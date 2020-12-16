@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'id'                => 'EU IRIA',
+    'font'              => 'Fonte',
+    'webfont-status'    => 'Status',
+    'remove'            => 'Retirar',
+    'activated'         => 'Ativa',
+    'webfont'           => 'Webfont',
+    'webfont-api'       => 'Chave API',
+    'title'             => 'Webfonts',
+    'de-activated'      => 'Inativa',
+    'select-fonts'      => 'Selecionar fontes',
+    'add'               => 'Adicionar fonte da Web',
+    'webfont-default'   => 'Fonte padrão',
+    'save-btn-title'    => 'Salvar fonte da Web',
+    'set-api-key'       => 'Definir a chave da API primeiro',
+    'delete-fail'       => 'Não é possível excluir a fonte',
+    'webfont-backend'   => 'Ativar para back-end',
+    'select-values'     => 'Por favor, selecione valores',
+    'webfont-frontend'  => 'Ativar para fachada de loja',
+    'delete-success'    => 'Fonte excluída com sucesso',
+    'active-success'    => 'Fonte ativada com sucesso',
+    'create-success'    => 'Fontes adicionadas ao armazenamento com sucesso',
+    'select-font-label' => 'Seleção múltipla e pesquisa são possíveis',
+    'cannot-fetch'      => 'Não é possível buscar a lista de fontes, verifique se você está conectado à Internet',
+];

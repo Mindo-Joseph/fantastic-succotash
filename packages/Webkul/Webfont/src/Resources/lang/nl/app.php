@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'id'                => 'ID kaart',
+    'font'              => 'Lettertype',
+    'webfont-status'    => 'Toestand',
+    'remove'            => 'Verwijderen',
+    'activated'         => 'Actief',
+    'webfont'           => 'Webfont',
+    'webfont-api'       => 'API sleutel',
+    'title'             => 'Webfonts',
+    'de-activated'      => 'Inactief',
+    'select-fonts'      => 'Selecteer lettertypen',
+    'add'               => 'Weblettertype toevoegen',
+    'webfont-default'   => 'Standaardlettertype',
+    'save-btn-title'    => 'Bewaar weblettertype',
+    'set-api-key'       => 'Stel eerst de API-sleutel in',
+    'delete-fail'       => 'Kan lettertype niet verwijderen',
+    'webfont-backend'   => 'Inschakelen voor backend',
+    'select-values'     => 'Selecteer waarden',
+    'webfont-frontend'  => 'Inschakelen voor storefront',
+    'delete-success'    => 'Lettertype succesvol verwijderd',
+    'active-success'    => 'Lettertype geactiveerd',
+    'create-success'    => 'Lettertypen succesvol toegevoegd aan opslag',
+    'select-font-label' => 'Meerdere selectie en zoeken zijn mogelijk',
+    'cannot-fetch'      => 'Kan de lijst met lettertypen niet ophalen, zorg ervoor dat u verbinding heeft met internet',
+];

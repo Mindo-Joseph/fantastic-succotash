@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'id'                => 'هوية شخصية',
+    'font'              => 'الخط',
+    'webfont-status'    => 'الحالة',
+    'remove'            => 'إزالة',
+    'activated'         => 'نشيط',
+    'webfont'           => 'خطوط الويب',
+    'webfont-api'       => 'مفتاح API',
+    'title'             => 'خطوط الويب',
+    'de-activated'      => 'غير نشط',
+    'select-fonts'      => 'حدد الخطوط',
+    'add'               => 'إضافة خط ويب',
+    'webfont-default'   => 'الخط الافتراضي',
+    'save-btn-title'    => 'حفظ خط الويب',
+    'set-api-key'       => 'قم بتعيين مفتاح API أولاً',
+    'delete-fail'       => 'لا يمكن حذف الخط',
+    'webfont-backend'   => 'تمكين للواجهة الخلفية',
+    'select-values'     => 'يرجى تحديد القيم',
+    'webfont-frontend'  => 'تفعيل واجهة المتجر',
+    'delete-success'    => 'تم حذف الخط بنجاح',
+    'active-success'    => 'تم تنشيط الخط بنجاح',
+    'create-success'    => 'تمت إضافة الخطوط إلى التخزين بنجاح',
+    'select-font-label' => 'يمكن الاختيار والبحث المتعدد',
+    'cannot-fetch'      => 'لا يمكن جلب قائمة الخطوط ، تأكد من أنك متصل بالإنترنت',
+];

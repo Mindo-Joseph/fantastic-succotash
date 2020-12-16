@@ -48,3 +48,19 @@ Thumbs.db
 *.mov
 *.wmv
 
+storage/*.key
+package-lock.json
+/public/hot
+/public/storage
+/public/css
+/public/js
+/public/vendor
+/public/themes
+/public/fonts
+/vendor
+.env
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/resources/themes/velocity/*

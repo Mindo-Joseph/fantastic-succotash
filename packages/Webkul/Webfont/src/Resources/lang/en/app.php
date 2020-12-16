@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'id'                => 'ID',
+    'font'              => 'Font',
+    'webfont-status'    => 'Status',
+    'remove'            => 'Remove',
+    'activated'         => 'Active',
+    'webfont'           => 'Webfont',
+    'webfont-api'       => 'API Key',
+    'title'             => 'Webfonts',
+    'de-activated'      => 'Inactive',
+    'select-fonts'      => 'Select Fonts',
+    'add'               => 'Add Web Font',
+    'webfont-default'   => 'Default Font',
+    'save-btn-title'    => 'Save Web Font',
+    'set-api-key'       => 'Set API key first',
+    'delete-fail'       => 'Cannot delete font',
+    'webfont-backend'   => 'Enable for backend',
+    'select-values'     => 'Please select values',
+    'webfont-frontend'  => 'Enable for storefront',
+    'delete-success'    => 'Font deleted successfully',
+    'active-success'    => 'Font activated successfully',
+    'create-success'    => 'Fonts added to storage successfully',
+    'select-font-label' => 'Multiple selection and search are possible',
+    'cannot-fetch'      => 'Cannot fetch the list of fonts, make sure that you are connected to internet',
+];
