@@ -27,7 +27,7 @@
           "Webkul\\Webfont\\": "packages/Webkul/Webfont/src",
           "Ridhima\\MediaManager\\": "packages/Ridhima/MediaManager/src",
           "Webkul\\Bulkupload\\": "packages/Webkul/Bulkupload/src",
-          "Webkul\\Marketplace\\": "packages/Webkul/Marketplace"
+          "Webkul\\Marketplace\\": "packages/Webkul/Marketplace/src"
         }
     },
 
