@@ -272,7 +272,8 @@ return [
         Webkul\UpgradeVersion\Providers\UpgradeVersionServiceProvider::class,
         Webkul\Webfont\Providers\WebfontServiceProvider::class,
         Ridhima\MediaManager\Providers\MediaManagerServiceProvider::class,
-        Webkul\Bulkupload\Providers\BulkUploadServiceProvider::class
+        Webkul\Bulkupload\Providers\BulkUploadServiceProvider::class,
+        Webkul\Marketplace\Providers\MarketplaceServiceProvider::class
     ],
 
     /*

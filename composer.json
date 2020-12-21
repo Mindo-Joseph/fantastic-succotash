@@ -26,7 +26,8 @@
           "Webkul\\UpgradeVersion\\": "packages/Webkul/UpgradeVersion/src",
           "Webkul\\Webfont\\": "packages/Webkul/Webfont/src",
           "Ridhima\\MediaManager\\": "packages/Ridhima/MediaManager/src",
-          "Webkul\\Bulkupload\\": "packages/Webkul/Bulkupload/src"
+          "Webkul\\Bulkupload\\": "packages/Webkul/Bulkupload/src",
+          "Webkul\\Marketplace\\": "packages/Webkul/Marketplace"
         }
     },
 
