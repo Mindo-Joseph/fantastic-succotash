@@ -48,7 +48,7 @@ Thumbs.db
 *.mov
 *.wmv
 
-storage/*.key
+
 package-lock.json
 /public/hot
 /public/storage
