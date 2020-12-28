@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Bagisto'),
+    'name' => env('APP_NAME', 'Laravel'),
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     |
     | This value determines the "environment" your application is currently
     | running in. This may determine how you prefer to configure various
-    | services your application utilizes. Set this in your ".env" file.
+    | services the application utilizes. Set this in your ".env" file.
     |
     */
 
@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => (bool) env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'asset_url' => env('ASSET_URL', null),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -65,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE','Asia/Kolkata'),
+    'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------
@@ -78,7 +80,7 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -95,40 +97,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Country
+    | Faker Locale
     |--------------------------------------------------------------------------
     |
-    | Here you may specify the default country by country code.
-    | Ensure it is uppercase and reflects the 'code' column of the
-    | countries table.
-    |
-    | for example: DE EN FR
-    | (use capital letters!)
-    */
-
-    'default_country' => null,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Base Currency Code
-    |--------------------------------------------------------------------------
-    |
-    | Here you may specify the base currency code for your application.
-    |
-    */
-    
-    'currency' => env('APP_CURRENCY', 'USD'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default channel Code
-    |--------------------------------------------------------------------------
-    |
-    | Here you may specify the default channel code for your application.
+    | This locale will be used by the Faker PHP library when generating fake
+    | data for your database seeds. For example, this will be used to get
+    | localized telephone numbers, street address information and more.
     |
     */
 
-    'channel' => 'default',
+    'faker_locale' => 'en_US',
 
     /*
     |--------------------------------------------------------------------------
@@ -144,35 +122,6 @@ return [
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
-
-    /*
-        Code Editor
-    */
-    'editor' =>'vscode',
-
-    /*
-        Application Version
-    */
-    'version' => env('APP_VERSION', '1.1.0'),
-
-    /**
-     * Blacklisting attributes while debugging
-     */
-    'debug_blacklist' => [
-        '_ENV' => [
-            'APP_KEY',
-            'DB_PASSWORD'
-        ],
-
-        '_SERVER' => [
-            'APP_KEY',
-            'DB_PASSWORD'
-        ],
-
-        '_POST' => [
-            'password'
-        ],
-    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -217,8 +166,6 @@ return [
          * Package Service Providers...
          */
 
-        Astrotomic\Translatable\TranslatableServiceProvider::class,
-
         /*
          * Application Service Providers...
          */
@@ -227,53 +174,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        R0bdiabl0\Laravel5Phumbor\Laravel5PhumborServiceProvider::class,
 
-        //Laravel Intervention
-        Intervention\Image\ImageServiceProvider::class,
-
-        //Laravel Maatwebsite
-        Maatwebsite\Excel\ExcelServiceProvider::class,
-
-        Barryvdh\Debugbar\ServiceProvider::class,
-
-        //Repository
-        Prettus\Repository\Providers\RepositoryServiceProvider::class,
-        Konekt\Concord\ConcordServiceProvider::class,
-        Flynsarmy\DbBladeCompiler\DbBladeCompilerServiceProvider::class,
-        Barryvdh\DomPDF\ServiceProvider::class,
-        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
-
-        //Webkul packages
-        Barryvdh\Elfinder\ElfinderServiceProvider::class,
-        Webkul\Theme\Providers\ThemeServiceProvider::class,
-        Webkul\User\Providers\UserServiceProvider::class,
-        Webkul\Admin\Providers\AdminServiceProvider::class,
-        Webkul\Ui\Providers\UiServiceProvider::class,
-        Webkul\Category\Providers\CategoryServiceProvider::class,
-        Webkul\Attribute\Providers\AttributeServiceProvider::class,
-        Webkul\Core\Providers\CoreServiceProvider::class,
-        Webkul\Shop\Providers\ShopServiceProvider::class,
-        Webkul\Customer\Providers\CustomerServiceProvider::class,
-        Webkul\Inventory\Providers\InventoryServiceProvider::class,
-        Webkul\Product\Providers\ProductServiceProvider::class,
-        Webkul\Checkout\Providers\CheckoutServiceProvider::class,
-        Webkul\Shipping\Providers\ShippingServiceProvider::class,
-        Webkul\Payment\Providers\PaymentServiceProvider::class,
-        Webkul\Paypal\Providers\PaypalServiceProvider::class,
-        Webkul\Sales\Providers\SalesServiceProvider::class,
-        Webkul\Tax\Providers\TaxServiceProvider::class,
-        Webkul\API\Providers\APIServiceProvider::class,
-        Webkul\CatalogRule\Providers\CatalogRuleServiceProvider::class,
-        Webkul\CartRule\Providers\CartRuleServiceProvider::class,
-        Webkul\Rule\Providers\RuleServiceProvider::class,
-        Webkul\CMS\Providers\CMSServiceProvider::class,
-        Webkul\Velocity\Providers\VelocityServiceProvider::class,
-        Webkul\BookingProduct\Providers\BookingProductServiceProvider::class,
-        Webkul\UpgradeVersion\Providers\UpgradeVersionServiceProvider::class,
-        Webkul\Webfont\Providers\WebfontServiceProvider::class,
-        Ridhima\MediaManager\Providers\MediaManagerServiceProvider::class,
-        Webkul\Bulkupload\Providers\BulkUploadServiceProvider::class,
-        Webkul\Marketplace\Providers\MarketplaceServiceProvider::class
     ],
 
     /*
@@ -290,6 +192,7 @@ return [
     'aliases' => [
 
         'App' => Illuminate\Support\Facades\App::class,
+        'Arr' => Illuminate\Support\Arr::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
         'Blade' => Illuminate\Support\Facades\Blade::class,
@@ -305,6 +208,7 @@ return [
         'File' => Illuminate\Support\Facades\File::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
+        'Http' => Illuminate\Support\Facades\Http::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
@@ -319,18 +223,12 @@ return [
         'Schema' => Illuminate\Support\Facades\Schema::class,
         'Session' => Illuminate\Support\Facades\Session::class,
         'Storage' => Illuminate\Support\Facades\Storage::class,
+        'Str' => Illuminate\Support\Str::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Datagrid' => Webkul\Ui\DataGrid\Facades\DataGrid::class,
-        'ProductGrid' => Webkul\Ui\DataGrid\Facades\ProductGrid::class,
-        'Image' => Intervention\Image\Facades\Image::class,
-        'Cart' => Webkul\Checkout\Facades\Cart::class,
-        'Core' => Webkul\Core\Facades\Core::class,
-        'DbView' => Flynsarmy\DbBladeCompiler\Facades\DbView::class,
-        'PDF' => Barryvdh\DomPDF\Facade::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Concord' => Konekt\Concord\Facades\Concord::class,
-        'Helper'  => Konekt\Concord\Facades\Helper::class
+        'Phumbor'   => R0bdiabl0\Laravel5Phumbor\Facades\Phumbor::class,
+
     ],
+
 ];
