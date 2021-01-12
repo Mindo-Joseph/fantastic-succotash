@@ -66,6 +66,7 @@ class ProcessClientDatabase implements ShouldQueue
             Artisan::call('migrate', ['--database' => $schemaName]);
             Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--database' => $schemaName]);
             DB::connection($schemaName)->table('clients')->insert($client);
+
             DB::disconnect($schemaName);
         } catch (Exception $ex) {
            return $ex->getMessage();

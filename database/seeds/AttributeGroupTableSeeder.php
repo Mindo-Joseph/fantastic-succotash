@@ -1,22 +1,14 @@
 <?php
 
-namespace Webkul\Attribute\Database\Seeders;
-
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class AttributeGroupTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-
         DB::table('attribute_groups')->delete();
-
         DB::table('attribute_group_mappings')->delete();
-
         DB::table('attribute_groups')->delete();
-
         DB::table('attribute_groups')->insert([
             [
                 'id'                  => '1',
@@ -159,6 +151,5 @@ class AttributeGroupTableSeeder extends Seeder
             ]
         ]);
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
     }
 }

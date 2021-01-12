@@ -1,10 +1,8 @@
 <?php
 
-namespace Webkul\Attribute\Database\Seeders;
+use Illuminate\Database\Seeder;
 
 use Carbon\Carbon;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class AttributeTableSeeder extends Seeder
 {

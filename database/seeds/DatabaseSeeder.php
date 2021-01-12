@@ -24,10 +24,10 @@ class DatabaseSeeder extends Seeder
               CategorySeeder::class,
               CategoryTranslationSeeder::class,
 
-              AttributeFamilyTableSeeder::class,
+              /*AttributeFamilyTableSeeder::class,
               AttributeGroupTableSeeder::class,
               AttributeTableSeeder::class,
-              AttributeOptionTableSeeder::class,
+              AttributeOptionTableSeeder::class,*/
 
 
           ]);
