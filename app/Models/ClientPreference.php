@@ -16,7 +16,7 @@ class ClientPreference extends Model
 
     public function language()
     {
-      return $this->hasMany('App\Models\ClientLanguage','client_code','client_code')->select('id', 'client_code', 'language_id');
+      return $this->hasMany('App\Models\ClientLanguage','client_code','client_code')->select( 'client_code', 'language_id');
     }
 
     public function domain()
