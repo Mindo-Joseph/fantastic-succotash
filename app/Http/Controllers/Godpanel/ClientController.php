@@ -17,8 +17,6 @@ use Illuminate\Support\Facades\Redis;
 use Session;
 use Illuminate\Support\Facades\Storage;
 
-
-
 class ClientController extends Controller
 {
     /**
@@ -118,9 +116,7 @@ class ClientController extends Controller
             $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
             //$s3filePath = '/assets/Clientlogo/' . $file_name;
             //$path = Storage::disk('s3')->put($s3filePath, $file,'public');
-            $path = $request->file('logo')->storeAs('/Clientlogo', $file_name, 'public');
-            $getFileName = $path;
-            $client->logo = $getFileName;
+            $client->logo = $request->file('logo')->storeAs('/Clientlogo', $file_name, 'public');
         }
 
         if( $update == 'false'){

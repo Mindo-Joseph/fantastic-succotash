@@ -51,10 +51,10 @@
                             <div class="col-lg-6">
                                 <div class="form-group mb-3">
                                     <label>Select</label> <br/>
-                                    <select id="selectize-select">
-                                        <option data-display="Select">Nothing</option>
+                                    <select id="selectize-select" value="3">
+                                        <option value="0">Nothing</option>
                                         <option value="1">Some option</option>
-                                        <option value="2">Another option</option>
+                                        <option value="2" selected>Another option</option>
                                         <option value="3" disabled>A disabled option</option>
                                         <option value="4">Potato</option>
                                     </select>

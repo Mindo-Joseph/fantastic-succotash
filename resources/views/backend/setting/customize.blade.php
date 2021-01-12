@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Configure'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Configure'])
 
 @section('content')
 
@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Settings</h4>
+                <h4 class="page-title">Customize</h4>
             </div>
         </div>
     </div>
@@ -18,135 +18,43 @@
         <div class="row">
             <div class="col-xl-11 col-md-offset-1">
                 <div class="card-box">
-                    <h4 class="header-title">Basic Website Customization</h4>
-                    <p class="sub-header"></p>
-                    <div class="row mb-0">
-
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="sms_provider">Country</label>
-                                <select class="form-control" id="sms_provider" name="sms_provider">
-                                    <option value="">Select Country</option>
-                                    @foreach($currencies as $curr)
-                                         <option value="{{$curr->id}}" {{ (isset($preference) && $preference->currency_id == $curr->id)? "selected" : "" }}> {{$curr->name}} </option>
-                                    @endforeach
-                                </select>
-                                @if($errors->has('sms_provider'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('sms_provider') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="sms_provider">Language</label>
-                                <select class="form-control" id="sms_provider" name="sms_provider">
-                                    <option value="">Select Language</option>
-                                    @foreach($languages as $lang)
-                                         <option value="{{$lang->id}}" {{ (isset($preference) && $preference->language_id == $lang->id)? "selected" : "" }}> {{$lang->name}} </option>
-                                    @endforeach
-                                </select>
-                                @if($errors->has('sms_provider'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('sms_provider') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="theme_admin">Theme Admin</label>
-                                <select class="form-control" id="theme_admin" name="theme_admin">
-                                    <option value="dark" {{(isset($preference) && $preference->theme_admin == 'dark')? "selected" : "" }}> Dark</option>
-                                    <option value="light" {{(isset($preference) && $preference->theme_admin == 'light')? "selected" : "" }}> Light</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="distance_unit">Distance Unit</label>
-                                <select class="form-control" id="distance_unit" name="distance_unit">
-                                    <option value="KM" {{(isset($preference) && $preference->distance_unit == 'KM')? "selected" : "" }}>Kilometer</option>
-                                    <option value="MILES" {{(isset($preference) && $preference->distance_unit == 'MILES')? "selected" : "" }}>Miles</option>
-                                    <option value="METER" {{(isset($preference) && $preference->distance_unit == 'METER')? "selected" : "" }}>Meter</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="date_format">Date Format</label>
-                                <select class="form-control" id="date_format" name="date_format">
-                                    <option value="Y-m-d" {{(isset($preference) && $preference->date_format == 'Y-m-d')? "selected" : "" }}>yyyy-mm-dd</option>
-                                    <option value="d-m-Y" {{(isset($preference) && $preference->date_format == 'd-m-Y')? "selected" : "" }}>dd-mm-yyyy</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="time_format">Time Format</label>
-                                <select class="form-control" id="time_format" name="time_format">
-                                    <option value="H:i" {{(isset($preference) && $preference->time_format == 'H:i')? "selected" : "" }}>24 Hour Format</option>
-                                    <option value="h:i" {{(isset($preference) && $preference->time_format == 'h:i')? "selected" : "" }}>12 Hour Fromat</option>
-                                    <option value="h:i,a" {{(isset($preference) && $preference->time_format == 'h:i,a')? "selected" : "" }}>12 Hour Fromat with AM/PM</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 switchery-demo">
-                                <label for="verify_email" class="mr-3">Apple Login</label>
-                                <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->verify_email == '1'))  checked='checked' @endif>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 ">
-                                <label for="verify_phone" class="mr-3">Verify Phone</label>
-                                <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->verify_phone == '1'))  checked='checked' @endif>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="Default_location_name">Default location name</label>
-                                <input type="text" name="Default_location_name" id="Default_location_name" placeholder="Delhi, India" class="form-control"
-                                    value="{{ old('Default_location_name', $preference->Default_location_name ?? '')}}">
-                                @if($errors->has('Default_location_name'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('Default_location_name') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="Default_latitude">Default latitude</label>
-                                <input type="text" name="Default_latitude" id="Default_latitude" placeholder="24.9876755" class="form-control"
-                                    value="{{ old('Default_latitude', $preference->Default_latitude ?? '')}}">
-                                @if($errors->has('Default_latitude'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('Default_latitude') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="Default_longitude">Default longitude</label>
-                                <input type="text" name="Default_longitude" id="Default_longitude" placeholder="11.9871371723" class="form-control"
-                                    value="{{ old('Default_longitude', $preference->Default_longitude ?? '')}}">
-                                @if($errors->has('Default_longitude'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('Default_longitude') }}</strong>
-                                </span>
+                    <div class="row mb-2">
+                        <div class="col-sm-8">
+                            <div class="text-sm-left">
+                                @if (\Session::has('success'))
+                                <div class="alert alert-success">
+                                    <span>{!! \Session::get('success') !!}</span>
+                                </div>
                                 @endif
                             </div>
                         </div>
                     </div>
+
+                    <h4 class="header-title">Theme</h4>
+                    <p class="sub-header">
+                        Choose between light and dark theme, for the platform.
+                    </p>
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <div class="radio radio-blue form-check-inline">
+                                <input type="radio" id="light_theme" value="light" name="theme_admin" {{ (isset($preference) && $preference->theme_admin =="light")? "checked" : "" }}>
+                                <label for="light_theme"> Light theme </label>
+                            </div>
+                            <div class="radio form-check-inline">
+                                <input type="radio" id="dark_theme" value="dark" name="theme_admin" {{ (isset($preference) &&  $preference->theme_admin =="dark")? "checked" : "" }}>
+                                <label for="dark_theme"> Dark theme </label>
+                            </div>
+                            @if($errors->has('theme'))
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $errors->first('theme') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
                     <div class="row mb-2">
                         <div class="col-md-2">
-                            <input type="hidden" name="send_to" id="send_to" value="customize">
                             <div class="form-group mb-0 text-center">
+                                <input type="hidden" name="send_to" id="send_to" value="customize">
                                 <button class="btn btn-blue btn-block" type="submit"> Update </button>
                             </div>
                         </div>
@@ -156,6 +64,296 @@
         </div>
     </form>
 
+    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+        @csrf
+        <div class="row">
+            <div class="col-xl-11 col-md-offset-1">
+                <div class="card-box">
+                    <h4 class="header-title"> Web Template</h4>
+                    <p class="sub-header">
+                        Select web templete
+                    </p>
+                    <div class="row mb-2">
+                        @foreach($webTemplates as $webt)
+                        <div class="col-lg-4 col-xl-3">
+                            <div class="card">
+                                <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
+                                <div class="card-body">
+                                    <div class="row">
+                                         <div class="col-sm-8">
+                                            <h5 class="card-title ">{{$webt->name}}</h5>
+                                         </div>
+                                         <div class="col-sm-4 custom-control custom-radio" style="text-align: right;">
+                                            <input type="radio" value="{{$webt->id}}" id="webTemplate{{$webt->id}}" name="web_template_id" class="custom-control-input" {{ ($preference && $preference->web_template_id == $webt->id)? "checked" : "" }}>
+                                            <label class="custom-control-label" for="webTemplate{{$webt->id}}">Select</label>
+                                         </div>
+                                    </div>
+                                    <p class="card-text">Some quick example text to build on the card title and make
+                                        up the bulk of the card's content. With supporting text below as a natural lead-in to additional content.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+
+                        <!--<div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="webTemplates">Web Template</label>
+                                <select class="form-control" >
+                                    @foreach($webTemplates as $webt)
+                                    <option value="{{ $webt->id }}" {{ ($preference && $preference->web_template_id == $webt->id)? "selected" : "" }}>{{ $webt->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                                @if($errors->has('web_template_id'))
+                                <span class="text-danger" role="alert">
+                                    <strong>{{ $errors->first('web_template_id') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <div class="form-group mb-0 text-center">
+                                <input type="hidden" name="send_to" id="send_to" value="customize">
+                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+        @csrf
+        <div class="row">
+            <div class="col-xl-11 col-md-offset-1">
+                <div class="card-box">
+                    <h4 class="header-title">App Template</h4>
+                    <p class="sub-header">
+                        Select app templete
+                    </p>
+                    <div class="row mb-2">
+                        @foreach($appTemplates as $webt)
+                        <div class="col-lg-4 col-xl-3">
+                            <div class="card" style="max-height: 445px; overflow: hidden;">
+                                <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
+                                <div class="card-body">
+                                    <div class="row">
+                                         <div class="col-sm-8">
+                                            <h5 class="card-title ">{{$webt->name}}</h5>
+                                         </div>
+                                         <div class="col-sm-4 custom-control custom-radio" style="text-align: right;">
+                                            <input type="radio" value="{{$webt->id}}" id="appTemplate{{$webt->id}}" name="app_template_id" class="custom-control-input" {{ ($preference && $preference->app_template_id == $webt->id)? "checked" : "" }}>
+                                        <label class="custom-control-label" for="appTemplate{{$webt->id}}">Select</label>
+                                         </div>
+                                    </div>
+                                    <p class="card-text">Some quick example text to build on the card title and make
+                                        up the bulk of the card's content. With supporting text below as a natural lead-in to additional content.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                        <!--<div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="appTemplates">App Template</label>
+                                <select class="form-control" id="appTemplates" name="app_template_id">
+                                    @foreach($appTemplates as $webt)
+                                    <option value="{{ $webt->id }}" {{ ($preference && $preference->app_template_id == $webt->id)? "selected" : "" }}>{{ $webt->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                                @if($errors->has('app_template_id'))
+                                <span class="text-danger" role="alert">
+                                    <strong>{{ $errors->first('app_template_id') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>-->
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <div class="form-group mb-0 text-center">
+                                <input type="hidden" name="send_to" id="send_to" value="customize">
+                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+        @csrf
+        <div class="row">
+            <div class="col-xl-11 col-md-offset-1">
+                <div class="card-box">
+                    <h4 class="header-title">Nomenclature</h4>
+                    <p class="sub-header">
+                        Define and update the nomenclature
+                    </p>
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="currency">CURRENCY</label>
+                                <select class="form-control" id="currency" name="currency_id">
+                                    @foreach($currencies as $currency)
+                                    <option value="{{ $currency->id }}" {{ ($preference && $preference->currency_id == $currency->id)? "selected" : "" }}>{{ $currency->iso_code }} - {{ $currency->symbol }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                                @if($errors->has('currency_id'))
+                                <span class="text-danger" role="alert">
+                                    <strong>{{ $errors->first('currency_id') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                 
+                        <div class="col-md-6">
+                            <label for="languages">Language</label>
+                            <select class="form-control select2-multiple" id="languages" name="languages[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+
+                                @foreach($languages as $lang)
+                                     <option value="{{$lang->id}}" {{ (isset($preference) && in_array($lang->id, $cli_langs))? "selected" : "" }}> {{$lang->name}} </option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('languages'))
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $errors->first('languages') }}</strong>
+                            </span>
+                            @endif
+                        </div> 
+                        <div class="col-md-6">
+                            <label>Unit</label>
+                            <div class="col-sm-12">
+                                <div class="radio radio-info form-check-inline">
+                                    <input type="radio" id="metric" value="metric" name="distance_unit" {{ ($preference && $preference->distance_unit =="metric")? "checked" : "" }}>
+                                    <label for="metric"> Metric</label>
+                                </div>
+                                <div class="radio form-check-inline">
+                                    <input type="radio" id="imperial" value="imperial" name="distance_unit" {{ ($preference && $preference->distance_unit =="imperial")? "checked" : "" }}>
+                                    <label for="imperial"> Imperial</label>
+                                </div>
+                                @if($errors->has('distance_unit'))
+                                <span class="text-danger" role="alert">
+                                    <strong>{{ $errors->first('distance_unit') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <div class="form-group mb-0 text-center">
+                                <input type="hidden" name="send_to" id="send_to" value="customize">
+                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+        @csrf
+        <div class="row">
+            <div class="col-xl-11 col-md-offset-1">
+                <div class="card-box">
+                    <h4 class="header-title">Date & Time</h4>
+                    <p class="sub-header">
+                        View and update the date & time format.
+                    </p>
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="date_format">DATE FORMAT</label>
+                                <select class="form-control" id="date_format" name="date_format">
+                                    <option value="DD-MM-YYYY" {{ ($preference && $preference->date_format =="DD-MM-YYYY")? "selected" : "" }}>
+                                        DD-MM-YYYY</option>
+                                    <option value="DD/MM/YYYY" {{ ($preference && $preference->date_format =="DD/MM/YYYY")? "selected" : "" }}>
+                                        DD/MM/YYYY</option>
+                                    <option value="YYYY-MM-DD" {{ ($preference && $preference->date_format =="YYYY-MM-DD")? "selected" : "" }}>
+                                        YYYY-MM-DD</option>
+                                </select>
+                                @if($errors->has('date_format'))
+                                <span class="text-danger" role="alert">
+                                    <strong>{{ $errors->first('date_format') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="time_format">TIME FORMAT</label>
+                                <select class="form-control" id="time_format" name="time_format">
+                                    <option value="12" {{ ($preference && $preference->time_format =="12")? "selected" : "" }}>12 hours
+                                    </option>
+                                    <option value="24" {{ ($preference && $preference->time_format =="24")? "selected" : "" }}>24 hours
+                                    </option>
+                                </select>
+                                @if($errors->has('time_format'))
+                                <span class="text-danger" role="alert">
+                                    <strong>{{ $errors->first('time_format') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <div class="form-group mb-0 text-center">
+                                <input type="hidden" name="send_to" id="send_to" value="customize">
+                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form method="POST" action="{{route('client.updateDomain', Auth::user()->code)}}">
+        @csrf
+        <div class="row">
+            <div class="col-xl-11 col-md-offset-1">
+                <div class="card-box">
+                    <h4 class="header-title">Custom Domain</h4>
+                    <p class="sub-header">
+                        Update custom domain here.
+                    </p>
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <div class="form-group mb-3">
+                                <label for="custom_domain">Custom Domain</label>
+                                <input type="text" name="custom_domain" id="custom_domain" placeholder="xyz"
+                                    class="form-control" value="{{ old('custom_domain', $preference->domain->custom_domain ?? '')}}">
+                                @if($errors->has('custom_domain'))
+                                <span class="text-danger" role="alert">
+                                    <strong>{{ $errors->first('custom_domain') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <div class="form-group mb-0 text-center">
+                                <input type="hidden" name="send_to" id="send_to" value="customize">
+                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div> <!-- container -->
 @endsection
 

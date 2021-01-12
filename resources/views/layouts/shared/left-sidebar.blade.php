@@ -38,108 +38,128 @@
 
                 <li>
                     <a href="{{route('client.dashboard')}}" >
-                        <i data-feather1="airplay" class="fas fa-home"></i>
+                        <i data-feather="airplay"></i>
                         <span> Dashboard </span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{route('client.dashboard')}}" >
-                        <i class="fas fa-user-plus"></i>
-                        <span> Customers </span>
+                    <a href="{{route('order.index')}}" >
+                        <i class="fe-user-plus"></i>
+                        <span> Orders </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{route('vendor.index')}}" >
+                        <i class="fe-user-plus"></i>
+                        <span> Vendors </span>
                     </a>
                 </li>
                 <li>   
-                    <a href="{{route('banner.index')}}" >
-                        <i class="fas fa-sliders-h"></i>
-                        <span> Banner </span>
+                    <a href="{{route('accounting.index')}}" >
+                        <i data-feather="briefcase"></i>
+                        <span> Accounting </span>
                     </a>
-                </li> 
+                </li>
+                
 
-                <li class="menu-title mt-2">Profile</li>
+                <li class="menu-title mt-2">Setting</li>
                 <li>   
                     <a href="{{route('client.profile')}}" >
-                        <i class="far fa-address-card"></i>
+                        <i data-feather="user"></i>
                         <span> Profile </span>
                     </a>
                 </li>
                 <li>   
                     <a href="{{route('configure.customize')}}" >
-                        <i class="far fa-address-card"></i>
+                        <i data-feather="settings"></i>
                         <span> Customize </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{route('configure.index')}}">
-                        <i class="fas fa-tools"></i>
+                        <i data-feather="tool"></i>
                         <span> Configure </span>
                     </a>
                 </li>
                 <li>   
-                    <a href="{{route('accounting.index')}}" >
-                        <i class="fas fa-book-reader"></i>
-                        <span> Accounting </span>
+                    <a href="{{route('banner.index')}}" >
+                        <i data-feather="columns"></i>
+                        <span> Banner </span>
+                    </a>
+                </li> 
+                <!--<li>
+                    <a href="#SettingSidebar" data-toggle="collapse">
+                        <i data-feather="settings"></i>
+                        <span> Setting </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                     <div class="collapse" id="SettingSidebar">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="{{route('client.profile')}}">
+                                    <i data-feather="user"></i><span> Profile </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{route('configure.customize')}}" >
+                                    <i data-feather="settings"></i><span> Customize </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{route('configure.index')}}">
+                                    <i data-feather="tool"></i><span> Configure </span>
+                                </a>
+                            </li>
+                            <li>   
+                                <a href="{{route('banner.index')}}" >
+                                    <i data-feather="columns"></i><span> Banner </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div> 
+                </li> -->
+                <li>   
+                    <a href="{{route('category.index')}}">
+                        <i data-feather="credit-card"></i>
+                        <span> Categories </span>
                     </a>
                 </li>
                 <li>   
-                    <a href="{{route('tax.index')}}" >
-                        <i class="far fa-money-bill-alt"></i>
-                        <span> Tax </span>
-                    </a>
-                </li> 
-                <li>   
-                    <a href="{{route('promocode.index')}}" >
-                        <i class="fas fa-tag"></i>
-                        <span> Promocode </span>
+                    <a href="{{route('payment.index')}}" >
+                        <i data-feather="dollar-sign"></i>
+                        <span> Payment Setting </span>
                     </a>
                 </li> 
                 <li>   
                     <a href="{{route('cms.index')}}" >
-                        <i class="fas fa-file-alt"></i>
+                        <i data-feather="link-2"></i>
                         <span> CMS </span>
                     </a>
                 </li> 
                 <li>   
-                    <a href="{{route('payment.index')}}" >
-                        <i class="fas fa-money-check-alt"></i>
-                        <span> Payment </span>
+                    <a href="{{route('promocode.index')}}" >
+                        <i data-feather="gift"></i>
+                        <span> Promocode </span>
                     </a>
-                </li> 
+                </li>
+                <li>   
+                    <a href="#" >
+                        <i data-feather="credit-card"></i>
+                        <span> Admin ACL </span>
+                    </a>
+                </li>
+                <!--<li>   
+                    <a href="{{route('tax.index')}}" >
+                        <i data-feather="credit-card"></i>
+                        <span> Tax </span>
+                    </a>
+                </li> -->
                 <li>
                     <a href="#" href1="notifications.index">
-                        <i class="far fa-bell"></i>
+                        <i data-feather="bell"></i>
                         <span> Notifications </span>
                     </a>
                 </li>
-
-
-
-                {{-- <li>
-                    <a href="#">
-                        <i data-feather="package"></i>
-                        <span> Tasks </span>
-                    </a>
-                </li>
-                
-                <li>
-                    <a href="#" href1="tag.index">
-                        <i data-feather="rss"></i>
-                        <span> Tags </span>
-                    </a>
-                </li>
-                
-                <li>
-                    <a href="#" href1="manager.index">
-                        <i data-feather="users"></i>
-                        <span> Managers </span>
-                    </a>
-                </li>
-                
-                <li>
-                    <a href="#" href1="{{url('modals">
-                        <i data-feather="users"></i>
-                        <span> Modals </span>
-                    </a>
-                </li>  --}}
 
 
                 

@@ -53,6 +53,7 @@
                                     <th>Provider Name</th>
                                     <th>Keyword</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Banner'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Banner'])
 
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
@@ -39,33 +39,62 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <a class="btn btn-blue waves-effect waves-light text-sm-right"
-                                href="{{route('map.create')}}"><i class="mdi mdi-plus-circle mr-1"></i> Add
-                            </a>
+                            <button class="btn btn-blue waves-effect waves-light text-sm-right openBannerModal"
+                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
+                            </button>
                         </div>
                     </div>
 
+
                     <div class="table-responsive">
-                        <table class="table table-centered table-nowrap table-striped" id="products-datatable">
+                        <form name="saveOrder" id="saveOrder"> @csrf </form>
+                        <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Name</th>
-                                    <th>column</th>
-                                    <th>Status</th>
+                                    <th>Duration</th>
+                                    <th>Redirect To</th>
+                                    <th></th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {{-- @foreach($banners as $banner) --}}
-                                <tr>
-                                    <td> first </td>
-                                    <td> second </td>
-                                    <td> third </td>
+                            <tbody id="post_list">
+                                @foreach($banners as $ban)
+                                <tr data-row-id="{{$ban->id}}">
                                     <td> 
-                                        <a class="btn btn-sm btn-danger" onclick="return confirm('Are you sure? You want to delete the map provider.')" href="#"><i class="fa fa-trash"></i></a>
+                                    @php 
+                                    
+                                    @endphp
+    
+                                        <img src="{{ url($ban->image)}}" alt="{{$ban->id}}" >
+                                    </td>
+
+                                    <td> {{ $ban->name }} </td>
+                                    <td> {{ $ban->start_date_time }} <br/> to <br/> {{$ban->end_date_time}}</td>
+                                    <td> {{ $ban->redirect_category_id }} </td>
+                                    <td> 
+                                        <input type="checkbox" bid="{{$ban->id}}" id="cur_{{$ban->id}}" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#039cfd" {{($ban->validity_on == '1') ? 'checked' : ''}} >
+                                     </td>
+                                    <td> 
+                                        <div class="form-ul" style="width: 60px;">
+                                            <div class="inner-div" style="float: left;">
+                                                <a class="action-icon openBannerModal" userId="{{$ban->id}}" href="#"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                            </div>
+                                            <div class="inner-div">
+                                                <form method="POST" action="{{ route('banner.destroy', $ban->id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <div class="form-group">
+                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the banner.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                         </h3>
                                     </td>
                                 </tr>
-                               {{-- @endforeach --}}
+                               @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -77,4 +106,11 @@
         </div> <!-- end col -->
     </div>
 </div>
+@include('backend.banner.modals')
+@endsection
+
+@section('script')
+
+@include('backend.banner.pagescript')
+
 @endsection

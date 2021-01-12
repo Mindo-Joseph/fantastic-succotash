@@ -1,5 +1,9 @@
 <!-- bundle -->
 <!-- Vendor js -->
+
+
+<script src="{{asset('assets/libs/dropzone/dropzone.min.js')}}"></script>
+<script src="{{asset('assets/libs/dropify/dropify.min.js')}}"></script>
 <script src="{{asset('assets/libs/selectize/selectize.min.js')}}"></script>
 <script src="{{asset('assets/libs/mohithg-switchery/mohithg-switchery.min.js')}}"></script>
 <script src="{{asset('assets/libs/multiselect/multiselect.min.js')}}"></script>
@@ -7,10 +11,13 @@
 <script src="{{asset('assets/libs/bootstrap-select/bootstrap-select.min.js')}}"></script>
 <script src="{{asset('assets/libs/bootstrap-touchspin/bootstrap-touchspin.min.js')}}"></script>
 <script src="{{asset('assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
+<script src="{{asset('assets/libs/flatpickr/flatpickr.min.js')}}"></script>
+<script src="{{asset('assets/libs/bootstrap-colorpicker/bootstrap-colorpicker.min.js')}}"></script>
+<script src="{{asset('assets/libs/clockpicker/clockpicker.min.js')}}"></script>
+<script src="{{asset('assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
 <script src="{{asset('assets/libs/devbridge-autocomplete/devbridge-autocomplete.min.js')}}"></script>
-<script src="{{asset('assets/libs/jquery-mockjax/jquery-mockjax.min.js')}}"></script>
-<script src="{{asset('assets/js/pages/form-advanced.init.js')}}"></script>
-<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+<script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
+<script src="{{asset('assets/js/pages/my-form-advanced.init.js')}}"></script>
 
 <script>
 

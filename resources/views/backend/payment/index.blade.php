@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Payment'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Payment'])
 
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />

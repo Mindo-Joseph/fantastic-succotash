@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         @include('layouts.shared/title-meta', ['title' => $title])
-        @include('layouts.shared/head-css')
+        @include('layouts.shared/head-content')
     </head>
 
     <body data-layout-mode="detached" @yield('body-extra')>

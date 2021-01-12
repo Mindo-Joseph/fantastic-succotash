@@ -47,24 +47,27 @@ class Client extends Authenticatable
 
     public function rules($id = ''){
         $rules = array(
-
             'name' => 'required|string|max:50',
-            'email' => 'required|email|max:60|unique:clients',
             'phone_number' => 'required',
-            'password' => 'required',
             'database_path' => 'required',
-            'database_name' => 'required|max:50|unique:clients',
             'database_username' => 'required|max:50',
             'database_password' => 'required|max:50',
             'company_name' => 'required',
             'company_address' => 'required',
             'custom_domain' => 'required',
-
         );
-        if(!empty($id)){
-            $rule['email'] = 'required|email|max:60|unique:clients,email,'.$id;
-            $rule['database_name'] = 'required|max:60|unique:clients,database_name,'.$id;
+
+        if(empty($id)){
+            $rule['email'] = 'required|email|max:60|unique:clients';
+            $rule['password'] = 'required|string|max:60';
+            $rule['database_name'] = 'required|max:60|unique:clients';
         }
+
+        /*if(!empty($id)){
+            $rule['email'] = 'email|max:60|unique:clients,email,'.$id;
+            $rule['database_name'] = 'max:60|unique:clients,database_name,'.$id;
+        }*/
         return $rules;
     }
+
 }

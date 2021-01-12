@@ -196,8 +196,8 @@
 
                                     <div class="modal-body">
                                         <div class="text-center mt-2 mb-4">
-                                            <a href="{{route('index')}}" class="text-success">
-                                                <span><img src="{{asset('assets/images/logo-dark.png')}}"alt="" height="24"></span>
+                                            <a href="{{route('home')}}" class="text-success">
+                                                <span><img src="{{asset('assets/images/logo-dark.png')}}"alt=" height="24"></span>
                                             </a>
                                         </div>
 
@@ -205,17 +205,17 @@
 
                                             <div class="form-group">
                                                 <label for="username">Name</label>
-                                                <input class="form-control" type="email" id="username" required="" placeholder="Michael Zenaty">
+                                                <input class="form-control" type="email" id="username" required=" placeholder="Michael Zenaty">
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="emailaddress">Email address</label>
-                                                <input class="form-control" type="email" id="emailaddress" required="" placeholder="john@deo.com">
+                                                <input class="form-control" type="email" id="emailaddress" required=" placeholder="john@deo.com">
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="password">Password</label>
-                                                <input class="form-control" type="password" required="" id="password" placeholder="Enter your password">
+                                                <input class="form-control" type="password" required=" id="password" placeholder="Enter your password">
                                             </div>
 
                                             <div class="form-group">
@@ -243,8 +243,8 @@
                                 <div class="modal-content">
                                     <div class="modal-body">
                                         <div class="text-center mt-2 mb-4">
-                                            <a href="{{route('index')}}" class="text-success">
-                                                <span><img src="{{asset('assets/images/logo-dark.png')}}"alt="" height="24"></span>
+                                            <a href="{{route('home')}}" class="text-success">
+                                                <span><img src="{{asset('assets/images/logo-dark.png')}}"alt=" height="24"></span>
                                             </a>
                                         </div>
 
@@ -252,12 +252,12 @@
 
                                             <div class="form-group">
                                                 <label for="emailaddress1">Email address</label>
-                                                <input class="form-control" type="email" id="emailaddress1" required="" placeholder="john@deo.com">
+                                                <input class="form-control" type="email" id="emailaddress1" required=" placeholder="john@deo.com">
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="password1">Password</label>
-                                                <input class="form-control" type="password" required="" id="password1" placeholder="Enter your password">
+                                                <input class="form-control" type="password" required=" id="password1" placeholder="Enter your password">
                                             </div>
 
                                             <div class="form-group">

@@ -39,7 +39,7 @@ class CreateClientsTable extends Migration {
 
 		Schema::table('clients', function (Blueprint $table) {
 
-		  $table->foreign('country_id')->references('id')->on('countries')->onUpdate('cascade')->onDelete('set null');
+			$table->foreign('country_id')->references('id')->on('countries')->onUpdate('cascade')->onDelete('set null');
 
 			$table->index('phone_number');
 			$table->index('custom_domain');

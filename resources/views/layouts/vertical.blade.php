@@ -2,12 +2,12 @@
     <html lang="en">
 
     <head>
-        @include('layouts.shared.title-meta', ['title' => "Log In"])
+        @include('layouts.shared.title-meta', ['title' => $title])
         @include('layouts.shared.head-content', ["demo" => "creative"])
         
         @yield('css')
 
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="{{asset('assets/js/jquery-3.1.1.min.js')}}"></script>
         <script src="{{asset('assets/js/vendor.min.js')}}"></script>
         <script src="{{asset('assets/js/jquery-ui.min.js')}}" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
         <script src="{{asset('assets/js/waitMe.min.js')}}"></script>

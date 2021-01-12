@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Client;
 
-use App\Models\User;
+use App\Http\Controllers\Client\BaseController;
+use App\Models\{Payment, User, Client, Country, Currency, Language};
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        //$vendors = User::with('country')->where('role_id', 1)->orderBy('created_at', 'DESC')->paginate(10);
+        return view('backend/vendor/index')->with(['users' => array()]);
     }
 
     /**
@@ -26,6 +28,8 @@ class UserController extends Controller
     {
         //
     }
+
+
 
     /**
      * Store a newly created resource in storage.

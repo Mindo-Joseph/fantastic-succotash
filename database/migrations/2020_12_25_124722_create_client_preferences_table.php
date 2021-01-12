@@ -22,15 +22,19 @@ class CreateClientPreferencesTable extends Migration
             $table->bigInteger('language_id')->unsigned()->nullable();
             $table->string('date_format', 25)->default('Y-m-d');
             $table->string('time_format', 25)->default('H:i');
+            $table->tinyInteger('fb_login')->default(0)->comment('1 - enable, 0 - disable')->index();
             $table->string('fb_client_id', 100)->nullable();
             $table->string('fb_client_secret', 100)->nullable();
             $table->string('fb_client_url', 200)->nullable();
+            $table->tinyInteger('twitter_login')->default(0)->comment('1 - enable, 0 - disable')->index();
             $table->string('twitter_client_id', 100)->nullable();
             $table->string('twitter_client_secret', 100)->nullable();
             $table->string('twitter_client_url', 200)->nullable();
+            $table->tinyInteger('google_login')->default(0)->comment('1 - enable, 0 - disable')->index();
             $table->string('google_client_id', 100)->nullable();
             $table->string('google_client_secret', 100)->nullable();
             $table->string('google_client_url', 200)->nullable();
+            $table->tinyInteger('apple_login')->default(0)->comment('1 - enable, 0 - disable')->index();
             $table->string('apple_client_id', 100)->nullable();
             $table->string('apple_client_secret', 100)->nullable();
             $table->string('apple_client_url', 200)->nullable();
@@ -44,24 +48,30 @@ class CreateClientPreferencesTable extends Migration
             $table->string('sms_key', 100)->nullable();
             $table->string('sms_secret', 100)->nullable();
             $table->string('sms_from', 20)->nullable();
-            $table->tinyInteger('verify_email')->default(0)->comment('0 - no, 1 - yes');
-            $table->tinyInteger('verify_phone')->default(0)->comment('0 - no, 1 - yes');
+            $table->tinyInteger('verify_email')->default(0)->comment('0 - no, 1 - yes')->index();
+            $table->tinyInteger('verify_phone')->default(0)->comment('0 - no, 1 - yes')->index();
             $table->bigInteger('web_template_id')->unsigned()->nullable();
             $table->bigInteger('app_template_id')->unsigned()->nullable();
+            $table->string('personal_access_token_v1', 100)->nullable();
+            $table->string('personal_access_token_v2', 100)->nullable();
+            $table->string('mail_type', 20)->default('smtp')->nullable()->index();
+            $table->string('mail_driver', 20)->nullable();
+            $table->string('mail_host', 30)->nullable();
+            $table->smallInteger('mail_port')->nullable();
+            $table->string('mail_username', 50)->nullable();
+            $table->string('mail_password', 50)->nullable();
+            $table->string('mail_encryption', 30)->nullable();
+            $table->string('mail_from', 50)->nullable();
             $table->timestamps();
         });
 
         Schema::table('client_preferences', function (Blueprint $table) {
-            $table->foreign('client_code')->references('id')->on('clients')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('client_code')->references('code')->on('clients')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('currency_id')->references('id')->on('currencies')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('language_id')->references('id')->on('languages')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('map_provider')->references('id')->on('map_providers')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('sms_provider')->references('id')->on('sms_providers')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('web_template_id')->references('id')->on('map_providers')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('app_template_id')->references('id')->on('sms_providers')->onUpdate('cascade')->onDelete('set null');
-            $table->string('personal_access_token_v1', 100)->nullable();
-            $table->string('personal_access_token_v2', 100)->nullable();
-
+            
         });
     }
 

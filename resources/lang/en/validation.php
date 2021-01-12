@@ -135,6 +135,12 @@ return [
         ],
     ],
 
+    'name.0' => [
+        'required' => 'The default language name is required',
+    ],
+
+    
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
