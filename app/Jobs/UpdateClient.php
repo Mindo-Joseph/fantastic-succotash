@@ -41,7 +41,7 @@ class UpdateClient implements ShouldQueue
         // dd($this->client_data);
         //$client = Client::where('id', $this->client_id)->first(['name', 'email', 'password', 'phone_number', 'password', 'database_path', 'database_name', 'database_username', 'database_password', 'logo', 'company_name', 'company_address', 'custom_domain', 'status'])->toarray();
 
-        $schemaName = 'royofoods' ?: config("database.connections.mysql.database");
+        $schemaName = 'royoorders' ?: config("database.connections.mysql.database");
         $default = [
             'driver' => env('DB_CONNECTION', 'mysql'),
             'host' => env('DB_HOST'),
