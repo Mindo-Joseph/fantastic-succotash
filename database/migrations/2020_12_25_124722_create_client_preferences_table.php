@@ -54,7 +54,7 @@ class CreateClientPreferencesTable extends Migration
             $table->bigInteger('app_template_id')->unsigned()->nullable();
             $table->string('personal_access_token_v1', 100)->nullable();
             $table->string('personal_access_token_v2', 100)->nullable();
-            $table->string('mail_type', 20)->default('smtp')->nullable()->index();
+            $table->string('mail_type', 20)->default('smtp')->nullable();
             $table->string('mail_driver', 20)->nullable();
             $table->string('mail_host', 30)->nullable();
             $table->smallInteger('mail_port')->nullable();
@@ -62,6 +62,10 @@ class CreateClientPreferencesTable extends Migration
             $table->string('mail_password', 50)->nullable();
             $table->string('mail_encryption', 30)->nullable();
             $table->string('mail_from', 50)->nullable();
+            $table->tinyInteger('is_hyperlocal')->default(0)->comment('0 - no, 1 - yes');
+            $table->tinyInteger('need_delivery_service')->default(0)->comment('0 - no, 1 - yes');
+            $table->string('dispatcher_key_1', 100)->nullable();
+            $table->string('dispatcher_key_2', 100)->nullable();
             $table->timestamps();
         });
 
@@ -71,7 +75,13 @@ class CreateClientPreferencesTable extends Migration
             $table->foreign('language_id')->references('id')->on('languages')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('map_provider')->references('id')->on('map_providers')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('sms_provider')->references('id')->on('sms_providers')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('web_template_id')->references('id')->on('templates')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('app_template_id')->references('id')->on('templates')->onUpdate('cascade')->onDelete('set null');
             
+             $table->index('is_hyperlocal');
+             $table->index('need_delivery_service');
+             $table->index('mail_type');
+
         });
     }
 
