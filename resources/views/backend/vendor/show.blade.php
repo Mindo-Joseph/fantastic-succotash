@@ -248,100 +248,103 @@
                         <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} " id="configuration">
 
                             <div class="row">
-
-                                <div class="col-md-4">
+                                <div class="col-md-12 card-box">
+                                    <h4 class="mb-4 text-uppercase"><i data-feather="tool"></i> Configuration</h4>
                                     <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
                                         @csrf
-                                        <div class="row mb-2 card-box">
-                                            <h4 class="mb-4 text-uppercase"><i data-feather="tool"></i> Configuration</h4>
-                                            <div class="col-md-12">
+                                        <div class="row mb-2">
+                                            <div class="col-md-4">
                                                 <div class="form-group" id="order_pre_timeInput">
                                                     {!! Form::label('title', 'Order Prepare Time(In minutes)',['class' => 'control-label']) !!}
                                                     <input class="form-control" onkeypress="return isNumberKey(event)" name="order_pre_time" type="text" value="{{$vendor->order_pre_time}}">
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-4">
                                                 <div class="form-group" id="auto_reject_timeInput">
                                                     {!! Form::label('title', 'Auto Reject Time(In minutes, 0 for no rejection)',['class' => 'control-label']) !!}
                                                     <input class="form-control" onkeypress="return isNumberKey(event)" name="auto_reject_time" type="text" value="{{$vendor->auto_reject_time}}">
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-4">
                                                 <div class="form-group" id="order_min_amountInput">
                                                     {!! Form::label('title', 'Order Min Amount',['class' => 'control-label']) !!}
                                                     <input class="form-control" onkeypress="return isNumberKey(event)" name="order_min_amount" type="text" value="{{$vendor->order_min_amount}}">
                                                 </div>
                                             </div>
-                                            
-                                            <div class="col-md-12">
+                                        </div>
+                                        <div class="row mb-2">    
+                                            <div class="col-md-4">
                                                 <div class="form-group" id="commission_percentInput">
                                                     {!! Form::label('title', 'Commission Percent',['class' => 'control-label']) !!}
                                                     <input class="form-control" name="commission_percent" type="text" value="{{$vendor->commission_percent}}" onkeypress="return isNumberKey(event)">
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-4">
                                                 <div class="form-group" id="commission_fixed_per_orderInput">
                                                     {!! Form::label('title', 'Commission Fixed Per Order',['class' => 'control-label']) !!} 
                                                     <input class="form-control" name="commission_fixed_per_order" type="text" value="{{$vendor->commission_fixed_per_order}}" onkeypress="return isNumberKey(event)">
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-4">
                                                 <div class="form-group" id="commission_monthlyInput">
                                                     {!! Form::label('title', 'Commission Monthly',['class' => 'control-label']) !!}
                                                     <input class="form-control" onkeypress="return isNumberKey(event)" name="commission_monthly" type="text" value="{{$vendor->commission_monthly}}">
                                                 </div>
                                             </div>
+                                        </div>
 
-                                            <div class="col-md-12 text-right">
-                                                <button class="btn btn-blue waves-effect waves-light">Submit</button>
-                                            </div>
+                                        <div class="col-md-12 text-right">
+                                            <button class="btn btn-blue waves-effect waves-light">Submit</button>
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="col-md-12">
-                                        <div class="row card-box">
-                                        
-                                            <div class="col-md-4"> 
-                                                <div class="table-responsive">
-                                                    <table class="table table-centered table-nowrap table-striped" id="products-datatable">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Name</th>
-                                                                <th style="width: 85px;">Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach($areas as $geo)
-                                                            <tr>
-                                                                <td class="table-user">
-                                                                    <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$geo->name}}</a>
-                                                                </td>
+                            </div>
 
-                                                                <td>
-                                                                    <button type="button" class="btn btn-primary-outline action-icon editAreaBtn" area_id="{{$geo->id}}"><h3><i class="mdi mdi-square-edit-outline"></i></h3></button> 
-                                                                   
-                                                                    <form action="{{route('vendor.serviceArea.delete', $vendor->id)}}" method="POST" class="action-icon">
-                                                                        @csrf
-                                                                        <input type="hidden" value="{{$geo->id}}" name="area_id">
-                                                                        <button type="submit" onclick="return confirm('Are you sure? You want to delete the banner.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
+                            <div class="row">
+                                <div class="col-md-12 card-box">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h4 class="mb-2 text-uppercase"><i data-feather="tool"></i> Service Area <span style=" float:right;"><button class="btn btn-info openServiceModal"> Add Service Area</button></span></h4>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"> 
+                                            <div class="table-responsive" style="max-height: 612px; overflow-y: auto;">
+                                                <table class="table table-centered table-nowrap table-striped" id="products-datatable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th style="width: 85px;">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($areas as $geo)
+                                                        <tr>
+                                                            <td class="table-user">
+                                                                <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$geo->name}}</a>
+                                                            </td>
 
-                                                                    </form>
-                                                                </td>
-                                                            </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                            <td>
+                                                                <button type="button" class="btn btn-primary-outline action-icon editAreaBtn" area_id="{{$geo->id}}"><h3><i class="mdi mdi-square-edit-outline"></i></h3></button> 
+                                                               
+                                                                <form action="{{route('vendor.serviceArea.delete', $vendor->id)}}" method="POST" class="action-icon">
+                                                                    @csrf
+                                                                    <input type="hidden" value="{{$geo->id}}" name="area_id">
+                                                                    <button type="submit" onclick="return confirm('Are you sure? You want to delete the banner.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
 
+                                                                </form>
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
                                             </div>
 
-                                            <div class="col-md-8">
-                                                <h4 class="mb-4 text-uppercase"><i data-feather="tool"></i> Service Area <span style=" float:right;"><button class="btn btn-info openServiceModal"> Add Service Area</button></span></h4>
-
-                                                <div class="card-box p-0 m-0" style="height:600px;">
-                                                    <div id="show_map-canvas"></div>
-                                                </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            
+                                            <div class="card-box p-1 m-0" style="height:600px;">
+                                                <div id="show_map-canvas"></div>
                                             </div>
                                         </div>
                                     </div>

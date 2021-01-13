@@ -5,6 +5,7 @@
 use App\Models\Client;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +25,8 @@ $factory->define(Client::class, function (Faker $faker) {
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'phone_number' => $faker->unique()->phoneNumber,
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // 1234qwer
+        //'encpass' => Crypt::encryptString('1234qwer'),
         'database_path' => $faker->url,
         'database_name' => $faker->userName,
         'database_username' => $faker->userName,

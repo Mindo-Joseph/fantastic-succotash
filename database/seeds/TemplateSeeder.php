@@ -16,14 +16,14 @@ class TemplateSeeder extends Seeder
         $maps = array(
             array(
                 'id' => 1,
-                'name' => 'default',
-                'image' => 'default',
+                'name' => 'Default',
+                'image' => 'default/templete.jpg',
                 'for' => '1'
             ),
             array(
                 'id' => 2,
-                'name' => 'default',
-                'image' => 'default',
+                'name' => 'Default',
+                'image' => 'default/templete.jpg',
                 'for' => '2'
             ),
         ); 

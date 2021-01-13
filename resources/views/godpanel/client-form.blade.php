@@ -23,7 +23,11 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
+                    <?php $disable = $style = ""; ?>
                     @if(isset($client))
+
+                    <?php $disable = 'disabled';
+                    $style = "cursor:not-allowed;"; ?>
                     <form id="UpdateClient" method="post" action="{{route('client.update', $client->id)}}"
                         enctype="multipart/form-data">
                         @method('PUT')
@@ -33,11 +37,10 @@
                         @csrf
                         <div class="row mb-2">
                             <div class="col-md-4"> <!--  Storage::disk('s3')->url($client->logo)  --> 
-                                <input type="file" data-plugins="dropify" name="logo" data-default-file="{{isset($client->logo) ?  : ''}}" />
+                                <input type="file" data-plugins="dropify" name="logo" data-default-file="{{isset($client->logo) ? url('storage/'.$client->logo) : ''}}" {{$disable}} {{$style}}/>
                                 <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
                             </div>
                         </div>
-
                         <div class=" row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -78,18 +81,19 @@
                                     @endif
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="password" class="control-label">PASSWORD</label>
-                                    <input type="password" class="form-control" id="password" name="password" value="{{ old('password', $client->password ?? '')}}" placeholder="Enter password" style="text-security:disc; -webkit-text-security:disc;">
-                                    @if($errors->has('password'))
+                                    <label for="encpass" class="control-label"> {{ (!isset($client) || !isset($client->id)) ? 'PASSWORD' : 'PASSWORD(Remain blank if not want to change)' }}</label>
+                                    <input type="password" class="form-control" id="encpass" name="encpass" value="" placeholder="Enter password" >
+                                    @if($errors->has('encpass'))
                                     <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
+                                        <strong>{{ $errors->first('encpass') }}</strong>
                                     </span>
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="database_path" class="control-label">DATABASE PATH</label>
                                     <input type="text" class="form-control" name="database_path" id="database_path"
@@ -101,13 +105,20 @@
                                     </span>
                                     @endif
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="database_name" class="control-label">DATABASE NAME</label>
-                                    <input type="text" class="form-control" name="database_name" id="database_name"
+                                    @if(!isset($client) || !isset($client->id))
+                                        <input type="text" class="form-control" name="database_name" id="database_name"
                                         value="{{ old('database_name', $client->database_name ?? '')}}"
                                         placeholder="Please Enter One String Example:-'mydatabase' ">
+                                    @else
+                                        <input type="text" class="form-control" name="database_name" id="database_name"
+                                        value="{{ old('database_name', $client->database_name ?? '')}}"
+                                        placeholder="Please Enter One String Example:-'mydatabase' " disabled="" style="cursor:not-allowed;">
+
+                                    @endif
                                     @if($errors->has('database_name'))
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $errors->first('database_name') }}</strong>
@@ -115,7 +126,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <!--<div class="col-md-6">
                                 <div class="form-group">
                                     <label for="database_username" class="control-label">DATABASE USERNAME</label>
                                     <input type="text" class="form-control" name="database_username" id="database_username"
@@ -140,7 +151,7 @@
                                     </span>
                                     @endif
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -182,11 +193,9 @@
                                     @endif
                                 </div>
                             </div>
-
                             <div class="col-md-12">
                                 <button type="submit" class="btn btn-info waves-effect waves-light">Submit</button>
                             </div>
-
                         </div>
                     </form>
                 </div>

@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\Config;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use App\Jobs\ProcessClientDatabase;
+use App\Jobs\{ProcessClientDatabase, EditClient};
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Session;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Storage; 
 
 class ClientController extends Controller
 {
@@ -49,7 +49,7 @@ class ClientController extends Controller
     public function edit($id)
     {
         $client = Client::find($id);
-        return view('godpanel/update-client')->with('client', $client);
+        return view('godpanel/client-form')->with('client', $client);
     }
     
     /**
@@ -94,38 +94,52 @@ class ClientController extends Controller
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
-
         $save = $this->saveClient($request, $client, 'true');
 
         if(!$save){
             return redirect()->back()->withErrors(['error' => "Something went wrong."]);
         }
-
+        $this->dispatchNow(new EditClient($client->id));
         return redirect()->route('client.index')->with('success', 'Client Updated successfully!');
     }
 
     /* save and update client information */
     public function saveClient(Request $request, Client $client, $update = 'false')
     {
-        foreach ($request->only('name', 'phone_number', 'database_path', 'database_username', 'database_password', 'company_name', 'company_address', 'custom_domain') as $key => $value) {
+        foreach ($request->only('name', 'phone_number', 'company_name', 'company_address', 'custom_domain') as $key => $value) {
             $client->{$key} = $value;
         }
+ 
+        if( $update == 'false'){
+            $client->logo = 'default/default_logo.png';
+            $client->database_path = '';
+            $client->database_username = env('DB_USERNAME');
+            $client->database_password = env('DB_PASSWORD');
+           
+            $client->email = $request->email;
+            $client->database_name = $request->database_name;
+            $client->password = Hash::make($request->encpass);
+            $client->encpass = $request->encpass;
+            $client->code = $this->randomString();
+            $client->country_id = $request->country ? $request->country : NULL;
+            $client->timezone = $request->timezone ? $request->timezone : NULL;
+        }
+        $isPasswordUpdate = 0;
+        if($update == 'true'){
+            if($request->has('encpass') && $request->has('encpass')){
+                $client->password = Hash::make($request->encpass);
+                $client->encpass = $request->encpass;
+                $isPasswordUpdate = 1;
 
+            }
+        }
         if ($request->hasFile('logo')) {    /* upload logo file */
             $file = $request->file('logo');
             $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
             //$s3filePath = '/assets/Clientlogo/' . $file_name;
             //$path = Storage::disk('s3')->put($s3filePath, $file,'public');
             $client->logo = $request->file('logo')->storeAs('/Clientlogo', $file_name, 'public');
-        }
 
-        if( $update == 'false'){
-            $client->email = $request->email;
-            $client->database_name = $request->database_name;
-            $client->password = Hash::make($request->password);
-            $client->code = $this->randomString();
-            $client->country_id = $request->country ? $request->country : NULL;
-            $client->timezone = $request->timezone ? $request->timezone : NULL;
         }
         $client->save();
         return $client;
@@ -160,10 +174,20 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $getClient = Client::where('id', $id)->update(['is_deleted' => 1]);
-        return redirect()->back()->with('success', 'Client deleted successfully!');
+        $client = Client::where('id', $id)->first();
+        $client->status = $request->action;
+        $msg = '';
+        if($request->action == 3){
+            $client->is_deleted = 1;
+            $msg = 'deleted';
+        }else{
+            $client->is_blocked = ($request->action == 2) ? 1 : 0;
+            $msg = ($request->action == 2) ? 'blocked' : 'unblocked';
+        }
+        $client->save();
+        return redirect()->back()->with('success', 'Client account ' . $msg . ' successfully!');
     }
 
     /**

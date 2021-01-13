@@ -80,17 +80,12 @@
                                 <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
                                 <div class="card-body">
                                     <div class="row">
-                                         <div class="col-sm-8">
-                                            <h5 class="card-title ">{{$webt->name}}</h5>
-                                         </div>
-                                         <div class="col-sm-4 custom-control custom-radio" style="text-align: right;">
+                                        <div class="col-sm-12 custom-control custom-radio">
                                             <input type="radio" value="{{$webt->id}}" id="webTemplate{{$webt->id}}" name="web_template_id" class="custom-control-input" {{ ($preference && $preference->web_template_id == $webt->id)? "checked" : "" }}>
-                                            <label class="custom-control-label" for="webTemplate{{$webt->id}}">Select</label>
-                                         </div>
+                                            <label class="custom-control-label" for="webTemplate{{$webt->id}}">{{$webt->name}}</label>
+                                        </div>
                                     </div>
-                                    <p class="card-text">Some quick example text to build on the card title and make
-                                        up the bulk of the card's content. With supporting text below as a natural lead-in to additional content.
-                                    </p>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -142,17 +137,11 @@
                                 <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
                                 <div class="card-body">
                                     <div class="row">
-                                         <div class="col-sm-8">
-                                            <h5 class="card-title ">{{$webt->name}}</h5>
-                                         </div>
-                                         <div class="col-sm-4 custom-control custom-radio" style="text-align: right;">
+                                         <div class="col-sm-4 custom-control custom-radio">
                                             <input type="radio" value="{{$webt->id}}" id="appTemplate{{$webt->id}}" name="app_template_id" class="custom-control-input" {{ ($preference && $preference->app_template_id == $webt->id)? "checked" : "" }}>
-                                        <label class="custom-control-label" for="appTemplate{{$webt->id}}">Select</label>
+                                        <label class="custom-control-label" for="appTemplate{{$webt->id}}">{{$webt->name}}</label>
                                          </div>
                                     </div>
-                                    <p class="card-text">Some quick example text to build on the card title and make
-                                        up the bulk of the card's content. With supporting text below as a natural lead-in to additional content.
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -197,7 +186,7 @@
                         Define and update the nomenclature
                     </p>
                     <div class="row mb-2">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group mb-3">
                                 <label for="currency">CURRENCY</label>
                                 <select class="form-control" id="currency" name="currency_id">
@@ -213,13 +202,20 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="col-md-4">
+                            <label for="languages">Main Language</label>
+                            <input type="text" class="form-control" value="English" disabled="" style="cursor:not-allowed;">
+                        </div>
                  
-                        <div class="col-md-6">
-                            <label for="languages">Language</label>
+                        <div class="col-md-4">
+                            <label for="languages">Additional Languages</label>
                             <select class="form-control select2-multiple" id="languages" name="languages[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
 
                                 @foreach($languages as $lang)
-                                     <option value="{{$lang->id}}" {{ (isset($preference) && in_array($lang->id, $cli_langs))? "selected" : "" }}> {{$lang->name}} </option>
+                                    @if($lang->id != 1)
+                                        <option value="{{$lang->id}}" {{ (isset($preference) && in_array($lang->id, $cli_langs))? "selected" : "" }}> {{$lang->name}} </option>
+                                    @endif
                                 @endforeach
                             </select>
                             @if($errors->has('languages'))
@@ -227,7 +223,8 @@
                                 <strong>{{ $errors->first('languages') }}</strong>
                             </span>
                             @endif
-                        </div> 
+                        </div>
+
                         <div class="col-md-6">
                             <label>Unit</label>
                             <div class="col-sm-12">

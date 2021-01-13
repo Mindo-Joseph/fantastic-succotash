@@ -89,7 +89,6 @@ class ClientPreferenceController extends BaseController
                 $preference->Default_longitude = $request->Default_longitude;
             }
         }
-
         
         if($request->has('social_login') && $request->social_login == '1'){
             $preference->fb_login = ($request->has('fb_login') && $request->fb_login == 'on') ? 1 : 0; 
@@ -107,7 +106,10 @@ class ClientPreferenceController extends BaseController
 
             $exist_langs = array();
 
+            $exist_langs[] = 1;
+
             foreach ($request->languages as $langs) {
+                
                 $clientLang = ClientLanguage::where('client_code', Auth::user()->code)->where('language_id', $langs)->first();
                 if(!$clientLang){
                     $clientLang = new ClientLanguage();
@@ -115,10 +117,14 @@ class ClientPreferenceController extends BaseController
                     $clientLang->language_id = $langs;
                     $clientLang->save();
                 }
-                $exist_langs[] = $clientLang->id;
+                $exist_langs[] = $clientLang->language_id;
 
             }
-            ClientLanguage::where('client_code', Auth::user()->code)->whereNotIn('id', $exist_langs)->delete();
+
+            $delCount = ClientLanguage::where('client_code', Auth::user()->code)->whereNotIn('language_id', $exist_langs)->count();
+            if($delCount > 0){
+                $delete = ClientLanguage::where('client_code', Auth::user()->code)->whereNotIn('language_id', $exist_langs)->delete();
+            }
             
         }
         $preference->save();

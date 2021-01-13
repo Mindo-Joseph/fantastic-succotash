@@ -55,6 +55,11 @@ class LoginController extends Controller
 
         if ($guard) {
             $client = Client::where('email', $request->email)->first();
+            if($client->is_blocked == 1 || $client->is_deleted == 1){
+                return redirect()->back()->with('Error', 'Your account has been blocked by admin. Please contact administration.');
+            }
+
+
             Auth::login($client);
            
             return redirect()->route('client.dashboard');

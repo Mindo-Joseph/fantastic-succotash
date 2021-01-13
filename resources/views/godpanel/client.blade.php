@@ -45,11 +45,12 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Email</th>
+                                    <th>Password</th>
                                     <th>Phone</th>
-                                    <th>DB Path</th>
                                     <th>DB Name</th>
-                                    <th>DB Username</th>
+                                    <th>DB User</th>
                                     <th>DB Password</th>
+                                    <th>Client Code</th>
                                     <th style="width: 85px;">Action</th>
                                 </tr>
                             </thead>
@@ -57,46 +58,30 @@
                                 @foreach($clients as $client)
                                 <tr>
                                     <td class="table-user">
-                                        <a href="javascript:void(0);"
-                                            class="text-body font-weight-semibold">{{$client->name}}</a>
+                                        <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$client->name}}</a>
                                     </td>
+                                    <td> {{$client->email}} </td>
+                                    <td style="width:100px;max-width:100px;"> {{$client->encpass}} </td>
+                                    <td> {{$client->phone_number}} </td>
+                                    <td> {{$client->database_name}} </td>
+                                    <td> {{$client->database_username}} </td>
+                                    <td> {{$client->database_password}} </td>
+                                    <td> {{$client->code}} </td>
                                     <td>
-                                        {{$client->email}}
-                                    </td>
-                                    <td>
-                                        {{$client->phone_number}}
-                                    </td>
-                                    <td>
-                                        {{$client->database_path}}
-                                    </td>
-                                    <td>
-                                        {{$client->database_name}}
-                                    </td>
-                                    <td>
-                                        {{$client->database_username}}
-                                    </td>
-                                    <td>
-                                        {{$client->database_password}}
-                                    </td>
-                                    <!-- <td>
-                                        <span class="badge bg-soft-success text-success">Active</span>
-                                    </td> -->
 
-                                    <td>
-                                        <a href="{{route('client.edit', $client->id)}}" class="action-icon"> <i
-                                                class="mdi mdi-square-edit-outline"></i></a>
-                                        <!-- <a href="{{route('client.destroy', $client->id)}}" class="action-icon">
-                                            <i class="mdi mdi-delete"></i>
-                                        </a> -->
-                                        <form method="POST" action="{{route('client.destroy', $client->id)}}">
+                                        <a href="{{route('client.edit', $client->id)}}" class="btn btn-primary-outlineaction-icon"> <h3><i class="mdi mdi-square-edit-outline"></i></h3></a>
+                                        
+                                        <button class="btn btn-primary-outline blockClient action-icon" cli_id="{{$client->id}}" status="{{$client->status}}"> <h3><i class="mdi {{ ($client->status == 2) ? 'mdi-lock-open-variant-outline' : 'mdi-lock-outline'}}"></i></h3></button>
+
+                                        <button class="btn btn-primary-outline deleteClient action-icon" cli_id="{{$client->id}}"> <h3><i class="mdi mdi-delete"></i></h3></button>
+
+                                        <form action="{{route('client.destroy', $client->id)}}" id="formClient_{{$client->id}}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <div class="form-group">
-                                                <button type="submit" class="btn btn-primary-outline action-icon"> <i
-                                                        class="mdi mdi-delete"></i></button>
-
-                                            </div>
+                                            <input type="hidden" name="action" value="block" id="client_{{$client->id}}">
                                         </form>
+                                       
+                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -121,6 +106,42 @@
 <script src="{{asset('assets/libs/dropify/dropify.min.js')}}"></script>
 <!-- Page js-->
 <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
+
+<script type="text/javascript">
+
+    $('.blockClient').click(function(){
+        var status = $(this).attr('status');
+        var id = $(this).attr('cli_id');
+
+        var msg = 'Are you sure? You want to block this client.';
+        var action = 2;
+        if(status == 2) {
+            msg = 'Are you sure? You want to activate this client.';
+            action = 1;
+        }
+
+        if(confirm(msg)) {
+            document.getElementById('client_'+id).value = action;
+            $('#formClient_'+id).submit();
+        }
+        return false;
+    });
+
+    $('.deleteClient').click(function(){
+        var status = $(this).attr('status');
+        var id = $(this).attr('cli_id');
+
+        var msg = 'Are you sure? You want to delete this client.';
+        var action = 3;
+
+        if(confirm(msg)) {
+            document.getElementById('client_'+id).value = action;
+            $('#formClient_'+id).submit();
+        }
+        return false;
+    });
+    
+</script>
 
 <!-- @parent
 

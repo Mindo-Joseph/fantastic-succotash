@@ -133,6 +133,13 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+
+        'encpass' => [
+            'required' => 'The password field is required.',
+            'string' => 'The password field must be a string.',
+            'max' => 'The password should be less than 60 characters.', 
+            'min' => 'The password must be at least 6 characters.'
+        ],
     ],
 
     'name.0' => [

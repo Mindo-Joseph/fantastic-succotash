@@ -20,6 +20,7 @@ class CreateClientsTable extends Migration {
 			$table->string('email', 60)->unique();
 			$table->string('phone_number', 24)->nullable();
 			$table->string('password');
+			$table->string('encpass')->nullable();
 			$table->bigInteger('country_id')->unsigned()->nullable();
 			$table->string('timezone', 25)->nullable();
 			$table->string('custom_domain', 40)->nullable();
