@@ -80,8 +80,16 @@ class ProcessClientDatabase implements ShouldQueue
                 'need_delivery_service' => 0
             ];
 
-            $cli_langs = array('client_code' => $client['code'], 'language_id' => '1');
-            $cli_currs = array('client_code' => $client['code'], 'currency_id' => '147');
+            $cli_langs = [
+                'client_code' => $client['code'],
+                'language_id' => '1'
+               
+            ];
+
+            $cli_currs = [
+                'client_code' => $client['code'],
+                'currency_id' => '147'
+            ];            
 
             $query = "CREATE DATABASE $schemaName;";
 
