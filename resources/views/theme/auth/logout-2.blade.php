@@ -3,7 +3,7 @@
     <head>
         @include('layouts.shared.title-meta', ['title' => "Logout"])
 
-        @include('layouts.shared.head-css')
+        @include('layouts.shared.head-content')
     </head>
 
     <body class="auth-fluid-pages pb-0">
@@ -17,13 +17,13 @@
                         <!-- Logo -->
                         <div class="auth-brand text-center text-lg-left">
                             <div class="auth-logo">
-                                <a href="{{route('index')}}" class="logo logo-dark text-center">
+                                <a href="{{route('any', ['dashboard'])}}" class="logo logo-dark text-center">
                                     <span class="logo-lg">
                                         <img src="{{asset('assets/images/logo-dark.png')}}" alt="" height="22">
                                     </span>
                                 </a>
             
-                                <a href="{{route('index')}}" class="logo logo-light text-center">
+                                <a href="{{route('any', ['dashboard'])}}" class="logo logo-light text-center">
                                     <span class="logo-lg">
                                         <img src="{{asset('assets/images/logo-light.png')}}" alt="" height="22">
                                     </span>

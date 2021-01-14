@@ -80,9 +80,8 @@ class ProcessClientDatabase implements ShouldQueue
                 'need_delivery_service' => 0
             ];
 
-            $cl = [
-                'client_code'           => $client['code'],
-                'language_id'           => '1',
+            $cli_langs = array('client_code' => $client['code'], 'language_id' => '1');
+            $cli_currs = array('client_code' => $client['code'], 'currency_id' => '147');
 
             $query = "CREATE DATABASE $schemaName;";
 
@@ -94,7 +93,8 @@ class ProcessClientDatabase implements ShouldQueue
             Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--database' => $schemaName]);
             DB::connection($schemaName)->table('clients')->insert($client);
             DB::connection($schemaName)->table('client_preferences')->insert($settings);
-            DB::connection($schemaName)->table('client_languages')->insert($cl);
+            DB::connection($schemaName)->table('client_languages')->insert($cli_langs);
+            DB::connection($schemaName)->table('client_currencies')->insert($cli_currs);
 
             DB::disconnect($schemaName);
         } catch (Exception $ex) {

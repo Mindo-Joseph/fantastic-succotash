@@ -32,6 +32,8 @@ class CreateVendorsTable extends Migration
             $table->tinyInteger('takeaway')->default('0')->comment('1 for yes, 0 for no');
             $table->tinyInteger('delivery')->default('0')->comment('1 for yes, 0 for no');
             $table->tinyInteger('status')->default('1')->comment('1-active, 0-pending, 2-blocked');
+            $table->tinyInteger('add_category')->default(1)->comment('0 for no, 1 for yes');
+            $table->tinyInteger('setting')->default(0)->comment('0 for no, 1 for yes');
             $table->timestamps();
 
             $table->index('name');
@@ -44,7 +46,7 @@ class CreateVendorsTable extends Migration
             $table->index('dine_in');
             $table->index('takeaway');
             $table->index('delivery');
-            $table->index('status');
+            $table->index('add_category');
 
         });
     }

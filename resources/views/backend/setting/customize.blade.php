@@ -186,29 +186,29 @@
                         Define and update the nomenclature
                     </p>
                     <div class="row mb-2">
-                        <div class="col-md-4">
-                            <div class="form-group mb-3">
-                                <label for="currency">CURRENCY</label>
-                                <select class="form-control" id="currency" name="currency_id">
-                                    @foreach($currencies as $currency)
-                                    <option value="{{ $currency->id }}" {{ ($preference && $preference->currency_id == $currency->id)? "selected" : "" }}>{{ $currency->iso_code }} - {{ $currency->symbol }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                                @if($errors->has('currency_id'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('currency_id') }}</strong>
-                                </span>
-                                @endif
-                            </div>
+                        <div class="col-md-6">
+                            <label for="languages">Primary Currency</label>
+                            <input type="text" class="form-control" value="{{ $preference->primary->currency->iso_code }} - {{ $preference->primary->currency->symbol }}" disabled="" style="cursor:not-allowed;">
+                        </div>
+                 
+                        <div class="col-md-6">
+                            <label for="languages">Additional Currency</label>
+                            <select class="form-control select2-multiple" id="currency" name="currency_data[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+
+                                @foreach($currencies as $currency)
+                                    @if($currency->id != 147)
+                                        <option value="{{$currency->id}}" {{ (isset($preference) && in_array($currency->id, $cli_currs))? "selected" : "" }}> {{$currency->iso_code}} {{$currency->symbol}} </option>
+                                    @endif
+                                @endforeach
+                            </select>
                         </div>
 
-                        <div class="col-md-4">
-                            <label for="languages">Main Language</label>
+                        <div class="col-md-6">
+                            <label for="languages">Primary Language</label>
                             <input type="text" class="form-control" value="English" disabled="" style="cursor:not-allowed;">
                         </div>
                  
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="languages">Additional Languages</label>
                             <select class="form-control select2-multiple" id="languages" name="languages[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
 
@@ -218,11 +218,6 @@
                                     @endif
                                 @endforeach
                             </select>
-                            @if($errors->has('languages'))
-                            <span class="text-danger" role="alert">
-                                <strong>{{ $errors->first('languages') }}</strong>
-                            </span>
-                            @endif
                         </div>
 
                         <div class="col-md-6">

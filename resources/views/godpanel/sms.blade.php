@@ -62,8 +62,8 @@
                                     <td> {{ $s->provider }} </td>
                                     <td> {{ $s->keyword }} </td>
                                     <td> {{ ($s->status == 1) ? 'Available' : 'Not Available' }} </td>
-                                    <td> 
-                                        <a class="btn btn-sm btn-danger" onclick="return confirm('Are you sure? You want to delete the sms provider.')" href="{{URL::to('godpanel/sms/destroy/'.$s->id)}}"><i class="fa fa-trash"></i></a>
+                                    <td>
+                                        <a onclick="return confirm('Are you sure? You want to delete the sms provider.')" href="{{URL::to('godpanel/sms/destroy/'.$s->id)}}" class="btn btn-primary-outline action-icon"> <h3><i class="mdi mdi-delete"></i></h3></a>
                                     </td>
                                 </tr>
                                 @endforeach

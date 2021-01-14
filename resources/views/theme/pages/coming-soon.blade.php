@@ -4,7 +4,7 @@
 <head>
     @include('layouts.shared.title-meta', ['title' => "Coming Soon"])
 
-    @include('layouts.shared.head-css')
+    @include('layouts.shared.head-content')
 
 </head>
 
@@ -17,7 +17,7 @@
 
                     <div class="text-center">
                         <h2>
-                            <a href="{{route('index')}}">
+                            <a href="{{route('any', ['dashboard'])}}">
                                 <img src="{{asset('assets/images/logo-light.png')}}" alt="main-logo" height="24" />
                             </a>
                         </h2>

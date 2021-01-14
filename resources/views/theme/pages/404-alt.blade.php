@@ -26,7 +26,7 @@
                         it happens to the best of us. You might want to check your internet connection.
                         Here's a little tip that might help you get back on track.</p>
 
-                    <a href="{{route('index')}}" class="btn btn-success waves-effect waves-light">Back to Dashboard</a>
+                    <a href="{{route('any', ['dashboard'])}}" class="btn btn-success waves-effect waves-light">Back to Dashboard</a>
                 </div>
                 <!-- end row -->
 

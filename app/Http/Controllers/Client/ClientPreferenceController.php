@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Client\BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage};
+use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency};
 
 class ClientPreferenceController extends BaseController
 {
@@ -39,19 +39,24 @@ class ClientPreferenceController extends BaseController
         $webTemplates = Template::where('for', '1')->get();
         $appTemplates = Template::where('for', '2')->get();
         $currencies = Currency::where('id', '>', '0')->get();
-        $languages = Language::where('id', '>', '0')->get();
-        $preference = ClientPreference::with('language', 'domain')->select('client_code', 'theme_admin', 'distance_unit', 'currency_id', 'language_id', 'date_format', 'time_format', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'verify_email', 'verify_phone', 'web_template_id', 'app_template_id')
+        $languages = Language::where('id', '>', '0')->get(); /*  cprimary - currency primary*/
+        $preference = ClientPreference::with('language', 'domain', 'currency', 'primary.currency')->select('client_code', 'theme_admin', 'distance_unit', 'currency_id', 'language_id', 'date_format', 'time_format', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'verify_email', 'verify_phone', 'web_template_id', 'app_template_id')
                         ->where('client_code', Auth::user()->code)->first();
         $client = Auth::user();
         $cli_langs = array();
+        $cli_currencies = array();
+
         if(!$preference){
             $preference = new ClientPreference();
         }else{
+            foreach ($preference->currency as $key => $value) {
+                $cli_currencies[] = $value->currency_id;
+            }
             foreach ($preference->language as $key => $value) {
                 $cli_langs[] = $value->language_id;
             }
         }
-        return view('backend/setting/customize')->with(['client' => $client, 'preference' => $preference, 'webTemplates' => $webTemplates, 'appTemplates' => $appTemplates, 'currencies' => $currencies, 'languages' => $languages, 'cli_langs' => $cli_langs]);
+        return view('backend/setting/customize')->with(['client' => $client, 'preference' => $preference, 'webTemplates' => $webTemplates, 'appTemplates' => $appTemplates, 'currencies' => $currencies, 'languages' => $languages, 'cli_langs' => $cli_langs, 'cli_currs' => $cli_currencies]);
     }
 
     /**
@@ -63,6 +68,7 @@ class ClientPreferenceController extends BaseController
      */
     public function update(Request $request, $code)
     {
+        //dd($request->all());
         $cp = new ClientPreference();
         $preference = ClientPreference::where('client_code', Auth::user()->code)->first();
 
@@ -71,8 +77,8 @@ class ClientPreferenceController extends BaseController
             $preference = new ClientPreference();
             $preference->client_code = $code;
         }
-        //dd($request->all());
-        $keyShouldNot = array('Default_location_name', 'Default_latitude', 'Default_longitude', 'is_hyperlocal', '_token', 'social_login', 'send_to', 'languages', 'hyperlocals');
+        
+        $keyShouldNot = array('Default_location_name', 'Default_latitude', 'Default_longitude', 'is_hyperlocal', '_token', 'social_login', 'send_to', 'languages', 'hyperlocals', 'currency_data');
 
         foreach ($request->all() as $key => $value) {
 
@@ -101,6 +107,29 @@ class ClientPreferenceController extends BaseController
             $preference->verify_email = ($request->has('verify_email') && $request->verify_email == 'on') ? 1 : 0;
             $preference->verify_phone = ($request->has('verify_phone') && $request->verify_phone == 'on') ? 1 : 0;
             $preference->need_delivery_service = ($request->has('need_delivery_service') && $request->need_delivery_service == 'on') ? 1 : 0;
+        }
+
+        if($request->has('currency_data')){
+
+            $exist = array();
+            $exist[] = 147;
+            foreach ($request->currency_data as $cur) {
+                
+                $currs = ClientCurrency::where('client_code', Auth::user()->code)->where('currency_id', $cur)->first();
+                if(!$currs){
+                    $currs = new ClientCurrency();
+                    $currs->client_code = Auth::user()->code;
+                    $currs->currency_id = $cur;
+                    $currs->save();
+                }
+                $exist[] = $currs->currency_id;
+            }
+
+            $delCount = ClientCurrency::where('client_code', Auth::user()->code)->whereNotIn('currency_id', $exist)->count();
+            if($delCount > 0){
+                $delete = ClientCurrency::where('client_code', Auth::user()->code)->whereNotIn('currency_id', $exist)->delete();
+            }
+            
         }
         if($request->has('languages')){
 

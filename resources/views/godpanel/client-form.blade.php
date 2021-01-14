@@ -29,10 +29,10 @@
                     <?php $disable = 'disabled';
                     $style = "cursor:not-allowed;"; ?>
                     <form id="UpdateClient" method="post" action="{{route('client.update', $client->id)}}"
-                        enctype="multipart/form-data">
+                        enctype="multipart/form-data" autocomplete="off">
                         @method('PUT')
                     @else
-                        <form id="StoreClient" method="post" action="{{route('client.store')}}" enctype="multipart/form-data">
+                        <form id="StoreClient" method="post" action="{{route('client.store')}}" enctype="multipart/form-data" autocomplete="off">
                     @endif
                         @csrf
                         <div class="row mb-2">
@@ -57,7 +57,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="email" class="control-label">EMAIL</label>
-                                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $client->email ?? '')}}" placeholder="Enter email address" autocomplete="false">
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $client->email ?? '')}}" placeholder="Enter email address" autocomplete="false" autocomplete="off">
                                     @if($errors->has('email'))
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -85,7 +85,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="encpass" class="control-label"> {{ (!isset($client) || !isset($client->id)) ? 'PASSWORD' : 'PASSWORD(Remain blank if not want to change)' }}</label>
-                                    <input type="password" class="form-control" id="encpass" name="encpass" value="" placeholder="Enter password" >
+                                    <input type="password" class="form-control" id="encpass" name="encpass" value="" placeholder="Enter password" autocomplete="off">
                                     @if($errors->has('encpass'))
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $errors->first('encpass') }}</strong>

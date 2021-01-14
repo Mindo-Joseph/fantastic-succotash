@@ -19,6 +19,18 @@ class ClientPreference extends Model
       return $this->hasMany('App\Models\ClientLanguage','client_code','client_code')->select( 'client_code', 'language_id');
     }
 
+    public function currency()
+    {
+      return $this->hasMany('App\Models\ClientCurrency','client_code','client_code')->select( 'client_code', 'currency_id');
+    }
+
+
+    public function primary()
+    {
+      return $this->hasone('App\Models\ClientCurrency','client_code','client_code')->select( 'client_code', 'currency_id')->where('currency_id', 147);
+    }
+
+
     public function domain()
     {
       return $this->belongsTo('App\Models\Client','client_code','code')->select('id', 'code', 'custom_domain');

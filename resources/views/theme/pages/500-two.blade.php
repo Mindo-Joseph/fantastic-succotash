@@ -3,7 +3,7 @@
     <head>
         @include('layouts.shared.title-meta', ['title' => "Error Page | 500 | Internal Server Error"])
 
-        @include('layouts.shared.head-css')
+        @include('layouts.shared.head-content')
 
     </head>
 
@@ -18,13 +18,13 @@
                         <!-- Logo -->
                         <div class="auth-brand text-center text-lg-left">
                             <div class="auth-logo">
-                                <a href="{{route('index')}}" class="logo logo-dark text-center">
+                                <a href="{{route('any', ['dashboard'])}}" class="logo logo-dark text-center">
                                     <span class="logo-lg">
                                         <img src="{{asset('assets/images/logo-dark.png')}}" alt="" height="22">
                                     </span>
                                 </a>
             
-                                <a href="{{route('index')}}" class="logo logo-light text-center">
+                                <a href="{{route('any', ['dashboard'])}}" class="logo logo-light text-center">
                                     <span class="logo-lg">
                                         <img src="{{asset('assets/images/logo-light.png')}}" alt="" height="22">
                                     </span>
@@ -37,7 +37,7 @@
                             <h3 class="mt-3 mb-2">Internal Server Error</h3>
                             <p class="text-muted mb-3">Why not try refreshing your page? or you can contact <a href="" class="text-dark"><b>Support</b></a></p>
 
-                            <a href="{{route('index')}}" class="btn btn-success waves-effect waves-light">Back to Home</a>
+                            <a href="{{route('any', ['dashboard'])}}" class="btn btn-success waves-effect waves-light">Back to Home</a>
                         </div>
 
                         <!-- Footer-->

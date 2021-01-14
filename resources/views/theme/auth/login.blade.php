@@ -3,7 +3,7 @@
     <head>
         @include('layouts.shared.title-meta', ['title' => "Log In"])
 
-        @include('layouts.shared.head-css')
+        @include('layouts.shared.head-content')
     </head>
 
     <body class="authentication-bg authentication-bg-pattern">
@@ -18,13 +18,13 @@
                                 
                                 <div class="text-center w-75 m-auto">
                                     <div class="auth-logo">
-                                        <a href="{{route('index')}}" class="logo logo-dark text-center">
+                                        <a href="{{route('any', ['dashboard'])}}" class="logo logo-dark text-center">
                                             <span class="logo-lg">
                                                 <img src="{{asset('assets/images/logo-dark.png')}}" alt="" height="40">
                                             </span>
                                         </a>
                     
-                                        <a href="{{route('index')}}" class="logo logo-light text-center">
+                                        <a href="{{route('any', ['dashboard'])}}" class="logo logo-light text-center">
                                             <span class="logo-lg">
                                                 <img src="{{asset('assets/images/logo-light.png')}}" alt="" height="40">
                                             </span>

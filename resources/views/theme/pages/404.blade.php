@@ -5,7 +5,7 @@
         @include('layouts.shared.title-meta', ['title' => "Error Page | 404 | Page not Found"])
 
 
-        @include('layouts.shared.head-css')
+        @include('layouts.shared.head-content')
 
     </head>
 
@@ -76,7 +76,7 @@
 
                         <div class="row mt-3">
                             <div class="col-12 text-center">
-                                <p class="text-white-50">Return to <a href="{{route('index')}}" class="text-white ml-1"><b>Home</b></a></p>
+                                <p class="text-white-50">Return to <a href="{{route('any', ['dashboard'])}}" class="text-white ml-1"><b>Home</b></a></p>
                             </div> <!-- end col -->
                         </div>
                         <!-- end row -->

@@ -249,9 +249,14 @@
 
                             <div class="row">
                                 <div class="col-md-12 card-box">
-                                    <h4 class="mb-4 text-uppercase"><i data-feather="tool"></i> Configuration</h4>
                                     <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
                                         @csrf
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4 class="mb-2 text-uppercase"><i data-feather="tool"></i> <span class="text-uppercase">Configuration</span><span style=" float:right;"><button class="btn btn-blue waves-effect waves-light">Save</button></span></h4>
+                                            </div>
+                                        </div>
+
                                         <div class="row mb-2">
                                             <div class="col-md-4">
                                                 <div class="form-group" id="order_pre_timeInput">
@@ -272,8 +277,27 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row mb-2">    
-                                            <div class="col-md-4">
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 card-box">
+                                    <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4 class="mb-2"><i data-feather="dollar-sign"></i> <span class="text-uppercase">Commission</span>(Visible For Admin)<span style=" float:right;"><button class="btn btn-blue waves-effect waves-light">Save</button></span></h4>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-md-2">
+                                                {!! Form::label('title', 'Add Category',['class' => 'control-label']) !!} 
+                                                <div>
+                                                    <input type="checkbox" data-plugin="switchery" name="add_category" class="form-control can_add_category1" data-color="#039cfd" @if($vendor->add_category == 1) checked @endif >
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
                                                 <div class="form-group" id="commission_percentInput">
                                                     {!! Form::label('title', 'Commission Percent',['class' => 'control-label']) !!}
                                                     <input class="form-control" name="commission_percent" type="text" value="{{$vendor->commission_percent}}" onkeypress="return isNumberKey(event)">
@@ -285,20 +309,18 @@
                                                     <input class="form-control" name="commission_fixed_per_order" type="text" value="{{$vendor->commission_fixed_per_order}}" onkeypress="return isNumberKey(event)">
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group" id="commission_monthlyInput">
                                                     {!! Form::label('title', 'Commission Monthly',['class' => 'control-label']) !!}
                                                     <input class="form-control" onkeypress="return isNumberKey(event)" name="commission_monthly" type="text" value="{{$vendor->commission_monthly}}">
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div class="col-md-12 text-right">
-                                            <button class="btn btn-blue waves-effect waves-light">Submit</button>
-                                        </div>
                                     </form>
                                 </div>
                             </div>
+
+                            @if(session('preferences.is_hyperlocal') == 1)
 
                             <div class="row">
                                 <div class="col-md-12 card-box">
@@ -350,6 +372,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
 
                             <div class="row card-box">
                                 <h4 class="mb-4 text-uppercase"><i class="mdi mdi-av-timer"></i> Weekly Slot</h4>
@@ -405,7 +428,7 @@
                                 
                             </div>
 
-                             <div class="col-lg-12 mb-2">
+                            <div class="col-lg-12 mb-2">
                                 {!! Form::label('title', 'Area Description',['class' => 'control-label']) !!}
                                 {!! Form::textarea('description', '',['class' => 'form-control', 'rows' => '3', 'placeholder' => 'Area Description']) !!}
                                 
@@ -462,9 +485,7 @@
 <script src="{{ asset('assets/js/pages/jquery.cookie.js') }}"></script>
 
 <script type="text/javascript">
-    /* show geo service area */
     var areajson_json = {!! json_encode($all_coordinates) !!};
-
 
     function gm_authFailure() {
 

@@ -239,11 +239,24 @@ class VendorController extends BaseController
     public function updateConfig(Request $request, $id)
     {
         $vendor = Vendor::where('id', $id)->first();
-        foreach($request->only('order_min_amount', 'order_pre_time', 'auto_reject_time', 'commission_percent', 'commission_fixed_per_order', 'commission_monthly') as $key => $value){
-            $vendor->{$key} = $value;
+        $msg = 'Order configuration';
+
+        if($request->has('order_pre_time')){
+            $vendor->order_min_amount   = $request->order_min_amount;
+            $vendor->order_pre_time     = $request->order_pre_time;
+            $vendor->auto_reject_time   = $request->auto_reject_time;
+        }
+
+        if($request->has('commission_percent')){
+            $vendor->commission_percent         = $request->commission_percent;
+            $vendor->commission_fixed_per_order = $request->commission_fixed_per_order;
+            $vendor->commission_monthly         = $request->commission_monthly;
+            $vendor->add_category = ($request->has('add_category') && $request->add_category == 'on') ? 1 : 0;
+
+            $msg = 'commission configuration';
         }
         $vendor->save();
-        return redirect()->back()->with('success', 'Configurations updated successfully!');
+        return redirect()->back()->with('success', $msg.' updated successfully!');
         
     }
 }

@@ -14,12 +14,12 @@ class LanguageTableSeeder extends Seeder
         DB::table('languages')->delete();
 
         $language = [ 
-                       ['name'=>'English','sort_code'=>'en'],
-                       ['name'=>'Hindi','sort_code'=>'hi'],
-                       ['name'=>'Italian','sort_code'=>'it'],
-                       ['name'=>'French','sort_code'=>'fr']
-                       
-                    ];
+                 ['name'=>'English','sort_code'=>'en'],
+                 ['name'=>'Hindi','sort_code'=>'hi'],
+                 ['name'=>'Italian','sort_code'=>'it'],
+                 ['name'=>'French','sort_code'=>'fr']
+                 
+        ];
         DB::table('languages')->insert($language);
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateClientLanguagesTable extends Migration
+class CreateClientCurrenciesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreateClientLanguagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_languages', function (Blueprint $table) {
+        Schema::create('client_currencies', function (Blueprint $table) {
             $table->string('client_code', 10)->nullable();
-            $table->bigInteger('language_id')->unsigned()->nullable();
+            $table->bigInteger('currency_id')->unsigned()->nullable();
+            $table->timestamps();
         });
 
-        Schema::table('client_languages', function (Blueprint $table) {
+        Schema::table('client_currencies', function (Blueprint $table) {
             $table->foreign('client_code')->references('code')->on('clients')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('language_id')->references('id')->on('languages')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('currency_id')->references('id')->on('currencies')->onUpdate('cascade')->onDelete('set null');
         });
     }
 
@@ -31,6 +32,6 @@ class CreateClientLanguagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('client_languages');
+        Schema::dropIfExists('client_currencies');
     }
 }
