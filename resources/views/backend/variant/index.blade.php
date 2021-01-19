@@ -5,7 +5,7 @@
     <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
 
     <style type="text/css">
-        .modal-lg {
+        #add-category-form .modal-lg, #edit-category-form .modal-lg {
             max-width: 70%;
         }
         span.inner-div{
@@ -14,6 +14,9 @@
             position: absolute;
             top: -5px;
             right: 16px;
+        }
+        .table-borderless th, .table-borderless td {
+            padding: 8px 10px 8px 0px;
         }
     </style>
 @endsection
@@ -27,28 +30,34 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Category</h4>
+                
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="text-sm-left">
+                @if (\Session::has('success'))
+                <div class="alert alert-success">
+                    <span>{!! \Session::get('success') !!}</span>
+                </div>
+                @endif
+                @if (\Session::has('error_delete'))
+                <div class="alert alert-danger">
+                    <span>{!! \Session::get('error_delete') !!}</span>
+                </div>
+                @endif
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-4">
             <div class="card-box">
                 <div class="row mb-2">
                     <div class="col-sm-8">
-                        <div class="text-sm-left">
-                            @if (\Session::has('success'))
-                            <div class="alert alert-success">
-                                <span>{!! \Session::get('success') !!}</span>
-                            </div>
-                            @endif
-                            @if (\Session::has('error_delete'))
-                            <div class="alert alert-danger">
-                                <span>{!! \Session::get('error_delete') !!}</span>
-                            </div>
-                            @endif
-                        </div>
+                        <h4 class="page-title">Category</h4>
+                        <p class="sub-header">
+                            Drag & drop Categories to make child parent relation
+                        </p>
                     </div>
                     <div class="col-sm-4 text-right">
                         <button class="btn btn-blue waves-effect waves-light text-sm-right openCategoryModal"
@@ -57,11 +66,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
-                        <h4 class="header-title">Category List</h4>
-                        <p class="sub-header">
-                            Drag & drop Categories to make child parent relation
-                        </p>
+                    <div class="col-md-12">                        
                         <form name="category_order" id="category_order" action="{{route('category.order')}}" method="post">
                             @csrf
                             <input type="hidden" name="orderDta" id="orderDta" value="" />
@@ -113,22 +118,91 @@
                             
                         </div>
                     </div>
-                    <div class="col-sm-12 text-left">
+                    <div class="col-sm-12 text-right">
                         <button class="btn btn-blue waves-effect waves-light text-sm-right saveList">Save</button>
                     </div>
 
                 </div> <!-- end row -->
             </div> <!-- end card-box -->
         </div> <!-- end col -->
+
+        <div class="col-sm-4">
+            <div class="card-box">
+                <div class="row mb-2">
+                    <div class="col-sm-8">
+                        <h4 class="page-title">Variant</h4>
+                        <p class="sub-header">
+                            Drag & drop Variant to make child parent relation
+                        </p>
+                    </div>
+                    <div class="col-sm-4 text-right">
+                        <button class="btn btn-blue waves-effect waves-light text-sm-right addVariantbtn"
+                         dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        
+                        <form name="variant_order" id="variant_order" action="{{route('variant.order')}}" method="post">
+                            @csrf
+                            <input type="hidden" name="variantData" id="variantData" value="" />
+                        </form>
+                        <div class="custom-dd-empty dd" id="nestable_list_3">
+                            
+                        <?php //print_r($html); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 text-right">
+                        <button class="btn btn-blue waves-effect waves-light text-sm-right saveList">Save</button>
+                    </div>
+
+                </div> <!-- end row -->
+            </div> <!-- end card-box -->
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card-box">
+                <div class="row mb-2">
+                    <div class="col-sm-8">
+                        <h4 class="page-title">Brand</h4>
+                        <p class="sub-header">
+                            Drag & drop Brand to make child parent relation
+                        </p>
+                    </div>
+                    <div class="col-sm-4 text-right">
+                        <button class="btn btn-blue waves-effect waves-light text-sm-right openCategoryModal"
+                         dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <form name="variant_order" id="variant_order" action="{{route('variant.order')}}" method="post">
+                            @csrf
+                            <input type="hidden" name="variantData" id="variantData" value="" />
+                        </form>
+                        <div class="custom-dd-empty dd" id="nestable_list_3">
+                            
+                        <?php //print_r($html); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 text-right">
+                        <button class="btn btn-blue waves-effect waves-light text-sm-right saveList">Save</button>
+                    </div>
+
+                </div> <!-- end row -->
+            </div> <!-- end card-box -->
+        </div>
     </div>
 </div>
-@include('backend.category.modals')
+@include('backend.catalog.modals')
 @endsection
 
 @section('script')
     <script src="{{asset('assets/libs/nestable2/nestable2.min.js')}}"></script>
     <script src="{{asset('assets/js/pages/my-nestable.init.js')}}"></script>
-    @include('backend.category.pagescript')
+    @include('backend.catalog.pagescript')
 
 <script type="text/javascript">
 

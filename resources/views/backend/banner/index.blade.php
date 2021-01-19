@@ -52,6 +52,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Image</th>
                                     <th>Name</th>
                                     <th>Duration</th>
                                     <th>Redirect To</th>
@@ -61,7 +62,9 @@
                             </thead>
                             <tbody id="post_list">
                                 @foreach($banners as $ban)
+
                                 <tr data-row-id="{{$ban->id}}">
+                                    <td class="draggableTd"><span class="dragula-handle"></span></td>
                                     <td> 
                                     @php 
                                     
@@ -91,7 +94,7 @@
                                                     </div>
                                                 </form>
                                             </div>
-                                         </h3>
+                                        </div>
                                     </td>
                                 </tr>
                                @endforeach
@@ -106,10 +109,53 @@
         </div> <!-- end col -->
     </div>
 </div>
+
 @include('backend.banner.modals')
 @endsection
 
 @section('script')
+
+
+<script type="text/javascript">
+    function assignSortAttach() {
+      $("table").sortable({
+        axis: "y",
+        cursor: "grabbing",
+        handle: ".handle",
+        cancel: "thead",
+        opacity: 0.6,
+        placeholder: "two-place",
+        helper: function(e, item) {
+          if (!item.hasClass("selected")) {
+            item.addClass("selected");
+          }
+          console.log("Selected: ", $(".selected"));
+          var elements = $(".selected").not(".ui-sortable-placeholder").clone();
+          console.log("Making helper from: ", elements);
+          // Hide selected Elements
+          $(".selected").not(".ui-sortable-placeholder").addClass("hidden");
+          var helper = $("<table />");
+          helper.append(elements);
+          console.log("Helper: ", helper);
+          return helper;
+        },
+        start: function(e, ui) {
+          var elements = $(".selected.hidden").not('.ui-sortable-placeholder');
+          console.log("Start: ", elements);
+          ui.item.data("items", elements);
+        },
+        update: function(e, ui) {
+          console.log("Receiving: ", ui.item.data("items"));
+          ui.item.before(ui.item.data("items")[1], ui.item.data("items")[0]);
+        },
+        stop: function(e, ui) {
+          $('.selected.hidden').not('.ui-sortable-placeholder').removeClass('hidden');
+          $('.selected').removeClass('selected');
+        }
+      });
+    }
+</script>
+
 
 @include('backend.banner.pagescript')
 

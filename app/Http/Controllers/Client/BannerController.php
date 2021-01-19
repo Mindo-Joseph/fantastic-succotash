@@ -120,7 +120,11 @@ class BannerController extends BaseController
 
         if( $update == 'false'){
             $bannerSort = Banner::select('id', 'sorting')->where('sorting', \DB::raw("(select max(`sorting`) from banners)"))->first();
-            $banner->sorting = $bannerSort->sorting + 1;
+            $banner->sorting = 1;
+            if($bannerSort){
+                $banner->sorting = $bannerSort->sorting + 1;
+            }
+            
         }
         //$banner->redirect_category_id = $request->redirect_category_id;
         //$banner->redirect_vendor_id = $request->redirect_vendor_id;

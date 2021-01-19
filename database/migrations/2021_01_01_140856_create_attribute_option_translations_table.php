@@ -18,7 +18,7 @@ class CreateAttributeOptionTranslationsTable extends Migration
             $table->bigInteger('language_id')->unsigned()->nullable();
             $table->text('label')->nullable();
             $table->bigInteger('attribute_option_id')->unsigned()->nullable();
-            $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');
+            $table->foreign('language_id')->references('client_languages')->on('language_id')->onDelete('cascade');
             $table->foreign('attribute_option_id')->references('id')->on('attribute_options')->onDelete('cascade');
         });
     }

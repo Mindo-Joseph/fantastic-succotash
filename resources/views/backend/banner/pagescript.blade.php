@@ -181,10 +181,9 @@
         });
     }
 
-    
-
     $("#banner-datatable tbody").sortable({
         placeholder : "ui-state-highlight",
+        handle: ".dragula-handle",
         update  : function(event, ui)
         {
             var post_order_ids = new Array();
@@ -195,6 +194,7 @@
             saveOrder(post_order_ids);
         }
     });
+
     var CSRF_TOKEN = $("input[name=_token]").val();
     function saveOrder(orderVal){
 

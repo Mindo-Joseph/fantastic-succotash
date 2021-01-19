@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage};
+use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory};
 
 class CategoryController extends BaseController
 {
@@ -20,15 +20,32 @@ class CategoryController extends BaseController
     {
         //$categories = Category::with('childs')->select('id', 'slug', 'parent_id')->wherenull('parent_id')->get();
 
-        $categories = Category::select('id', 'slug', 'parent_id')->where('id', '>', '1')->where('status', '!=', '2')->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->get();
+        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
+                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.type', 'categories.is_visible', 'categories.status', 'categories.is_core', 'categories.can_add_products', 'categories.parent_id', 'categories.vendor_id', 'cts.name')
+                        ->where('categories.id', '>', '1')
+                        ->where('categories.status', '!=', '2')
+                        ->where('cts.language_id', 1)
+                        ->orderBy('categories.parent_id', 'asc')
+                        ->orderBy('categories.position', 'asc')->get();
 
+        $variants = Variant::with('option', 'varcategory.cate.english')
+                        ->where('status', '!=', 2)->orderBy('position', 'asc')->get();
+        $brands = Brand::with( 'bc.cate.english')
+                        ->where('status', '!=', 2)->orderBy('position', 'asc')->get();
+
+        //dd($variants->toArray());
         if($categories){
             $build = $this->buildTree($categories->toArray());
+            //dd($build);
             $tree = $this->printTree($build);
         }
+        $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
+                    ->where('client_languages.client_code', Auth::user()->code)->get();
         
-        $langs = ClientLanguage::with('language')->where('client_code', Auth::user()->code)->get();
-        return view('backend/category/index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs]);
+        //$langs = ClientLanguage::with('language')->where('client_code', Auth::user()->code)->get();
+
+        return view('backend/catalog/index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs, 'variants' => $variants, 'brands' => $brands]);
     }
 
     /**
@@ -47,7 +64,7 @@ class CategoryController extends BaseController
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
                     ->where('client_languages.client_code', Auth::user()->code)->get();
 
-        $returnHTML = view('backend.category.add-form')->with(['category' => $category,  'languages' => $langs, 'parCategory' => $parCategory])->render();
+        $returnHTML = view('backend.catalog.add-category')->with(['category' => $category,  'languages' => $langs, 'parCategory' => $parCategory])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -68,7 +85,7 @@ class CategoryController extends BaseController
         $cate = new Category();
         $save = $this->save($request, $cate, 'false');
         if($save > 0){
-            
+
             foreach ($request->language_id as $key => $value) {
                 $trans = new Category_translation();
                 $trans->name = $request->name{$key};
@@ -79,6 +96,14 @@ class CategoryController extends BaseController
                 $trans->language_id = $request->language_id{$key};
                 $trans->save();
             }
+
+            $hs = new CategoryHistory();
+            $hs->category_id = $save;
+            $hs->action = 'Add';
+            $hs->updater_role = 'Admin';
+            $hs->update_id = Auth::user()->id;
+            $hs->client_code = Auth::user()->code;
+            $hs->save();
 
             return response()->json([
                 'status'=>'success',
@@ -97,7 +122,6 @@ class CategoryController extends BaseController
     public function edit($id)
     {
         $vendors = array();
-
         $category = Category::with('translation')->where('id', $id)->first();
 
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
@@ -109,7 +133,7 @@ class CategoryController extends BaseController
         $parCategory = Category::join('category_translations', 'categories.id', 'category_translations.category_id')
                         ->select('categories.id', 'categories.slug', 'category_translations.name')->where('categories.id', '!=', $id)->groupBy('category_translations.category_id')->get();
         
-        $returnHTML = view('backend.category.edit-form')->with(['category' => $category,  'languages' => $langs, 'parCategory' => $parCategory])->render();
+        $returnHTML = view('backend.catalog.edit-category')->with(['category' => $category,  'languages' => $langs, 'parCategory' => $parCategory])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -142,6 +166,14 @@ class CategoryController extends BaseController
                 $trans->save();
             }
 
+            $hs = new CategoryHistory();
+            $hs->category_id = $save;
+            $hs->action = 'Update';
+            $hs->updater_role = 'Admin';
+            $hs->update_id = Auth::user()->id;
+            $hs->client_code = Auth::user()->code;
+            $hs->save();
+
             return response()->json([
                 'status'=>'success',
                 'message' => 'Category created Successfully!',
@@ -172,9 +204,17 @@ class CategoryController extends BaseController
         }
 
         if($update == 'false'){
+
+            if($request->login_user_type != 'client'){
+                $cate->is_core = 0;
+                $cate->vendor_id = Auth::user()->id;
+            }else{
+                $cate->is_core = 1;
+            }
+
             $cate->status = 1;
             $cate->position = 1;
-            $cate->is_core =  (!empty(Auth::user()->code)) ? 1 : 0;
+            
             $cate->client_code = (!empty(Auth::user()->code)) ? Auth::user()->code : '';
         }
 
@@ -183,12 +223,12 @@ class CategoryController extends BaseController
             $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
             //$s3filePath = '/assets/Clientlogo/' . $file_name;
             //$path = Storage::disk('s3')->put($s3filePath, $file,'public');
-            $cate->icon = $request->file('icon')->storeAs('/calegory/icon', $file_name, 'public');
+            $cate->icon = $request->file('icon')->storeAs('/category/icon', $file_name, 'public');
         }
         if ($request->hasFile('image')) {    /* upload category image */
             $file = $request->file('image');
             $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            $cate->image = $request->file('image')->storeAs('/calegory/image', $file_name, 'public');
+            $cate->image = $request->file('image')->storeAs('/category/image', $file_name, 'public');
         }
         $cate->save();
         return $cate->id;
@@ -221,8 +261,6 @@ class CategoryController extends BaseController
         }
     }
 
-    
-
     /**
      * Remove the specified resource from storage.
      *
@@ -234,6 +272,14 @@ class CategoryController extends BaseController
         $category = Category::where('id', $id)->first();
         $category->status = 2;
         $category->save();
+
+        $hs = new CategoryHistory();
+        $hs->category_id = $category->id;
+        $hs->action = 'Block';
+        $hs->updater_role = 'Admin';
+        $hs->update_id = Auth::user()->id;
+        $hs->client_code = Auth::user()->code;
+        $hs->save();
         return redirect()->back()->with('success', 'Category deleted successfully!');
     }
 }

@@ -50,6 +50,8 @@ class DatabaseDynamic
 
               $clientPreference = ClientPreference::where('client_code',Auth::user()->code)->first();
 
+              Session::put('login_user_type', 'client');
+
               if(isset($clientPreference)){
                 $agentTitle = empty($clientPreference->agent_name) ? 'Agent' : $clientPreference->agent_name;
                 Session::put('agent_name', $agentTitle);

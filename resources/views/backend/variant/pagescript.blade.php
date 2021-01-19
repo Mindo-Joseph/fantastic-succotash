@@ -24,11 +24,11 @@
             dataType: 'json',
             success: function (data) {
                 if(id > 0){
-                    $('#edit-form').modal({
+                    $('#edit-category-form').modal({
                         backdrop: 'static',
                         keyboard: false
                     });
-                    $('#edit-form #editCardBox').html(data.html);
+                    $('#edit-category-form #editCategoryBox').html(data.html);
                     elems1 = document.getElementsByClassName('switch1Edit');
                     elems2 = document.getElementsByClassName('switch2Edit');
                     var switchery = new Switchery(elems1[0]);
@@ -36,11 +36,11 @@
 
                 }else{
 
-                    $('#add-form').modal({
+                    $('#add-category-form').modal({
                         backdrop: 'static',
                         keyboard: false
                     });
-                    $('#add-form #AddCardBox').html(data.html);
+                    $('#add-category-form #AddCategoryBox').html(data.html);
                     elems1 = document.getElementsByClassName('switch1');
                     elems2 = document.getElementsByClassName('switch2');
                     var switchery = new Switchery(elems1[0]);
@@ -75,18 +75,18 @@
         }
     });
 
-    $(document).on('click', '.submitAddForm', function(e) { 
+    $(document).on('click', '.addCategorySubmit', function(e) { 
         e.preventDefault();
-        var form =  document.getElementById('save_add_form');
+        var form =  document.getElementById('addCategoryForm');
         var formData = new FormData(form);
         var url =  "{{route('category.store')}}";
         saveData(formData, 'add', url );
 
     });
 
-    $(document).on('click', '.submitEditForm', function(e) { 
+    $(document).on('click', '.editCategorySubmit', function(e) { 
         e.preventDefault();
-        var form =  document.getElementById('save_edit_form');
+        var form =  document.getElementById('editCategoryForm');
         var formData = new FormData(form);
         var url =  document.getElementById('cateId').getAttribute('url');
 
@@ -183,49 +183,87 @@
         });
     }
 
-   
 
+    /*          Variant Modals Started      */
 
+    /*addOptionRow: function (isNullOptionRow) {
+                    const rowCount = this.optionRowCount++;
+                    const id = 'option_' + rowCount;
+                    let row = {'id': id};
 
+                                            row['en'] = '';
+                                            row['fr'] = '';
+                                            row['nl'] = '';
+                    
+                    row['notRequired'] = '';
 
+                    if (isNullOptionRow) {
+                        this.idNullOption = id;
+                        row['notRequired'] = true;
+                    }
 
+                    this.optionRows.push(row);
+                },
 
+                removeRow: function (row) {
+                    if (row.id === this.idNullOption) {
+                        this.idNullOption = null;
+                        this.isNullOptionChecked = false;
+                    }
 
+                    const index = this.optionRows.indexOf(row);
+                    Vue.delete(this.optionRows, index);
+                },*/
 
-
-
-
-
-
-
-
-
-
-    $("#user-modal #add_user").submit(function(e) {
-            e.preventDefault();
+    $(".addVariantbtn").click(function (e) {
+        $('#addVariantmodal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
     });
 
-    $(document).on('click', '.addVendorForm', function() { 
-        var form =  document.getElementById('add_customer');
-        var formData = new FormData(form);
-        var urls = "{{URL::route('vendor.store')}}";
-        saveCustomer(urls, formData, inp = '', modal = 'user-modal');
-    });
+    $(".EditVariantbtn").click(function (e) {
 
-    $("#edit-user-modal #edit_user").submit(function(e) {
-            e.preventDefault();
-    });
-
-    $(document).on('click', '.editVendorForm', function(e) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
         e.preventDefault();
-        var form =  document.getElementById('edit_customer');
-        var formData = new FormData(form);
-        var urls =  document.getElementById('customer_id').getAttribute('url');
-        saveCustomer(urls, formData, inp = 'Edit', modal = 'edit-user-modal');
-        console.log(urls);
+
+        var uri = "{{route('variant.create')}}";
+       
+        var id = $(this).attr('dataid');
+        if(id > 0){
+            uri = "<?php echo url('client/variant'); ?>" + '/' + id + '/edit';
+
+        }
+
+        $.ajax({
+            type: "get",
+            url: uri,
+            data: '',
+            dataType: 'json',
+            success: function (data) {
+                if(id > 0){
+                    $('#editVariantmodal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    $('#editVariantmodal #editVariantBox').html(data.html);
+
+                }else{
+                    
+                    $('#addVariantmodal #AddVariantBox').html(data.html);
+                }
+
+                $('.dropify').dropify();
+                $('.selectize-select').selectize(); 
+                
+            },
+            error: function (data) {
+                console.log('data2');
+            }
+        });
     });
-
-    
-
-    
 </script>

@@ -14,6 +14,10 @@
         top: -5px;
         right: 16px;
     }
+
+    .dd{
+        max-width: 100%;
+    }
 </style>
 @endsection
 
@@ -175,33 +179,28 @@
                         <div class="tab-pane {{($tab == 'category') ? 'active show' : '' }}" id="category">
 
                             <div class="row card-box">
-                                <h4 class="mb-4 text-uppercase"><i data-feather="credit-card"></i> Categories</h4>
+                                <div class="col-sm-8">
+                                    <h4 class="mb-4 text-uppercase"><i data-feather="credit-card"></i> Categories</h4>
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    <button class="btn btn-blue waves-effect waves-light text-sm-right openCategoryModal"
+                                     dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add Category
+                                    </button>
+                                </div> 
                                 <div class="col-md-12">
                                     <div class="row mb-2">
-                                        
                                         <div class="col-md-12">
-                                            
-                                            <!--<p class="sub-header">
-                                                Drag & drop Categories to make child parent relation
-                                            </p> -->
-                                            <!--<form name="category_order" id="category_order" action="{{route('category.order')}}" method="post">
-                                                @csrf
-                                                <input type="hidden" name="orderDta" id="orderDta" value="" />
-                                            </form> -->
-                                            <div class="custom-dd-empty dd" id="nestable_list_3">
-                                                
-                                                <?php print_r($html); ?>
 
+                                            <div class="custom-dd-empty dd" id="nestable_list_3">
+                                                <?php print_r($html); ?>
                                             </div>
                                         </div>
                                         
                                     </div>
                                 </div>
                             </div>
-                            
                         </div>
-                        <!-- end timeline content-->
-
+                        
                         <div class="tab-pane {{($tab == 'catalog') ? 'active show' : '' }}" id="catalog">
                             
                         </div>
@@ -212,8 +211,9 @@
         </div>
     </div>
 
-
 @include('backend.vendor.modals')
+@include('backend.common.category-modals')
+
 @endsection
 
 @section('script')
@@ -221,5 +221,6 @@
     <script src="{{asset('assets/js/pages/my-nestable.init.js')}}"></script>
 
 @include('backend.vendor.pagescript')
+@include('backend.common.category-script')
 
 @endsection

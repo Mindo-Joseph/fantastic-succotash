@@ -113,7 +113,7 @@ class VendorController extends BaseController
     {
         $vendor = Vendor::findOrFail($id);
         $categories = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
-                        ->select('ct.name', 'categories.id', 'ct.category_id', 'categories.icon', 'categories.slug', 'categories.type', 'categories.parent_id')
+                        ->select('ct.name', 'categories.id', 'ct.category_id', 'categories.icon', 'categories.slug', 'categories.type', 'categories.parent_id', 'categories.vendor_id', 'categories.is_core')
 
                         ->where(function($q) use($id){
                               $q->whereNull('categories.vendor_id')

@@ -121,7 +121,7 @@
                 <li>   
                     <a href="{{route('category.index')}}">
                         <i data-feather="credit-card"></i>
-                        <span> Categories </span>
+                        <span> Catalog </span>
                     </a>
                 </li>
                 <li>   

@@ -94,6 +94,11 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 	Route::resource('category','Client\CategoryController');
 	Route::post('categoryOrder','Client\CategoryController@updateOrder')->name('category.order');
 	Route::get('category/delete/{id}','Client\CategoryController@destroy');
+	Route::resource('variant','Client\VariantController');
+	Route::post('variant/order','Client\VariantController@updateOrders')->name('variant.order');
+	Route::resource('brand','Client\BrandController');
+	Route::post('brand/order','Client\BrandController@updateOrders')->name('brand.order');
+
 	Route::resource('promocode','Client\PromocodeController');
 	Route::resource('cms','Client\CmsController');
 	Route::resource('tax','Client\TaxController');

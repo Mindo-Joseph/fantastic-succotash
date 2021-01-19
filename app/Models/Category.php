@@ -12,6 +12,10 @@ class Category extends Model
        return $this->hasMany('App\Models\Category_translation'); 
     }
 
+    public function english(){
+       return $this->hasOne('App\Models\Category_translation')->select('category_id', 'name')->where('language_id', 1); 
+    }
+
     public function childs()
     {
         return $this->hasMany(Category::class, 'parent_id', 'id')->select('id', 'slug', 'parent_id');
