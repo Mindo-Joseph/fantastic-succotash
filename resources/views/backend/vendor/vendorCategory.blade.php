@@ -197,6 +197,65 @@
                                         </div>
                                         
                                     </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row card-box">
+                                <div class="col-sm-8">
+                                    <h4 class="mb-4 text-uppercase"><i data-feather="credit-card"></i> Addon Set</h4>
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    <button class="btn btn-blue waves-effect waves-light text-sm-right openAddonModal"
+                                     dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add 
+                                    </button>
+                                </div> 
+                                <div class="col-md-12">
+                                    <div class="row addon-row">
+                                        <div class="col-md-12">
+                                            <form name="addon_order" id="addon_order" action="" method="post">
+                                                @csrf
+                                                <input type="hidden" name="orderData" id="orderVariantData" value="" />
+                                            </form>
+                                            <table class="table table-centered table-nowrap table-striped" id="varient-datatable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Title</th>
+                                                        <th>Select(Min - Max)</th>
+                                                        <th>Options</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($addon_sets as $set)
+                                                    <tr>
+                                                        <td>{{$set->id}}</td>
+                                                        <td>{{$set->title}}</td>
+                                                        <td>{{$set->min_select}} - {{$set->max_select}}</td>
+                                                        <td>
+                                                            @foreach($set->option as $opt)
+                                                                <span>{{$opt->title}} - ${{$opt->price}}</span><br/>
+                                                                <span></span>
+                                                            @endforeach
+                                                        </td>
+                                                        <td>
+                                                            <a class="action-icon editAddonBtn" dataid="{{$set->id}}" href="javascript:void(0);" > <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
+
+                                                            <a class="action-icon deleteAddon" dataid="{{$set->id}}" href="javascript:void(0);"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
+                                                            <form action="{{route('addon.destroy', $set->id)}}" method="POST"  style="display: none;" id="addonDeleteForm{{$set->id}}">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                                
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -210,6 +269,135 @@
             </div> 
         </div>
     </div>
+<!--   Add On    modals   -->
+<div id="addAddonmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create AddOn Set</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form id="addAddonForm" method="post" enctype="multipart/form-data" action="{{route('addon.store')}}">
+                @csrf
+                {!! Form::hidden('vendor_id', $vendor->id) !!}
+                <div class="modal-body" id="AddAddonBox">
+                    <div class="row">
+                        <div class="col-md-12 card-box">
+                            <div class="row rowYK">
+                                <div class="col-md-12">
+                                    <h5>Addon Title</h5>
+                                </div>
+                                <div class="col-md-12" style="overflow-x: auto;">
+                                    <table class="table table-borderless mb-0" id="banner-datatable" >
+                                        <tr>
+                                            @foreach($languages as $langs)
+                                                <td>{{$langs->langName}}</td>
+                                            @endforeach
+                                        </tr>
+                                        <tr>
+                                            @foreach($languages as $langs)
+                                                @if($langs->langId == 1)
+                                                    <td style="min-width: 200px;">
+                                                        {!! Form::hidden('language_id[]', $langs->langId) !!}
+                                                        {!! Form::text('title[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
+                                                    </td>
+
+                                                @else
+                                                    <td style="min-width: 200px;">
+                                                        {!! Form::hidden('language_id[]', $langs->langId) !!}
+                                                        {!! Form::text('title[]', null, ['class' => 'form-control']) !!}
+                                                    </td>
+                                                @endif
+                                            @endforeach 
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row rowYK mb-2">
+                                <div class="col-md-12">
+                                    <h5>Addon Options</h5>
+                                </div>
+                                <div class="col-md-12" style="overflow-x: auto;">
+                                    <table class="table table-borderless mb-0 optionTableAdd" id="banner-datatable">
+                                        <tr class="trForClone">
+                                            <td>Price($)</td>
+                                            @foreach($languages as $langs)
+                                                <td>{{$langs->langName}}</td>
+                                            @endforeach
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>{!! Form::text('price[]', null, ['class' => 'form-control', 'onkeypress' => 'return isNumberKey(event)', 'min' => '1', 'required' => 'required']) !!}</td>
+                                           @foreach($languages as $key => $langs)
+                                            <td style="min-width: 200px;">
+                                                <input type="text" name="opt_value[{{$key}}][]" class="form-control" @if($langs->langId == 1) required @endif>
+                                            </td>
+                                            @endforeach
+                                            <td class="lasttd"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-blue waves-effect waves-light addOptionRow-Add">Add Option</button>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {!! Form::label('title', 'Min Select',['class' => 'control-label']) !!}
+                                        {!! Form::text('min_select', 1, ['class' => 'form-control', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {!! Form::label('title', 'Max Select',['class' => 'control-label']) !!}
+                                        {!! Form::text('max_select', 1, ['class' => 'form-control', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <p>If max select is greater than total option than max will be total option</p>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-blue waves-effect waves-light addAddonSubmit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="editdAddonmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create AddOn Set</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form id="editAddonForm" method="post" enctype="multipart/form-data" action="">
+                @csrf
+                @method('PUT')
+                <div class="modal-body" id="editAddonBox">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-blue waves-effect waves-light editAddonSubmit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @include('backend.vendor.modals')
 @include('backend.common.category-modals')

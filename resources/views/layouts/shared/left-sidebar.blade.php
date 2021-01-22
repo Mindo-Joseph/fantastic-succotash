@@ -60,7 +60,6 @@
                         <span> Accounting </span>
                     </a>
                 </li>
-                
 
                 <li class="menu-title mt-2">Setting</li>
                 <li>   
@@ -148,12 +147,11 @@
                         <span> Admin ACL </span>
                     </a>
                 </li>
-                <!--<li>   
-                    <a href="{{route('tax.index')}}" >
-                        <i data-feather="credit-card"></i>
-                        <span> Tax </span>
+                <li>
+                    <a href="{{route('tax.index')}}">
+                        <i data-feather="layers"></i><span> Tax </span>
                     </a>
-                </li> -->
+                </li>
                 <li>
                     <a href="#" href1="notifications.index">
                         <i data-feather="bell"></i>

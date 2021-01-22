@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory};
+use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type};
 
 class CategoryController extends BaseController
 {
@@ -20,8 +20,8 @@ class CategoryController extends BaseController
     {
         //$categories = Category::with('childs')->select('id', 'slug', 'parent_id')->wherenull('parent_id')->get();
 
-        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
-                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.type', 'categories.is_visible', 'categories.status', 'categories.is_core', 'categories.can_add_products', 'categories.parent_id', 'categories.vendor_id', 'cts.name')
+        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id', 'type')
+                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.type_id', 'categories.is_visible', 'categories.status', 'categories.is_core', 'categories.can_add_products', 'categories.parent_id', 'categories.vendor_id', 'cts.name')
                         ->where('categories.id', '>', '1')
                         ->where('categories.status', '!=', '2')
                         ->where('cts.language_id', 1)
@@ -56,6 +56,7 @@ class CategoryController extends BaseController
     public function create()
     {
         $vendors = array();
+        $type = Type::all();
         $category = new Category();
         $parCategory = Category::join('category_translations', 'categories.id', 'category_translations.category_id')
                         ->select('categories.id', 'categories.slug', 'category_translations.name')->get();
@@ -64,7 +65,7 @@ class CategoryController extends BaseController
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
                     ->where('client_languages.client_code', Auth::user()->code)->get();
 
-        $returnHTML = view('backend.catalog.add-category')->with(['category' => $category,  'languages' => $langs, 'parCategory' => $parCategory])->render();
+        $returnHTML = view('backend.catalog.add-category')->with(['category' => $category,  'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -122,6 +123,7 @@ class CategoryController extends BaseController
     public function edit($id)
     {
         $vendors = array();
+        $type = Type::all();
         $category = Category::with('translation')->where('id', $id)->first();
 
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
@@ -133,7 +135,7 @@ class CategoryController extends BaseController
         $parCategory = Category::join('category_translations', 'categories.id', 'category_translations.category_id')
                         ->select('categories.id', 'categories.slug', 'category_translations.name')->where('categories.id', '!=', $id)->groupBy('category_translations.category_id')->get();
         
-        $returnHTML = view('backend.catalog.edit-category')->with(['category' => $category,  'languages' => $langs, 'parCategory' => $parCategory])->render();
+        $returnHTML = view('backend.catalog.edit-category')->with(['category' => $category,  'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -192,7 +194,7 @@ class CategoryController extends BaseController
     public function save(Request $request, Category $cate, $update = 'false')
     {
         $cate->slug = $request->slug;
-        $cate->type = $request->type;
+        $cate->type_id = $request->type_id;
         $cate->display_mode = $request->display_mode;
         $cate->is_visible = ($request->has('is_visible') && $request->is_visible == 'on') ? 1 : 0;
         $cate->can_add_products = ($request->has('can_add_products') && $request->can_add_products == 'on') ? 1 : 0;

@@ -297,8 +297,77 @@
     }
 
     */
-
+/*          Add on  set   script          */
     
-
+$(".openAddonModal").click(function (e) {
+    $('#addAddonmodal').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
     
+});
+
+$(document).on('click', '.addOptionRow-Add',function (e) {
+    var $tr = $('.optionTableAdd tbody>tr:first').next('tr');
+    console.log('asasd');
+    var $clone = $tr.clone();
+    $clone.find(':text').val('');
+    $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>');
+    $('.optionTableAdd').append($clone);
+});
+
+$(document).on('click', '.addOptionRow-edit',function (e) {
+    var $tr = $('.optionTableEdit tbody>tr:first').next('tr');
+    var $clone = $tr.clone();
+    $clone.find(':text').val('');
+    $clone.find(':hidden').val('');
+    $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>');
+    $('.optionTableEdit').append($clone);
+});
+$("#addAddonmodal").on('click', '.deleteCurRow', function () {
+    $(this).closest('tr').remove();
+});
+
+$("#editdAddonmodal").on('click', '.deleteCurRow', function () {
+    $(this).closest('tr').remove();
+});
+
+$(document).on('click', '.deleteAddon', function(){
+       
+    var did = $(this).attr('dataid');
+    if(confirm("Are you sure? You want to delete this addon set.")) {
+        $('#addonDeleteForm'+did).submit();
+    }
+    return false;
+});
+
+$('.editAddonBtn').on('click', function(e) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    e.preventDefault();
+
+    var did = $(this).attr('dataid');
+    $.ajax({
+        type: "get",
+        url: "<?php echo url('client/addon'); ?>" + '/' + did + '/edit',
+        data: '',
+        dataType: 'json',
+        success: function (data) {
+
+            $('#editdAddonmodal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+            $('#editAddonForm #editAddonBox').html(data.html);
+
+            document.getElementById('editAddonForm').action = data.submitUrl;
+        },
+        error: function (data) {
+            console.log('data2');
+        }
+    });
+});
 </script>

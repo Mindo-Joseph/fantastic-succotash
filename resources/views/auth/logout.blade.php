@@ -3,7 +3,7 @@
     <head>
         @include('layouts.shared.title-meta', ['title' => "Logout"])
 
-        @include('layouts.shared.head-css')
+        @include('layouts.shared.head-content')
     </head>
 
     <body class="authentication-bg authentication-bg-pattern">

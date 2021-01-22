@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $fillable = ['icon', 'image', 'is_visible', 'status', 'position', 'is_core', 'can_add_products', 'parent_id', 'vendor_id', 'client_code', 'display_mode'];
+    protected $fillable = ['icon', 'image', 'is_visible', 'status', 'position', 'is_core', 'can_add_products', 'parent_id', 'vendor_id', 'client_code', 'display_mode', 'type_id'];
 
     public function translation(){
        return $this->hasMany('App\Models\Category_translation'); 
@@ -19,5 +19,9 @@ class Category extends Model
     public function childs()
     {
         return $this->hasMany(Category::class, 'parent_id', 'id')->select('id', 'slug', 'parent_id');
+    }
+
+    public function type(){
+       return $this->belongsTo('App\Models\Type')->select('id', 'title'); 
     }
 }

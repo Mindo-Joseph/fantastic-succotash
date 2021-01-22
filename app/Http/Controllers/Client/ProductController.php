@@ -1,12 +1,14 @@
 <?php
-
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\Tax;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Session;
+use Illuminate\Support\Facades\Validator;
+use App\Models\{Client, Product, Category, ProductTranslation, Type, Vendor};
 
-class TaxController extends BaseController
+class ProductController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +17,7 @@ class TaxController extends BaseController
      */
     public function index()
     {
-        $taxes = array();
-        return view('backend/tax/index')->with(['taxes' => $taxes]);
+        //
     }
 
     /**
@@ -24,9 +25,17 @@ class TaxController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        //
+        $vendor = Vendor::findOrFail($id);
+        $type = Type::all();
+        $categories = Category::with('english')->select('id', 'slug')
+                        ->where('id', '>', '1')->where('status', '!=', '2')
+                        ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
+                        ->orderBy('position', 'asc')->get();
+
+                       // dd($categories->toArray());
+        return view('backend/product/create', ['typeArray' => $type, 'categories' => $categories, 'vendor_id' => $vendor->id]);
     }
 
     /**
@@ -37,16 +46,16 @@ class TaxController extends BaseController
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Tax  $tax
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Tax $tax)
+    public function show(Product $product)
     {
         //
     }
@@ -54,10 +63,10 @@ class TaxController extends BaseController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Tax  $tax
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tax $tax)
+    public function edit(Product $product)
     {
         //
     }
@@ -66,10 +75,10 @@ class TaxController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Tax  $tax
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tax $tax)
+    public function update(Request $request, Product $product)
     {
         //
     }
@@ -77,10 +86,10 @@ class TaxController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Tax  $tax
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tax $tax)
+    public function destroy(Product $product)
     {
         //
     }

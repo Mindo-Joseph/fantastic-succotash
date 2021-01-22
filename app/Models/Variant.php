@@ -13,7 +13,7 @@ class Variant extends Model
   }
 
   public function english(){
-    return $this->hasMany('App\Models\VariantTranslation')->where('language_id', 1); 
+    return $this->hasOne('App\Models\VariantTranslation')->where('language_id', 1); 
   }
 
   public function varcategory(){

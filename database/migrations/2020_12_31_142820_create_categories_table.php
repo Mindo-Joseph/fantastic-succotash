@@ -18,7 +18,7 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->string('icon', 150)->nullable();
             $table->string('slug', 30)->unique();
-            $table->string('type')->nullable();
+            $table->bigInteger('type_id')->unsigned()->nullable();
             $table->string('image', 150)->nullable();
             $table->tinyInteger('is_visible')->nullable();
             $table->tinyInteger('status')->default('1')->comment('0 - pending, 1 - active, 2 - blocked');
@@ -33,9 +33,10 @@ class CreateCategoriesTable extends Migration
         });
 
         Schema::table('categories', function (Blueprint $table) {
-            $table->foreign('client_code')->references('code')->on('clients')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('vendor_id')->references('id')->on('vendors')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('parent_id')->references('id')->on('categories')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('client_code')->references('code')->on('clients')->onDelete('set null');
+            $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('set null');
+            $table->foreign('parent_id')->references('id')->on('categories')->onDelete('set null');
+            $table->foreign('type_id')->references('id')->on('types')->onDelete('set null');
             $table->index('status');
             $table->index('is_core');
             $table->index('position');

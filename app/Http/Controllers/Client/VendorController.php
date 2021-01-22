@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{VendorSlotDate, Vendor, VendorSlot, VendorBlockDate, Category, ServiceArea};
+use App\Models\{VendorSlotDate, Vendor, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -129,7 +129,14 @@ class VendorController extends BaseController
             $build = $this->buildTree($categories->toArray());
             $tree = $this->printTree($build, 'vendor');
         }
-        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree,]);
+
+        $addons = AddonSet::with('option')->select('id', 'title', 'min_select', 'max_select', 'position')
+                    ->where('status', '!=', 2)->where('vendor_id', $id)->orderBy('position', 'asc')->get();
+
+        $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
+                    ->where('client_languages.client_code', Auth::user()->code)->get();
+        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons]);
     }
 
     /**

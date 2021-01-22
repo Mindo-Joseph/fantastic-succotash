@@ -91,6 +91,7 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 	Route::post('banner/saveOrder','Client\BannerController@saveOrder');
 	Route::post('banner/changeValidity','Client\BannerController@validity');
 
+
 	Route::resource('category','Client\CategoryController');
 	Route::post('categoryOrder','Client\CategoryController@updateOrder')->name('category.order');
 	Route::get('category/delete/{id}','Client\CategoryController@destroy');
@@ -101,7 +102,9 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 
 	Route::resource('promocode','Client\PromocodeController');
 	Route::resource('cms','Client\CmsController');
-	Route::resource('tax','Client\TaxController');
+	Route::resource('tax','Client\TaxCategoryController');
+	Route::resource('taxRate','Client\TaxRateController');
+	Route::resource('addon','Client\AddonSetController');
 	Route::resource('payment','Client\PaymentController');
 	Route::resource('accounting','Client\AccountController');
 
@@ -122,6 +125,9 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 	Route::post('vendor/deleteArea/{vid}','Client\ServiceAreaController@destroy')->name('vendor.serviceArea.delete');
 
 	Route::resource('order','Client\OrderController');
+
+	Route::get('product/create/{vendor_id}','Client\ProductController@create')->name('product.create');
+	Route::post('product/store','Client\ProductController@store')->name('product.store');
 	
 });
 

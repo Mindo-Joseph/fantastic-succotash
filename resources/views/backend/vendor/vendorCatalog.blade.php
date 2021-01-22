@@ -173,9 +173,15 @@
                                 <h4 class="mb-4 text-uppercase"><i class="mdi mdi-av-timer"></i> Catalog</h4>
                                 <div class="col-md-12">
                                     <div class="row mb-2">
-                                        <div class="col-md-12">
+                                        <div class="col-md-8">
                                             Catalog
                                         </div>
+                                        <div class="col-sm-4 text-right">
+                                          <a class="btn btn-blue waves-effect waves-light text-sm-right"
+                                           dataid="0" href="{{route('product.create', $vendor->id)}}"><i class="mdi mdi-plus-circle mr-1"></i> Add Product
+                                          </a>
+                                      </div> 
+
                                     </div>
                                 </div>
                             </div>

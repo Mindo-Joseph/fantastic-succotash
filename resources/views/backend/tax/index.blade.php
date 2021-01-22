@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Tax'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Tax Category'])
 
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
@@ -18,61 +18,164 @@
             </div>
         </div>
     </div>
+    <div class="row mb-2">
+        <div class="col-sm-12">
+            <div class="text-sm-left">
+                @if (\Session::has('success'))
+                <div class="alert alert-success">
+                    <span>{!! \Session::get('success') !!}</span>
+                </div>
+                @endif
+                @if (\Session::has('error_delete'))
+                <div class="alert alert-danger">
+                    <span>{!! \Session::get('error_delete') !!}</span>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
     <!-- end page title -->
     <div class="row">
-        <div class="col-12">
+        <div class="col-6">
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-sm-8">
-                            <div class="text-sm-left">
-                                @if (\Session::has('success'))
-                                <div class="alert alert-success">
-                                    <span>{!! \Session::get('success') !!}</span>
-                                </div>
-                                @endif
-                                @if (\Session::has('error_delete'))
-                                <div class="alert alert-danger">
-                                    <span>{!! \Session::get('error_delete') !!}</span>
-                                </div>
-                                @endif
-                            </div>
+                            <h4 class="page-title">Tax Category</h4>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <a class="btn btn-blue waves-effect waves-light text-sm-right"
-                                href="{{route('map.create')}}"><i class="mdi mdi-plus-circle mr-1"></i> Add
-                            </a>
+                            <button class="btn btn-blue waves-effect waves-light text-sm-right addTaxCateModal"
+                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <div class="table-responsive">
+                        <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="post_list">
+                                @foreach($taxCates as $cat)
+
+                                <tr data-row-id="{{$cat->id}}">
+                                    <td> {{ $cat->id }} </td>
+                                    <td> {{ $cat->title }} </td>
+                                    <td> {{ $cat->code }} </td>
+                                    <td> {{ $cat->description }} </td>
+                                    
+                                    <td> 
+                                        <div class="form-ul" style="width: 60px;">
+                                            <div class="inner-div" style="float: left;">
+                                                <a class="action-icon editTaxCateModal" userId="{{$cat->id}}" href="javascript:void(0);"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                            </div>
+                                            <div class="inner-div">
+                                                <form method="POST" action="{{ route('tax.destroy', $cat->id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <div class="form-group">
+                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the tax category.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                               @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination pagination-rounded justify-content-end mb-0"></div>
+                </div>
+            </div> 
+        </div> 
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-sm-8">
+                            <h4 class="page-title">Tax Rate</h4>
+                        </div>
+                        <div class="col-sm-4 text-right">
+                            <button class="btn btn-blue waves-effect waves-light text-sm-right addTaxRateModal"
+                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
+                            </button>
                         </div>
                     </div>
 
                     <div class="table-responsive">
-                        <table class="table table-centered table-nowrap table-striped" id="products-datatable">
+                        <table class="table table-centered table-nowrap table-striped" id="Rate-datatable">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>column</th>
-                                    <th>Status</th>
+                                    <th>Identifier</th>
+                                    <th>Tax Categories</th>
+                                    <th>Postal Code(s)</th>
+                                    <th>Tax Rate</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td> first </td>
-                                    <td> second </td>
-                                    <td> third </td>
+                            <tbody id="post_list">
+                                @foreach($taxRates as $rat)
+
+                                <tr data-row-id="{{$cat->id}}">
+                                    <td> {{ $rat->identifier }} </td>
                                     <td> 
-                                        <a class="btn btn-sm btn-danger" onclick="return confirm('Are you sure? You want to delete the map provider.')" href="#"><i class="fa fa-trash"></i></a>
+                                        @foreach($rat->category as $cats)
+                                            <span>{{$cats->title}}</span><br/>
+                                        @endforeach
+                                    </td>
+                                    <td> 
+                                        @if( $rat->is_zip == 1)
+                                            {{ $rat->zip_code }}
+                                        @elseif( $rat->is_zip == 2)
+                                            {{ $rat->zip_from }} - {{ $rat->zip_to }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td> {{ $rat->tax_rate }} </td>
+                                    <td> 
+                                        <div class="form-ul" style="width: 60px;">
+                                            <div class="inner-div" style="float: left;">
+                                                <a class="action-icon editTaxRateModal" userId="{{$rat->id}}" href="javascript:void(0);"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                            </div>
+                                            <div class="inner-div">
+                                                <form method="POST" action="{{ route('taxRate.destroy', $rat->id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <div class="form-group">
+                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the tax rate.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
+                               @endforeach
                             </tbody>
                         </table>
                     </div>
                     <div class="pagination pagination-rounded justify-content-end mb-0">
-                        {{-- $banners->links() --}}
                     </div>
-                </div> <!-- end card-body-->
-            </div> <!-- end card-->
-        </div> <!-- end col -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+@include('backend.tax.modals')
+@endsection
+
+@section('script')
+
+@include('backend.tax.pagescript')
+
 @endsection

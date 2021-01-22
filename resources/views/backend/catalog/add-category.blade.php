@@ -49,10 +49,10 @@
             <div class="col-md-5">
                 <div class="form-group">
                     {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control" id="typeSelectBox" name="type">
-                        <option value="product">Product</option>
-                        <option value="Service">Service</option>
-                        <option value="ride">Ride</option>
+                    <select class="selectize-select form-control" id="typeSelectBox" name="type_id">
+                        @foreach($typeArray as $type)
+                        <option value="{{$type->id}}">{{$type->title}}</option>
+                        @endforeach
                     </select>
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>

@@ -93,9 +93,7 @@ class VariantController extends BaseController
             }
             VariantOptionTranslation::insert($data);
         }
-
         return redirect()->back()->with('success', 'Variant added successfully!');
-
     }
 
     /**
