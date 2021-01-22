@@ -16,6 +16,7 @@ class CreateClientLanguagesTable extends Migration
         Schema::create('client_languages', function (Blueprint $table) {
             $table->string('client_code', 10)->nullable();
             $table->bigInteger('language_id')->unsigned()->nullable();
+            $table->timestamps();
         });
 
         Schema::table('client_languages', function (Blueprint $table) {
