@@ -5,7 +5,6 @@
 <link href="{{asset('assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" id="bs-default-stylesheet" />
 <link href="{{asset('assets/css/app.min.css')}}" rel="stylesheet" type="text/css" id="app-default-stylesheet" />
 <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
-<link href="{{asset('assets/css/waitMe.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/css/custom.css')}}" rel="stylesheet" type="text/css" />
 
 @if(isset($mode) && $mode == 'rtl')
@@ -128,4 +127,3 @@
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/css/jquery-ui.css')}}" rel="stylesheet" type="text/css" />
-<script src="{{asset('assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
