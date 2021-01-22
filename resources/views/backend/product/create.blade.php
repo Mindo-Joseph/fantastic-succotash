@@ -17,9 +17,7 @@
                 <h4 class="page-title">Add Product</h4>
             </div>
         </div>
-        <div class="col-4 text-right" style="margin: auto;">
-            <button type="button" class="btn btn-blue waves-effect waves-light text-sm-right saveProduct"> Submit</button>
-        </div>
+        
     </div>
     <div class="row mb-2">
         <div class="col-sm-12">
