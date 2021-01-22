@@ -16,7 +16,7 @@ class CategorySeeder extends Seeder
         $maps = array(
             array(
                 'slug' => 'root',
-                'type' => 'product',
+                'type_id' => 1,
                 'is_visible' => 0,
                 'status' => 1,
                 'position' => 1,
