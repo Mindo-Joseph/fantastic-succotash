@@ -213,7 +213,7 @@
                                                   <td> {{ ($prod->is_physical == 0) ? 'No' : 'Yes' }}</td>
                                                   <td> {{ ($prod->requires_shipping == 0) ? 'No' : 'Yes' }}</td>
                                                   <td> {{ ($prod->has_inventory == 0) ? 'No' : 'Yes' }}</td>
-                                                  <td> {{ (empty($prod->variantSet)) ? 'No' : 'Yes' }}</td>
+                                                  <td> {{ (!empty($prod->variantSet) && count($prod->variantSet) > 0) ? 'Yes' : 'No' }}</td>
                                                   <td> 
                                                     <div class="form-ul" style="width: 60px;">
                                                       <div class="inner-div" style="float: left;">
