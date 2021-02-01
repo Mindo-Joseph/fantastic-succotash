@@ -154,13 +154,16 @@ class ProductController extends BaseController
 
             $varOptArray = array();
 
-            $varOpts = explode(';', $request->all_variant_set);
-            foreach ($varOpts as $varOpt) { //1=>1,2,3
-                $ops = explode('=>', $varOpt);
-                $varOptArray[$ops[0]] = explode(',' ,$ops[1]);
-            }
 
             if($request->has('variant_skus') && !empty($request->variant_skus)){
+                $varOpts = explode(';', $request->all_variant_set);
+                if(count($varOpts) > 0){
+                    foreach ($varOpts as $varOpt) { //1=>1,2,3
+                        $ops = explode('=>', $varOpt);
+                        $varOptArray[$ops[0]] = explode(',' ,$ops[1]);
+                    }
+                }
+
                 foreach ($request->variant_skus as $key => $value) {
                     $proVariant = new ProductVariant();
                     $proVariant->sku = $value.'-'.$product->id;
