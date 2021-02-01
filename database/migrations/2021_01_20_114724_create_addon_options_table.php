@@ -18,7 +18,7 @@ class CreateAddonOptionsTable extends Migration
             $table->string('title', 50)->nullable();
             $table->bigInteger('addon_id')->unsigned();
             $table->smallInteger('position')->default(1);
-            $table->decimal('price' 10, 2)->nullable();
+            $table->decimal('price', 10, 2)->nullable();
             $table->timestamps();
 
             $table->foreign('addon_id')->references('id')->on('addon_sets')->onDelete('cascade');
