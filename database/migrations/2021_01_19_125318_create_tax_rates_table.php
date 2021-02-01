@@ -22,8 +22,8 @@ class CreateTaxRatesTable extends Migration
             $table->string('zip_to', 100)->nullable();
             $table->string('state', 40)->nullable();
             $table->string('country', 40)->nullable();
-            $table->decimal('tax_rate')->nullable();
-            $table->decimal('tax_amount')->nullable();
+            $table->decimal('tax_rate',  10, 2)->nullable();
+            $table->decimal('tax_amount',  10, 2)->nullable();
             $table->timestamps();
 
             $table->index('is_zip');

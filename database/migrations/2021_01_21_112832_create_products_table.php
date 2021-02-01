@@ -15,7 +15,7 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('sku', 50);
+            $table->string('sku', 50)->unique();
             $table->string('title', 60)->nullable();
             $table->string('url_slug', 100)->nullable();
             $table->longText('description')->nullable();
@@ -26,9 +26,9 @@ class CreateProductsTable extends Migration
             $table->bigInteger('country_origin_id')->unsigned()->nullable();
             $table->tinyInteger('is_new')->default(0)->comment('0 - no, 1 - yes');
             $table->tinyInteger('is_featured')->default(0)->comment('0 - no, 1 - yes');
-            $table->tinyInteger('is_live')->default(0)->comment('0 - no, 1 - yes');
+            $table->tinyInteger('is_live')->default(0)->comment('0 - draft, 1 - published, 2 - blocked');
             $table->tinyInteger('is_physical')->default(0)->comment('0 - no, 1 - yes');
-            $table->decimal('weight', 8, 8)->nullable();
+            $table->decimal('weight', 10, 4)->nullable();
             $table->string('weight_unit', 10)->nullable();
             $table->tinyInteger('has_inventory')->default(0)->comment('0 - no, 1 - yes');
             $table->tinyInteger('sell_when_out_of_stock')->default(0)->comment('0 - no, 1 - yes');
@@ -42,6 +42,14 @@ class CreateProductsTable extends Migration
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
             $table->foreign('type_id')->references('id')->on('types')->onDelete('set null');
             $table->foreign('country_origin_id')->references('id')->on('countries')->onDelete('set null');
+            $table->index('is_new');
+            $table->index('is_featured');
+            $table->index('is_live');
+            $table->index('is_physical');
+            $table->index('has_inventory');
+            $table->index('sell_when_out_of_stock');
+            $table->index('requires_shipping');
+            $table->index('Requires_last_mile');
         });
     }
 

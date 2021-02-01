@@ -253,4 +253,51 @@ class VariantController extends BaseController
         }
         return redirect('client/category')->with('success', 'Variant order updated successfully!');
     }
+
+    /**
+     * save the order of variant.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Variant  $variant
+     * @return \Illuminate\Http\Response
+     */
+    public function makeHtmlData($variants)
+    {
+        $html = '<div class="row mb-2">';
+      
+        foreach ($variants as $vk => $var) {
+            $html .= '<div class="col-sm-3"> <label class="control-label">'.$var->title.'</label> </div> 
+                    <div class="col-sm-9">';
+            foreach ($var->option as $key => $opt) {
+                $html .='<div class="checkbox checkbox-success form-check-inline pr-3">
+                    <input type="checkbox" name="variant'.$var->id.'" class="intpCheck" opt="'.$opt->id.';'.$opt->title.'" varId="'.$var->id.';'.$var->title.'" id="opt_vid_'.$opt->id.'"> 
+                    <label  for="opt_vid_'.$opt->id.'">'.$opt->title.'</label></div>';
+            }
+
+            $html .='</div>';
+        }
+        $html .='<div>';
+        return $html;
+    }
+
+    /**
+     * save the order of variant.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Variant  $variant
+     * @return \Illuminate\Http\Response
+     */
+    public function variantbyCategory($cid)
+    {
+        $variants = Variant::with('option', 'varcategory.cate.english')
+                        ->select('variants.*')
+                        ->join('variant_categories', 'variant_categories.variant_id', 'variants.id')
+                        ->where('variant_categories.category_id', $cid)
+                        ->where('variants.status', '!=', 2)
+                        ->orderBy('position', 'asc')->get();
+
+        $makeHtml = $this->makeHtmlData($variants);
+        return response()->json(array('success' => true, 'resp'=>$makeHtml));
+    }
+
 }

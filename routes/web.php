@@ -24,7 +24,10 @@ Route::get('/banner/{img}',function($img){
     return \Image::make($image)->fit(460, 120)->response('jpg');
 });
 
-
+Route::get('/product/{img}',function($img){
+	$image  = storage_path('app/public/product/'.$img);
+    return \Image::make($image)->fit(460, 320)->response('jpg');
+});
 /*		 GOD - PANEL 			*/
 Route::group(['prefix' => '/godpanel'], function () {
 	Route::get('login', function(){
@@ -97,6 +100,7 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 	Route::get('category/delete/{id}','Client\CategoryController@destroy');
 	Route::resource('variant','Client\VariantController');
 	Route::post('variant/order','Client\VariantController@updateOrders')->name('variant.order');
+	Route::get('variant/cate/{cid}','Client\VariantController@variantbyCategory');
 	Route::resource('brand','Client\BrandController');
 	Route::post('brand/order','Client\BrandController@updateOrders')->name('brand.order');
 
@@ -126,9 +130,13 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 
 	Route::resource('order','Client\OrderController');
 
+	Route::resource('product','Client\ProductController');
+
 	Route::get('product/create/{vendor_id}','Client\ProductController@create')->name('product.create');
-	Route::post('product/store','Client\ProductController@store')->name('product.store');
-	
+	Route::post('product/deleteVariant','Client\ProductController@deleteVariant')->name('product.deleteVariant');
+	Route::post('product/images','Client\ProductController@images')->name('product.images');
+	Route::post('product/variantRows','Client\ProductController@makeVariantRows')->name('product.makeRows');
+
 });
 
 Route::group(['middleware' => 'auth:client', 'prefix' => '/'], function () {

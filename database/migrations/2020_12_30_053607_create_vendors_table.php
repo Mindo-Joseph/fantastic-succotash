@@ -20,14 +20,14 @@ class CreateVendorsTable extends Migration
             $table->string('logo', 150)->nullable();
             $table->string('banner', 150)->nullable();
             $table->string('address')->nullable();
-            $table->decimal('latitude', 10, 8)->nullable();
-            $table->decimal('longitude', 12, 8)->nullable();
+            $table->decimal('latitude', 15, 12)->nullable();
+            $table->decimal('longitude', 16, 12)->nullable();
             $table->decimal('order_min_amount', 10, 2)->default(0);
             $table->string('order_pre_time', 40)->nullable();
             $table->string('auto_reject_time', 40)->nullable();
             $table->smallInteger('commission_percent')->default(1)->nullable();
-            $table->decimal('commission_fixed_per_order')->default(0)->nullable();
-            $table->decimal('commission_monthly')->default('0')->nullable();
+            $table->decimal('commission_fixed_per_order', 10, 2)->default(0)->nullable();
+            $table->decimal('commission_monthly', 10, 2)->default('0')->nullable();
             $table->tinyInteger('dine_in')->default('0')->comment('1 for yes, 0 for no');
             $table->tinyInteger('takeaway')->default('0')->comment('1 for yes, 0 for no');
             $table->tinyInteger('delivery')->default('0')->comment('1 for yes, 0 for no');
