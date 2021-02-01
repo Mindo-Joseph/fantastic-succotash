@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{VendorSlotDate, Vendor, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet};
+use App\Models\{VendorSlotDate, Vendor, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Product};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -113,7 +113,7 @@ class VendorController extends BaseController
     {
         $vendor = Vendor::findOrFail($id);
         $categories = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
-                        ->select('ct.name', 'categories.id', 'ct.category_id', 'categories.icon', 'categories.slug', 'categories.type', 'categories.parent_id', 'categories.vendor_id', 'categories.is_core')
+                        ->select('ct.name', 'categories.id', 'ct.category_id', 'categories.icon', 'categories.slug', 'categories.type_id', 'categories.parent_id', 'categories.vendor_id', 'categories.is_core')
 
                         ->where(function($q) use($id){
                               $q->whereNull('categories.vendor_id')
@@ -148,7 +148,10 @@ class VendorController extends BaseController
     public function vendorCatalog($id)
     {
         $vendor = Vendor::findOrFail($id);
-        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'tab' => 'catalog']);
+        $products = Product::with('variant', 'english', 'category.cat', 'variantSet')->where('vendor_id', $id)->get();
+
+        //dd($products->toArray());
+        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'tab' => 'catalog', 'products' => $products]);
     }
 
     /**

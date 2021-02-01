@@ -39,8 +39,8 @@ class CreateClientPreferencesTable extends Migration
             $table->string('apple_client_secret', 100)->nullable();
             $table->string('apple_client_url', 200)->nullable();
             $table->string('Default_location_name', 200)->nullable();
-            $table->decimal('Default_latitude', 10, 8)->default(0);
-            $table->decimal('Default_longitude', 12, 8)->default(0);
+            $table->decimal('Default_latitude', 15, 12)->default(0);
+            $table->decimal('Default_longitude', 16, 12)->default(0);
             $table->bigInteger('map_provider')->unsigned()->nullable();
             $table->string('map_key', 100)->nullable();
             $table->string('map_secret', 100)->nullable();

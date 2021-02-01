@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Add Product'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Edit Product'])
 
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
@@ -43,11 +43,11 @@
         </div>
     </div>
 
-    <form action="{{route('product.store')}}" enctype="multipart/form-data" method="post" class="product_form">
+    <form action="{{route('product.update', $product->id)}}" enctype="multipart/form-data" method="post" class="product_form">
         <div class="row">
-            {!! Form::hidden('vendor_id', $vendor_id) !!}
             <div class="col-lg-7">
                 @csrf
+                @method('PUT')
                 <div class="card-box">
                     <h5 class="text-uppercase bg-light p-2 mt-0 mb-3">General</h5>
                     <div class="row mb-2">
@@ -55,15 +55,15 @@
                             {!! Form::label('title', 'Product Type',['class' => 'control-label']) !!}
                             <select class="form-control selectizeInput" id="typeSelectBox" name="type_id">
                                 @foreach($typeArray as $type)
-                                    <option value="{{$type->id}}">{{$type->title}}</option>
+                                    <option value="{{$type->id}}" @if($type->id == $product->type_id) selected @endif >{{$type->title}}</option>
                                 @endforeach
                             </select>
                         </div>
 
-                        <div class="col-6 mb-2">
+                        <div class="col-6 mb-2" style="cursor: not-allowed;">
                             {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
-                            {!! Form::text('sku', null, ['class'=>'form-control','id' => 'sku', 'onkeypress' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
+                            {!! Form::text('sku', $product->sku, ['class'=>'form-control','id' => 'sku', 'style' => 'pointer-events:none;']) !!}
 
                             @if($errors->has('sku'))
                                 <span class="text-danger" role="alert">
@@ -74,17 +74,12 @@
 
                         <div class="col-6" style="cursor: not-allowed;">
                             {!! Form::label('title', 'Url Slug',['class' => 'control-label']) !!}
-                            {!! Form::text('product_url', null, ['class'=>'form-control', 'id' => 'product_url', 'placeholder' => 'Apple iMac', 'style' => 'pointer-events:none;']) !!}
+                            {!! Form::text('url_slug', $product->url_slug, ['class'=>'form-control', 'id' => 'url_slug', 'style' => 'pointer-events:none;']) !!}
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-6" style="cursor: not-allowed;">
                             {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
-                            <select class="form-control selectizeInput" id="category_list" name="category[]">
-                                <option value="">Select Category...</option>
-                                @foreach($categories as $cate)
-                                    <option value="{{$cate->id}}">{{$cate->english->name}}</option>
-                                @endforeach
-                            </select>
+                            {!! Form::text('url_slug', $product->category->cat->slug, ['class'=>'form-control', 'id' => 'url_slug', 'style' => 'pointer-events:none;']) !!}
                         </div>
                     </div>
                 </div>
@@ -106,31 +101,31 @@
                     <div class="row mb-2">
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Product Name',['class' => 'control-label']) !!}
-                            {!! Form::text('product_name', null, ['class'=>'form-control', 'id' => 'product_name', 'placeholder' => 'Apple iMac']) !!}
+                            {!! Form::text('product_name', $product->english->title, ['class'=>'form-control', 'id' => 'product_name', 'placeholder' => 'Apple iMac']) !!}
                         </div>
 
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Product Desription',['class' => 'control-label']) !!}
-                            {!! Form::textarea('body_html', null, ['class'=>'form-control', 'id' => 'body_html', 'placeholder' => 'Description', 'rows' => '3']) !!}
+                            {!! Form::textarea('body_html', $product->english->body_html, ['class'=>'form-control', 'id' => 'body_html', 'placeholder' => 'Description', 'rows' => '3']) !!}
                         </div>
 
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!}
-                            {!! Form::text('meta_title', null, ['class'=>'form-control', 'id' => 'meta_title', 'placeholder' => 'Meta Title']) !!}
+                            {!! Form::text('meta_title', $product->english->meta_title, ['class'=>'form-control', 'id' => 'meta_title', 'placeholder' => 'Meta Title']) !!}
                         </div>
 
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Meta Keyword',['class' => 'control-label']) !!}
-                            {!! Form::textarea('meta_keyword', null, ['class'=>'form-control', 'id' => 'meta_keyword', 'placeholder' => 'Meta Keyword', 'rows' => '3']) !!}
+                            {!! Form::textarea('meta_keyword', $product->english->meta_keyword, ['class'=>'form-control', 'id' => 'meta_keyword', 'placeholder' => 'Meta Keyword', 'rows' => '3']) !!}
                         </div>
 
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Meta Desription',['class' => 'control-label']) !!}
-                            {!! Form::textarea('meta_description', null, ['class'=>'form-control', 'id' => 'meta_description', 'placeholder' => 'Meta Desription', 'rows' => '3']) !!}
+                            {!! Form::textarea('meta_description', $product->english->meta_description, ['class'=>'form-control', 'id' => 'meta_description', 'placeholder' => 'Meta Desription', 'rows' => '3']) !!}
                         </div>
                     </div>
                 </div>
-
+                @if(empty($product->variantSet))
                 <div class="card-box">
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Pricing Information</h5>
                     <div class="row mb-2">
@@ -167,6 +162,7 @@
 
                     </div>
                 </div>
+                @endif
 
                 <div class="card-box">
                     
@@ -180,7 +176,86 @@
                     </div>
                     <p>Select or change category to get variants</p>
                     <div class="row" style="width:100%; overflow-x: scroll;">
-                        <div id="variantAjaxDiv" class="col-12 mb-2" ></div>
+                        <div id="variantAjaxDiv" class="col-12 mb-2" >
+                            <h5 class="">Variant List</h5>
+                            <div class="row mb-2">
+                                
+                                @foreach($productVariants as $vk => $var)
+                                    <div class="col-sm-3"> 
+                                        <label class="control-label">{{$var->title}}</label>
+                                    </div> 
+                                    <div class="col-sm-9">
+                                    @foreach($var->option as $key => $opt)
+                                        <div class="checkbox checkbox-success form-check-inline pr-3">
+                                            <input type="checkbox" name="variant{{$var->id}}" class="intpCheck" opt="{{$opt->id.';'.$opt->title}}" varId="{{$var->id.';'.$var->title}}" id="opt_vid_{{$opt->id}}" @if(in_array($opt->id, $existOptions)) checked @endif> 
+                                            <label  for="opt_vid_{{$opt->id}}">{{$opt->title}}</label>
+                                        </div>
+                                    @endforeach
+                                    </div>
+                                @endforeach
+                            </div>
+
+                        </div>
+                        <div class="col-12" id="exist_variant_div">
+                            <h5 class="">Applied Variants Set</h5>
+                            <table class="table table-centered table-nowrap table-striped">
+                                <thead>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Variants</th>
+                                    <th>Price</th>
+                                    <th>Compare at price</th>
+                                    <th>Cost Price</th>
+                                    <th>Quantity</th>
+                                    <th> </th>
+                                </thead>
+                                @foreach($product->variant as $varnt)
+                                    @php 
+                                        $existSet = array();
+                                        $mediaPath = (empty($varnt->set[0]->path)) ? asset("assets/images/default_image.png") : url('storage/'.$varnt->set[0]->path);
+                                        $existSet = explode('-', $varnt->sku);
+                                        $vsets = '';
+
+                                    @endphp
+                                    @foreach($varnt->set as $vs)
+                                         @php 
+                                            $vsets .= $vs->title.', ';
+                                         @endphp
+                                    @endforeach
+                                    <tr>
+                                        <td>
+                                            <div class="image-upload">
+                                              <label class="file-input" for="file-input_{{$varnt->id}}">
+                                                <img src="{{$mediaPath}}" width="30" height="30" class="vimg_{{$varnt->id}}"/>
+                                              </label>
+
+                                              <input id="file-input_{{$varnt->id}}" type="file" name="variantImage-{{$varnt->id}}" class="vimage" for="{{$varnt->id}}"/>
+                                            </div>
+                                        </td>
+                                        <td> 
+                                            <input type="hidden" name="exist_variant[]" value="{{$varnt->id}}">
+                                            <input type="hidden" class="exist_sets" value="{{$existSet[(count($existSet) - 2)]}}">
+                                            <input type="text" name="exist_variant_titles[]" value="{{$varnt->title}}">
+                                        </td>
+                                        <td>{{rtrim($vsets, ', ')}}</td>
+                                        <td>
+                                            <input type="text" style="width: 70px;" name="exist_variant_price[]" value="{{$varnt->price}}" onkeypress="return isNumberKey(event)"> </td>
+                                        <td>
+                                            <input type="text" style="width: 100px;" name="exist_variant_compare_price[]" value="{{$varnt->compare_at_price}}" onkeypress="return isNumberKey(event)">
+                                        </td>
+                                        <td>
+                                            <input type="text" style="width: 70px;" name="exist_variant_cost_price[]" value="{{$varnt->cost_price}}" onkeypress="return isNumberKey(event)">
+                                        </td>
+                                        <td>
+                                            <input type="text" style="width: 70px;" name="exist_variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0);" varId="{{$varnt->id}}" class="action-icon deleteExistRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
 
                         <div id="variantRowDiv" class="col-12"></div>
                         
@@ -197,11 +272,11 @@
                     <div class="row mb-2">
                         {!! Form::label('title', 'New',['class' => 'control-label col-sm-2']) !!}
                         <div class="col-sm-4">
-                            <input type="checkbox" bid="" id="is_new" data-plugin="switchery" name="is_new" class="chk_box" data-color="#039cfd">
+                            <input type="checkbox" id="is_new" data-plugin="switchery" name="is_new" class="chk_box" data-color="#039cfd" @if($product->is_new == 1) checked @endif>
                         </div>
                         {!! Form::label('title', 'Featured',['class' => 'control-label col-sm-2']) !!}
                         <div class="col-sm-4">
-                            <input type="checkbox" bid="" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#039cfd">
+                            <input type="checkbox" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#039cfd" @if($product->is_new == 1) checked @endif>
                         </div>
                     </div>
 
@@ -209,15 +284,15 @@
                         <div class="col-sm-6">
                             {!! Form::label('title', 'Live',['class' => 'control-label']) !!}
                             <select class="selectize-select form-control" id="is_live" name="is_live">
-                                <option value="0">Draft</option>
-                                <option value="1">Published</option>
+                                <option value="0" @if($product->is_live == 0) selected @endif>Draft</option>
+                                <option value="1" @if($product->is_live == 1) selected @endif>Published</option>
                             </select>
                         </div>
                         <div class="col-sm-6">
                             {!! Form::label('title', 'Tax Category',['class' => 'control-label']) !!}
                             <select class="form-control selectizeInput" id="typeSelectBox" name="tax_category">
                                 @foreach($taxCate as $cate)
-                                    <option value="{{$cate->id}}">{{$cate->title}}</option>
+                                    <option value="{{$cate->id}}" @if($product->variant[0]->tax_category_id == $cate->id) selected @endif>{{$cate->title}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -226,35 +301,35 @@
                     <div class="row mb-2">
                         {!! Form::label('title', 'Physical',['class' => 'control-label col-sm-2']) !!}
                         <div class="col-sm-4">
-                            <input type="checkbox" bid="" id="is_physical" data-plugin="switchery" name="is_physical" class="chk_box" data-color="#039cfd">
+                            <input type="checkbox" bid="" id="is_physical" data-plugin="switchery" name="is_physical" class="chk_box" data-color="#039cfd" @if($product->is_physical == 1) checked @endif>
                         </div>
 
                         {!! Form::label('title', 'Required Last Mile',['class' => 'control-label col-sm-2']) !!}
                         <div class="col-sm-4">
-                            <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#039cfd">
+                            <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#039cfd" @if($product->Requires_last_mile == 1) checked @endif>
                         </div>
                     </div>
-                    <div class="row mb-2 physicalDiv" style="display: none;">
+                    <div class="row mb-2 physicalDiv" style="{{ ($product->is_physical == 1) ? '' : 'display: none;' }}">
                         <div class="col-sm-6">
                             {!! Form::label('title', 'Weight',['class' => 'control-label']) !!}
-                            {!! Form::text('weight', null,['class' => 'form-control', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                            {!! Form::text('weight', $product->weight,['class' => 'form-control', 'onkeypress' => 'return isNumberKey(event)']) !!}
                         </div>
                         <div class="col-sm-6">
                             {!! Form::label('title', 'Weight Unit',['class' => 'control-label']) !!}
-                            {!! Form::text('weight_unit', null,['class' => 'form-control']) !!}
+                            {!! Form::text('weight_unit', $product->weight_unit,['class' => 'form-control']) !!}
                         </div>
                     </div>
-                    <div class="row mb-2 physicalDiv" style="display: none;">
+                    <div class="row mb-2 physicalDiv" style="{{ ($product->is_physical == 1) ? '' : 'display: none;' }}">
                         {!! Form::label('title', 'Required Shipping',['class' => 'control-label col-sm-2 mb-2']) !!}
                         <div class="col-sm-4 mb-2">
-                            <input type="checkbox" id="requiredShipping" data-plugin="switchery" name="require_ship" class="chk_box" data-color="#039cfd">
+                            <input type="checkbox" id="requiredShipping" data-plugin="switchery" name="require_ship" class="chk_box" data-color="#039cfd" @if($product->requires_shipping == 1) checked @endif>
                         </div>
                         <div class="col-sm-6"></div>
-                        <div class="col-sm-6 shippingDiv" style="display: none;">
+                        <div class="col-sm-6 shippingDiv" style="{{($product->requires_shipping == 1) ? '' : 'display:none;' }}">
                             {!! Form::label('title', 'Country Origin',['class' => 'control-label']) !!}
                             <select class="form-control selectizeInput" id="country_origin_id" name="country_origin_id">
                                 @foreach($countries as $coun)
-                                    <option value="{{$coun->id}}">{{$coun->name}}</option>
+                                    <option value="{{$coun->id}}" @if($product->country_origin_id == $coun->id) selected @endif>{{$coun->name}}</option>
                                 @endforeach
                             </select>
 
@@ -264,6 +339,16 @@
 
                 <div class="card-box">
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Product Images</h5>
+                    <div class="row mb-2">
+                        @foreach($product->media as $media)
+                        <div class="col-4" style="overflow: hidden;">
+                            @php 
+                                $mediaPath = (empty($media->path)) ? asset("assets/images/default_image.png") : url($media->path);
+                            @endphp
+                            <img src="{{$mediaPath}}" style="width:100%;" class="vimg_{{$media->id}}"/>
+                        </div>
+                        @endforeach
+                    </div>
                     <div class="dropzone dropzone-previews" id="my-awesome-dropzone"></div>
 
                     <div class="imageDivHidden" ></div>
@@ -278,7 +363,7 @@
                             <select class="form-control selectizeInput" name="addon_sets[]" multiple placeholder="Select gear...">
                                 <option value="">Select gear...</option>
                                 @foreach($addons as $set)
-                                <option value="{{$set->id}}">{{$set->title}}</option>
+                                <option value="{{$set->id}}" @if(in_array($set->id, $addOn_ids)) selected @endif>{{$set->title}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -460,33 +545,39 @@
     });
 
     $('.makeVariantRow').click(function(){
-        var product_sku = $('#sku').val();
-        if(product_sku.trim() == ''){
+        var psku = $('#sku').val();
+        if(psku.trim() == ''){
             alert('Enter Product sku.');
             return false;
         }
-        var var_ids = [];
-        var opt_ids = [];
-        count = 0;
+        var vids = [];
+        var optids = [];
+        var exist = [];
         $("#variantAjaxDiv .intpCheck").each(function(){
             var $this = $(this);
             if($this.is(":checked") ){
-                opt_ids.push($this.attr('opt'));
-                var_ids.push($this.attr('varid'));
+                optids.push($this.attr('opt'));
+                vids.push($this.attr('varid'));
             }
         });
-        
+
+        $("#exist_variant_div .exist_sets").each(function(){
+            exist.push($(this).val());
+        });
+
         $.ajax({
             type: "post",
             url: "{{route('product.makeRows')}}",
-            data: {"_token": "{{ csrf_token() }}", 'variantIds' : var_ids, 'optionIds' : opt_ids, 'sku': product_sku},
+            data: {"_token": "{{ csrf_token() }}", 'variantIds' : vids, 'optionIds' : optids, 'sku': psku, 'existing' : exist},
             dataType: 'json',
             success: function (resp) {
                 if(resp.success == 'false'){
                     alert(resp.msg);
+                    $('#variantRowDiv').html('');
                 }else{
                     $('#variantRowDiv').html(resp.html);
                 }
+                
             },
             error: function (resp) {
                 console.log('data2');
@@ -496,6 +587,26 @@
 
     $(document).on('click', '.deleteCurRow', function () {
         $(this).closest('tr').remove();
+    });
+
+    $(document).on('click', '.deleteExistRow', function () {
+        var prod_id = '{{$product->id}}';
+        var prod_var_id = $(this).attr('varid');
+        $this = $(this);
+
+        if(confirm("Are you sure? You want to delete this brand.")) {
+            $.ajax({
+                type: "post",
+                url: "{{route('product.deleteVariant')}}",
+                data: {"_token": "{{ csrf_token() }}", 'prod_id' : prod_id, 'prod_var_id' : prod_var_id},
+                dataType: 'json',
+                success: function (resp) {
+                    alert(resp.msg);
+                    $this.closest('tr').remove();
+                }
+            });
+        }
+        return false;
     });
 
     $(document).on('change', '.vimage', function () {
@@ -510,7 +621,7 @@
             reader.onload = function(e) {
                 $('.vimg_'+forv).attr('src', e.target.result);
             }
-            reader.readAsDataURL(input.files[0]); // convert to base64 string
+            reader.readAsDataURL(input.files[0]);
         }
     }
 

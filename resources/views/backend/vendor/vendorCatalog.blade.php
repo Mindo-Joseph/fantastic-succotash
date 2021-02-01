@@ -180,9 +180,61 @@
                                           <a class="btn btn-blue waves-effect waves-light text-sm-right"
                                            dataid="0" href="{{route('product.create', $vendor->id)}}"><i class="mdi mdi-plus-circle mr-1"></i> Add Product
                                           </a>
-                                      </div> 
-
+                                      </div>
                                     </div>
+
+                                    <div class="table-responsive">
+                                      <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
+                                          <thead>
+                                              <tr>
+                                                  <th>SKU</th>
+                                                  <th>Name</th>
+                                                  <th>New</th>
+                                                  <th>Featured</th>
+                                                  <th>Is live</th>
+                                                  <th>Physical</th>
+                                                  <th>Required Shipping</th>
+                                                  <th>Has Inventory</th>
+                                                  <th>Has Variant</th>
+                                                  <th>Action</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody id="post_list">
+                                              @foreach($products as $prod)
+                                              <tr data-row-id="{{$prod->id}}">
+                                                  <td> 
+                                                     <!-- <img src="{{ url('storage/'.$prod->logo)}}" alt="{{$prod->id}}" width="50" height="50"> -->
+                                                     {{ $prod->sku }}
+                                                  </td>
+                                                  <td> {{ $prod->english->title }} </td>
+                                                  <td> {{ ($prod->is_new == 0) ? 'No' : 'Yes' }}</td>
+                                                  <td> {{ ($prod->is_featured == 0) ? 'No' : 'Yes' }}</td>
+                                                  <td> {{ ($prod->is_live == 0) ? 'No' : 'Yes' }}</td>
+                                                  <td> {{ ($prod->is_physical == 0) ? 'No' : 'Yes' }}</td>
+                                                  <td> {{ ($prod->requires_shipping == 0) ? 'No' : 'Yes' }}</td>
+                                                  <td> {{ ($prod->has_inventory == 0) ? 'No' : 'Yes' }}</td>
+                                                  <td> {{ (empty($prod->variantSet)) ? 'No' : 'Yes' }}</td>
+                                                  <td> 
+                                                    <div class="form-ul" style="width: 60px;">
+                                                      <div class="inner-div" style="float: left;">
+                                                        <a class="action-icon" href="{{ route('product.edit', $prod->id) }}" userId="{{$prod->id}}"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                                      </div>
+                                                      <div class="inner-div">
+                                                          <form method="POST" action="">
+                                                              @csrf
+                                                              @method('DELETE')
+                                                              <div class="form-group">
+                                                                 <button type="submit" onclick="return confirm('Are you sure? You want to delete the vendor.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button>
+                                                              </div>
+                                                          </form>
+                                                      </div>
+                                                    </div>
+                                                  </td>
+                                              </tr>
+                                             @endforeach
+                                          </tbody>
+                                      </table>
+                                  </div>
                                 </div>
                             </div>
                         </div>
@@ -196,39 +248,8 @@
         <input type="text" id="def-address" name="test" class="autocomplete form-control def_address">
     </div>
 
-
-
-
-
-
-<div class="row">
-    <div class="col-lg-3" style="display: none;">
-        <button class="btn btn-lg font-16 btn-primary btn-block" id="btn-new-event"><i class="mdi mdi-plus-circle-outline"></i> Create New Event</button>
-        <div id="external-events" class="m-t-20">
-            
-        </div>
-
-
-       
-
-    </div> <!-- end col-->
-
-    <div class="col-lg-9">
-        <div id="calendar"></div>
-    </div> <!-- end col -->
-
-</div>
-
-<script src="{{asset('assets/libs/fullcalendar-list/fullcalendar-list.min.js')}}"></script>
-<script src="{{asset('assets/libs/moment/moment.min.js')}}"></script>
-
-<!-- Page js-->
-<script src="{{asset('assets/js/pages/calendar.init.js')}}"></script>
-
 <script type="text/javascript">
-
-
-               
+   
        /*$('#submitButton').on('click', function(e){
            // We don't want this to act as a link so cancel the link action
            e.preventDefault();
@@ -280,8 +301,8 @@
                }
            });
            
-       }*/
-    });
+       }
+    });*/
 
 </script>
 
