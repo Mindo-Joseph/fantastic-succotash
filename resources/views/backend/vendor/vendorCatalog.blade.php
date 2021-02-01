@@ -206,7 +206,7 @@
                                                      <!-- <img src="{{ url('storage/'.$prod->logo)}}" alt="{{$prod->id}}" width="50" height="50"> -->
                                                      {{ $prod->sku }}
                                                   </td>
-                                                  <td> {{ $prod->english->title }} </td>
+                                                  <td> {{ (isset($prod->english->title) && !empty($prod->english->title)) ? $prod->english->title : '' }} </td>
                                                   <td> {{ ($prod->is_new == 0) ? 'No' : 'Yes' }}</td>
                                                   <td> {{ ($prod->is_featured == 0) ? 'No' : 'Yes' }}</td>
                                                   <td> {{ ($prod->is_live == 0) ? 'No' : 'Yes' }}</td>
