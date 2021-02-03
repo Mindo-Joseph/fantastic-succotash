@@ -110,11 +110,9 @@
     </div>
 </div>
 
-@include('backend.banner.modals')
 @endsection
 
 @section('script')
-
 
 <script type="text/javascript">
     function assignSortAttach() {

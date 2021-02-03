@@ -54,12 +54,6 @@
                         <span> Vendors </span>
                     </a>
                 </li>
-                <li>   
-                    <a href="{{route('accounting.index')}}" >
-                        <i data-feather="briefcase"></i>
-                        <span> Accounting </span>
-                    </a>
-                </li>
 
                 <li class="menu-title mt-2">Setting</li>
                 <li>   
@@ -123,45 +117,26 @@
                         <span> Catalog </span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{route('tax.index')}}">
+                        <i data-feather="layers"></i><span> Tax </span>
+                    </a>
+                </li>
                 <li>   
                     <a href="{{route('payment.index')}}" >
                         <i data-feather="dollar-sign"></i>
-                        <span> Payment Setting </span>
+                        <span> Payments </span>
                     </a>
-                </li> 
-                <li>   
-                    <a href="{{route('cms.index')}}" >
-                        <i data-feather="link-2"></i>
-                        <span> CMS </span>
-                    </a>
-                </li> 
+                </li>
                 <li>   
                     <a href="{{route('promocode.index')}}" >
                         <i data-feather="gift"></i>
                         <span> Promocode </span>
                     </a>
                 </li>
-                <li>   
-                    <a href="#" >
-                        <i data-feather="credit-card"></i>
-                        <span> Admin ACL </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{route('tax.index')}}">
-                        <i data-feather="layers"></i><span> Tax </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" href1="notifications.index">
-                        <i data-feather="bell"></i>
-                        <span> Notifications </span>
-                    </a>
-                </li>
-
 
                 
-            @if(env('APP_DEBUG'))
+            {{-- @if(env('APP_DEBUG'))
                 <li class="menu-title mt-5">Other Pages</li>
 
                 <li>
@@ -854,7 +829,7 @@
                         </ul>
                     </div>
                 </li> 
-                @endif
+                @endif --}}
             </ul>
 
         </div>

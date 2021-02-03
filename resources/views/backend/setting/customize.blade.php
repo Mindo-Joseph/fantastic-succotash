@@ -16,7 +16,7 @@
     <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
         @csrf
         <div class="row">
-            <div class="col-xl-11 col-md-offset-1">
+            <div class="col-xl-12">
                 <div class="card-box">
                     <div class="row mb-2">
                         <div class="col-sm-8">
@@ -64,122 +64,127 @@
         </div>
     </form>
 
-    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
-        @csrf
-        <div class="row">
-            <div class="col-xl-11 col-md-offset-1">
-                <div class="card-box">
-                    <h4 class="header-title"> Web Template</h4>
-                    <p class="sub-header">
-                        Select web templete
-                    </p>
-                    <div class="row mb-2">
-                        @foreach($webTemplates as $webt)
-                        <div class="col-lg-4 col-xl-3">
-                            <div class="card">
-                                <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-12 custom-control custom-radio">
-                                            <input type="radio" value="{{$webt->id}}" id="webTemplate{{$webt->id}}" name="web_template_id" class="custom-control-input" {{ ($preference && $preference->web_template_id == $webt->id)? "checked" : "" }}>
-                                            <label class="custom-control-label" for="webTemplate{{$webt->id}}">{{$webt->name}}</label>
+    <div class="row">
+        <div class="col-6">
+            <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+                @csrf
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card-box">
+                            <h4 class="header-title"> Web Template</h4>
+                            <p class="sub-header">
+                                Select web templete
+                            </p>
+                            <div class="row mb-2">
+                                @foreach($webTemplates as $webt)
+                                <div class="col-lg-4 col-xl-3">
+                                    <div class="card">
+                                        <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-sm-12 custom-control custom-radio">
+                                                    <input type="radio" value="{{$webt->id}}" id="webTemplate{{$webt->id}}" name="web_template_id" class="custom-control-input" {{ ($preference && $preference->web_template_id == $webt->id)? "checked" : "" }}>
+                                                    <label class="custom-control-label" for="webTemplate{{$webt->id}}">{{$webt->name}}</label>
+                                                </div>
+                                            </div>
+                                            
                                         </div>
                                     </div>
-                                    
                                 </div>
-                            </div>
-                        </div>
-                        @endforeach
+                                @endforeach
 
-                        <!--<div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="webTemplates">Web Template</label>
-                                <select class="form-control" >
-                                    @foreach($webTemplates as $webt)
-                                    <option value="{{ $webt->id }}" {{ ($preference && $preference->web_template_id == $webt->id)? "selected" : "" }}>{{ $webt->name }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                                @if($errors->has('web_template_id'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('web_template_id') }}</strong>
-                                </span>
-                                @endif
+                                <!--<div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="webTemplates">Web Template</label>
+                                        <select class="form-control" >
+                                            @foreach($webTemplates as $webt)
+                                            <option value="{{ $webt->id }}" {{ ($preference && $preference->web_template_id == $webt->id)? "selected" : "" }}>{{ $webt->name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @if($errors->has('web_template_id'))
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $errors->first('web_template_id') }}</strong>
+                                        </span>
+                                        @endif
+                                    </div>
+                                </div> -->
                             </div>
-                        </div> -->
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-2">
-                            <div class="form-group mb-0 text-center">
-                                <input type="hidden" name="send_to" id="send_to" value="customize">
-                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-
-    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
-        @csrf
-        <div class="row">
-            <div class="col-xl-11 col-md-offset-1">
-                <div class="card-box">
-                    <h4 class="header-title">App Template</h4>
-                    <p class="sub-header">
-                        Select app templete
-                    </p>
-                    <div class="row mb-2">
-                        @foreach($appTemplates as $webt)
-                        <div class="col-lg-4 col-xl-3">
-                            <div class="card" style="max-height: 445px; overflow: hidden;">
-                                <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
-                                <div class="card-body">
-                                    <div class="row">
-                                         <div class="col-sm-4 custom-control custom-radio">
-                                            <input type="radio" value="{{$webt->id}}" id="appTemplate{{$webt->id}}" name="app_template_id" class="custom-control-input" {{ ($preference && $preference->app_template_id == $webt->id)? "checked" : "" }}>
-                                        <label class="custom-control-label" for="appTemplate{{$webt->id}}">{{$webt->name}}</label>
-                                         </div>
+                            <div class="row mb-2">
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0 text-center">
+                                        <input type="hidden" name="send_to" id="send_to" value="customize">
+                                        <button class="btn btn-blue btn-block" type="submit"> Update </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        @endforeach
-                        <!--<div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="appTemplates">App Template</label>
-                                <select class="form-control" id="appTemplates" name="app_template_id">
-                                    @foreach($appTemplates as $webt)
-                                    <option value="{{ $webt->id }}" {{ ($preference && $preference->app_template_id == $webt->id)? "selected" : "" }}>{{ $webt->name }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                                @if($errors->has('app_template_id'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('app_template_id') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>-->
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-md-2">
-                            <div class="form-group mb-0 text-center">
-                                <input type="hidden" name="send_to" id="send_to" value="customize">
-                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-6">
+            <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+                @csrf
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card-box">
+                            <h4 class="header-title">App Template</h4>
+                            <p class="sub-header">
+                                Select app templete
+                            </p>
+                            <div class="row mb-2">
+                                @foreach($appTemplates as $webt)
+                                <div class="col-lg-4 col-xl-3">
+                                    <div class="card" style="max-height: 445px; overflow: hidden;">
+                                        <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                 <div class="col-sm-4 custom-control custom-radio">
+                                                    <input type="radio" value="{{$webt->id}}" id="appTemplate{{$webt->id}}" name="app_template_id" class="custom-control-input" {{ ($preference && $preference->app_template_id == $webt->id)? "checked" : "" }}>
+                                                <label class="custom-control-label" for="appTemplate{{$webt->id}}">{{$webt->name}}</label>
+                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                                <!--<div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="appTemplates">App Template</label>
+                                        <select class="form-control" id="appTemplates" name="app_template_id">
+                                            @foreach($appTemplates as $webt)
+                                            <option value="{{ $webt->id }}" {{ ($preference && $preference->app_template_id == $webt->id)? "selected" : "" }}>{{ $webt->name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @if($errors->has('app_template_id'))
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $errors->first('app_template_id') }}</strong>
+                                        </span>
+                                        @endif
+                                    </div>
+                                </div>-->
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0 text-center">
+                                        <input type="hidden" name="send_to" id="send_to" value="customize">
+                                        <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+    </div>
 
     <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
         @csrf
         <div class="row">
-            <div class="col-xl-11 col-md-offset-1">
+            <div class="col-xl-12">
                 <div class="card-box">
                     <h4 class="header-title">Nomenclature</h4>
                     <p class="sub-header">
@@ -252,100 +257,106 @@
         </div>
     </form>
 
-    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
-        @csrf
-        <div class="row">
-            <div class="col-xl-11 col-md-offset-1">
-                <div class="card-box">
-                    <h4 class="header-title">Date & Time</h4>
-                    <p class="sub-header">
-                        View and update the date & time format.
-                    </p>
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="date_format">DATE FORMAT</label>
-                                <select class="form-control" id="date_format" name="date_format">
-                                    <option value="DD-MM-YYYY" {{ ($preference && $preference->date_format =="DD-MM-YYYY")? "selected" : "" }}>
-                                        DD-MM-YYYY</option>
-                                    <option value="DD/MM/YYYY" {{ ($preference && $preference->date_format =="DD/MM/YYYY")? "selected" : "" }}>
-                                        DD/MM/YYYY</option>
-                                    <option value="YYYY-MM-DD" {{ ($preference && $preference->date_format =="YYYY-MM-DD")? "selected" : "" }}>
-                                        YYYY-MM-DD</option>
-                                </select>
-                                @if($errors->has('date_format'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('date_format') }}</strong>
-                                </span>
-                                @endif
+    <div class="row">
+        <div class="col-6">
+                <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+                @csrf
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card-box">
+                            <h4 class="header-title">Date & Time</h4>
+                            <p class="sub-header">
+                                View and update the date & time format.
+                            </p>
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="date_format">DATE FORMAT</label>
+                                        <select class="form-control" id="date_format" name="date_format">
+                                            <option value="DD-MM-YYYY" {{ ($preference && $preference->date_format =="DD-MM-YYYY")? "selected" : "" }}>
+                                                DD-MM-YYYY</option>
+                                            <option value="DD/MM/YYYY" {{ ($preference && $preference->date_format =="DD/MM/YYYY")? "selected" : "" }}>
+                                                DD/MM/YYYY</option>
+                                            <option value="YYYY-MM-DD" {{ ($preference && $preference->date_format =="YYYY-MM-DD")? "selected" : "" }}>
+                                                YYYY-MM-DD</option>
+                                        </select>
+                                        @if($errors->has('date_format'))
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $errors->first('date_format') }}</strong>
+                                        </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="time_format">TIME FORMAT</label>
+                                        <select class="form-control" id="time_format" name="time_format">
+                                            <option value="12" {{ ($preference && $preference->time_format =="12")? "selected" : "" }}>12 hours
+                                            </option>
+                                            <option value="24" {{ ($preference && $preference->time_format =="24")? "selected" : "" }}>24 hours
+                                            </option>
+                                        </select>
+                                        @if($errors->has('time_format'))
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $errors->first('time_format') }}</strong>
+                                        </span>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="time_format">TIME FORMAT</label>
-                                <select class="form-control" id="time_format" name="time_format">
-                                    <option value="12" {{ ($preference && $preference->time_format =="12")? "selected" : "" }}>12 hours
-                                    </option>
-                                    <option value="24" {{ ($preference && $preference->time_format =="24")? "selected" : "" }}>24 hours
-                                    </option>
-                                </select>
-                                @if($errors->has('time_format'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('time_format') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="row mb-2">
-                        <div class="col-md-2">
-                            <div class="form-group mb-0 text-center">
-                                <input type="hidden" name="send_to" id="send_to" value="customize">
-                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                            <div class="row mb-2">
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0 text-center">
+                                        <input type="hidden" name="send_to" id="send_to" value="customize">
+                                        <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
-
-    <form method="POST" action="{{route('client.updateDomain', Auth::user()->code)}}">
-        @csrf
-        <div class="row">
-            <div class="col-xl-11 col-md-offset-1">
-                <div class="card-box">
-                    <h4 class="header-title">Custom Domain</h4>
-                    <p class="sub-header">
-                        Update custom domain here.
-                    </p>
-                    <div class="row mb-2">
-                        <div class="col-sm-12">
-                            <div class="form-group mb-3">
-                                <label for="custom_domain">Custom Domain</label>
-                                <input type="text" name="custom_domain" id="custom_domain" placeholder="xyz"
-                                    class="form-control" value="{{ old('custom_domain', $preference->domain->custom_domain ?? '')}}">
-                                @if($errors->has('custom_domain'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('custom_domain') }}</strong>
-                                </span>
-                                @endif
+        <div class="col-6">
+            <form method="POST" action="{{route('client.updateDomain', Auth::user()->code)}}">
+                @csrf
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card-box">
+                            <h4 class="header-title">Custom Domain</h4>
+                            <p class="sub-header">
+                                Update custom domain here.
+                            </p>
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <div class="form-group mb-3">
+                                        <label for="custom_domain">Custom Domain</label>
+                                        <input type="text" name="custom_domain" id="custom_domain" placeholder="xyz"
+                                            class="form-control" value="{{ old('custom_domain', $preference->domain->custom_domain ?? '')}}">
+                                        @if($errors->has('custom_domain'))
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $errors->first('custom_domain') }}</strong>
+                                        </span>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-2">
-                            <div class="form-group mb-0 text-center">
-                                <input type="hidden" name="send_to" id="send_to" value="customize">
-                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                            <div class="row mb-2">
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0 text-center">
+                                        <input type="hidden" name="send_to" id="send_to" value="customize">
+                                        <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+    </div>
+      
 </div> <!-- container -->
 @endsection
 

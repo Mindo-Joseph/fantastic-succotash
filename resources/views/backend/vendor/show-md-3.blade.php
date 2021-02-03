@@ -12,7 +12,7 @@
         <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light"> Block </button>
     </div>
     <div class="text-left mt-3">
-        <h4 class="font-13 text-uppercase">Description :</h4>
+        <h4 class="font-13">Description :</h4>
         <p class="text-muted font-13 mb-3">
            {{$vendor->desc}}
         </p>
@@ -46,7 +46,7 @@
 </div> <!-- end card-box -->
 
 <div class="card-box">
-    <h4 class="header-title mb-3">Inbox</h4>
+    <h4 class="header-title mb-3">Users</h4>
 
     <div class="inbox-widget" data-simplebar style="max-height: 350px;">
         <div class="inbox-item">

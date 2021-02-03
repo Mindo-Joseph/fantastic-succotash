@@ -24,8 +24,8 @@ Route::get('/banner/{img}',function($img){
     return \Image::make($image)->fit(460, 120)->response('jpg');
 });
 
-Route::get('/product/{img}',function($img){
-	$image  = storage_path('app/public/product/'.$img);
+Route::get('/prods/{img}',function($img){
+	$image  = storage_path('app/public/prods/'.$img);
     return \Image::make($image)->fit(460, 320)->response('jpg');
 });
 /*		 GOD - PANEL 			*/
@@ -131,11 +131,14 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 	Route::resource('order','Client\OrderController');
 
 	Route::resource('product','Client\ProductController');
-
-	Route::get('product/create/{vendor_id}','Client\ProductController@create')->name('product.create');
+	Route::post('product/validate','Client\ProductController@validateData')->name('product.validate');
+	Route::get('product/add/{vendor_id}','Client\ProductController@create')->name('product.add');
+	Route::post('product/getImages','Client\ProductController@getImages')->name('productImage.get');
 	Route::post('product/deleteVariant','Client\ProductController@deleteVariant')->name('product.deleteVariant');
 	Route::post('product/images','Client\ProductController@images')->name('product.images');
+	Route::post('product/translation','Client\ProductController@translation')->name('product.translation');
 	Route::post('product/variantRows','Client\ProductController@makeVariantRows')->name('product.makeRows');
+	Route::post('product/variantImage/update','Client\ProductController@updateVariantImage')->name('product.variant.update');
 
 });
 
