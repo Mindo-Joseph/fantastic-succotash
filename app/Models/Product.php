@@ -45,6 +45,6 @@ class Product extends Model
   	}
 
     public function media(){
-        return $this->hasMany('App\Models\ProductImage')->select('media_type', 'product_id', 'path'); 
+        return $this->hasMany('App\Models\ProductImage')->select('product_images.product_id', 'product_images.media_id', 'product_images.is_default', 'vendor_media.media_type', 'vendor_media.path')->join('vendor_media', 'vendor_media.id', 'product_images.media_id');
     }
 }

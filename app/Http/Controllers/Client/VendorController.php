@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{VendorSlotDate, Vendor, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Product};
+use App\Models\{VendorSlotDate, Vendor, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Product, Type};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -148,10 +148,15 @@ class VendorController extends BaseController
     public function vendorCatalog($id)
     {
         $vendor = Vendor::findOrFail($id);
+        $type = Type::all();
+        $categories = Category::with('english')->select('id', 'slug')
+                        ->where('id', '>', '1')->where('status', '!=', '2')
+                        ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
+                        ->orderBy('position', 'asc')->get();
         $products = Product::with('variant', 'english', 'category.cat', 'variantSet')->where('vendor_id', $id)->get();
 
         //dd($products->toArray());
-        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'tab' => 'catalog', 'products' => $products]);
+        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'tab' => 'catalog', 'products' => $products, 'typeArray' => $type, 'categories' => $categories]);
     }
 
     /**

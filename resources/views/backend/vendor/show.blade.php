@@ -90,7 +90,7 @@
                 </div>
             </div>
         </div>
-        <div class="row mb-2">
+        <div class="row mb-1">
             <div class="col-sm-12">
                 <div class="text-sm-left">
                     @if (\Session::has('success'))
@@ -142,7 +142,7 @@
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h4 class="mb-2 text-uppercase"><i data-feather="tool"></i> <span class="text-uppercase">Configuration</span><span style=" float:right;"><button class="btn btn-blue waves-effect waves-light">Save</button></span></h4>
+                                                <h4 class="mb-2 "> <span class="">Configuration</span><span style=" float:right;"><button class="btn btn-blue waves-effect waves-light">Save</button></span></h4>
                                             </div>
                                         </div>
 
@@ -176,12 +176,12 @@
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h4 class="mb-2"><i data-feather="dollar-sign"></i> <span class="text-uppercase">Commission</span>(Visible For Admin)<span style=" float:right;"><button class="btn btn-blue waves-effect waves-light">Save</button></span></h4>
+                                                <h4 class="mb-2"> <span class="">Commission</span> (Visible For Admin)<span style=" float:right;"><button class="btn btn-blue waves-effect waves-light">Save</button></span></h4>
                                             </div>
                                         </div>
                                         <div class="row mb-2">
                                             <div class="col-md-2">
-                                                {!! Form::label('title', 'Add Category',['class' => 'control-label']) !!} 
+                                                {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!} 
                                                 <div>
                                                     <input type="checkbox" data-plugin="switchery" name="add_category" class="form-control can_add_category1" data-color="#039cfd" @if($vendor->add_category == 1) checked @endif >
                                                 </div>
@@ -215,7 +215,7 @@
                                 <div class="col-md-12 card-box">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h4 class="mb-2 text-uppercase"><i data-feather="tool"></i> Service Area <span style=" float:right;"><button class="btn btn-info openServiceModal"> Add Service Area</button></span></h4>
+                                            <h4 class="mb-2 "> Service Area <span style=" float:right;"><button class="btn btn-info openServiceModal"> Add Service Area</button></span></h4>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -264,7 +264,7 @@
                             @endif
 
                             <div class="row card-box">
-                                <h4 class="mb-4 text-uppercase"><i class="mdi mdi-av-timer"></i> Weekly Slot</h4>
+                                <h4 class="mb-4 "> Weekly Slot</h4>
                                 <div class="col-md-12">
                                     <div class="row mb-2">
                                         <div class="col-md-12">

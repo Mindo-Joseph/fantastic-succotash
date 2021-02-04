@@ -105,7 +105,7 @@
         <div class="row">
             <div class="col-xl-11 col-md-offset-1">
                 <div class="card-box"> 
-                    <h4 class="header-title col-md-12">Social Network Login Details</h4>    
+                    <h4 class="header-title">Social Network Login Details</h4>    
                     <p class="sub-header">Enable and disable login using social network</p>               
                     <div class="row">
                         <div class="col-md-6">
@@ -202,7 +202,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-3 switchery-demo">
-                                <label for="google_login" class="mr-3"><h5>Goodle Login</h5></label>
+                                <label for="google_login" class="mr-3"><h5>Google Login</h5></label>
                                 <input type="checkbox" data-plugin="switchery" name="google_login" id="google_login" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->google_login == '1'))  checked='checked' @endif>
                             </div>
                         </div>

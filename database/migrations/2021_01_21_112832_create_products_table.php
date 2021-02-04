@@ -31,6 +31,7 @@ class CreateProductsTable extends Migration
             $table->decimal('weight', 10, 4)->nullable();
             $table->string('weight_unit', 10)->nullable();
             $table->tinyInteger('has_inventory')->default(0)->comment('0 - no, 1 - yes');
+            $table->tinyInteger('has_variant')->default(0)->comment('0 - no, 1 - yes');
             $table->tinyInteger('sell_when_out_of_stock')->default(0)->comment('0 - no, 1 - yes');
             $table->tinyInteger('requires_shipping')->default(0)->comment('0 - no, 1 - yes');
             $table->tinyInteger('Requires_last_mile')->default(0)->comment('0 - no, 1 - yes');

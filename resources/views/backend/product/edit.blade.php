@@ -7,6 +7,70 @@
     .image-upload>input {
         display: none;
     }
+
+
+    .product-img-box {
+    width: 100%;
+    height: 150px;
+    border: 1px solid #ccc;
+    }
+    .product-img-box img {
+    height: 100%;
+    width:100%;
+    object-fit: cover;
+    object-position: center;
+    }
+
+    .upload-btn-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+    }
+
+    .btn {
+        border: 2px solid gray;
+        color: gray;
+        background-color: white;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .upload-btn-wrapper input[type=file] {
+        font-size: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+    }
+
+    
+    .product-img-box input[type="checkbox"] {
+        position: absolute;
+        top: 0;
+        right: 11px;
+    }
+    .product-img-box label {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    .product-img-box .form-group {
+        height: 100%;
+    }
+
+
+    .product-img-box label:before {
+        right: -1px;
+        left: auto;
+        top: -1px;
+    }
+    .product-img-box .checkbox-success input[type="checkbox"]:checked + label::after {
+        left: auto;
+        right: 6px;
+        top:4px;
+    }
 </style>
 @endsection
 
@@ -79,7 +143,7 @@
 
                         <div class="col-6" style="cursor: not-allowed;">
                             {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
-                            {!! Form::text('url_slug', $product->category->cat->slug, ['class'=>'form-control', 'id' => 'url_slug', 'style' => 'pointer-events:none;']) !!}
+                            {!! Form::text('category', $product->category->cat->slug, ['class'=>'form-control', 'id' => 'url_slug', 'style' => 'pointer-events:none;']) !!}
                         </div>
                     </div>
                 </div>
@@ -125,7 +189,6 @@
                         </div>
                     </div>
                 </div>
-                @if(empty($product->variantSet))
                 <div class="card-box">
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Pricing Information</h5>
                     <div class="row mb-2">
@@ -162,7 +225,6 @@
 
                     </div>
                 </div>
-                @endif
 
                 <div class="card-box">
                     
@@ -175,6 +237,7 @@
                         </div>
                     </div>
                     <p>Select or change category to get variants</p>
+
                     <div class="row" style="width:100%; overflow-x: scroll;">
                         <div id="variantAjaxDiv" class="col-12 mb-2" >
                             <h5 class="">Variant List</h5>
@@ -194,8 +257,8 @@
                                     </div>
                                 @endforeach
                             </div>
-
                         </div>
+                        @if($product->has_variant == 1)
                         <div class="col-12" id="exist_variant_div">
                             <h5 class="">Applied Variants Set</h5>
                             <table class="table table-centered table-nowrap table-striped">
@@ -225,29 +288,28 @@
                                     <tr>
                                         <td>
                                             <div class="image-upload">
-                                              <label class="file-input" for="file-input_{{$varnt->id}}">
-                                                <img src="{{$mediaPath}}" width="30" height="30" class="vimg_{{$varnt->id}}"/>
+                                              <label class="file-input uploadImages" for="{{$varnt->id}}">
+                                                <img src="{{$mediaPath}}" width="30" height="30" for="{{$varnt->id}}"/>
                                               </label>
-
-                                              <input id="file-input_{{$varnt->id}}" type="file" name="variantImage-{{$varnt->id}}" class="vimage" for="{{$varnt->id}}"/>
                                             </div>
+                                            <div class="imageCountDiv{{$varnt->id}}"></div>
                                         </td>
                                         <td> 
-                                            <input type="hidden" name="exist_variant[]" value="{{$varnt->id}}">
-                                            <input type="hidden" class="exist_sets" value="{{$existSet[(count($existSet) - 2)]}}">
+                                            <input type="hidden" name="variant_ids[]" value="{{$varnt->id}}">
+                                            <input type="hidden" class="exist_sets" value="{{$existSet[(count($existSet) - 1)]}}">
                                             <input type="text" name="exist_variant_titles[]" value="{{$varnt->title}}">
                                         </td>
                                         <td>{{rtrim($vsets, ', ')}}</td>
                                         <td>
-                                            <input type="text" style="width: 70px;" name="exist_variant_price[]" value="{{$varnt->price}}" onkeypress="return isNumberKey(event)"> </td>
+                                            <input type="text" style="width: 70px;" name="variant_price[]" value="{{$varnt->price}}" onkeypress="return isNumberKey(event)"> </td>
                                         <td>
-                                            <input type="text" style="width: 100px;" name="exist_variant_compare_price[]" value="{{$varnt->compare_at_price}}" onkeypress="return isNumberKey(event)">
+                                            <input type="text" style="width: 100px;" name="variant_compare_price[]" value="{{$varnt->compare_at_price}}" onkeypress="return isNumberKey(event)">
                                         </td>
                                         <td>
-                                            <input type="text" style="width: 70px;" name="exist_variant_cost_price[]" value="{{$varnt->cost_price}}" onkeypress="return isNumberKey(event)">
+                                            <input type="text" style="width: 70px;" name="variant_cost_price[]" value="{{$varnt->cost_price}}" onkeypress="return isNumberKey(event)">
                                         </td>
                                         <td>
-                                            <input type="text" style="width: 70px;" name="exist_variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
+                                            <input type="text" style="width: 70px;" name="variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
                                         </td>
                                         <td>
                                             <a href="javascript:void(0);" varId="{{$varnt->id}}" class="action-icon deleteExistRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
@@ -256,6 +318,7 @@
                                 @endforeach
                             </table>
                         </div>
+                        @endif
 
                         <div id="variantRowDiv" class="col-12"></div>
                         
@@ -434,6 +497,27 @@
     </form>
 </div>
 
+<div id="upload-media" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Product Image</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body" id="AddCardBox">
+            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-blue waves-effect waves-light selectVaiantImages">Select</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+</style>
+
 @endsection
 
 @section('script')
@@ -495,6 +579,8 @@
         $("div#my-awesome-dropzone").dropzone({
             addRemoveLinks: true,
             url: "{{route('product.images')}}",
+            params: {prodId: "{{$product->id}}"},
+            parameter: "{{route('product.images')}}",
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
@@ -546,6 +632,7 @@
 
     $('.makeVariantRow').click(function(){
         var psku = $('#sku').val();
+        var pid = "{{$product->id}}";
         if(psku.trim() == ''){
             alert('Enter Product sku.');
             return false;
@@ -568,7 +655,7 @@
         $.ajax({
             type: "post",
             url: "{{route('product.makeRows')}}",
-            data: {"_token": "{{ csrf_token() }}", 'variantIds' : vids, 'optionIds' : optids, 'sku': psku, 'existing' : exist},
+            data: {"_token": "{{ csrf_token() }}", 'variantIds' : vids, 'optionIds' : optids, 'sku': psku, 'existing' : exist, 'pid': pid},
             dataType: 'json',
             success: function (resp) {
                 if(resp.success == 'false'){
@@ -609,9 +696,35 @@
         return false;
     });
 
-    $(document).on('change', '.vimage', function () {
-        var forv = $(this).attr('for');
-        readURL(this, forv);
+    $(document).on('change', '.vimageNew', function () {
+
+        var form = document.getElementById('modalImageForm');
+        var formData = new FormData(form);
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: "{{route('product.images')}}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success:function(data){
+                $('#upload-media .lastDiv').before(data.htmlData);
+                
+            },
+            error: function(data){
+                console.log("error");
+                console.log(data);
+            }
+        });
     });
 
     function readURL(input, forv) {
@@ -624,6 +737,74 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+    $(document).on('change', '#language_id', function () {
+        var forv = $(this).val();
+        var pid = "{{$product->id}}";
+        $.ajax({
+            type: "post",
+            url: "{{route('product.translation')}}",
+            data: {"_token": "{{ csrf_token() }}", 'prod_id' : pid, 'lang_id' : forv},
+            dataType: 'json',
+            success: function (resp) {
+                if(resp){
+                    $('#product_name').val(resp.data.title);
+                    $('#body_html').val(resp.data.body_html);
+                    $('#meta_title').val(resp.data.meta_title);
+                    $('#meta_keyword').val(resp.data.meta_keyword);
+                    $('#meta_description').val(resp.data.meta_description);
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '.uploadImages', function () {
+
+        var vari_id = $(this).attr('for');
+        var pid = "{{$product->id}}";
+        var vendor = "{{$product->vendor_id}}";
+        $.ajax({
+            type: "post",
+            url: "{{route('productImage.get')}}",
+            data: {"_token": "{{ csrf_token() }}", 'prod_id': pid, 'variant_id': vari_id, 'vendor_id': vendor},
+            dataType: 'json',
+            success: function (data) {
+                $('#upload-media #AddCardBox').html(data.htmlData);
+                $('#upload-media').modal({
+                    keyboard: false
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.selectVaiantImages', function () {
+        var variantId = $('#upload-media #modalVariantId').val();
+        var productId = "{{$product->id}}";
+        var imageId = [];
+        $("#upload-media .imgChecks").each(function(){
+            var $this = $(this);
+            if($this.is(":checked") ){
+                imageId.push($this.attr('imgId'));
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "{{route('product.variant.update')}}",
+            data: {"_token": "{{ csrf_token() }}", 'prod_id': productId, 'variant_id': variantId, 'image_id': imageId},
+            dataType: 'json',
+            success: function (resp) {
+                if(resp.success != 'false'){
+                    $('#upload-media').modal('hide');
+                }else{
+                    alert(resp.msg);
+                    $('#upload-media').modal('hide');
+                }
+            }
+        });
+    });
+
+    
 
 </script>
 
