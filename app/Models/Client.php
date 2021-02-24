@@ -35,7 +35,15 @@ class Client extends Authenticatable
     */
     public function getPreference()
     {
-      return $this->hasOne('App\Model\ClientPreference','client_id','code');
+      return $this->hasOne('App\Models\ClientPreference','client_code','code');
+    }
+
+    /**
+     * Get Clientpreference
+    */
+    public function preferences()
+    {
+      return $this->hasOne('App\Models\ClientPreference', 'client_code', 'code')->select('theme_admin', 'client_code', 'distance_unit', 'currency_id', 'date_format', 'time_format', 'fb_login', 'twitter_login', 'google_login', 'apple_login', 'map_provider', 'app_template_id', 'is_hyperlocal', 'verify_email', 'verify_phone');
     }
 
     public function getEncpassAttribute($value)
@@ -84,6 +92,21 @@ class Client extends Authenticatable
             $rule['database_name'] = 'max:60|unique:clients,database_name,'.$id;
         }*/
         return $rules;
+    }
+
+    public function getLogoAttribute($value)
+    {
+      $values = array();
+      $img = 'default/default_image.png';
+      if(!empty($value)){
+        $img = $value;
+      }
+      $values = \Storage::disk('s3')->url($img);
+      /*$values['small'] = url('showImage/small/' . $img);
+      $values['medium'] = url('showImage/medium/' . $img);
+      $values['large'] = url('showImage/large/' . $img);*/
+
+      return $values;
     }
 
 }

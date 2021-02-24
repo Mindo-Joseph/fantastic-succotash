@@ -11,6 +11,7 @@ use App\Models\{Client, ClientPreference, Brand, Category, Category_translation,
 
 class BrandController extends BaseController
 {
+    private $folderName = 'brand';
     /**
      * Display a listing of the resource.
      *
@@ -53,10 +54,9 @@ class BrandController extends BaseController
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-                //$s3filePath = '/assets/Clientlogo/' . $file_name;
-                //$path = Storage::disk('s3')->put($s3filePath, $file,'public');
-                $brand->image = $request->file('image')->storeAs('/brand', $file_name, 'public');
+                //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
+                //$brand->image = $request->file('image')->storeAs('/brand', $file_name, 'public');
+                $brand->image = Storage::disk('s3')->put($this->folderName, $file,'public');
             }else{
                 $brand->image = 'default/default_image.png';
             }
@@ -144,10 +144,9 @@ class BrandController extends BaseController
         $brand->title = $request->title[0];
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            //$s3filePath = '/assets/Clientlogo/' . $file_name;
-            //$path = Storage::disk('s3')->put($s3filePath, $file,'public');
-            $brand->image = $request->file('image')->storeAs('/brand', $file_name, 'public');
+            //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
+            //$brand->image = $request->file('image')->storeAs('/brand', $file_name, 'public');
+            $brand->image = Storage::disk('s3')->put($this->folderName, $file,'public');
         }
         $brand->save();
 

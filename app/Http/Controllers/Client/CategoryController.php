@@ -6,11 +6,13 @@ use App\Http\Controllers\Client\BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type};
 
 class CategoryController extends BaseController
 {
+    private $folderName = 'category/icon';
     /**
      * Display a listing of the resource.
      *
@@ -222,15 +224,15 @@ class CategoryController extends BaseController
 
         if ($request->hasFile('icon')) {    /* upload category icon */
             $file = $request->file('icon');
-            $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            //$s3filePath = '/assets/Clientlogo/' . $file_name;
-            //$path = Storage::disk('s3')->put($s3filePath, $file,'public');
-            $cate->icon = $request->file('icon')->storeAs('/category/icon', $file_name, 'public');
+            //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
+            //$cate->icon = $request->file('icon')->storeAs('/category/icon', $file_name, 'public');
+            $cate->icon = Storage::disk('s3')->put($this->folderName, $file,'public');
         }
         if ($request->hasFile('image')) {    /* upload category image */
             $file = $request->file('image');
-            $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            $cate->image = $request->file('image')->storeAs('/category/image', $file_name, 'public');
+            //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
+            //$cate->image = $request->file('image')->storeAs('/category/image', $file_name, 'public');
+            $cate->image = Storage::disk('s3')->put('/category/image', $file,'public');
         }
         $cate->save();
         return $cate->id;

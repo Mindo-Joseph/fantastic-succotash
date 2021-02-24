@@ -11,6 +11,7 @@ use App\Models\{Client, Product, Category, ProductTranslation, Type, Vendor, Add
 
 class ProductController extends BaseController
 {
+    private $folderName = 'prods';
     /**
      * Display a listing of the resource.
      *
@@ -42,8 +43,8 @@ class ProductController extends BaseController
                         ->orderBy('position', 'asc')->get();
 
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code')
-                    ->where('client_languages.client_code', Auth::user()->code)->get();
+                        ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code')
+                        ->where('client_languages.client_code', Auth::user()->code)->get();
 
         $taxCate = TaxCategory::all();
 
@@ -273,10 +274,9 @@ class ProductController extends BaseController
                         $image->media_type = 1;
                         $file = $request->file($fname);
                         $image->product_id = $product->id;
-                        $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-                        //$s3filePath = '/assets/Clientlogo/' . $file_name;
-                        //$path = Storage::disk('s3')->put($s3filePath, $file,'public');
-                        $image->path = $request->file($fname)->storeAs('/product', $file_name, 'public');
+                        //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
+                        //$image->path = $request->file($fname)->storeAs('/product', $file_name, 'public');
+                        $image->path = Storage::disk('s3')->put($this->folderName, $file,'public');
                         $image->save();
                         $img = $image->id;
 
@@ -860,10 +860,10 @@ class ProductController extends BaseController
                     $img->media_type = 1;
                     $img->vendor_id = $product->vendor_id;
 
-                    $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-                    //$s3filePath = '/assets/Clientlogo/' . $file_name;
-                    //$path = Storage::disk('s3')->put($s3filePath, $file,'public');
-                    $img->path = $file->storeAs('/prods', $file_name, 'public');
+                    //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
+                    //$img->path = $file->storeAs('/prods', $file_name, 'public');
+                    $img->path = Storage::disk('s3')->put($this->folderName, $file,'public');
+
                     $img->save();
                     $path1 = url($img->path);
 
@@ -901,8 +901,9 @@ class ProductController extends BaseController
                 $img = new VendorMedia();
                 $img->media_type = 1;
                 $img->vendor_id = $product->vendor_id;
-                $file_name = uniqid() .'.'.  $files->getClientOriginalExtension();
-                $img->path = $files->storeAs('/prods', $file_name, 'public');
+                //$file_name = uniqid() .'.'.  $files->getClientOriginalExtension();
+                $img->path = Storage::disk('s3')->put($this->folderName, $file,'public');
+                //$img->path = $files->storeAs('/prods', $file_name, 'public');
                 $img->save();
                 $imageId = $img->id;
             }

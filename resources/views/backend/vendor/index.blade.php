@@ -65,8 +65,10 @@
                             <tbody id="post_list">
                                 @foreach($vendors as $ven)
                                 <tr data-row-id="{{$ven->id}}">
-                                    <td> 
-                                        <img src="{{ url('storage/'.$ven->logo)}}" alt="{{$ven->id}}" width="50" height="50">
+                                    <td>
+                                        <img alt="{{$ven->id}}" src="{{url('showImage/small/'.$ven->logo['link'])}}">
+                                        <!--<img alt="{{$ven->id}}" src1="url($ven->logo)" src="Thumbor::url($ven->logo)->resize(90,50)"> -->
+                                        
                                     </td>
 
                                     <td> {{ $ven->name }} </td>

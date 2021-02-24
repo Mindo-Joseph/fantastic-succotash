@@ -65,7 +65,7 @@
                             @php 
                                 $image = '';
                                 if(isset($client->logo)){
-                                    $image = env('IMG_URL').'storage/app/public/'.$client->logo;
+                                    $image = $client->logo;
                                 }
                             @endphp
                             <div class="col-md-4"> <!--  <input type="file" data-plugins="dropify" name="logo" data-default-file="  isset(Auth::user()->logo) ? Storage::disk('s3')->url(Auth::user()->logo) : ''  " />  --> 

@@ -6,16 +6,33 @@ use Illuminate\Database\Eloquent\Model;
 
 class Brand extends Model
 {
-    //
-	public function translation(){
-		return $this->hasMany('App\Models\BrandTranslation')->join('languages', 'brand_translations.language_id', 'languages.id'); 
-	}
+    protected $fillable = [
+        'title', 'image', 'position', 'status'
+    ];
+  	public function translation(){
+  		return $this->hasMany('App\Models\BrandTranslation')->join('languages', 'brand_translations.language_id', 'languages.id'); 
+  	}
 
-	public function english(){
-		return $this->hasMany('App\Models\BrandTranslation')->where('language_id', 1); 
-	}
+  	public function english(){
+  		return $this->hasMany('App\Models\BrandTranslation')->where('language_id', 1); 
+  	}
 
-	public function bc(){
-		return $this->hasOne('App\Models\BrandCategory'); 
-	}
+  	public function bc(){
+  		return $this->hasOne('App\Models\BrandCategory');
+  	}
+
+    public function getImageAttribute($value)
+    {
+      $values = array();
+      $img = 'default/default_image.png';
+      if(!empty($value)){
+        $img = $value;
+      }
+      $values = \Storage::disk('s3')->url($img);
+      /*$values['small'] = url('showImage/small/' . $img);
+      $values['medium'] = url('showImage/medium/' . $img);
+      $values['large'] = url('showImage/large/' . $img);*/
+
+      return $values;
+    }
 }

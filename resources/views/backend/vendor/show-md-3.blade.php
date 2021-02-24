@@ -2,7 +2,7 @@
 <div class="card-box text-center" style="">
     
     <div class="background">
-        <img src="{{ url('storage/'.$vendor->logo)}}" class="rounded-circle avatar-lg img-thumbnail"
+        <img src="{{url('showImage/small/'.$vendor->logo['link'])}}" class="rounded-circle avatar-lg img-thumbnail"
             alt="profile-image">
 
         <h4 class="mb-0">{{ucfirst($vendor->name)}}</h4>

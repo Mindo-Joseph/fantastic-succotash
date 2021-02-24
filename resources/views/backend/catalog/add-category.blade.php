@@ -13,7 +13,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="form-group" id="slugInput">
                     {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
                     {!! Form::text('slug', null, ['class'=>'form-control']) !!}
@@ -24,15 +24,7 @@
                     {!! Form::hidden('login_user_id', auth()->user()->id, ['class'=>'form-control']) !!}
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
-                    <div>
-                        <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2" data-color="#039cfd" checked='checked'>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('title', 'Select Parent Category',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control" id="cateSelectBox" name="parent_cate">
@@ -46,10 +38,10 @@
                     </span>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control" id="typeSelectBox" name="type_id">
+                    <select class="selectize-select form-control type-select" for="add" id="typeSelectBox" name="type_id">
                         @foreach($typeArray as $type)
                         <option value="{{$type->id}}">{{$type->title}}</option>
                         @endforeach
@@ -59,7 +51,15 @@
                     </span>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 text-center">
+                <div class="form-group">
+                    {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
+                    <div>
+                        <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2" data-color="#039cfd" checked='checked'>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 text-center" id="addProductHide">
                 <div class="form-group">
                     {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
                     <div>
@@ -67,7 +67,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <!--<div class="col-md-4">
                 <div class="form-group">
                     {!! Form::label('title', 'Display Mode',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control" name="display_mode">
@@ -78,7 +78,7 @@
                         <strong></strong>
                     </span>
                 </div>
-            </div>
+            </div> -->
         </div>
         @foreach($languages as $langs)
             <div class="row rowYK" style="border: 2px dashed #d2d0cd;">

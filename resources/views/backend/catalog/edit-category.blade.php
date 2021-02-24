@@ -4,17 +4,17 @@
 
         <div class="row mb-2">
             <div class="col-md-3">
-                <input type="file" data-plugins="dropify" name="icon" class="dropify" data-default-file="{{ !empty($category->icon) ? env('IMG_URL').'storage/app/public/'.$category->icon : '' }}" />
+                <input type="file" data-plugins="dropify" name="icon" class="dropify" data-default-file="{{$category->icon['original']}}" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category Icon</p>
             </div> <div class="col-md-2"></div>
             <div class="col-md-6"> <!--  Storage::disk('s3')->url($client->logo)  -->                 
-                <input type="file" data-plugins="dropify" name="image" class="dropify" data-default-file="{{ !empty($category->image) ? env('IMG_URL').'storage/app/public/'.$category->image : '' }}" />
+                <input type="file" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$category->image['original']}}" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category image</p>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="form-group" id="slugInput">
                     {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
                     {!! Form::text('slug', $category->slug, ['class'=>'form-control']) !!}
@@ -25,19 +25,7 @@
                     {!! Form::hidden('login_user_id', auth()->user()->id, ['class'=>'form-control']) !!}
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
-                    <div>
-                        @if($category->is_visible == '1')
-                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2Edit" data-color="#039cfd" checked='checked'>
-                        @else
-                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2Edit" data-color="#039cfd">
-                        @endif
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('title', 'Select Parent Category',['class' => 'control-label']) !!}
                     <select class="selectize-select1 form-control" id="cateSelectBox" name="parent_cate">
@@ -51,10 +39,10 @@
                     </span>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control" id="typeSelectBox" name="type_id">
+                    <select class="selectize-select form-control type-select" for="edit" id="typeSelectBox" name="type_id">
                         @foreach($typeArray as $type)
                         <option value="{{$type->id}}" @if($category->type_id == $type->id) selected @endif>{{$type->title}}</option>
                         @endforeach
@@ -66,7 +54,19 @@
                     <input type="hidden" id="cateId" url="{{route('category.update', $category->id)}}">
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 text-center">
+                <div class="form-group">
+                    {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
+                    <div>
+                        @if($category->is_visible == '1')
+                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2Edit" data-color="#039cfd" checked='checked'>
+                        @else
+                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2Edit" data-color="#039cfd">
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 text-center" id="editProductHide">
                 <div class="form-group">
                     {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
                     <div>
@@ -78,7 +78,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <!--<div class="col-md-4">
                 <div class="form-group">
                     {!! Form::label('title', 'Display Mode',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control" name="display_mode">
@@ -89,7 +89,7 @@
                         <strong></strong>
                     </span>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         @foreach($languages as $langs)

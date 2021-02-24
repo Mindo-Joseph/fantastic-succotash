@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,3 +18,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+$prefix = 'v1';
+
+require_once $prefix."/auth.php";
+require_once $prefix."/guest.php";
+
+
+/*
+private $folderName = 'category/icon';
+    $brand->image = Storage::disk('s3')->put('/category/image', $file,'public');
+*/

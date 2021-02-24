@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6"> <!--  Storage::disk('s3')->url($client->logo)  -->                 
-                <input type="file" data-plugins="dropify" name="image" class="dropify" data-default-file="{{ !empty($banner->image) ? env('IMG_URL').'storage/app/public/'.$banner->image : '' }}" />
+                <input type="file" data-plugins="dropify" name="image" class="dropify" data-default-file="{{ (isset($banner->id) && !empty($banner->image)) ? $banner->image['original'] : '' }}" />
                 <p class="text-muted text-center mt-2 mb-0">Upload banner image</p>
             </div>
         </div>
@@ -78,10 +78,10 @@
                 <input type="hidden" id="bannerId" url="{{ (isset($banner->id) && $banner->id > 0) ? route('banner.update', $banner->id) : route('banner.store') }}">
                 <div class="form-group">
                     {!! Form::label('title', 'Select Category',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control" name="assignTo">
+                    <select class="selectize-select form-control" name="category_id">
                         <option value="">Select</option>
                         @foreach($categories as $key => $cate)
-                        <option value="{{$cate->id}}">{{$cate->name}}</option>
+                        <option value="{{$cate->id}}">{{$cate->slug}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -89,7 +89,7 @@
             <div class="col-md-6 vendor_list" style="display: none;">
                 <div class="form-group">
                     {!! Form::label('title', 'Select Vendor',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control" name="assignTo">
+                    <select class="selectize-select form-control" name="vendor_id">
                         <option value="">Select</option>
                         @foreach($vendors as $key => $vend)
                             <option value="{{$vend->id}}">{{$vend->name}}</option>

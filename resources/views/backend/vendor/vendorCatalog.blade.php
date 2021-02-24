@@ -162,8 +162,8 @@
             <div class="modal-body" >
                 <div class="row">
                     <div class="col-md-12 card-box">
-                      <div class="row mb-2">
-                        <div class="col-6 mb-2">
+                      <div class="row">
+                        <!--<div class="col-6 mb-2">
                             {!! Form::label('title', 'Product Type',['class' => 'control-label']) !!}
                             <select class="form-control selectizeInput" id="typeSelectBox" name="type_id">
                                 @foreach($typeArray as $type)
@@ -172,9 +172,9 @@
                             </select>
 
                             {!! Form::hidden('vendor_id', $vendor->id) !!}
-                        </div>
+                        </div> -->
 
-                        <div class="col-6 mb-2" id="">
+                        <div class="col-12 mb-2">
                           <div class="form-group" id="skuInput">
                             {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
@@ -183,15 +183,19 @@
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
                             </span>
+
+                            {!! Form::hidden('type_id', 1) !!}
                           </div>
                         </div>
 
-                        <div class="col-6" style="cursor: not-allowed;">
+                        <div class="col-12 mb-2" style="cursor: not-allowed;">
+                          <div class="form-group" id="">
                             {!! Form::label('title', 'Url Slug',['class' => 'control-label']) !!}
                             {!! Form::text('product_url', null, ['class'=>'form-control', 'id' => 'product_url', 'placeholder' => 'Apple iMac', 'style' => 'pointer-events:none;']) !!}
+                          </div>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="form-group" id="categoryInput">
                             {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
                             <select class="form-control selectizeInput" id="category_list" name="category[]">

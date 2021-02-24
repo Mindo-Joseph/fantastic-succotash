@@ -40,11 +40,11 @@
 
                                 <div class="form-group mb-3">
                                     <label for="emailaddress">Email address</label>
-                                    <input class="form-control  @if($errors->has('email')) is-invalid @endif" name="email" type="email" id="emailaddress" required="" value="{{ old('email')}}" placeholder="Enter your email" />
+                                    <input class="form-control  @if(isset($errors) && $errors->has('email')) is-invalid @endif" name="email" type="email" id="emailaddress" required="" value="{{ old('email')}}" placeholder="Enter your email" />
 
-                                    @if($errors->has('email'))
+                                    @if(isset($errors) && $errors->has('email'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
+                                        <strong>{{ isset($errors) && $errors->first('email') }}</strong>
                                     </span>
                                     @endif
                                 </div>
@@ -53,8 +53,8 @@
                                     <!-- <a href="{{route('login')}}" class="text-muted float-right"><small>Forgot your
                                             password?</small></a> -->
                                     <label for="password">Password</label>
-                                    <div class="input-group input-group-merge @if($errors->has('password')) is-invalid @endif">
-                                        <input class="form-control @if($errors->has('password')) is-invalid @endif" name="password" type="password" required="" id="password" placeholder="Enter your password" />
+                                    <div class="input-group input-group-merge @if(isset($errors) && $errors->has('password')) is-invalid @endif">
+                                        <input class="form-control @if(isset($errors) && $errors->has('password')) is-invalid @endif" name="password" type="password" required="" id="password" placeholder="Enter your password" />
                                         <div class="input-group-append" data-password="false">
                                             <div class="input-group-text">
                                                 <span class="password-eye"></span>
@@ -80,8 +80,6 @@
                                 <div class="form-group mb-0 text-center">
                                     <button class="btn btn-primary btn-block" type="submit"> Log In </button>
                                 </div>
-
-
 
                             </form>
 
