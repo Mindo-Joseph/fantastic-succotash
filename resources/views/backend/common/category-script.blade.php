@@ -65,6 +65,19 @@
 
     });
 
+    $(document).on('change', '.type-select', function() { 
+        var id =  $(this).val();
+        var for1 = $(this).attr('for');
+        if(id == '1'){
+            $("#" + for1 + "-category-form #" + for1 + "ProductHide").show();
+        }else{
+            $("#" + for1 + "-category-form #" + for1 + "ProductHide").hide();
+        }
+
+    });
+
+    
+
     $(document).on('click', '.editCategorySubmit', function(e) { 
         e.preventDefault();
         var form =  document.getElementById('editCategoryForm');

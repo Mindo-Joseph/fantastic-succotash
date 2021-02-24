@@ -35,6 +35,7 @@ class CreateProductsTable extends Migration
             $table->tinyInteger('sell_when_out_of_stock')->default(0)->comment('0 - no, 1 - yes');
             $table->tinyInteger('requires_shipping')->default(0)->comment('0 - no, 1 - yes');
             $table->tinyInteger('Requires_last_mile')->default(0)->comment('0 - no, 1 - yes');
+            $table->decimal('averageRating', 4, 2)->nullable();
             $table->dateTime('publish_at')->nullable();
 
             $table->timestamps();
@@ -51,6 +52,7 @@ class CreateProductsTable extends Migration
             $table->index('sell_when_out_of_stock');
             $table->index('requires_shipping');
             $table->index('Requires_last_mile');
+            $table->index('averageRating');
         });
     }
 

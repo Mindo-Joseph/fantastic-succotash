@@ -7,6 +7,7 @@ use App\Models\{VendorSlotDate, Vendor, VendorSlot, VendorBlockDate, Category, S
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Phumbor;
 use Image;
 
 class VendorController extends BaseController

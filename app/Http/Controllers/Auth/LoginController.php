@@ -45,7 +45,6 @@ class LoginController extends Controller
 
     public function clientLogin(Request $request)
     {
-        
         $this->validate($request, [
             'email'           => 'required|max:255|email',
             'password'        => 'required',
@@ -59,7 +58,6 @@ class LoginController extends Controller
                 return redirect()->back()->with('Error', 'Your account has been blocked by admin. Please contact administration.');
             }
 
-
             Auth::login($client);
            
             return redirect()->route('client.dashboard');
@@ -71,11 +69,16 @@ class LoginController extends Controller
     public function Logout()
     {
         Auth::logout();
-        return redirect()->route('login');
+        return redirect()->route('admin.login');
     }
 
     public function wrongurl()
     {
-        return redirect()->route('wrong.client');;
+        return redirect()->route('wrong.client');
+    }
+
+    public function showLoginForm()
+    {
+        return redirect()->route('admin.login');
     }
 }

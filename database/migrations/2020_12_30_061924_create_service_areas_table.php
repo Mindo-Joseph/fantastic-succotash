@@ -19,6 +19,7 @@ class CreateServiceAreasTable extends Migration
             $table->text('description')->nullable();
             $table->text('geo_array')->nullable();
             $table->smallInteger('zoom_level')->default(13);
+            $table->geometry('polygon')->nullable();
             $table->bigInteger('vendor_id')->unsigned()->nullable();
             $table->timestamps();
 

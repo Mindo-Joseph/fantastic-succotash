@@ -27,7 +27,7 @@ class ClientPreference extends Model
 
     public function primary()
     {
-      return $this->hasone('App\Models\ClientCurrency','client_code','client_code')->select( 'client_code', 'currency_id')->where('currency_id', 147);
+      return $this->hasone('App\Models\ClientCurrency','client_code','client_code')->select( 'client_code', 'currency_id')->where('is_primary', 1);
     }
 
 

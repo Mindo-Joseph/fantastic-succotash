@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\PasswordReset; 
 
 class User extends Authenticatable
 {
@@ -40,5 +41,19 @@ class User extends Authenticatable
     public function country(){
        return $this->belongsTo('App\Models\Country')->select("id", "code", "name"); 
     }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new PasswordReset($token));
+    }
+
+    /*
+    bucketname:- royoorders2.0-assets
+
+        IAM user:-royoorders2.0S3Access
+        Access key ID:- AKIAUDRAUVRKEJPQVO4C
+        Secret access key :- 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
+             
+    */
 
 }

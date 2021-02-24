@@ -52,4 +52,15 @@ class Handler extends ExceptionHandler
     {
         return parent::render($request, $exception);
     }
+
+    /*protected function invalidJson($request, ValidationException $exception)
+    {
+        return response()->json([
+                 'data' => [], 
+                 'meta' => [
+                    'message' => 'The given data is invalid', 
+                    'errors' => $exception->errors()
+                 ]
+                 ], $exception->status);
+    }*/
 }

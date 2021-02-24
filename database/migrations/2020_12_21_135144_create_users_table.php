@@ -20,14 +20,12 @@ class CreateUsersTable extends Migration
             $table->string('phone_number', 24)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->tinyInteger('is_verified_phone')->default(0)->comment('0 for no, 1 for yes');
             $table->tinyInteger('type')->default(0)->comment('1 for buyer, 2 for seller');
             $table->tinyInteger('status')->default(0)->comment('0 - pending, 1 - active, 2 - blocked, 3 - inactive');
-            $table->string('device_type')->nullable();
-            $table->string('device_token')->nullable();
             $table->bigInteger('country_id')->unsigned()->nullable();
             $table->bigInteger('role_id')->unsigned()->nullable();
             $table->string('auth_token')->nullable();
+            $table->string('system_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -38,7 +36,6 @@ class CreateUsersTable extends Migration
             $table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('set null');
 
             $table->index('phone_number');
-            $table->index('is_verified_phone');
             $table->index('type');
             $table->index('status');
 

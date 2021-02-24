@@ -69,13 +69,20 @@
                                     @php 
                                     
                                     @endphp
-    
-                                        <img src="{{ url($ban->image)}}" alt="{{$ban->id}}" >
+                                        <img src="{{url('showImg/'.$ban->image['link'])}}" alt="{{$ban->id}}" >
                                     </td>
 
                                     <td> {{ $ban->name }} </td>
                                     <td> {{ $ban->start_date_time }} <br/> to <br/> {{$ban->end_date_time}}</td>
-                                    <td> {{ $ban->redirect_category_id }} </td>
+                                    <td> 
+                                        @if($ban->link == 'category')
+                                            Category
+                                        @elseif($ban->link == 'vendor')
+                                            Vendor
+                                        @else
+                                            N/A
+                                        @endif
+                                     </td>
                                     <td> 
                                         <input type="checkbox" bid="{{$ban->id}}" id="cur_{{$ban->id}}" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#039cfd" {{($ban->validity_on == '1') ? 'checked' : ''}} >
                                      </td>

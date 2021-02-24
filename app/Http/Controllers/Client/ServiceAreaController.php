@@ -42,11 +42,23 @@ class ServiceAreaController extends BaseController
         if($request->has('area_id')){
             $area = ServiceArea::where('id', $request->area_id)->first();
         }
+        
+        $latlng = str_replace('),(', ';', $request->latlongs);
+        $latlng = str_replace(')', '', $latlng);
+        $latlng = str_replace('(', '', $latlng);
+        $latlng = str_replace(', ', ' ', $latlng);
+
+        $codsArray = explode(';', $latlng);
+        $latlng = implode(', ', $codsArray);
+
+        $latlng = $latlng. ', ' . $codsArray[0];
+
         $area->name             = $request->name;
         $area->description      = $request->description;
         $area->geo_array        = $request->latlongs;
         $area->zoom_level       = $request->zoom_level;
         $area->vendor_id        = $vendor->id;
+        $area->polygon          = \DB::raw("ST_GEOMFROMTEXT('POLYGON((".$latlng."))')");
 
         $area->save();
 
@@ -76,10 +88,22 @@ class ServiceAreaController extends BaseController
     public function update(Request $request, $id)
     {
         $area = ServiceArea::where('id', $id)->where('vendor_id', $request->ven_id)->firstOrFail();
+
+        $latlng = str_replace('),(', ';', $request->latlongs_edit);
+        $latlng = str_replace(')', '', $latlng);
+        $latlng = str_replace('(', '', $latlng);
+        $latlng = str_replace(', ', ' ', $latlng);
+
+        $codsArray = explode(';', $latlng);
+        $latlng = implode(', ', $codsArray);
+
+        $latlng = $latlng. ', ' . $codsArray[0];
+
         $area->name           = $request->name;
         $area->description    = $request->description;
         $area->geo_array      = $request->latlongs_edit;
         $area->zoom_level     = $request->zoom_level_edit;
+        $area->polygon        = \DB::raw("ST_GEOMFROMTEXT('POLYGON((".$latlng."))')");
         $area->save();
 
         return redirect()->back()->with('success', 'Service area updated successfully!');

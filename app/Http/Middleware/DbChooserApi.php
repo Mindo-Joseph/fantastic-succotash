@@ -23,15 +23,16 @@ class DbChooserApi
     public function handle($request, Closure $next)
     {
 
-        config(['auth.guards.api.provider' => 'agents']);
+        config(['auth.guards.api.provider' => 'users']);
 
-        $database_name = $database = 'royodelivery_db';
+        //$database_name = $database = 'royoorders';
+        $database_name = $database = 'royo_varun';
 
         $header = $request->header();
         //$client = Cache::get($database);
 
         if (array_key_exists("client", $header)){
-            $database_name =  'db_'.$header['client'][0];
+            $database_name =  'royo_'.$header['client'][0];
         }
 
         if (isset($database_name)) {

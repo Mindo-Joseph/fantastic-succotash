@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\Banner;
+use App\Models\{Banner, Vendor, Category};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Image;
+use Illuminate\Support\Facades\Storage;
 
 class BannerController extends BaseController
 {
+    private $folderName = 'banner';
+    private $fstatus = 1;
     /**
      * Display a listing of the resource.
      *
@@ -30,8 +33,10 @@ class BannerController extends BaseController
      */
     public function create()
     {
-        $vendors = array();
-        $categories = array();
+        $categories = Category::select('id', 'slug')
+                    ->where('status', $this->fstatus)->where('can_add_products', 1)->where('id', '>', 1)->get();
+        
+        $vendors = Vendor::select('id', 'name')->where('status', $this->fstatus)->get();
         $banner = new Banner();
         $returnHTML = view('backend.banner.form')->with(['banner' => $banner,  'vendors' => $vendors, 'categories' => $categories])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
@@ -45,9 +50,11 @@ class BannerController extends BaseController
      */
     public function edit($id)
     {
-        $vendors = array();
-        $categories = array();
         $banner = Banner::where('id', $id)->first();
+        $categories = Category::select('id', 'slug')
+                    ->where('status', $this->fstatus)->where('can_add_products', 1)->where('id', '>', 1)->get();
+        
+        $vendors = Vendor::select('id', 'name')->where('status', $this->fstatus)->get();
         $returnHTML = view('backend.banner.form')->with(['banner' => $banner,  'vendors' => $vendors, 'categories' => $categories])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
@@ -126,15 +133,18 @@ class BannerController extends BaseController
             }
             
         }
-        //$banner->redirect_category_id = $request->redirect_category_id;
-        //$banner->redirect_vendor_id = $request->redirect_vendor_id;
+        if($request->has('assignTo') && !empty($request->assignTo)){
+            $banner->link = $request->assignTo;
+            $banner->redirect_category_id = ($request->assignTo == 'category') ? $request->category_id : NULL;
+            $banner->redirect_vendor_id = ($request->assignTo == 'vendor') ? $request->vendor_id : NULL;
+        }
 
         if ($request->hasFile('image')) {    /* upload logo file */
             $file = $request->file('image');
-            $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            //$s3filePath = '/assets/Clientlogo/' . $file_name;
-            //$path = Storage::disk('s3')->put($s3filePath, $file,'public');
-            $banner->image = $request->file('image')->storeAs('/banner', $file_name, 'public');
+            //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
+            //$banner->image = $request->file('image')->storeAs('/banner', $file_name, 'public');
+
+            $banner->image = Storage::disk('s3')->put('/banner', $file,'public');
         }
         $banner->save();
         return $banner->id;

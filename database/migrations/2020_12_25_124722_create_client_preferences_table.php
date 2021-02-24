@@ -64,8 +64,9 @@ class CreateClientPreferencesTable extends Migration
             $table->string('mail_from', 50)->nullable();
             $table->tinyInteger('is_hyperlocal')->default(0)->comment('0 - no, 1 - yes');
             $table->tinyInteger('need_delivery_service')->default(0)->comment('0 - no, 1 - yes');
-            $table->string('dispatcher_key_1', 100)->nullable();
-            $table->string('dispatcher_key_2', 100)->nullable();
+            $table->tinyInteger('need_dispacher_ride')->default(0)->comment('0 - no, 1 - yes');
+            $table->string('delivery_service_key', 100)->nullable();
+            $table->string('dispatcher_key', 100)->nullable();
             $table->timestamps();
         });
 

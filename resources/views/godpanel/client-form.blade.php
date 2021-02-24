@@ -36,8 +36,8 @@
                     @endif
                         @csrf
                         <div class="row mb-2">
-                            <div class="col-md-4"> <!--  Storage::disk('s3')->url($client->logo)  --> 
-                                <input type="file" data-plugins="dropify" name="logo" data-default-file="{{isset($client->logo) ? url('storage/'.$client->logo) : ''}}" {{$disable}} {{$style}}/>
+                            <div class="col-md-4"> <!--  Storage::disk('s3')->url($client->logo)  url('storage/'.$client->logo)--> 
+                                <input type="file" data-plugins="dropify" name="logo" data-default-file="{{isset($client->logo) ? Storage::disk('s3')->url($client->logo) : ''}}" />
                                 <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
                             </div>
                         </div>

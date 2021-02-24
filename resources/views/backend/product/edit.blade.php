@@ -115,16 +115,16 @@
                 <div class="card-box">
                     <h5 class="text-uppercase bg-light p-2 mt-0 mb-3">General</h5>
                     <div class="row mb-2">
-                        <div class="col-6 mb-2">
+                        <!--<div class="col-6 mb-2">
                             {!! Form::label('title', 'Product Type',['class' => 'control-label']) !!}
                             <select class="form-control selectizeInput" id="typeSelectBox" name="type_id">
                                 @foreach($typeArray as $type)
                                     <option value="{{$type->id}}" @if($type->id == $product->type_id) selected @endif >{{$type->title}}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> -->
 
-                        <div class="col-6 mb-2" style="cursor: not-allowed;">
+                        <div class="col-12 mb-2" style="cursor: not-allowed;">
                             {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
                             {!! Form::text('sku', $product->sku, ['class'=>'form-control','id' => 'sku', 'style' => 'pointer-events:none;']) !!}

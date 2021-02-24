@@ -17,7 +17,11 @@ class CreateCountriesTable extends Migration {
 		{
 			$table->id();
 			$table->string('code', 5);
-			$table->string('name', 56);
+			$table->string('name', 56)->nullable();
+			$table->string('nicename', 56)->nullable();
+			$table->string('iso3', 5)->nullable();
+			$table->integer('numcode')->nullable();
+			$table->integer('phonecode')->nullable();
 			$table->timestamps();
 		});
 
@@ -27,7 +31,6 @@ class CreateCountriesTable extends Migration {
 		});
 
 	}
-
 
 	/**
 	 * Reverse the migrations.

@@ -161,6 +161,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        AkibTanjim\Currency\CurrencyServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -230,6 +231,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Phumbor'   => R0bdiabl0\Laravel5Phumbor\Facades\Phumbor::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'ConvertCurrency'=> AkibTanjim\Currency\Facades\CurrencyConverter::class,
 
     ],
 

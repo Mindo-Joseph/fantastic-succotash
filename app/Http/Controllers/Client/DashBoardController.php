@@ -21,7 +21,7 @@ use \DateTimeZone;
 
 class DashBoardController extends BaseController
 {
-
+    private $folderName = 'Clientlogo';
     public function __construct(){
         
     }
@@ -105,11 +105,10 @@ class DashBoardController extends BaseController
 
         if ($request->hasFile('logo')) {    /* upload logo file */
             $file = $request->file('logo');
-            $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            //$s3filePath = '/assets/Clientlogo/' . $file_name;
-            //$path = Storage::disk('s3')->put($s3filePath, $file,'public');
-            $path = $request->file('logo')->storeAs('/Clientlogo', $file_name, 'public');
-            $getFileName = $path;
+            //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
+            //$path = $request->file('logo')->storeAs('/Clientlogo', $file_name, 'public');
+
+            $getFileName = Storage::disk('s3')->put($this->folderName, $file,'public');
             $data['logo'] = $getFileName;
         }
 

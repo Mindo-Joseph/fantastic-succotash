@@ -41,15 +41,12 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-
     public function Login(Request $request)
     {
         $this->validate($request, [
             'email'           => 'required|max:255|email',
             'password'        => 'required',
         ]);
-
-        //dd($request->all());
 
         $guard = Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password]);
     
