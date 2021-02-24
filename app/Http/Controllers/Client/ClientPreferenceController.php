@@ -43,7 +43,7 @@ class ClientPreferenceController extends BaseController
         $preference = ClientPreference::with('language', 'domain', 'currency', 'primary.currency')->select('client_code', 'theme_admin', 'distance_unit', 'date_format', 'time_format', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'verify_email', 'verify_phone', 'web_template_id', 'app_template_id')
                         ->where('client_code', Auth::user()->code)->first();
 
-        dd($preference->toArray());
+        //dd($preference->toArray());
         $client = Auth::user();
         $cli_langs = array();
         $cli_currencies = array();

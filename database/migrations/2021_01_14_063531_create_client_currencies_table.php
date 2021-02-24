@@ -16,7 +16,7 @@ class CreateClientCurrenciesTable extends Migration
         Schema::create('client_currencies', function (Blueprint $table) {
             $table->string('client_code', 10)->nullable();
             $table->bigInteger('currency_id')->unsigned()->nullable();
-            $table->tinyInteger('is_primary')->unsigned()->nullable();
+            $table->tinyInteger('is_primary')->default(0)->comment('1 for yes, 0 for no');
             $table->decimal('doller_compare')->nullable();
             $table->timestamps();
         });
