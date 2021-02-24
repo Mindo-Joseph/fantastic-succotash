@@ -66,7 +66,7 @@ class SmsProviderController extends Controller
      */
     public function show(SmsProvider $smsProvider)
     {
-        phpinfo();
+        //phpinfo();
     }
 
     /**
