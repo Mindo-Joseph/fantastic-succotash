@@ -28,7 +28,18 @@ class VariantController extends BaseController
      */
     public function create()
     {
-        //
+        $categories = Category::with('english')
+                        ->select('id', 'slug')
+                        ->where('id', '>', '1')
+                        ->where('status', '!=', '2')
+                        ->orderBy('parent_id', 'asc')
+                        ->orderBy('position', 'asc')->get();
+
+        $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
+                    ->where('client_languages.client_code', Auth::user()->code)->get();
+        $returnHTML = view('backend.catalog.add-variant')->with(['categories' => $categories,  'languages' => $langs])->render();
+        return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
     /**

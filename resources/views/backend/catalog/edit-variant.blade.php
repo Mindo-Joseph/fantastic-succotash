@@ -18,7 +18,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
-                    <select class="form-control selectize-select" name="type">
+                    <select class="form-control selectize-select dropDownType" name="type" dataFor="edit">
                         <option value="1" @if($variant->type == 1) selected @endif>DropDown</option>
                         <option value="2" @if($variant->type == 2) selected @endif>Color</option>
                     </select>
@@ -83,7 +83,7 @@
             <div class="col-md-12" style="overflow-x: auto;">
                 <table class="table table-borderless mb-0 optionTableEdit" id="edit_banner-datatable">
                     <tr class="trForClone">
-                        <td>Color Code</td>
+                        <td class="hexacodeClass-edit" style="@if($variant->type == 1) display: none @endif">Color Code</td>
                         @foreach($variant->option[0]->translation as $langu)
                             <td>{{$langu->name}}</td>
                         @endforeach
@@ -92,7 +92,7 @@
                     
                    @foreach($variant->option as $first => $opt)
                    <tr>
-                        <td style="min-width: 100px;">
+                        <td style="min-width: 100px; @if($variant->type == 1) display: none @endif" class="hexacodeClass-edit">
                             {!! Form::text('hexacode[]', $opt->hexacode, ['class' => 'form-control', 'placeholder' => '#cccccc']) !!}
                             {!! Form::hidden('option_id[]', $opt->id) !!}
                         </td>

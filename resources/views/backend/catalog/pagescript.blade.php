@@ -86,11 +86,34 @@
                 },*/
 
     $(".addVariantbtn").click(function (e) {
-        $('#addVariantmodal').modal({
-            backdrop: 'static',
-            keyboard: false
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
         });
-        $('.dropify').dropify();
+        e.preventDefault();
+
+        var did = $(this).attr('dataid');
+        $.ajax({
+            type: "get",
+            url: "{{route('variant.create')}}",
+            data: '',
+            dataType: 'json',
+            success: function (data) {
+
+                $('#addVariantmodal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                $('#addVariantForm #AddVariantBox').html(data.html);
+                $('.dropify').dropify();
+                $('.selectize-select').selectize(); 
+            },
+            error: function (data) {
+                console.log('data2');
+            }
+        });
         
     });
 
@@ -176,9 +199,20 @@
         $(".brandList").each(function () {
             var_ids.push($(this).data("row-id"));
         });
-
-        
     });
+
+    $(document).on('change', '.dropDownType', function(){
+       
+        var did = $(this).val();
+        var dataFor = $(this).attr('dataFor');
+        console.log(dataFor);
+        if(did == 1){
+            $('#'+dataFor+'Variantmodal .hexacodeClass-'+dataFor).hide();
+        }else{
+            $('#'+dataFor+'Variantmodal .hexacodeClass-'+dataFor).show();
+        }
+    });
+
     $('.saveVariantOrder').on('click', function(e) {
         //alert(1);
         var var_ids = new Array();
