@@ -130,17 +130,11 @@ class ClientController extends Controller
                 $client->password = Hash::make($request->encpass);
                 $client->encpass = $request->encpass;
                 $isPasswordUpdate = 1;
-
             }
         }
         if ($request->hasFile('logo')) {    /* upload logo file */
             $file = $request->file('logo');
-            $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            $s3filePath = 'Clientlogo';
-            $path = Storage::disk('s3')->put($s3filePath, $file, 'public');
-            //$client->logo = $request->file('logo')->storeAs('/Clientlogo', $file_name, 'public');
-            $client->logo = $path;
-
+            $client->logo = Storage::disk('s3')->put('Clientlogo', $file, 'public');
         }
         $client->save();
         return $client;

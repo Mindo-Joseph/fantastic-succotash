@@ -123,7 +123,7 @@
                     </div>
                     
                 </div>
-                <div class="row variant-row">
+                <div class="row variant-row" style="max-width: 100%;overflow: auto;">
                     <div class="col-md-12">
                         <form name="variant_order" id="variant_order" action="{{route('variant.order')}}" method="post">
                             @csrf
@@ -190,7 +190,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="row brand-row">
+                <div class="row brand-row" style="max-width: 100%;overflow: auto;">
                     <div class="col-md-12">
                         <form name="brand_order" id="brand_order" action="{{route('brand.order')}}" method="post">
                             @csrf
