@@ -137,7 +137,7 @@ class ClientController extends Controller
             $file = $request->file('logo');
             $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
             $s3filePath = 'Clientlogo';
-            $path = Storage::disk('s3')->put($s3filePath, $file,'public');
+            $path = Storage::disk('s3')->put($s3filePath, $file, 'public');
             //$client->logo = $request->file('logo')->storeAs('/Clientlogo', $file_name, 'public');
             $client->logo = $path;
 

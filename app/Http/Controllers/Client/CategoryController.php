@@ -139,7 +139,6 @@ class CategoryController extends BaseController
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
-        //dd($category->toArray());
 
         $existlangs = $langIds = array();
         foreach ($langs as $key => $value) {
