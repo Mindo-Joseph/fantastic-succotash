@@ -36,7 +36,16 @@ class ProcessClientDatabase implements ShouldQueue
      */
     public function handle()
     {
-        $client = Client::where('id', $this->client_id)->first(['name', 'email', 'password', 'phone_number', 'password', 'database_path', 'database_name', 'database_username', 'database_password', 'logo', 'company_name', 'company_address', 'custom_domain', 'status', 'code', 'country_id', 'timezone'])->toarray();
+        $client = Client::where('id', $this->client_id)->first(['name', 'email', 'password', 'phone_number', 'database_path', 'database_name', 'database_username', 'database_password', 'logo', 'company_name', 'company_address', 'custom_domain', 'status', 'code', 'country_id'])->toarray();
+        $clientData = array();
+
+        foreach ($client as $key => $value) {
+            if($key == 'logo'){
+                $clientData[$key] = $value['original'];
+            }else{
+                $clientData[$key] = $value;
+            }
+        }
         try {
            
             $schemaName = 'royo_' . $client['database_name'] ?: config("database.connections.mysql.database");
@@ -59,8 +68,6 @@ class ProcessClientDatabase implements ShouldQueue
                 'client_code'           => $client['code'],
                 'theme_admin'           => 'light',
                 'distance_unit'         => 'metric',
-                'currency_id'           => 147,
-                'language_id'           => 1,
                 'date_format'           => 'YYYY-MM-DD',
                 'time_format'           => '24',
                 'fb_login'              => 0,
@@ -101,14 +108,16 @@ class ProcessClientDatabase implements ShouldQueue
             config(["database.connections.mysql.database" => $schemaName]);
             Artisan::call('migrate', ['--database' => $schemaName]);
             Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--database' => $schemaName]);
-            DB::connection($schemaName)->table('clients')->insert($client);
+            DB::connection($schemaName)->table('clients')->insert($clientData);
             DB::connection($schemaName)->table('client_preferences')->insert($settings);
             DB::connection($schemaName)->table('client_languages')->insert($cli_langs);
             DB::connection($schemaName)->table('client_currencies')->insert($cli_currs);
 
             DB::disconnect($schemaName);
         } catch (Exception $ex) {
+            print_r($ex->getMessage());die;
            return $ex->getMessage();
+
         }
     }
 }

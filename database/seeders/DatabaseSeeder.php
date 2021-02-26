@@ -23,8 +23,8 @@ class DatabaseSeeder extends Seeder
               MapProviderSeeder::class,
               SmsProviderSeeder::class,
               TemplateSeeder::class,
-              //CategorySeeder::class,
-              //CategoryTranslationSeeder::class,
+              CategorySeeder::class,
+              CategoryTranslationSeeder::class,
 
               /*AttributeFamilyTableSeeder::class,
               AttributeGroupTableSeeder::class,
