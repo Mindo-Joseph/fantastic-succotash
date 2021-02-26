@@ -17,13 +17,10 @@ class Vendor extends Model
       if(!empty($value)){
         $img = $value;
       }
-      //$values = \Storage::disk('s3')->url($img);
-      $values['original'] = \Storage::disk('s3')->url($img);
-      $values['link'] = $img;
-      /*$values['small'] = url('showImage/small/' . $img);
-      $values['medium'] = url('showImage/medium/' . $img);
-      $values['large'] = url('showImage/large/' . $img);*/
+      $values['proxy_url'] = env('IMG_URL1');
+      $values['image_path'] = env('IMG_URL2').'/'.\Storage::disk('s3')->url($img);
 
+      //$values['small'] = url('showImage/small/' . $img);
       return $values;
     }
 
@@ -34,12 +31,10 @@ class Vendor extends Model
       if(!empty($value)){
         $img = $value;
       }
-      $values = \Storage::disk('s3')->url($img);
-      //$values = $img;
-      /*$values['small'] = url('showImage/small/' . $img);
-      $values['medium'] = url('showImage/medium/' . $img);
-      $values['large'] = url('showImage/large/' . $img);*/
+      $values['proxy_url'] = env('IMG_URL1');
+      $values['image_path'] = env('IMG_URL2').'/'.\Storage::disk('s3')->url($img);
 
+      //$values['small'] = url('showImage/small/' . $img);
       return $values;
     }
 }

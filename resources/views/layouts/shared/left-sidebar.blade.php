@@ -136,7 +136,7 @@
                 </li>
 
                 
-            {{-- @if(env('APP_DEBUG'))
+            @if(env('APP_DEBUG'))
                 <li class="menu-title mt-5">Other Pages</li>
 
                 <li>
@@ -829,7 +829,7 @@
                         </ul>
                     </div>
                 </li> 
-                @endif --}}
+                @endif
             </ul>
 
         </div>

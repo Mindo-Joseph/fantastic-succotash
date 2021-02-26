@@ -16,7 +16,12 @@ class ClientPreference extends Model
 
     public function language()
     {
-      return $this->hasMany('App\Models\ClientLanguage','client_code','client_code')->select( 'client_code', 'language_id');
+      return $this->hasMany('App\Models\ClientLanguage','client_code','client_code')->select( 'client_code', 'language_id', 'is_primary');
+    }
+
+    public function primarylang()
+    {
+      return $this->hasOne('App\Models\ClientLanguage','client_code','client_code')->select( 'client_code', 'language_id')->where('is_primary', 1);
     }
 
     public function currency()
@@ -37,6 +42,3 @@ class ClientPreference extends Model
     }
  
 }
-/*
-'', 'distance_unit', 'currency_id', 'date_format', 'time_format', 'fb_client_id', 'fb_client_secret', 'fb_client_url', 'twitter_client_id', 'twitter_client_secret', 'twitter_client_url', 'google_client_id', 'google_client_secret', 'google_client_url', 'apple_client_id', 'apple_client_secret', 'apple_client_url', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'map_provider', 'map_key', 'map_secret', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'verify_email', 'verify_phone', '', ''
-*/

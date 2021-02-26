@@ -79,7 +79,7 @@ class BaseController extends Controller
                     $this->htmlData .='<a class="action-icon openCategoryModal" dataid="'.$node["id"].'" href="#"> <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
                         <a class="action-icon" dataid="'.$node["id"].'" onclick="'.$askMessage.'" href="'.url("client/category/delete/".$node["id"]).'"> <h3> <i class="mdi mdi-delete"></i> </h3></a>';
 
-                }elseif($from == 'vendor'){ //$from == 'vendor' && $node["is_core"] == 0
+                }elseif($from == 'vendor' && $node["is_core"] == 0){
                     $this->htmlData .='<a class="action-icon openCategoryModal" dataid="'.$node["id"].'" href="#"> <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
                         <a class="action-icon" dataid="'.$node["id"].'" onclick="'.$askMessage.'" href="'.url("client/category/delete/".$node["id"]).'"> <h3> <i class="mdi mdi-delete"></i> </h3></a>';
                 }

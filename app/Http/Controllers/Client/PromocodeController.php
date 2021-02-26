@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\Promocode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PromocodeController extends BaseController
 {

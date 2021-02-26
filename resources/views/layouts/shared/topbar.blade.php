@@ -63,14 +63,10 @@
         <!-- LOGO -->
         <div class="logo-box">
             @php
-            //echo $aa = 'app/public/'.Auth::user()->logo;
+                $urlImg = URL::to('/').'/assets/images/users/user-1.jpg';
                 if(!empty(Auth::user()->logo)){
-                    $urlImg = Auth::user()->logo;
-                }else{
-                    $urlImg = URL::to('/').'/assets/images/users/user-1.jpg';
+                    $urlImg = Auth::user()->logo['proxy_url'].'80/60'.Auth::user()->logo['image_path'];
                 }
-
-            
             @endphp
             <a href="{{ route('any', ['dashboard']) }}" class="logo logo-dark text-center">
                 <span class="logo-sm">

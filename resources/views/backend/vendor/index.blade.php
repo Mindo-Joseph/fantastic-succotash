@@ -66,11 +66,8 @@
                                 @foreach($vendors as $ven)
                                 <tr data-row-id="{{$ven->id}}">
                                     <td>
-                                        <img alt="{{$ven->id}}" src="{{url('showImage/small/'.$ven->logo['link'])}}">
-                                        <!--<img alt="{{$ven->id}}" src1="url($ven->logo)" src="Thumbor::url($ven->logo)->resize(90,50)"> -->
-                                        
+                                        <img src="{{$ven->logo['proxy_url'].'90/50'.$ven->logo['image_path']}}" alt="{{$ven->id}}">
                                     </td>
-
                                     <td> {{ $ven->name }} </td>
                                     <td> {{ $ven->address }}</td>
                                     <td> {{ $ven->latitude }} </td>

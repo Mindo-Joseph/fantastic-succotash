@@ -7,6 +7,7 @@ use App\Http\Controllers\Client\BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency};
+use Illuminate\Support\Facades\Storage;
 
 class ClientPreferenceController extends BaseController
 {
@@ -40,7 +41,7 @@ class ClientPreferenceController extends BaseController
         $appTemplates = Template::where('for', '2')->get();
         $currencies = Currency::where('id', '>', '0')->get();
         $languages = Language::where('id', '>', '0')->get(); /*  cprimary - currency primary*/
-        $preference = ClientPreference::with('language', 'domain', 'currency', 'primary.currency')->select('client_code', 'theme_admin', 'distance_unit', 'date_format', 'time_format', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'verify_email', 'verify_phone', 'web_template_id', 'app_template_id')
+        $preference = ClientPreference::with('language', 'primarylang', 'domain', 'currency', 'primary.currency')->select('client_code', 'theme_admin', 'distance_unit', 'date_format', 'time_format', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'verify_email', 'verify_phone', 'web_template_id', 'app_template_id')
                         ->where('client_code', Auth::user()->code)->first();
 
         //dd($preference->toArray());
@@ -70,7 +71,6 @@ class ClientPreferenceController extends BaseController
      */
     public function update(Request $request, $code)
     {
-        //dd($request->all());
         $cp = new ClientPreference();
         $preference = ClientPreference::where('client_code', Auth::user()->code)->first();
 
@@ -80,7 +80,7 @@ class ClientPreferenceController extends BaseController
             $preference->client_code = $code;
         }
         
-        $keyShouldNot = array('Default_location_name', 'Default_latitude', 'Default_longitude', 'is_hyperlocal', '_token', 'social_login', 'send_to', 'languages', 'hyperlocals', 'currency_data');
+        $keyShouldNot = array('Default_location_name', 'Default_latitude', 'Default_longitude', 'is_hyperlocal', '_token', 'social_login', 'send_to', 'languages', 'hyperlocals', 'currency_data', 'primary_language');
 
         foreach ($request->all() as $key => $value) {
 
@@ -129,35 +129,35 @@ class ClientPreferenceController extends BaseController
 
             $delCount = ClientCurrency::where('client_code', Auth::user()->code)->whereNotIn('currency_id', $exist)->count();
             if($delCount > 0){
-                $delete = ClientCurrency::where('client_code', Auth::user()->code)->whereNotIn('currency_id', $exist)->delete();
+               $delete = ClientCurrency::where('client_code',Auth::user()->code)->whereNotIn('currency_id',$exist)->delete();
             }
-            
         }
+
         if($request->has('languages')){
 
-            $exist_langs = array();
-
-            $exist_langs[] = 1;
-
+            $additionalLang = array();
+            $delete = ClientLanguage::where('client_code', Auth::user()->code)->where('is_primary', 0)->delete();
             foreach ($request->languages as $langs) {
-                
-                $clientLang = ClientLanguage::where('client_code', Auth::user()->code)->where('language_id', $langs)->first();
-                if(!$clientLang){
-                    $clientLang = new ClientLanguage();
-                    $clientLang->client_code = Auth::user()->code;
-                    $clientLang->language_id = $langs;
-                    $clientLang->save();
-                }
-                $exist_langs[] = $clientLang->language_id;
-
+                $additionalLang[] = [
+                    'client_code' => Auth::user()->code,
+                    'language_id' => $langs,
+                    'is_primary' => 0
+                ];
             }
-
-            $delCount = ClientLanguage::where('client_code', Auth::user()->code)->whereNotIn('language_id', $exist_langs)->count();
-            if($delCount > 0){
-                $delete = ClientLanguage::where('client_code', Auth::user()->code)->whereNotIn('language_id', $exist_langs)->delete();
-            }
-            
+            ClientLanguage::insert($additionalLang);
         }
+
+        if($request->has('primary_language')){
+            $primary_lang = ClientLanguage::where('client_code', Auth::user()->code)->where('is_primary', 1)->delete();
+            $primary_lang = ClientLanguage::where('client_code', Auth::user()->code)->where('language_id', $request->primary_language)->delete();
+           
+            $primary_lang = new ClientLanguage();
+            $primary_lang->client_code = Auth::user()->code;
+            $primary_lang->is_primary = 1;
+            $primary_lang->language_id = $request->primary_language;
+            $primary_lang->save();   
+        }
+
         $preference->save();
 
         if($request->has('send_to') && $request->send_to == 'customize'){

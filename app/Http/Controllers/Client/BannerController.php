@@ -21,8 +21,7 @@ class BannerController extends BaseController
      */
     public function index()
     {
-        $banners = Banner::orderBy('sorting', 'asc')->get();
-        
+        $banners = Banner::orderBy('sorting', 'asc')->get();        
         return view('backend/banner/index')->with(['banners' => $banners]);
     }
 
@@ -69,8 +68,8 @@ class BannerController extends BaseController
     {
         $rules = array(
             'name' => 'required|string|max:150',
-            'start_date_time' => 'required',
-            'end_date_time' => 'required',
+            'start_date_time' => 'required|before:end_date_time',
+            'end_date_time' => 'required|after:start_date_time',
         );
         $validation  = Validator::make($request->all(), $rules)->validate();
         $banner = new Banner();

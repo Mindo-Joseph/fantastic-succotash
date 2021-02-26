@@ -31,6 +31,7 @@
                     elems2 = document.getElementsByClassName('switch2Edit');
                     var switchery = new Switchery(elems1[0]);
                     var switchery = new Switchery(elems2[0]);
+                    makeTag();
 
                 }else{
 
@@ -43,6 +44,7 @@
                     elems2 = document.getElementsByClassName('switch2');
                     var switchery = new Switchery(elems1[0]);
                     var switchery = new Switchery(elems2[0]);
+                    makeTag();
 
                 }
 
@@ -61,7 +63,7 @@
         var form =  document.getElementById('addCategoryForm');
         var formData = new FormData(form);
         var url =  "{{route('category.store')}}";
-        saveCategory(formData, 'add', url );
+        saveCategory(formData, '', url );
 
     });
 
@@ -69,14 +71,16 @@
         var id =  $(this).val();
         var for1 = $(this).attr('for');
         if(id == '1'){
+            $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
             $("#" + for1 + "-category-form #" + for1 + "ProductHide").show();
-        }else{
+        } else if(id == '2') {
             $("#" + for1 + "-category-form #" + for1 + "ProductHide").hide();
+            $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").show();
+        } else {
+            $("#" + for1 + "-category-form #" + for1 + "ProductHide").hide();
+            $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
         }
-
     });
-
-    
 
     $(document).on('click', '.editCategorySubmit', function(e) { 
         e.preventDefault();
@@ -84,7 +88,7 @@
         var formData = new FormData(form);
         var url =  document.getElementById('cateId').getAttribute('url');
 
-        saveCategory(formData, 'edit', url);
+        saveCategory(formData, 'Edit', url);
 
     });
 
@@ -120,13 +124,15 @@
                     let errors = response.responseJSON.errors;
                     Object.keys(errors).forEach(function(key) {
                         if(key == 'name.0'){
-                            $("#nameInput input").addClass("is-invalid");
-                            $("#nameInput span.invalid-feedback").children("strong").text('The default language name field is required.');
-                            $("#nameInput span.invalid-feedback").show();
+                            var valiField = 'nameInput'+type;
+                            $("#"+valiField+" input").addClass("is-invalid");
+                            $("#nameInput"+type+" span.invalid-feedback").children("strong").text('The default language name field is required.');
+                            $("#nameInput"+type+" span.invalid-feedback").show();
                         }else{
-                            $("#" + key + "Input input").addClass("is-invalid");
-                            $("#" + key + "Input span.invalid-feedback").children("strong").text(errors[key][0]);
-                            $("#" + key + "Input span.invalid-feedback").show();
+                            var valiField = key +'Input'+type;
+                            $("#"+valiField+" input").addClass("is-invalid");
+                            $("#"+valiField+" span.invalid-feedback").children("strong").text(errors[key][0]);
+                            $("#"+valiField+" span.invalid-feedback").show();
                         }
                     });
                 } else {

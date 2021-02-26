@@ -27,14 +27,6 @@
                 </div>
             </div>
 
-            <!--<div class="col-md-6">
-                <div class="form-group">
-                    {!! Form::label('title', 'Variant Title(English)',['class' => 'control-label']) !!}
-                    {!! Form::hidden('language_id[]', 1) !!}
-                    {!! Form::text('title[]', null, ['class' => 'form-control']) !!}
-                </div>
-            </div>-->
-
         </div>                            
         <div class="row rowYK">
             <div class="col-md-12">
@@ -44,12 +36,12 @@
                 <table class="table table-borderless mb-0" id="banner-datatable" >
                     <tr>
                         @foreach($languages as $langs)
-                            <td>{{$langs->langName}}</td>
+                            <th>{{$langs->langName}}</th>
                         @endforeach
                     </tr>
                     <tr>
                         @foreach($languages as $langs)
-                            @if($langs->langId == 1)
+                            @if($langs->is_primary == 1)
                                 <td style="min-width: 200px;">
                                     {!! Form::hidden('language_id[]', $langs->langId) !!}
                                     {!! Form::text('title[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
@@ -82,12 +74,12 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td style="min-width: 100px; display:none;" class="hexacodeClass-add">
-                            {!! Form::text('hexacode[]', null, ['class' => 'form-control', 'placeholder' => '#cccccc']) !!}
+                        <td style="min-width: 200px; display:none;" class="hexacodeClass-add">
+                            <input type="text" name="hexacode[]" class="form-control hexa-colorpicker" value="cccccc" id="hexa-colorpicker-1">
                         </td>
                        @foreach($languages as $key => $langs)
                         <td style="min-width: 200px;">
-                            <input type="text" name="opt_color[{{$key}}][]" class="form-control" @if($langs->langId == 1) required @endif>
+                            <input type="text" name="opt_color[{{$key}}][]" class="form-control" @if($langs->is_primary == 1) required @endif>
                         </td>
                         @endforeach
                         <td class="lasttd"></td>

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{Client, ClientPreference, Brand, Category, Category_translation, ClientLanguage, BrandCategory, BrandTranslation};
+use Illuminate\Support\Facades\Storage;
 
 class BrandController extends BaseController
 {
@@ -29,7 +30,25 @@ class BrandController extends BaseController
      */
     public function create()
     {
-        //
+        $categories = Category::with('english')
+                        ->select('id', 'slug')
+                        ->where('id', '>', '1')
+                        ->where('status', '!=', '2')
+                        ->orderBy('parent_id', 'asc')
+                        ->orderBy('position', 'asc')->get();
+
+        $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
+                    ->where('client_languages.client_code', Auth::user()->code)
+                    ->orderBy('client_languages.is_primary', 'desc')->get();
+
+        $langIds = array();
+        foreach ($langs as $key => $value) {
+            $langIds[] = $langs{$key}->langId;
+        }
+
+        $returnHTML = view('backend.catalog.add-brand')->with(['categories' => $categories,  'languages' => $langs, 'langIds' => $langIds])->render();
+        return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
     /**
@@ -114,8 +133,9 @@ class BrandController extends BaseController
                         ->orderBy('position', 'asc')->get();
 
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
-                    ->where('client_languages.client_code', Auth::user()->code)->get();
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
+                    ->where('client_languages.client_code', Auth::user()->code)
+                    ->orderBy('client_languages.is_primary', 'desc')->get();
 
         $langIds = array();
         foreach ($langs as $key => $value) {

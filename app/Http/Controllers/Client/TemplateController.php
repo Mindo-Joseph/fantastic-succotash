@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Template;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TemplateController extends Controller
 {

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Phumbor;
 use Image;
+use Illuminate\Support\Facades\Storage;
 
 class VendorController extends BaseController
 {

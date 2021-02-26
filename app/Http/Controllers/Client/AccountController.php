@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\Account;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AccountController extends BaseController
 {

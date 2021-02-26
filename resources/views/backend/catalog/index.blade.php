@@ -243,10 +243,23 @@
     <script src="{{asset('assets/js/pages/my-nestable.init.js')}}"></script>
     <script src="{{asset('assets/libs/dragula/dragula.min.js')}}"></script>
     <script src="{{asset('assets/js/pages/dragula.init.js')}}"></script>
+    <script src="{{asset('assets/js/jscolor.js')}}"></script>
+    <script src="{{ asset('assets/js/jquery.tagsinput-revisited.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('assets/css/jquery.tagsinput-revisited.css') }}" />
     @include('backend.common.category-script')
     @include('backend.catalog.pagescript')
 
 <script type="text/javascript">
+    var tagList = "";
+    tagList = tagList.split(',');
+    console.log(tagList);
+    function makeTag(tagList = ''){
+        $('.myTag1').tagsInput({
+            'autocomplete': {
+                source: tagList
+            } 
+        });
+    }
 
     $('.saveList').on('click', function(e) {
         e.preventDefault();

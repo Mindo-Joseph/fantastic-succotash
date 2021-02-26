@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type};
+use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag};
 
 class CategoryController extends BaseController
 {
@@ -42,11 +42,10 @@ class CategoryController extends BaseController
             $tree = $this->printTree($build);
         }
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
-                    ->where('client_languages.client_code', Auth::user()->code)->get();
-        
-        //$langs = ClientLanguage::with('language')->where('client_code', Auth::user()->code)->get();
-
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
+                    ->where('client_languages.client_code', Auth::user()->code)
+                    ->orderBy('client_languages.is_primary', 'desc')->get();
+        //dd($langs->toArray());
         return view('backend/catalog/index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs, 'variants' => $variants, 'brands' => $brands]);
     }
 
@@ -64,8 +63,9 @@ class CategoryController extends BaseController
                         ->select('categories.id', 'categories.slug', 'category_translations.name')->get();
 
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
-                    ->where('client_languages.client_code', Auth::user()->code)->get();
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
+                    ->where('client_languages.client_code', Auth::user()->code)
+                    ->orderBy('client_languages.is_primary', 'desc')->get();
 
         $returnHTML = view('backend.catalog.add-category')->with(['category' => $category,  'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
@@ -126,19 +126,34 @@ class CategoryController extends BaseController
     {
         $vendors = array();
         $type = Type::all();
-        $category = Category::with('translation')->where('id', $id)->first();
+        $tagList = array();
+
+        $category = Category::with('translation', 'tags')->where('id', $id)->first();
+        if(!empty($category->tags)){
+            foreach ($category->tags as $key => $value) {
+                $tagList[] = $value->tag;
+            }
+        }
 
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->leftjoin('category_translations as cts', 'client_languages.language_id', 'cts.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'cts.id as trans_id', 'cts.name as cateName', 'cts.meta_title', 'cts.meta_description', 'cts.meta_keywords', 'cts.category_id')
-                    ->where('cts.category_id', $id)
-                    ->where('client_languages.client_code', Auth::user()->code)->get();
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
+                    ->where('client_languages.client_code', Auth::user()->code)
+                    ->orderBy('client_languages.is_primary', 'desc')->get();
+        //dd($category->toArray());
+
+        $existlangs = $langIds = array();
+        foreach ($langs as $key => $value) {
+            $langIds[] = $langs{$key}->langId;
+        }
+        foreach ($category->translation as $key => $value) {
+            $existlangs[] = $value->language_id;
+        }
 
         $parCategory = Category::join('category_translations', 'categories.id', 'category_translations.category_id')
                         ->select('categories.id', 'categories.slug', 'category_translations.name')->where('categories.id', '!=', $id)->groupBy('category_translations.category_id')->get();
         
-        $returnHTML = view('backend.catalog.edit-category')->with(['category' => $category,  'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML));
+        $returnHTML = view('backend.catalog.edit-category')->with(['typeArray' => $type, 'category' => $category,  'languages' => $langs, 'parCategory' => $parCategory, 'langIds' => $langIds, 'existlangs' => $existlangs, 'tagList' => $tagList])->render();
+        return response()->json(array('success' => true, 'html'=>$returnHTML, 'tagList' => $tagList));
     }
 
     /**
@@ -222,19 +237,29 @@ class CategoryController extends BaseController
             $cate->client_code = (!empty(Auth::user()->code)) ? Auth::user()->code : '';
         }
 
-        if ($request->hasFile('icon')) {    /* upload category icon */
+        if ($request->hasFile('icon')) {
             $file = $request->file('icon');
-            //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            //$cate->icon = $request->file('icon')->storeAs('/category/icon', $file_name, 'public');
             $cate->icon = Storage::disk('s3')->put($this->folderName, $file,'public');
         }
-        if ($request->hasFile('image')) {    /* upload category image */
+        if ($request->hasFile('image')) {
             $file = $request->file('image');
-            //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            //$cate->image = $request->file('image')->storeAs('/category/image', $file_name, 'public');
             $cate->image = Storage::disk('s3')->put('/category/image', $file,'public');
         }
         $cate->save();
+
+        $tagDelete = CategoryTag::where('category_id', $cate->id)->delete();
+
+        if($request->has('tags') && !empty($request->tags)){
+            $tagArray = array();
+            $tags = explode(',', $request->tags);
+            foreach ($tags as $k => $v) {
+                $tagArray[] = [
+                    'category_id' => $cate->id,
+                    'tag' => $v
+                ];
+            }
+            CategoryTag::insert($tagArray);
+        }
         return $cate->id;
     }
 

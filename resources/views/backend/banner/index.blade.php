@@ -66,10 +66,7 @@
                                 <tr data-row-id="{{$ban->id}}">
                                     <td class="draggableTd"><span class="dragula-handle"></span></td>
                                     <td> 
-                                    @php 
-                                    
-                                    @endphp
-                                        <img src="{{url('showImg/'.$ban->image['link'])}}" alt="{{$ban->id}}" >
+                                        <img src="{{$ban->image['proxy_url'].'400/160'.$ban->image['image_path']}}" alt="{{$ban->id}}" >
                                     </td>
 
                                     <td> {{ $ban->name }} </td>

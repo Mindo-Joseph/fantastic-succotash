@@ -8,6 +8,7 @@ use Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{Client, Product, Category, ProductTranslation, Type, Vendor, AddonSet, ProductUpSell, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage};
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends BaseController
 {

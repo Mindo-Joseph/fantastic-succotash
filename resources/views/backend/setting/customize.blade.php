@@ -199,7 +199,6 @@
                         <div class="col-md-6">
                             <label for="languages">Additional Currency</label>
                             <select class="form-control select2-multiple" id="currency" name="currency_data[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-
                                 @foreach($currencies as $currency)
                                     @if($currency->id != 147)
                                         <option value="{{$currency->id}}" {{ (isset($preference) && in_array($currency->id, $cli_currs))? "selected" : "" }}> {{$currency->iso_code}} {{$currency->symbol}} </option>
@@ -210,7 +209,11 @@
 
                         <div class="col-md-6">
                             <label for="languages">Primary Language</label>
-                            <input type="text" class="form-control" value="English" disabled="" style="cursor:not-allowed;">
+                            <select class="form-control" id="primary_language" name="primary_language">
+                                @foreach($languages as $lang)
+                                    <option {{(isset($preference) && ($lang->id == $preference->primarylang->language_id))? "selected" : "" }} value="{{$lang->id}}"> {{$lang->name}} </option>
+                                @endforeach
+                            </select>
                         </div>
                  
                         <div class="col-md-6">
@@ -218,7 +221,7 @@
                             <select class="form-control select2-multiple" id="languages" name="languages[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
 
                                 @foreach($languages as $lang)
-                                    @if($lang->id != 1)
+                                    @if($lang->id != $preference->primarylang->language_id)
                                         <option value="{{$lang->id}}" {{ (isset($preference) && in_array($lang->id, $cli_langs))? "selected" : "" }}> {{$lang->name}} </option>
                                     @endif
                                 @endforeach

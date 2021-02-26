@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\{VendorSlotDate, Vendor, VendorSlot, SlotDay, ServiceArea};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceAreaController extends BaseController
 {

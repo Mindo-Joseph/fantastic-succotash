@@ -16,7 +16,7 @@
             <div class="col-md-6">
                 <div class="form-group" id="slugInput">
                     {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
-                    {!! Form::text('slug', null, ['class'=>'form-control']) !!}
+                    {!! Form::text('slug', null, ['class'=>'form-control', 'required' => 'required']) !!}
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>
                     </span>
@@ -24,6 +24,7 @@
                     {!! Form::hidden('login_user_id', auth()->user()->id, ['class'=>'form-control']) !!}
                 </div>
             </div>
+
             <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('title', 'Select Parent Category',['class' => 'control-label']) !!}
@@ -38,7 +39,7 @@
                     </span>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control type-select" for="add" id="typeSelectBox" name="type_id">
@@ -51,6 +52,7 @@
                     </span>
                 </div>
             </div>
+
             <div class="col-md-3 text-center">
                 <div class="form-group">
                     {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
@@ -59,12 +61,21 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 text-center" id="addProductHide">
+            <div class="col-md-6 text-center" id="addProductHide">
                 <div class="form-group">
                     {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
                     <div>
                         <input type="checkbox" data-plugin="switchery" name="can_add_products" class="form-control switch1" data-color="#039cfd" checked='checked'>
                     </div>
+                </div>
+            </div>
+            <div class="col-md-6" id="addDispatcherHide" style="display: none;">
+                <div class="form-group">
+                    {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
+                    {!! Form::hidden('tags', null, ['class'=>'form-control myTag1']) !!}
+                    <span class="invalid-feedback" role="alert">
+                        <strong></strong>
+                    </span>
                 </div>
             </div>
             <!--<div class="col-md-4">
@@ -82,12 +93,16 @@
         </div>
         @foreach($languages as $langs)
             <div class="row rowYK" style="border: 2px dashed #d2d0cd;">
-                <h4 class="col-md-12"> {{ ($langs->langId == 1) ? 'Default Language(English)' : $langs->langName.' Language' }} </h4>
+                <h4 class="col-md-12"> {{ $langs->langName.' Language' }} </h4>
 
                 <div class="col-md-6">
                     <div class="form-group" id="{{ ($langs->langId == 1) ? 'nameInput' : 'nameotherInput' }}">
                         {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
-                        {!! Form::text('name[]', null, ['class' => 'form-control']) !!}
+                        @if($langs->is_primary == 1)
+                            {!! Form::text('name[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
+                        @else
+                            {!! Form::text('name[]', null, ['class' => 'form-control']) !!}
+                        @endif
                         <span class="invalid-feedback" role="alert">
                             <strong></strong>
                         </span>

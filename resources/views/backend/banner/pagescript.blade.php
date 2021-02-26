@@ -33,12 +33,15 @@
             //backdrop: 'static',
             keyboard: false
         });
+        //var now = ;
         runPicker();
     });
 
     function runPicker(){
         $('.datetime-datepicker').flatpickr({
             enableTime: true,
+            startDate: new Date(),
+            minDate: new Date(),
             dateFormat: "Y-m-d H:i"
         });
 
@@ -74,15 +77,17 @@
                         backdrop: 'static',
                         keyboard: false
                     });
-                    runPicker(); 
+                    
                 }else{
                     $('#add-form #AddCardBox').html(data.html);
                     $('#add-form').modal({
                         backdrop: 'static',
                         keyboard: false
                     });
-                    runPicker(); 
+                    
                 }
+                var now = new Date();
+                runPicker();
                 $('.dropify').dropify();
                 $('.selectize-select').selectize();
                 elem1 = document.getElementsByClassName('validity_add');

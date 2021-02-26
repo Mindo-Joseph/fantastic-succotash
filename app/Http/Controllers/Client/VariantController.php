@@ -36,10 +36,11 @@ class VariantController extends BaseController
                         ->orderBy('position', 'asc')->get();
 
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
-                    ->where('client_languages.client_code', Auth::user()->code)->get();
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
+                    ->where('client_languages.client_code', Auth::user()->code)
+                    ->orderBy('client_languages.is_primary', 'desc')->get();
         $returnHTML = view('backend.catalog.add-variant')->with(['categories' => $categories,  'languages' => $langs])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML));
+        return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
     /**
@@ -128,7 +129,7 @@ class VariantController extends BaseController
     {
         $variant = Variant::with('translation', 'option.translation', 'varcategory')
                         ->where('id', $id)->firstOrFail();
-        //dd($variant->toArray());
+        
         $categories = Category::with('english')
                         ->select('id', 'slug')
                         ->where('id', '>', '1')
@@ -137,13 +138,15 @@ class VariantController extends BaseController
                         ->orderBy('position', 'asc')->get();
 
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
-                    ->where('client_languages.client_code', Auth::user()->code)->get();
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
+                    ->where('client_languages.client_code', Auth::user()->code)
+                    ->orderBy('client_languages.is_primary', 'desc')->get();
 
         $langIds = array();
         foreach ($langs as $key => $value) {
             $langIds[] = $langs{$key}->langId;
         }
+        $existlangs = array();
         foreach ($variant->translation as $key => $value) {
             $existlangs[] = $value->language_id;
         }
@@ -163,7 +166,6 @@ class VariantController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        
         $variant = Variant::where('id', $id)->firstOrFail();
         $variant->title = $request->title[0];
         $variant->type = $request->type;
@@ -186,17 +188,16 @@ class VariantController extends BaseController
         $exist_options = array();
         foreach ($request->option_id as $key => $value) {
 
-            if(empty($value)){
-                $varOpt = new VariantOption();
-                $varOpt->title = $request->opt_color[1][$key];
-                $varOpt->variant_id = $variant->id;
-                $varOpt->hexacode = ($request->hexacode[$key] == '') ? '' : $request->hexacode[$key];
-                $varOpt->save();
-                $exist_options[$key] = $varOpt->id;
+            $varOpt = VariantOption::where('id', $value)->first();
 
-            } else {
-                $exist_options[$key] = $value;
+            if(!$varOpt){
+                $varOpt = new VariantOption();
+                $varOpt->variant_id = $variant->id;
             }
+            $varOpt->title = $request->opt_color[1][$key];
+            $varOpt->hexacode = ($request->hexacode[$key] == '') ? '' : $request->hexacode[$key];
+            $varOpt->save();
+            $exist_options[$key] = $value;
         }
 
         foreach($request->opt_id as $lid => $options) {

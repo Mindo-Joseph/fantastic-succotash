@@ -92,8 +92,9 @@
                     
                    @foreach($variant->option as $first => $opt)
                    <tr>
-                        <td style="min-width: 100px; @if($variant->type == 1) display: none @endif" class="hexacodeClass-edit">
-                            {!! Form::text('hexacode[]', $opt->hexacode, ['class' => 'form-control', 'placeholder' => '#cccccc']) !!}
+                        <td style="min-width: 200px; @if($variant->type == 1) display: none @endif" class="hexacodeClass-edit">
+                            <input type="text" name="hexacode[]" class="form-control hexa-colorpicker" value="{{$opt->hexacode}}" id="hexa-colorpicker-{{$opt->id}}">
+
                             {!! Form::hidden('option_id[]', $opt->id) !!}
                         </td>
 

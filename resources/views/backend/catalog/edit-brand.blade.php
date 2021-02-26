@@ -2,7 +2,7 @@
     <div class="col-md-12 card-box">
         <div class="row mb-2">
             <div class="col-md-12">              
-                <input type="file" data-plugins="dropify" name="image" class="dropify" data-default-file="{{ !empty($brand->image) ? env('IMG_URL').'storage/app/public/'.$brand->image : '' }}" />
+                <input type="file" class="dropify" data-plugins="dropify" name="image" data-default-file="{{$brand->image['proxy_url'].'400/400'.$brand->image['image_path']}}" />
                 <p class="text-muted text-center mt-2 mb-0">Upload image</p>
             </div>
         </div>
@@ -20,7 +20,7 @@
                     </span>
                 </div>
             </div>
-        </div>                            
+        </div>
         <div class="row rowYK">
             <div class="col-md-12">
                 <h5>Variant Title</h5>

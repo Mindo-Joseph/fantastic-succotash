@@ -1,4 +1,7 @@
 <script>
+    var options = {
+        zIndex: 9999
+    }
     $(document).on('change', '.assignToSelect', function(){
         var val = $(this).val();
         if(val == 'category'){
@@ -108,7 +111,8 @@
                 });
                 $('#addVariantForm #AddVariantBox').html(data.html);
                 $('.dropify').dropify();
-                $('.selectize-select').selectize(); 
+                $('.selectize-select').selectize();
+                var picker = new jscolor('#hexa-colorpicker-1', options);  
             },
             error: function (data) {
                 console.log('data2');
@@ -118,21 +122,31 @@
     });
 
     $(document).on('click', '.addOptionRow-Add',function (e) {
+        var d = new Date();
+        var n = d.getTime();
         var $tr = $('.optionTableAdd tbody>tr:first').next('tr');
         console.log('asasd');
         var $clone = $tr.clone();
         $clone.find(':text').val('');
+        $clone.find('.hexa-colorpicker').attr("id", "hexa-colorpicker-"+n);
         $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>');
         $('.optionTableAdd').append($clone);
+
+        var picker = new jscolor("#hexa-colorpicker-"+n, options);
     });
 
     $(document).on('click', '.addOptionRow-edit',function (e) {
+        var d = new Date();
+        var n = d.getTime();
         var $tr = $('.optionTableEdit tbody>tr:first').next('tr');
         var $clone = $tr.clone();
         $clone.find(':text').val('');
         $clone.find(':hidden').val('');
+        $clone.find('.hexa-colorpicker').attr("id", "hexa-colorpicker-"+n);
         $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>');
         $('.optionTableEdit').append($clone);
+        $('.hexa-colorpicker').colorpicker();
+        var picker = new jscolor("#hexa-colorpicker-"+n, options);
     });
 
     $("#addVariantmodal").on('click', '.deleteCurRow', function () {
@@ -174,7 +188,17 @@
                 });
                 $('#editVariantForm #editVariantBox').html(data.html);
                 $('.dropify').dropify();
-                $('.selectize-select').selectize(); 
+                $('.selectize-select').selectize();
+
+                $("#editVariantForm .hexa-colorpicker").each(function() {
+                    var ids = $(this).attr('id');
+                    //console.log(ids);
+                    var picker = new jscolor('#'+ids, options); 
+
+                });
+
+                //var picker = new jscolor('.hexa-colorpicker', options); 
+                
 
                 var getURI = document.getElementById('submitEditHidden').value;
                 document.getElementById('editVariantForm').action = data.submitUrl;
@@ -226,12 +250,35 @@
 
     /*              Brand Started               */
 
-    $(".addBrandbtn").click(function (e) {
-        $('#addBrandmodal').modal({
-            backdrop: 'static',
-            keyboard: false
+    $('.addBrandbtn').on('click', function(e) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
         });
-        $('.dropify').dropify();
+        e.preventDefault();
+
+        var did = $(this).attr('dataid');
+        $.ajax({
+            type: "get",
+            url: "{{route('brand.create')}}",
+            data: '',
+            dataType: 'json',
+            success: function (data) {
+
+                $('#addBrandmodal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                $('#addBrandForm #AddbrandBox').html(data.html);
+                $('.dropify').dropify();
+                $('.selectize-select').selectize();
+
+            },
+            error: function (data) {
+                console.log('data2');
+            }
+        });
     });
 
     $(document).ready(function(){
@@ -298,6 +345,5 @@
             }
         });
     });
-
-    
+  
 </script>

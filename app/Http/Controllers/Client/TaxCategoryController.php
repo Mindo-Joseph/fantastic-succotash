@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{TaxRate, TaxCategory, TaxRateCategory};
+use Illuminate\Support\Facades\Storage;
 
 class TaxCategoryController extends BaseController
 {

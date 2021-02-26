@@ -1,8 +1,6 @@
 <!-- bundle -->
 <!-- Vendor js -->
 
-
-
 <script src="{{asset('assets/libs/selectize/selectize.min.js')}}"></script>
 <script src="{{asset('assets/libs/mohithg-switchery/mohithg-switchery.min.js')}}"></script>
 <script src="{{asset('assets/libs/multiselect/multiselect.min.js')}}"></script>
@@ -23,6 +21,12 @@
 <script src="{{asset('assets/js/pages/my-form-advanced.init.js')}}"></script>
 
 <script>
+
+function gm_authFailure() {
+
+    $('.excetion_keys').append('<span><i class="mdi mdi-block-helper mr-2"></i> <strong>Google Map</strong> key is not valid</span><br/>');
+    $('.displaySettingsError').show();
+};
 
 const startLoader = function(element) {
     // check if the element is not specified
