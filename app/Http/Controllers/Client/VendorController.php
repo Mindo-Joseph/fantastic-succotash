@@ -137,7 +137,9 @@ class VendorController extends BaseController
 
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
-                    ->where('client_languages.client_code', Auth::user()->code)->get();
+                    ->where('client_languages.client_code', Auth::user()->code)
+                    ->orderBy('client_languages.is_primary', 'desc')->get();
+
         return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons]);
     }
 
@@ -151,13 +153,14 @@ class VendorController extends BaseController
     {
         $vendor = Vendor::findOrFail($id);
         $type = Type::all();
-        $categories = Category::with('english')->select('id', 'slug')
+        $categories = Category::with('primary')->select('id', 'slug')
                         ->where('id', '>', '1')->where('status', '!=', '2')
                         ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
                         ->orderBy('position', 'asc')->get();
-        $products = Product::with('variant', 'english', 'category.cat', 'variantSet')->where('vendor_id', $id)->get();
 
-        //dd($products->toArray());
+        $products = Product::with('variant', 'primary', 'category.cat', 'variantSet')->where('vendor_id', $id)->get();
+
+        //dd($categories->toArray());
         return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'tab' => 'catalog', 'products' => $products, 'typeArray' => $type, 'categories' => $categories]);
     }
 

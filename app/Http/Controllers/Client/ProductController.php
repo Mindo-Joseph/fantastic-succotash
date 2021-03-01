@@ -360,7 +360,7 @@ class ProductController extends BaseController
      */
     public function edit($id)
     {
-        $product = Product::with('variant.set', 'english', 'category.cat','variantSet', 'addOn', 'media')->where('id', $id)->firstOrFail();
+        $product = Product::with('variant.set', 'primary', 'category.cat','variantSet', 'addOn', 'media')->where('id', $id)->firstOrFail();
         //dd($product->toArray());
         $type = Type::all();
         $countries = Country::all();
@@ -369,17 +369,17 @@ class ProductController extends BaseController
                         ->where('vendor_id', $product->vendor_id)
                         ->orderBy('position', 'asc')->get();
 
-        /*$categories = Category::with('english')->select('id', 'slug')
+        /*$categories = Category::with('primary')->select('id', 'slug')
                         ->where('id', '>', '1')->where('status', '!=', '2')
                         ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
                         ->orderBy('position', 'asc')->get();*/
 
         $clientLanguages = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code')
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.is_primary')
                     ->where('client_languages.client_code', Auth::user()->code)->get();
 
         
-        $productVariants = Variant::with('option', 'varcategory.cate.english')
+        $productVariants = Variant::with('option', 'varcategory.cate.primary')
                         ->select('variants.*')
                         ->join('variant_categories', 'variant_categories.variant_id', 'variants.id')
                         ->where('variant_categories.category_id', $product->category->category_id)

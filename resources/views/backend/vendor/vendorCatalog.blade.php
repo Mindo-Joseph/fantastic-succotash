@@ -109,7 +109,7 @@
                                                      <!-- <img src="{{ url('storage/'.$prod->logo)}}" alt="{{$prod->id}}" width="50" height="50"> -->
                                                      {{ $prod->sku }}
                                                   </td>
-                                                  <td> {{ (isset($prod->english->title) && !empty($prod->english->title)) ? $prod->english->title : '' }} </td>
+                                                  <td> {{ (isset($prod->primary->title) && !empty($prod->primary->title)) ? $prod->primary->title : '' }} </td>
                                                   <td> {{ ($prod->is_new == 0) ? 'No' : 'Yes' }}</td>
                                                   <td> {{ ($prod->is_featured == 0) ? 'No' : 'Yes' }}</td>
                                                   <td> {{ ($prod->is_live == 0) ? 'No' : 'Yes' }}</td>
@@ -171,7 +171,7 @@
                                 @endforeach
                             </select>
 
-                            {!! Form::hidden('vendor_id', $vendor->id) !!}
+                            
                         </div> -->
 
                         <div class="col-12 mb-2">
@@ -185,6 +185,7 @@
                             </span>
 
                             {!! Form::hidden('type_id', 1) !!}
+                            {!! Form::hidden('vendor_id', $vendor->id) !!}
                           </div>
                         </div>
 
@@ -198,10 +199,11 @@
                         <div class="col-12">
                           <div class="form-group" id="categoryInput">
                             {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
+
                             <select class="form-control selectizeInput" id="category_list" name="category[]">
                                 <option value="">Select Category...</option>
                                 @foreach($categories as $cate)
-                                    <option value="{{$cate->id}}">{{$cate->english->name}}</option>
+                                    <option value="{{$cate->id}}">{{(isset($cate->primary->name)) ? $cate->primary->name : $cate->slug}}</option>
                                 @endforeach
                             </select>
 

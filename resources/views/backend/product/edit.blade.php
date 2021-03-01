@@ -156,7 +156,7 @@
                         <div class="col-4 p-2 mt-0" style="margin:auto; padding: 8px !important;">
                             <select class="selectize-select form-control" id="language_id" name="language_id">
                                 @foreach($languages as $lang)
-                                <option value="{{$lang->langId}}">{{$lang->langName}}</option>
+                                <option value="{{$lang->langId}}" {{ ($lang->is_primary == 1) ? 'selected' : ''}}>{{$lang->langName}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -165,27 +165,27 @@
                     <div class="row mb-2">
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Product Name',['class' => 'control-label']) !!}
-                            {!! Form::text('product_name', $product->english->title, ['class'=>'form-control', 'id' => 'product_name', 'placeholder' => 'Apple iMac']) !!}
+                            {!! Form::text('product_name', $product->primary->title, ['class'=>'form-control', 'id' => 'product_name', 'placeholder' => 'Apple iMac']) !!}
                         </div>
 
                         <div class="col-12 mb-2">
-                            {!! Form::label('title', 'Product Desription',['class' => 'control-label']) !!}
-                            {!! Form::textarea('body_html', $product->english->body_html, ['class'=>'form-control', 'id' => 'body_html', 'placeholder' => 'Description', 'rows' => '3']) !!}
+                            {!! Form::label('title', 'Product Description',['class' => 'control-label']) !!}
+                            {!! Form::textarea('body_html', $product->primary->body_html, ['class'=>'form-control', 'id' => 'body_html', 'placeholder' => 'Description', 'rows' => '3']) !!}
                         </div>
 
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!}
-                            {!! Form::text('meta_title', $product->english->meta_title, ['class'=>'form-control', 'id' => 'meta_title', 'placeholder' => 'Meta Title']) !!}
+                            {!! Form::text('meta_title', $product->primary->meta_title, ['class'=>'form-control', 'id' => 'meta_title', 'placeholder' => 'Meta Title']) !!}
                         </div>
 
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Meta Keyword',['class' => 'control-label']) !!}
-                            {!! Form::textarea('meta_keyword', $product->english->meta_keyword, ['class'=>'form-control', 'id' => 'meta_keyword', 'placeholder' => 'Meta Keyword', 'rows' => '3']) !!}
+                            {!! Form::textarea('meta_keyword', $product->primary->meta_keyword, ['class'=>'form-control', 'id' => 'meta_keyword', 'placeholder' => 'Meta Keyword', 'rows' => '3']) !!}
                         </div>
 
                         <div class="col-12 mb-2">
-                            {!! Form::label('title', 'Meta Desription',['class' => 'control-label']) !!}
-                            {!! Form::textarea('meta_description', $product->english->meta_description, ['class'=>'form-control', 'id' => 'meta_description', 'placeholder' => 'Meta Desription', 'rows' => '3']) !!}
+                            {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!}
+                            {!! Form::textarea('meta_description', $product->primary->meta_description, ['class'=>'form-control', 'id' => 'meta_description', 'placeholder' => 'Meta Description', 'rows' => '3']) !!}
                         </div>
                     </div>
                 </div>

@@ -37,9 +37,22 @@ class Product extends Model
 
     }
 
-  	public function english(){
+  	/*public function english(){
   	    return $this->hasOne('App\Models\ProductTranslation')->select('title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description', 'product_id', 'language_id')->where('language_id', 1); 
-  	}
+  	}*/
+
+    public function primary(){
+
+      $langData = $this->hasOne('App\Models\ProductTranslation')->join('client_languages as cl', 'cl.language_id', 'product_translations.language_id')->select('product_translations.product_id', 'product_translations.title', 'product_translations.language_id')->where('cl.is_primary', 1);
+
+      /*if(!$langData){
+        $langData = $this->hasOne('App\Models\Category_translation')->join('client_languages as cl', 'cl.language_id', 'product_translations.language_id')->select('product_translations.category_id', 'product_translations.title', 'product_translations.language_id')->limit(1);
+      }*/
+      return $langData;
+ 
+    }
+
+
 
   	public function category(){
   	    return $this->hasOne('App\Models\ProductCategory')->select('product_id', 'category_id'); 

@@ -16,6 +16,18 @@ class Category extends Model
        return $this->hasOne('App\Models\Category_translation')->select('category_id', 'name')->where('language_id', 1); 
     }
 
+    public function primary(){
+
+      $langData = $this->hasOne('App\Models\Category_translation')->join('client_languages as cl', 'cl.language_id', 'category_translations.language_id')->select('category_translations.category_id', 'category_translations.name', 'category_translations.language_id')->where('cl.is_primary', 1);
+
+      if(!$langData){
+        $langData = $this->hasOne('App\Models\Category_translation')->join('client_languages as cl', 'cl.language_id', 'category_translations.language_id')->select('category_translations.category_id', 'category_translations.name', 'category_translations.language_id')->limit(1);
+      }
+      return $langData;
+ 
+    }
+
+
     public function tags()
     {
         return $this->hasMany(CategoryTag::class)->select('category_id', 'tag');

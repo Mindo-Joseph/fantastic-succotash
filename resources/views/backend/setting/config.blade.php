@@ -37,10 +37,23 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group mb-3 ">
                                 <label for="is_hyperlocal" class="mr-3">Is Hyperlocal</label>
                                 <input type="checkbox" data-plugin="switchery" name="is_hyperlocal" id="is_hyperlocal" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->is_hyperlocal == '1'))  checked='checked' @endif>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-group mb-3 switchery-demo">
+                                <label for="need_delivery_service" class="mr-3">Need Delivery Service</label>
+                                <input type="checkbox" data-plugin="switchery" name="need_delivery_service" id="need_delivery_service" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->need_delivery_service == '1'))  checked='checked' @endif>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3 switchery-demo">
+                                <label for="need_dispacher_ride" class="mr-3">Need Dispatcher Rides</label>
+                                <input type="checkbox" data-plugin="switchery" name="need_dispacher_ride" id="need_dispacher_ride" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->need_dispacher_ride == '1'))  checked='checked' @endif>
                             </div>
                         </div>
                     </div>
@@ -82,6 +95,32 @@
                                 @if($errors->has('Default_longitude'))
                                 <span class="text-danger" role="alert">
                                     <strong>{{ $errors->first('Default_longitude') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-6 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
+                            <div class="form-group mb-3" >
+                                <label for="delivery_service_key">Delivery Service key</label>
+                                <input type="text" name=" delivery_service_key" id=" delivery_service_key" placeholder="asdada324234fd32" class="form-control"
+                                    value="{{ old(' delivery_service_key', $preference-> delivery_service_key ?? '')}}">
+                                @if($errors->has(' delivery_service_key'))
+                                <span class="text-danger" role="alert">
+                                    <strong>{{ $errors->first(' delivery_service_key') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6 dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_ride == '1')) ? '' : 'display:none;'}}">
+                            <div class="form-group mb-3 ">
+                                <label for="dispatcher_key">Dispatcher key</label>
+                                <input type="text" name="dispatcher_key" id="dispatcher_key" placeholder="asdada324234fd32" class="form-control"
+                                    value="{{ old('dispatcher_key', $preference->dispatcher_key ?? '')}}">
+                                @if($errors->has('dispatcher_key'))
+                                <span class="text-danger" role="alert">
+                                    <strong>{{ $errors->first('dispatcher_key') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -565,51 +604,20 @@
                     <h4 class="header-title">Basic Website Configuration</h4>
                     <p class="sub-header"></p>
                     <div class="row mb-2">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group mb-3 switchery-demo">
                                 <label for="verify_email" class="mr-3">Verify Email</label>
                                 <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->verify_email == '1'))  checked='checked' @endif>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group mb-3 ">
                                 <label for="verify_phone" class="mr-3">Verify Phone</label>
                                 <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->verify_phone == '1'))  checked='checked' @endif>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group mb-3 switchery-demo">
-                                <label for="need_delivery_service" class="mr-3">Need Delivery Service</label>
-                                <input type="checkbox" data-plugin="switchery" name="need_delivery_service" id="need_delivery_service" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->need_delivery_service == '1'))  checked='checked' @endif>
-                            </div>
-                        </div>
                     </div>
-                    <div class="row mb-2 dispatcherFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="dispatcher_key_1">Dispatcher Api key-1</label>
-                                <input type="text" name="dispatcher_key_1" id="dispatcher_key_1" placeholder="asdada324234fd32" class="form-control"
-                                    value="{{ old('dispatcher_key_1', $preference->dispatcher_key_1 ?? '')}}">
-                                @if($errors->has('dispatcher_key_1'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('dispatcher_key_1') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                        {{-- <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="dispatcher_key_2">Dispatcher Api key-2</label>
-                                <input type="text" name="dispatcher_key_2" id="dispatcher_key_2" placeholder="asdada324234fd32" class="form-control"
-                                    value="{{ old('dispatcher_key_2', $preference->dispatcher_key_2 ?? '')}}">
-                                @if($errors->has('dispatcher_key_2'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('dispatcher_key_2') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div> --}}
-                    </div>
+                    
                     <div class="row mb-2">
                         <div class="col-md-2">
                             <div class="form-group mb-0 text-center">
@@ -928,11 +936,21 @@
         }
     }
 
-    var dispatcherDiv = $('#need_delivery_service');
+    var delivery_service = $('#need_delivery_service');
+    var dispatcherDiv = $('#need_dispacher_ride');
+
+    delivery_service[0].onchange = function() {
+
+        if($('#need_delivery_service:checked').length != 1){
+            $('.deliveryServiceFields').hide();
+        }else{
+            $('.deliveryServiceFields').show();
+        }
+    }
 
     dispatcherDiv[0].onchange = function() {
 
-        if($('#need_delivery_service:checked').length != 1){
+        if($('#need_dispacher_ride:checked').length != 1){
             $('.dispatcherFields').hide();
             //$('.disableHyperLocal').attr('style', "cursor: not-allowed;");
             //$('.disableHyperLocal input').attr('style', "pointer-events: none;");
