@@ -30,9 +30,9 @@ class CategoryController extends BaseController
                         ->orderBy('categories.parent_id', 'asc')
                         ->orderBy('categories.position', 'asc')->get();
 
-        $variants = Variant::with('option', 'varcategory.cate.english')
+        $variants = Variant::with('option', 'varcategory.cate.primary')
                         ->where('status', '!=', 2)->orderBy('position', 'asc')->get();
-        $brands = Brand::with( 'bc.cate.english')
+        $brands = Brand::with( 'bc.cate.primary')
                         ->where('status', '!=', 2)->orderBy('position', 'asc')->get();
 
         //dd($variants->toArray());

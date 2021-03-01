@@ -17,7 +17,7 @@ class CreateVariantOptionsTable extends Migration
 
             $table->id();
             $table->string('title', 150)->nullable();
-            $table->bigInteger('variant_id')->unsigned();
+            $table->bigInteger('variant_id')->unsigned()->nullable();
             $table->string('hexacode', 10)->nullable();
             $table->smallInteger('position')->default(1);
             $table->timestamps();

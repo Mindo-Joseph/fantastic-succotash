@@ -108,10 +108,17 @@ class ProcessClientDatabase implements ShouldQueue
             config(["database.connections.mysql.database" => $schemaName]);
             Artisan::call('migrate', ['--database' => $schemaName]);
             Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--database' => $schemaName]);
+
             DB::connection($schemaName)->table('clients')->insert($clientData);
             DB::connection($schemaName)->table('client_preferences')->insert($settings);
             DB::connection($schemaName)->table('client_languages')->insert($cli_langs);
             DB::connection($schemaName)->table('client_currencies')->insert($cli_currs);
+
+            Artisan::call('db:seed', ['--class' => 'AddonsetDataSeeder', '--database' => $schemaName]);
+            Artisan::call('db:seed', ['--class' => 'VariantSeeder', '--database' => $schemaName]);
+            Artisan::call('db:seed', ['--class' => 'CatalogSeeder', '--database' => $schemaName]);
+            Artisan::call('db:seed', ['--class' => 'ProductSeeder', '--database' => $schemaName]);
+
 
             DB::disconnect($schemaName);
         } catch (Exception $ex) {

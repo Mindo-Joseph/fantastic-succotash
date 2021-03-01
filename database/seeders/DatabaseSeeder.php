@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
          $this->call([
               CurrencyTableSeeder::class,
               CountryTableSeeder::class,
-              TypeSeeder::class,
               RoleSeeder::class,
               //ClientTableSeeder::class,
               LanguageTableSeeder::class,
@@ -24,13 +23,13 @@ class DatabaseSeeder extends Seeder
               SmsProviderSeeder::class,
               TemplateSeeder::class,
               CategorySeeder::class,
-              CategoryTranslationSeeder::class,
-
-              /*AttributeFamilyTableSeeder::class,
-              AttributeGroupTableSeeder::class,
-              AttributeTableSeeder::class,
-              AttributeOptionTableSeeder::class,*/
-
+              //CategoryTranslationSeeder::class,
+              CommonDataSeeder::class,
+              BannerDataSeeder::class,
+              /*AddonsetDataSeeder::class,
+              VariantSeeder::class,
+              CatalogSeeder::class,
+              ProductSeeder::class,*/
 
           ]);
     }

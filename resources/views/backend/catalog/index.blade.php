@@ -144,13 +144,14 @@
                                 <tr class="variantList" data-row-id="{{$variant->id}}">
                                     <td><span class="dragula-handle"></span></td>
                                     <td>{{$variant->title}}</td>
-                                    <td>{{$variant->varcategory->cate->english->name}}</td>
+                                    <td>{{$variant->varcategory->cate->primary->name}}</td>
                                     <td>
                                         @foreach($variant->option as $key => $value)
+                                        <label style="margin-bottom: 3px;">
                                             @if($variant->type == 2)
-                                            <span style="padding:10px; float: left; background:{{$value->hexacode}}"> </span>
+                                            <span style="padding:8px; float: left; border: 1px dotted #ccc; background:{{$value->hexacode}};"> </span>
                                             @endif
-                                            <span>&nbsp;&nbsp; {{$value->title}}</span> <br/>
+                                            &nbsp;&nbsp; {{$value->title}}</label> <br/>
                                         @endforeach
                                     </td>
                                     <td>
