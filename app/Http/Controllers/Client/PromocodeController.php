@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\Promocode;
+use App\Models\{Promocode, Vendor, PromocodeUser, PromocodeProduct};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,7 +16,7 @@ class PromocodeController extends BaseController
      */
     public function index()
     {
-        $promocodes = array();
+        $promocodes = Promocode::all();
         return view('backend/promocode/index')->with(['promocodes' => $promocodes]);
     }
 

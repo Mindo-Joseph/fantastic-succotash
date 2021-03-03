@@ -89,7 +89,7 @@
                         @endforeach
                         <td></td>
                     </tr>
-                    
+
                    @foreach($variant->option as $first => $opt)
                    <tr>
                         <td style="min-width: 200px; @if($variant->type == 1) display: none @endif" class="hexacodeClass-edit">

@@ -93,6 +93,14 @@
                                     @endif
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <label for="languages">Primary Language</label>
+                                <select class="form-control" id="primary_language" name="primary_language">
+                                    @foreach($languages as $lang)
+                                        <option value="{{$lang->id}}"> {{$lang->name}} </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="database_path" class="control-label">DATABASE PATH</label>
@@ -126,6 +134,8 @@
                                     @endif
                                 </div>
                             </div>
+
+
                             <!--<div class="col-md-6">
                                 <div class="form-group">
                                     <label for="database_username" class="control-label">DATABASE USERNAME</label>

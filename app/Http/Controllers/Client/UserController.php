@@ -16,8 +16,9 @@ class UserController extends BaseController
      */
     public function index()
     {
-        //$vendors = User::with('country')->where('role_id', 1)->orderBy('created_at', 'DESC')->paginate(10);
-        return view('backend/vendor/index')->with(['users' => array()]);
+        $users = User::with('role', 'country')->paginate(20);
+        //dd($users->toArray());
+        return view('backend/users/index')->with(['users' => $users]);
     }
 
     /**
@@ -25,66 +26,17 @@ class UserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function changeStatus($uid, $action)
     {
-        //
+        $user = User::where('id', $uid)->firstOrFail();
+        $user->status = $action;
+        $user->save();
+        $msg = 'activated';
+        if($action == 2){
+            $msg = 'blocked';
+        }
+
+        return redirect()->back()->with('success', 'Customer account ' . $msg . ' successfully!');
     }
 
-
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        //
-    }
 }

@@ -9,8 +9,14 @@ class AddonsetDataSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    //private 1 = 1;
+
+    public function __construct()
     {
+        //$this->langId = 1;
+    }
+    public function run(){
+
         /* Add on sets*/
         \DB::table('addon_sets')->delete();
  
@@ -23,7 +29,6 @@ class AddonsetDataSeeder extends Seeder
                 'position' => 1,
                 'status' => 1,
                 'is_core' => 1,
-                'vendor_id' => 1,
             ),
         ); 
         \DB::table('addon_sets')->insert($addons);

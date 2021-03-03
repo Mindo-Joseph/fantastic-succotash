@@ -144,7 +144,7 @@
                                 <tr class="variantList" data-row-id="{{$variant->id}}">
                                     <td><span class="dragula-handle"></span></td>
                                     <td>{{$variant->title}}</td>
-                                    <td>{{$variant->varcategory->cate->primary->name}}</td>
+                                    <td>{{isset($variant->varcategory->cate->primary->name) ? $variant->varcategory->cate->primary->name : ''}}</td>
                                     <td>
                                         @foreach($variant->option as $key => $value)
                                         <label style="margin-bottom: 3px;">
@@ -211,7 +211,7 @@
                                 <tr class="brandList" data-row-id="{{$brand->id}}">
                                     <td><span class="dragula-handle"></span></td>
                                     <td>{{$brand->title}}</td>
-                                    <td>{{$brand->bc->cate->english->name}}</td>
+                                    <td>{{isset($brand->bc->cate->primary) ? $brand->bc->cate->primary->name : ''}}</td>
                                     <td>
                                         <a class="action-icon editBrandBtn" dataid="{{$brand->id}}" href="javascript:void(0);" > <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
 

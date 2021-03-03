@@ -33,6 +33,7 @@ class CreateClientsTable extends Migration {
 			$table->string('logo', 100)->nullable();
 			$table->string('company_name', 50)->nullable();
 			$table->string('company_address', 150)->nullable();
+			$table->bigInteger('language_id')->unsigned()->nullable();
 			$table->tinyInteger('status')->default(0)->comment('1 for active, 0 for pending, 2 for blocked, 3 for inactive');
 			$table->string('code', 10)->unique();
 			$table->timestamps();
@@ -41,6 +42,7 @@ class CreateClientsTable extends Migration {
 		Schema::table('clients', function (Blueprint $table) {
 
 			$table->foreign('country_id')->references('id')->on('countries')->onUpdate('cascade')->onDelete('set null');
+			$table->foreign('language_id')->references('id')->on('languages')->onUpdate('cascade')->onDelete('set null');
 
 			$table->index('phone_number');
 			$table->index('custom_domain');

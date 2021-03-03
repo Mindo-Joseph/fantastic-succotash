@@ -18,15 +18,17 @@ class ProcessClientDatabase implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
 
-    protected $client_id;
+    protected $client_id; 
+    protected $languId;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($client_id)
+    public function __construct($client_id, $languId)
     {
         $this->client_id = $client_id;
+        $this->languId = $languId;
     }
 
     /**
@@ -86,14 +88,6 @@ class ProcessClientDatabase implements ShouldQueue
                 'app_template_id'       => 2,
                 'need_delivery_service' => 0
             ];
-
-            $cli_langs = [
-                'client_code' => $client['code'],
-                'language_id' => '1',
-                'is_primary' => '1'
-               
-            ];
-
             $cli_currs = [
                 'client_code' => $client['code'],
                 'currency_id' => '147',
@@ -103,6 +97,13 @@ class ProcessClientDatabase implements ShouldQueue
             $query = "CREATE DATABASE $schemaName;";
 
             DB::statement($query);
+
+            $cli_langs = [
+                'client_code' => $client['code'],
+                'language_id' => $this->languId,
+                'is_primary' => 1,
+                'is_active' => 1
+            ];
 
             Config::set("database.connections.$schemaName", $default);
             config(["database.connections.mysql.database" => $schemaName]);
@@ -114,11 +115,41 @@ class ProcessClientDatabase implements ShouldQueue
             DB::connection($schemaName)->table('client_languages')->insert($cli_langs);
             DB::connection($schemaName)->table('client_currencies')->insert($cli_currs);
 
-            Artisan::call('db:seed', ['--class' => 'AddonsetDataSeeder', '--database' => $schemaName]);
-            Artisan::call('db:seed', ['--class' => 'VariantSeeder', '--database' => $schemaName]);
-            Artisan::call('db:seed', ['--class' => 'CatalogSeeder', '--database' => $schemaName]);
-            Artisan::call('db:seed', ['--class' => 'ProductSeeder', '--database' => $schemaName]);
+            if($this->languId == 1){
+                Artisan::call('db:seed', ['--class' => 'CategorySeeder', '--database' => $schemaName]);
+                Artisan::call('db:seed', ['--class' => 'CatalogSeeder', '--database' => $schemaName]);
+                Artisan::call('db:seed', ['--class' => 'AddonsetDataSeeder', '--database' => $schemaName]);
+                Artisan::call('db:seed', ['--class' => 'VariantSeeder', '--database' => $schemaName]);
+                Artisan::call('db:seed', ['--class' => 'ProductSeeder', '--database' => $schemaName]);
+            }else{
 
+                $main_category = [
+                    'id' => '1',
+                    'slug' => 'root',
+                    'type_id' => 1,
+                    'is_visible' => 0,
+                    'status' => 1,
+                    'position' => 1,
+                    'is_core' => 1,
+                    'can_add_products' => 1,
+                    'display_mode' => 1,
+                    'parent_id' => NULL
+                ];
+
+                $main_trans = [
+                    'id' => 1,
+                    'name' => 'root',
+                    'trans-slug' => '',
+                    'meta_title' => 'root',
+                    'meta_description' => '',
+                    'meta_keywords' => '',
+                    'category_id' => 1,
+                    'language_id' => $this->languId,
+                ];
+
+                DB::connection($schemaName)->table('categories')->insert($main_category);
+                DB::connection($schemaName)->table('category_translations')->insert($main_category);
+            }
 
             DB::disconnect($schemaName);
         } catch (Exception $ex) {

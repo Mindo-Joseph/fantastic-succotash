@@ -77,7 +77,8 @@ class ProductSeeder extends Seeder
                 'tax_category_id' => NULL, 
                 'inventory_policy' => NULL, 
                 'fulfillment_service' => NULL, 
-                'inventory_management' => NULL
+                'inventory_management' => NULL,
+                'position' => '1'
             ),
             array(
                 'id' => 2, 
@@ -94,6 +95,7 @@ class ProductSeeder extends Seeder
                 'tax_category_id' => NULL, 
                 'inventory_policy' => NULL, 
                 'fulfillment_service' => NULL, 
+                'position' => '1',
                 'inventory_management' => NULL
             ),
             array(
@@ -110,6 +112,7 @@ class ProductSeeder extends Seeder
                 'currency_id' => NULL, 
                 'tax_category_id' => NULL, 
                 'inventory_policy' => NULL, 
+                'position' => '1',
                 'fulfillment_service' => NULL, 
                 'inventory_management' => NULL
             ),
@@ -127,6 +130,7 @@ class ProductSeeder extends Seeder
                 'currency_id' => NULL, 
                 'tax_category_id' => NULL, 
                 'inventory_policy' => NULL, 
+                'position' => '1',
                 'fulfillment_service' => NULL, 
                 'inventory_management' => NULL
             ),
@@ -144,6 +148,7 @@ class ProductSeeder extends Seeder
                 'currency_id' => NULL, 
                 'tax_category_id' => NULL, 
                 'inventory_policy' => NULL, 
+                'position' => '1',
                 'fulfillment_service' => NULL, 
                 'inventory_management' => NULL
             ),

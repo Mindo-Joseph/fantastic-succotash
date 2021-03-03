@@ -31,7 +31,7 @@
                     <select class="selectize-select1 form-control" id="cateSelectBox" name="parent_cate">
                         <option value="">Select</option>
                         @foreach($parCategory as $pc)
-                            <option value="{{$pc->id}}" {{ ($pc->id == $category->parent_id) ? 'selected' : '' }} > {{$pc->name}}</option>
+                            <option value="{{$pc->id}}" {{ ($pc->id == $category->parent_id) ? 'selected' : '' }} > {{$pc->slug}}</option>
                         @endforeach
                     </select>
                     <span class="invalid-feedback" role="alert">
@@ -150,7 +150,7 @@
                     <div class="col-md-6">
                         <div class="form-group" id="{{ ($langs->is_primary == 1) ? 'nameInputEdit' : 'nameotherInput' }}">
                             {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
-                            @if($trans->is_primary == 1)
+                            @if($langs->is_primary == 1)
                                 {!! Form::text('name[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
                             @else
                                 {!! Form::text('name[]', null, ['class' => 'form-control']) !!}

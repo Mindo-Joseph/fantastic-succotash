@@ -16,12 +16,12 @@ class RoleSeeder extends Seeder
         $maps = array(
             array(
                 'id' => 1,
-                'role' => 'vendor',
+                'role' => 'Buyer',
                 'status' => '1'
             ),
             array(
                 'id' => 2,
-                'role' => 'customer',
+                'role' => 'Seller',
                 'status' => '1'
             ),
         ); 

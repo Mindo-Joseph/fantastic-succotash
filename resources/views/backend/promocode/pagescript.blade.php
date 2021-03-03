@@ -65,8 +65,6 @@
 
         }
 
-        $('.showLoader').show();
-
         $.ajax({
             type: "get",
             url: uri,
@@ -104,9 +102,6 @@
             },
             error: function (data) {
                 console.log('data2');
-            },
-            complete: function(){
-                //$('.showLoader').hide();
             }
         });
     });

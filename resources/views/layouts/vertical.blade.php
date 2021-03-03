@@ -41,13 +41,14 @@
                 </div>
                 @yield('content')
             </div>
-
+            <div class="spinner-border text-danger m-2 showLoader" role="status" style="display: none;"></div>
             @include('layouts.shared/footer')
-            
 
         </div>
+        
         <!-- End Page content -->
     </div>
+
     @include('layouts.shared/right-sidebar')
     @include('layouts.shared/footer-script')
 

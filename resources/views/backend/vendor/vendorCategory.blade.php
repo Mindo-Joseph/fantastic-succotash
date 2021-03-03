@@ -32,7 +32,7 @@
                 </div>
             </div>
         </div>
-        <div class="row mb-1">
+        <!--<div class="row mb-1">
             <div class="col-sm-12">
                 <div class="text-sm-left">
                     @if (\Session::has('success'))
@@ -47,8 +47,7 @@
                     @endif
                 </div>
             </div>
-        </div>
-        <!-- end page title -->
+        </div> -->
 
         <div class="row">
             <div class="col-lg-3 col-xl-3">
@@ -310,16 +309,76 @@
     </div>
 </div>
 
+<div id="add-category-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Category</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form id="addCategoryForm" method="post" enctype="multipart/form-data">
+                @csrf
+                {!! Form::hidden('vendor_id', $vendor->id) !!}
+                <div class="modal-body" id="AddCategoryBox">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-blue waves-effect waves-light addCategorySubmit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="edit-category-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Category</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+
+            <form id="editCategoryForm" method="post" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                {!! Form::hidden('vendor_id', $vendor->id) !!}
+                <div class="modal-body" id="editCategoryBox">
+                    
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-blue waves-effect waves-light editCategorySubmit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @include('backend.vendor.modals')
-@include('backend.common.category-modals')
 
 @endsection
 
 @section('script')
     <script src="{{asset('assets/libs/nestable2/nestable2.min.js')}}"></script>
     <script src="{{asset('assets/js/pages/my-nestable.init.js')}}"></script>
+    <script src="{{asset('assets/js/jscolor.js')}}"></script>
+    <script src="{{ asset('assets/js/jquery.tagsinput-revisited.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('assets/css/jquery.tagsinput-revisited.css') }}" />
 
 @include('backend.vendor.pagescript')
 @include('backend.common.category-script')
+
+<script type="text/javascript">
+    var tagList = "";
+    tagList = tagList.split(',');
+    console.log(tagList);
+    function makeTag(tagList = ''){
+        $('.myTag1').tagsInput({
+            'autocomplete': {
+                source: tagList
+            } 
+        });
+    }
+</script>
 
 @endsection

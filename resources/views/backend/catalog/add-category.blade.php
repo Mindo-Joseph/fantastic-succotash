@@ -31,7 +31,7 @@
                     <select class="selectize-select form-control" id="cateSelectBox" name="parent_cate">
                         <option value="">Select</option>
                         @foreach($parCategory as $pc)
-                            <option value="{{$pc->id}}">{{$pc->name}}</option>
+                            <option value="{{$pc->id}}">{{$pc->slug}}</option>
                         @endforeach
                     </select>
                     <span class="invalid-feedback" role="alert">

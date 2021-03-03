@@ -148,27 +148,42 @@ class ClientPreferenceController extends BaseController
 
         if($request->has('languages')){
 
-            $additionalLang = array();
-            $delete = ClientLanguage::where('client_code', Auth::user()->code)->where('is_primary', 0)->delete();
-            foreach ($request->languages as $langs) {
-                $additionalLang[] = [
-                    'client_code' => Auth::user()->code,
-                    'language_id' => $langs,
-                    'is_primary' => 0
-                ];
+            $existLanguage = array();
+
+            foreach ($request->languages as $lan) {
+                $lang = ClientLanguage::where('client_code',Auth::user()->code)->where('language_id', $lan)->first();
+                if(!$lang){
+                    $lang = new ClientLanguage();
+                    $lang->client_code = Auth::user()->code;
+                }
+                $lang->is_primary = 0;
+                $lang->language_id = $lan;
+                $lang->is_active = 1;
+                $lang->save();
+                $existLanguage[] = $lan;
             }
-            ClientLanguage::insert($additionalLang);
+
+            $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->whereNotIn('language_id', $existLanguage)->where('is_primary', 0)->update(['is_active' => 0]);
+            
         }
 
         if($request->has('primary_language')){
-            $primary_lang = ClientLanguage::where('client_code', Auth::user()->code)->where('is_primary', 1)->delete();
-            $primary_lang = ClientLanguage::where('client_code', Auth::user()->code)->where('language_id', $request->primary_language)->delete();
-           
-            $primary_lang = new ClientLanguage();
-            $primary_lang->client_code = Auth::user()->code;
-            $primary_lang->is_primary = 1;
-            $primary_lang->language_id = $request->primary_language;
-            $primary_lang->save();   
+
+            $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->where('is_primary', 1)->update(['is_active' => 0, 'is_primary' => 0]);
+
+            $primary_change = ClientLanguage::where('client_code', Auth::user()->code)->where('language_id', $request->primary_language)->update(['is_active' => 1, 'is_primary' => 1]);
+
+            if(!$primary_change){
+                $primary_lang[] = [
+                    'client_code'=> Auth::user()->code,
+                    'language_id'=> $request->primary_language,
+                    'is_primary'=> 1,
+                    'is_active'=> 1
+                ];
+
+                ClientLanguage::insert($primary_lang);
+            }
+            
         }
 
         $preference->save();

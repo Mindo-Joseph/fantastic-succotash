@@ -114,18 +114,27 @@ class VendorController extends BaseController
     public function vendorCategory($id)
     {
         $vendor = Vendor::findOrFail($id);
-        $categories = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
+
+        $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
+                        ->where('id', '>', '1')
+                        ->where(function($q) use($id){
+                              $q->whereNull('vendor_id')
+                                ->orWhere('vendor_id', $id);
+                        })
+                        ->where('status', '!=', '2')
+                        ->where('is_core', 1)
+                        ->orderBy('parent_id', 'asc')
+                        ->orderBy('position', 'asc')->get();
+
+        /*$categories = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
                         ->select('ct.name', 'categories.id', 'ct.category_id', 'categories.icon', 'categories.slug', 'categories.type_id', 'categories.parent_id', 'categories.vendor_id', 'categories.is_core')
 
-                        ->where(function($q) use($id){
-                              $q->whereNull('categories.vendor_id')
-                                ->orWhere('categories.vendor_id', $id);
-                        })
+                        
                         ->where('categories.id', '>', '1')
                         ->where('ct.language_id', '=', '1')
                         ->where('categories.status', '!=', '2')
                         ->orderBy('categories.parent_id', 'asc')
-                        ->orderBy('categories.position', 'asc')->get();
+                        ->orderBy('categories.position', 'asc')->get();*/
 
         if($categories){
             $build = $this->buildTree($categories->toArray());

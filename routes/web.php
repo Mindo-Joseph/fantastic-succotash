@@ -106,6 +106,8 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 	Route::post('vendor/deleteArea/{vid}','Client\ServiceAreaController@destroy')->name('vendor.serviceArea.delete');
 
 	Route::resource('order','Client\OrderController');
+	Route::get('customers','Client\UserController@index')->name('customers');
+	Route::get('customer/account/{user}/{action}','Client\UserController@changeStatus')->name('customer.account.action');
 
 	Route::resource('product','Client\ProductController');
 	Route::post('product/validate','Client\ProductController@validateData')->name('product.validate');

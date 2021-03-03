@@ -28,7 +28,7 @@ class VariantController extends BaseController
      */
     public function create()
     {
-        $categories = Category::with('english')
+        $categories = Category::with('primary')
                         ->select('id', 'slug')
                         ->where('id', '>', '1')
                         ->where('status', '!=', '2')
@@ -129,7 +129,6 @@ class VariantController extends BaseController
     {
         $variant = Variant::with('translation', 'option.translation', 'varcategory')
                         ->where('id', $id)->firstOrFail();
-        
         $categories = Category::with('english')
                         ->select('id', 'slug')
                         ->where('id', '>', '1')
@@ -138,10 +137,13 @@ class VariantController extends BaseController
                         ->orderBy('position', 'asc')->get();
 
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
+                    ->leftjoin('variant_translations as vt', 'vt.language_id', 'client_languages.language_id')
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary', 'vt.title')
                     ->where('client_languages.client_code', Auth::user()->code)
+                    ->where('client_languages.client_code', Auth::user()->code)
+                    ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
-
+        //dd($langs->toArray);
         $langIds = array();
         foreach ($langs as $key => $value) {
             $langIds[] = $langs{$key}->langId;

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Godpanel;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{ClientPreference, Currency, Client};
+use App\Models\{ClientPreference, Currency, Client, Language};
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Config;
@@ -37,7 +37,8 @@ class ClientController extends Controller
      */
     public function create()
     {
-        return view('godpanel/client-form');
+        $languages = Language::where('id', '>', '0')->get();
+        return view('godpanel/client-form')->with(['languages' => $languages]);
     }
 
     /**
@@ -49,7 +50,8 @@ class ClientController extends Controller
     public function edit($id)
     {
         $client = Client::find($id);
-        return view('godpanel/client-form')->with('client', $client);
+        $languages = Language::where('id', '>', '0')->get();
+        return view('godpanel/client-form')->with(['client' => $client, 'languages' => $languages]);
     }
     
     /**
@@ -74,7 +76,8 @@ class ClientController extends Controller
         }
         $database_name = preg_replace('/\s+/', '', $request->database_name);
         Cache::set($database_name, $data);
-        $this->dispatchNow(new ProcessClientDataBase($data->id));
+        $languId = ($request->has('primary_language')) ? $request->primary_language : 1;
+        $this->dispatchNow(new ProcessClientDataBase($data->id, $languId));
         return redirect()->route('client.index')->with('success', 'Client Added successfully!');  
     }
 

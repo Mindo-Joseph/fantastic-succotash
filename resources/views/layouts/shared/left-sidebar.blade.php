@@ -44,14 +44,21 @@
                 </li>
                 <li>
                     <a href="{{route('order.index')}}" >
-                        <i class="fe-user-plus"></i>
+                         <i data-feather="menu"></i>
                         <span> Orders </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{route('vendor.index')}}" >
-                        <i class="fe-user-plus"></i>
+                        <i data-feather="user-plus"></i>
                         <span> Vendors </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{route('customers')}}" >
+                        <i data-feather="users"></i>
+                        <span> Customers </span>
                     </a>
                 </li>
 
@@ -134,9 +141,12 @@
                         <span> Promocode </span>
                     </a>
                 </li>
+            </ul>
+        </div>
+        <div id="sidebar-menu" style="display: none;">
 
-                
-           <!-- @if(env('APP_DEBUG'))
+            <ul id="side-menu"> 
+            @if(env('APP_DEBUG'))
                 <li class="menu-title mt-5">Other Pages</li>
 
                 <li>
@@ -828,10 +838,9 @@
                             </li>
                         </ul>
                     </div>
-                </li>  -->
+                </li>
                 @endif
             </ul>
-
         </div>
         <!-- End Sidebar -->
 

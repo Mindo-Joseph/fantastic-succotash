@@ -28,7 +28,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Vendors</h4>
+                <h4 class="page-title">Customers</h4>
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right addVendor"><i class="mdi mdi-plus-circle mr-1"></i> Add </button>
+                            <!--<button class="btn btn-blue waves-effect waves-light text-sm-right addVendor"><i class="mdi mdi-plus-circle mr-1"></i> Add </button> -->
                         </div>
 
                     </div>
@@ -62,37 +62,43 @@
                                     <th>Phone</th>
                                     <th>Country</th>
                                     <th>Status</th>
-                                    <th>Verified Email</th>
-                                    <th>Verified Phone</th>
-                                    <th style="width: 85px;">Action</th>
+                                    <th>Role</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($users as $user)
                                 <tr>
-                                    <td class="table-user">
-                                        <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$user->name}}</a>
-                                    </td>
+                                    <td> {{$user->name}} </td>
                                     <td> {{$user->email}} </td>
+                                    <td> {{$user->phone_number}} </td>
                                     <td> {{$user->country->name}} </td>
-                                    <td> {{ $status = ($user->status == 0) ? 'pending' : ($user->status == 1) ? 'active' : ($user->status == 2) ? 'blocked' : 'inactive' }} </td>
-                                    <td> {{ ($user->verified_email == 0) ? 'NO' : 'YES' }} </td>
-                                    <td> {{ ($user->verified_phone == 0) ? 'NO' : 'YES' }} </td>
-                                    <!-- <td>
-                                        <span class="badge bg-soft-success text-success">Active</span>
-                                    </td> -->
-
                                     <td>
-                                        <a href="{{route('user.edit', $user->id)}}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
-                                        <form method="POST" action="{{route('user.destroy', $user->id)}}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <div class="form-group">
-                                                <button type="submit" class="btn btn-primary-outline action-icon"> <i
-                                                        class="mdi mdi-delete"></i></button>
-
-                                            </div>
-                                        </form>
+                                        @if($user->status == 0)
+                                            Pending
+                                        @elseif($user->status == 1)
+                                            Active
+                                        @elseif($user->status == 2)
+                                            Block
+                                        @else
+                                            Inactive
+                                        @endif
+                                    </td>
+                                    <td> {{ $user->role->role }} </td>
+                                    <td>
+                                        @if($user->status == 0)
+                                            <a class="btn btn-blue waves-effect waves-light text-sm-right"
+                                             href="{{route('customer.account.action', ['user' => $user->id, 'action' => 1])}}" onclick="return confirm('Are you sure? You want to approve customer account.')"><i class="mdi mdi-lock-open-check mr-1"></i> Approve User
+                                            </a>  
+                                        @elseif($user->status == 1)
+                                            <a class="btn btn-danger waves-effect waves-light text-sm-right"
+                                             href="{{route('customer.account.action', ['user' => $user->id, 'action' => 2])}}" onclick="return confirm('Are you sure? You want to block customer account.')"><i class="mdi mdi-lock mr-1"></i> Block User
+                                            </a>
+                                        @elseif($user->status == 2)
+                                            <a class="btn btn-blue waves-effect waves-light text-sm-right"
+                                             href="{{route('customer.account.action', ['user' => $user->id, 'action' => 1])}}" onclick="return confirm('Are you sure? You want to activate customer account.')"><i class="mdi mdi-lock-open-variant mr-1"></i> Activate User
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach

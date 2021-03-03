@@ -148,7 +148,7 @@ class CategorySeeder extends Seeder
             ),
             array(
                 'id' => '12',
-                'slug' => 'phone',
+                'slug' => 'Cloth',
                 'type_id' => 1,
                 'is_visible' => 0,
                 'status' => 1,
@@ -156,13 +156,11 @@ class CategorySeeder extends Seeder
                 'is_core' => 1,
                 'can_add_products' => 1,
                 'display_mode' => 1,
-                'parent_id' => 11
+                'parent_id' => 1
             ),
 
         ); 
         \DB::table('categories')->insert($maps);
-
-
 
         \DB::table('category_translations')->delete();
  
@@ -278,18 +276,20 @@ class CategorySeeder extends Seeder
                 'category_id' => 11,
                 'language_id' => 1,
             ),
+
             array(
                 'id' => 12,
-                'slug' => 'Phone',
+                'slug' => 'Cloth',
                 'trans-slug' => '',
-                'meta_title' => 'Phone',
+                'meta_title' => 'Cloth',
                 'meta_description' => '',
                 'meta_keywords' => '',
                 'category_id' => 12,
                 'language_id' => 1,
             ),
-
         );
         \DB::table('category_translations')->insert($translati);
+
+        
     }
 }

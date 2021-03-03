@@ -17,6 +17,7 @@ class CreateClientLanguagesTable extends Migration
             $table->string('client_code', 10)->nullable();
             $table->bigInteger('language_id')->unsigned()->nullable();
             $table->tinyInteger('is_primary')->default(0)->comment('1 for yes, 0 for no');
+            $table->tinyInteger('is_active')->default(0)->comment('1 for yes, 0 for no');
             $table->timestamps();
         });
 

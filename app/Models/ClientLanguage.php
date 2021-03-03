@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClientLanguage extends Model
 {
-    protected $fillable = ['client_code', 'language_id'];
+	protected $primaryKey = null;
+    public $incrementing = false;
+    
+    protected $fillable = ['client_code', 'language_id', 'is_primary', 'is_active'];
 
     public function language()
     {

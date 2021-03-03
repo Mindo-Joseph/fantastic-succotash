@@ -51,7 +51,6 @@ class Client extends Authenticatable
       $value1 = $value;
       if(!empty($value)){
         $value1 = Crypt::decryptString($value);
-
       }
       return $value1;
     }

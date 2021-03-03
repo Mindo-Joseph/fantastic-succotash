@@ -15,7 +15,7 @@ class LanguageController extends Controller
      */
     public function index()
     {
-        $language = Language::orderBy('created_at', 'DESC')->paginate(10);
+        $language = Language::orderBy('created_at', 'desc')->paginate(10);
         return view('godpanel/language')->with(['language' => $language]);
     }
 

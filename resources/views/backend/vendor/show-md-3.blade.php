@@ -1,7 +1,7 @@
 <div class="card-box text-center" style="">
     
     <div class="background">
-        <img src="{{$vendor->logo['proxy_url'] . '50/30' . $vendor->logo['image_path']}}" class="rounded-circle avatar-lg img-thumbnail"
+        <img src="{{$vendor->logo['proxy_url'] . '90/90' . $vendor->logo['image_path']}}" class="rounded-circle avatar-lg img-thumbnail"
             alt="profile-image">
 
         <h4 class="mb-0">{{ucfirst($vendor->name)}}</h4>
