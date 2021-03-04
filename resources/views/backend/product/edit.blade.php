@@ -191,21 +191,22 @@
                 </div>
                 <div class="card-box">
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Pricing Information</h5>
+                    @if($product->has_variant == 0)
                     <div class="row mb-2">
                         <div class="col-6 mb-2">
                             {!! Form::label('title', 'Price', ['class' => 'control-label']) !!}
-                            {!! Form::text('price', null, ['class'=>'form-control', 'id' => 'price', 'placeholder' => '200', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                            {!! Form::text('price', $product->variant[0]->price, ['class'=>'form-control', 'id' => 'price', 'placeholder' => '200', 'onkeypress' => 'return isNumberKey(event)']) !!}
                         </div>
                         <div class="col-6 mb-2">
                             {!! Form::label('title', 'Compare at price', ['class' => 'control-label']) !!}
-                            {!! Form::text('compare_at_price', null, ['class'=>'form-control', 'id' => 'compare_at_price', 'placeholder' => '200', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                            {!! Form::text('compare_at_price', $product->variant[0]->compare_at_price, ['class'=>'form-control', 'id' => 'compare_at_price', 'placeholder' => '200', 'onkeypress' => 'return isNumberKey(event)']) !!}
                         </div>
                         <div class="col-6 mb-2">
                             {!! Form::label('title', 'Cost Price', ['class' => 'control-label']) !!}
-                            {!! Form::text('cost_price', null, ['class'=>'form-control', 'id' => 'cost_price', 'placeholder' => '200', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                            {!! Form::text('cost_price', $product->variant[0]->cost_price, ['class'=>'form-control', 'id' => 'cost_price', 'placeholder' => '200', 'onkeypress' => 'return isNumberKey(event)']) !!}
                         </div>
-                        
                     </div>
+                    @endif
                     <div class="row mb-2">
                         {!! Form::label('title', 'Track Inventory',['class' => 'control-label col-sm-4']) !!}
                         <div class="col-sm-4">
@@ -215,19 +216,17 @@
                     <div class="row mb-2 check_inventory">
                         <div class="col-sm-6">
                             {!! Form::label('title', 'Quantity',['class' => 'control-label']) !!}
-                            {!! Form::number('quantity', 0, ['class'=>'form-control', 'id' => 'quantity', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                            {!! Form::number('quantity', $product->variant[0]->quantity, ['class'=>'form-control', 'id' => 'quantity', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
                         </div>
                         <div class="col-sm-2"></div>
                         <div class="col-sm-4">
                             {!! Form::label('title', 'Sell When Out Of Stock',['class' => 'control-label']) !!} <br/>
-                            <input type="checkbox" bid="" id="sell_stock_out" data-plugin="switchery" name="sell_stock_out" class="chk_box" data-color="#039cfd">
+                            <input type="checkbox" bid="" id="sell_stock_out" data-plugin="switchery" name="sell_stock_out" class="chk_box" data-color="#039cfd" @if($product->sell_when_out_of_stock == 1) checked @endif>
                         </div>
-
                     </div>
                 </div>
 
                 <div class="card-box">
-                    
                     <div class="row mb-2 bg-light">
                         <div class="col-8" style="margin:auto;">
                             <h5 class="text-uppercase mt-0 bg-light p-2">Variant Information</h5>
@@ -275,9 +274,10 @@
                                 @foreach($product->variant as $varnt)
                                     @php 
                                         $existSet = array();
-                                        $mediaPath = (empty($varnt->set[0]->path)) ? asset("assets/images/default_image.png") : url('storage/'.$varnt->set[0]->path);
+                                        $vimg = (empty($varnt->set[0]->path)) ? 'default/default_image.png' : $varnt->set[0]->path;
                                         $existSet = explode('-', $varnt->sku);
                                         $vsets = '';
+                                        $mediaPath = $media->path['proxy_url'].'300/300'.$media->path['image_path'].'/'.Storage::disk('s3')->url($vimg);
 
                                     @endphp
                                     @foreach($varnt->set as $vs)
@@ -285,6 +285,7 @@
                                             $vsets .= $vs->title.', ';
                                          @endphp
                                     @endforeach
+
                                     <tr>
                                         <td>
                                             <div class="image-upload">
@@ -321,7 +322,7 @@
                         @endif
 
                         <div id="variantRowDiv" class="col-12"></div>
-                        
+
                     </div>
                 </div>                
 
@@ -382,7 +383,7 @@
                             {!! Form::text('weight_unit', $product->weight_unit,['class' => 'form-control']) !!}
                         </div>
                     </div>
-                    <div class="row mb-2 physicalDiv" style="{{ ($product->is_physical == 1) ? '' : 'display: none;' }}">
+                    <div class="row mb-2 physicalDiv" style="{{ ($product->is_physical==1) ? '' : 'display:none;' }}">
                         {!! Form::label('title', 'Required Shipping',['class' => 'control-label col-sm-2 mb-2']) !!}
                         <div class="col-sm-4 mb-2">
                             <input type="checkbox" id="requiredShipping" data-plugin="switchery" name="require_ship" class="chk_box" data-color="#039cfd" @if($product->requires_shipping == 1) checked @endif>
@@ -405,17 +406,25 @@
                     <div class="row mb-2">
                         @foreach($product->media as $media)
                         <div class="col-4" style="overflow: hidden;">
-                            @php 
-                                $mediaPath = (empty($media->path)) ? asset("assets/images/default_image.png") : url($media->path);
+                            @php
+                            $img = 'default/default_image.png';
+                            $mediaPath = env('IMG_URL1').'300/300'.env('IMG_URL2');
+
+                                if(is_array($media->path)){
+                                    $mediaPath = $media->path['proxy_url'].'300/300'.$media->path['image_path'];
+                                }else{
+                                    if(!empty($media->path)){
+                                        $img = $media->path;
+                                    }
+                                    $mediaPath = $mediaPath.'/'.Storage::disk('s3')->url($img);
+                                }
                             @endphp
                             <img src="{{$mediaPath}}" style="width:100%;" class="vimg_{{$media->id}}"/>
                         </div>
                         @endforeach
                     </div>
                     <div class="dropzone dropzone-previews" id="my-awesome-dropzone"></div>
-
                     <div class="imageDivHidden" ></div>
-
                 </div>
 
                 <div class="card-box">

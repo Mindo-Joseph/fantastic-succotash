@@ -37,17 +37,12 @@ class BrandController extends BaseController
                         ->orderBy('parent_id', 'asc')
                         ->orderBy('position', 'asc')->get();
 
-        $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
-                    ->where('client_languages.client_code', Auth::user()->code)
-                    ->orderBy('client_languages.is_primary', 'desc')->get();
+        $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
+                    ->where('is_active', 1)
+                    ->orderBy('is_primary', 'desc')->get();
 
-        $langIds = array();
-        foreach ($langs as $key => $value) {
-            $langIds[] = $langs{$key}->langId;
-        }
 
-        $returnHTML = view('backend.catalog.add-brand')->with(['categories' => $categories,  'languages' => $langs, 'langIds' => $langIds])->render();
+        $returnHTML = view('backend.catalog.add-brand')->with(['categories' => $categories,  'languages' => $langs])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -132,22 +127,15 @@ class BrandController extends BaseController
                         ->orderBy('parent_id', 'asc')
                         ->orderBy('position', 'asc')->get();
 
-        $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
-                    ->where('client_languages.client_code', Auth::user()->code)
-                    ->orderBy('client_languages.is_primary', 'desc')->get();
-
-        $langIds = array();
-        foreach ($langs as $key => $value) {
-            $langIds[] = $langs{$key}->langId;
-        }
-        foreach ($brand->translation as $key => $value) {
-            $existlangs[] = $value->language_id;
-        }
-
+        $langs = ClientLanguage::with(['language', 'brand_trans' => function($query) use ($id) {
+                        $query->where('brand_id', $id);
+                    }])
+                    ->select('language_id', 'is_primary', 'is_active')
+                    ->where('is_active', 1)
+                    ->orderBy('is_primary', 'desc')->get();
         $submitUrl = route('brand.update', $id);
 
-        $returnHTML = view('backend.catalog.edit-brand')->with(['categories' => $categories,  'languages' => $langs, 'brand' => $brand, 'langIds' => $langIds, 'existlangs' => $existlangs])->render();
+        $returnHTML = view('backend.catalog.edit-brand')->with(['categories' => $categories,  'languages' => $langs, 'brand' => $brand])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML, 'submitUrl' => $submitUrl));
     }
 

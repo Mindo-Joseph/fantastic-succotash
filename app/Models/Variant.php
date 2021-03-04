@@ -9,7 +9,7 @@ class Variant extends Model
   protected $fillable = ['title', 'type', 'position', 'status'];
 
   public function translation(){
-    return $this->hasMany('App\Models\VariantTranslation')->join('languages', 'variant_translations.language_id', 'languages.id');
+    return $this->hasMany('App\Models\VariantTranslation')->join('languages', 'variant_translations.language_id', 'languages.id')->select('variant_translations.id', 'variant_translations.title', 'variant_translations.variant_id', 'variant_translations.language_id', 'languages.name');
   }
 
   public function primary(){

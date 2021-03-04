@@ -103,6 +103,11 @@ class ProductController extends BaseController
         $product->url_slug = empty($request->url_slug) ? $request->sku : $request->url_slug; 
         $product->type_id = $request->type_id;
         $product->vendor_id = $request->vendor_id;
+
+        $client_lang = ClientLanguage::where('is_primary', 1)->first();
+        if(!$client_lang){
+            $client_lang = ClientLanguage::where('is_active', 1)->first();
+        }
         $product->save();
         if($product->id > 0){
 
@@ -123,7 +128,7 @@ class ProductController extends BaseController
                 'meta_keyword' => '',
                 'meta_description' => '',
                 'product_id' => $product->id,
-                'language_id' => 1
+                'language_id' => $client_lang->language_id
             ];
 
             $proVariant = new ProductVariant();
@@ -414,10 +419,11 @@ class ProductController extends BaseController
      */
     public function update(Request $request, $id)
     {
+        //dd($request->all());
         $product = Product::where('id', $id)->firstOrFail();
 
         $yes = '2'; //'url_slug',
-        foreach ($request->only('is_live', 'vendor_id', 'type_id', 'country_origin_id', 'weight', 'weight_unit') as $key => $value) {
+        foreach ($request->only('country_origin_id', 'weight', 'weight_unit') as $key => $value) {
             $product->{$key} = $value;
         }
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
@@ -533,8 +539,24 @@ class ProductController extends BaseController
                     } 
                 }
                 $delOpt = ProductVariant::whereNotIN('id', $existv)->where('product_id', $product->id)->whereNull('title')->delete();
-            }
+            }else{
 
+                $variantData = ProductVariant::where('product_id', $product->id)->first();
+                if(!$variantData){
+                    $variantData = new ProductVariant();
+                    $variantData->product_id    = $product->id;
+                    $variantData->sku           = $product->sku;
+                    $variantData->title         = $product->sku;
+                    $variantData->barcode       = $this->generateBarcodeNumber();
+
+                }
+                $variantData->price             = $request->price;
+                $variantData->compare_at_price  = $request->compare_at_price;
+                $variantData->cost_price        = $request->cost_price;
+                $variantData->quantity          = $request->quantity;
+                $variantData->tax_category_id   = $request->tax_category;
+                $variantData->save();
+            }
 
             /*if($request->has('exist_variant') && count($request->exist_variant) > 0){
                 foreach ($request->exist_variant as $key => $value) {
@@ -903,7 +925,7 @@ class ProductController extends BaseController
                 $img->media_type = 1;
                 $img->vendor_id = $product->vendor_id;
                 //$file_name = uniqid() .'.'.  $files->getClientOriginalExtension();
-                $img->path = Storage::disk('s3')->put($this->folderName, $file,'public');
+                $img->path = Storage::disk('s3')->put($this->folderName, $files,'public');
                 //$img->path = $files->storeAs('/prods', $file_name, 'public');
                 $img->save();
                 $imageId = $img->id;

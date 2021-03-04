@@ -36,20 +36,20 @@
                 <table class="table table-borderless mb-0" id="banner-datatable" >
                     <tr>
                         @foreach($languages as $langs)
-                            <th>{{$langs->langName}}</th>
+                            <th>{{$langs->language->name}}</th>
                         @endforeach
                     </tr>
                     <tr>
                         @foreach($languages as $langs)
                             @if($langs->is_primary == 1)
                                 <td style="min-width: 200px;">
-                                    {!! Form::hidden('language_id[]', $langs->langId) !!}
+                                    {!! Form::hidden('language_id[]', $langs->language_id) !!}
                                     {!! Form::text('title[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
                                 </td>
 
                             @else
                                 <td style="min-width: 200px;">
-                                    {!! Form::hidden('language_id[]', $langs->langId) !!}
+                                    {!! Form::hidden('language_id[]', $langs->language_id) !!}
                                     {!! Form::text('title[]', null, ['class' => 'form-control']) !!}
                                 </td>
                             @endif
@@ -62,7 +62,6 @@
         <div class="row rowYK">
             <div class="col-md-12">
                 <h5>Variant Options</h5>
-                <!--<p>Note: Fill Color code if variant type is color(Default - #cccccc)</p> -->
             </div>
             <div class="col-md-12" style="overflow-x: auto;">
                 <table class="table table-borderless mb-0 optionTableAdd" id="banner-datatable">

@@ -201,24 +201,16 @@
                                     <table class="table table-borderless mb-0" id="banner-datatable" >
                                         <tr>
                                             @foreach($languages as $langs)
-                                                <td>{{$langs->langName}}</td>
+                                                <th>{{$langs->language->name}}</th>
                                             @endforeach
                                         </tr>
                                         <tr>
                                             @foreach($languages as $langs)
-                                                @if($langs->langId == 1)
-                                                    <td style="min-width: 200px;">
-                                                        {!! Form::hidden('language_id[]', $langs->langId) !!}
-                                                        {!! Form::text('title[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
-                                                    </td>
-
-                                                @else
-                                                    <td style="min-width: 200px;">
-                                                        {!! Form::hidden('language_id[]', $langs->langId) !!}
-                                                        {!! Form::text('title[]', null, ['class' => 'form-control']) !!}
-                                                    </td>
-                                                @endif
-                                            @endforeach 
+                                                <td style="min-width: 200px;">
+                                                    {!! Form::hidden('language_id[]', $langs->language_id) !!}
+                                                    <input type="text" name="title[]" value="" class="form-control" @if($langs->is_primary == 1) required @endif>
+                                                </td>
+                                            @endforeach
                                         </tr>
                                     </table>
                                 </div>
@@ -231,18 +223,18 @@
                                 <div class="col-md-12" style="overflow-x: auto;">
                                     <table class="table table-borderless mb-0 optionTableAdd" id="banner-datatable">
                                         <tr class="trForClone">
-                                            <td>Price($)</td>
+                                            <th>Price($)</th>
                                             @foreach($languages as $langs)
-                                                <td>{{$langs->langName}}</td>
+                                                <th>{{$langs->language->name}}</th>
                                             @endforeach
-                                            <td></td>
+                                            <th></th>
                                         </tr>
                                         <tr>
                                             <td>{!! Form::text('price[]', null, ['class' => 'form-control', 'onkeypress' => 'return isNumberKey(event)', 'min' => '1', 'required' => 'required']) !!}</td>
-                                           @foreach($languages as $key => $langs)
-                                            <td style="min-width: 200px;">
-                                                <input type="text" name="opt_value[{{$key}}][]" class="form-control" @if($langs->langId == 1) required @endif>
-                                            </td>
+
+                                            @foreach($languages as $k => $langs)
+                                                <td><input type="text" name="opt_value[{{$k}}][]" class="form-control" @if($langs->is_primary == 1) required @endif>
+                                                </td>
                                             @endforeach
                                             <td class="lasttd"></td>
                                         </tr>
@@ -275,7 +267,7 @@
                                 <div class="col-md-12">
                                     <p>If max select is greater than total option than max will be total option</p>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                     

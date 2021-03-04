@@ -43,16 +43,11 @@ class Product extends Model
 
     public function primary(){
 
-      $langData = $this->hasOne('App\Models\ProductTranslation')->join('client_languages as cl', 'cl.language_id', 'product_translations.language_id')->select('product_translations.product_id', 'product_translations.title', 'product_translations.language_id')->where('cl.is_primary', 1);
+      $langData = $this->hasOne('App\Models\ProductTranslation')->join('client_languages as cl', 'cl.language_id', 'product_translations.language_id')->select('product_translations.product_id', 'product_translations.title', 'product_translations.language_id', 'product_translations.body_html', 'product_translations.meta_title', 'product_translations.meta_keyword', 'product_translations.meta_description')->where('cl.is_primary', 1);
 
-      /*if(!$langData){
-        $langData = $this->hasOne('App\Models\Category_translation')->join('client_languages as cl', 'cl.language_id', 'product_translations.language_id')->select('product_translations.category_id', 'product_translations.title', 'product_translations.language_id')->limit(1);
-      }*/
       return $langData;
  
     }
-
-
 
   	public function category(){
   	    return $this->hasOne('App\Models\ProductCategory')->select('product_id', 'category_id'); 

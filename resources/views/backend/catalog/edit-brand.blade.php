@@ -29,39 +29,20 @@
                 <table class="table table-borderless mb-0" id="edit_brand-datatable" >
                     <tr>
                         @foreach($languages as $langs)
-                            <td>{{$langs->langName}}</td>
+                            <th>{{$langs->language->name}}</th>
                         @endforeach
                     </tr>
                     <tr>
-                        @foreach($brand->translation as $trans)
-                            @if(in_array($trans->language_id, $langIds))
-                                @if($trans->language_id == 1)
-                                    <td style="min-width: 200px;">
-                                        {!! Form::hidden('language_id[]', $trans->language_id) !!}
-                                        {!! Form::text('title[]', $trans->title, ['class' => 'form-control', 'required' => 'required']) !!}
-                                    </td>
-                                @else
-                                    <td style="min-width: 200px;">
-                                        {!! Form::hidden('language_id[]', $trans->language_id) !!}
-                                        {!! Form::text('title[]', $trans->title, ['class' => 'form-control']) !!}
-                                    </td>
-                                @endif
-                            @endif
-                        @endforeach
+                        @foreach($languages as $langs)
+                        
 
-                        @if(count($langIds) !=  count($existlangs))
-                       
-                            @foreach($languages as $language)
-                                @if(!in_array($language->langId, $existlangs) && in_array($language->langId, $langIds))
-                                    <td style="min-width: 200px;">
-                                        {!! Form::hidden('language_id[]', $language->langId) !!}
-                                        {!! Form::text('title[]', null, ['class' => 'form-control']) !!}
-                                    </td>
-                                @endif
-                            @endforeach 
-                        @endif
+                            <td style="min-width: 200px;">
+
+                                {!! Form::hidden('language_id[]', $langs->language_id) !!}
+                                <input type="text" name="title[]" value="{{(isset($langs->brand_trans) && !empty($langs->brand_trans->title)) ? $langs->brand_trans->title : ''}}" class="form-control" @if($langs->is_primary == 1) required @endif>
+                            </td>
+                        @endforeach
                     </tr>
-                    
                 </table>
             </div>
         </div>

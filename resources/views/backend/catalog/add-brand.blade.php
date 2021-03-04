@@ -30,20 +30,20 @@
                 <table class="table table-borderless mb-0" id="banner-datatable" >
                     <tr>
                         @foreach($languages as $langs)
-                            <th>{{$langs->langName}}</th>
+                            <th>{{$langs->language->name}}</th>
                         @endforeach
                     </tr>
                     <tr>
                         @foreach($languages as $langs)
-                            @if($langs->langId == 1)
+                            @if($langs->is_primary == 1)
                                 <td style="min-width: 200px;">
-                                    {!! Form::hidden('language_id[]', $langs->langId) !!}
+                                    {!! Form::hidden('language_id[]', $langs->language->id) !!}
                                     {!! Form::text('title[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
                                 </td>
 
                             @else
                                 <td style="min-width: 200px;">
-                                    {!! Form::hidden('language_id[]', $langs->langId) !!}
+                                    {!! Form::hidden('language_id[]', $langs->language->id) !!}
                                     {!! Form::text('title[]', null, ['class' => 'form-control']) !!}
                                 </td>
                             @endif

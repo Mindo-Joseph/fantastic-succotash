@@ -112,22 +112,18 @@ class AddonSetController extends BaseController
     {
         $addon = AddonSet::with('translation', 'option.translation')->where('id', $id)->firstOrFail();
 
-        $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
+        $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
+                    ->where('is_active', 1)
+                    ->orderBy('is_primary', 'desc')->get();
+        /*$langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
                     ->where('client_languages.client_code', Auth::user()->code)
-                    ->orderBy('client_languages.is_primary', 'desc')->get();
-
-        $existlangs = $langIds = array();
-        foreach ($langs as $key => $value) {
-            $langIds[] = $langs{$key}->langId;
-        }
-        foreach ($addon->translation as $key => $value) {
-            $existlangs[] = $value->language_id;
-        }
+                    ->orderBy('client_languages.is_primary', 'desc')->get();*/
 
         $submitUrl = route('addon.update', $id);
+        //dd($addon->toArray());
 
-        $returnHTML = view('backend.vendor.edit-addon')->with(['languages' => $langs, 'addon' => $addon, 'langIds' => $langIds, 'existlangs' => $existlangs])->render();
+        $returnHTML = view('backend.vendor.edit-addon')->with(['languages' => $langs, 'addon' => $addon])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML, 'submitUrl' => $submitUrl));
     }
 
@@ -140,6 +136,7 @@ class AddonSetController extends BaseController
      */
     public function update(Request $request, $id)
     {
+        //dd($request->all());
         $count = count($request->price);
         $min = ($request->min_select < 1) ? 1 : $request->min_select;
         $max = ($request->max_select < 1) ? 1 : $request->max_select;
@@ -169,9 +166,11 @@ class AddonSetController extends BaseController
         $exist_options = array();
         foreach ($request->option_id as $key => $value) {
 
+            $curLangId = $request->language_id[0];
+
             if(empty($value)){
                 $varOpt = new AddonOption();
-                $varOpt->title = $request->opt_value[1]{$key};
+                $varOpt->title = $request->opt_value[$curLangId]{$key};
                 $varOpt->addon_id = $addon->id;
                 $varOpt->price = $request->price{$key};
                 $varOpt->save();
@@ -179,6 +178,7 @@ class AddonSetController extends BaseController
 
             } else {
                 $varOpt = AddonOption::where('id', $value)->first();
+                $varOpt->title = $request->opt_value[$curLangId]{$key};
                 $varOpt->price = $request->price{$key};
                 $varOpt->save();
                 $exist_options[$key] = $value;
@@ -189,33 +189,27 @@ class AddonSetController extends BaseController
 
             foreach($options as $key => $value) {
 
-                $optTrans = AddonOptionTranslation::where('language_id', $lid)->where('addon_opt_id', $value)->first();
-                if(!$optTrans){
-                    $optTrans = new AddonOptionTranslation();
-                    $optTrans->addon_opt_id =$exist_options[$key];
-                    $optTrans->language_id = $lid;
+                if(!empty($value)){
+                    $setOptTrans = AddonOptionTranslation::where('language_id', $lid)->where('addon_opt_id', $value)->first();
+                    if(!$setOptTrans){
+                        $setOptTrans = new AddonOptionTranslation();
+                        $setOptTrans->addon_opt_id =$exist_options[$key];
+                        $setOptTrans->language_id = $lid;
+                    }
+                    $setOptTrans->title = $request->opt_value[$lid][$key];
+                    $setOptTrans->save();
+
+                }else{
+                    $setOptTrans = new AddonOptionTranslation();
+                    $setOptTrans->addon_opt_id =$exist_options[$key];
+                    $setOptTrans->language_id = $lid;
+                    $setOptTrans->title = $request->opt_value[$lid][$key];
+                    $setOptTrans->save();
                 }
-                $optTrans->title = $request->opt_value{$lid}{$key};
-                $optTrans->save();
             }
         }
-
-        if($request->has('opt_value_new') && count($request->opt_value_new) > 0)
-
-        foreach($request->opt_value_new as $lanId => $optValue) {
-
-            foreach($optValue as $key => $value) {
-                $optTrans = new VariantOptionTranslation();
-                $optTrans->addon_opt_id =$exist_options[$key];
-                $optTrans->language_id = $lanId;
-                $optTrans->title = $value;
-                $optTrans->save();
-            }
-        }
-        $delOpt = AddonOption::whereNotIN('id', $exist_options)->where('addon_id', $addon->id)->delete();
+        //$delOpt = AddonOption::whereNotIN('id', $exist_options)->where('addon_id', $addon->id)->delete();
         return redirect()->back()->with('success', 'Addon set updated successfully!');
-
-
     }
 
     /**

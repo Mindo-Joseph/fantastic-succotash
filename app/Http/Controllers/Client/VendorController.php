@@ -122,7 +122,6 @@ class VendorController extends BaseController
                                 ->orWhere('vendor_id', $id);
                         })
                         ->where('status', '!=', '2')
-                        ->where('is_core', 1)
                         ->orderBy('parent_id', 'asc')
                         ->orderBy('position', 'asc')->get();
 
@@ -135,19 +134,20 @@ class VendorController extends BaseController
                         ->where('categories.status', '!=', '2')
                         ->orderBy('categories.parent_id', 'asc')
                         ->orderBy('categories.position', 'asc')->get();*/
-
         if($categories){
             $build = $this->buildTree($categories->toArray());
             $tree = $this->printTree($build, 'vendor');
         }
 
         $addons = AddonSet::with('option')->select('id', 'title', 'min_select', 'max_select', 'position')
-                    ->where('status', '!=', 2)->where('vendor_id', $id)->orderBy('position', 'asc')->get();
+                    ->where('status', '!=', 2)
+                    ->where('vendor_id', $id)
+                    ->orderBy('position', 'asc')->get();
 
-        $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code')
-                    ->where('client_languages.client_code', Auth::user()->code)
-                    ->orderBy('client_languages.is_primary', 'desc')->get();
+        $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
+                    ->where('is_active', 1)
+                    ->orderBy('is_primary', 'desc')->get();
+
 
         return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons]);
     }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class VariantController extends BaseController
 {
+    private $blockdata = 2;
     /**
      * Display a listing of the resource.
      *
@@ -28,17 +29,15 @@ class VariantController extends BaseController
      */
     public function create()
     {
-        $categories = Category::with('primary')
-                        ->select('id', 'slug')
-                        ->where('id', '>', '1')
-                        ->where('status', '!=', '2')
+        $categories = Category::select('id', 'slug')
+                        ->where('status', '!=', $this->blockdata)
                         ->orderBy('parent_id', 'asc')
                         ->orderBy('position', 'asc')->get();
 
-        $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
-                    ->where('client_languages.client_code', Auth::user()->code)
-                    ->orderBy('client_languages.is_primary', 'desc')->get();
+        $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
+                    ->where('is_active', 1)
+                    ->orderBy('is_primary', 'desc')->get();
+
         $returnHTML = view('backend.catalog.add-variant')->with(['categories' => $categories,  'languages' => $langs])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
@@ -127,35 +126,52 @@ class VariantController extends BaseController
      */
     public function edit($id)
     {
-        $variant = Variant::with('translation', 'option.translation', 'varcategory')
+        $variant = Variant::select('id', 'title', 'type', 'position')
+                        ->with('translation', 'option.translation', 'varcategory')
                         ->where('id', $id)->firstOrFail();
-        $categories = Category::with('english')
-                        ->select('id', 'slug')
-                        ->where('id', '>', '1')
-                        ->where('status', '!=', '2')
+        $categories = Category::select('id', 'slug')
+                        ->where('status', '!=', $this->blockdata)
                         ->orderBy('parent_id', 'asc')
                         ->orderBy('position', 'asc')->get();
 
-        $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
+        $langs = ClientLanguage::with(['language', 'variantTrans' => function($query) use ($id) {
+                        $query->where('variant_id', $id);
+                      }])
+                    ->select('language_id', 'is_primary', 'is_active')
+                    ->where('is_active', 1)
+                    ->orderBy('is_primary', 'desc')->get();
+
+                    //dd($variant->toArray());
+/*[ 'subitems']
+
+'translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                        $q->where('language_id', $langId);
+                    }*/
+
+
+
+        //dd($langs->toArray());
+        /*$langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->leftjoin('variant_translations as vt', 'vt.language_id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary', 'vt.title')
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.is_active', 1)
-                    ->orderBy('client_languages.is_primary', 'desc')->get();
+                    ->orderBy('client_languages.is_primary', 'desc')->get();*/
         //dd($langs->toArray);
-        $langIds = array();
+        /*$langIds = array(); , 'langIds' => $langIds, 'existlangs' => $existlangs
         foreach ($langs as $key => $value) {
             $langIds[] = $langs{$key}->langId;
         }
         $existlangs = array();
         foreach ($variant->translation as $key => $value) {
             $existlangs[] = $value->language_id;
-        }
+        }*/
 
         $submitUrl = route('variant.update', $id);
 
-        $returnHTML = view('backend.catalog.edit-variant')->with(['categories' => $categories,  'languages' => $langs, 'variant' => $variant, 'langIds' => $langIds, 'existlangs' => $existlangs])->render();
+        $returnHTML = view('backend.catalog.edit-variant')->with(['categories' => $categories,  'languages' => $langs, 'variant' => $variant])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML, 'submitUrl' => $submitUrl));
     }
 
@@ -168,6 +184,7 @@ class VariantController extends BaseController
      */
     public function update(Request $request, $id)
     {
+
         $variant = Variant::where('id', $id)->firstOrFail();
         $variant->title = $request->title[0];
         $variant->type = $request->type;
@@ -190,46 +207,57 @@ class VariantController extends BaseController
         $exist_options = array();
         foreach ($request->option_id as $key => $value) {
 
-            $varOpt = VariantOption::where('id', $value)->first();
+            $curLangId = $request->language_id[0];
 
-            if(!$varOpt){
+            if(!empty($value)){
+                $varOpt = VariantOption::where('id', $value)->first();
+
+                if(!$varOpt){
+                    $varOpt = new VariantOption();
+                    $varOpt->variant_id = $variant->id;
+                }
+
+                $varOpt->title = $request->opt_title[$curLangId]{$key};
+                $varOpt->hexacode = ($request->hexacode{$key} == '') ? '' : $request->hexacode{$key};
+                $varOpt->save();
+                $exist_options[$key] = $varOpt->id;
+            }else{
+
                 $varOpt = new VariantOption();
                 $varOpt->variant_id = $variant->id;
+                $varOpt->title = $request->opt_title[$curLangId]{$key};
+                $varOpt->hexacode = ($request->hexacode{$key} == '') ? '' : $request->hexacode{$key};
+                $varOpt->save();
+                $exist_options[$key] = $varOpt->id;
+
             }
-            $varOpt->title = $request->opt_color[1][$key];
-            $varOpt->hexacode = ($request->hexacode[$key] == '') ? '' : $request->hexacode[$key];
-            $varOpt->save();
-            $exist_options[$key] = $value;
         }
 
         foreach($request->opt_id as $lid => $options) {
 
             foreach($options as $key => $value) {
 
-                $varOptTrans = VariantOptionTranslation::where('language_id', $lid)->where('variant_option_id', $value)->first();
-                if(!$varOptTrans){
+                if(!empty($value)){
+                    $varOptTrans = VariantOptionTranslation::where('language_id', $lid)->where('variant_option_id', $value)->first();
+                    if(!$varOptTrans){
+                        $varOptTrans = new VariantOptionTranslation();
+                        $varOptTrans->variant_option_id =$exist_options[$key];
+                        $varOptTrans->language_id = $lid;
+                    }
+                    $varOptTrans->title = $request->opt_title[$lid][$key];
+                    $varOptTrans->save();
+
+                }else{
                     $varOptTrans = new VariantOptionTranslation();
                     $varOptTrans->variant_option_id =$exist_options[$key];
                     $varOptTrans->language_id = $lid;
+                    $varOptTrans->title = $request->opt_title[$lid][$key];
+                    $varOptTrans->save();
                 }
-                $varOptTrans->title = $request->opt_color{$lid}{$key};
-                $varOptTrans->save();
             }
         }
 
-        if($request->has('opt_color_new') && count($request->opt_color_new) > 0)
-
-        foreach($request->opt_color_new as $lanId => $optValue) {
-
-            foreach($optValue as $key => $value) {
-                $varOptTrans = new VariantOptionTranslation();
-                $varOptTrans->variant_option_id =$exist_options[$key];
-                $varOptTrans->language_id = $lanId;
-                $varOptTrans->title = $value;
-                $varOptTrans->save();
-            }
-        }
-        $delOpt = VariantOption::whereNotIN('id', $exist_options)->where('variant_id', $variant->id)->delete();
+       // $delOpt = VariantOption::whereNotIN('id', $exist_options)->where('variant_id', $variant->id)->delete();
         return redirect()->back()->with('success', 'Variant updated successfully!');
 
     }

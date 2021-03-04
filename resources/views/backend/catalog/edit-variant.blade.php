@@ -38,37 +38,29 @@
                 <table class="table table-borderless mb-0" id="edit_banner-datatable" >
                     <tr>
                         @foreach($languages as $langs)
-                            <td>{{$langs->langName}}</td>
+                            <td>{{$langs->language->name}}</td>
                         @endforeach
                     </tr>
                     <tr>
-                        @foreach($variant->translation as $trans)
-                            @if(in_array($trans->language_id, $langIds))
-                                @if($trans->language_id == 1)
-                                    <td style="min-width: 200px;">
-                                        {!! Form::hidden('language_id[]', $trans->language_id) !!}
-                                        {!! Form::text('title[]', $trans->title, ['class' => 'form-control', 'required' => 'required']) !!}
-                                    </td>
-                                @else
-                                    <td style="min-width: 200px;">
-                                        {!! Form::hidden('language_id[]', $trans->language_id) !!}
-                                        {!! Form::text('title[]', $trans->title, ['class' => 'form-control']) !!}
-                                    </td>
-                                @endif
-                            @endif
-                        @endforeach
+                        @foreach($languages as $langs)
 
-                        @if(count($langIds) !=  count($existlangs))
-                       
-                            @foreach($languages as $language)
-                                @if(!in_array($language->langId, $existlangs) && in_array($language->langId, $langIds))
-                                    <td style="min-width: 200px;">
-                                        {!! Form::hidden('language_id[]', $language->langId) !!}
-                                        {!! Form::text('title[]', null, ['class' => 'form-control']) !!}
-                                    </td>
+                            <?php $valueData = ''; ?>
+
+                            @foreach($variant->translation as $trans)
+
+                                @if($trans->language_id == $langs->language_id)
+
+                                    <?php $valueData = $trans->title; ?>
+
                                 @endif
-                            @endforeach 
-                        @endif
+                            @endforeach
+
+                            <td style="min-width: 200px;">
+                                {!! Form::hidden('language_id[]', $langs->language_id) !!}
+                                <input type="text" name="title[]" class="form-control" value="{{$valueData}}" @if($langs->is_primary == 1) required @endif>
+                            </td>
+                        @endforeach 
+
                     </tr>
                     
                 </table>
@@ -78,10 +70,9 @@
         <div class="row rowYK">
             <div class="col-md-12">
                 <h5>Variant Options</h5>
-                <p>Note: Fill Color code if variant type is color(Default - #cccccc)</p>
             </div>
             <div class="col-md-12" style="overflow-x: auto;">
-                <table class="table table-borderless mb-0 optionTableEdit" id="edit_banner-datatable">
+                <table class="table table-borderless mb-0 optionTableEdit" id="edit_variant-datatable">
                     <tr class="trForClone">
                         <td class="hexacodeClass-edit" style="@if($variant->type == 1) display: none @endif">Color Code</td>
                         @foreach($variant->option[0]->translation as $langu)
@@ -98,26 +89,27 @@
                             {!! Form::hidden('option_id[]', $opt->id) !!}
                         </td>
 
-                        @foreach($opt->translation as $key => $value)
-                            @if(in_array($value->language_id, $langIds))
-                            <td style="min-width: 200px;">
-                                <input type="hidden" name="opt_id[{{$value->language_id}}][]" class="form-control" value="{{$value->variant_option_id}}" @if($langs->langId == 1) required @endif>
-                                <input type="text" name="opt_color[{{$value->language_id}}][]" class="form-control" value="{{$value->title}}" @if($value->language_id == 1) required @endif>
-                            </td>
-                            @endif
-                        @endforeach
+                        @foreach($languages as $langs)
 
-                        @if(count($langIds) !=  count($existlangs))
-                            @foreach($languages as $key => $language)
-                                @if(in_array($trans->language_id, $langIds) && !in_array($language->langId, $existlangs))
-                                    <td style="min-width: 200px;">
-                                        {!! Form::hidden('opt_lang_new[]', $language->langId) !!}
-                                        <input type="text" name="opt_color_new[{{$language->langId}}][]" class="form-control" value="" @if($language->langId == 1) required @endif>
-                                    </td>
+                            @php $optData = $optDataId = ''; @endphp
+                            @foreach($opt->translation as $opt_trans)
+
+                                @if($opt_trans->language_id == $langs->language_id)
+                                    @php
+                                        $optData = $opt_trans->title;
+                                        $optDataId = $opt_trans->variant_option_id;
+                                    @endphp
+
                                 @endif
-                            @endforeach 
-                        @endif
-                        
+                            @endforeach
+
+                            <td style="min-width: 200px;">
+                                <input type="hidden" name="opt_id[{{$langs->language_id}}][]" class="form-control" value="{{$optDataId}}" @if($langs->is_primary == 1) required @endif>
+                                <input type="text" name="opt_title[{{$langs->language_id}}][]" class="form-control" value="{{$optData}}" @if($langs->is_primary == 1) required @endif>
+                            </td>
+                        @endforeach 
+
+
                         <td class="lasttd">
                             @if($first > 0)
                             <a href="#" class="action-icon deleteCurRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>

@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class AddonOption extends Model
 {
     public function translation(){
-       return $this->hasMany('App\Models\AddonOptionTranslation', 'addon_opt_id', 'id')->join('languages', 'addon_option_translations.language_id', 'languages.id'); 
+       return $this->hasMany('App\Models\AddonOptionTranslation', 'addon_opt_id', 'id')->join('languages', 'addon_option_translations.language_id', 'languages.id')->select('addon_option_translations.id', 'addon_option_translations.title', 'addon_option_translations.addon_opt_id', 'addon_option_translations.language_id', 'languages.sort_code', 'languages.name'); 
     }
 }
