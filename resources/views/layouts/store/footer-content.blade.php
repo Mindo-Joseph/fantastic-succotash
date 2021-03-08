@@ -88,10 +88,10 @@
                         </div>
                         <div class="footer-contant">
                             <ul class="contact-list">
-                                <li><i class="fa fa-map-marker"></i>Multikart Demo Store, Demo store India 345-659
+                                <li><i class="fa fa-map-marker"></i>Royoorders, Demo store India 345-659
                                 </li>
-                                <li><i class="fa fa-phone"></i>Call Us: 123-456-7898</li>
-                                <li><i class="fa fa-envelope-o"></i>Email Us: <a href="#">Support@Fiot.com</a></li>
+                                <li><i class="fa fa-phone"></i>Call Us: 9211420645</li>
+                                <li><i class="fa fa-envelope-o"></i>Email Us: <a href="#">Support@royoorders.com</a></li>
                                 <li><i class="fa fa-fax"></i>Fax: 123456</li>
                             </ul>
                         </div>
@@ -105,8 +105,7 @@
             <div class="row">
                 <div class="col-xl-6 col-md-6 col-sm-12">
                     <div class="footer-end">
-                        <p><i class="fa fa-copyright" aria-hidden="true"></i> 2017-18 themeforest powered by
-                            pixelstrap</p>
+                        <p><i class="fa fa-copyright" aria-hidden="true"></i> 2021-2022 Royoorders</p>
                     </div>
                 </div>
                 <div class="col-xl-6 col-md-6 col-sm-12">
