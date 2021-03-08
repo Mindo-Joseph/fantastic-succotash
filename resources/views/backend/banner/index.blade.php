@@ -119,7 +119,6 @@
 
 @section('script')
 
-
 <script type="text/javascript">
     function assignSortAttach() {
       $("table").sortable({

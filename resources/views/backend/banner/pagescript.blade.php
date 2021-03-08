@@ -49,7 +49,7 @@
     }
 
     $(".openBannerModal").click(function (e) {
-
+        
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -65,13 +65,14 @@
 
         }
 
-        $('.showLoader').show();
-
         $.ajax({
             type: "get",
             url: uri,
             data: '',
             dataType: 'json',
+            beforeSend: function(){
+                //$(".loader_box").show();
+            },
             success: function (data) {
                 if(uid > 0){
                     $('#edit-form #editCardBox').html(data.html);
@@ -106,7 +107,7 @@
                 console.log('data2');
             },
             complete: function(){
-                //$('.showLoader').hide();
+                //$('.loader_box').hide();
             }
         });
     });
@@ -163,6 +164,9 @@
             data: formData,
             contentType: false,
             processData: false,
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
             success: function(response) {
 
                 if (response.status == 'success') {
@@ -187,6 +191,9 @@
                     $(".show_all_error.invalid-feedback").text('Something went wrong, Please try Again.');
                 }
                 return response;
+            },
+            complete: function(){
+                $('.loader_box').hide();
             }
         });
     }

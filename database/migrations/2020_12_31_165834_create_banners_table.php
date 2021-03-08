@@ -31,7 +31,7 @@ class CreateBannersTable extends Migration
 
         Schema::table('banners', function (Blueprint $table) {
             $table->foreign('redirect_category_id')->references('id')->on('categories')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('redirect_vendor_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('redirect_vendor_id')->references('id')->on('vendors')->onUpdate('cascade')->onDelete('set null');
             $table->index('name');
             $table->index('status');
             $table->index('start_date_time');

@@ -180,6 +180,9 @@
             url: "<?php echo url('client/variant'); ?>" + '/' + did + '/edit',
             data: '',
             dataType: 'json',
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
             success: function (data) {
 
                 $('#editVariantmodal').modal({
@@ -205,6 +208,9 @@
             },
             error: function (data) {
                 console.log('data2');
+            },
+            complete: function(){
+                $('.loader_box').hide();
             }
         });
     });

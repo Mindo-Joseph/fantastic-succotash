@@ -11,6 +11,25 @@
         <script src="{{asset('assets/js/vendor.min.js')}}"></script>
         <script src="{{asset('assets/js/jquery-ui.min.js')}}" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
        
+       <style type="text/css">
+            .loader_box {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: #00000075;
+                top: 0;
+                left: 0;
+            }
+            .spinner-border{
+                position: absolute;
+                top: 50%;
+                left: 0;
+                right: 0;
+                margin: 0 auto !important;
+                display: block;
+            }
+       </style>
+
     </head>
 
     <body @yield('body-extra')>
@@ -41,8 +60,11 @@
                 </div>
                 @yield('content')
             </div>
-            <div class="spinner-border text-danger m-2 showLoader" role="status" style="display: none;"></div>
-            @include('layouts.shared/footer')
+            
+        @include('layouts.shared/footer')
+        <div class="loader_box" style="display: none;">
+            <div class="spinner-border text-danger m-2 showLoader" role="status" ></div>
+        </div>
 
         </div>
         
