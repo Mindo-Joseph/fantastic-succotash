@@ -184,7 +184,7 @@
                                 </li>
                                 <li>
                                     <a href="#">Home</a>
-                                    <ul>
+                                    <!--<ul>
                                         <li>
                                             <a href="#">new demos <span class="new-tag">new</span></a>
                                             <ul>
@@ -243,9 +243,9 @@
                                                 <li><a target="_blank" href="full-page.html">full page</a></li>
                                             </ul>
                                         </li>
-                                    </ul>
+                                    </ul> -->
                                 </li>
-                                <li>
+                                <!--<li>
                                     <a href="#">shop</a>
                                     <ul>
                                         <li><a href="category-page.html">left sidebar</a></li>
@@ -490,7 +490,7 @@
                                         <li><a href="blog(no-sidebar).html">no sidebar</a></li>
                                         <li><a href="blog-details.html">blog details</a></li>
                                     </ul>
-                                </li>
+                                </li> -->
                             </ul>
                         </nav>
                     </div>
