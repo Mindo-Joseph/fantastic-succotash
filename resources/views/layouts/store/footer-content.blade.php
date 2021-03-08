@@ -35,7 +35,7 @@
                         <h4>about</h4>
                     </div>
                     <div class="footer-contant">
-                        <div class="footer-logo"><img src="{{asset('assets/images/logo-dark.png')}}" alt=""></div>
+                        <div class="footer-logo"><img src="{{asset('assets/images/logo-dark.png')}}" alt="" width="120"></div>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
                             ut labore et dolore magna aliqua. Ut enim ad minim veniam,</p>
                         <div class="footer-social">
