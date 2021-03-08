@@ -154,7 +154,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-2 fb_row" style="{{((isset($preference) && $preference->fb_login == '1')) ? '' : 'display:none;'}}">
                         <div class="col-md-4">
                             <div class="form-group mb-3">
                                 <label for="fb_client_id">Facebook Client Key</label>
@@ -200,7 +200,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-2 twitter_row" style="{{((isset($preference) && $preference->twitter_login == '1')) ? '' : 'display:none;'}}">
                         <div class="col-md-4">
                             <div class="form-group mb-3">
                                 <label for="twitter_client_id">Twitter Client Key</label>
@@ -246,7 +246,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-2 google_row" style="{{((isset($preference) && $preference->google_login == '1')) ? '' : 'display:none;'}}">
                         <div class="col-md-4">
                             <div class="form-group mb-3">
                                 <label for="google_client_id">Google Client Key</label>
@@ -292,7 +292,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-2 apple_row" style="{{((isset($preference) && $preference->apple_login == '1')) ? '' : 'display:none;'}}">
                         <div class="col-md-4">
                             <div class="form-group mb-3">
                                 <label for="apple_client_id">Apple Client Key</label>
@@ -958,6 +958,51 @@
             $('.dispatcherFields').show();
             //$('.disableHyperLocal').attr('style', "cursor: auto;");
             //$('.disableHyperLocal input').attr('style', "pointer-events: auto;");
+        }
+    }
+
+
+    var hyprlocal = $('#fb_login');
+
+    hyprlocal[0].onchange = function() {
+
+        if($('#fb_login:checked').length != 1){
+            $('.fb_row').hide();
+        }else{
+            $('.fb_row').show();
+        }
+    }
+
+    var hyprlocal = $('#twitter_login');
+
+    hyprlocal[0].onchange = function() {
+
+        if($('#twitter_login:checked').length != 1){
+            $('.twitter_row').hide();
+        }else{
+            $('.twitter_row').show();
+        }
+    }
+
+    var hyprlocal = $('#google_login');
+
+    hyprlocal[0].onchange = function() {
+
+        if($('#google_login:checked').length != 1){
+            $('.google_row').hide();
+        }else{
+            $('.google_row').show();
+        }
+    }
+
+    var hyprlocal = $('#apple_login');
+
+    hyprlocal[0].onchange = function() {
+
+        if($('#apple_login:checked').length != 1){
+            $('.apple_row').hide();
+        }else{
+            $('.apple_row').show();
         }
     }
 

@@ -100,7 +100,7 @@ class VendorController extends BaseController
             ];
          }
 
-        //dd($all_coordinates);
+        //dd($center);
         
         return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas]);
     }

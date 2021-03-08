@@ -9,6 +9,7 @@ use Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Twilio\Rest\Client as TwilioC;
+use Illuminate\Support\Facades\View;
 
 class DatabaseDynamic
 {
@@ -21,6 +22,11 @@ class DatabaseDynamic
      */
     public function handle($request, Closure $next)
     {
+        /*$domain = $request->getHost();
+        $subDomain = explode('.', $domain);
+        print_r($subDomain);
+        $tenant = Client::where('database_name', $subDomain[0])->first();
+        dd($tenant->toArray());*/
 
         if(Auth::check()){
             
@@ -83,12 +89,9 @@ class DatabaseDynamic
                   Session::put('twilio_status', 'null_key');
                 }
 
-                
               }
 
-              
               //Session::put('testImage', url('profileImg'));
-              
           }
       }
         return $next($request);

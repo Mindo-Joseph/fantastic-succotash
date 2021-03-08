@@ -57,7 +57,7 @@ class LoginController extends Controller
             Auth::login($admin);
             $details = Auth::guard('admin')->user();
             $user = $details['original'];
-            return redirect()->route('god.dashboard');
+            return redirect()->route('client.index');
     
         } else {
             return redirect()->back()->with('Error', 'Invalid Credentials');

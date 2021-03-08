@@ -20,14 +20,13 @@
                     </form>
                 </div>
             </li>
-    
+
             <li class="dropdown d-none d-lg-inline-block">
                 <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="fullscreen" href="#">
                     <i class="fe-maximize noti-icon"></i>
                 </a>
             </li>
-           
-    
+
             <li class="dropdown notification-list topbar-dropdown">
                 <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                     {{-- <img src="{{ isset(Auth::user()->logo) ? asset('clients/'.Auth::user()->logo.'') : asset('assets/images/users/user-1.jpg') }}" alt="user-image" class="rounded-circle"> --}}
@@ -40,8 +39,7 @@
                     <div class="dropdown-header noti-title">
                         <h6 class="text-overflow m-0">Welcome !</h6>
                     </div>
-    
-                    
+
                     <a href="javascript:void(0);" class="dropdown-item notify-item">
                         <i class="fe-user"></i>
                         <span>My Account</span>
@@ -57,13 +55,11 @@
     
                 </div>
             </li>
-    
-    
         </ul>
     
         <!-- LOGO -->
         <div class="logo-box">
-            <a href="{{route('any', ['dashboard'])}}" class="logo logo-dark text-center">
+            <a href="{{route('any', ['client.index'])}}" class="logo logo-dark text-center">
                 <span class="logo-sm">
                     <img src="{{asset('assets/images/logo-sm.png')}}"alt="" height="22">
                     <!-- <span class="logo-lg-text-light">UBold</span> -->
@@ -83,7 +79,7 @@
 
             @endphp
     
-            <a href="{{route('god.dashboard')}}" class="logo logo-light text-center">
+            <a href="{{route('client.index')}}" class="logo logo-light text-center">
                 <span class="logo-sm">
                     <img src="{{$urlImg}}"alt="" height="30" style="padding-top: 4px;">
                 </span>

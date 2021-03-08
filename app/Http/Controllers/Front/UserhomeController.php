@@ -15,8 +15,8 @@ class UserhomeController extends FrontController
      */
     public function index()
     {
-        echo '1';die;
-        return view('welcome');
+        $home = array();        
+        return view('forntend/home')->with(['home' => $home]);
     }
 
 }

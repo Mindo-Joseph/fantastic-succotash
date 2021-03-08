@@ -19,6 +19,3 @@ Route::group(['prefix' => '/godpanel'], function () {
 		Route::get('sms/destroy/{id}', 'Godpanel\SmsProviderController@destroy');
 	});
 });
-
-
-	

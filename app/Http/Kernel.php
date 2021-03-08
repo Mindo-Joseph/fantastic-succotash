@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'dbCheck'    => \App\Http\Middleware\DbChooserApi::class,
         'AppAuth'    =>\App\Http\Middleware\AppAuth::class,
         'checkAuth'    =>\App\Http\Middleware\CheckAuth::class,
+        'domain' => \App\Http\Middleware\CustomDomain::class,
     ];
 }
