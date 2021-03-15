@@ -114,6 +114,49 @@
                                     @endif
                                 </div>
                             </div> -->
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="database_host" class="control-label">DATABASE HOST</label>
+                                    @if(!isset($client) || !isset($client->id))
+                                        <input type="text" class="form-control" name="database_host" id="database_host"
+                                        value="{{ old('database_host', $client->database_host ?? '')}}"
+                                        placeholder="Please Enter One String Example:-'mydatabase' ">
+                                    @else
+                                        <input type="text" class="form-control" name="database_host" id="database_host"
+                                        value="{{ old('database_host', $client->database_host ?? '')}}"
+                                        placeholder="DB HOST Example:127.0.0.1">
+
+                                    @endif
+                                    @if($errors->has('database_host'))
+                                    <span class="text-danger" role="alert">
+                                        <strong>{{ $errors->first('database_host') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="database_port" class="control-label">DATABASE PORT</label>
+                                    @if(!isset($client) || !isset($client->id))
+                                        <input type="text" class="form-control" name="database_port" id="database_port"
+                                        value="{{ old('database_port', $client->database_port ?? '')}}"
+                                        placeholder="Please Enter One String Example:-'mydatabase' ">
+                                    @else
+                                        <input type="text" class="form-control" name="database_port" id="database_port"
+                                        value="{{ old('database_port', $client->database_port ?? '')}}"
+                                        placeholder="DB PORT Example:3306"  >
+
+                                    @endif
+                                    @if($errors->has('database_port'))
+                                    <span class="text-danger" role="alert">
+                                        <strong>{{ $errors->first('database_port') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="database_name" class="control-label">DATABASE NAME</label>
@@ -136,7 +179,7 @@
                             </div>
 
 
-                            <!--<div class="col-md-6">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="database_username" class="control-label">DATABASE USERNAME</label>
                                     <input type="text" class="form-control" name="database_username" id="database_username"
@@ -161,7 +204,7 @@
                                     </span>
                                     @endif
                                 </div>
-                            </div> -->
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">

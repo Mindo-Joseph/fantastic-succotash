@@ -25,25 +25,32 @@
         <i class="fa fa-angle-double-up"></i>
     </div>
 </div>
+@php 
+    $mapKey = '1234';
+    if(isset(Session::get('preferences')->map_key) && !empty(Session::get('preferences')->map_key)){
+        $mapKey = session('preferences')->map_key;
+    }
+@endphp
 
+<script src="https://maps.googleapis.com/maps/api/js?key={{$mapKey}}&v=3.exp&libraries=places,drawing"></script>
 <!-- exitintent jquery-->
-<script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
-<script src="{{asset('front-assets/js/exit.js')}}"></script>
+
 <script src="{{asset('front-assets/js/popper.min.js')}}"></script>
 <script src="{{asset('front-assets/js/slick.js')}}"></script>
 <script src="{{asset('front-assets/js/menu.js')}}"></script>
 <script src="{{asset('front-assets/js/lazysizes.min.js')}}"></script>
 <script src="{{asset('front-assets/js/bootstrap.js')}}"></script>
 <script src="{{asset('front-assets/js/bootstrap-notify.min.js')}}"></script>
-<script src="{{asset('front-assets/js/fly-cart.js')}}"></script>
+
+<script src="{{asset('front-assets/js/jquery.elevatezoom.js')}}"></script>
 <script src="{{asset('front-assets/js/script.js')}}"></script>
 
 <script>
-    $(window).on('load', function () {
+    /*$(window).on('load', function () {
         setTimeout(function () {
             $('#exampleModal').modal('show');
         }, 2500);
-    });
+    });*/
     function openSearch() {
         document.getElementById("search-overlay").style.display = "block";
     }

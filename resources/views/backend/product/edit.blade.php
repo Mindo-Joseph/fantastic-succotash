@@ -8,7 +8,6 @@
         display: none;
     }
 
-
     .product-img-box {
     width: 100%;
     height: 150px;
@@ -45,7 +44,6 @@
         opacity: 0;
     }
 
-    
     .product-img-box input[type="checkbox"] {
         position: absolute;
         top: 0;
@@ -59,7 +57,6 @@
     .product-img-box .form-group {
         height: 100%;
     }
-
 
     .product-img-box label:before {
         right: -1px;
@@ -79,7 +76,6 @@
 <!-- Start Content-->
 <div class="container-fluid">
 
-    <!-- start page title -->
     <div class="row">
         <div class="col-8">
             <div class="page-title-box">
@@ -272,20 +268,21 @@
                                     <th> </th>
                                 </thead>
                                 @foreach($product->variant as $varnt)
-                                    @php 
+                                    <?php 
                                         $existSet = array();
-                                        $vimg = (empty($varnt->set[0]->path)) ? 'default/default_image.png' : $varnt->set[0]->path;
+
+                                        $mediaPath = Storage::disk('s3')->url('default/default_image.png');
+
+                                        if(!empty($varnt->vimage) && isset($varnt->vimage->pimage->image)){
+                                            $mediaPath = $varnt->vimage->pimage->image->path['proxy_url'].'100/100'.$varnt->vimage->pimage->image->path['image_path'];
+                                        }
                                         $existSet = explode('-', $varnt->sku);
                                         $vsets = '';
-                                        $mediaPath = $media->path['proxy_url'].'300/300'.$media->path['image_path'].'/'.Storage::disk('s3')->url($vimg);
 
-                                    @endphp
-                                    @foreach($varnt->set as $vs)
-                                         @php 
+                                        foreach($varnt->set as $vs){
                                             $vsets .= $vs->title.', ';
-                                         @endphp
-                                    @endforeach
-
+                                        }
+                                    ?>
                                     <tr>
                                         <td>
                                             <div class="image-upload">
@@ -404,24 +401,20 @@
                 <div class="card-box">
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Product Images</h5>
                     <div class="row mb-2">
-                        @foreach($product->media as $media)
-                        <div class="col-4" style="overflow: hidden;">
-                            @php
-                            $img = 'default/default_image.png';
-                            $mediaPath = env('IMG_URL1').'300/300'.env('IMG_URL2');
+                        @if(isset($product->media) && !empty($product->media))
+                            @foreach($product->media as $media)
+                            <div class="col-4" style="overflow: hidden;">
+                            <?php 
+                                $mediaPath = Storage::disk('s3')->url('default/default_image.png');
 
-                                if(is_array($media->path)){
-                                    $mediaPath = $media->path['proxy_url'].'300/300'.$media->path['image_path'];
-                                }else{
-                                    if(!empty($media->path)){
-                                        $img = $media->path;
+                                    if(isset($media->image) && is_array($media->image->path)){
+                                        $mediaPath = $media->image->path['proxy_url'].'300/300'.$media->image->path['image_path'];
                                     }
-                                    $mediaPath = $mediaPath.'/'.Storage::disk('s3')->url($img);
-                                }
-                            @endphp
-                            <img src="{{$mediaPath}}" style="width:100%;" class="vimg_{{$media->id}}"/>
-                        </div>
-                        @endforeach
+                                ?>
+                                <img src="{{$mediaPath}}" style="width:100%;" class="vimg_{{$media->id}}"/>
+                            </div>
+                            @endforeach
+                        @endif
                     </div>
                     <div class="dropzone dropzone-previews" id="my-awesome-dropzone"></div>
                     <div class="imageDivHidden" ></div>

@@ -24,7 +24,7 @@
         </div>                            
         <div class="row rowYK">
             <div class="col-md-12">
-                <h5>Variant Title</h5>
+                <h5>Brand Title</h5>
             </div>
             <div class="col-md-12" style="overflow-x: auto;">
                 <table class="table table-borderless mb-0" id="banner-datatable" >

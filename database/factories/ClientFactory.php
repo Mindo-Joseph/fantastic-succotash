@@ -28,6 +28,8 @@ $factory->define(Client::class, function (Faker $faker) {
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // 1234qwer
         //'encpass' => Crypt::encryptString('1234qwer'),
         'database_path' => $faker->url,
+        'database_host' => $faker->url,
+        'database_port' => $faker->slug,
         'database_name' => $faker->userName,
         'database_username' => $faker->userName,
         'database_password' => $faker->password,

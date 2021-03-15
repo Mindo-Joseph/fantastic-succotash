@@ -24,8 +24,7 @@ class ProductController extends BaseController
         if(!$request->has('product_id')){
             return response()->json(['error' => 'No record found.'], 404);
         }
-
-        $products = Product::with(['pimage', 'variants.set', 'translation' => function($q) use($langId){
+        $products = Product::with(['vendor', 'pimage', 'variants.set', 'addOn', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $langId);
                     }] )

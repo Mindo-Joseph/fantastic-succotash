@@ -109,15 +109,15 @@ class ClientController extends Controller
     /* save and update client information */
     public function saveClient(Request $request, Client $client, $update = 'false')
     {
-        foreach ($request->only('name', 'phone_number', 'company_name', 'company_address', 'custom_domain') as $key => $value) {
+        foreach ($request->only('name', 'phone_number', 'company_name', 'company_address', 'custom_domain', 'database_host', 'database_port', 'database_username', 'database_password') as $key => $value) {
             $client->{$key} = $value;
         }
  
         if( $update == 'false'){
             $client->logo = 'default/default_logo.png';
             $client->database_path = '';
-            $client->database_username = env('DB_USERNAME');
-            $client->database_password = env('DB_PASSWORD');
+            //$client->database_username = env('DB_USERNAME');
+            //$client->database_password = env('DB_PASSWORD');
            
             $client->email = $request->email;
             $client->database_name = $request->database_name;
@@ -129,7 +129,7 @@ class ClientController extends Controller
         }
         $isPasswordUpdate = 0;
         if($update == 'true'){
-            if($request->has('encpass') && $request->has('encpass')){
+            if($request->has('encpass') && !empty($request->encpass)){
                 $client->password = Hash::make($request->encpass);
                 $client->encpass = $request->encpass;
                 $isPasswordUpdate = 1;

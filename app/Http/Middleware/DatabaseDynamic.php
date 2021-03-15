@@ -35,11 +35,11 @@ class DatabaseDynamic
               $database_name = 'royo_'.$client->database_name;
               $default = [
                   'driver' => env('DB_CONNECTION','mysql'),
-                  'host' => env('DB_HOST'),
-                  'port' => env('DB_PORT'),
+                  'host' => $client->database_host,
+                  'port' => $client->database_port,
                   'database' => $database_name,
-                  'username' => env('DB_USERNAME'),
-                  'password' => env('DB_PASSWORD'),
+                  'username' => $client->database_username,
+                  'password' => $client->database_password,
                   'charset' => 'utf8mb4',
                   'collation' => 'utf8mb4_unicode_ci',
                   'prefix' => '',

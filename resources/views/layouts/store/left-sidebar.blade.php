@@ -1,33 +1,4 @@
 
-<!-- header start -->
-
-<div class="top-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="header-contact">
-                    <ul>
-                        <li>Welcome to Our store Multikart</li>
-                        <li><i class="fa fa-phone" aria-hidden="true"></i>Call Us: 123 - 456 - 7890</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-6 text-right">
-                <ul class="header-dropdown">
-                    <li class="mobile-wishlist"><a href="#"><i class="fa fa-heart" aria-hidden="true"></i></a>
-                    </li>
-                    <li class="onhover-dropdown mobile-account"> <i class="fa fa-user" aria-hidden="true"></i>
-                        My Account
-                        <ul class="onhover-show-div">
-                            <li><a href="#" data-lng="en">Login</a></li>
-                            <li><a href="#" data-lng="es">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
@@ -44,7 +15,45 @@
                                 <div onclick="closeNav()">
                                     <div class="sidebar-back text-left"><i class="fa fa-angle-left pr-2" aria-hidden="true"></i> Back</div>
                                 </div>
+
+                                @if($categories && !empty($categories))
                                 <ul id="sub-menu" class="sm pixelstrap sm-vertical">
+                                    @foreach($categories as $cate)
+                                    <li> <a href="#">{{$cate['name']}}</a>
+                                        
+                                        @if(!empty($cate['children']))
+                                        <ul class="mega-menu clothing-menu">
+                                            <div class="row m-0">
+                                            @foreach($cate['children'] as $childs)
+                                            <li class="col-xl-4">
+
+                                                <div class="link-section">
+                                                    <h5>{{$childs['name']}}</h5>
+                                                    @if(!empty($childs['children']))
+                                                    <ul>
+                                                        @foreach($childs['children'] as $chld)
+                                                            <li><a href="#">{{$chld['name']}}</a></li>
+                                                        @endforeach
+                                                    </ul>
+                                                    @endif
+
+                                                </div>
+
+                                               <!-- <div class="col-xl-4">
+                                                    <a href="#" class="mega-menu-banner"><img
+                                                            src="{{asset('front-assets/images/mega-menu/fashion.jpg')}}"
+                                                            alt="" class="img-fluid blur-up lazyload"></a>
+                                                </div> -->
+                                            </li> 
+                                            @endforeach
+                                            </div>
+                                        </ul>
+                                        @endif
+                                    </li>
+                                    @endforeach
+                                </ul>
+                                @endif
+                                <!-- <ul id="sub-menu" class="sm pixelstrap sm-vertical">
                                     <li> <a href="#">clothing</a>
                                         <ul class="mega-menu clothing-menu">
                                             <li>
@@ -165,12 +174,12 @@
                                     </li>
                                     <li><a href="#">home & decor</a></li>
                                     <li><a href="#">kitchen</a></li>
-                                </ul>
+                                </ul> -->
                             </nav>
                         </div>
                     </div>
                     <div class="brand-logo">
-                        <a href="{{route('userHome')}}"><img src="{{asset('assets/images/logo-dark.png')}}" class="img-fluid blur-up lazyload" alt="" width="120"></a>
+                        <a href="{{ route('userHome') }}"><img src="{{session('client_config')->logo->proxy_url . '120/100' . session('client_config')->logo->image_path}}" class="img-fluid blur-up lazyload" alt=""></a>
                     </div>
                 </div>
                 <div class="menu-right pull-right">

@@ -12,10 +12,8 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <form
-                            action="https://pixelstrap.us19.list-manage.com/subscribe/post?u=5a128856334b598b395f1fc9b&amp;id=082f74cbda"
-                            class="form-inline subscribe-form auth-form needs-validation" method="post"
-                            id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank">
+                        <form class="form-inline subscribe-form auth-form needs-validation"
+                            action="https://pixelstrap.us19.list-manage.com/subscribe/post?u=5a128856334b598b395f1fc9b&amp;id=082f74cbda" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank">
                             <div class="form-group mx-sm-3">
                                 <input type="text" class="form-control" name="EMAIL" id="mce-EMAIL"
                                     placeholder="Enter your email" required="required">
@@ -35,7 +33,11 @@
                         <h4>about</h4>
                     </div>
                     <div class="footer-contant">
-                        <div class="footer-logo"><img src="{{asset('assets/images/logo-dark.png')}}" alt="" width="120"></div>
+                         @php
+                            $logo = session('client_config')->logo->proxy_url . '200/200' . session('client_config')->logo->image_path;
+                        
+                        @endphp
+                        <div class="footer-logo"><img src="{{$logo}}" alt="" width="120"></div>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
                             ut labore et dolore magna aliqua. Ut enim ad minim veniam,</p>
                         <div class="footer-social">

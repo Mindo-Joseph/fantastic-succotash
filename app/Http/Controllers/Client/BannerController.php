@@ -21,7 +21,7 @@ class BannerController extends BaseController
      */
     public function index()
     {
-        $banners = Banner::orderBy('sorting', 'asc')->get();        
+        $banners = Banner::orderBy('sorting', 'asc')->get();
         return view('backend/banner/index')->with(['banners' => $banners]);
     }
 

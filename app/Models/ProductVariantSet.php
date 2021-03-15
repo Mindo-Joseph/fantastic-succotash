@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductVariantSet extends Model
 {
-    function options(){
+    /*function options(){
         return $this->hasMany('App\Models\ProductVariantSet', 'variant_option_id', 'variant_type_id')->merge($this->relatedUserRelations);
     }
 
@@ -15,5 +15,11 @@ class ProductVariantSet extends Model
 
 	public function allUserRelations() {
 	    return $this->userRelations->merge($this->relatedUserRelations);
+	}*/
+
+	public function options() {
+	    return $this->hasMany('App\Models\VariantOption', 'variant_id', 'variant_type_id')
+	    		->join('product_variant_sets as pvs', 'pvs.variant_option_id', 'variant_options.id')
+	    		->groupBy('pvs.variant_option_id');
 	}
 }

@@ -75,8 +75,8 @@
                 <table class="table table-borderless mb-0 optionTableEdit" id="edit_variant-datatable">
                     <tr class="trForClone">
                         <td class="hexacodeClass-edit" style="@if($variant->type == 1) display: none @endif">Color Code</td>
-                        @foreach($variant->option[0]->translation as $langu)
-                            <td>{{$langu->name}}</td>
+                        @foreach($languages as $langs)
+                            <td>{{$langs->language->name}}</td>
                         @endforeach
                         <td></td>
                     </tr>

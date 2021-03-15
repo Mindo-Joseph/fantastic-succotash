@@ -365,7 +365,7 @@ class ProductController extends BaseController
      */
     public function edit($id)
     {
-        $product = Product::with('variant.set', 'primary', 'category.cat','variantSet', 'addOn', 'media')->where('id', $id)->firstOrFail();
+        $product = Product::with('variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat','variantSet', 'addOn', 'media.image')->where('id', $id)->firstOrFail();
         //dd($product->toArray());
         $type = Type::all();
         $countries = Country::all();
@@ -888,7 +888,7 @@ class ProductController extends BaseController
                     $img->path = Storage::disk('s3')->put($this->folderName, $file,'public');
 
                     $img->save();
-                    $path1 = url($img->path);
+                    $path1 = $img->path['proxy_url'].'40/40'.$img->path['image_path'];
 
                     if($img->id > 0){
                         $imageId = $img->id;
@@ -948,11 +948,8 @@ class ProductController extends BaseController
         $product = Product::where('id', $request->prod_id)->firstOrFail();
 
         $variId = ($request->has('variant_id') && $request->variant_id > 0) ? $request->variant_id : 0;
-        $images = ProductImage::join('vendor_media', 'vendor_media.id', 'product_images.media_id')
-                    ->select('product_images.id','product_images.product_id', 'product_images.media_id', 'product_images.is_default', 'vendor_media.path')
-                    ->where('product_images.product_id', $product->id)
-                    ->where('vendor_media.vendor_id', $product->vendor_id)->get();
 
+        $images = ProductImage::with('image')->where('product_images.product_id', $product->id)->get();
         $variantImages = array();
         if($variId > 0){
             $varImages = ProductVariantImage::where('product_variant_id', $variId)->get();

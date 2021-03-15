@@ -69,5 +69,7 @@ class Kernel extends HttpKernel
         'AppAuth'    =>\App\Http\Middleware\AppAuth::class,
         'checkAuth'    =>\App\Http\Middleware\CheckAuth::class,
         'domain' => \App\Http\Middleware\CustomDomain::class,
+        'domainAdmin' => \App\Http\Middleware\CustomDomainAdmin::class,
+        'subdomain' => \App\Http\Middleware\SubdomainMiddleware::class,
     ];
 }

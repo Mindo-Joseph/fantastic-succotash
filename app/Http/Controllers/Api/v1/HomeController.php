@@ -50,19 +50,21 @@ class HomeController extends BaseController
 
         $vends = array();
 
-        $vendorData =Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount')
-                ->whereIn('id', function($query) use($lats, $longs){
+        $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
+
+        if($preferences->is_hyperlocal == 1){
+            $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
                     $query->select('vendor_id')
                     ->from(with(new ServiceArea)->getTable())
                     ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
-                })->where('status', '!=', $this->field_status)->get();
-
+            });
+        }
+        $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
 
         foreach ($vendorData as $key => $value) {
             $vends[] = $value->id;
         }
         $isVendorArea = 0;
-
         $langId = Auth::user()->language;
 
         $homeData = array();

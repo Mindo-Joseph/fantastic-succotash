@@ -12,6 +12,14 @@ class Product extends Model
        return $this->hasMany('App\Models\ProductAddon')->select('product_id', 'addon_id'); 
     }
 
+    public function sets(){
+      return $this->hasMany('App\Models\ProductAddon')->join('addon_set_translations as ast', 'ast.addon_id', 'product_addons.addon_id')->select('product_addons.product_id', 'ast.title', 'product_addons.addon_id');
+    }
+
+    public function vendor(){
+       return $this->belongsTo('App\Models\Vendor')->select('id', 'name', 'desc', 'logo'); 
+    }
+
     public function related(){
        return $this->hasMany('App\Models\ProductRelated')->select('product_id', 'related_product_id'); 
     }
@@ -54,11 +62,19 @@ class Product extends Model
   	}
 
   	public function variantSet(){
-  	    return $this->hasMany('App\Models\ProductVariantSet'); 
+  	    return $this->hasMany('App\Models\ProductVariantSet')->select('product_id', 'product_variant_id', 'variant_type_id', 'variant_option_id')->groupBy('variant_type_id');
   	}
 
+    public function vatoptions(){
+        return $this->hasMany('App\Models\ProductVariantSet')->select('product_id', 'product_variant_id', 'variant_option_id')->groupBy('variant_option_id');
+    }
+
+    public function variantSets(){
+        return $this->hasMany('App\Models\ProductVariantSet'); 
+    }
+
     public function media(){
-        return $this->hasMany('App\Models\ProductImage')->select('product_images.product_id', 'product_images.media_id', 'product_images.is_default', 'vendor_media.media_type', 'vendor_media.path')->join('vendor_media', 'vendor_media.id', 'product_images.media_id');
+        return $this->hasMany('App\Models\ProductImage')->select('product_images.product_id', 'product_images.media_id', 'product_images.is_default');
     }
 
     public function pimage(){

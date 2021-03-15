@@ -3,16 +3,14 @@
     
         <div class="row">
             @foreach($images as $img)
-            @php 
-                $mediaPath = (empty($img->path)) ? asset("assets/images/default_image.png") : url($img->path);
-            @endphp
+
             <div class="col-md-3 col-sm-4 col-12 mb-3">
                 <div class="product-img-box">
                     <div class="form-group checkbox checkbox-success">
                         <input type="checkbox" id="image{{$img->id}}" class="imgChecks" imgId="{{$img->id}}"
                          @if(in_array($img->id, $variantImages)) checked @endif>
                         <label for="image{{$img->id}}">
-                        <img src="{{$mediaPath}}" alt="">
+                        <img src="{{$img->image->path['proxy_url'].'100/100'.$img->image->path['image_path']}}" alt="">
                         </label>
                     </div>
                 </div>
