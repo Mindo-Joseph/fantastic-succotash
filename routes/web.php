@@ -27,12 +27,29 @@ Route::get('/user', function () {
 }); */
 include_once "images.php";
 include_once "godpanel.php";
-
+/*
 Route::domain('{subdomain}.{domain}.com')->middleware(['subdomain'])->group(function () {
 
+	include_once "frontend.php";
 	include_once "backend.php";
-    include_once "frontend.php";
+    
+});*/
+
+
+Route::domain('{domain}')->middleware(['subdomain'])->group(function() {
+	include_once "frontend.php";
+	include_once "backend.php";
+    /*Route::get('/', function (Request $request) {
+        echo "flskdfksdjfk";die;
+    });*/
 });
+
+/*Route::domain('{domain}')->middleware(['subdomain'])->group(function () {
+
+	include_once "frontend.php";
+	include_once "backend.php";
+    
+});*/
 
 	Route::get('showImg/{folder}/{img}',function($folder, $img){
 		$image  = \Storage::disk('s3')->url($folder . '/' . $img);

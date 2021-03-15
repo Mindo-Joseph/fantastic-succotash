@@ -24,18 +24,21 @@ class CustomDomain
     public function handle($request, Closure $next)
     {
       $domain = $request->getHost();
+      $domain = str_replace(array('http://', '.test.com/login'), '', $domain);
       $subDomain = explode('.', $domain);
 
-      $existRedis = Redis::get($domain);
+      //$existRedis = Redis::get($domain);
+      $a = 1;
 
-      if(!$existRedis){
+      //if(!$existRedis){
+      if($a == 1){
         $client = Client::select('name', 'email', 'phone_number', 'is_deleted', 'is_blocked', 'logo', 'company_name', 'company_address', 'status', 'code', 'database_name', 'database_host', 'database_port', 'database_username', 'database_password')
                     ->where(function($q) use($domain, $subDomain){
                               $q->where('custom_domain', $domain)
-                                ->where('custom_domain', $subDomain[0])
-                                ->orWhere('database_name', $subDomain[0]);
+                                ->orWhere('custom_domain', $subDomain[0]);
+                                //->orWhere('database_name', $subDomain[0]);
                     })
-                    ->first();
+                    ->firstOrFail();
 
         Redis::set($domain, json_encode($client->toArray()), 'EX', 36000);
 
@@ -46,6 +49,8 @@ class CustomDomain
 
       if($redisData){
           $database_name = 'royo_'.$redisData->database_name;
+          $database_host = !empty($redisData->database_host) ? $redisData->database_host : '127.0.0.1';
+          $database_port = !empty($redisData->database_port) ? $redisData->database_port : '3306';
           $default = [
               'driver' => env('DB_CONNECTION','mysql'),
               'host' => $redisData->database_host,
