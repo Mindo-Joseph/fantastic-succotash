@@ -45,7 +45,7 @@ class CustomDomain
         }
 
         $redisData = json_decode($existRedis);
-        //dd($redisData);die;
+        dd($redisData);
 
         if($redisData){
             $database_name = 'royo_'.$redisData->database_name;
