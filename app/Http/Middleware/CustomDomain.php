@@ -25,7 +25,7 @@ class CustomDomain
     {
       $domain = $request->getHost();
       $domain = str_replace(array('http://', '.test.com/login'), '', $domain);
-      //if($domain != 'royoorders.com'){
+
         $subDomain = explode('.', $domain);
 
         $existRedis = Redis::get($domain);
@@ -91,8 +91,6 @@ class CustomDomain
             Session::put('preferences', $preferData);
 
         }
-
-      //}
       
       return $next($request);
     }
