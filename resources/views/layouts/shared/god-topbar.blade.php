@@ -59,7 +59,7 @@
     
         <!-- LOGO -->
         <div class="logo-box">
-            <a href="{{route('any', ['client.index'])}}" class="logo logo-dark text-center">
+            <a href="{{route('client.index')}}" class="logo logo-dark text-center">
                 <span class="logo-sm">
                     <img src="{{asset('assets/images/logo-sm.png')}}"alt="" height="22">
                     <!-- <span class="logo-lg-text-light">UBold</span> -->
