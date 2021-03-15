@@ -228,7 +228,7 @@ class CategorySeeder extends Seeder
 
             array(
                 'id' => 7,
-                'slug' => 'Buy something',
+                'name' => 'Buy something',
                 'trans-slug' => '',
                 'meta_title' => 'Buy something',
                 'meta_description' => '',
@@ -238,7 +238,7 @@ class CategorySeeder extends Seeder
             ),
             array(
                 'id' => 8,
-                'slug' => 'Vegetables',
+                'name' => 'Vegetables',
                 'trans-slug' => '',
                 'meta_title' => 'Vegetables',
                 'meta_description' => '',
@@ -248,7 +248,7 @@ class CategorySeeder extends Seeder
             ),
             array(
                 'id' => 9,
-                'slug' => 'Fruits',
+                'name' => 'Fruits',
                 'trans-slug' => '',
                 'meta_title' => 'Fruits',
                 'meta_description' => '',
@@ -258,7 +258,7 @@ class CategorySeeder extends Seeder
             ),
             array(
                 'id' => 10,
-                'slug' => 'Dairy and Eggs',
+                'name' => 'Dairy and Eggs',
                 'trans-slug' => '',
                 'meta_title' => 'Dairy and Eggs',
                 'meta_description' => '',
@@ -268,7 +268,7 @@ class CategorySeeder extends Seeder
             ),
             array(
                 'id' => 11,
-                'slug' => 'E-Commerce',
+                'name' => 'E-Commerce',
                 'trans-slug' => '',
                 'meta_title' => 'E-Commerce',
                 'meta_description' => '',
@@ -279,7 +279,7 @@ class CategorySeeder extends Seeder
 
             array(
                 'id' => 12,
-                'slug' => 'Cloth',
+                'name' => 'Cloth',
                 'trans-slug' => '',
                 'meta_title' => 'Cloth',
                 'meta_description' => '',
