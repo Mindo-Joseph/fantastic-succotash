@@ -121,7 +121,7 @@
                                     @if(!isset($client) || !isset($client->id))
                                         <input type="text" class="form-control" name="database_host" id="database_host"
                                         value="{{ old('database_host', $client->database_host ?? '')}}"
-                                        placeholder="Please Enter One String Example:-'mydatabase' ">
+                                        placeholder="Please Enter One String Example:-'127.0.0.1' ">
                                     @else
                                         <input type="text" class="form-control" name="database_host" id="database_host"
                                         value="{{ old('database_host', $client->database_host ?? '')}}"
@@ -142,7 +142,7 @@
                                     @if(!isset($client) || !isset($client->id))
                                         <input type="text" class="form-control" name="database_port" id="database_port"
                                         value="{{ old('database_port', $client->database_port ?? '')}}"
-                                        placeholder="Please Enter One String Example:-'mydatabase' ">
+                                        placeholder="3306">
                                     @else
                                         <input type="text" class="form-control" name="database_port" id="database_port"
                                         value="{{ old('database_port', $client->database_port ?? '')}}"
