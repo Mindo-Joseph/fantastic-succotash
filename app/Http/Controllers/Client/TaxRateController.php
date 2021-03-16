@@ -104,7 +104,7 @@ class TaxRateController extends BaseController
      * @param  \App\TaxRate  $taxRate
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($domain = '', $id)
     {
         $taxRate = TaxRate::where('id', $id)->firstOrFail();
         $taxCates = TaxCategory::orderBy('id', 'desc')->get();
@@ -125,7 +125,7 @@ class TaxRateController extends BaseController
      * @param  \App\TaxRate  $taxRate
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $domain = '', $id)
     {
         $rules = array(
             'identifier' => 'required|string|max:25|unique:tax_rates,identifier,'.$id,
@@ -185,7 +185,7 @@ class TaxRateController extends BaseController
      * @param  \App\TaxRate  $taxRate
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($domain = '', $id)
     {
         $tax = TaxRate::where('id', $id)->delete();
         return redirect('client/tax')->with('success', 'Tax category updated successfully!');

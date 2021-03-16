@@ -134,7 +134,7 @@ class CategoryController extends BaseController
      * @param  \App\Category_translation  $category_translation
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($domain = '', $id)
     {
         $vendors = array();
         $type = Type::all();
@@ -177,7 +177,7 @@ class CategoryController extends BaseController
      * @param  \App\Category_translation  $category_translation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $domain = '', $id)
     {
         $rules = array(
             'slug' => 'required|string|max:30|unique:categories,slug,'.$id,
@@ -334,7 +334,7 @@ class CategoryController extends BaseController
      * @param  \App\Category_translation  $category_translation
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($domain = '', $id)
     {
         $category = Category::where('id', $id)->first();
         $category->status = 2;

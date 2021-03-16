@@ -235,7 +235,7 @@
                         @foreach($brands as $bnd)
                         <div>
                             <div class="logo-block">
-                                <a href="#"><img src="{{$bnd->image['proxy_url'] . '300/200' . $bnd->image['image_path']}}" alt=""></a>
+                                <a href="#"><img src="{{$bnd->image['proxy_url'] . '120/120' . $bnd->image['image_path']}}" alt=""></a>
                             </div>
                         </div>
                         @endforeach

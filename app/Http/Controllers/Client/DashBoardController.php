@@ -78,7 +78,7 @@ class DashBoardController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function updateProfile(Request $request, $id)
+    public function updateProfile(Request $request, $domain = '', $id)
     {
         $client = Client::where('code', Auth::user()->code)->firstOrFail();
 

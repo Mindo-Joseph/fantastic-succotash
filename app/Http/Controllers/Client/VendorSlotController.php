@@ -56,7 +56,7 @@ class VendorSlotController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id)
+    public function store(Request $request, $domain = '', $id)
     {
         $vendor = Vendor::where('id', $id)->firstOrFail();
 
@@ -104,7 +104,7 @@ class VendorSlotController extends BaseController
      * @param  \App\VendorSlot  $vendorSlot
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $domain = '', $id)
     {
         $vendor = Vendor::where('id', $id)->firstOrFail();
         $dine_in = in_array('dine_in', $request->slot_type) ? '1' : 0;
@@ -155,7 +155,7 @@ class VendorSlotController extends BaseController
      * @param  \App\VendorSlot  $vendorSlot
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $domain = '', $id)
     {
         $vendor = Vendor::where('id', $id)->firstOrFail();
 

@@ -66,7 +66,83 @@ class VendorController extends BaseController
      * @param  \App\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function save(Request $request, Vendor $vendor, $update = 'false')
+    {
+        $checks = array();
+        foreach ($request->only('name', 'address', 'latitude', 'longitude', 'desc') as $key => $value) {
+            $vendor->{$key} = $value;
+        }
+
+        $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0; 
+        $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0; 
+        $vendor->delivery = ($request->has('delivery') && $request->delivery == 'on') ? 1 : 0;
+
+        if($update == 'false'){
+            $vendor->logo = 'default/default_logo.png';
+            $vendor->banner = 'default/default_image.png';
+        }
+
+        if ($request->hasFile('logo')) {    /* upload logo file */
+            $file = $request->file('logo');
+            $vendor->logo = Storage::disk('s3')->put('/vendor', $file,'public');
+        }
+
+        if ($request->hasFile('banner')) {    /* upload logo file */
+            $file = $request->file('banner');
+            $vendor->banner = Storage::disk('s3')->put('/vendor', $file,'public');
+        }
+
+        $vendor->save();
+        return $vendor->id;
+
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Vendor  $vendor
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($domain = '', $id)
+    {
+        $vendor = Vendor::where('id', $id)->first();
+        $returnHTML = view('backend.vendor.form')->with(['vendor' => $vendor])->render();
+        return response()->json(array('success' => true, 'html'=>$returnHTML));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Vendor  $vendor
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $domain = '', $id)
+    {
+        $rules = array(
+            'name' => 'required|string|max:150|unique:vendors,name,'.$id,
+            'address' => 'required',
+        );
+        //dd($request->all());
+        $validation  = Validator::make($request->all(), $rules)->validate();
+        $vendor = Vendor::where('id', $id)->first();
+        $saveVendor = $this->save($request, $vendor, 'true');
+        if($saveVendor > 0){
+            return response()->json([
+                'status'=>'success',
+                'message' => 'Vendor updated Successfully!',
+                'data' => $saveVendor
+            ]);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Vendor  $vendor
+     * @return \Illuminate\Http\Response
+     */
+    public function show($domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
         $co_ordinates = $all_coordinates = array();
@@ -111,7 +187,7 @@ class VendorController extends BaseController
      * @param  \App\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function vendorCategory($id)
+    public function vendorCategory($domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
 
@@ -158,7 +234,7 @@ class VendorController extends BaseController
      * @param  \App\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function vendorCatalog($id)
+    public function vendorCatalog($domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
         $type = Type::all();
@@ -174,90 +250,12 @@ class VendorController extends BaseController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Vendor  $vendor
-     * @return \Illuminate\Http\Response
-     */
-    public function save(Request $request, Vendor $vendor, $update = 'false')
-    {
-        $checks = array();
-        foreach ($request->only('name', 'address', 'latitude', 'longitude', 'desc') as $key => $value) {
-            $vendor->{$key} = $value;
-        }
-
-        $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0; 
-        $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0; 
-        $vendor->delivery = ($request->has('delivery') && $request->delivery == 'on') ? 1 : 0;
-
-        if($update == 'false'){
-            $vendor->logo = 'default/default_logo.png';
-            $vendor->banner = 'default/default_image.png';
-        }
-
-        if ($request->hasFile('logo')) {    /* upload logo file */
-            $file = $request->file('logo');
-            $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            $vendor->logo = $request->file('logo')->storeAs('/vendor', $file_name, 'public');
-        }
-
-        if ($request->hasFile('banner')) {    /* upload logo file */
-            $file = $request->file('banner');
-            $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            $vendor->banner = $request->file('banner')->storeAs('/vendor', $file_name, 'public');
-        }
-
-        $vendor->save();
-        return $vendor->id;
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Vendor  $vendor
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $vendor = Vendor::where('id', $id)->first();
-        $returnHTML = view('backend.vendor.form')->with(['vendor' => $vendor])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Vendor  $vendor
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $rules = array(
-            'name' => 'required|string|max:150|unique:vendors,name,'.$id,
-            'address' => 'required',
-        );
-        //dd($request->all());
-        $validation  = Validator::make($request->all(), $rules)->validate();
-        $vendor = Vendor::where('id', $id)->first();
-        $saveVendor = $this->save($request, $vendor, 'true');
-        if($saveVendor > 0){
-            return response()->json([
-                'status'=>'success',
-                'message' => 'Vendor updated Successfully!',
-                'data' => $saveVendor
-            ]);
-        }
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($domain = '', $id)
     {
         $vendor = Vendor::where('id', $id)->first();
         $vendor->status = 2;
@@ -265,7 +263,7 @@ class VendorController extends BaseController
         return redirect()->back()->with('success', 'Vendor deleted successfully!');
     }
 
-    public function updateConfig(Request $request, $id)
+    public function updateConfig(Request $request, $domain = '',  $id)
     {
         $vendor = Vendor::where('id', $id)->first();
         $msg = 'Order configuration';

@@ -47,7 +47,7 @@ class BannerController extends BaseController
      * @param  \App\Cms  $cms
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($domain = '', $id)
     {
         $banner = Banner::where('id', $id)->first();
         $categories = Category::select('id', 'slug')
@@ -90,7 +90,7 @@ class BannerController extends BaseController
      * @param  \App\Cms  $cms
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $domain = '', $id)
     {
         $rules = array(
             'name' => 'required|string|max:150',
@@ -166,7 +166,7 @@ class BannerController extends BaseController
      * @param  \App\Cms  $cms
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($domain = '', $id)
     {
         banner::where('id',$id)->delete();
         return redirect()->back()->with('success', 'Banner deleted successfully!');

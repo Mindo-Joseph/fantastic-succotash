@@ -117,7 +117,7 @@ class BrandController extends BaseController
      * @param  \App\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($domain = '', $id)
     {
         $brand = Brand::with('translation', 'bc')->where('id', $id)->firstOrFail();
         $categories = Category::with('english')
@@ -146,7 +146,7 @@ class BrandController extends BaseController
      * @param  \App\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $domain = '', $id)
     {
         $brand = Brand::where('id', $id)->firstOrFail();
         $brand->title = $request->title[0];
@@ -180,7 +180,7 @@ class BrandController extends BaseController
      * @param  \App\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($domain = '', $id)
     {
         $brand = Brand::where('id', $id)->first();
         $brand->status = 2;

@@ -5,12 +5,12 @@
         <div class="row mb-2">
             <div class="col-md-1"></div>
             <div class="col-md-3">
-                <input type="file" data-plugins="dropify" name="logo" class="dropify" data-default-file="{{ url('storage/'.$vendor->logo) }}" />
+                <input type="file" data-plugins="dropify" name="logo" class="dropify" data-default-file="{{ $vendor->logo['proxy_url'].'90/90'.$vendor->logo['image_path'] }}" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
             </div> 
             <div class="col-md-1"></div>
             <div class="col-md-6">                
-                <input type="file" data-plugins="dropify" data-default-file="{{ url('storage/'.$vendor->banner) }}" name="banner" class="dropify" />
+                <input type="file" data-plugins="dropify" data-default-file="{{$vendor->banner['proxy_url'] . '90/90' . $vendor->banner['image_path']}}" name="banner" class="dropify" />
                 <p class="text-muted text-center mt-2 mb-0">Upload banner image</p>
             </div>
         </div>

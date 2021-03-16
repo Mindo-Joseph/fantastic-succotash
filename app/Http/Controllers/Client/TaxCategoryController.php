@@ -54,7 +54,7 @@ class TaxCategoryController extends BaseController
      * @param  \App\TaxCategory  $taxCategory
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($domain = '', $id)
     {
         $vendors = array();
         $categories = array();
@@ -98,7 +98,7 @@ class TaxCategoryController extends BaseController
      * @param  \App\TaxCategory  $taxCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $domain = '', $id)
     {
         $rules = array(
             'title' => 'required|string|max:60',
@@ -125,7 +125,7 @@ class TaxCategoryController extends BaseController
      * @param  \App\TaxCategory  $taxCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($domain = '', $id)
     {
         $tax = TaxCategory::where('id', $id)->delete();
         return redirect('client/tax')->with('success', 'Tax category updated successfully!');

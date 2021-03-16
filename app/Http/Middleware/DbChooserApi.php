@@ -3,11 +3,12 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Routing\Route;
-use App\Model\Client;
+use App\Models\Client;
 use Illuminate\Support\Facades\Cache;
 use Request;
 use Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 
 class DbChooserApi
 {
@@ -22,44 +23,87 @@ class DbChooserApi
 
     public function handle($request, Closure $next)
     {
-
         config(['auth.guards.api.provider' => 'users']);
 
-        //$database_name = $database = 'royoorders';
-        $database_name = $database = 'royo_varun';
-
         $header = $request->header();
-        //$client = Cache::get($database);
 
-        if (array_key_exists("client", $header)){
-            $database_name =  'royo_'.$header['client'][0];
+        $database_name = 'royoorders';
+
+        $clientCode = '';
+
+        if (!array_key_exists("code", $header)){
+            
+            return response()->json(['error' => 'Invalid Code', 'message' => 'Invalid Code'], 401);
+            abort(404);
         }
 
-        if (isset($database_name)) {
+        $clientCode = $header['code'][0];
+
+        $existRedis = Redis::get($clientCode);
+
+        if(!$existRedis){
+        $client = Client::select('name', 'email', 'phone_number', 'is_deleted', 'is_blocked', 'logo', 'company_name', 'company_address', 'status', 'code', 'database_name', 'database_host', 'database_port', 'database_username', 'database_password')
+                    ->where('code', $clientCode)
+                    ->firstOrFail();
+
+        Redis::set($clientCode, json_encode($client->toArray()), 'EX', 36000);
+
+        $existRedis = Redis::get($clientCode);
+        }
+
+        $redisData = json_decode($existRedis);
+
+        //if($redisData){
+        try {
+            $database_name = 'royo_'.$redisData->database_name;
+            $database_host = !empty($redisData->database_host) ? $redisData->database_host : '127.0.0.1';
+            $database_port = !empty($redisData->database_port) ? $redisData->database_port : '3306';
             $default = [
-                'driver' => env('DB_CONNECTION', 'mysql'),
-                'host' => env('DB_HOST'),
-                'port' => env('DB_PORT'),
-                'database' => $database_name,
-                'username' => env('DB_USERNAME'),
-                'password' => env('DB_PASSWORD'),
-                'charset' => 'utf8mb4',
-                'collation' => 'utf8mb4_unicode_ci',
-                'prefix' => '',
-                'prefix_indexes' => true,
-                'strict' => false,
-                'engine' => null
+              'driver' => env('DB_CONNECTION','mysql'),
+              'host' => $redisData->database_host,
+              'port' => $redisData->database_port,
+              'database' => $database_name,
+              'username' => $redisData->database_username,
+              'password' => $redisData->database_password,
+              'charset' => 'utf8mb4',
+              'collation' => 'utf8mb4_unicode_ci',
+              'prefix' => '',
+              'prefix_indexes' => true,
+              'strict' => false,
+              'engine' => null
             ];
-            Config::set("database.connections.$database_name", $default);
-            Config::set("client_connected", true);
-            //Config::set("client_data", $client);
-            DB::setDefaultConnection($database_name);
-            DB::purge($database_name);
-            //DB::reconnect($database_name);
 
-            return $next($request);
+            if (isset($database_name)) {
+            
+                Config::set("database.connections.$database_name", $default);
+                Config::set("client_connected", true);
+                //Config::set("client_data", $client);
+                DB::setDefaultConnection($database_name);
+                DB::purge($database_name);
+                //DB::reconnect($database_name);
+
+                return $next($request);
+            }
+            abort(404);
+   
+        } catch (\Exception $e) {
+            throw new HttpException(500, $e->getMessage());
         }
-        abort(404);
+          
+
+      /*}else{
+        return redirect()->route('error_404');
+      }*/
+
+
+
+
+
+
+        
+        
+
+        
     }
 }
 

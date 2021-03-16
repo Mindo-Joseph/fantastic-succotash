@@ -17,7 +17,7 @@ class VendorMedia extends Model
       }
       $values['proxy_url'] = env('IMG_URL1');
       $values['image_path'] = env('IMG_URL2').'/'.\Storage::disk('s3')->url($img);
-      $values['image_fit'] = env('IMG_PROXY2');
+      $values['image_fit'] = env('FIT_URl');
 
       //$values['small'] = url('showImage/small/' . $img);
       return $values;

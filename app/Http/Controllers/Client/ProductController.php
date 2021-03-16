@@ -28,7 +28,7 @@ class ProductController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id)
+    public function create($domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
         $type = Type::all();
@@ -363,7 +363,7 @@ class ProductController extends BaseController
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($domain = '', $id)
     {
         $product = Product::with('variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat','variantSet', 'addOn', 'media.image')->where('id', $id)->firstOrFail();
         //dd($product->toArray());
@@ -417,7 +417,7 @@ class ProductController extends BaseController
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $domain = '', $id)
     {
         //dd($request->all());
         $product = Product::where('id', $id)->firstOrFail();
@@ -648,7 +648,7 @@ class ProductController extends BaseController
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($domain = '', $id)
     {
         
     }
