@@ -107,8 +107,8 @@ class ProcessClientDatabase implements ShouldQueue
 
             Config::set("database.connections.$schemaName", $default);
             config(["database.connections.mysql.database" => $schemaName]);
-            Artisan::call('migrate', ['--database' => $schemaName]);
-            Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--database' => $schemaName]);
+            Artisan::call('migrate', ['--database' => $schemaName, '--force' => true]);
+            Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--database' => $schemaName, '--force' => true]);
 
             DB::connection($schemaName)->table('clients')->insert($clientData);
             DB::connection($schemaName)->table('client_preferences')->insert($settings);
@@ -116,11 +116,11 @@ class ProcessClientDatabase implements ShouldQueue
             DB::connection($schemaName)->table('client_currencies')->insert($cli_currs);
 
             if($this->languId == 1){
-                Artisan::call('db:seed', ['--class' => 'CategorySeeder', '--database' => $schemaName]);
-                Artisan::call('db:seed', ['--class' => 'CatalogSeeder', '--database' => $schemaName]);
-                Artisan::call('db:seed', ['--class' => 'AddonsetDataSeeder', '--database' => $schemaName]);
-                Artisan::call('db:seed', ['--class' => 'VariantSeeder', '--database' => $schemaName]);
-                Artisan::call('db:seed', ['--class' => 'ProductSeeder', '--database' => $schemaName]);
+            Artisan::call('db:seed', ['--class' => 'CategorySeeder', '--database' => $schemaName,  '--force' => true]);
+            Artisan::call('db:seed',['--class' => 'CatalogSeeder', '--database' => $schemaName,  '--force' => true]);
+            Artisan::call('db:seed', ['--class' => 'AddonsetDataSeeder', '--database' => $schemaName,  '--force' => true]);
+            Artisan::call('db:seed', ['--class' => 'VariantSeeder', '--database' => $schemaName,  '--force' => true]);
+            Artisan::call('db:seed', ['--class' => 'ProductSeeder', '--database' => $schemaName,  '--force' => true]);
             }else{
 
                 $main_category = [
