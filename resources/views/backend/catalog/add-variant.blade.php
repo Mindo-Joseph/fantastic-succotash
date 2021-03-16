@@ -66,11 +66,11 @@
             <div class="col-md-12" style="overflow-x: auto;">
                 <table class="table table-borderless mb-0 optionTableAdd" id="banner-datatable">
                     <tr class="trForClone">
-                        <td class="hexacodeClass-add" style="display:none;">Color Code</td>
+                        <th class="hexacodeClass-add" style="display:none;">Color Code</td>
                         @foreach($languages as $langs)
-                            <td>{{$langs->langName}}</td>
+                            <th>{{$langs->language->name}}</th>
                         @endforeach
-                        <td></td>
+                        <th></th>
                     </tr>
                     <tr>
                         <td style="min-width: 200px; display:none;" class="hexacodeClass-add">

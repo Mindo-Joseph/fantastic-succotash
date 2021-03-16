@@ -1,4 +1,4 @@
-@extends('layouts.god-vertical', ['title' => 'Options'])
+@extends('layouts.god-vertical', ['title' => 'Dashboard'])
 
 @section('css')
     <!-- Plugins css -->

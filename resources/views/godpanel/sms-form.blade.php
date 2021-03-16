@@ -1,4 +1,4 @@
-@extends('layouts.god-vertical', ['title' => 'Options'])
+@extends('layouts.god-vertical', ['title' => 'SMS'])
 
 @section('css')
 <link href="{{asset('assets/libs/mohithg-switchery/mohithg-switchery.min.css')}}" rel="stylesheet" type="text/css" />

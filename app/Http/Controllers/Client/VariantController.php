@@ -124,7 +124,7 @@ class VariantController extends BaseController
      * @param  \App\Variant  $variant
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($domain = '', $id)
     {
         $variant = Variant::select('id', 'title', 'type', 'position')
                         ->with('translation', 'option.translation', 'varcategory')
@@ -182,7 +182,7 @@ class VariantController extends BaseController
      * @param  \App\Variant  $variant
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $domain = '', $id)
     {
 
         $variant = Variant::where('id', $id)->firstOrFail();
@@ -268,7 +268,7 @@ class VariantController extends BaseController
      * @param  \App\Category_translation  $category_translation
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($domain = '', $id)
     {
         $var = Variant::where('id', $id)->first();
         $var->status = 2;
@@ -329,7 +329,7 @@ class VariantController extends BaseController
      * @param  \App\Models\Variant  $variant
      * @return \Illuminate\Http\Response
      */
-    public function variantbyCategory($cid)
+    public function variantbyCategory($domain = '', $cid)
     {
         $variants = Variant::with('option', 'varcategory.cate.english')
                         ->select('variants.*')

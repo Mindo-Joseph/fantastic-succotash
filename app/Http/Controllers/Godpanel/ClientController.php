@@ -109,10 +109,15 @@ class ClientController extends Controller
     /* save and update client information */
     public function saveClient(Request $request, Client $client, $update = 'false')
     {
-        foreach ($request->only('name', 'phone_number', 'company_name', 'company_address', 'custom_domain', 'database_host', 'database_port', 'database_username', 'database_password') as $key => $value) {
+        foreach ($request->only('name', 'phone_number', 'company_name', 'company_address', 'custom_domain', 'sub_domain', 'database_host', 'database_port', 'database_username', 'database_password') as $key => $value) {
             $client->{$key} = $value;
         }
- 
+
+        $client->database_host = env('DB_HOST');
+        $client->database_port = '3306';
+        $client->database_username = env('DB_USERNAME');
+        $client->database_password = env('DB_PASSWORD');
+
         if( $update == 'false'){
             $client->logo = 'default/default_logo.png';
             $client->database_path = '';

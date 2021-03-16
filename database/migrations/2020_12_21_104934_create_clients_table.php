@@ -23,7 +23,8 @@ class CreateClientsTable extends Migration {
 			$table->string('encpass')->nullable();
 			$table->bigInteger('country_id')->unsigned()->nullable();
 			$table->string('timezone', 25)->nullable();
-			$table->string('custom_domain', 40)->nullable();
+			$table->string('custom_domain', 100)->nullable();
+			$table->string('sub_domain', 40)->nullable();
 			$table->tinyInteger('is_deleted')->default(0);
 			$table->tinyInteger('is_blocked')->default(0);
 			$table->string('database_path')->nullable();

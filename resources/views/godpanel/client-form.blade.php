@@ -1,4 +1,4 @@
-@extends('layouts.god-vertical', ['title' => 'Options'])
+@extends('layouts.god-vertical', ['title' => 'Client'])
 
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
@@ -229,6 +229,19 @@
                                     @if($errors->has('company_address'))
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $errors->first('company_address') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="sub_domain" class="control-label">SUB DOMAIN</label>
+                                    <input type="text" class="form-control" name="sub_domain" id="sub_domain"
+                                        value="{{ old('sub_domain', $client->sub_domain ?? '')}}"
+                                        placeholder="Enter sub domain">
+                                    @if($errors->has('sub_domain'))
+                                    <span class="text-danger" role="alert">
+                                        <strong>{{ $errors->first('sub_domain') }}</strong>
                                     </span>
                                     @endif
                                 </div>
