@@ -32,7 +32,7 @@ class CustomDomain
         $client = Client::select('name', 'email', 'phone_number', 'is_deleted', 'is_blocked', 'logo', 'company_name', 'company_address', 'status', 'code', 'database_name', 'database_host', 'database_port', 'database_username', 'database_password')
                     ->where(function($q) use($domain, $subDomain){
                               $q->where('custom_domain', $domain)
-                                ->orWhere('custom_domain', $subDomain[0]);
+                                ->orWhere('sub_domain', $subDomain[0]);
                                 //->orWhere('database_name', $subDomain[0]);
                     })
                     ->firstOrFail();
