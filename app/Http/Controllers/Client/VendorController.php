@@ -176,7 +176,7 @@ class VendorController extends BaseController
             ];
          }
 
-        //dd($center);
+        //dd($area1->toArray());
         
         return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas]);
     }

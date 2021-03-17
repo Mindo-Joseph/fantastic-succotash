@@ -173,7 +173,7 @@ class VendorSlotController extends BaseController
         return redirect()->back()->with('success', 'Slot deleted successfully!');
     }
 
-    public function returnJson(Request $request, $id)
+    public function returnJson(Request $request, $domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
         $date = $day = array();

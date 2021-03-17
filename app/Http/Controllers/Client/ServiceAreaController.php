@@ -35,7 +35,7 @@ class ServiceAreaController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $vendor_id)
+    public function store(Request $request, $domain = '', $vendor_id)
     {
         //dd($request->all());
         $vendor = Vendor::where('id', $vendor_id)->firstOrFail();
@@ -72,7 +72,7 @@ class ServiceAreaController extends BaseController
      * @param  \App\ServiceArea  $serviceArea
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $vendor_id)
+    public function edit(Request $request, $domain = '', $vendor_id)
     {
         $area = ServiceArea::where('id', $request->data)->where('vendor_id', $vendor_id)->first();
         $returnHTML = view('backend.vendor.editArea')->with(['area' => $area])->render();
@@ -86,7 +86,7 @@ class ServiceAreaController extends BaseController
      * @param  \App\ServiceArea  $serviceArea
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $domain = '', $id)
     {
         $area = ServiceArea::where('id', $id)->where('vendor_id', $request->ven_id)->firstOrFail();
 
@@ -128,7 +128,7 @@ class ServiceAreaController extends BaseController
      * @param  \App\ServiceArea  $serviceArea
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $vendor_id)
+    public function destroy(Request $request, $domain = '', $vendor_id)
     {
         $vendor = Vendor::where('id', $vendor_id)->firstOrFail();
         $area = ServiceArea::where('id', $request->area_id)->delete();

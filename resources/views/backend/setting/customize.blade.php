@@ -35,7 +35,7 @@
                         Choose between light and dark theme, for the platform.
                     </p>
                     <div class="row mb-2">
-                        <div class="col-sm-12">
+                        <div class="col-sm-4">
                             <div class="radio radio-blue form-check-inline">
                                 <input type="radio" id="light_theme" value="light" name="theme_admin" {{ (isset($preference) && $preference->theme_admin =="light")? "checked" : "" }}>
                                 <label for="light_theme"> Light theme </label>
@@ -49,6 +49,18 @@
                                 <strong>{{ $errors->first('theme') }}</strong>
                             </span>
                             @endif
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group mb-3">
+                                <label for="primary_color">Primary Color</label>
+                                <input type="text" id="primary_color" name="primary_color" class="form-control" value="{{ old('primary_color', $preference->primary_color ?? 'cccccc')}}" >
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group mb-3">
+                                <label for="secondary_color">Secondary Color</label>
+                                <input type="text" id="secondary_color" name="secondary_color" class="form-control" value="{{ old('secondary_color', $preference->secondary_color ?? 'cccccc')}}" >
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -378,6 +390,13 @@
 
     });
 }*/
+var options = {
+    zIndex: 9999
+}
+$(document).ready(function(){
+    var color1 = new jscolor('#primary_color', options); 
+    var color2 = new jscolor('#secondary_color', options); 
+});
 
 function generateRandomString(length) {
   var text = "";
