@@ -399,9 +399,7 @@ class ProductController extends BaseController
             $addOn_ids[] = $value->addon_id;
         }
 
-
         foreach ($product->vatoptions as $key => $value) {
-
             if(!in_array($value->variant_option_id, $existOptions)){
                 $existOptions[] = $value->variant_option_id;
             }

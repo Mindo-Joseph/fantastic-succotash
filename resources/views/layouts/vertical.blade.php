@@ -13,11 +13,12 @@
        
        <style type="text/css">
             .loader_box {
-                position: absolute;
+                position: fixed;
                 width: 100%;
                 height: 100%;
                 background: #00000075;
                 top: 0;
+                z-index:99999;
                 left: 0;
             }
             .spinner-border{

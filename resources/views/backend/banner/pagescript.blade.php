@@ -107,7 +107,7 @@
                 console.log('data2');
             },
             complete: function(){
-                //$('.loader_box').hide();
+                $('.loader_box').hide();
             }
         });
     });
@@ -233,27 +233,15 @@
                 if (response.status == 'success') {
                 }
                 return response;
-            }
+            },
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            complete: function(){
+                $(".loader_box").hide();
+            },
         });
     }
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     $("#user-modal #add_user").submit(function(e) {
             e.preventDefault();
@@ -278,8 +266,4 @@
         saveCustomer(urls, formData, inp = 'Edit', modal = 'edit-user-modal');
         console.log(urls);
     });
-
-    
-
-    
 </script>

@@ -636,6 +636,12 @@
             success: function (data) {
                 $('#variantAjaxDiv').html(data.resp);
             },
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            complete: function(){
+                $(".loader_box").hide();
+            },
             error: function (data) {
                 console.log('data2');
             }
@@ -677,6 +683,12 @@
                     $('#variantRowDiv').html(resp.html);
                 }
                 
+            },
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            complete: function(){
+                $(".loader_box").hide();
             },
             error: function (resp) {
                 console.log('data2');
@@ -739,6 +751,12 @@
                     $('#upload-media .lastDiv').before(data.htmlData);
                     
                 },
+                beforeSend: function(){
+                    $(".loader_box").show();
+                },
+                complete: function(){
+                    $(".loader_box").hide();
+                },
                 error: function(data){
                     console.log("error");
                     console.log(data);
@@ -775,6 +793,12 @@
                     $('#meta_keyword').val(resp.data.meta_keyword);
                     $('#meta_description').val(resp.data.meta_description);
                 }
+            },
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            complete: function(){
+                $(".loader_box").hide();
             }
         });
     });
@@ -794,7 +818,13 @@
                 $('#upload-media').modal({
                     keyboard: false
                 });
-            }
+            },
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            complete: function(){
+                $(".loader_box").hide();
+            },
         });
     });
 
@@ -821,6 +851,12 @@
                     alert(resp.msg);
                     $('#upload-media').modal('hide');
                 }
+            },
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            complete: function(){
+                $(".loader_box").hide();
             }
         });
     });

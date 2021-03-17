@@ -314,6 +314,12 @@
                     $('#save_product_form').submit();
                 }
             },
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            complete: function(){
+                $(".loader_box").hide();
+            },
             error: function (response) {
                 if (response.status === 422) {
                     let errors = response.responseJSON.errors;

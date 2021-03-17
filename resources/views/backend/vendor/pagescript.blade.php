@@ -170,6 +170,12 @@
             },
             error: function (data) {
                 console.log('data2');
+            },
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            complete: function(){
+                $(".loader_box").hide();
             }
         });
     });
@@ -220,6 +226,12 @@
                     $(".show_all_error.invalid-feedback").text(response.message);
                 }
                 return response;
+            },
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            complete: function(){
+                $(".loader_box").hide();
             },
             error: function(response) {
                 if (response.status === 422) {
@@ -364,6 +376,12 @@ $('.editAddonBtn').on('click', function(e) {
             $('#editAddonForm #editAddonBox').html(data.html);
 
             document.getElementById('editAddonForm').action = data.submitUrl;
+        },
+        beforeSend: function(){
+                $(".loader_box").show();
+        },
+        complete: function(){
+            $(".loader_box").hide();
         },
         error: function (data) {
             console.log('data2');
