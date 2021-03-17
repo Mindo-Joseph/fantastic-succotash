@@ -298,7 +298,7 @@
                                             <td> 
                                                 <input type="hidden" name="variant_ids[]" value="{{$varnt->id}}">
                                                 <input type="hidden" class="exist_sets" value="{{$existSet[(count($existSet) - 1)]}}">
-                                                <input type="text" name="exist_variant_titles[]" value="{{$varnt->title}}">
+                                                <input type="text" name="variant_titles[]" value="{{$varnt->title}}">
                                             </td>
                                             <td>{{rtrim($vsets, ', ')}}</td>
                                             <td>

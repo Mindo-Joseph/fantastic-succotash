@@ -71,7 +71,7 @@
             data: '',
             dataType: 'json',
             beforeSend: function(){
-                //$(".loader_box").show();
+                $(".loader_box").show();
             },
             success: function (data) {
                 if(uid > 0){
