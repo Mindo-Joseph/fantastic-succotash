@@ -227,98 +227,107 @@
                         <div class="col-8" style="margin:auto;">
                             <h5 class="text-uppercase mt-0 bg-light p-2">Variant Information</h5>
                         </div>
+                        @if(!empty($productVariants))
                         <div class="col-4 p-2 mt-0 text-right" style="margin:auto; ">
-                            <button type="button" class="btn btn-blue makeVariantRow"> Create Variants</button>
+                            <button type="button" class="btn btn-blue makeVariantRow"> Make Variant Sets</button>
                         </div>
+                        @endif
                     </div>
                     <p>Select or change category to get variants</p>
 
-                    <div class="row" style="width:100%; overflow-x: scroll;">
-                        <div id="variantAjaxDiv" class="col-12 mb-2" >
-                            <h5 class="">Variant List</h5>
-                            <div class="row mb-2">
-                                
-                                @foreach($productVariants as $vk => $var)
-                                    <div class="col-sm-3"> 
-                                        <label class="control-label">{{$var->title}}</label>
-                                    </div> 
-                                    <div class="col-sm-9">
-                                    @foreach($var->option as $key => $opt)
-                                        <div class="checkbox checkbox-success form-check-inline pr-3">
-                                            <input type="checkbox" name="variant{{$var->id}}" class="intpCheck" opt="{{$opt->id.';'.$opt->title}}" varId="{{$var->id.';'.$var->title}}" id="opt_vid_{{$opt->id}}" @if(in_array($opt->id, $existOptions)) checked @endif> 
-                                            <label  for="opt_vid_{{$opt->id}}">{{$opt->title}}</label>
+                    @if(!empty($productVariants))
+                        <div class="row" style="width:100%; overflow-x: scroll;">
+                            <div id="variantAjaxDiv" class="col-12 mb-2" >
+                                <h5 class="">Variant List</h5>
+                                <div class="row mb-2">
+                                    @foreach($productVariants as $vk => $var)
+                                        <div class="col-sm-3"> 
+                                            <label class="control-label">{{$var->title}}</label>
+                                        </div> 
+                                        <div class="col-sm-9">
+                                        @foreach($var->option as $key => $opt)
+                                            <div class="checkbox checkbox-success form-check-inline pr-3">
+                                                <input type="checkbox" name="variant{{$var->id}}" class="intpCheck" opt="{{$opt->id.';'.$opt->title}}" varId="{{$var->id.';'.$var->title}}" id="opt_vid_{{$opt->id}}" @if(in_array($opt->id, $existOptions)) checked @endif> 
+                                                <label  for="opt_vid_{{$opt->id}}">{{$opt->title}}</label>
+                                            </div>
+                                        @endforeach
                                         </div>
                                     @endforeach
-                                    </div>
-                                @endforeach
+                                </div>
                             </div>
-                        </div>
-                        @if($product->has_variant == 1)
-                        <div class="col-12" id="exist_variant_div">
-                            <h5 class="">Applied Variants Set</h5>
-                            <table class="table table-centered table-nowrap table-striped">
-                                <thead>
-                                    <th>Image</th>
-                                    <th>Name</th>
-                                    <th>Variants</th>
-                                    <th>Price</th>
-                                    <th>Compare at price</th>
-                                    <th>Cost Price</th>
-                                    <th>Quantity</th>
-                                    <th> </th>
-                                </thead>
-                                @foreach($product->variant as $varnt)
-                                    <?php 
-                                        $existSet = array();
 
-                                        $mediaPath = Storage::disk('s3')->url('default/default_image.png');
+                            @if($product->has_variant == 1)
+                            <div class="col-12" id="exist_variant_div">
+                                <h5 class="">Applied Variants Set</h5>
+                                <table class="table table-centered table-nowrap table-striped">
+                                    <thead>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Variants</th>
+                                        <th>Price</th>
+                                        <th>Compare at price</th>
+                                        <th>Cost Price</th>
+                                        <th>Quantity</th>
+                                        <th> </th>
+                                    </thead>
+                                    @foreach($product->variant as $varnt)
+                                        <?php 
+                                            $existSet = array();
 
-                                        if(!empty($varnt->vimage) && isset($varnt->vimage->pimage->image)){
-                                            $mediaPath = $varnt->vimage->pimage->image->path['proxy_url'].'100/100'.$varnt->vimage->pimage->image->path['image_path'];
-                                        }
-                                        $existSet = explode('-', $varnt->sku);
-                                        $vsets = '';
+                                            $mediaPath = Storage::disk('s3')->url('default/default_image.png');
 
-                                        foreach($varnt->set as $vs){
-                                            $vsets .= $vs->title.', ';
-                                        }
-                                    ?>
-                                    <tr>
-                                        <td>
-                                            <div class="image-upload">
-                                              <label class="file-input uploadImages" for="{{$varnt->id}}">
-                                                <img src="{{$mediaPath}}" width="30" height="30" for="{{$varnt->id}}"/>
-                                              </label>
-                                            </div>
-                                            <div class="imageCountDiv{{$varnt->id}}"></div>
-                                        </td>
-                                        <td> 
-                                            <input type="hidden" name="variant_ids[]" value="{{$varnt->id}}">
-                                            <input type="hidden" class="exist_sets" value="{{$existSet[(count($existSet) - 1)]}}">
-                                            <input type="text" name="exist_variant_titles[]" value="{{$varnt->title}}">
-                                        </td>
-                                        <td>{{rtrim($vsets, ', ')}}</td>
-                                        <td>
-                                            <input type="text" style="width: 70px;" name="variant_price[]" value="{{$varnt->price}}" onkeypress="return isNumberKey(event)"> </td>
-                                        <td>
-                                            <input type="text" style="width: 100px;" name="variant_compare_price[]" value="{{$varnt->compare_at_price}}" onkeypress="return isNumberKey(event)">
-                                        </td>
-                                        <td>
-                                            <input type="text" style="width: 70px;" name="variant_cost_price[]" value="{{$varnt->cost_price}}" onkeypress="return isNumberKey(event)">
-                                        </td>
-                                        <td>
-                                            <input type="text" style="width: 70px;" name="variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
-                                        </td>
-                                        <td>
-                                            <a href="javascript:void(0);" varId="{{$varnt->id}}" class="action-icon deleteExistRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </table>
-                        </div>
+                                            if(!empty($varnt->vimage) && isset($varnt->vimage->pimage->image)){
+                                                $mediaPath = $varnt->vimage->pimage->image->path['proxy_url'].'100/100'.$varnt->vimage->pimage->image->path['image_path'];
+                                            }
+                                            $existSet = explode('-', $varnt->sku);
+                                            $vsets = '';
+
+                                            foreach($varnt->set as $vs){
+                                                $vsets .= $vs->title.', ';
+                                            }
+                                        ?>
+                                        <tr>
+                                            <td>
+                                                <div class="image-upload">
+                                                  <label class="file-input uploadImages" for="{{$varnt->id}}">
+                                                    <img src="{{$mediaPath}}" width="30" height="30" for="{{$varnt->id}}"/>
+                                                  </label>
+                                                </div>
+                                                <div class="imageCountDiv{{$varnt->id}}"></div>
+                                            </td>
+                                            <td> 
+                                                <input type="hidden" name="variant_ids[]" value="{{$varnt->id}}">
+                                                <input type="hidden" class="exist_sets" value="{{$existSet[(count($existSet) - 1)]}}">
+                                                <input type="text" name="exist_variant_titles[]" value="{{$varnt->title}}">
+                                            </td>
+                                            <td>{{rtrim($vsets, ', ')}}</td>
+                                            <td>
+                                                <input type="text" style="width: 70px;" name="variant_price[]" value="{{$varnt->price}}" onkeypress="return isNumberKey(event)"> </td>
+                                            <td>
+                                                <input type="text" style="width: 100px;" name="variant_compare_price[]" value="{{$varnt->compare_at_price}}" onkeypress="return isNumberKey(event)">
+                                            </td>
+                                            <td>
+                                                <input type="text" style="width: 70px;" name="variant_cost_price[]" value="{{$varnt->cost_price}}" onkeypress="return isNumberKey(event)">
+                                            </td>
+                                            <td>
+                                                <input type="text" style="width: 70px;" name="variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" varId="{{$varnt->id}}" class="action-icon deleteExistRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </table>
+                            </div>
+                            @endif
+
+                            <div id="variantRowDiv" class="col-12"></div>
+
+                        @else
+                            <div class="row" style="width:100%; overflow-x: scroll;">
+                                <h5 class="">No variant assigned to category.</h5>
+                            </div>
                         @endif
-
-                        <div id="variantRowDiv" class="col-12"></div>
 
                     </div>
                 </div>                

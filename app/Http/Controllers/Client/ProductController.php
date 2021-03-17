@@ -365,7 +365,7 @@ class ProductController extends BaseController
      */
     public function edit($domain = '', $id)
     {
-        $product = Product::with('variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat','variantSet', 'addOn', 'media.image')->where('id', $id)->firstOrFail();
+        $product = Product::with('variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image')->where('id', $id)->firstOrFail();
         //dd($product->toArray());
         $type = Type::all();
         $countries = Country::all();
@@ -399,7 +399,8 @@ class ProductController extends BaseController
             $addOn_ids[] = $value->addon_id;
         }
 
-        foreach ($product->variantSet as $key => $value) {
+
+        foreach ($product->vatoptions as $key => $value) {
 
             if(!in_array($value->variant_option_id, $existOptions)){
                 $existOptions[] = $value->variant_option_id;
