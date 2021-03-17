@@ -123,11 +123,11 @@
                                                         <a class="action-icon" href="{{ route('product.edit', $prod->id) }}" userId="{{$prod->id}}"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
                                                       </div>
                                                       <div class="inner-div">
-                                                          <form method="POST" action="">
+                                                          <form method="POST" action="{{ route('product.destroy', $prod->id) }}">
                                                               @csrf
                                                               @method('DELETE')
                                                               <div class="form-group">
-                                                                 <button type="submit" onclick="return confirm('Are you sure? You want to delete the vendor.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button>
+                                                                 <button type="submit" onclick="return confirm('Are you sure? You want to delete the product.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button>
                                                               </div>
                                                           </form>
                                                       </div>

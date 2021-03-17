@@ -243,7 +243,7 @@ class VendorController extends BaseController
                         ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
                         ->orderBy('position', 'asc')->get();
 
-        $products = Product::with('variant', 'primary', 'category.cat', 'variantSet')->where('vendor_id', $id)->get();
+        $products = Product::with('variant', 'primary', 'category.cat', 'variantSet')->where('vendor_id', $id)->where('is_live', '!=', 2)->get();
 
         //dd($categories->toArray());
         return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'tab' => 'catalog', 'products' => $products, 'typeArray' => $type, 'categories' => $categories]);

@@ -650,7 +650,8 @@ class ProductController extends BaseController
      */
     public function destroy($domain = '', $id)
     {
-        
+        Product::where('id',$id)->update(['is_live' => 2]);
+        return redirect()->back()->with('success', 'Product deleted successfully!');
     }
 
     /**      Make variant rows          */
