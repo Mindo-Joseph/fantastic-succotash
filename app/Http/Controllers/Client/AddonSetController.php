@@ -108,7 +108,7 @@ class AddonSetController extends BaseController
      * @param  \App\AddonOption  $addonOption
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($domain = '', $id)
     {
         $addon = AddonSet::with('translation', 'option.translation')->where('id', $id)->firstOrFail();
 
@@ -134,7 +134,7 @@ class AddonSetController extends BaseController
      * @param  \App\AddonOption  $addonOption
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $domain = '', $id)
     {
         //dd($request->all());
         $count = count($request->price);
@@ -218,7 +218,7 @@ class AddonSetController extends BaseController
      * @param  \App\AddonOption  $addonOption
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($domain = '', $id)
     {
         $aos = AddonSet::where('id', $id)->first();
         $aos->status = 2;

@@ -43,19 +43,6 @@
                                 <input type="checkbox" data-plugin="switchery" name="is_hyperlocal" id="is_hyperlocal" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->is_hyperlocal == '1'))  checked='checked' @endif>
                             </div>
                         </div>
-                        
-                        <div class="col-md-4">
-                            <div class="form-group mb-3 switchery-demo">
-                                <label for="need_delivery_service" class="mr-3">Need Delivery Service</label>
-                                <input type="checkbox" data-plugin="switchery" name="need_delivery_service" id="need_delivery_service" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->need_delivery_service == '1'))  checked='checked' @endif>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group mb-3 switchery-demo">
-                                <label for="need_dispacher_ride" class="mr-3">Need Dispatcher Rides</label>
-                                <input type="checkbox" data-plugin="switchery" name="need_dispacher_ride" id="need_dispacher_ride" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->need_dispacher_ride == '1'))  checked='checked' @endif>
-                            </div>
-                        </div>
                     </div>
                     <div class="row mb-2 disableHyperLocal" style="{{((isset($preference) && $preference->is_hyperlocal == '1')) ? '' : 'display:none;'}}">
                         <div class="col-md-4">
@@ -100,9 +87,23 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-md-6 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
-                            <div class="form-group mb-3" >
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3 switchery-demo">
+                                <label for="need_delivery_service" class="mr-3">Need Delivery Service</label>
+                                <input type="checkbox" data-plugin="switchery" name="need_delivery_service" id="need_delivery_service" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->need_delivery_service == '1'))  checked='checked' @endif>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3 switchery-demo">
+                                <label for="need_dispacher_ride" class="mr-3">Need Dispatcher Rides</label>
+                                <input type="checkbox" data-plugin="switchery" name="need_dispacher_ride" id="need_dispacher_ride" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->need_dispacher_ride == '1'))  checked='checked' @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <div class="form-group mb-3 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
                                 <label for="delivery_service_key">Delivery Service key</label>
                                 <input type="text" name=" delivery_service_key" id=" delivery_service_key" placeholder="asdada324234fd32" class="form-control"
                                     value="{{ old(' delivery_service_key', $preference-> delivery_service_key ?? '')}}">
@@ -113,8 +114,8 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-md-6 dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_ride == '1')) ? '' : 'display:none;'}}">
-                            <div class="form-group mb-3 ">
+                        <div class="col-md-6 " >
+                            <div class="form-group mb-3 dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_ride == '1')) ? '' : 'display:none;'}}">
                                 <label for="dispatcher_key">Dispatcher key</label>
                                 <input type="text" name="dispatcher_key" id="dispatcher_key" placeholder="asdada324234fd32" class="form-control"
                                     value="{{ old('dispatcher_key', $preference->dispatcher_key ?? '')}}">

@@ -181,83 +181,6 @@
         </div>
     </div>
 
-    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
-        @csrf
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card-box">
-                    <h4 class="header-title">Nomenclature</h4>
-                    <p class="sub-header">
-                        Define and update the nomenclature
-                    </p>
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <label for="languages">Primary Currency</label>
-                            <input type="text" class="form-control" value="{{ $preference->primary->currency->iso_code }} - {{ $preference->primary->currency->symbol }}" disabled="" style="cursor:not-allowed;">
-                        </div>
-                 
-                        <div class="col-md-6">
-                            <label for="languages">Additional Currency</label>
-                            <select class="form-control select2-multiple" id="currency" name="currency_data[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                                @foreach($currencies as $currency)
-                                    @if($currency->id != 147)
-                                        <option value="{{$currency->id}}" {{ (isset($preference) && in_array($currency->id, $cli_currs))? "selected" : "" }}> {{$currency->iso_code}} {{$currency->symbol}} </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="languages">Primary Language</label>
-                            <select class="form-control" id="primary_language" name="primary_language">
-                                @foreach($languages as $lang)
-                                    <option {{(isset($preference) && ($lang->id == $preference->primarylang->language_id))? "selected" : "" }} value="{{$lang->id}}"> {{$lang->name}} </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="languages">Additional Languages</label>
-                            <select class="form-control select2-multiple" id="languages" name="languages[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                                @foreach($languages as $lang)
-                                    @if($lang->id != $preference->primarylang->language_id)
-                                        <option value="{{$lang->id}}" {{ (isset($preference) && in_array($lang->id, $cli_langs))? "selected" : "" }}> {{$lang->name}} </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label>Unit</label>
-                            <div class="col-sm-12">
-                                <div class="radio radio-info form-check-inline">
-                                    <input type="radio" id="metric" value="metric" name="distance_unit" {{ ($preference && $preference->distance_unit =="metric")? "checked" : "" }}>
-                                    <label for="metric"> Metric</label>
-                                </div>
-                                <div class="radio form-check-inline">
-                                    <input type="radio" id="imperial" value="imperial" name="distance_unit" {{ ($preference && $preference->distance_unit =="imperial")? "checked" : "" }}>
-                                    <label for="imperial"> Imperial</label>
-                                </div>
-                                @if($errors->has('distance_unit'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('distance_unit') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-2">
-                            <div class="form-group mb-0 text-center">
-                                <input type="hidden" name="send_to" id="send_to" value="customize">
-                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-
     <div class="row">
         <div class="col-6">
                 <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
@@ -357,12 +280,98 @@
             </form>
         </div>
     </div>
+
+    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+        @csrf
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card-box">
+                    <h4 class="header-title">Nomenclature</h4>
+                    <p class="sub-header">
+                        Define and update the nomenclature
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="languages">Primary Language</label>
+                            <select class="form-control" id="primary_language" name="primary_language">
+                                @foreach($languages as $lang)
+                                    <option {{(isset($preference) && ($lang->id == $preference->primarylang->language_id))? "selected" : "" }} value="{{$lang->id}}"> {{$lang->name}} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="languages">Additional Languages</label>
+                            <select class="form-control select2-multiple" id="languages" name="languages[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                                @foreach($languages as $lang)
+                                    @if($lang->id != $preference->primarylang->language_id)
+                                        <option value="{{$lang->id}}" {{ (isset($preference) && in_array($lang->id, $cli_langs))? "selected" : "" }}> {{$lang->name}} </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <label for="languages">Primary Currency</label>
+                            <input type="text" class="form-control" value="{{ $preference->primary->currency->iso_code }} - {{ $preference->primary->currency->symbol }}" disabled="" style="cursor:not-allowed;">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="languages">Additional Currency</label>
+                            <select class="form-control select2-multiple" id="currency" name="currency_data[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                                @foreach($currencies as $currency)
+                                    @if($currency->id != 147)
+                                        <option value="{{$currency->id}}" {{ (isset($preference) && in_array($currency->id, $cli_currs))? "selected" : "" }}> {{$currency->iso_code}} {{$currency->symbol}} </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        
+                            @if(!empty($curtableData))
+                            <!--<table class="table table-centered table-nowrap table-striped" id="banner-datatable">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Currency</th>
+                                    <th>Multiplier</th>
+                                    <th>Active</th>
+                                    <th>#</th>
+                                    <th>Currency</th>
+                                    <th>Multiplier</th>
+                                    <th>Active</th>
+                                </tr>
+                            
+                            @foreach($curtableData as $currency)
+                                <tr>
+                                    @foreach($currency as $cur)
+                                    <td>{{$cur['id']}}</td>
+                                    <td>{{$cur['iso_code']}}</td>
+                                    <td><input type="number" name="multiplier" min="0" value="0" step=".01"></td>
+                                    <td></td>
+                                    @endforeach
+                                </tr>
+
+                            @endforeach
+                            </table> -->
+                            @endif
+                        </div>
+                        
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <div class="form-group mb-0 text-center">
+                                <input type="hidden" name="send_to" id="send_to" value="customize">
+                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
       
 </div> <!-- container -->
 @endsection
 
 @section('script')
-
+<script src="{{asset('assets/js/jscolor.js')}}"></script>
 <script type="text/javascript">
 /*function toggleDisplayCustomDomain(){
     $("#custom_domain_name").toggle( 'fast', function(){ 

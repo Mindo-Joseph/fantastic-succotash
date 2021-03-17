@@ -39,7 +39,15 @@ class ClientPreferenceController extends BaseController
     {
         $webTemplates = Template::where('for', '1')->get();
         $appTemplates = Template::where('for', '2')->get();
-        $currencies = Currency::where('id', '>', '0')->get();
+        
+        $curArray = array();
+        $primaryCurrency = ClientCurrency::where('is_primary', 1)->first();
+
+        $currencies = Currency::where('id', '!=', $primaryCurrency->currency_id)->get();
+
+        $curtableData = array_chunk($currencies->toArray(), 2);
+        //dd($currencies);
+
         $languages = Language::where('id', '>', '0')->get(); /*  cprimary - currency primary*/
         $preference = ClientPreference::with('language', 'primarylang', 'domain', 'currency', 'primary.currency')->select('client_code', 'theme_admin', 'distance_unit', 'date_format', 'time_format', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'verify_email', 'verify_phone', 'web_template_id', 'app_template_id')
                         ->where('client_code', Auth::user()->code)->first();
@@ -59,7 +67,7 @@ class ClientPreferenceController extends BaseController
                 $cli_langs[] = $value->language_id;
             }
         }
-        return view('backend/setting/customize')->with(['client' => $client, 'preference' => $preference, 'webTemplates' => $webTemplates, 'appTemplates' => $appTemplates, 'currencies' => $currencies, 'languages' => $languages, 'cli_langs' => $cli_langs, 'cli_currs' => $cli_currencies]);
+        return view('backend/setting/customize')->with(['client' => $client, 'preference' => $preference, 'webTemplates' => $webTemplates, 'appTemplates' => $appTemplates, 'currencies' => $currencies, 'languages' => $languages, 'cli_langs' => $cli_langs, 'cli_currs' => $cli_currencies, 'primaryCurrency' => $primaryCurrency, 'curtableData' => $curtableData]);
     }
 
     /**

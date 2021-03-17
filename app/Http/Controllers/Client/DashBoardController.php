@@ -105,11 +105,12 @@ class DashBoardController extends BaseController
 
         if ($request->hasFile('logo')) {    /* upload logo file */
             $file = $request->file('logo');
+            $file_name = 'Clientlogo/'.uniqid() .'.'.  $file->getClientOriginalExtension();
+            $path = Storage::disk('s3')->put($file_name, file_get_contents($file), 'public');
             //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
             //$path = $request->file('logo')->storeAs('/Clientlogo', $file_name, 'public');
-
-            $getFileName = Storage::disk('s3')->put($this->folderName, $file,'public');
-            $data['logo'] = $getFileName;
+            //$getFileName = Storage::disk('s3')->put($this->folderName, $file,'public');
+            $data['logo'] = $file_name;
         }
 
         $client = Client::where('code', Auth::user()->code)->update($data);
