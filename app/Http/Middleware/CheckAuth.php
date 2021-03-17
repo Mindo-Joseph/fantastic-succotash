@@ -3,7 +3,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Routing\Route;
-use App\Models\{BlockedToken, User};
+use App\Models\{BlockedToken, User, ClientLanguage};
 use Illuminate\Support\Facades\Cache;
 use Request;
 use Config;
@@ -49,14 +49,15 @@ class CheckAuth
             //abort(404);
         }
 
-        $language_id = 1;
+        $languages = ClientLanguage::where('is_primary', 1)->first();
+
+        $language_id = $languages->language_id;
         $currency = 'USD';
 
-        if(isset($header['language'])){
-            $language_id = $header['language'][0];
+        if(isset($header['language'][0])){
+            $language_id = !empty($header['language'][0]) ? $header['language'][0] : $languages->language_id;
             $currency = $header['currency'][0];
         }
-
         $user->language = $language_id;
         $user->currency = $currency;
         

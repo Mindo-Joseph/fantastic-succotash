@@ -34,8 +34,9 @@
                     <p class="sub-header">
                         Choose between light and dark theme, for the platform.
                     </p>
-                    <div class="row mb-2">
+                    <div class="row">
                         <div class="col-sm-4">
+                            <label for="primary_color">Selcte Theme</label> <br/>
                             <div class="radio radio-blue form-check-inline">
                                 <input type="radio" id="light_theme" value="light" name="theme_admin" {{ (isset($preference) && $preference->theme_admin =="light")? "checked" : "" }}>
                                 <label for="light_theme"> Light theme </label>

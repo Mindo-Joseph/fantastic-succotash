@@ -25,7 +25,7 @@
                     <input type="hidden" name="variantId" value="{{$variant_id}}">
                     <div class="product-img-box">
                       <label class="file-input" for="uploadNew"><img src="{{asset('assets/images/default_image.png')}}" class="newImg"/> </label>
-                      <input type="file" proId="" name="file[]" id="uploadNew" class="vimageNew" multiple="" style="display: none;">
+                      <input type="file" accept="image/*" accept="image/*" proId="" name="file[]" id="uploadNew" class="vimageNew" multiple="" style="display: none;">
                     </div>
                 </form>
             </div>
@@ -67,7 +67,7 @@
             <div class="col-12 text-center">
                 <div class="upload-btn-wrapper">
                     <button class="btn">Upload a file</button>
-                    <input type="file" name="myfile" />
+                    <input type="file" accept="image/*" accept="image/*" name="myfile" />
                 </div>
             </div>
         </div> -->

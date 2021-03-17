@@ -4,11 +4,11 @@
 
         <div class="row mb-2">
             <div class="col-md-3">
-                <input type="file" data-plugins="dropify" name="icon" class="dropify" data-default-file="{{ !empty($category->icon) ? env('IMG_URL').'storage/app/public/'.$category->icon : '' }}" />
+                <input type="file" accept="image/*" data-plugins="dropify" name="icon" class="dropify" data-default-file="{{ !empty($category->icon) ? env('IMG_URL').'storage/app/public/'.$category->icon : '' }}" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category Icon</p>
             </div> <div class="col-md-2"></div>
             <div class="col-md-6"> <!--  Storage::disk('s3')->url($client->logo)  -->                 
-                <input type="file" data-plugins="dropify" name="image" class="dropify" data-default-file="{{ !empty($category->image) ? env('IMG_URL').'storage/app/public/'.$category->image : '' }}" />
+                <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{ !empty($category->image) ? env('IMG_URL').'storage/app/public/'.$category->image : '' }}" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category image</p>
             </div>
         </div>

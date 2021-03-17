@@ -16,6 +16,11 @@ use ConvertCurrency;
 class HomeController extends BaseController
 {
     private $field_status = 2;
+    private $curLang = 0;
+
+    public function __construct(){
+        
+    }
 
     /**
      * update driver availability status if 0 than 1 if 1 than 0

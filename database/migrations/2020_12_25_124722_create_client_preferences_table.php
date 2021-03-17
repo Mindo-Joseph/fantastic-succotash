@@ -66,6 +66,8 @@ class CreateClientPreferencesTable extends Migration
             $table->tinyInteger('need_delivery_service')->default(0)->comment('0 - no, 1 - yes');
             $table->tinyInteger('need_dispacher_ride')->default(0)->comment('0 - no, 1 - yes');
             $table->string('delivery_service_key', 100)->nullable();
+            $table->string('primary_color', 10)->nullable();
+            $table->string('secondary_color', 10)->nullable();
             $table->string('dispatcher_key', 100)->nullable();
             $table->timestamps();
         });

@@ -2,7 +2,7 @@
     <div class="col-md-12 card-box">
         <div class="row mb-2">
             <div class="col-md-12">              
-                <input type="file" data-plugins="dropify" name="image" class="dropify" data-default-file="" />
+                <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="" />
                 <p class="text-muted text-center mt-2 mb-0">Upload image</p>
             </div>
         </div>

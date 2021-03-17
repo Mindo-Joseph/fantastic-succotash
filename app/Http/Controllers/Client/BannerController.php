@@ -71,6 +71,11 @@ class BannerController extends BaseController
             'start_date_time' => 'required|before:end_date_time',
             'end_date_time' => 'required|after:start_date_time',
         );
+
+        if ($request->hasFile('image')) {    /* upload logo file */
+            $rules['image'] =  'image|mimes:jpeg,png,jpg,gif';
+        }
+
         $validation  = Validator::make($request->all(), $rules)->validate();
         $banner = new Banner();
         $savebanner = $this->save($request, $banner, 'false');
@@ -97,6 +102,9 @@ class BannerController extends BaseController
             'start_date_time' => 'required',
             'end_date_time' => 'required',
         );
+        if ($request->hasFile('image')) {    /* upload logo file */
+            $rules['image'] =  'image|mimes:jpeg,png,jpg,gif';
+        }
         $validation  = Validator::make($request->all(), $rules)->validate();
 
         $banner = Banner::find($id);

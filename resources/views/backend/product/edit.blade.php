@@ -417,7 +417,7 @@
                         @endif
                     </div>
                     <div class="dropzone dropzone-previews" id="my-awesome-dropzone"></div>
-                    <div class="imageDivHidden" ></div>
+                    <div class="imageDivHidden"></div>
                 </div>
 
                 <div class="card-box">
@@ -579,6 +579,7 @@
     jQuery(document).ready(function() {
 
         $("div#my-awesome-dropzone").dropzone({
+            acceptedFiles: ".jpeg,.jpg,.png",
             addRemoveLinks: true,
             url: "{{route('product.images')}}",
             params: {prodId: "{{$product->id}}"},
@@ -700,33 +701,42 @@
 
     $(document).on('change', '.vimageNew', function () {
 
-        var form = document.getElementById('modalImageForm');
-        var formData = new FormData(form);
+        var file = this.files[0];
+        var fileType = file['type'];
+        var validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+        if (!validImageTypes.includes(fileType)) {
+            alert('select only images');
+        }else{
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-            }
-        });
+            var form = document.getElementById('modalImageForm');
+            var formData = new FormData(form);
 
-        $.ajax({
-            type: "post",
-            headers: {
-                Accept: "application/json"
-            },
-            url: "{{route('product.images')}}",
-            data: formData,
-            contentType: false,
-            processData: false,
-            success:function(data){
-                $('#upload-media .lastDiv').before(data.htmlData);
-                
-            },
-            error: function(data){
-                console.log("error");
-                console.log(data);
-            }
-        });
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: "post",
+                headers: {
+                    Accept: "application/json"
+                },
+                url: "{{route('product.images')}}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success:function(data){
+                    $('#upload-media .lastDiv').before(data.htmlData);
+                    
+                },
+                error: function(data){
+                    console.log("error");
+                    console.log(data);
+                }
+            });
+
+        }
     });
 
     function readURL(input, forv) {
