@@ -311,11 +311,11 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label for="languages">Primary Currency</label>
                             <input type="text" class="form-control" value="{{ $preference->primary->currency->iso_code }} - {{ $preference->primary->currency->symbol }}" disabled="" style="cursor:not-allowed;">
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label for="languages">Additional Currency</label>
                             <select class="form-control select2-multiple" id="currency" name="currency_data[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
                                 @foreach($currencies as $currency)
