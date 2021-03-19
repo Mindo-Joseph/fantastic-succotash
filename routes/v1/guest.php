@@ -9,8 +9,11 @@ Route::group([
     ], function() {
         Route::post('homepage', 'Api\v1\HomeController@homepage');
         Route::post('header', 'Api\v1\HomeController@headerContent');
-        Route::post('product', 'Api\v1\ProductController@productById');
+        Route::get('product/{id}', 'Api\v1\ProductController@productById');
         Route::post('get-products', 'Api\v1\ProductController@productList');
+        Route::get('category/{id?}', 'Api\v1\ProductController@categoryData');
+        Route::get('vendor/{id?}', 'Api\v1\ProductController@productsByVendor');
+        
     });
 
 });

@@ -10,6 +10,10 @@ class Vendor extends Model
        return $this->hasMany('App\Models\ServiceArea')->select('vendor_id', 'geo_array', 'name'); 
     }
 
+    public function products(){
+       return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
+    }
+
     public function getLogoAttribute($value)
     {
       $values = array();

@@ -63,11 +63,21 @@ class ProductPageController extends FrontController
                         $q2->select('addon_options.id', 'addon_options.title', 'addon_options.price', 'apt.title', 'addon_options.addon_id');
                         $q2->where('apt.language_id', $langId);
                     },
-                    ])->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id')
+                    ])->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory')
                     ->where('sku', $sku)
                     ->firstOrFail();
 
-        //dd($product->toArray());
+        $clientCurrency = ClientCurrency::where('is_primary', '1')->first();
+        foreach ($products->variant as $key => $value) {
+            $products->variant{$key}->multiplier = $clientCurrency->doller_compare;
+        }
+
+        foreach ($products->addOn as $key => $value) {
+            foreach ($value->setoptions as $k => $v) {
+                $v->multiplier = $clientCurrency->doller_compare;
+            }
+        }
+        
 
         /*$upSellProducts = $this->subProducts($sku, Session::get('lang_id'), 'USD', 'ProductUpSell');
         $croSellProducts = $this->subProducts($sku, Session::get('lang_id'), 'USD', 'ProductCrossSell');
@@ -135,6 +145,21 @@ class ProductPageController extends FrontController
             }
         }
         return $products;
+    }
+
+    public function categoryData($cid)
+    {
+        $categories = Category::with('translation')->->where('id', $cid)->first();
+
+        print_r($categories->toArray());die;
+
+        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id', 'type')
+                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')
+                        ->where('categories.id', '>', '1')
+                        ->where('categories.status', '!=', $this->field_status)
+                        ->where('cts.language_id', Session::get('lang_id'))
+                        ->orderBy('categories.parent_id', 'asc')
+                        ->orderBy('categories.position', 'asc')->get();
     }
 
 }

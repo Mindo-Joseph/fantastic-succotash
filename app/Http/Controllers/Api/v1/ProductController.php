@@ -7,106 +7,74 @@ use App\Model\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell};
+use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor};
 use Validation;
 use DB;
 
 class ProductController extends BaseController
 {
+    private $field_status = 2;
     /**
      * Get Company ShortCode
      *
      */
-    public function productById(Request $request)
+    public function productById(Request $request, $pid)
     {
-        $pid = $request->product_id;
+        //$pid = $request->product_id;
         $langId = Auth::user()->language;
-        if(!$request->has('product_id')){
+        /*if(!$request->has('product_sku')){
             return response()->json(['error' => 'No record found.'], 404);
-        }
-        $products = Product::with(['vendor', 'pimage', 'variants.set', 'addOn', 'translation' => function($q) use($langId){
+        }*/
+        $products = Product::with(['variant' => function($v){
+                        $v->select('id', 'sku', 'product_id', 'title', 'quantity','price','barcode','tax_category_id');
+                    },
+                    'variant.vimage.pimage.image', 'related', 'upSell', 'crossSell', 'vendor', 'media.image', 'addOn' => function($q1) use($langId){
+                        $q1->join('addon_sets as set', 'set.id', 'product_addons.addon_id');
+                        $q1->join('addon_set_translations as ast', 'ast.addon_id', 'set.id');
+                        $q1->select('product_addons.product_id', 'set.min_select', 'set.max_select', 'ast.title', 'product_addons.addon_id');
+                        $q1->where('ast.language_id', $langId);
+                    },
+                    'variantSet' => function($z) use($langId){
+                        $z->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id');
+                        $z->join('variant_translations as vt','vt.variant_id','vr.id');
+                        $z->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title');
+                        $z->where('vt.language_id', $langId);
+                    },
+                    'variantSet.options' => function($zx) use($langId){
+                        $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
+                        $zx->select('variant_options.*', 'vt.title');
+                        $zx->where('vt.language_id', $langId);
+                    },
+                    'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $langId);
-                    }] )
-                    ->select('id', 'sku', 'url_slug', 'weight', 'weight_unit')
+                    },
+                    'addOn.setoptions' => function($q2) use($langId){
+                        $q2->join('addon_option_translations as apt', 'apt.addon_opt_id', 'addon_options.id');
+                        $q2->select('addon_options.id', 'addon_options.title', 'addon_options.price', 'apt.title', 'addon_options.addon_id');
+                        $q2->where('apt.language_id', $langId);
+                    },
+                    ])->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id')
+                   // ->where('sku', $request->product_sku)
                     ->where('id', $pid)
-                    ->get();
+                    ->first();
 
         if(!$products){
-            return response()->json(
-                ['error' => 'No record found.'], 404);
+            return response()->json(['error' => 'No record found.'], 404);
         }
 
-
-        foreach ($products as $key => $value) {
-
-            if(!empty($value->pimage) && count($value->pimage) > 0){
-                $imgs = array();
-                foreach ($value->pimage as $k => $v) {
-                    //$imgs['small'] = url('showImage/small/' . $v->path);
-                    //$imgs['medium'] = url('showImage/medium/' . $v->path);
-                    //$imgs['large'] = url('showImage/large/' . $v->path);
-
-                    $products{$key}->image = \Storage::disk('s3')->url($v->path);
-
-                    //unset($products{$key}->pimage{$k}->path);
-                }
-            }else{
-                $products{$key}->image = \Storage::disk('s3')->url('default/default_image.png');
-            }
-
-            unset($products{$key}->pimage);
-
-            if(!empty($value->variants) && count($value->variants) > 0){
-
-                foreach ($value->variants as $row => $varRow) {
-                    $prodPrice = '0.00';
-
-                    if(!empty($varRow->price) && $varRow->price > 0 && Auth::user()->currency != 'USD'){
-
-                        $prodPrice = $this->changeCurrency(Auth::user()->currency, $varRow->price);
-                        //$products{$key}->price = $amount;
-                        //$prodPrice = $value->baseprice[0]->price;
-                        $value->variants{$row}->price = $prodPrice;
-                    }
-                }
-            }
+        $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+        foreach ($products->variant as $key => $value) {
+            $products->variant{$key}->multiplier = $clientCurrency->doller_compare;
         }
 
+        foreach ($products->addOn as $key => $value) {
+            foreach ($value->setoptions as $k => $v) {
+                $v->multiplier = $clientCurrency->doller_compare;
+            }
+        }
+        
         $response['products'] = $products;
-
-        $response['variants'] = ProductVariantSet::join('variants as vs', 'vs.id', 'product_variant_sets.variant_type_id')
-                    ->join('variant_translations as trans', 'vs.id', 'trans.variant_id')
-                    ->select('product_variant_sets.product_id', 'trans.title', 'vs.id as varId', 'vs.type', 'vs.position')
-                    ->where('trans.language_id', $langId)
-                    ->where('product_variant_sets.product_id', $pid)
-                    ->groupBy('product_variant_sets.variant_type_id')
-                    ->orderBy('vs.position', 'asc')->get()->each(function ($variants, $key) use($langId, $pid){
-                           
-                    $options = ProductVariantSet::join('variant_options as opt', 'opt.id', 'product_variant_sets.variant_option_id')
-                            ->join('variant_option_translations as opTrans', 'opt.id', 'opTrans.variant_option_id')
-                            ->select('opTrans.title', 'opt.hexacode', 'opt.variant_id')
-                            ->where('opTrans.language_id', $langId)
-                            ->where('product_variant_sets.variant_type_id', $variants->varId)
-                            ->where('product_variant_sets.product_id', $pid)
-                            ->groupBy('product_variant_sets.variant_option_id')
-                            ->orderBy('opt.id', 'asc')->get();
-
-                            $variants->ashdhasd = $options->toArray();
-
-                    });
-
-        $response['product_addons'] = ProductAddon::with('addOn')
-                                ->where('product_id', $pid)->get();
-
-        $response['related_product'] = ProductRelated::with('detail.english', 'detail.variant')
-                                ->where('product_id', $pid)->paginate(10);
-
-        $response['up_sell_product'] = ProductUpSell::with('detail.english', 'detail.variant')
-                                ->where('product_id', $pid)->paginate(10);
-
-        $response['cross_sell_product'] = ProductCrossSell::with('detail.english', 'detail.variant')
-                                ->where('product_id', $pid)->paginate(10);
 
         return response()->json([
             'data' => $response,
@@ -155,11 +123,7 @@ class ProductController extends BaseController
                 $prodPrice = $value->baseprice[0]->price;
 
                 if(!empty($value->baseprice[0]->price) && $value->baseprice[0]->price > 0 && Auth::user()->currency != 'USD'){
-
-                    $prodPrice = $this->changeCurrency(Auth::user()->currency, $value->baseprice[0]->price);
-                    //$products{$key}->price = $amount;
-                    //$prodPrice = $value->baseprice[0]->price;
-
+                    $value->variants{$row}->multiplier = $clientCurrency->doller_compare;
                 }
             }
             $products{$key}->price = $prodPrice;
@@ -172,15 +136,123 @@ class ProductController extends BaseController
         ]);
     }
 
-    public function productByCategory(Request $request)
+    public function productsByVendor(Request $request, $vid = 0)
     {
-        $product = Product::with('variant.set', 'english', 'category.cat','variantSet', 'addOn', 'media')->where('id', $request->id)->firstOrFail();
+        if($vid == 0){
+            return response()->json(['error' => 'No record found.'], 404);
+        }
+        $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+        $langId = Auth::user()->language;
 
-        echo '<pre>'; print_r($product->toArray());die;
+        $vendor = Vendor::with(['products' => function($q){
+                    $q->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating');
+                    },
+                    'products.media.image', 'products.translation' => function($q) use($langId){
+                    $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                    },
+                    'products.variant' => function($q) use($langId){
+                        $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                        $q->groupBy('product_id');
+                    },
+                ])->select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery')
+                ->where('id', $vid)->first();
+
+        if(!$vendor){
+            return response()->json(['error' => 'No record found.'], 200);
+        }
+        if(!empty($vendor->products)){
+            foreach ($vendor->products as $key => $value) {
+                foreach ($value->variant as $k => $v) {
+                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                }
+            }
+        }
+
+        $response['vendor'] = $vendor;
 
         return response()->json([
-            'data' => $product,
+            'data' => $response,
         ]);
+    }
+
+    public function categoryData($cid = 0)
+    {
+        if($cid == 0){
+            return response()->json(['error' => 'No record found.'], 404);
+        }
+        $langId = Auth::user()->language;
+        $category = Category::with(['tags',
+                    'type'  => function($q){
+                        $q->select('id', 'title as redirect_to');
+                    },
+                    'childs.translation'  => function($q) use($langId){
+                        $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+                        ->where('category_translations.language_id', $langId);
+                    },
+                    'translation' => function($q) use($langId){
+                        $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+                        ->where('category_translations.language_id', $langId);
+                    }])
+                    ->select('id', 'icon', 'slug', 'type_id', 'can_add_products')
+                    ->where('id', $cid)->first();
+
+        if(!$category){
+            return response()->json(['error' => 'No record found.'], 200);
+        }
+        $response['category'] = $category;
+        $response['listData'] = $this->listData($langId, $cid, $category->type->redirect_to);
+
+        return response()->json([
+            'data' => $response,
+        ]);
+    }
+
+    public function listData($langId, $cid, $tpye = ''){
+        
+        if($tpye == 'vendor' || $tpye == 'Vendor'){
+
+            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
+
+            /*if($preferences->is_hyperlocal == 1){
+                $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
+                        $query->select('vendor_id')
+                        ->from(with(new ServiceArea)->getTable())
+                        ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
+                });
+            }*/
+            $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
+
+            return $vendorData;
+
+        }elseif($tpye == 'product' || $tpye == 'Product'){
+
+            $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+
+            $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
+                    ->with(['media.image', 'translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                        },
+                        'variant' => function($q) use($langId){
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->groupBy('product_id');
+                        },
+                    ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
+                    ->where('pc.category_id', $cid)->get();
+
+            if(!empty($products)){
+                foreach ($products as $key => $value) {
+                    foreach ($value->variant as $k => $v) {
+                        $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                    }
+                }
+            }
+            $listData = $products;
+            return $listData;
+
+        }else{
+            $arr = array();
+            return $arr;
+        }
     }
 
     /*public function getCode(Request $request)

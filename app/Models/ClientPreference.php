@@ -26,7 +26,7 @@ class ClientPreference extends Model
 
     public function currency()
     {
-      return $this->hasMany('App\Models\ClientCurrency','client_code','client_code')->select( 'client_code', 'currency_id');
+      return $this->hasMany('App\Models\ClientCurrency','client_code','client_code')->select( 'client_code', 'currency_id', 'doller_compare')->where('is_primary', 0);
     }
 
 

@@ -237,6 +237,8 @@ class VendorController extends BaseController
     public function vendorCatalog($domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
+
+        //$ve = Vendor::with('products')->where('id', $id)->first();
         $type = Type::all();
         $categories = Category::with('primary')->select('id', 'slug')
                         ->where('id', '>', '1')->where('status', '!=', '2')

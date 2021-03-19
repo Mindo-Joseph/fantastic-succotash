@@ -11,6 +11,7 @@
         var uri = "{{route('category.create')}}";
        
         var id = $(this).attr('dataid');
+        var is_vendor = $(this).attr('is_vendor');
         if(id > 0){
             uri = "<?php echo url('client/category'); ?>" + '/' + id + '/edit';
         }
@@ -18,7 +19,7 @@
         $.ajax({
             type: "get",
             url: uri,
-            data: '',
+            data: {'is_vendor' : is_vendor},
             dataType: 'json',
             success: function (data) {
                 if(id > 0){

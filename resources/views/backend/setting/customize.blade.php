@@ -325,47 +325,39 @@
                     </div>
                     <div class="row mb-2">
                         <div class="col-md-6">
-                            <label for="languages">Primary Currency</label>
-                            <input type="text" class="form-control" value="{{ $preference->primary->currency->iso_code }} - {{ $preference->primary->currency->symbol }}" disabled="" style="cursor:not-allowed;">
+                            <label for="primary_currency">Primary Currency</label>
+
+                            <select class="form-control" id="primary_currency" name="primary_currency">
+                                @foreach($currencies as $currency)
+                                    <option iso="{{$currency->iso_code.' '.$currency->symbol}}" {{ (isset($preference) && $preference->primary->currency->id == $currency->id) ? "selected" : ""}} value="{{$currency->id}}"> {{$currency->iso_code.' '.$currency->symbol}} </option>
+                                @endforeach
+                            </select>
                         </div>
+                        
                         <div class="col-md-6">
-                            <label for="languages">Additional Currency</label>
+                            <label for="currency">Additional Currency</label>
                             <select class="form-control select2-multiple" id="currency" name="currency_data[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
                                 @foreach($currencies as $currency)
-                                    @if($currency->id != 147)
-                                        <option value="{{$currency->id}}" {{ (isset($preference) && in_array($currency->id, $cli_currs))? "selected" : "" }}> {{$currency->iso_code}} {{$currency->symbol}} </option>
+                                    @if($preference->primary->currency->id != $currency->id)
+                                        <option value="{{$currency->id}}" iso="{{$currency->iso_code}}" {{ (isset($preference) && in_array($currency->id, $cli_currs))? "selected" : "" }}> {{$currency->iso_code}} {{!empty($currency->symbol) ? $currency->symbol : ''}} </option>
                                     @endif
                                 @endforeach
                             </select>
-                        
-                            @if(!empty($curtableData))
-                            <!--<table class="table table-centered table-nowrap table-striped" id="banner-datatable">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Currency</th>
-                                    <th>Multiplier</th>
-                                    <th>Active</th>
-                                    <th>#</th>
-                                    <th>Currency</th>
-                                    <th>Multiplier</th>
-                                    <th>Active</th>
-                                </tr>
-                            
-                            @foreach($curtableData as $currency)
-                                <tr>
-                                    @foreach($currency as $cur)
-                                    <td>{{$cur['id']}}</td>
-                                    <td>{{$cur['iso_code']}}</td>
-                                    <td><input type="number" name="multiplier" min="0" value="0" step=".01"></td>
-                                    <td></td>
-                                    @endforeach
-                                </tr>
-
-                            @endforeach
-                            </table> -->
-                            @endif
                         </div>
-                        
+                        <div class="col-6"> </div>
+                        <div class="col-6">
+                            <div class="row multiplierData">
+                               @if($preference->currency)
+                                 @foreach($preference->currency as $ac)
+                                    <div class="col-6" id="addCur-{{$ac->currency->id}}">
+                                        <label class="primaryCurText">1 {{$preference->primary->currency->iso_code}} {{!empty($preference->primary->currency->symbol) ? $preference->primary->currency->symbol : ''}} = </label> 
+                                        <input type="number" value="{{$ac->doller_compare}}" step=".01" name="multiply_by[]" min="0.01"> {{$ac->currency->iso_code}} {{!empty($ac->currency->symbol) ? $ac->currency->symbol : ''}}
+                                        <input type="hidden" name="cuid[]" class="curr_id" value="{{ $ac->currency->id }}">
+                                    </div> 
+                                 @endforeach
+                               @endif
+                            </div>
+                        </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-md-2">
@@ -416,6 +408,49 @@ function genrateKeyAndToken(){
     $('#personal_access_token_v1').val(key);
     $('#personal_access_token_v2').val(token);
 }
+
+var existCid = [];
+
+$('#primary_currency').change(function(){
+    var pri_curr = $('#primary_currency option:selected').text();
+    console.log(pri_curr);
+    $(document).find('.primaryCurText').html('1 '+pri_curr+'  = ');
+});
+
+$('#currency').change(function(){
+    var pri_curr = $('#primary_currency option:selected').text();
+
+    var cidText = $('#currency').select2('data');
+
+    var activeCur = [];
+
+    for (i = 0; i < cidText.length; i++) {
+        activeCur.push(cidText[i].id);
+    }
+
+    $(".curr_id").each(function() {
+        var cv = $(this).val();
+
+        if(existCid.indexOf(cv) === -1){
+            existCid.push(cv);
+        }
+    });
+
+    for (i = 0; i < existCid.length; i++) {
+        if(activeCur.indexOf(existCid[i]) === -1){
+            $('#addCur-'+existCid[i]).remove();
+        }
+    }
+
+    for (i = 0; i < cidText.length; i++) {
+
+        if(existCid.indexOf(cidText[i].id) === -1){
+            var text = '<div class="col-6" id="addCur-'+cidText[i].id+'"><label class="primaryCurText">1 '+pri_curr+'  = </label> <input type="number" name="multiply_by[]" min="0.01" value="0" step=".01">'+cidText[i].text+'<input type="hidden" name="cuid[]" class="curr_id" value="'+cidText[i].id+'"></div>';
+            $('.multiplierData').append(text);
+        }
+
+    }
+});
 
 </script>
 

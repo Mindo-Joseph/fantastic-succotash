@@ -27,7 +27,6 @@ class Category extends Model
  
     }
 
-
     public function tags()
     {
         return $this->hasMany(CategoryTag::class)->select('category_id', 'tag');
@@ -35,7 +34,7 @@ class Category extends Model
 
     public function childs()
     {
-        return $this->hasMany(Category::class, 'parent_id', 'id')->select('id', 'slug', 'parent_id');
+        return $this->hasMany(Category::class, 'parent_id', 'id')->select('id', 'slug', 'parent_id', 'icon');
     }
 
     public function type(){

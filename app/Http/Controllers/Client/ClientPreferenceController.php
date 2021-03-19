@@ -37,19 +37,20 @@ class ClientPreferenceController extends BaseController
      */
     public function customize(ClientPreference $clientPreference)
     {
+
         $webTemplates = Template::where('for', '1')->get();
         $appTemplates = Template::where('for', '2')->get();
         
         $curArray = array();
         $primaryCurrency = ClientCurrency::where('is_primary', 1)->first();
 
-        $currencies = Currency::where('id', '!=', $primaryCurrency->currency_id)->get();
+        $currencies = Currency::where('id', '>', '0')->get();
 
         $curtableData = array_chunk($currencies->toArray(), 2);
         //dd($currencies);
 
         $languages = Language::where('id', '>', '0')->get(); /*  cprimary - currency primary*/
-        $preference = ClientPreference::with('language', 'primarylang', 'domain', 'currency', 'primary.currency')->select('client_code', 'theme_admin', 'distance_unit', 'date_format', 'time_format', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'verify_email', 'verify_phone', 'web_template_id', 'app_template_id', 'primary_color', 'secondary_color')
+        $preference = ClientPreference::with('language', 'primarylang', 'domain', 'currency.currency', 'primary.currency')->select('client_code', 'theme_admin', 'distance_unit', 'date_format', 'time_format', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'verify_email', 'verify_phone', 'web_template_id', 'app_template_id', 'primary_color', 'secondary_color')
                         ->where('client_code', Auth::user()->code)->first();
 
         //dd($preference->toArray());
@@ -82,16 +83,17 @@ class ClientPreferenceController extends BaseController
         $cp = new ClientPreference();
         $preference = ClientPreference::where('client_code', Auth::user()->code)->first();
 
+        //dd($request->all());
+
         //$fillingData = $cp->filling();
         if(!$preference){
             $preference = new ClientPreference();
             $preference->client_code = $code;
         }
         
-        $keyShouldNot = array('Default_location_name', 'Default_latitude', 'Default_longitude', 'is_hyperlocal', '_token', 'social_login', 'send_to', 'languages', 'hyperlocals', 'currency_data', 'primary_language');
+        $keyShouldNot = array('Default_location_name', 'Default_latitude', 'Default_longitude', 'is_hyperlocal', '_token', 'social_login', 'send_to', 'languages', 'hyperlocals', 'currency_data', 'multiply_by', 'cuid', 'primary_language', 'primary_currency', 'currency_data');
 
         foreach ($request->all() as $key => $value) {
-
             if(!in_array($key, $keyShouldNot)){
                $preference->{$key} = $value; 
             }
@@ -132,28 +134,6 @@ class ClientPreferenceController extends BaseController
             
         }
 
-        if($request->has('currency_data')){
-
-            $exist = array();
-            $exist[] = 147;
-            foreach ($request->currency_data as $cur) {
-                
-                $currs = ClientCurrency::where('client_code', Auth::user()->code)->where('currency_id', $cur)->first();
-                if(!$currs){
-                    $currs = new ClientCurrency();
-                    $currs->client_code = Auth::user()->code;
-                    $currs->currency_id = $cur;
-                    $currs->save();
-                }
-                $exist[] = $currs->currency_id;
-            }
-
-            $delCount = ClientCurrency::where('client_code', Auth::user()->code)->whereNotIn('currency_id', $exist)->count();
-            if($delCount > 0){
-               $delete = ClientCurrency::where('client_code',Auth::user()->code)->whereNotIn('currency_id',$exist)->delete();
-            }
-        }
-
         if($request->has('languages')){
 
             $existLanguage = array();
@@ -172,7 +152,6 @@ class ClientPreferenceController extends BaseController
             }
 
             $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->whereNotIn('language_id', $existLanguage)->where('is_primary', 0)->update(['is_active' => 0]);
-            
         }
 
         if($request->has('primary_language')){
@@ -191,7 +170,45 @@ class ClientPreferenceController extends BaseController
 
                 ClientLanguage::insert($primary_lang);
             }
-            
+        }
+
+        if($request->has('primary_currency')){
+
+            $oldAdditional = ClientCurrency::where('currency_id', $request->primary_currency)
+                        ->where('is_primary', 0)->delete();
+
+            $primaryCur = ClientCurrency::where('is_primary', 1)->update(['currency_id' => $request->primary_currency, 'doller_compare' => 1]); 
+        }
+
+        if($request->has('primary_currency') && !$request->has('currency_data')){
+
+            $delete = ClientCurrency::where('client_code',Auth::user()->code)->where('is_primary', 0)->delete();
+        }
+
+        if($request->has('currency_data') && $request->has('multiply_by')){
+            $cur_multi = $exist_cid = array(); 
+            foreach ($request->currency_data as $key => $value) {
+
+                $exist_cid[] = $value;
+
+                $curr = ClientCurrency::where('currency_id', $value)->where('client_code',Auth::user()->code)->first();
+                $multiplier = array_key_exists($key, $request->multiply_by) ? $request->multiply_by{$key} : 1;
+                if(!$curr){
+
+                    $cur_multi[] = [
+                        'currency_id'=> $value,
+                        'client_code'=> Auth::user()->code,
+                        'is_primary'=> 0,
+                        'doller_compare'=> $multiplier
+                    ];
+                }else{
+                    ClientCurrency::where('currency_id', $value)->where('client_code',Auth::user()->code)
+                                ->update(['doller_compare' => $multiplier]);                    
+                }
+            }
+            ClientCurrency::insert($cur_multi);
+            $delete = ClientCurrency::where('client_code',Auth::user()->code)->where('is_primary', 0)
+                            ->whereNotIn('currency_id',$exist_cid)->delete();
         }
 
         $preference->save();

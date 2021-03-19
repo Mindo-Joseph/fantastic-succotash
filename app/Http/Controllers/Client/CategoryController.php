@@ -62,8 +62,9 @@ class CategoryController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $is_vendor = ($request->has('is_vendor')) ? $request->is_vendor : 0;
         $vendors = array();
         $type = Type::all();
         $category = new Category();
@@ -77,7 +78,7 @@ class CategoryController extends BaseController
                     ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
 
-        $returnHTML = view('backend.catalog.add-category')->with(['category' => $category,  'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type])->render();
+        $returnHTML = view('backend.catalog.add-category')->with(['category' => $category, 'is_vendor' => $is_vendor, 'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -94,8 +95,6 @@ class CategoryController extends BaseController
             'name.0' => 'required|string|max:60',
         );
         $validation  = Validator::make($request->all(), $rules)->validate();
-
-        //dd($request->all());
 
         $cate = new Category();
         $save = $this->save($request, $cate, 'false');
@@ -134,8 +133,9 @@ class CategoryController extends BaseController
      * @param  \App\Category_translation  $category_translation
      * @return \Illuminate\Http\Response
      */
-    public function edit($domain = '', $id)
+    public function edit(Request $request, $domain = '', $id)
     {
+        $is_vendor = ($request->has('is_vendor')) ? $request->is_vendor : 0;
         $vendors = array();
         $type = Type::all();
         $tagList = array();
@@ -166,7 +166,7 @@ class CategoryController extends BaseController
         /*$parCategory = Category::join('category_translations', 'categories.id', 'category_translations.category_id')
                         ->select('categories.id', 'categories.slug', 'category_translations.name')->where('categories.id', '!=', $id)->groupBy('category_translations.category_id')->get();*/
         
-        $returnHTML = view('backend.catalog.edit-category')->with(['typeArray' => $type, 'category' => $category,  'languages' => $langs, 'parCategory' => $parCategory, 'langIds' => $langIds, 'existlangs' => $existlangs, 'tagList' => $tagList])->render();
+        $returnHTML = view('backend.catalog.edit-category')->with(['typeArray' => $type, 'category' => $category,  'languages' => $langs, 'is_vendor' => $is_vendor, 'parCategory' => $parCategory, 'langIds' => $langIds, 'existlangs' => $existlangs, 'tagList' => $tagList])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML, 'tagList' => $tagList));
     }
 

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClientCurrency extends Model
 {
-	protected $fillable = ['client_code', 'currency_id'];
+	protected $fillable = ['client_code', 'currency_id', 'is_primary', 'doller_compare'];
 
     public function currency()
     {

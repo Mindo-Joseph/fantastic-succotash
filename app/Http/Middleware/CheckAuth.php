@@ -3,7 +3,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Routing\Route;
-use App\Models\{BlockedToken, User, ClientLanguage};
+use App\Models\{BlockedToken, User, ClientLanguage, ClientCurrency};
 use Illuminate\Support\Facades\Cache;
 use Request;
 use Config;
@@ -50,16 +50,27 @@ class CheckAuth
         }
 
         $languages = ClientLanguage::where('is_primary', 1)->first();
+        $primary_cur = ClientCurrency::where('is_primary', 1)->first();
 
         $language_id = $languages->language_id;
-        $currency = 'USD';
+        $currency_id = $primary_cur->currency_id;
 
-        if(isset($header['language'][0])){
-            $language_id = !empty($header['language'][0]) ? $header['language'][0] : $languages->language_id;
-            $currency = $header['currency'][0];
+        if(isset($header['language'][0]) && !empty($header['language'][0])){
+            $checkLang = ClientLanguage::where('language_id', $header['language'][0])->first();
+            if($checkLang){
+                $language_id = $checkLang->language_id;
+            }
         }
+
+        if(isset($header['currency'][0]) && !empty($header['currency'][0])){
+            $checkCur = ClientCurrency::where('currency_id', $header['currency'][0])->first();
+            if($checkCur){
+                $currency_id = $checkCur->currency_id;
+            }
+        }
+
         $user->language = $language_id;
-        $user->currency = $currency;
+        $user->currency = $currency_id;
         
         Auth::login($user);
 

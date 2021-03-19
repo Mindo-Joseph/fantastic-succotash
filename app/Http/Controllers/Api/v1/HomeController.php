@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, Product, Country, Currency, ServiceArea};
+use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency};
 use Validation;
 use DB;
 use Illuminate\Support\Facades\Storage;
@@ -34,9 +34,9 @@ class HomeController extends BaseController
 
         $homeData['languages'] = ClientLanguage::with('language')->select('language_id')->get();
 
-        $homeData['banners'] = Banner::select("id","name","description", "image", "link")->orderBy('sorting', 'asc')->get();
+        $homeData['banners'] = Banner::select("id", "name", "description", "image", "link")->orderBy('sorting', 'asc')->get();
 
-        $homeData['currencies'] = Currency::select('id', 'name', 'symbol', 'iso_code')->get();
+        $homeData['currencies'] = ClientCurrency::with('currency')->select('currency_id', 'is_primary', 'doller_compare')->orderBy('is_primary', 'desc')->get();
         return response()->json([
             'data' => $homeData,
         ]);
@@ -73,8 +73,9 @@ class HomeController extends BaseController
         $langId = Auth::user()->language;
 
         $homeData = array();
-        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id', 'type')
-                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')
+        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
+                        ->leftjoin('types', 'types.id', 'categories.type_id')
+                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name', 'types.title as redirect_to')
                         ->where('categories.id', '>', '1')
                         ->where('categories.status', '!=', $this->field_status)
                         ->where('cts.language_id', Auth::user()->language)
@@ -83,6 +84,7 @@ class HomeController extends BaseController
         if($categories){
             $categories = $this->buildTree($categories->toArray());
         }
+        //print_r($categories->toArray());
         $homeData['reqData'] = $request->all();
         $homeData['categories'] = $categories;
         $homeData['vendors'] = $vendorData;
@@ -115,6 +117,7 @@ class HomeController extends BaseController
 
     public function productList($venderIds, $currency = 'USD', $where = '')
     {
+        $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
         $products = Product::with('pimage', 'baseprice')
                         ->join('product_translations as trans', 'trans.product_id', 'products.id')
                         ->select('trans.title', 'trans.body_html', 'products.sku', 'products.id')
@@ -134,13 +137,7 @@ class HomeController extends BaseController
                 if(!empty($value->pimage) && count($value->pimage) > 0){
                     $imgs = array();
                     foreach ($value->pimage as $k => $v) {
-                        //$imgs['small'] = url('showImage/small/' . $v->path);
-                        //$imgs['medium'] = url('showImage/medium/' . $v->path);
-                        //$imgs['large'] = url('showImage/large/' . $v->path);
-
                         $products{$key}->image = \Storage::disk('s3')->url($v->path);
-
-                        //unset($products{$key}->pimage{$k}->path);
                     }
                 }else{
                     $products{$key}->image = \Storage::disk('s3')->url('default/default_image.png');
@@ -152,18 +149,10 @@ class HomeController extends BaseController
 
                 if(!empty($value->baseprice) && count($value->baseprice) > 0){
 
-                    //echo '<pre>';print_r($value->baseprice->toArray());die;
                     $prodPrice = $value->baseprice[0]->price;
-
-                    if(!empty($value->baseprice[0]->price) && $value->baseprice[0]->price > 0 && $currency != 'USD'){
-
-                        $prodPrice = $this->changeCurrency($currency, $value->baseprice[0]->price);
-                        //$products{$key}->price = $amount;
-                        //$prodPrice = $value->baseprice[0]->price;
-
-                    }
                 }
                 $products{$key}->price = $prodPrice;
+                $products{$key}->multiplier = $clientCurrency->doller_compare;
                 unset($products{$key}->baseprice);
 
             }

@@ -80,7 +80,7 @@
                     </div>
                     <div class="col-sm-4 text-right">
                         <button class="btn btn-blue waves-effect waves-light text-sm-right openCategoryModal"
-                         dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
+                         dataid="0" is_vendor="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                         </button>
                     </div>
                 </div>

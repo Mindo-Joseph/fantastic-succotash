@@ -44,7 +44,10 @@
                     {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control type-select" for="add" id="typeSelectBox" name="type_id">
                         @foreach($typeArray as $type)
-                        <option value="{{$type->id}}">{{$type->title}}</option>
+                        @if($is_vendor == 1 && ($type->title === 'vendor' || $type->title === 'Vendor'))
+                        @else
+                            <option value="{{$type->id}}">{{$type->title}}</option>
+                        @endif
                         @endforeach
                     </select>
                     <span class="invalid-feedback" role="alert">
