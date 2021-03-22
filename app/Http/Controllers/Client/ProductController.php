@@ -420,8 +420,12 @@ class ProductController extends BaseController
     {
         $product = Product::where('id', $id)->firstOrFail();
 
+        if($product->is_live == 0){
+            $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
+        }
+
         $yes = '2'; //'url_slug',
-        foreach ($request->only('country_origin_id', 'weight', 'weight_unit') as $key => $value) {
+        foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live') as $key => $value) {
             $product->{$key} = $value;
         }
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
