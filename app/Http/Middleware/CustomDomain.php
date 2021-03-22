@@ -72,7 +72,7 @@ class CustomDomain
 
           $primeLang = ClientLanguage::select('language_id', 'is_primary')->where('is_primary', 1)->first();
 
-          $clientPreference = ClientPreference::select('theme_admin', 'distance_unit', 'currency_id', 'date_format', 'time_format', 'fb_login', 'fb_client_id', 'fb_client_secret', 'fb_client_url', 'twitter_login', 'twitter_client_id', 'twitter_client_secret', 'twitter_client_url', 'google_login', 'google_client_id', 'google_client_secret', 'google_client_url', 'apple_login', 'apple_client_id', 'apple_client_secret', 'apple_client_url', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'map_provider', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'web_template_id', 'is_hyperlocal', 'need_delivery_service', 'need_dispacher_ride', 'delivery_service_key', 'dispatcher_key')
+          $clientPreference = ClientPreference::select('theme_admin', 'distance_unit', 'currency_id', 'date_format', 'time_format', 'fb_login', 'fb_client_id', 'fb_client_secret', 'fb_client_url', 'twitter_login', 'twitter_client_id', 'twitter_client_secret', 'twitter_client_url', 'google_login', 'google_client_id', 'google_client_secret', 'google_client_url', 'apple_login', 'apple_client_id', 'apple_client_secret', 'apple_client_url', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'map_provider', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'web_template_id', 'is_hyperlocal', 'need_delivery_service', 'need_dispacher_ride', 'delivery_service_key', 'dispatcher_key', 'primary_color', 'secondary_color')
                 ->where('client_code', $redisData->code)->first();
 
           Session::put('client_config', $redisData);
@@ -83,7 +83,7 @@ class CustomDomain
           $preferData = array();
 
           if(isset($clientPreference)){
-            $preferData = $clientPreference->toArray();
+            $preferData = $clientPreference;
           }
 
           Session::put('preferences', $preferData);

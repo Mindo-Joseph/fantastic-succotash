@@ -68,6 +68,4 @@ Route::domain('{subdomain}.{domain}.com')->middleware(['subdomain'])->group(func
 	Route::post('admin/login/client', 'Auth\LoginController@clientLogin')->name('client.login');
 	Route::get('admin/wrong/url','Auth\LoginController@wrongurl')->name('wrong.client');*/
 
-	
-
 //});

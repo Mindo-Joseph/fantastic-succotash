@@ -23,7 +23,7 @@
             @foreach($banners as $banner)
             <div>
                 <div class="home  text-center">
-                    <img src="{{env('IMG_PROXY2') . '600/450' . $banner->image['image_path']}}" class="bg-img blur-up lazyload" alt="">
+                    <img src="{{$banner->image['image_fit'] . '600/400' . $banner->image['image_path']}}" class="bg-img blur-up lazyload" alt="">
                     <!--<div class="container">
                         <div class="row">
                             <div class="col">
@@ -51,7 +51,7 @@
                     @foreach($categories as $cate)
                     <div class="category-block">
                         <a href="#">
-                            <div class="category-image"><img src="{{$cate['icon']['proxy_url'].'40/30'.$cate['icon']['image_path']}}" alt=""></div>
+                            <div class="category-image"><img src="{{$cate['icon']['image_fit'].'40/30'.$cate['icon']['image_path']}}" alt=""></div>
                         </a>
                         <div class="category-details">
                             <a href="#">

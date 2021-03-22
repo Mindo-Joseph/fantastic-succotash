@@ -69,7 +69,7 @@ class UserhomeController extends FrontController
         $newProdu = $this->productList($vends, Session::get('lang_id'), 'USD', 'is_new');
         
         $onSale = $this->productList($vends, Session::get('lang_id'), 'USD');
-        //dd($vendorData->toArray());
+        //dd($banners->toArray());
         $featuredPro = array_chunk($featured->toArray(), ceil(count($featured) / 2));
         $newProducts = array_chunk($newProdu->toArray(), ceil(count($newProdu) / 2));
         $onSaleProds = array_chunk($onSale->toArray(), ceil(count($onSale) / 2));

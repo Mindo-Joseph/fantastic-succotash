@@ -1,6 +1,6 @@
 <?php
 //phpinfo();
-//echo 'lol';
+//echo 'lol';die;
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
