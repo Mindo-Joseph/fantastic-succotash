@@ -56,7 +56,11 @@ class UserhomeController extends FrontController
         Session::put('navCategories', $navCategories);
 
 
-        $brands = Brand::select('id', 'title', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
+        $brands = Brand::join('brand_translations as bt', 'bt.brand_id', 'brands.id')
+                    ->select('brands.id', 'brands.image', 'bt.title', 'bt.language_id')
+                    ->where('brands.status', '!=', $this->field_status)
+                    ->where('bt.language_id', $langId)
+                    ->orderBy('position', 'asc')->get();
 
         $featured = $this->productList($vends, $langId, 'USD', 'is_featured');
         $newProdu = $this->productList($vends, $langId, 'USD', 'is_new');

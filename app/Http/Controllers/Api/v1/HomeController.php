@@ -74,7 +74,7 @@ class HomeController extends BaseController
         $langId = Auth::user()->language;
 
         $homeData = array();
-        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
+        /*$categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
                         ->leftjoin('types', 'types.id', 'categories.type_id')
                         ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name', 'types.title as redirect_to')
                         ->where('categories.id', '>', '1')
@@ -84,17 +84,23 @@ class HomeController extends BaseController
                         ->orderBy('categories.position', 'asc')->get();
         if($categories){
             $categories = $this->buildTree($categories->toArray());
-        }
+        }*/
+
+        $categories = $this->categoryNav($langId);
         //print_r($categories->toArray());
         $homeData['reqData'] = $request->all();
         $homeData['categories'] = $categories;
         $homeData['vendors'] = $vendorData;
 
-        $homeData['brands'] = Brand::select('id', 'title', 'image')
-                        ->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
+        $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
+                        $q->select('brand_id', 'title')->where('language_id', $langId);
+                        }])
+                    ->select('id', 'image')
+                    ->where('status', '!=', $this->field_status)
+                    ->orderBy('position', 'asc')->get();
 
-        $homeData['featuredProducts'] = $this->productList($vends, Auth::user()->currency, 'is_featured');
-        $homeData['newProducts'] = $this->productList($vends, Auth::user()->currency, 'is_new');
+        $homeData['featuredProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_featured');
+        $homeData['newProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_new');
         
         $homeData['onSale'] = $this->productList($vends, Auth::user()->currency);
 
@@ -116,15 +122,22 @@ class HomeController extends BaseController
         return 0;
     }*/
 
-    public function productList($venderIds, $currency = 'USD', $where = '')
+    public function productList($venderIds, $langId = 1, $currency = 147, $where = '')
     {
-        $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
-        $products = Product::with('pimage', 'baseprice')
-                        ->join('product_translations as trans', 'trans.product_id', 'products.id')
-                        ->select('trans.title', 'trans.body_html', 'products.sku', 'products.id')
-                        ->where('trans.language_id', Auth::user()->language);
+        $clientCurrency = ClientCurrency::where('currency_id', $currency)->first();
+        $products = Product::with(['media' => function($q){
+                            $q->groupBy('product_id');
+                        }, 'media.image',
+                        'translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                        },
+                        'variant' => function($q) use($langId){
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->groupBy('product_id');
+                        },
+                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating');
         if($where !== ''){
-            $products = $products->where('products.'.$where, 1);
+            $products = $products->where($where, 1);
         }
         if(is_array($venderIds) && count($venderIds) > 0){
             $products = $products->whereIn('vendor_id', $venderIds);
@@ -132,30 +145,10 @@ class HomeController extends BaseController
         $products = $products->get();
 
         if(!empty($products)){
-
             foreach ($products as $key => $value) {
-
-                if(!empty($value->pimage) && count($value->pimage) > 0){
-                    $imgs = array();
-                    foreach ($value->pimage as $k => $v) {
-                        $products{$key}->image = \Storage::disk('s3')->url($v->path);
-                    }
-                }else{
-                    $products{$key}->image = \Storage::disk('s3')->url('default/default_image.png');
+                foreach ($value->variant as $k => $v) {
+                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
                 }
-
-                unset($products{$key}->pimage);
-
-                $prodPrice = '0.00';
-
-                if(!empty($value->baseprice) && count($value->baseprice) > 0){
-
-                    $prodPrice = $value->baseprice[0]->price;
-                }
-                $products{$key}->price = $prodPrice;
-                $products{$key}->multiplier = $clientCurrency->doller_compare;
-                unset($products{$key}->baseprice);
-
             }
         }
         return $products;

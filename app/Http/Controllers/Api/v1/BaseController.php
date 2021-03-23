@@ -4,20 +4,21 @@ namespace App\Http\Controllers\Api\v1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Twilio\Rest\Client;
+use Twilio\Rest\Client as TwilioClient;
+use App\Models\{Client, Category};
 use Mail;
 use ConvertCurrency;
 
 class BaseController extends Controller
 {
-
+    private $field_status = 2;
 	protected function sendSms($recipients, $message)
 	{
 		//echo $recipients;die;
 	    $sid = getenv("TWILIO_SID");
 	    $token = getenv("TWILIO_AUTH_TOKEN");
 	    $twilio_number = getenv("TWILIO_NUMBER");
-	    $client = new Client($account_sid, $auth_token);
+	    $client = new TwilioClient($account_sid, $auth_token);
 	    $client->messages->create('+91'.$recipients, 
 	            ['from' => $twilio_number, 'body' => $message] );
 	}
@@ -36,6 +37,20 @@ class BaseController extends Controller
         }
 
         return $branch;
+    }
+
+    public function categoryNav($lang_id) {
+        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id', 'type')
+                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')
+                        ->where('categories.id', '>', '1')
+                        ->where('categories.status', '!=', $this->field_status)
+                        ->where('cts.language_id', $lang_id)
+                        ->orderBy('categories.parent_id', 'asc')
+                        ->orderBy('categories.position', 'asc')->get();
+        if($categories){
+            $categories = $this->buildTree($categories->toArray());
+        }
+        return $categories;
     }
 
     protected function in_polygon($points_polygon, $vertices_x, $vertices_y, $longitude_x, $latitude_y)
