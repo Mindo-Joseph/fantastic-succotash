@@ -48,13 +48,13 @@
         <div class="row">
             <div class="col">
                 <div class="slide-6 no-arrow">
-                    @foreach($categories as $cate)
+                    @foreach($navCategories as $cate)
                     <div class="category-block">
-                        <a href="#">
+                        <a href="{{route('categoryDetail', $cate['id'])}}">
                             <div class="category-image"><img src="{{$cate['icon']['image_fit'].'40/30'.$cate['icon']['image_path']}}" alt=""></div>
                         </a>
                         <div class="category-details">
-                            <a href="#">
+                            <a href="{{route('categoryDetail', $cate['id'])}}">
                                 <h5>{{$cate['name']}}</h5>
                             </a>
                         </div>
@@ -128,20 +128,25 @@
             <div class="row multiple-slider">
                 <div class="col-lg-3 col-sm-6">
                     <div class="theme-card">
-                        <h5 class="title-border">new products</h5>
+                        <h5 class="title-border">New Products</h5>
                         <div class="offer-slider slide-1">
-
                             @foreach($newProducts as $newProds)
                                 <div>
                                 @foreach($newProds as $new)
                                     <div class="media">
-                                        <a href="#"><img class="img-fluid blur-up lazyload" src="{{$new['image']}}" alt=""></a>
+                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$new['media'][0]['image']['path']['image_fit'] .'100/100'. $new['media'][0]['image']['path']['image_path']}}" alt="" ></a>
                                         <div class="media-body align-self-center">
-                                            <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-                                            <a href="product-page(no-sidebar).html">
-                                                <h6>{{$new['product_name']}}</h6>
+                                            <div class="rating">
+                                                @for($i = 1; $i < 6; $i++)
+                                                    <i class="fa fa-star"></i>
+                                                @endfor
+                                            </div>
+                                            <a href="{{route('productDetail', $new['sku'])}}">
+                                                <h6>{{ !empty($new['translation']) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                             </a>
-                                            <h4>${{$new['price']}}<del>$600.00</del></h4>
+                                            <h4>
+                                                <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
+                                                {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
                                         </div>
                                     </div>
                                 @endforeach
@@ -158,13 +163,19 @@
                                 <div>
                                 @foreach($featured as $new)
                                     <div class="media">
-                                        <a href="#"><img class="img-fluid blur-up lazyload" src="{{$new['image']}}" alt=""></a>
+                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$new['media'][0]['image']['path']['image_fit'] .'100/100'. $new['media'][0]['image']['path']['image_path']}}" alt="" ></a>
                                         <div class="media-body align-self-center">
-                                            <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-                                            <a href="product-page(no-sidebar).html">
-                                                <h6>{{$new['product_name']}}</h6>
+                                            <div class="rating">
+                                                @for($i = 1; $i < 6; $i++)
+                                                    <i class="fa fa-star"></i>
+                                                @endfor
+                                            </div>
+                                            <a href="{{route('productDetail', $new['sku'])}}">
+                                                <h6>{{ !empty($new['translation']) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                             </a>
-                                            <h4>${{$new['price']}}<del>$600.00</del></h4>
+                                            <h4>
+                                                <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
+                                                {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
                                         </div>
                                     </div>
                                 @endforeach
@@ -181,13 +192,19 @@
                                 <div>
                                 @foreach($newProds as $new)
                                     <div class="media">
-                                        <a href="#"><img class="img-fluid blur-up lazyload" src="{{$new['image']}}" alt=""></a>
+                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$new['media'][0]['image']['path']['image_fit'] .'100/100'. $new['media'][0]['image']['path']['image_path']}}" alt="" ></a>
                                         <div class="media-body align-self-center">
-                                            <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-                                            <a href="product-page(no-sidebar).html">
-                                                <h6>{{$new['product_name']}}</h6>
+                                            <div class="rating">
+                                                @for($i = 1; $i < 6; $i++)
+                                                    <i class="fa fa-star"></i>
+                                                @endfor
+                                            </div>
+                                            <a href="{{route('productDetail', $new['sku'])}}">
+                                                <h6>{{ !empty($new['translation']) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                             </a>
-                                            <h4>${{$new['price']}}<del>$600.00</del></h4>
+                                            <h4>
+                                                <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
+                                                {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
                                         </div>
                                     </div>
                                 @endforeach
@@ -204,13 +221,19 @@
                                 <div>
                                 @foreach($SaleProds as $new)
                                     <div class="media">
-                                        <a href="#"><img class="img-fluid blur-up lazyload" src="{{$new['image']}}" alt=""></a>
+                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$new['media'][0]['image']['path']['image_fit'] .'100/100'. $new['media'][0]['image']['path']['image_path']}}" alt="" ></a>
                                         <div class="media-body align-self-center">
-                                            <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-                                            <a href="product-page(no-sidebar).html">
-                                                <h6>{{$new['product_name']}}</h6>
+                                            <div class="rating">
+                                                @for($i = 1; $i < 6; $i++)
+                                                    <i class="fa fa-star"></i>
+                                                @endfor
+                                            </div>
+                                            <a href="{{route('productDetail', $new['sku'])}}">
+                                                <h6>{{ !empty($new['translation']) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                             </a>
-                                            <h4>${{$new['price']}}<del>$600.00</del></h4>
+                                            <h4>
+                                                <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
+                                                {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
                                         </div>
                                     </div>
                                 @endforeach

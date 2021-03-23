@@ -9,7 +9,22 @@ use Session;
 
 class FrontController extends Controller
 {
-   public function buildTree($elements, $parentId = 1) {
+    private $field_status = 2;
+    public function categoryNav($lang_id) {
+        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id', 'type')
+                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')
+                        ->where('categories.id', '>', '1')
+                        ->where('categories.status', '!=', $this->field_status)
+                        ->where('cts.language_id', $lang_id)
+                        ->orderBy('categories.parent_id', 'asc')
+                        ->orderBy('categories.position', 'asc')->get();
+        if($categories){
+            $categories = $this->buildTree($categories->toArray());
+        }
+        return $categories;
+    }
+
+    public function buildTree($elements, $parentId = 1) {
         $branch = array();
 
         foreach ($elements as $element) {

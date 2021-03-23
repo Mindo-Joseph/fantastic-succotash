@@ -74,7 +74,7 @@ class Product extends Model
     }
 
     public function media(){
-        return $this->hasMany('App\Models\ProductImage')->select('product_images.product_id', 'product_images.media_id', 'product_images.is_default');
+        return $this->hasMany('App\Models\ProductImage')->select('product_id', 'media_id', 'is_default');
     }
 
     public function pimage(){

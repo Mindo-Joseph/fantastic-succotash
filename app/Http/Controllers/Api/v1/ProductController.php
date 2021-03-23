@@ -211,6 +211,17 @@ class ProductController extends BaseController
         
         if($tpye == 'vendor' || $tpye == 'Vendor'){
 
+            $vendorIds = array();
+
+            $vendorWithCategory = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
+                        ->select('products.id', 'products.vendor_id')
+                        ->where('pc.category_id', $cid)->groupBy('products.vendor_id')->get();
+            if($vendorWithCategory){
+                foreach ($vendorWithCategory as $key => $value) {
+                    $vendorIds[] = $value->vendor_id;
+                }
+            }
+
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
 
             /*if($preferences->is_hyperlocal == 1){
@@ -220,7 +231,8 @@ class ProductController extends BaseController
                         ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
                 });
             }*/
-            $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
+            $vendorData = $vendorData->where('status', '!=', $this->field_status)
+                            ->whereIn('id', $vendorIds)->get();
 
             return $vendorData;
 

@@ -32,7 +32,8 @@ class HomeController extends BaseController
 
         $homeData['profile'] = Client::with('preferences')->select('company_name', 'code', 'logo', 'company_address', 'phone_number', 'email')->first();
 
-        $homeData['languages'] = ClientLanguage::with('language')->select('language_id')->get();
+        $homeData['languages'] = ClientLanguage::with('language')->select('language_id', 'is_primary')
+                                ->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 
         $homeData['banners'] = Banner::select("id", "name", "description", "image", "link")->orderBy('sorting', 'asc')->get();
 

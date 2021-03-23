@@ -45,7 +45,6 @@
                         </div>
                     </div>
 
-
                     <div class="table-responsive">
                         <form name="saveOrder" id="saveOrder"> @csrf </form>
                         <table class="table table-centered table-nowrap table-striped" id="banner-datatable">

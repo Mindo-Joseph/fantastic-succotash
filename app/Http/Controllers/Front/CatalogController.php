@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor};
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency};
 use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
@@ -13,30 +13,24 @@ use Illuminate\Support\Facades\Hash;
 class CatalogController extends FrontController
 {
     private $field_status = 2;
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($domain = '', $sku)
+    public function index(Request $request, $domain = '', $sku)
     {
+        foreach ($request->only('') as $key => $value) {
+            # code...
+        }
         /*$product = Product::with(['vendor', 'primary', 'addOn', 'media.image', 'translation' => function($qq) use(Session::get('lang_id'))])
                 ->select('id', 'sku', 'title', 'url_slug', 'sell_when_out_of_stock', 'Requires_last_mile', 'vendor_id', 'weight_unit', 'weight', 'has_inventory', 'has_variant', 'requires_shipping', 'averageRating')
                 ->where('sku', $sku)
                 ->firstOrFail();*/
-
-        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id', 'type')
-                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')
-                        ->where('categories.id', '>', '1')
-                        ->where('categories.status', '!=', $this->field_status)
-                        ->where('cts.language_id', Session::get('lang_id'))
-                        ->orderBy('categories.parent_id', 'asc')
-                        ->orderBy('categories.position', 'asc')->get();
-        if($categories){
-            $categories = $this->buildTree($categories->toArray());
-        }
-
-        $langId = Session::get('lang_id');
+        $langId = Session::get('customerLanguage');
+        $curId = Session::get('customerCurrency');
+        $navCategories = $this->categoryNav($langId);
 
         $product = Product::with(['variant',  'variant.vimage.pimage.image', 'related', 'upSell', 'crossSell', 'vendor', 'media.image', 'addOn' => function($q1) use($langId){
                         $q1->join('addon_sets as set', 'set.id', 'product_addons.addon_id');
@@ -69,96 +63,22 @@ class CatalogController extends FrontController
                     ->firstOrFail();
 
         $clientCurrency = ClientCurrency::where('is_primary', '1')->first();
-        foreach ($products->variant as $key => $value) {
-            $products->variant{$key}->multiplier = $clientCurrency->doller_compare;
+        foreach ($product->variant as $key => $value) {
+            $product->variant{$key}->multiplier = $clientCurrency->doller_compare;
         }
 
-        foreach ($products->addOn as $key => $value) {
+        foreach ($product->addOn as $key => $value) {
             foreach ($value->setoptions as $k => $v) {
                 $v->multiplier = $clientCurrency->doller_compare;
             }
         }
-        
-
-        /*$upSellProducts = $this->subProducts($sku, Session::get('lang_id'), 'USD', 'ProductUpSell');
-        $croSellProducts = $this->subProducts($sku, Session::get('lang_id'), 'USD', 'ProductCrossSell');
-        $relatedProducts = $this->subProducts($sku, Session::get('lang_id'), 'USD', 'ProductRelated');*/
-
-        /*return view('forntend/product')->with(['product' => $product, 'banners' => $banners, 'categories' => $categories, 'brands' =>$brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds]);*/
-
-        return view('forntend/product')->with(['product' => $product, 'categories' => $categories]);
-    }
-
-    public function productList($venderIds, $langID, $currency = 'USD', $where = '')
-    {
-        $products = Product::with('pimage', 'baseprice', 'primary')
-                        //->leftjoin('product_translations as trans', 'trans.product_id', 'products.id')
-                        ->select('id', 'sku');
-                       // ->where('trans.language_id', $langID);
-        if($where !== ''){
-            $products = $products->where('products.'.$where, 1);
-        }
-        if(is_array($venderIds) && count($venderIds) > 0){
-            $products = $products->whereIn('vendor_id', $venderIds);
-        }
-        $products = $products->get();
-
-        $folderPath = env('IMG_URL1').'300/300'.env('IMG_URL2');
-
-        if(!empty($products)){
-
-            foreach ($products as $key => $value) {
-                if(!empty($value->primary)){
-                    $products{$key}->product_name = $value->primary->title;
-                }else{
-                    $products{$key}->product_name = $value->sku;
-                }
-
-                if(!empty($value->pimage) && count($value->pimage) > 0){
-                    $imgs = array();
-                    foreach ($value->pimage as $k => $v) {
-                        $products{$key}->image = $folderPath.'/'.\Storage::disk('s3')->url($v->path);
-                    }
-                }else{
-                    $products{$key}->image = $folderPath.'/'.\Storage::disk('s3')->url('default/default_image.png');
-                }
-
-                unset($products{$key}->pimage);
-
-                $prodPrice = '0.00';
-
-                if(!empty($value->baseprice) && count($value->baseprice) > 0){
-
-                    //echo '<pre>';print_r($value->baseprice->toArray());die;
-                    $prodPrice = $value->baseprice[0]->price;
-
-                    if(!empty($value->baseprice[0]->price) && $value->baseprice[0]->price > 0 && $currency != 'USD'){
-
-                        //$prodPrice = $this->changeCurrency($currency, $value->baseprice[0]->price);
-                        //$products{$key}->price = $amount;
-                        $prodPrice = $value->baseprice[0]->price;
-
-                    }
-                }
-                $products{$key}->price = $prodPrice;
-                unset($products{$key}->baseprice);
-
-            }
-        }
-        return $products;
+        return view('forntend/product')->with(['product' => $product, 'navCategories' => $navCategories]);
     }
 
     public function categoryData(Request $request, $domain = '', $cid = 0)
     {
-        /*$langId = '';
-        if($request->has('lang') && !empty($request->lang)){
-
-            $langId = 
-        }else{
-            $primeLang = ClientLanguage::select('language_id', 'is_primary')->where('is_primary', 1)->first();
-        }
-        */
-
+        $langId = Session::get('customerLanguage');
+        $curId = Session::get('customerCurrency');
         $category = Category::with(['tags',
                     'type'  => function($q){
                         $q->select('id', 'title as redirect_to');
@@ -174,20 +94,21 @@ class CatalogController extends FrontController
                     ->select('id', 'icon', 'slug', 'type_id', 'can_add_products')
                     ->where('id', $cid)->firstOrFail();
 
-        dd($category->toArray());
-        $response['category'] = $category;
+
+        $navCategories = $this->categoryNav($langId);
         $listData = $this->listData($langId, $cid, $category->type->redirect_to);
+        $category->type->redirect_to;
+        $page = ($category->type->redirect_to == 'vendor' || $category->type->redirect_to == 'Vendor') ? 'vendor' : 'product';
 
-        $page = ($category->type->redirect_to == 'vendor') ? 'vendor' : 'Product';
-
-        return view('forntend/'.$page.'Detail')->with(['listData' => $listData, 'categories' => $categories]);
+        //dd($listData->toArray());
+        return view('forntend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories]);
     }
 
     public function listData($langId, $cid, $tpye = ''){
         
         if($tpye == 'vendor' || $tpye == 'Vendor'){
 
-            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
+            $vendorData = Vendor::select('id', 'name', 'logo', 'banner', 'order_pre_time', 'order_min_amount');
 
             /*if($preferences->is_hyperlocal == 1){
                 $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
@@ -202,10 +123,13 @@ class CatalogController extends FrontController
 
         }elseif($tpye == 'product' || $tpye == 'Product'){
 
-            $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+            $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
 
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
-                    ->with(['media.image', 'translation' => function($q) use($langId){
+                    ->with(['media' => function($q){
+                            $q->groupBy('product_id');
+                        }, 'media.image',
+                        'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
                         'variant' => function($q) use($langId){
@@ -229,6 +153,41 @@ class CatalogController extends FrontController
             $arr = array();
             return $arr;
         }
+    }
+
+    public function productsByVendor(Request $request, $vid = 0)
+    {
+        $langId = Session::get('customerLanguage');
+        $curId = Session::get('customerCurrency');
+
+        $vendor = Vendor::with(['products' => function($q){
+                    $q->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating');
+                    },
+                    'products.media.image', 'products.translation' => function($q) use($langId){
+                    $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                    },
+                    'products.variant' => function($q) use($langId){
+                        $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                        $q->groupBy('product_id');
+                    },
+                ])->select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery')
+                ->where('id', $vid)->firstOrFail();
+
+        
+        if(!empty($vendor->products)){
+            foreach ($vendor->products as $key => $value) {
+                foreach ($value->variant as $k => $v) {
+                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                }
+            }
+        }
+        $navCategories = Session::get('navCategories');
+
+        if(empty($navCategories)){
+            $navCategories = $this->categoryNav($langId);
+        }
+
+        return view('forntend/vendor')->with(['vendor' => $vendor, 'navCategories' => $navCategories]);
     }
 
 }

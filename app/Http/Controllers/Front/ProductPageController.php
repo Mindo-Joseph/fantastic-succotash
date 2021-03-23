@@ -28,14 +28,14 @@ class ProductPageController extends FrontController
                         ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')
                         ->where('categories.id', '>', '1')
                         ->where('categories.status', '!=', $this->field_status)
-                        ->where('cts.language_id', Session::get('lang_id'))
+                        ->where('cts.language_id', Session::get('customerLanguage'))
                         ->orderBy('categories.parent_id', 'asc')
                         ->orderBy('categories.position', 'asc')->get();
         if($categories){
             $categories = $this->buildTree($categories->toArray());
         }
 
-        $langId = Session::get('lang_id');
+        $langId = Session::get('customerLanguage');
 
         $product = Product::with(['variant',  'variant.vimage.pimage.image', 'related', 'upSell', 'crossSell', 'vendor', 'media.image', 'addOn' => function($q1) use($langId){
                         $q1->join('addon_sets as set', 'set.id', 'product_addons.addon_id');
@@ -157,7 +157,7 @@ class ProductPageController extends FrontController
                         ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')
                         ->where('categories.id', '>', '1')
                         ->where('categories.status', '!=', $this->field_status)
-                        ->where('cts.language_id', Session::get('lang_id'))
+                        ->where('cts.language_id', Session::get('customerLanguage'))
                         ->orderBy('categories.parent_id', 'asc')
                         ->orderBy('categories.position', 'asc')->get();
     }

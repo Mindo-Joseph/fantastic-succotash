@@ -51,6 +51,43 @@
             $('#exampleModal').modal('show');
         }, 2500);
     });*/
+
+    $('.customerLang').click(function(){
+        var changLang = $(this).attr('langId');
+        //$('#cliLang').val(changLang);
+        //$('#filterData').submit();
+        settingData('language', changLang);
+    });
+
+    $('.customerCurr').click(function(){
+        var changcurrId = $(this).attr('currId');
+        var changSymbol = $(this).attr('currSymbol');
+        settingData('currency', changcurrId, changSymbol);
+        //$('#cliCur').val(changcurrId);
+        //$('#filterData').submit();
+    });
+
+    function settingData(type = '', v1 = '', v2 = '') {
+        
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ route('changePrimaryData') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "type": type,
+                "value1": v1, 
+                "value2": v2
+            },
+            success: function(response) {
+                location.reload();
+            },
+            error: function (data) {
+                location.reload();
+            },
+        });
+    }
+
     function openSearch() {
         document.getElementById("search-overlay").style.display = "block";
     }
