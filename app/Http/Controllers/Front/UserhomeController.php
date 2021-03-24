@@ -66,9 +66,10 @@ class UserhomeController extends FrontController
         
         $onSale = $this->productList($vends, $langId, 'USD');
         //dd($banners->toArray());
-        $featuredPro = array_chunk($featured->toArray(), ceil(count($featured) / 2));
-        $newProducts = array_chunk($newProdu->toArray(), ceil(count($newProdu) / 2));
-        $onSaleProds = array_chunk($onSale->toArray(), ceil(count($onSale) / 2));
+        if
+        $featuredPro = ($featured->count() > 0) ? array_chunk($featured->toArray(), ceil(count($featured) / 2)) : $featured;
+        $newProducts = ($newProdu->count() > 0) ? array_chunk($newProdu->toArray(), ceil(count($newProdu) / 2)) : $newProdu;
+        $onSaleProds = ($onSale->count() > 0) ? array_chunk($onSale->toArray(), ceil(count($onSale) / 2)) : $onSale;
 
         return view('forntend/home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'brands' => $brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds]);
     }
