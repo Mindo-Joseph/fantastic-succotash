@@ -82,12 +82,7 @@
         </div>
     </div>
 </section>
-@endsection
-
-@section('script')
-
-@endsection
-
+<!--
 name
 email Index
 phone_number Index
@@ -98,4 +93,9 @@ type
 status
 device_type
 device_token
-country_id
+country_id -->
+@endsection
+
+@section('script')
+
+@endsection
