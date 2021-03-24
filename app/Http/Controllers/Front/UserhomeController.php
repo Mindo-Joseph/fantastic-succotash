@@ -45,8 +45,8 @@ class UserhomeController extends FrontController
         $banners = Banner::where('status', 1)
                     ->where(function($q){
                         $q->whereNull('start_date_time')->orWhere(function($q2){
-                            $q2->where('start_date_time', '<=', Carbon::now())
-                                ->where('end_date_time', '>=', Carbon::now());
+                            $q2->whereDate('start_date_time', '<=', Carbon::now())
+                                ->whereDate('end_date_time', '>=', Carbon::now());
                         });
                     })
                     ->orderBy('sorting', 'asc')->get();
