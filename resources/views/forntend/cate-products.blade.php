@@ -53,11 +53,11 @@
             <div class="slide-6 no-arrow">
                 @foreach($category->childs->toArray() as $cate)
                 <div class="category-block">
-                    <a href="#">
+                    <a href="{{route('categoryDetail', $cate['id'])}}">
                         <div class="category-image"><img alt="" src="{{$cate['icon']['image_fit'] . '40/30' . $cate['icon']['image_path']}}" ></div>
                     </a>
                     <div class="category-details">
-                        <a href="#">
+                        <a href="{{route('categoryDetail', $cate['id'])}}">
                             <h5>{{$cate['translation'][0]['name']}}</h5>
                         </a>
                     </div>
@@ -85,10 +85,10 @@
                                 <div class="cart-info cart-wrap">
                                     <a href="javascript:void(0)" title="Add to Wishlist"><i class="ti-heart"
                                             aria-hidden="true"></i></a>
-                                    <a href="#" data-toggle="modal" data-target="#quick-view" title="Quick View"><i
+                                    <!--<a href="#" data-toggle="modal" data-target="#quick-view" title="Quick View"><i
                                             class="ti-search" aria-hidden="true"></i></a>
                                     <a href="compare.html" title="Compare"><i class="ti-reload"
-                                            aria-hidden="true"></i></a>
+                                            aria-hidden="true"></i></a> -->
                                 </div>
                                 <div class="add-button" data-toggle="modal" data-target="#addtocart">add to cart</div>
                             </div>

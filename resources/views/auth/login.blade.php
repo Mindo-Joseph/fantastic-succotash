@@ -4,6 +4,9 @@
         @include('layouts.shared.title-meta', ['title' => "Log In"])
 
         @include('layouts.shared.head-content')
+        <script src="{{asset('assets/js/jquery-3.1.1.min.js')}}"></script>
+        <script src="{{asset('assets/js/vendor.min.js')}}"></script>
+        <script src="{{asset('assets/js/jquery-ui.min.js')}}" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     </head>
 
     <body class="authentication-bg authentication-bg-pattern">
@@ -30,7 +33,7 @@
                                             </span>
                                         </a>
                                     </div>
-                                    <p class="text-muted mb-4 mt-3">Enter your email address and password to access admin panel.</p>
+                                    <p class="text-muted mb-4 mt-3">Enter1 your email address and password to access admin panel.</p>
                                 </div>
 
                                 <form action="{{route('client.login')}}" method="POST" novalidate>
@@ -131,6 +134,6 @@
         </footer>
 
         @include('layouts.shared.footer-script')
-        
+        <script src="{{asset('assets/js/app.min.js')}}"></script>
     </body>
 </html>

@@ -20,7 +20,7 @@ class RoutingController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($domain= '')
     {
        
         return view('index');
@@ -31,7 +31,7 @@ class RoutingController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function root($first)
+    public function root($domain= '', $first)
     {   
         if ($first != 'assets')
             return view('theme/'.$first);
@@ -41,7 +41,7 @@ class RoutingController extends BaseController
     /**
      * second level route
      */
-    public function secondLevel($first, $second)
+    public function secondLevel($domain= '', $first, $second)
     {        
         if ($first != 'assets')
             return view('theme/'.$first.'.'.$second);
@@ -51,7 +51,7 @@ class RoutingController extends BaseController
     /**
      * third level route
      */
-    public function thirdLevel($first, $second, $third)
+    public function thirdLevel($domain= '', $first, $second, $third)
     {
         if ($first != 'assets')
             return view('theme/'.$first.'.'.$second.'.'.$third);

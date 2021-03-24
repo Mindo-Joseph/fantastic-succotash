@@ -102,7 +102,7 @@ class HomeController extends BaseController
         $homeData['featuredProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_featured');
         $homeData['newProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_new');
         
-        $homeData['onSale'] = $this->productList($vends, Auth::user()->currency);
+        $homeData['onSale'] = $this->productList($vends, $langId, Auth::user()->currency);
 
         return response()->json([
             'data' => $homeData,

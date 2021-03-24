@@ -7,12 +7,15 @@
 
     <script src="{{asset('front-assets/js/jquery-3.3.1.min.js')}}"></script>
     <script src="{{asset('front-assets/js/jquery-ui.min.js')}}"></script>
-    @yield('css')
 
 </head>
 <body>
 
-    @include('layouts.store/topbar')
+    @if (Auth::check())
+      @include('layouts.store/topbar-auth')
+    @else
+      @include('layouts.store/topbar-guest')
+    @endif
     
     @yield('content')
             

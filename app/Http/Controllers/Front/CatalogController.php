@@ -155,10 +155,11 @@ class CatalogController extends FrontController
         }
     }
 
-    public function productsByVendor(Request $request, $vid = 0)
+    public function productsByVendor(Request $request, $domain = '', $vid = 0)
     {
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
+        $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
 
         $vendor = Vendor::with(['products' => function($q){
                     $q->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating');
@@ -173,7 +174,6 @@ class CatalogController extends FrontController
                 ])->select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery')
                 ->where('id', $vid)->firstOrFail();
 
-        
         if(!empty($vendor->products)){
             foreach ($vendor->products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
@@ -187,7 +187,7 @@ class CatalogController extends FrontController
             $navCategories = $this->categoryNav($langId);
         }
 
-        return view('forntend/vendor')->with(['vendor' => $vendor, 'navCategories' => $navCategories]);
+        return view('forntend/vendor-products')->with(['vendor' => $vendor, 'navCategories' => $navCategories]);
     }
 
 }

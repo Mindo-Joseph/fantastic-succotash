@@ -24,7 +24,7 @@ class UserhomeController extends FrontController
         $value = Session::get('preferences');
         //$clientLanguage = ClientLanguage::where('is_primary', 1)->first();
         $langId = Session::get('customerLanguage');
-
+        $curId = Session::get('customerCurrency');
         $vends = array();
 
         $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
@@ -54,16 +54,15 @@ class UserhomeController extends FrontController
         $navCategories = $this->categoryNav($langId);
 
         Session::put('navCategories', $navCategories);
-
-
-        $brands = Brand::join('brand_translations as bt', 'bt.brand_id', 'brands.id')
-                    ->select('brands.id', 'brands.image', 'bt.title', 'bt.language_id')
-                    ->where('brands.status', '!=', $this->field_status)
-                    ->where('bt.language_id', $langId)
+        $brands = Brand::with(['translation' => function($q) use($langId){
+                        $q->select('brand_id', 'title')->where('language_id', $langId);
+                        }])
+                    ->select('id', 'image')
+                    ->where('status', '!=', $this->field_status)
                     ->orderBy('position', 'asc')->get();
 
-        $featured = $this->productList($vends, $langId, 'USD', 'is_featured');
-        $newProdu = $this->productList($vends, $langId, 'USD', 'is_new');
+        $featured = $this->productList($vends, $langId, $curId, 'is_featured');
+        $newProdu = $this->productList($vends, $langId, $curId, 'is_new');
         
         $onSale = $this->productList($vends, $langId, 'USD');
         //dd($banners->toArray());
