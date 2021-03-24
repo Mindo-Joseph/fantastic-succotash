@@ -61,7 +61,7 @@
                         <div class="product-box">
                             <div class="img-wrapper">
                                 <div class="front">
-                                    <a href="{{route('productDetail', $prod->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$prod->media[0]->image->path['image_fit'] .'200/250'. $prod->media[0]->image->path['image_path']}}" alt=""></a>
+                                    <a href="{{route('productDetail', $prod->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
                                 </div>
                                 <div class="cart-info cart-wrap">
                                     <a href="javascript:void(0)" title="Add to Wishlist"><i class="ti-heart"
