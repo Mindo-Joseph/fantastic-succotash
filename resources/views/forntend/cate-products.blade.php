@@ -77,10 +77,14 @@
                 <div class="product-5 product-m no-arrow">
                     @if(!empty($listData))
                         @foreach($listData as $key => $data)
+                        <?php $imagePath = '';
+                        foreach ($new->media as $key => $value) {
+                            $imagePath = $value->image->path['image_fit'].'100/100'.$value->image->path['image_path'];
+                        } ?>
                         <div class="product-box">
                             <div class="img-wrapper">
                                 <div class="front">
-                                    <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$data->media[0]->image->path['image_fit'] .'200/250'. $data->media[0]->image->path['image_path']}}" alt=""></a>
+                                    <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
                                 </div>
                                 <div class="cart-info cart-wrap">
                                     <a href="javascript:void(0)" title="Add to Wishlist"><i class="ti-heart"
