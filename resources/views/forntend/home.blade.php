@@ -78,10 +78,10 @@
                         <div class="product-box">
                             <div class="img-wrapper">
                                 <div class="front">
-                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['image_fit'] . '200/120' . $vend->banner['image_path']}}"></a>
+                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['image_fit'] . '300/300' . $vend->banner['image_path']}}"></a>
                                 </div>
                                 <div class="back">
-                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['image_fit'] . '200/120' . $vend->banner['image_path']}}"></a>
+                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['image_fit'] . '300/300' . $vend->banner['image_path']}}"></a>
                                 </div>
                                 <!-- <div class="cart-info cart-wrap">
                                     <button data-toggle="modal" data-target="#addtocart" title="Add to cart">
@@ -133,8 +133,12 @@
                             @foreach($newProducts as $newProds)
                                 <div>
                                 @foreach($newProds as $new)
+                                    <?php $imagePath = '';
+                                    foreach ($new['media'] as $k => $v) {
+                                        $imagePath = $v['image']['path']['image_fit'].'300/300'.$v['image']['path']['image_path'];
+                                    } ?>
                                     <div class="media">
-                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$new['media'][0]['image']['path']['image_fit'] .'100/100'. $new['media'][0]['image']['path']['image_path']}}" alt="" ></a>
+                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                         <div class="media-body align-self-center">
                                             <div class="rating">
                                                 @for($i = 1; $i < 6; $i++)
@@ -162,8 +166,12 @@
                             @foreach($featuredProducts as $featured)
                                 <div>
                                 @foreach($featured as $new)
+                                    <?php $imagePath = '';
+                                    foreach ($new['media'] as $k => $v) {
+                                        $imagePath = $v['image']['path']['image_fit'].'300/300'.$v['image']['path']['image_path'];
+                                    } ?>
                                     <div class="media">
-                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$new['media'][0]['image']['path']['image_fit'] .'100/100'. $new['media'][0]['image']['path']['image_path']}}" alt="" ></a>
+                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                         <div class="media-body align-self-center">
                                             <div class="rating">
                                                 @for($i = 1; $i < 6; $i++)
@@ -191,8 +199,12 @@
                             @foreach($newProducts as $newProds)
                                 <div>
                                 @foreach($newProds as $new)
+                                    <?php $imagePath = '';
+                                    foreach ($new['media'] as $k => $v) {
+                                        $imagePath = $v['image']['path']['image_fit'].'300/300'.$v['image']['path']['image_path'];
+                                    } ?>
                                     <div class="media">
-                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$new['media'][0]['image']['path']['image_fit'] .'100/100'. $new['media'][0]['image']['path']['image_path']}}" alt="" ></a>
+                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                         <div class="media-body align-self-center">
                                             <div class="rating">
                                                 @for($i = 1; $i < 6; $i++)
@@ -221,8 +233,8 @@
                                 <div>
                                 @foreach($SaleProds as $new)
                                     <?php $imagePath = '';
-                                    foreach ($new['media'] as $key => $value) {
-                                            $imagePath = $value['image']['path']['image_fit'].'100/100'.$value['image']['path']['image_path'];
+                                    foreach ($new['media'] as $k => $v) {
+                                        $imagePath = $v['image']['path']['image_fit'].'300/300'.$v['image']['path']['image_path'];
                                     } ?>
                                     <div class="media">
                                         <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
