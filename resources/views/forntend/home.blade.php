@@ -78,10 +78,10 @@
                         <div class="product-box">
                             <div class="img-wrapper">
                                 <div class="front">
-                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['proxy_url'] . '200/120' . $vend->banner['image_path']}}"></a>
+                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['image_fit'] . '200/120' . $vend->banner['image_path']}}"></a>
                                 </div>
                                 <div class="back">
-                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['proxy_url'] . '200/120' . $vend->banner['image_path']}}"></a>
+                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['image_fit'] . '200/120' . $vend->banner['image_path']}}"></a>
                                 </div>
                                 <!-- <div class="cart-info cart-wrap">
                                     <button data-toggle="modal" data-target="#addtocart" title="Add to cart">
@@ -262,7 +262,7 @@
                         @foreach($brands as $bnd)
                         <div>
                             <div class="logo-block">
-                                <a href="#"><img src="{{$bnd->image['proxy_url'] . '120/120' . $bnd->image['image_path']}}" alt=""></a>
+                                <a href="#"><img src="{{$bnd->image['image_fit'] . '120/120' . $bnd->image['image_path']}}" alt=""></a>
                             </div>
                         </div>
                         @endforeach
