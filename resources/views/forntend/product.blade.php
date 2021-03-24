@@ -91,7 +91,7 @@
 
                 <div class="col-lg-7 rtl-text">
                     <div class="product-right">
-                        <h2>{{$product->translation[0]->title}}</h2>
+                        <h2>{{ !empty($product->translation) ? $product->translation[0]->title : ''}}</h2>
                         <!--<h4><del>$459.00</del><span>55% off</span></h4> -->
                         <h3>${{$product->variant[0]->price}}</h3>
                         <!--<ul class="color-variant">
@@ -203,7 +203,7 @@
                         </div>
                         <div class="border-product">
                             <h6 class="product-title">product details</h6>
-                            <p>{{$product->translation[0]->body_html}}</p>
+                            <p>{{ !empty($product->translation) ? $product->translation[0]->body_html : ''}}</p>
                         </div>
                         <!--<div class="border-product">
                             <h6 class="product-title">share it</h6>
@@ -267,7 +267,7 @@
                 <div class="tab-content nav-material" id="top-tabContent">
                     <div class="tab-pane fade show active" id="top-home" role="tabpanel"
                         aria-labelledby="top-home-tab">
-                          <p>{{$product->translation[0]->body_html}}</p> 
+                          <p>{{ !empty($product->translation) ? $product->translation[0]->body_html : ''}}</p> 
                     </div> 
                     <!--<div class="tab-pane fade" id="top-profile" role="tabpanel" aria-labelledby="profile-top-tab">
                         

@@ -58,7 +58,7 @@
                     </a>
                     <div class="category-details">
                         <a href="{{route('categoryDetail', $cate['id'])}}">
-                            <h5>{{$cate['translation'][0]['name']}}</h5>
+                            <h5>{{ !empty($cate->translation) ? $cate->translation[0]->title : ''}} </h5>
                         </a>
                     </div>
                 </div>
