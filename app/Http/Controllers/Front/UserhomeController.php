@@ -92,7 +92,7 @@ class UserhomeController extends FrontController
         if(is_array($venderIds) && count($venderIds) > 0){
             $products = $products->whereIn('vendor_id', $venderIds);
         }
-        $products = $products->get();
+        $products = $products->where('is_live', 1)->get();
 
         if(!empty($products)){
             foreach ($products as $key => $value) {

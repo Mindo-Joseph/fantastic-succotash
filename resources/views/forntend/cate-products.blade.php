@@ -54,7 +54,7 @@
                 @foreach($category->childs->toArray() as $cate)
                 <div class="category-block">
                     <a href="{{route('categoryDetail', $cate['id'])}}">
-                        <div class="category-image"><img alt="" src="{{$cate['icon']['image_fit'] . '40/30' . $cate['icon']['image_path']}}" ></div>
+                        <div class="category-image"><img alt="" src="{{$cate['icon']['proxy_url'] . '40/30' . $cate['icon']['image_path']}}" ></div>
                     </a>
                     <div class="category-details">
                         <a href="{{route('categoryDetail', $cate['id'])}}">
@@ -80,7 +80,7 @@
 
                         <?php $imagePath = '';
                         foreach ($data->media as $k => $v) {
-                            $imagePath = $v->image->path['image_fit'].'300/300'.$v->image->path['image_path'];
+                            $imagePath = $v->image->path['proxy_url'].'300/300'.$v->image->path['image_path'];
                         } ?>
                         <div class="product-box">
                             <div class="img-wrapper">

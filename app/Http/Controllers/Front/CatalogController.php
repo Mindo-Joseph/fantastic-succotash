@@ -60,6 +60,7 @@ class CatalogController extends FrontController
                     },
                     ])->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory')
                     ->where('sku', $sku)
+                    ->where('is_live', 1)
                     ->firstOrFail();
 
         $clientCurrency = ClientCurrency::where('is_primary', '1')->first();
@@ -137,7 +138,7 @@ class CatalogController extends FrontController
                             $q->groupBy('product_id');
                         },
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('pc.category_id', $cid)->get();
+                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->get();
 
             if(!empty($products)){
                 foreach ($products as $key => $value) {
@@ -162,7 +163,8 @@ class CatalogController extends FrontController
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
 
         $vendor = Vendor::with(['products' => function($q){
-                    $q->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating');
+                    $q->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating')
+                    ->where('is_live', 1);
                     },
                     'products.media.image', 'products.translation' => function($q) use($langId){
                     $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);

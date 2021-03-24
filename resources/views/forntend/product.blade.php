@@ -72,7 +72,7 @@
                     <div class="product-slick">
                         @if(!empty($product->media))
                             @foreach($product->media as $k => $img)
-                                <div><img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" alt="" src="{{$img->image->path['image_fit'].'600/800'.$img->image->path['image_path']}}"></div>
+                                <div><img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" alt="" src="{{$img->image->path['proxy_url'].'600/800'.$img->image->path['image_path']}}"></div>
                             @endforeach
                         @endif
                     </div>
@@ -81,7 +81,7 @@
                             <div class="slider-nav">
                                 @if(!empty($product->media))
                                     @foreach($product->media as $img)
-                                        <div><img alt="" src="{{$img->image->path['image_fit']. '300/300' .$img->image->path['image_path']}}" class="img-fluid blur-up lazyload"></div>
+                                        <div><img alt="" src="{{$img->image->path['proxy_url']. '300/300' .$img->image->path['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endforeach
                                 @endif
                             </div>

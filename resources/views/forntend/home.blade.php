@@ -23,7 +23,7 @@
             @foreach($banners as $banner)
             <div>
                 <div class="home  text-center">
-                    <img src="{{$banner->image['image_fit'] . '600/400' . $banner->image['image_path']}}" class="bg-img blur-up lazyload" alt="">
+                    <img src="{{$banner->image['proxy_url'] . '1500/600' . $banner->image['image_path']}}" class="bg-img blur-up lazyload" alt="">
                     <!--<div class="container">
                         <div class="row">
                             <div class="col">
@@ -51,7 +51,7 @@
                     @foreach($navCategories as $cate)
                     <div class="category-block">
                         <a href="{{route('categoryDetail', $cate['id'])}}">
-                            <div class="category-image"><img src="{{$cate['icon']['image_fit'].'40/30'.$cate['icon']['image_path']}}" alt=""></div>
+                            <div class="category-image"><img src="{{$cate['icon']['proxy_url'].'40/30'.$cate['icon']['image_path']}}" alt=""></div>
                         </a>
                         <div class="category-details">
                             <a href="{{route('categoryDetail', $cate['id'])}}">
@@ -78,10 +78,10 @@
                         <div class="product-box">
                             <div class="img-wrapper">
                                 <div class="front">
-                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['image_fit'] . '300/300' . $vend->banner['image_path']}}"></a>
+                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['proxy_url'] . '300/300' . $vend->banner['image_path']}}"></a>
                                 </div>
                                 <div class="back">
-                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['image_fit'] . '300/300' . $vend->banner['image_path']}}"></a>
+                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['proxy_url'] . '300/300' . $vend->banner['image_path']}}"></a>
                                 </div>
                                 <!-- <div class="cart-info cart-wrap">
                                     <button data-toggle="modal" data-target="#addtocart" title="Add to cart">
@@ -135,7 +135,7 @@
                                 @foreach($newProds as $new)
                                     <?php $imagePath = '';
                                     foreach ($new['media'] as $k => $v) {
-                                        $imagePath = $v['image']['path']['image_fit'].'300/300'.$v['image']['path']['image_path'];
+                                        $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                                     } ?>
                                     <div class="media">
                                         <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
@@ -168,7 +168,7 @@
                                 @foreach($featured as $new)
                                     <?php $imagePath = '';
                                     foreach ($new['media'] as $k => $v) {
-                                        $imagePath = $v['image']['path']['image_fit'].'300/300'.$v['image']['path']['image_path'];
+                                        $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                                     } ?>
                                     <div class="media">
                                         <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
@@ -201,7 +201,7 @@
                                 @foreach($newProds as $new)
                                     <?php $imagePath = '';
                                     foreach ($new['media'] as $k => $v) {
-                                        $imagePath = $v['image']['path']['image_fit'].'300/300'.$v['image']['path']['image_path'];
+                                        $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                                     } ?>
                                     <div class="media">
                                         <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
@@ -227,14 +227,14 @@
                 </div>
                 <div class="col-lg-3 col-sm-6">
                     <div class="theme-card">
-                        <h5 class="title-border">on sell</h5>
+                        <h5 class="title-border">on sale</h5>
                         <div class="offer-slider slide-1">
                             @foreach($onSaleProducts as $SaleProds)
                                 <div>
                                 @foreach($SaleProds as $new)
                                     <?php $imagePath = '';
                                     foreach ($new['media'] as $k => $v) {
-                                        $imagePath = $v['image']['path']['image_fit'].'300/300'.$v['image']['path']['image_path'];
+                                        $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                                     } ?>
                                     <div class="media">
                                         <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
@@ -274,7 +274,7 @@
                         @foreach($brands as $bnd)
                         <div>
                             <div class="logo-block">
-                                <a href="#"><img src="{{$bnd->image['image_fit'] . '120/120' . $bnd->image['image_path']}}" alt=""></a>
+                                <a href="#"><img src="{{$bnd->image['proxy_url'] . '120/120' . $bnd->image['image_path']}}" alt=""></a>
                             </div>
                         </div>
                         @endforeach
@@ -324,7 +324,6 @@
 @section('script')
 
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
-<script src="{{asset('front-assets/js/exit.js')}}"></script>
 <script src="{{asset('front-assets/js/fly-cart.js')}}"></script>
 <script type="text/javascript">
 
