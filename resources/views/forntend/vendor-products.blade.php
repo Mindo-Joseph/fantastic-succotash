@@ -55,7 +55,7 @@
                     @if(!empty($vendor->products))
                         @foreach($vendor->products as $key => $prod)
                         <?php $imagePath = '';
-                        foreach ($data['media'] as $key => $value) {
+                        foreach ($prod->media as $key => $value) {
                             $imagePath = $value->image->path['image_fit'].'100/100'.$value->image->path['image_path'];
                         } ?>
                         <div class="product-box">

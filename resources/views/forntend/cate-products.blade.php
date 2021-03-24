@@ -78,7 +78,7 @@
                     @if(!empty($listData))
                         @foreach($listData as $key => $data)
                         <?php $imagePath = '';
-                        foreach ($new->media as $key => $value) {
+                        foreach ($data->media as $key => $value) {
                             $imagePath = $value->image->path['image_fit'].'100/100'.$value->image->path['image_path'];
                         } ?>
                         <div class="product-box">
