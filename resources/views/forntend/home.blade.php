@@ -220,9 +220,12 @@
                             @foreach($onSaleProducts as $SaleProds)
                                 <div>
                                 @foreach($SaleProds as $new)
-                                {{dd($new)}}
+                                    <?php $imagePath = '';
+                                    foreach ($new['media'] as $key => $value) {
+                                            $imagePath = $value['image']['path']['image_fit'].'100/100'.$value['image']['path']['image_path'];
+                                    } ?>
                                     <div class="media">
-                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$new[0]['image']['path']['image_fit'] .'100/100'. $new[0]['image']['path']['image_path']}}" alt="" ></a>
+                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                         <div class="media-body align-self-center">
                                             <div class="rating">
                                                 @for($i = 1; $i < 6; $i++)
