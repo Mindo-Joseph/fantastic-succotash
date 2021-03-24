@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{Client, Category};
+use App\Models\{Client, Category, Product};
 use Session;
 
 class FrontController extends Controller
@@ -38,6 +38,37 @@ class FrontController extends Controller
         }
 
         return $branch;
+    }
+
+    public function productList($venderIds, $langId, $currency = 'USD', $where = '')
+    {
+        $products = Product::with(['media' => function($q){
+                            $q->groupBy('product_id');
+                        }, 'media.image',
+                        'translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                        },
+                        'variant' => function($q) use($langId){
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->groupBy('product_id');
+                        },
+                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating');
+        if($where !== ''){
+            $products = $products->where($where, 1);
+        }
+        if(is_array($venderIds) && count($venderIds) > 0){
+            $products = $products->whereIn('vendor_id', $venderIds);
+        }
+        $products = $products->where('is_live', 1)->take(6)->get();
+
+        if(!empty($products)){
+            foreach ($products as $key => $value) {
+                foreach ($value->variant as $k => $v) {
+                    $value->variant{$k}->multiplier = Session::get('currencyMultiplier');
+                }
+            }
+        }
+        return $products;
     }
     
 }

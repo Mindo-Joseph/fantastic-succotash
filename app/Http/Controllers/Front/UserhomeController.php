@@ -61,47 +61,16 @@ class UserhomeController extends FrontController
                     ->where('status', '!=', $this->field_status)
                     ->orderBy('position', 'asc')->get();
 
-        $featured = $this->productList($vends, $langId, $curId, 'is_featured');
-        $newProdu = $this->productList($vends, $langId, $curId, 'is_new');
+        $fp = $this->productList($vends, $langId, $curId, 'is_featured');
+        $np = $this->productList($vends, $langId, $curId, 'is_new');
         
-        $onSale = $this->productList($vends, $langId, 'USD');
+        $onSP = $this->productList($vends, $langId, 'USD');
         //dd($banners->toArray());
-        $featuredPro = ($featured->count() > 0) ? array_chunk($featured->toArray(), ceil(count($featured) / 2)) : $featured;
-        $newProducts = ($newProdu->count() > 0) ? array_chunk($newProdu->toArray(), ceil(count($newProdu) / 2)) : $newProdu;
-        $onSaleProds = ($onSale->count() > 0) ? array_chunk($onSale->toArray(), ceil(count($onSale) / 2)) : $onSale;
+        $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
+        $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
+        $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
 
         return view('forntend/home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'brands' => $brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds]);
-    }
-
-    public function productList($venderIds, $langId, $currency = 'USD', $where = '')
-    {
-        $products = Product::with(['media' => function($q){
-                            $q->groupBy('product_id');
-                        }, 'media.image',
-                        'translation' => function($q) use($langId){
-                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
-                        },
-                        'variant' => function($q) use($langId){
-                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
-                            $q->groupBy('product_id');
-                        },
-                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating');
-        if($where !== ''){
-            $products = $products->where($where, 1);
-        }
-        if(is_array($venderIds) && count($venderIds) > 0){
-            $products = $products->whereIn('vendor_id', $venderIds);
-        }
-        $products = $products->where('is_live', 1)->get();
-
-        if(!empty($products)){
-            foreach ($products as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = Session::get('currencyMultiplier');
-                }
-            }
-        }
-        return $products;
     }
 
     public function changePrimaryData(Request $request)

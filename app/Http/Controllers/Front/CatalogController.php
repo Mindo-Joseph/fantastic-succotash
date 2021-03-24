@@ -68,12 +68,17 @@ class CatalogController extends FrontController
             $product->variant{$key}->multiplier = $clientCurrency->doller_compare;
         }
 
+        $vendorIds[] = $product->vendor_id;
+
+        $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
+        $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
+
         foreach ($product->addOn as $key => $value) {
             foreach ($value->setoptions as $k => $v) {
                 $v->multiplier = $clientCurrency->doller_compare;
             }
         }
-        return view('forntend/product')->with(['product' => $product, 'navCategories' => $navCategories]);
+        return view('forntend/product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts]);
     }
 
     public function categoryData(Request $request, $domain = '', $cid = 0)

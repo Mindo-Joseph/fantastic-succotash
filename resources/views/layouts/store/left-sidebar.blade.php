@@ -34,11 +34,11 @@ echo '<pre>';print_r($currencyList->toArray()); -->
                                             <li class="col-xl-4">
 
                                                 <div class="link-section">
-                                                    <a href="{{route('categoryDetail', $cate['id'])}}"><h5>{{$childs['name']}}</h5></a>
+                                                    <a href="{{route('categoryDetail', $childs['id'])}}"><h5>{{$childs['name']}}</h5></a>
                                                     @if(!empty($childs['children']))
                                                     <ul>
                                                         @foreach($childs['children'] as $chld)
-                                                            <li><a href="{{route('categoryDetail', $cate['id'])}}">{{$chld['name']}}</a></li>
+                                                            <li><a href="{{route('categoryDetail', $chld['id'])}}">{{$chld['name']}}</a></li>
                                                         @endforeach
                                                     </ul>
                                                     @endif
