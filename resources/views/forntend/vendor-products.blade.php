@@ -80,7 +80,7 @@
                                     @endfor
                                 </div>
                                 <a href="url('productDetail/'.$prod->sku.'/?lang='.Session::get('currencySymbol'))}}">
-                                    <h6>{{$prod->translation[0]->title}}</h6>
+                                    <h6>{{ !empty($prod->translation) ? $prod->translation[0]->title : ''}}</h6>
                                 </a>
                                 <h4>{{Session::get('currencySymbol').($prod->variant[0]->price * $prod->variant[0]->multiplier)}}</h4>
                             </div>
