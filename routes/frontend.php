@@ -33,12 +33,11 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('register','Front\CustomerAuthController@register')->name('user.register');
 	Route::post('forgotPassword','Front\CustomerAuthController@forgotPassword')->name('user.forgotPass');
 	Route::post('resetPassword','Front\CustomerAuthController@resetPassword')->name('user.resetPass');
-
+	
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
 	Route::get('/product/{id}','Front\CatalogController@index')->name('productDetail');
 	Route::get('category/{id?}', 'Front\CatalogController@categoryData')->name('categoryDetail');
     Route::get('vendor/{id?}', 'Front\CatalogController@productsByVendor')->name('vendorDetail');
-
     Route::post('primaryData', 'Front\UserhomeController@changePrimaryData')->name('changePrimaryData');
 
 });

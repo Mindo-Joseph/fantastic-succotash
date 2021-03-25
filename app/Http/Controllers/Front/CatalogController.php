@@ -123,7 +123,7 @@ class CatalogController extends FrontController
                         ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
                 });
             }*/
-            $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
+            $vendorData = $vendorData->where('status', '!=', $this->field_status)->paginate(8);
 
             return $vendorData;
 
@@ -143,7 +143,7 @@ class CatalogController extends FrontController
                             $q->groupBy('product_id');
                         },
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->get();
+                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->paginate(8);
 
             if(!empty($products)){
                 foreach ($products as $key => $value) {
