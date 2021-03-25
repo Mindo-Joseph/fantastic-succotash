@@ -167,7 +167,7 @@ class ProductController extends BaseController
 
         $product = new Product();
         foreach ($request->only('sku', 'is_live', 'url_slug', 'vendor_id', 'type_id', 'country_origin_id', 'weight', 'weight_unit') as $key => $value) {
-            $product->[$key] = $value;
+            $product->{$key} = $value;
         }
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
         $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;

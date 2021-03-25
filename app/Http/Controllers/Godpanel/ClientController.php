@@ -110,7 +110,7 @@ class ClientController extends Controller
     public function saveClient(Request $request, Client $client, $update = 'false')
     {
         foreach ($request->only('name', 'phone_number', 'company_name', 'company_address', 'custom_domain', 'sub_domain', 'database_host', 'database_port', 'database_username', 'database_password') as $key => $value) {
-            $client->[$key] = $value;
+            $client->{$key} = $value;
         }
 
         $client->database_host = env('DB_HOST');

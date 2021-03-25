@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Product'])
+@extends('layouts.store', ['title' => 'Category'])
 
 @section('css')
 <style type="text/css">
@@ -141,70 +141,32 @@
                     <div class="theme-card">
                         <h5 class="title-border">new product</h5>
                         <div class="offer-slider slide-1">
-                            <div>
-                                <div class="media">
-                                    <a href=""><img class="img-fluid blur-up lazyload" src="{{asset('front-assets/images/pro/1.jpg')}}" alt=""></a>
-                                    <div class="media-body align-self-center">
-                                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-                                        <a href="product-page(no-sidebar).html">
-                                            <h6>Slim Fit Cotton Shirt</h6>
-                                        </a>
-                                        <h4>$500.00</h4>
+                            @foreach($newProducts as $newProds)
+                                <div>
+                                @foreach($newProds as $new)
+                                    <?php $imagePath = '';
+                                    foreach ($new['media'] as $k => $v) {
+                                        $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
+                                    } ?>
+                                    <div class="media">
+                                        <a href="{{route('productDetail', $new['sku'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
+                                        <div class="media-body align-self-center">
+                                            <div class="rating">
+                                                @for($i = 1; $i < 6; $i++)
+                                                    <i class="fa fa-star"></i>
+                                                @endfor
+                                            </div>
+                                            <a href="{{route('productDetail', $new['sku'])}}">
+                                                <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
+                                            </a>
+                                            <h4>
+                                                <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
+                                                {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
+                                        </div>
                                     </div>
+                                @endforeach
                                 </div>
-                                <div class="media">
-                                    <a href=""><img class="img-fluid blur-up lazyload" src="{{asset('front-assets/images/pro/1.jpg')}}" alt=""></a>
-                                    <div class="media-body align-self-center">
-                                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-                                        <a href="product-page(no-sidebar).html">
-                                            <h6>Slim Fit Cotton Shirt</h6>
-                                        </a>
-                                        <h4>$500.00</h4>
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <a href=""><img class="img-fluid blur-up lazyload" src="{{asset('front-assets/images/pro/1.jpg')}}" alt=""></a>
-                                    <div class="media-body align-self-center">
-                                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-                                        <a href="product-page(no-sidebar).html">
-                                            <h6>Slim Fit Cotton Shirt</h6>
-                                        </a>
-                                        <h4>$500.00</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="media">
-                                    <a href=""><img class="img-fluid blur-up lazyload" src="{{asset('front-assets/images/pro/1.jpg')}}" alt=""></a>
-                                    <div class="media-body align-self-center">
-                                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-                                        <a href="product-page(no-sidebar).html">
-                                            <h6>Slim Fit Cotton Shirt</h6>
-                                        </a>
-                                        <h4>$500.00</h4>
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <a href=""><img class="img-fluid blur-up lazyload" src="{{asset('front-assets/images/pro/1.jpg')}}" alt=""></a>
-                                    <div class="media-body align-self-center">
-                                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-                                        <a href="product-page(no-sidebar).html">
-                                            <h6>Slim Fit Cotton Shirt</h6>
-                                        </a>
-                                        <h4>$500.00</h4>
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <a href=""><img class="img-fluid blur-up lazyload" src="{{asset('front-assets/images/pro/1.jpg')}}" alt=""></a>
-                                    <div class="media-body align-self-center">
-                                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-                                        <a href="product-page(no-sidebar).html">
-                                            <h6>Slim Fit Cotton Shirt</h6>
-                                        </a>
-                                        <h4>$500.00</h4>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                     <!-- side-bar banner end here -->

@@ -95,7 +95,7 @@ class ClientPreferenceController extends BaseController
 
         foreach ($request->all() as $key => $value) {
             if(!in_array($key, $keyShouldNot)){
-               $preference->[$key] = $value; 
+               $preference->{$key} = $value; 
             }
         }
 

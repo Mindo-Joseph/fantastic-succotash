@@ -155,7 +155,7 @@ class AuthController extends BaseController
         $user = new User();
 
         foreach ($signReq->only('name', 'email', 'phone_number', 'country_id') as $key => $value) {
-            $user->[$key] = $value;
+            $user->{$key} = $value;
         }
         $user->password = Hash::make($signReq->password);
         //$user->encpass = $signReq->password;

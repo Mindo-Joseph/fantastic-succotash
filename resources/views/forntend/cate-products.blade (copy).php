@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Product'])
+@extends('layouts.store', ['title' => 'Category'])
 
 @section('css')
 <style type="text/css">

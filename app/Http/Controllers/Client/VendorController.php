@@ -70,7 +70,7 @@ class VendorController extends BaseController
     {
         $checks = array();
         foreach ($request->only('name', 'address', 'latitude', 'longitude', 'desc') as $key => $value) {
-            $vendor->[$key] = $value;
+            $vendor->{$key} = $value;
         }
 
         $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0; 

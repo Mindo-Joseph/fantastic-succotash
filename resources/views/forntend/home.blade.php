@@ -78,10 +78,10 @@
                         <div class="product-box">
                             <div class="img-wrapper">
                                 <div class="front">
-                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['proxy_url'] . '300/300' . $vend->banner['image_path']}}"></a>
+                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->logo['proxy_url'] . '300/300' . $vend->logo['image_path']}}"></a>
                                 </div>
                                 <div class="back">
-                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->banner['proxy_url'] . '300/300' . $vend->banner['image_path']}}"></a>
+                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->logo['proxy_url'] . '300/300' . $vend->logo['image_path']}}"></a>
                                 </div>
                                 <!-- <div class="cart-info cart-wrap">
                                     <button data-toggle="modal" data-target="#addtocart" title="Add to cart">
