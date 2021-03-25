@@ -45,11 +45,11 @@
         background-color: inherit;
         }
 </style>
-
+@if(!empty($category->childs))
 <section class="section-b-space border-section border-top-0">
     <div class="row">
         <div class="col-12">
-            @if(!empty($category->childs))
+            
             <div class="slide-6 no-arrow">
                 @foreach($category->childs->toArray() as $cate)
                 <div class="category-block">
@@ -64,11 +64,10 @@
                 </div>
                 @endforeach
             </div>
-            @endif
         </div>
     </div>
 </section>
-
+@endif
 <section class="ratio_asos game-product section-b-space">
     <div class="container">
 
