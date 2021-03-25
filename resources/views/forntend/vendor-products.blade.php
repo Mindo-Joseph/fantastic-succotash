@@ -54,6 +54,8 @@
                 <div class="product-5 product-m no-arrow">
                     @if(!empty($vendor->products))
                         @foreach($vendor->products as $key => $prod)
+
+                        
                         <?php $imagePath = '';
                         foreach ($prod->media as $k => $v) {
                             $imagePath = $v->image->path['proxy_url'].'300/300'.$v->image->path['image_path'];
@@ -80,7 +82,7 @@
                                     @endfor
                                 </div>
                                 <a href="url('productDetail/'.$prod->sku.'/?lang='.Session::get('currencySymbol'))}}">
-                                    <h6>{{ !empty($prod->translation) ? $prod->translation[0]->title : ''}}</h6>
+                                    <h6>{{ (!empty($prod->translation)) ? $prod->translation[0]->title : ''}}</h6>
                                 </a>
                                 <h4>{{Session::get('currencySymbol').($prod->variant[0]->price * $prod->variant[0]->multiplier)}}</h4>
                             </div>

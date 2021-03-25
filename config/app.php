@@ -177,6 +177,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         R0bdiabl0\Laravel5Phumbor\Laravel5PhumborServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
 
     ],
 
@@ -232,6 +233,7 @@ return [
         'Phumbor'   => R0bdiabl0\Laravel5Phumbor\Facades\Phumbor::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'ConvertCurrency'=> AkibTanjim\Currency\Facades\CurrencyConverter::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
     ],
 

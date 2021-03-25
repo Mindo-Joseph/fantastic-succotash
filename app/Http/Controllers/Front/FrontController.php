@@ -11,7 +11,7 @@ class FrontController extends Controller
 {
     private $field_status = 2;
     public function categoryNav($lang_id) {
-        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id', 'type')
+        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
                         ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')
                         ->where('categories.id', '>', '1')
                         ->where('categories.status', '!=', $this->field_status)
