@@ -27,7 +27,7 @@ class UserhomeController extends FrontController
         $curId = Session::get('customerCurrency');
         $vends = array();
 
-        $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
+        $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
 
         if(session('preferences.is_hyperlocal') == 1){
             /*$vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
