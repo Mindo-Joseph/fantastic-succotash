@@ -179,7 +179,7 @@
                                 <div class="top-banner-wrapper">
                                     
                                     @if(!empty($vendor->banner))
-                                      <a href="#"><img alt="" src="{{$vendor->banner['proxy_url'] . '1000/400' . $vendor->banner['image_path']}}" class="img-fluid blur-up lazyload" style="width: 100%;"></a>
+                                      <a href="#"><img alt="" src="{{$vendor->banner['proxy_url'] . '1000/400' . $vendor->banner['image_path']}}" class="img-fluid blur-up lazyload" style="width: 100%;max-height: 400px;overflow: hidden;"></a>
                                     @endif
 
                                         
