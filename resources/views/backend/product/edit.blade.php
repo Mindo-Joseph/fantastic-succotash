@@ -320,9 +320,7 @@
                                 </table>
                             </div>
                             @endif
-
                             <div id="variantRowDiv" class="col-12"></div>
-
                         @else
                             <div class="row" style="width:100%; overflow-x: scroll;">
                                 <h5 class="">No variant assigned to category.</h5>
@@ -340,25 +338,34 @@
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Other Information</h5>
 
                     <div class="row mb-2">
-                        {!! Form::label('title', 'New',['class' => 'control-label col-sm-2']) !!}
-                        <div class="col-sm-4">
+                        {!! Form::label('title', 'New',['class' => 'control-label col-sm-3']) !!}
+                        <div class="col-sm-3">
                             <input type="checkbox" id="is_new" data-plugin="switchery" name="is_new" class="chk_box" data-color="#039cfd" @if($product->is_new == 1) checked @endif>
                         </div>
-                        {!! Form::label('title', 'Featured',['class' => 'control-label col-sm-2']) !!}
-                        <div class="col-sm-4">
+                        {!! Form::label('title', 'Featured',['class' => 'control-label col-sm-3']) !!}
+                        <div class="col-sm-3">
                             <input type="checkbox" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#039cfd" @if($product->is_new == 1) checked @endif>
                         </div>
                     </div>
 
                     <div class="row mb-2">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             {!! Form::label('title', 'Live',['class' => 'control-label']) !!}
-                            <select class="selectize-select form-control" id="is_live" name="is_live">
+                            <select class="selectizeInput form-control" id="is_live" name="is_live">
                                 <option value="0" @if($product->is_live == 0) selected @endif>Draft</option>
                                 <option value="1" @if($product->is_live == 1) selected @endif>Published</option>
                             </select>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
+                            {!! Form::label('title', 'Brand',['class' => 'control-label']) !!}
+                            <select class="form-control selectizeInput" id="brand_idBox" name="brand_id">
+                                <option value="">Select Brand</option>
+                                @foreach($brands as $brand)
+                                    <option value="{{$brand->id}}" @if(!empty($product->brand) && $product->brand->id == $brand->id) selected @endif>{{$brand->title}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-12">
                             {!! Form::label('title', 'Tax Category',['class' => 'control-label']) !!}
                             <select class="form-control selectizeInput" id="typeSelectBox" name="tax_category">
                                 @foreach($taxCate as $cate)

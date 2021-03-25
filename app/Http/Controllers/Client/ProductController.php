@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{Client, Product, Category, ProductTranslation, Type, Vendor, AddonSet, ProductUpSell, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage};
+use App\Models\{Client, Product, Category, ProductTranslation, Type, Vendor, AddonSet, ProductUpSell, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand};
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends BaseController
@@ -365,7 +365,7 @@ class ProductController extends BaseController
      */
     public function edit($domain = '', $id)
     {
-        $product = Product::with('variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image')->where('id', $id)->firstOrFail();
+        $product = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image')->where('id', $id)->firstOrFail();
         //dd($product->toArray());
         $type = Type::all();
         $countries = Country::all();
@@ -373,6 +373,10 @@ class ProductController extends BaseController
                         ->where('status', '!=', 2)
                         ->where('vendor_id', $product->vendor_id)
                         ->orderBy('position', 'asc')->get();
+
+        $brands = Brand::join('brand_categories as bc', 'bc.brand_id', 'brands.id')
+                        ->select('brands.id', 'brands.title', 'brands.image')
+                        ->where('bc.category_id', $product->category->category_id)->get(); 
 
         /*$categories = Category::with('primary')->select('id', 'slug')
                         ->where('id', '>', '1')->where('status', '!=', '2')
@@ -407,8 +411,7 @@ class ProductController extends BaseController
             }
         }
 
-        return view('backend/product/edit', ['typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions]);
-
+        return view('backend/product/edit', ['typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands]);
     }
 
     /**
@@ -427,8 +430,8 @@ class ProductController extends BaseController
         }
 
         $yes = '2'; //'url_slug',
-        foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live') as $key => $value) {
-            $product->{$key} = $value;
+        foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live', 'brand_id') as $k => $val) {
+            $product->{$k} = $val;
         }
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
         $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;

@@ -55,7 +55,6 @@
                     @if(!empty($vendor->products))
                         @foreach($vendor->products as $key => $prod)
 
-                        
                         <?php $imagePath = '';
                         foreach ($prod->media as $k => $v) {
                             $imagePath = $v->image->path['proxy_url'].'300/300'.$v->image->path['image_path'];

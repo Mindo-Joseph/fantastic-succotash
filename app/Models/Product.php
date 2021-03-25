@@ -16,6 +16,10 @@ class Product extends Model
       return $this->hasMany('App\Models\ProductAddon')->join('addon_set_translations as ast', 'ast.addon_id', 'product_addons.addon_id')->select('product_addons.product_id', 'ast.title', 'product_addons.addon_id');
     }
 
+    public function brand(){
+       return $this->belongsTo('App\Models\Brand')->select('id', 'title', 'image'); 
+    }
+
     public function vendor(){
        return $this->belongsTo('App\Models\Vendor')->select('id', 'name', 'desc', 'logo'); 
     }
