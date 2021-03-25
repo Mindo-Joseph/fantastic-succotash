@@ -102,7 +102,7 @@
                                         <i class="fa fa-star"></i>
                                     @endfor
                                 </div>
-                                <a href="url('productDetail/'.$data->sku.'/?lang='.Session::get('currencySymbol'))}}">
+                                <a href="{{route('productDetail', $data->sku)}}">
                                     <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
                                 </a>
                                 <h4>{{Session::get('currencySymbol').($data->variant[0]->price * $data->variant[0]->multiplier)}}</h4>
