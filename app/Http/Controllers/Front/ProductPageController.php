@@ -69,7 +69,7 @@ class ProductPageController extends FrontController
 
         $clientCurrency = ClientCurrency::where('is_primary', '1')->first();
         foreach ($products->variant as $key => $value) {
-            $products->variant{$key}->multiplier = $clientCurrency->doller_compare;
+            $products->variant[$key]->multiplier = $clientCurrency->doller_compare;
         }
 
         foreach ($products->addOn as $key => $value) {
@@ -108,21 +108,21 @@ class ProductPageController extends FrontController
 
             foreach ($products as $key => $value) {
                 if(!empty($value->primary)){
-                    $products{$key}->product_name = $value->primary->title;
+                    $products[$key]->product_name = $value->primary->title;
                 }else{
-                    $products{$key}->product_name = $value->sku;
+                    $products[$key]->product_name = $value->sku;
                 }
 
                 if(!empty($value->pimage) && count($value->pimage) > 0){
                     $imgs = array();
                     foreach ($value->pimage as $k => $v) {
-                        $products{$key}->image = $folderPath.'/'.\Storage::disk('s3')->url($v->path);
+                        $products[$key]->image = $folderPath.'/'.\Storage::disk('s3')->url($v->path);
                     }
                 }else{
-                    $products{$key}->image = $folderPath.'/'.\Storage::disk('s3')->url('default/default_image.png');
+                    $products[$key]->image = $folderPath.'/'.\Storage::disk('s3')->url('default/default_image.png');
                 }
 
-                unset($products{$key}->pimage);
+                unset($products[$key]->pimage);
 
                 $prodPrice = '0.00';
 
@@ -134,13 +134,13 @@ class ProductPageController extends FrontController
                     if(!empty($value->baseprice[0]->price) && $value->baseprice[0]->price > 0 && $currency != 'USD'){
 
                         //$prodPrice = $this->changeCurrency($currency, $value->baseprice[0]->price);
-                        //$products{$key}->price = $amount;
+                        //$products[$key]->price = $amount;
                         $prodPrice = $value->baseprice[0]->price;
 
                     }
                 }
-                $products{$key}->price = $prodPrice;
-                unset($products{$key}->baseprice);
+                $products[$key]->price = $prodPrice;
+                unset($products[$key]->baseprice);
 
             }
         }

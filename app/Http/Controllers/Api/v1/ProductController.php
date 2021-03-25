@@ -65,7 +65,7 @@ class ProductController extends BaseController
 
         $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
         foreach ($products->variant as $key => $value) {
-            $products->variant{$key}->multiplier = $clientCurrency->doller_compare;
+            $products->variant[$key]->multiplier = $clientCurrency->doller_compare;
         }
 
         foreach ($products->addOn as $key => $value) {
@@ -109,13 +109,13 @@ class ProductController extends BaseController
             if(!empty($value->pimage) && count($value->pimage) > 0){
                 $imgs = array();
                 foreach ($value->pimage as $k => $v) {
-                    $products{$key}->image = \Storage::disk('s3')->url($v->path);
+                    $products[$key]->image = \Storage::disk('s3')->url($v->path);
                 }
             }else{
-                $products{$key}->image = \Storage::disk('s3')->url('default/default_image.png');
+                $products[$key]->image = \Storage::disk('s3')->url('default/default_image.png');
             }
 
-            unset($products{$key}->pimage);
+            unset($products[$key]->pimage);
 
             if(!empty($value->baseprice) && count($value->baseprice) > 0){
 
@@ -126,8 +126,8 @@ class ProductController extends BaseController
                     $value->variants{$row}->multiplier = $clientCurrency->doller_compare;
                 }
             }
-            $products{$key}->price = $prodPrice;
-            unset($products{$key}->baseprice);
+            $products[$key]->price = $prodPrice;
+            unset($products[$key]->baseprice);
 
         }
 

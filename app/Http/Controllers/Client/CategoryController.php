@@ -102,12 +102,12 @@ class CategoryController extends BaseController
 
             foreach ($request->language_id as $key => $value) {
                 $trans = new Category_translation();
-                $trans->name = $request->name{$key};
-                $trans->meta_title = $request->meta_title{$key};
-                $trans->meta_description = $request->meta_description{$key};
-                $trans->meta_keywords = $request->meta_keywords{$key};
+                $trans->name = $request->name[$key];
+                $trans->meta_title = $request->meta_title[$key];
+                $trans->meta_description = $request->meta_description[$key];
+                $trans->meta_keywords = $request->meta_keywords[$key];
                 $trans->category_id = $save;
-                $trans->language_id = $request->language_id{$key};
+                $trans->language_id = $request->language_id[$key];
                 $trans->save();
             }
 
@@ -155,7 +155,7 @@ class CategoryController extends BaseController
 
         $existlangs = $langIds = array();
         foreach ($langs as $key => $value) {
-            $langIds[] = $langs{$key}->langId;
+            $langIds[] = $langs[$key]->langId;
         }
         foreach ($category->translation as $key => $value) {
             $existlangs[] = $value->language_id;
@@ -197,21 +197,21 @@ class CategoryController extends BaseController
                         $trans->category_id = $save;
                         $trans->language_id = $value;
                     }
-                    $trans->name = $request->name{$key};
-                    $trans->meta_title = $request->meta_title{$key};
-                    $trans->meta_description = $request->meta_description{$key};
-                    $trans->meta_keywords = $request->meta_keywords{$key};
+                    $trans->name = $request->name[$key];
+                    $trans->meta_title = $request->meta_title[$key];
+                    $trans->meta_description = $request->meta_description[$key];
+                    $trans->meta_keywords = $request->meta_keywords[$key];
                     $trans->save();
                 }
             }
 
             /*if($request->has('trans_id')){
                 foreach ($request->trans_id as $key => $value) {
-                    $trans = Category_translation::where('id', $request->trans_id{$key})->first();
-                    $trans->name = $request->name{$key};
-                    $trans->meta_title = $request->meta_title{$key};
-                    $trans->meta_description = $request->meta_description{$key};
-                    $trans->meta_keywords = $request->meta_keywords{$key};
+                    $trans = Category_translation::where('id', $request->trans_id[$key])->first();
+                    $trans->name = $request->name[$key];
+                    $trans->meta_title = $request->meta_title[$key];
+                    $trans->meta_description = $request->meta_description[$key];
+                    $trans->meta_keywords = $request->meta_keywords[$key];
                     $trans->save();
                 }
             }*/

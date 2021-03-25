@@ -167,7 +167,7 @@ class ProductController extends BaseController
 
         $product = new Product();
         foreach ($request->only('sku', 'is_live', 'url_slug', 'vendor_id', 'type_id', 'country_origin_id', 'weight', 'weight_unit') as $key => $value) {
-            $product->{$key} = $value;
+            $product->[$key] = $value;
         }
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
         $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;
@@ -260,13 +260,13 @@ class ProductController extends BaseController
                     $proVariant = new ProductVariant();
                     $proVariant->sku = $value.'-'.$product->id;
                     $proVariant->product_id = $product->id;
-                    $proVariant->title = $request->variant_titles{$key};
-                    $proVariant->quantity = $request->variant_quantity{$key};
-                    $proVariant->price = $request->variant_price{$key};
+                    $proVariant->title = $request->variant_titles[$key];
+                    $proVariant->quantity = $request->variant_quantity[$key];
+                    $proVariant->price = $request->variant_price[$key];
                     $proVariant->position = 1;
-                    $proVariant->compare_at_price = $request->variant_compare_price{$key};
+                    $proVariant->compare_at_price = $request->variant_compare_price[$key];
                     $proVariant->barcode = $this->generateBarcodeNumber();
-                    $proVariant->cost_price = $request->variant_cost_price{$key};
+                    $proVariant->cost_price = $request->variant_cost_price[$key];
                     $proVariant->currency_id = 1;
                     $proVariant->tax_category_id = $request->tax_category;
                     $proVariant->inventory_policy = '';
@@ -287,7 +287,7 @@ class ProductController extends BaseController
                         $img = $image->id;
 
                     }
-                    foreach ($request->variant{$key} as $k => $v) {
+                    foreach ($request->variant[$key] as $k => $v) {
 
                         $prodVarSet[$i] = [
                             'product_id' => $product->id,
@@ -535,11 +535,11 @@ class ProductController extends BaseController
                     $existv[] = $value;
 
                     if($variantData){
-                        $variantData->title             = $request->variant_titles{$key};
-                        $variantData->price             = $request->variant_price{$key};
-                        $variantData->compare_at_price  = $request->variant_compare_price{$key};
-                        $variantData->cost_price        = $request->variant_cost_price{$key};
-                        $variantData->quantity          = $request->variant_quantity{$key};
+                        $variantData->title             = $request->variant_titles[$key];
+                        $variantData->price             = $request->variant_price[$key];
+                        $variantData->compare_at_price  = $request->variant_compare_price[$key];
+                        $variantData->cost_price        = $request->variant_cost_price[$key];
+                        $variantData->quantity          = $request->variant_quantity[$key];
                         //$variantData->currency_id       = $request->
                         $variantData->tax_category_id   = $request->tax_category;
                         $variantData->save();
@@ -569,11 +569,11 @@ class ProductController extends BaseController
                 foreach ($request->exist_variant as $key => $value) {
 
                     $update = DB::table('product_variants')->where('id', $request->get('area_id'))->update([
-                         'title'            => $request->exist_variant_titles{$key},
-                         'price'            => $request->exist_variant_price{$key},
-                         'compare_at_price' => $request->exist_variant_compare_price{$key},
-                         'cost_price'       => $request->exist_variant_cost_price{$key},
-                         'quantity'         => $request->exist_variant_quantity{$key},
+                         'title'            => $request->exist_variant_titles[$key],
+                         'price'            => $request->exist_variant_price[$key],
+                         'compare_at_price' => $request->exist_variant_compare_price[$key],
+                         'cost_price'       => $request->exist_variant_cost_price[$key],
+                         'quantity'         => $request->exist_variant_quantity[$key],
                          'currency_id'      => 1,
                          'tax_category_id'  => $request->tax_category,
                     ]);
@@ -593,13 +593,13 @@ class ProductController extends BaseController
                     $proVariant = new ProductVariant();
                     $proVariant->sku = $value.'-'.$product->id;
                     $proVariant->product_id = $product->id;
-                    $proVariant->title = $request->variant_titles{$key};
-                    $proVariant->quantity = $request->variant_quantity{$key};
-                    $proVariant->price = $request->variant_price{$key};
+                    $proVariant->title = $request->variant_titles[$key];
+                    $proVariant->quantity = $request->variant_quantity[$key];
+                    $proVariant->price = $request->variant_price[$key];
                     $proVariant->position = 1;
-                    $proVariant->compare_at_price = $request->variant_compare_price{$key};
+                    $proVariant->compare_at_price = $request->variant_compare_price[$key];
                     $proVariant->barcode = $this->generateBarcodeNumber();
-                    $proVariant->cost_price = $request->variant_cost_price{$key};
+                    $proVariant->cost_price = $request->variant_cost_price[$key];
                     $proVariant->currency_id = 1;
                     $proVariant->tax_category_id = $request->tax_category;
                     $proVariant->inventory_policy = '';
@@ -621,7 +621,7 @@ class ProductController extends BaseController
                         $img = $image->id;
 
                     }
-                    foreach ($request->variant{$key} as $k => $v) {
+                    foreach ($request->variant[$key] as $k => $v) {
 
                         $prodVarSet[$i] = [
                             'product_id' => $product->id,
@@ -676,13 +676,13 @@ class ProductController extends BaseController
         
         foreach ($request->optionIds as $key => $value) {
 
-            $name = explode(';', $request->variantIds{$key});
+            $name = explode(';', $request->variantIds[$key]);
 
             if(!in_array($name[1], $variantNames)){
                 $variantNames[] = $name[1];
             }
 
-            $multiArray[$request->variantIds{$key}][] = $value;
+            $multiArray[$request->variantIds[$key]][] = $value;
         }
 
         $combination = $this->array_combinations($multiArray);

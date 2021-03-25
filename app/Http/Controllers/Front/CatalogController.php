@@ -65,7 +65,7 @@ class CatalogController extends FrontController
 
         $clientCurrency = ClientCurrency::where('is_primary', '1')->first();
         foreach ($product->variant as $key => $value) {
-            $product->variant{$key}->multiplier = $clientCurrency->doller_compare;
+            $product->variant[$key]->multiplier = $clientCurrency->doller_compare;
         }
 
         $vendorIds[] = $product->vendor_id;
@@ -97,7 +97,7 @@ class CatalogController extends FrontController
                         $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
                         ->where('category_translations.language_id', $langId);
                     }])
-                    ->select('id', 'icon', 'slug', 'type_id', 'can_add_products')
+                    ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
                     ->where('id', $cid)->firstOrFail();
 
 

@@ -88,7 +88,7 @@ class BrandController extends BaseController
                     $data[] = [
                         'title' => $value,
                         'brand_id' => $brand->id,
-                        'language_id' => $request->language_id{$key}
+                        'language_id' => $request->language_id[$key]
                     ];
                 }
 
@@ -162,11 +162,11 @@ class BrandController extends BaseController
 
         foreach ($request->title as $key => $value) {
 
-            $bt = BrandTranslation::where('brand_id', $brand->id)->where('language_id', $request->language_id{$key})->first();
+            $bt = BrandTranslation::where('brand_id', $brand->id)->where('language_id', $request->language_id[$key])->first();
             if(!$bt){
                 $bt = new BrandTranslation();
                 $bt->brand_id = $brand->id;
-                $bt->language_id = $request->language_id{$key};
+                $bt->language_id = $request->language_id[$key];
             }
             $bt->title = $value;
             $bt->save();

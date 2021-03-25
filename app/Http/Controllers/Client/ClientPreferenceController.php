@@ -95,7 +95,7 @@ class ClientPreferenceController extends BaseController
 
         foreach ($request->all() as $key => $value) {
             if(!in_array($key, $keyShouldNot)){
-               $preference->{$key} = $value; 
+               $preference->[$key] = $value; 
             }
         }
 
@@ -192,7 +192,7 @@ class ClientPreferenceController extends BaseController
                 $exist_cid[] = $value;
 
                 $curr = ClientCurrency::where('currency_id', $value)->where('client_code',Auth::user()->code)->first();
-                $multiplier = array_key_exists($key, $request->multiply_by) ? $request->multiply_by{$key} : 1;
+                $multiplier = array_key_exists($key, $request->multiply_by) ? $request->multiply_by[$key] : 1;
                 if(!$curr){
 
                     $cur_multi[] = [

@@ -72,16 +72,16 @@ class VariantController extends BaseController
 
             foreach ($request->title as $key => $value) {
                 $varTrans = new VariantTranslation();
-                $varTrans->title = $request->title{$key};
+                $varTrans->title = $request->title[$key];
                 $varTrans->variant_id = $variant->id;
-                $varTrans->language_id = $request->language_id{$key};
+                $varTrans->language_id = $request->language_id[$key];
                 $varTrans->save();
             }
 
             foreach ($request->hexacode as $key => $value) {
 
                 $varOpt = new VariantOption();
-                $varOpt->title = $request->opt_color[0]{$key};
+                $varOpt->title = $request->opt_color[0][$key];
                 $varOpt->variant_id = $variant->id;
                 $varOpt->hexacode = ($value == '') ? '' : $value;
                 $varOpt->save();
@@ -89,13 +89,13 @@ class VariantController extends BaseController
                 foreach($request->language_id as $k => $v) {
 
                     /*$varOptTrans = new VariantOptionTranslation();
-                    $varOptTrans->title = $request->opt_color{$k}{$key};
+                    $varOptTrans->title = $request->opt_color{$k}[$key];
                     $varOptTrans->variant_option_id = $varOpt->id;
                     $varOptTrans->language_id = $v;
                     $varOptTrans->save();*/
 
                     $data[] = [
-                        'title' => $request->opt_color{$k}{$key},
+                        'title' => $request->opt_color{$k}[$key],
                         'variant_option_id' => $varOpt->id,
                         'language_id' => $v
                     ];
@@ -162,7 +162,7 @@ class VariantController extends BaseController
         //dd($langs->toArray);
         /*$langIds = array(); , 'langIds' => $langIds, 'existlangs' => $existlangs
         foreach ($langs as $key => $value) {
-            $langIds[] = $langs{$key}->langId;
+            $langIds[] = $langs[$key]->langId;
         }
         $existlangs = array();
         foreach ($variant->translation as $key => $value) {
@@ -200,7 +200,7 @@ class VariantController extends BaseController
                 $varTrans->variant_id = $variant->id;
                 $varTrans->language_id = $value;
             }
-            $varTrans->title = $request->title{$key};
+            $varTrans->title = $request->title[$key];
             $varTrans->save();
         }
 
@@ -217,16 +217,16 @@ class VariantController extends BaseController
                     $varOpt->variant_id = $variant->id;
                 }
 
-                $varOpt->title = $request->opt_title[$curLangId]{$key};
-                $varOpt->hexacode = ($request->hexacode{$key} == '') ? '' : $request->hexacode{$key};
+                $varOpt->title = $request->opt_title[$curLangId][$key];
+                $varOpt->hexacode = ($request->hexacode[$key] == '') ? '' : $request->hexacode[$key];
                 $varOpt->save();
                 $exist_options[$key] = $varOpt->id;
             }else{
 
                 $varOpt = new VariantOption();
                 $varOpt->variant_id = $variant->id;
-                $varOpt->title = $request->opt_title[$curLangId]{$key};
-                $varOpt->hexacode = ($request->hexacode{$key} == '') ? '' : $request->hexacode{$key};
+                $varOpt->title = $request->opt_title[$curLangId][$key];
+                $varOpt->hexacode = ($request->hexacode[$key] == '') ? '' : $request->hexacode[$key];
                 $varOpt->save();
                 $exist_options[$key] = $varOpt->id;
 

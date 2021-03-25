@@ -68,7 +68,7 @@ class AddonSetController extends BaseController
             foreach ($request->price as $key => $value) {
 
                 $option = new AddonOption();
-                $option->title = $request->opt_value[0]{$key};
+                $option->title = $request->opt_value[0][$key];
                 $option->addon_id = $addOn->id;
                 $option->position = $key + 1;
                 $option->price = $value;
@@ -76,7 +76,7 @@ class AddonSetController extends BaseController
 
                 foreach ($request->language_id as $lk => $lang) {
                     $optTrans[] = [
-                        'title' => $request->opt_value{$lk}{$key},
+                        'title' => $request->opt_value[$lk][$key],
                         'addon_opt_id' => $option->id,
                         'language_id' => $lang,
                     ];
@@ -159,7 +159,7 @@ class AddonSetController extends BaseController
                 $varTrans->addon_id = $addon->id;
                 $varTrans->language_id = $value;
             }
-            $varTrans->title = $request->title{$key};
+            $varTrans->title = $request->title[$key];
             $varTrans->save();
         }
 
@@ -170,16 +170,16 @@ class AddonSetController extends BaseController
 
             if(empty($value)){
                 $varOpt = new AddonOption();
-                $varOpt->title = $request->opt_value[$curLangId]{$key};
+                $varOpt->title = $request->opt_value[$curLangId][$key];
                 $varOpt->addon_id = $addon->id;
-                $varOpt->price = $request->price{$key};
+                $varOpt->price = $request->price[$key];
                 $varOpt->save();
                 $exist_options[$key] = $varOpt->id;
 
             } else {
                 $varOpt = AddonOption::where('id', $value)->first();
-                $varOpt->title = $request->opt_value[$curLangId]{$key};
-                $varOpt->price = $request->price{$key};
+                $varOpt->title = $request->opt_value[$curLangId][$key];
+                $varOpt->price = $request->price[$key];
                 $varOpt->save();
                 $exist_options[$key] = $value;
             }
