@@ -51,11 +51,9 @@ class ActivityController extends BaseController
                
                 }])->get(['id','order_id','dependent_task_id','task_type_id','location_id','appointment_duration','task_status','allocation_type','created_at']);
 
-
-                return response()->json([
-                    'data' => $tasks,
-                   ],200);
-        
+        return response()->json([
+            'data' => $tasks,
+           ],200);
     }
 
     /**

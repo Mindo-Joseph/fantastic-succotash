@@ -123,7 +123,7 @@
                                                 @endfor
                                             </div>
                                             <a href="{{route('productDetail', $new['sku'])}}">
-                                                <h6>{{ !empty($new['translation']) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
+                                                <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                             </a>
                                             <h4>
                                                 <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
@@ -167,7 +167,7 @@
                             </div>
                             <div class="col-lg-6 rtl-text">
                                 <div class="product-right">
-                                    <h2>{{ !empty($product->translation) ? $product->translation[0]->title : ''}}</h2>
+                                    <h2>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}</h2>
                                     <!--<h4><del>$459.00</del><span>55% off</span></h4> -->
                                     <h3>{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</h3>
                                     @if(!empty($product->variantSet))
@@ -270,7 +270,7 @@
                                             href="#" class="btn btn-solid">buy now</a></div>
                                     <div class="border-product">
                                         <h6 class="product-title">product details</h6>
-                                        <p>{{ !empty($product->translation) ? $product->translation[0]->body_html : ''}}</p>
+                                        <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''}}</p>
                                     </div>
                                     <!--<div class="border-product">
                                         <h6 class="product-title">share it</h6>
@@ -333,11 +333,11 @@
                                 <div class="tab-content nav-material" id="top-tabContent">
                                     <div class="tab-pane fade show active" id="top-home" role="tabpanel"
                                         aria-labelledby="top-home-tab">
-                                        <p>{{ !empty($product->translation) ? $product->translation[0]->body_html : ''}}</p>
+                                        <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''}}</p>
                                     </div>
                                     <div class="tab-pane fade" id="top-profile" role="tabpanel"
                                         aria-labelledby="profile-top-tab">
-                                        <p>{{ !empty($product->translation) ? $product->translation[0]->body_html : ''}}</p>
+                                        <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''}}</p>
                                         <!--<div class="single-product-tables">
                                             <table>
                                                 <tbody>

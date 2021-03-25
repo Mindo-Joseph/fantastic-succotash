@@ -73,7 +73,7 @@ class ProductController extends BaseController
                 $v->multiplier = $clientCurrency->doller_compare;
             }
         }
-        
+
         $response['products'] = $products;
 
         return response()->json([
