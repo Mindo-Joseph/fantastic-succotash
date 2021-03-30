@@ -36,13 +36,13 @@ Route::domain('{subdomain}.{domain}.com')->middleware(['subdomain'])->group(func
 });*/
 
 
-	Route::domain('{domain}')->middleware(['subdomain'])->group(function() {
+	//Route::domain('{domain}')->middleware(['subdomain'])->group(function() {
 		include_once "frontend.php";
 		include_once "backend.php";
 	    /*Route::get('/', function (Request $request) {
 	        echo "flskdfksdjfk";die;
 	    });*/
-	});
+	//});
 
 	/*Route::domain('{domain}')->middleware(['subdomain'])->group(function () {
 
