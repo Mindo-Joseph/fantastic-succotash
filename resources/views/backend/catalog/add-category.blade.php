@@ -2,11 +2,12 @@
     <div class="col-md-12 card-box">
 
         <div class="row mb-2">
-            <div class="col-md-3">
+            <div class="col-sm-6">
                 <input type="file" accept="image/*" data-plugins="dropify" name="icon" class="dropify" data-default-file="" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category Icon</p>
-            </div> <div class="col-md-2"></div>
-            <div class="col-md-6"> <!--  Storage::disk('s3')->url($client->logo)  -->                 
+            </div> 
+            
+            <div class="col-sm-6"> <!--  Storage::disk('s3')->url($client->logo)  -->                 
                 <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category image</p>
             </div>
@@ -94,44 +95,51 @@
                 </div>
             </div> -->
         </div>
-        @foreach($languages as $langs)
-            <div class="row rowYK" style="border: 2px dashed #d2d0cd;">
-                <h4 class="col-md-12"> {{ $langs->langName.' Language' }} </h4>
 
-                <div class="col-md-6">
-                    <div class="form-group" id="{{ ($langs->langId == 1) ? 'nameInput' : 'nameotherInput' }}">
-                        {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
-                        @if($langs->is_primary == 1)
-                            {!! Form::text('name[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
-                        @else
-                            {!! Form::text('name[]', null, ['class' => 'form-control']) !!}
-                        @endif
-                        <span class="invalid-feedback" role="alert">
-                            <strong></strong>
-                        </span>
-                    </div>
-                </div>
-                {!! Form::hidden('language_id[]', $langs->langId) !!}
-                <div class="col-md-6">
-                    <div class="form-group" id="meta_titleInput">
-                        {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!} 
-                        {!! Form::text('meta_title[]', null, ['class' => 'form-control']) !!}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!} 
-                        {!! Form::textarea('meta_description[]', null, ['class'=>'form-control', 'rows' => '3']) !!}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {!! Form::label('title', 'Meta Keywords',['class' => 'control-label']) !!} 
-                        {!! Form::textarea('meta_keywords[]', null, ['class' => 'form-control', 'rows' => '3']) !!}
-                    </div>
-                </div>
-            </div>
-        @endforeach
+        <div class="row">
+            @foreach($languages as $langs)
+                <div class="col-lg-6">
+                <div class="outer_box px-3 py-2 mb-3">
+                <div class="row rowYK">
+                    <h4 class="col-md-12"> {{ $langs->langName.' Language' }} </h4>
 
+                    <div class="col-md-6">
+                        <div class="form-group" id="{{ ($langs->langId == 1) ? 'nameInput' : 'nameotherInput' }}">
+                            {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
+                            @if($langs->is_primary == 1)
+                                {!! Form::text('name[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
+                            @else
+                                {!! Form::text('name[]', null, ['class' => 'form-control']) !!}
+                            @endif
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                        </div>
+                    </div>
+                    {!! Form::hidden('language_id[]', $langs->langId) !!}
+                    <div class="col-md-6">
+                        <div class="form-group" id="meta_titleInput">
+                            {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!} 
+                            {!! Form::text('meta_title[]', null, ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!} 
+                            {!! Form::textarea('meta_description[]', null, ['class'=>'form-control', 'rows' => '3']) !!}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Meta Keywords',['class' => 'control-label']) !!} 
+                            {!! Form::textarea('meta_keywords[]', null, ['class' => 'form-control', 'rows' => '3']) !!}
+                        </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+                
+            @endforeach
+        </div>
     </div>
 </div>

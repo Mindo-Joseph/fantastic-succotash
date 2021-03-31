@@ -68,9 +68,9 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-4">
-            <div class="card-box">
+    <div class="row catalog_box">
+        <div class="col-xl-4 col-lg-6 mb-4">
+            <div class="card-box h-100">
                 <div class="row mb-2">
                     <div class="col-sm-8">
                         <h4 class="page-title">Category</h4>
@@ -96,15 +96,15 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12 text-right">
+                    <div class="col-sm-12 text-right btn_bottom">
                         <button class="btn btn-blue waves-effect waves-light text-sm-right saveList">Save Order</button>
                     </div>
                 </div> <!-- end row -->
             </div> <!-- end card-box -->
         </div> <!-- end col -->
 
-        <div class="col-sm-4">
-            <div class="card-box">
+        <div class="col-xl-4 col-lg-6 mb-4">
+            <div class="card-box h-100">
                 <div class="row mb-2">
                     <div class="col-sm-8">
                         <h4 class="page-title">Variant</h4>
@@ -169,15 +169,15 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-sm-12 text-right">
+                    <div class="col-sm-12 text-right btn_bottom">
                         <button class="btn btn-blue waves-effect waves-light text-sm-right saveVariantOrder">Save Order</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-4">
-            <div class="card-box">
+        <div class="col-xl-4 col-lg-6 mb-4">
+            <div class="card-box h-100">
                 <div class="row mb-2">
                     <div class="col-sm-8">
                         <h4 class="page-title">Brand</h4>
@@ -227,7 +227,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-sm-12 text-right">
+                    <div class="col-sm-12 text-right btn_bottom">
                         <button class="btn btn-blue waves-effect waves-light text-sm-right saveBrandOrder">Save Order</button>
                     </div>
                 </div>

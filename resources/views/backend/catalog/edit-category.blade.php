@@ -2,12 +2,12 @@
     <div class="col-md-12 card-box">
         <h4 class="header-title mb-3"></h4>
 
-        <div class="row mb-2">
-            <div class="col-md-3">
+        <div class="row mb-6">
+            <div class="col-sm-6">
                 <input type="file" accept="image/*" data-plugins="dropify" name="icon" class="dropify" data-default-file="{{$category->icon['proxy_url'].'400/400'.$category->icon['image_path']}}" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category Icon</p>
-            </div> <div class="col-md-2"></div>
-            <div class="col-md-6"> <!--  Storage::disk('s3')->url($client->logo)  -->                 
+            </div> 
+            <div class="col-sm-6"> <!--  Storage::disk('s3')->url($client->logo)  -->                 
                 <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$category->image['proxy_url'].'400/400'.$category->image['image_path']}}" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category image</p>
             </div>
@@ -102,50 +102,59 @@
             </div> 
         -->
         </div>
-        @foreach($category->translation as $trans)
-            <div class="row rowYK" style="border: 2px dashed #d2d0cd;">
-                <h4 class="col-md-12"> {{ $trans->langName.' Language' }} </h4>
-                <div class="col-md-6">
-                    <div class="form-group" id="{{ ($trans->is_primary == 1) ? 'nameInputEdit' : 'nameotherInput' }}">
-                        {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
-                        @if($trans->is_primary == 1)
-                            {!! Form::text('name[]', $trans->name, ['class' => 'form-control', 'required' => 'required']) !!}
-                        @else
-                            {!! Form::text('name[]', $trans->name, ['class' => 'form-control']) !!}
-                        @endif
-                        
-                        <span class="invalid-feedback" role="alert">
-                            <strong></strong>
-                        </span>
-                    </div>
-                </div>
-                {!! Form::hidden('language_id[]', $trans->langId) !!}
-                {!! Form::hidden('trans_id[]', $trans->id) !!}
-                <div class="col-md-6">
-                    <div class="form-group" id="meta_titleInput">
-                        {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!} 
-                        {!! Form::text('meta_title[]', $trans->meta_title, ['class' => 'form-control']) !!}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!} 
-                        {!! Form::textarea('meta_description[]', $trans->meta_description, ['class'=>'form-control', 'rows' => '3']) !!}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {!! Form::label('title', 'Meta Keywords',['class' => 'control-label']) !!} 
-                        {!! Form::textarea('meta_keywords[]', $trans->meta_keywords, ['class' => 'form-control', 'rows' => '3']) !!}
-                    </div>
-                </div>
-            </div>
-        @endforeach
 
-        @if(count($langIds) !=  count($existlangs))
-            @foreach($languages as $langs)
-              @if(!in_array($langs->langId, $existlangs) && in_array($langs->langId, $langIds))
-                <div class="row rowYK" style="border: 2px dashed #d2d0cd;">
+        <div class="row">
+            @foreach($category->translation as $trans)
+                <div class="col-lg-6">
+                    <div class="outer_box px-3 py-2 mb-3">
+                        <div class="row rowYK">
+                            <h4 class="col-md-12"> {{ $trans->langName.' Language' }} </h4>
+                            <div class="col-md-6">
+                                <div class="form-group" id="{{ ($trans->is_primary == 1) ? 'nameInputEdit' : 'nameotherInput' }}">
+                                    {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
+                                    @if($trans->is_primary == 1)
+                                        {!! Form::text('name[]', $trans->name, ['class' => 'form-control', 'required' => 'required']) !!}
+                                    @else
+                                        {!! Form::text('name[]', $trans->name, ['class' => 'form-control']) !!}
+                                    @endif
+                                    
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong></strong>
+                                    </span>
+                                </div>
+                            </div>
+                            {!! Form::hidden('language_id[]', $trans->langId) !!}
+                            {!! Form::hidden('trans_id[]', $trans->id) !!}
+                            <div class="col-md-6">
+                                <div class="form-group" id="meta_titleInput">
+                                    {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!} 
+                                    {!! Form::text('meta_title[]', $trans->meta_title, ['class' => 'form-control']) !!}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!} 
+                                    {!! Form::textarea('meta_description[]', $trans->meta_description, ['class'=>'form-control', 'rows' => '3']) !!}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {!! Form::label('title', 'Meta Keywords',['class' => 'control-label']) !!} 
+                                    {!! Form::textarea('meta_keywords[]', $trans->meta_keywords, ['class' => 'form-control', 'rows' => '3']) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            @endforeach
+
+            @if(count($langIds) !=  count($existlangs))
+        @foreach($languages as $langs)
+            @if(!in_array($langs->langId, $existlangs) && in_array($langs->langId, $langIds))
+            <div class="col-lg-6">
+                <div class="outer_box px-3 py-2 mb-3">
+
+                <div class="row rowYK">
                     <h4 class="col-md-12"> {{ $langs->langName.' Language' }} </h4>
                     <div class="col-md-6">
                         <div class="form-group" id="{{ ($langs->is_primary == 1) ? 'nameInputEdit' : 'nameotherInput' }}">
@@ -180,8 +189,17 @@
                         </div>
                     </div>
                 </div>
-              @endif
-            @endforeach
+
+                </div>
+            </div> 
+            @endif
+            @endforeach   
+        
         @endif
+        </div>
+
+        
+                
+              
     </div>
 </div>

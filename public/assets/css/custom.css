@@ -2,15 +2,15 @@
     width: 6px !important;
     height: 6px;
 }
- 
+
 .table-responsive::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3) !important; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
     border-radius: 10px;
 }
- 
+
 .table-responsive::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1) !important; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1) !important;
 }
 
 .login-form label {
@@ -26,31 +26,36 @@
     text-align: center;
 }
 
-  .login-form .blank-label {
+.login-form .blank-label {
     display: none;
-  }
-  
-  .login-form input[type="radio"]:checked + label {
-      color: #010101;
-      background-color: #F8ECEC;
-      color: #000000;
-      font-size: 13px;  
-      letter-spacing: 0.5px;
-  }
-  .login-form input{
-     display: none;
-  }
-  .dataTables_filter  label{
+}
+
+.login-form input[type="radio"]:checked+label {
+    color: #010101;
+    background-color: #F8ECEC;
+    color: #000000;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.login-form input {
+    display: none;
+}
+
+.dataTables_filter label {
     float: right !important;
-  }
-  .login-form .custom-control-label::before{
-      display: none;
-  }
-  .pos-rel-tb {
-      position: relative;
-      top: 6px;
-  }
-  .add-sub-task-btn {
+}
+
+.login-form .custom-control-label::before {
+    display: none;
+}
+
+.pos-rel-tb {
+    position: relative;
+    top: 6px;
+}
+
+.add-sub-task-btn {
     background-color: #ECF6FF;
     height: 42px;
     line-height: 42px;
@@ -66,22 +71,48 @@
     letter-spacing: 0.5px;
     text-align: center;
     transition: all .3s ease-in-out 0s;
-  }
-  .add-sub-task-btn:hover {
+}
+
+.add-sub-task-btn:hover {
     color: #000000;
     background-color: #F8ECEC;
-  }
-  .upload-img-btn {
+}
+
+.upload-img-btn {
     background-color: #F8ECEC;
     color: #000000;
     font-size: 13px;
     letter-spacing: 0.5px;
     border: none;
-  }
-  .taskselect{
-      font-weight: 700;
-  }
+}
 
-  .dropify-wrapper{
+.taskselect {
+    font-weight: 700;
+}
+
+.dropify-wrapper {
     height: 130px !important;
-  }
+}
+
+.catalog_box .card-box {
+    margin: 0;
+    padding: 1.5rem 1.5rem 80px;
+}
+
+.btn_bottom {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+}
+
+.dragula-handle::before {
+    position: initial;
+}
+
+.outer_box{
+  border: 2px dashed #d2d0cd;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background-color: #6658dd !important;
+}
