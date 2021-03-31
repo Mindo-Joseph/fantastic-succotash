@@ -26,6 +26,8 @@ class ProductVariant extends Model
 	    		->select('product_variant_id', 'product_image_id')->groupBy('product_variant_id');
 	}
 
-	
+	public function vset(){
+	    return $this->hasMany('App\Models\ProductVariantSet')->select('product_variant_id', 'variant_option_id', 'product_id', 'variant_type_id'); 
+	}
 
 }

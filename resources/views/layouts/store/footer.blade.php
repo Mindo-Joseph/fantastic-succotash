@@ -87,6 +87,25 @@
         });
     }
 
+    $('.customerPaginate').change(function(){
+        var perPage = $('.customerPaginate option:selected').val();
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ route('changePaginate') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "itemPerPage": perPage,
+            },
+            success: function(response) {
+                location.reload();
+            },
+            error: function (data) {
+                location.reload();
+            },
+        });
+    });
+
     function openSearch() {
         document.getElementById("search-overlay").style.display = "block";
     }

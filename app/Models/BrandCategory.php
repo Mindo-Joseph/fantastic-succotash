@@ -11,4 +11,8 @@ class BrandCategory extends Model
     public function cate(){
        return $this->belongsTo('App\Models\Category', 'category_id', 'id')->select('id', 'slug', 'type_id'); 
     }
+
+    public function translation(){
+       return $this->hasMany('App\Models\BrandTranslation', 'brand_id', 'brand_id')->select('brand_id', 'language_id', 'title'); 
+    }
 }

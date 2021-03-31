@@ -8,4 +8,6 @@
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/bootstrap.css')}}">
 <!-- Theme css -->
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/color1.css')}}" media="screen" id="color">
+
+<link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/custom.css')}}">
 @yield('css')

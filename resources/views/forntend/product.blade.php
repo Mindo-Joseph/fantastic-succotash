@@ -177,60 +177,69 @@
                                             <div class="size-box">
                                                 <ul class="productVariants">
                                                     <li class="firstChild">{{$variant->title}}</li>
-                                                    @foreach($variant->options as $k => $optn)
-                                                        <li class="otherSize" >
-
-                                                            <?php $checked = ($k == 0) ? 'checked' : '';
-                                                                $value = $optn->variant_id.'-'.$optn->id;
-                                                                $name = 'variant_'.$key;
-                                                            ?>
-
-                                                            <div class="radio radio-info form-check-inline">
-                                                                <input id="inlineRadio-{{$value}}" value="{{$value}}" name="{{$name}}" varId="{{$optn->variant_id}}" varOptId="{{$optn->id}}" type="radio" {{$checked}} class="dataVar{{$name}}">
-                                                                <label for="inlineRadio-{{$value}}">{{$optn->title}}</label>
-                                                            </div>
-                                                        <!--<a href="#">{{$optn->title}}</a> -->
-                                                     </li>
+                                                    @foreach($variant->option2 as $k => $optn)
+                                                    <li class="otherSize">
+                                                        <?php $var_id = $variant->variant_type_id;
+                                                            $opt_id = $optn->variant_option_id;
+                                                            $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';
+                                                        ?>
+                                                        <div class="radio radio-info form-check-inline">
+                                                            <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="dataVar{{$var_id}}">
+                                                            <label for="lineRadio-{{$opt_id}}">{{$optn->title}}</label>
+                                                        </div>
+                                                    </li>
                                                     @endforeach
                                                 </ul>
                                             </div>
 
                                          @else
-                                            <ul class="color-variant productVariants">
-                                                <li class="firstChild">{{$variant->title}} </li>
-                                                @foreach($variant->options as $k => $option)
-                                                    <li  class="otherChild bg-light1 {{($k == 0) ? 'active' : ''}}" style="background-color:{{$option->hexacode}} !important;"></li>
-                                                @endforeach
-                                            </ul>
+                                            <div class="size-box">
+                                                <ul class="productVariants">
+                                                    <li class="firstChild">{{$variant->title}}</li>
+                                                    @foreach($variant->option2 as $k => $optn)
+                                                    <li class="otherSize">
+                                                        <?php $var_id = $variant->variant_type_id;
+                                                            $opt_id = $optn->variant_option_id;
+                                                            $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';
+                                                        ?>
+                                                        <div class="radio radio-info form-check-inline">
+                                                            <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="dataVar{{$var_id}}">
+                                                            <label for="lineRadio-{{$opt_id}}">{{$optn->title}}</label>
+                                                        </div>
+                                                        <!--<a href="#">{{$optn->title}}</a> -->
+                                                    </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+
+                                            <!-- <div class="size-box">
+                                                <ul class="productVariants">
+                                                    <li class="firstChild">{{$variant->title}}</li>
+                                                    @foreach($variant->option2 as $k => $optn)
+                                                    <li class="otherSize">
+                                                        <?php /*$var_id = $variant->variant_type_id;
+                                                            $opt_id = $optn->variant_option_id;
+                                                            $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';*/
+                                                        ?>
+                                                        <div class="chiller_cb small_label d-inline-block color-selector radio radio-info form-check-inline">
+                                                            <input class="custom-control-input" type="radio" {{$checked}} id="opt-{{$opt_id}}" vid="{{$var_id}}" optid="{{$opt_id}}">
+                                                            <label for="opt-{{$opt_id}}"></label>
+                                                            @if(strtoupper($optn->hexacode) == '#FFF' || strtoupper($optn->hexacode) == '#FFFFFF')
+                                                                <span style="background: #FFFFFF; border-color:#000;" class="check_icon white_check"></span>
+                                                            @else
+                                                                <span class="check_icon" style="background:{{$optn->hexacode}}; border-color: {{$optn->hexacode}};"></span>
+                                                            @endif                                        
+                                                        </div>
+                                                    </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div> -->
+
                                          @endif
                                         @endforeach
                                     @endif 
 
                                     <div class="product-description border-product">
-                                        <!--<h6 class="product-title size-text">select size <span><a href="" data-toggle="modal"
-                                                    data-target="#sizemodal">size chart</a></span> </h6>
-                                        <div class="modal fade" id="sizemodal" tabindex="-1" role="dialog"
-                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Sheer Straight Kurta</h5>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    </div>
-                                                    <div class="modal-body"><img src="{{asset('front-assets/images/size-chart.jpg')}}" alt=""
-                                                            class="img-fluid blur-up lazyload"></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                        <!--<div class="size-box">
-                                            <ul>
-                                                <li class="active"><a href="#">s</a></li>
-                                                <li><a href="#">m</a></li>
-                                                <li><a href="#">l</a></li>
-                                                <li><a href="#">xl</a></li>
-                                            </ul>
-                                        </div> -->
                                         <h6 class="product-title">quantity</h6>
                                         <div class="qty-box">
                                             <div class="input-group">

@@ -191,8 +191,7 @@
                                     <div class="product-top-filter">
                                         <div class="row">
                                             <div class="col-xl-12">
-                                                <div class="filter-main-btn"><span class="filter-btn btn btn-theme"><i class="fa fa-filter"
-                                                            aria-hidden="true"></i> Filter</span></div>
+                                                <div class="filter-main-btn"><span class="filter-btn btn btn-theme"><i class="fa fa-filter" aria-hidden="true"></i> Filter</span></div>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -242,9 +241,13 @@
                                           @if(!empty($listData))
                                             @foreach($listData as $key => $data)
 
-                                            <?php $imagePath = '';
-                                            foreach ($data->media as $k => $v) {
-                                                $imagePath = $v->image->path['proxy_url'].'300/300'.$v->image->path['image_path'];
+                                            <?php $imagePath = $imagePath2 = '';
+                                            $mediaCount = count($data->media);
+                                            for ($i = 0; $i < $mediaCount && $i < 2; $i++) { 
+                                                if($i == 0){
+                                                    $imagePath = $data->media[$i]->image->path['proxy_url'].'300/300'.$data->media[$i]->image->path['image_path'];
+                                                }
+                                                $imagePath2 = $data->media[$i]->image->path['proxy_url'].'300/300'.$data->media[$i]->image->path['image_path'];
                                             } ?>
                                             <div class="col-xl-3 col-6 col-grid-box">
                                                 <div class="product-box">
@@ -253,7 +256,7 @@
                                                             <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
                                                         </div>
                                                         <div class="back">
-                                                            <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
+                                                            <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath2}}" alt=""></a>
                                                         </div>
                                                         <div class="cart-info cart-wrap">
                                                             <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> 
@@ -295,11 +298,7 @@
                                                 <div class="col-xl-6 col-md-6 col-sm-12">
                                                     <nav aria-label="Page navigation">
                                                         <ul class="pagination">
-                                                            <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span
-                                                                        aria-hidden="true"><i
-                                                                            class="fa fa-chevron-left"
-                                                                            aria-hidden="true"></i></span> <span
-                                                                        class="sr-only">Previous</span></a></li>
+                                                            <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-chevron-left" aria-hidden="true"></i></span> <span class="sr-only">Previous</span></a></li>
                                                             <li class="page-item active"><a class="page-link" href="#">1</a></li>
                                                             <li class="page-item"><a class="page-link" href="#">2</a></li>
                                                             <li class="page-item"><a class="page-link" href="#">3</a></li>
