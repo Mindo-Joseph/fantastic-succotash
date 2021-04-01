@@ -116,3 +116,113 @@
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
   background-color: #6658dd !important;
 }
+
+#add-category-form .modal-lg, #edit-category-form .modal-lg {
+    max-width: 70%;
+}
+span.inner-div{
+    float: right;
+    display: block;
+    position: absolute;
+    top: -5px;
+    right: 16px;
+}
+.table-borderless th, .table-borderless td {
+    padding: 8px 10px 8px 0px;
+}
+
+.dd{max-width: 100%;}
+
+.variant-row .card-body {
+    background: #f3f7f9; padding:12px;
+}
+.vari.action-icon{
+    padding: 0px 1px; float: left;
+}
+
+.dd-list .dd3-handle::before {
+    content: "\F01DB" !important;
+    font-family: "Material Design Icons";
+    color: #adb5bd;
+    font-size: 22px;
+}
+.dragula-handle::before {
+    top: 5px;
+}
+
+#map-canvas {
+    height: 90%;
+    margin: 0px;
+    padding: 0px;
+    position: unset;
+}
+
+.serch {
+    width: 100%;
+    margin: 0px;
+}
+
+.imageagent {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    margin-right: 15px;
+}
+
+.cornar {
+    border: 1px solid #ddd;
+    padding-top: 10px;
+    height: 240px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.teamshow {
+    margin-left: 58px;
+
+}
+
+.display {
+    height: 35px;
+    width: 67px;
+}
+
+.boxes {
+    margin-bottom: 10px;
+    height: 100px;
+}
+
+.new {
+    vertical-align: initial !important;
+    display: revert !important;
+}
+
+#new_show {
+    display: none;
+}
+
+.agentcheck {}
+
+.search {
+    background-color: #02f2cc;
+}
+.card-box {
+
+    padding: 1.5rem;
+    box-shadow: 0 0 8px 0 rgba(154, 161, 171, 0.15) !important;
+    margin-bottom: 24px !important;
+    border-radius: 0.25rem;
+    /* margin-bottom: 10px; */
+}
+.select_all{
+    position: relative;
+    top: 8px;
+}
+#show_map-canvas{
+    height: 600px;
+}
+.pac-container, .pac-container .pac-item { z-index: 99999 !important; }
+
+body[data-sidebar-size="condensed"]:not([data-layout="compact"]) {
+    min-height: 900px !important;
+}

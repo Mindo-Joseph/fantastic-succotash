@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ddb0d1458d10de6f9b4d15265352dc71",
+    "content-hash": "b1f90cb7eb06f36b7aefc2b419b0586f",
     "packages": [
         {
             "name": "99designs/phumbor",
@@ -1269,6 +1269,58 @@
                 "source": "https://github.com/ixudra/curl/tree/6.21.0"
             },
             "time": "2020-09-22T12:50:01+00:00"
+        },
+        {
+            "name": "jackocnr/intl-tel-input",
+            "version": "17.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jackocnr/intl-tel-input.git",
+                "reference": "63c9f7cfb7b1a0ab183a20b6fe30551f9e729c89"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jackocnr/intl-tel-input/zipball/63c9f7cfb7b1a0ab183a20b6fe30551f9e729c89",
+                "reference": "63c9f7cfb7b1a0ab183a20b6fe30551f9e729c89",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jack O'Connor",
+                    "homepage": "http://jackocnr.com"
+                }
+            ],
+            "description": "A JavaScript plugin for entering and validating international telephone numbers",
+            "homepage": "https://github.com/jackocnr/intl-tel-input",
+            "keywords": [
+                "code",
+                "country",
+                "dial",
+                "flag",
+                "i18n",
+                "input",
+                "international",
+                "mobile",
+                "number",
+                "tel",
+                "telephone"
+            ],
+            "support": {
+                "issues": "https://github.com/jackocnr/intl-tel-input/issues",
+                "source": "https://github.com/jackocnr/intl-tel-input/tree/v17.0.12"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/jackocnr",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-02-13T17:19:07+00:00"
         },
         {
             "name": "laravel/framework",

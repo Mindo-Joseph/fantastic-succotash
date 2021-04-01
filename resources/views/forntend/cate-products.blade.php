@@ -69,7 +69,6 @@
                                                 @endif                                        
                                             </div>
                                         @endforeach
-                                     
                                     @else
                                         @foreach($sets->options as $ok => $opt)
                                             <div class="custom-control custom-checkbox collection-filter-checkbox">
@@ -78,7 +77,6 @@
                                             </div>
                                         @endforeach
                                     @endif
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -265,11 +263,6 @@
                                                                 <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
                                                             </a>
                                                             <h4>{{Session::get('currencySymbol').($data->variant[0]->price * $data->variant[0]->multiplier)}}</h4>
-                                                            <!-- <ul class="color-variant">
-                                                                <li class="bg-light0"></li>
-                                                                <li class="bg-light1"></li>
-                                                                <li class="bg-light2"></li>
-                                                            </ul> -->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -282,35 +275,6 @@
                                             {{ $listData->links() }}
                                         </div>
                                     </div>
-                                    <!-- <div class="product-pagination">
-                                        <div class="theme-paggination-block">
-                                            <div class="row">
-                                                <div class="col-xl-6 col-md-6 col-sm-12">
-                                                    <nav aria-label="Page navigation">
-                                                        <ul class="pagination">
-                                                            <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span
-                                                                        aria-hidden="true"><i
-                                                                            class="fa fa-chevron-left"
-                                                                            aria-hidden="true"></i></span> <span
-                                                                        class="sr-only">Previous</span></a></li>
-                                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true"><i
-                                                                            class="fa fa-chevron-right"
-                                                                            aria-hidden="true"></i></span> <span
-                                                                        class="sr-only">Next</span></a></li>
-                                                        </ul>
-                                                    </nav>
-                                                </div>
-                                                <div class="col-xl-6 col-md-6 col-sm-12">
-                                                    <div class="product-search-count-bottom">
-                                                        <h5>Showing Products 1-24 of 10 Result</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -325,15 +289,34 @@
 
 @section('script')
 
-<script src="{{asset('front-assets/js/price-range.js')}}"></script>
+<script src="{{asset('front-assets/js/rangeSlider.min.js')}}"></script>
+<script src="{{asset('front-assets/js/my-sliders.js')}}"></script>
 <script>
 
-    $('.rangeSliderPrice').change(function(){
+    $('.js-range-slider').ionRangeSlider({
+        type: 'double',
+        grid: false,
+        min: 0,
+        max: 50000,
+        from: 200,
+        to: 50000,
+        prefix: " "
+    });
+
+    /*$('.rangeSliderPrice').change(function(){
         var range = $('.rangeSliderPrice').val();
         console.log(range);
+    });*/
+    var ajaxCall = 'ToCancelPrevReq';
+    $('.js-range-slider').change(function(){
+        filterProducts();
     });
-    $('.productFilter').click(function(){
 
+    $('.productFilter').click(function(){
+        filterProducts();
+    });
+
+    function filterProducts(){
         var brands = [];
         var variants = [];
         var options = [];
@@ -349,10 +332,9 @@
                 }
             }
         });
+        var range = $('.rangeSliderPrice').val();
 
-        
-
-        $.ajax({
+        ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
             url: "{{ route('productFilters', $category->id) }}",
@@ -361,7 +343,12 @@
                 "brands": brands,
                 "variants": variants, 
                 "options": options,
-
+                "range": range
+            },
+            beforeSend : function() {
+                if(ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
+                    ajaxCall.abort();
+                }
             },
             success: function(response) {
                 $('.displayProducts').html(response.html);
@@ -370,7 +357,8 @@
                 //location.reload();
             },
         });
-    });
+    }
+
 </script>
 
 

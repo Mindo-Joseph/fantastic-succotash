@@ -141,7 +141,6 @@ class CategoryController extends FrontController
                     ->select('id as pro_id', 'sku')
                     ->where('pc.category_id', $cid)->get();
 
-
         dd($products->toArray());*/
 
         $langId = Session::get('customerLanguage');
@@ -152,19 +151,25 @@ class CategoryController extends FrontController
         if($request->has('variants') && !empty($request->variants)){
             $setArray = array_unique($request->variants);
         }
-        
-        $multiArray = array();
-        foreach ($request->options as $key => $value) {
 
-            $multiArray[$request->variants[$key]][] = $value;
+        $startRange = 0; $endRange = 20000;
+        if($request->has('range') && !empty($request->range)){
+            $range = explode(';', $request->range);
+            $clientCurrency->doller_compare;
+            $startRange = $range[0] * $clientCurrency->doller_compare;
+            $endRange = $range[1] * $clientCurrency->doller_compare;
+        }
+
+        $multiArray = array();
+        if($request->has('options') && !empty($request->options)){
+            foreach ($request->options as $key => $value) {
+                $multiArray[$request->variants[$key]][] = $value;
+            }
         }
 
         //$combinations = $this->array_combinations($multiArray);
-
         //$variantSetData = ProductVariantSet::select('product_id', 'product_variant_id');
-
         /*if(!empty($multiArray)){
-
             foreach ($multiArray as $key => $value) {
                 $variantSetData = $variantSetData->whereIn('product_variant_id', function($qry) use($key, $value){ 
                         $qry->select('product_variant_id')->from('product_variant_sets')
@@ -172,12 +177,10 @@ class CategoryController extends FrontController
                             ->whereIn('variant_option_id', $value);
                         })
             }
-
         }*/
         $variantIds = $productIds = array();
 
         if(!empty($multiArray)){
-
             foreach ($multiArray as $key => $value) {
                 $new_pIds = $new_vIds = array();
                 $vResult = ProductVariantSet::join('product_categories as pc', 'product_variant_sets.product_id', 'pc.product_id')->select('product_variant_sets.product_variant_id', 'product_variant_sets.product_id')
@@ -185,7 +188,6 @@ class CategoryController extends FrontController
                     ->whereIn('product_variant_sets.variant_option_id', $value);
 
                 if(!empty($variantIds)){
-
                     $vResult  = $vResult->whereIn('product_variant_sets.product_variant_id', $variantIds);
                 }
                 $vResult  = $vResult->groupBy('product_variant_sets.product_variant_id')->get();
@@ -200,7 +202,6 @@ class CategoryController extends FrontController
                 $productIds = $new_pIds;
             }
         }
-
 
         /*if($request->has('options') && !empty($request->options)){
             $optionArray = $request->options;
@@ -227,16 +228,26 @@ class CategoryController extends FrontController
                         'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
-                        'variant' => function($q) use($langId, $setArray, $variantIds){
+                        'variant' => function($q) use($langId, $variantIds){
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
-                            $q->whereIn('id', $variantIds);
+                            if(!empty($variantIds)){
+                                $q->whereIn('id', $variantIds);
+                            }
                             $q->groupBy('product_id');
                         },
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
                     ->where('pc.category_id', $cid)
                     ->where('products.is_live', 1)
-                    ->whereIn('id', $productIds);
+                    ->whereIn('id', function($qr) use($startRange, $endRange){ 
+                        $qr->select('product_id')->from('product_variants')
+                            ->where('price',  '>=', $startRange)
+                            ->where('price',  '<=', $endRange);
+                        });
 
+        if(!empty($productIds)){
+            $products = $products->whereIn('id', $productIds);
+        }
+        
         if($request->has('brands') && !empty($request->brands)){
             $products = $products->whereIn('products.brand_id', $request->brands);
         }
@@ -254,7 +265,7 @@ class CategoryController extends FrontController
         $listData = $products;
         //dd($listData->toArray());
 
-        $returnHTML = view('forntend.ajax.productByCid')->with(['listData' => $listData])->render();
+        $returnHTML = view('forntend.ajax.productList')->with(['listData' => $listData])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 

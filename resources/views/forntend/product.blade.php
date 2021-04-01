@@ -168,50 +168,36 @@
                             <div class="col-lg-6 rtl-text">
                                 <div class="product-right">
                                     <h2>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}</h2>
+                                    <input type="hidden" name="variant_id" id="prod_variant_id" value="{{$product->variant[0]->id}}">
                                     <!--<h4><del>$459.00</del><span>55% off</span></h4> -->
-                                    <h3>{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</h3>
+                                    <h3 id="productPriceValue">{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</h3>
                                     @if(!empty($product->variantSet))
 
                                         @foreach($product->variantSet as $key => $variant)
-                                         @if($variant->type == 1)
+                                         @if($variant->type == 1 || $variant->type == 2)
+
                                             <div class="size-box">
                                                 <ul class="productVariants">
                                                     <li class="firstChild">{{$variant->title}}</li>
-                                                    @foreach($variant->option2 as $k => $optn)
                                                     <li class="otherSize">
-                                                        <?php $var_id = $variant->variant_type_id;
-                                                            $opt_id = $optn->variant_option_id;
-                                                            $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';
-                                                        ?>
-                                                        <div class="radio radio-info form-check-inline">
-                                                            <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="dataVar{{$var_id}}">
-                                                            <label for="lineRadio-{{$opt_id}}">{{$optn->title}}</label>
-                                                        </div>
-                                                    </li>
+
+                                                    @foreach($variant->option2 as $k => $optn)
+
+                                                    <?php $var_id = $variant->variant_type_id;
+                                                        $opt_id = $optn->variant_option_id;
+                                                        $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';
+                                                    ?>
+                                                    <label class="radio d-inline-block txt-14">{{$optn->title}}
+                                                        <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="changeVariant dataVar{{$var_id}}">
+                                                        <span class="checkround"></span>
+                                                    </label>
+                                                    
                                                     @endforeach
+                                                    </li>
                                                 </ul>
                                             </div>
 
                                          @else
-                                            <div class="size-box">
-                                                <ul class="productVariants">
-                                                    <li class="firstChild">{{$variant->title}}</li>
-                                                    @foreach($variant->option2 as $k => $optn)
-                                                    <li class="otherSize">
-                                                        <?php $var_id = $variant->variant_type_id;
-                                                            $opt_id = $optn->variant_option_id;
-                                                            $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';
-                                                        ?>
-                                                        <div class="radio radio-info form-check-inline">
-                                                            <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="dataVar{{$var_id}}">
-                                                            <label for="lineRadio-{{$opt_id}}">{{$optn->title}}</label>
-                                                        </div>
-                                                        <!--<a href="#">{{$optn->title}}</a> -->
-                                                    </li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-
                                             <!-- <div class="size-box">
                                                 <ul class="productVariants">
                                                     <li class="firstChild">{{$variant->title}}</li>
@@ -221,20 +207,14 @@
                                                             $opt_id = $optn->variant_option_id;
                                                             $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';*/
                                                         ?>
-                                                        <div class="chiller_cb small_label d-inline-block color-selector radio radio-info form-check-inline">
-                                                            <input class="custom-control-input" type="radio" {{$checked}} id="opt-{{$opt_id}}" vid="{{$var_id}}" optid="{{$opt_id}}">
-                                                            <label for="opt-{{$opt_id}}"></label>
-                                                            @if(strtoupper($optn->hexacode) == '#FFF' || strtoupper($optn->hexacode) == '#FFFFFF')
-                                                                <span style="background: #FFFFFF; border-color:#000;" class="check_icon white_check"></span>
-                                                            @else
-                                                                <span class="check_icon" style="background:{{$optn->hexacode}}; border-color: {{$optn->hexacode}};"></span>
-                                                            @endif                                        
+                                                        <div class="radio radio-info form-check-inline">
+                                                            <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="changeVariant dataVar{{$var_id}}">
+                                                            <label for="lineRadio-{{$opt_id}}">{{$optn->title}}</label>
                                                         </div>
                                                     </li>
                                                     @endforeach
                                                 </ul>
                                             </div> -->
-
                                          @endif
                                         @endforeach
                                     @endif 
@@ -347,36 +327,6 @@
                                     <div class="tab-pane fade" id="top-profile" role="tabpanel"
                                         aria-labelledby="profile-top-tab">
                                         <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''}}</p>
-                                        <!--<div class="single-product-tables">
-                                            <table>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Febric</td>
-                                                        <td>Chiffon</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Color</td>
-                                                        <td>Red</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Material</td>
-                                                        <td>Crepe printed</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <table>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Length</td>
-                                                        <td>50 Inches</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Size</td>
-                                                        <td>S, M, L .XXL</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div> -->
                                     </div>
                                     <!-- <div class="tab-pane fade" id="top-contact" role="tabpanel"
                                         aria-labelledby="contact-top-tab">
@@ -659,5 +609,47 @@
 @endsection
 
 @section('script')
+
+<script type="text/javascript">
+    var ajaxCall = 'ToCancelPrevReq';
+    $('.changeVariant').click(function(){
+        var variants = [];
+        var options = [];
+        $('.changeVariant').each(function () {
+            var that = this;
+            if(this.checked == true){
+                variants.push($(that).attr('vid'));
+                options.push($(that).attr('optid'));
+            }
+        });
+
+        ajaxCall = $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ route('productVariant', $product->sku) }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "variants": variants, 
+                "options": options,
+            },
+            beforeSend : function() {
+                if(ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
+                    ajaxCall.abort();
+                }
+            },
+            success: function(response) {
+                var res = response.result;
+                //console.log(res);
+                //console.log(res.id);
+                $('#prod_variant_id').val(res.id);
+                $('#productPriceValue').html(res.productPrice);
+            },
+            error: function (data) {
+                
+            },
+        });
+    });
+
+</script>
 
 @endsection

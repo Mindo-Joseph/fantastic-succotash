@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency};
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ProductVariant, ProductVariantSet};
 use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
@@ -21,17 +21,9 @@ class ProductController extends FrontController
      */
     public function index(Request $request, $domain = '', $sku)
     {
-        foreach ($request->only('') as $key => $value) {
-            # code...
-        }
-        /*$product = Product::with(['vendor', 'primary', 'addOn', 'media.image', 'translation' => function($qq) use(Session::get('lang_id'))])
-                ->select('id', 'sku', 'title', 'url_slug', 'sell_when_out_of_stock', 'Requires_last_mile', 'vendor_id', 'weight_unit', 'weight', 'has_inventory', 'has_variant', 'requires_shipping', 'averageRating')
-                ->where('sku', $sku)
-                ->firstOrFail();*/
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-
 
         $product = Product::select('id')->where('sku', $sku)->firstOrFail();
         $p_id = $product->id;
@@ -74,8 +66,7 @@ class ProductController extends FrontController
                     ->firstOrFail();
 
         //dd($product->toArray());
-
-        $clientCurrency = ClientCurrency::where('is_primary', '1')->first();
+        $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         foreach ($product->variant as $key => $value) {
             $product->variant[$key]->multiplier = $clientCurrency->doller_compare;
         }
@@ -92,4 +83,47 @@ class ProductController extends FrontController
         }
         return view('forntend/product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts]);
     }
+
+    /**
+     * Display product variant data
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getVariantData(Request $request, $domain = '', $sku)
+    {
+        $product = Product::select('id')->where('sku', $sku)->firstOrFail();
+        $pv_ids = array();
+        if($request->has('options') && !empty($request->options)){
+            foreach ($request->options as $key => $value) {
+                $newIds = array();
+
+                $product_variant = ProductVariantSet::where('variant_type_id', $request->variants[$key])
+                                    ->where('variant_option_id', $request->options[$key]);
+
+                if(!empty($pv_ids)){
+                    $product_variant = $product_variant->whereIn('product_variant_id', $pv_ids);
+                }
+                $product_variant = $product_variant->where('product_id', $product->id)->get();
+
+                if($product_variant){
+                    foreach ($product_variant as $key => $value) {
+                        $newIds[] = $value->product_variant_id;
+                    }
+                }
+                $pv_ids = $newIds;
+               
+            }
+        }
+        $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
+        $variantData = ProductVariant::select('id', 'sku', 'quantity', 'price',  'barcode', 'product_id')
+                        ->where('id', $pv_ids[0])->first();
+        if ($variantData) {
+            $variantData->productPrice = Session::get('currencySymbol').$variantData->price * $clientCurrency->doller_compare;
+            return response()->json(array('success' => true, 'result'=>$variantData->toArray()));
+        }
+
+        return response()->json(array('error' => true, 'result' => NULL));
+    }
+
+    
 }

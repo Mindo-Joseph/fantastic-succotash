@@ -38,8 +38,13 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('primaryData', 'Front\UserhomeController@changePrimaryData')->name('changePrimaryData');
 	Route::post('paginateValue', 'Front\UserhomeController@changePaginate')->name('changePaginate');
 	Route::get('/product/{id}','Front\ProductController@index')->name('productDetail');
+	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
+	
+
 	Route::get('category/{id?}', 'Front\CategoryController@categoryProduct')->name('categoryDetail');
     Route::post('category/filters/{id}', 'Front\CategoryController@categoryFilters')->name('productFilters');
+
     Route::get('vendor/{id?}', 'Front\VendorController@vendorProducts')->name('vendorDetail');
+    Route::post('vendor/filters/{id}', 'Front\VendorController@vendorFilters')->name('vendorProductFilters');
 
 });

@@ -1,43 +1,7 @@
 @extends('layouts.vertical', ['title' => 'Category'])
 
 @section('css')
-    <!-- Plugins css -->
     <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
-
-    <style type="text/css">
-        #add-category-form .modal-lg, #edit-category-form .modal-lg {
-            max-width: 70%;
-        }
-        span.inner-div{
-            float: right;
-            display: block;
-            position: absolute;
-            top: -5px;
-            right: 16px;
-        }
-        .table-borderless th, .table-borderless td {
-            padding: 8px 10px 8px 0px;
-        }
-
-        .dd{max-width: 100%;}
-
-        .variant-row .card-body {
-            background: #f3f7f9; padding:12px;
-        }
-        .vari.action-icon{
-            padding: 0px 1px; float: left;
-        }
-
-        .dd-list .dd3-handle::before {
-            content: "\F01DB" !important;
-            font-family: "Material Design Icons";
-            color: #adb5bd;
-            font-size: 22px;
-        }
-        .dragula-handle::before {
-            top: 5px;
-        }
-    </style>
 @endsection
 
 @section('content')
