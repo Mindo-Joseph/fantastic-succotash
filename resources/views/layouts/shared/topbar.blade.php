@@ -68,7 +68,7 @@
                     $urlImg = Auth::user()->logo['proxy_url'].'200/80'.Auth::user()->logo['image_path'];
                 }
             @endphp
-            <a href="{{ route('any', ['dashboard']) }}" class="logo logo-dark text-center">
+            <a href="{{route('client.dashboard')}}" class="logo logo-dark text-center">
                 <span class="logo-sm">
                     <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                     <!-- <span class="logo-lg-text-light">UBold</span> -->
@@ -79,7 +79,7 @@
                 </span>
             </a>
             
-            <a href="{{ route('any', ['dashboard']) }}" class="logo logo-light text-center">
+            <a href="{{route('client.dashboard')}}" class="logo logo-light text-center">
                 <span class="logo-sm">
                     <img src="{{$urlImg}}"
                         alt="" height="30" style="padding-top: 4px;">

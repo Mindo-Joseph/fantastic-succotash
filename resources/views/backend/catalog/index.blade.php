@@ -1,43 +1,7 @@
 @extends('layouts.vertical', ['title' => 'Category'])
 
 @section('css')
-    <!-- Plugins css -->
     <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
-
-    <style type="text/css">
-        #add-category-form .modal-lg, #edit-category-form .modal-lg {
-            max-width: 70%;
-        }
-        span.inner-div{
-            float: right;
-            display: block;
-            position: absolute;
-            top: -5px;
-            right: 16px;
-        }
-        .table-borderless th, .table-borderless td {
-            padding: 8px 10px 8px 0px;
-        }
-
-        .dd{max-width: 100%;}
-
-        .variant-row .card-body {
-            background: #f3f7f9; padding:12px;
-        }
-        .vari.action-icon{
-            padding: 0px 1px; float: left;
-        }
-
-        .dd-list .dd3-handle::before {
-            content: "\F01DB" !important;
-            font-family: "Material Design Icons";
-            color: #adb5bd;
-            font-size: 22px;
-        }
-        .dragula-handle::before {
-            top: 5px;
-        }
-    </style>
 @endsection
 
 @section('content')
@@ -68,9 +32,9 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-4">
-            <div class="card-box">
+    <div class="row catalog_box">
+        <div class="col-xl-4 col-lg-6 mb-4">
+            <div class="card-box h-100">
                 <div class="row mb-2">
                     <div class="col-sm-8">
                         <h4 class="page-title">Category</h4>
@@ -96,15 +60,15 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12 text-right">
+                    <div class="col-sm-12 text-right btn_bottom">
                         <button class="btn btn-blue waves-effect waves-light text-sm-right saveList">Save Order</button>
                     </div>
                 </div> <!-- end row -->
             </div> <!-- end card-box -->
         </div> <!-- end col -->
 
-        <div class="col-sm-4">
-            <div class="card-box">
+        <div class="col-xl-4 col-lg-6 mb-4">
+            <div class="card-box h-100">
                 <div class="row mb-2">
                     <div class="col-sm-8">
                         <h4 class="page-title">Variant</h4>
@@ -169,15 +133,15 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-sm-12 text-right">
+                    <div class="col-sm-12 text-right btn_bottom">
                         <button class="btn btn-blue waves-effect waves-light text-sm-right saveVariantOrder">Save Order</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-4">
-            <div class="card-box">
+        <div class="col-xl-4 col-lg-6 mb-4">
+            <div class="card-box h-100">
                 <div class="row mb-2">
                     <div class="col-sm-8">
                         <h4 class="page-title">Brand</h4>
@@ -227,7 +191,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-sm-12 text-right">
+                    <div class="col-sm-12 text-right btn_bottom">
                         <button class="btn btn-blue waves-effect waves-light text-sm-right saveBrandOrder">Save Order</button>
                     </div>
                 </div>

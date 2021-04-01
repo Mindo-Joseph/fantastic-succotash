@@ -183,7 +183,7 @@ class VendorController extends BaseController
 
     /**
      * Display the specified resource.
-     *
+     * 
      * @param  \App\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
@@ -230,7 +230,7 @@ class VendorController extends BaseController
 
     /**
      * Display the specified resource.
-     *
+     * 
      * @param  \App\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */

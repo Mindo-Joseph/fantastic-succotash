@@ -40,7 +40,6 @@ class RoleSeeder extends Seeder
             ['id' => 3,
                 'title' => 'Vendor',
             ],
-                       
         ); 
         \DB::table('types')->insert($maps);
     }

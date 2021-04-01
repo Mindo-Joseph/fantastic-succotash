@@ -10,7 +10,7 @@ class Brand extends Model
         'title', 'image', 'position', 'status'
     ];
   	public function translation(){
-  		return $this->hasMany('App\Models\BrandTranslation')->join('languages', 'brand_translations.language_id', 'languages.id'); 
+  		return $this->hasMany('App\Models\BrandTranslation')->join('languages', 'brand_translations.language_id', 'languages.id');
   	}
 
   	public function english(){

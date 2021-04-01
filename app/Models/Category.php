@@ -24,12 +24,17 @@ class Category extends Model
         $langData = $this->hasOne('App\Models\Category_translation')->join('client_languages as cl', 'cl.language_id', 'category_translations.language_id')->select('category_translations.category_id', 'category_translations.name', 'category_translations.language_id')->limit(1);
       }
       return $langData;
- 
     }
 
     public function tags()
     {
         return $this->hasMany(CategoryTag::class)->select('category_id', 'tag');
+    }
+
+    public function brands()
+    {
+        return $this->hasMany(BrandCategory::class)->join('brands', 'brands.id', 'brand_categories.brand_id')
+                ->select('brand_categories.category_id', 'brand_categories.brand_id', 'brands.id', 'brands.image');
     }
 
     public function childs()

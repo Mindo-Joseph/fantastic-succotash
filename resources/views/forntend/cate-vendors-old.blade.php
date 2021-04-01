@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Category'])
+@extends('layouts.store', ['title' => 'Vendor'])
 
 @section('css')
 <style type="text/css">
@@ -13,7 +13,7 @@
 
 @section('content')
 
- <header>
+<header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
@@ -58,7 +58,7 @@
                     </a>
                     <div class="category-details">
                         <a href="{{route('categoryDetail', $cate['id'])}}">
-                            <h5>{{$cate['translation'][0]['name']}}</h5>
+                            <h5>{{ (!empty($cate->translation) && isset($cate->translation[0])) ? $cate->translation[0]->title : ''}} </h5>
                         </a>
                     </div>
                 </div>
@@ -76,25 +76,11 @@
                 <div class="product-5 product-m no-arrow">
                     @if(!empty($listData))
                         @foreach($listData as $key => $data)
-
-                        <?php $imagePath = '';
-                        foreach ($data->media as $k => $v) {
-                            $imagePath = $v->image->path['proxy_url'].'300/300'.$v->image->path['image_path'];
-                        } ?>
                         <div class="product-box">
                             <div class="img-wrapper">
                                 <div class="front">
-                                    <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
-                                </div>
-                                <div class="cart-info cart-wrap">
-                                    <a href="javascript:void(0)" title="Add to Wishlist"><i class="ti-heart"
-                                            aria-hidden="true"></i></a>
-                                    <!--<a href="#" data-toggle="modal" data-target="#quick-view" title="Quick View"><i
-                                            class="ti-search" aria-hidden="true"></i></a>
-                                    <a href="compare.html" title="Compare"><i class="ti-reload"
-                                            aria-hidden="true"></i></a> -->
-                                </div>
-                                <div class="add-button" data-toggle="modal" data-target="#addtocart">add to cart</div>
+                                    <a href="{{route('vendorDetail', $data->id)}}"><img class="img-fluid blur-up lazyload" alt="" src="{{$data->logo['proxy_url'] .'300/300'. $data->logo['image_path']}}" ></a>
+                                </div>                                
                             </div>
                             <div class="product-detail">
                                 <div class="rating">
@@ -102,10 +88,9 @@
                                         <i class="fa fa-star"></i>
                                     @endfor
                                 </div>
-                                <a href="{{route('productDetail', $data->sku)}}">
-                                    <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
+                                <a href="{{route('vendorDetail', $data->id)}}">
+                                    <h6>{{$data->name}}</h6>
                                 </a>
-                                <h4>{{Session::get('currencySymbol').($data->variant[0]->price * $data->variant[0]->multiplier)}}</h4>
                             </div>
                         </div>
                         @endforeach

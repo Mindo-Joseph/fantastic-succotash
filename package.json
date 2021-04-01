@@ -39,6 +39,7 @@
     },
     "dependencies": {
         "css-loader": "^3.6.0",
+        "intl-tel-input": "^17.0.12",
         "js-cookie": "^2.2.1",
         "npx": "^10.2.2",
         "postcss-loader": "^3.0.0",

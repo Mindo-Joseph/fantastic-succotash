@@ -143,7 +143,7 @@
                 </li>
             </ul>
         </div>
-        <div id="sidebar-menu" style="display: block;">
+        <div id="sidebar-menu" style="display: none;">
 
             <ul id="side-menu"> 
             @if(env('APP_DEBUG'))

@@ -2,15 +2,15 @@
     width: 6px !important;
     height: 6px;
 }
- 
+
 .table-responsive::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3) !important; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
     border-radius: 10px;
 }
- 
+
 .table-responsive::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1) !important; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1) !important;
 }
 
 .login-form label {
@@ -26,31 +26,36 @@
     text-align: center;
 }
 
-  .login-form .blank-label {
+.login-form .blank-label {
     display: none;
-  }
-  
-  .login-form input[type="radio"]:checked + label {
-      color: #010101;
-      background-color: #F8ECEC;
-      color: #000000;
-      font-size: 13px;  
-      letter-spacing: 0.5px;
-  }
-  .login-form input{
-     display: none;
-  }
-  .dataTables_filter  label{
+}
+
+.login-form input[type="radio"]:checked+label {
+    color: #010101;
+    background-color: #F8ECEC;
+    color: #000000;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.login-form input {
+    display: none;
+}
+
+.dataTables_filter label {
     float: right !important;
-  }
-  .login-form .custom-control-label::before{
-      display: none;
-  }
-  .pos-rel-tb {
-      position: relative;
-      top: 6px;
-  }
-  .add-sub-task-btn {
+}
+
+.login-form .custom-control-label::before {
+    display: none;
+}
+
+.pos-rel-tb {
+    position: relative;
+    top: 6px;
+}
+
+.add-sub-task-btn {
     background-color: #ECF6FF;
     height: 42px;
     line-height: 42px;
@@ -66,22 +71,158 @@
     letter-spacing: 0.5px;
     text-align: center;
     transition: all .3s ease-in-out 0s;
-  }
-  .add-sub-task-btn:hover {
+}
+
+.add-sub-task-btn:hover {
     color: #000000;
     background-color: #F8ECEC;
-  }
-  .upload-img-btn {
+}
+
+.upload-img-btn {
     background-color: #F8ECEC;
     color: #000000;
     font-size: 13px;
     letter-spacing: 0.5px;
     border: none;
-  }
-  .taskselect{
-      font-weight: 700;
-  }
+}
 
-  .dropify-wrapper{
+.taskselect {
+    font-weight: 700;
+}
+
+.dropify-wrapper {
     height: 130px !important;
-  }
+}
+
+.catalog_box .card-box {
+    margin: 0;
+    padding: 1.5rem 1.5rem 80px;
+}
+
+.btn_bottom {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+}
+
+.dragula-handle::before {
+    position: initial;
+}
+
+.outer_box{
+  border: 2px dashed #d2d0cd;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background-color: #6658dd !important;
+}
+
+#add-category-form .modal-lg, #edit-category-form .modal-lg {
+    max-width: 70%;
+}
+span.inner-div{
+    float: right;
+    display: block;
+    position: absolute;
+    top: -5px;
+    right: 16px;
+}
+.table-borderless th, .table-borderless td {
+    padding: 8px 10px 8px 0px;
+}
+
+.dd{max-width: 100%;}
+
+.variant-row .card-body {
+    background: #f3f7f9; padding:12px;
+}
+.vari.action-icon{
+    padding: 0px 1px; float: left;
+}
+
+.dd-list .dd3-handle::before {
+    content: "\F01DB" !important;
+    font-family: "Material Design Icons";
+    color: #adb5bd;
+    font-size: 22px;
+}
+.dragula-handle::before {
+    top: 5px;
+}
+
+#map-canvas {
+    height: 90%;
+    margin: 0px;
+    padding: 0px;
+    position: unset;
+}
+
+.serch {
+    width: 100%;
+    margin: 0px;
+}
+
+.imageagent {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    margin-right: 15px;
+}
+
+.cornar {
+    border: 1px solid #ddd;
+    padding-top: 10px;
+    height: 240px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.teamshow {
+    margin-left: 58px;
+
+}
+
+.display {
+    height: 35px;
+    width: 67px;
+}
+
+.boxes {
+    margin-bottom: 10px;
+    height: 100px;
+}
+
+.new {
+    vertical-align: initial !important;
+    display: revert !important;
+}
+
+#new_show {
+    display: none;
+}
+
+.agentcheck {}
+
+.search {
+    background-color: #02f2cc;
+}
+.card-box {
+
+    padding: 1.5rem;
+    box-shadow: 0 0 8px 0 rgba(154, 161, 171, 0.15) !important;
+    margin-bottom: 24px !important;
+    border-radius: 0.25rem;
+    /* margin-bottom: 10px; */
+}
+.select_all{
+    position: relative;
+    top: 8px;
+}
+#show_map-canvas{
+    height: 600px;
+}
+.pac-container, .pac-container .pac-item { z-index: 99999 !important; }
+
+body[data-sidebar-size="condensed"]:not([data-layout="compact"]) {
+    min-height: 900px !important;
+}

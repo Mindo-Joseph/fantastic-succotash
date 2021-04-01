@@ -97,4 +97,14 @@ class UserhomeController extends FrontController
 
         return response()->json(['status'=>'success', 'message' => 'Saved Successfully!', 'data' => $data]);
     }
+
+    public function changePaginate(Request $request)
+    {
+        $perPage = 12;
+        if($request->has('itemPerPage')){
+             $perPage = $request->itemPerPage;
+        }
+        Session::put('cus_paginate', $perPage);
+        return response()->json(['status'=>'success', 'message' => 'Saved Successfully!', 'data' => $perPage]);
+    }
 }

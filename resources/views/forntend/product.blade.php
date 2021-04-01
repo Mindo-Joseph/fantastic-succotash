@@ -168,69 +168,58 @@
                             <div class="col-lg-6 rtl-text">
                                 <div class="product-right">
                                     <h2>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}</h2>
+                                    <input type="hidden" name="variant_id" id="prod_variant_id" value="{{$product->variant[0]->id}}">
                                     <!--<h4><del>$459.00</del><span>55% off</span></h4> -->
-                                    <h3>{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</h3>
+                                    <h3 id="productPriceValue">{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</h3>
                                     @if(!empty($product->variantSet))
 
                                         @foreach($product->variantSet as $key => $variant)
-                                         @if($variant->type == 1)
+                                         @if($variant->type == 1 || $variant->type == 2)
+
                                             <div class="size-box">
                                                 <ul class="productVariants">
                                                     <li class="firstChild">{{$variant->title}}</li>
-                                                    @foreach($variant->options as $k => $optn)
-                                                        <li class="otherSize" >
+                                                    <li class="otherSize">
 
-                                                            <?php $checked = ($k == 0) ? 'checked' : '';
-                                                                $value = $optn->variant_id.'-'.$optn->id;
-                                                                $name = 'variant_'.$key;
-                                                            ?>
+                                                    @foreach($variant->option2 as $k => $optn)
 
-                                                            <div class="radio radio-info form-check-inline">
-                                                                <input id="inlineRadio-{{$value}}" value="{{$value}}" name="{{$name}}" varId="{{$optn->variant_id}}" varOptId="{{$optn->id}}" type="radio" {{$checked}} class="dataVar{{$name}}">
-                                                                <label for="inlineRadio-{{$value}}">{{$optn->title}}</label>
-                                                            </div>
-                                                        <!--<a href="#">{{$optn->title}}</a> -->
-                                                     </li>
+                                                    <?php $var_id = $variant->variant_type_id;
+                                                        $opt_id = $optn->variant_option_id;
+                                                        $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';
+                                                    ?>
+                                                    <label class="radio d-inline-block txt-14">{{$optn->title}}
+                                                        <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="changeVariant dataVar{{$var_id}}">
+                                                        <span class="checkround"></span>
+                                                    </label>
+                                                    
                                                     @endforeach
+                                                    </li>
                                                 </ul>
                                             </div>
 
                                          @else
-                                            <ul class="color-variant productVariants">
-                                                <li class="firstChild">{{$variant->title}} </li>
-                                                @foreach($variant->options as $k => $option)
-                                                    <li  class="otherChild bg-light1 {{($k == 0) ? 'active' : ''}}" style="background-color:{{$option->hexacode}} !important;"></li>
-                                                @endforeach
-                                            </ul>
+                                            <!-- <div class="size-box">
+                                                <ul class="productVariants">
+                                                    <li class="firstChild">{{$variant->title}}</li>
+                                                    @foreach($variant->option2 as $k => $optn)
+                                                    <li class="otherSize">
+                                                        <?php /*$var_id = $variant->variant_type_id;
+                                                            $opt_id = $optn->variant_option_id;
+                                                            $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';*/
+                                                        ?>
+                                                        <div class="radio radio-info form-check-inline">
+                                                            <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="changeVariant dataVar{{$var_id}}">
+                                                            <label for="lineRadio-{{$opt_id}}">{{$optn->title}}</label>
+                                                        </div>
+                                                    </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div> -->
                                          @endif
                                         @endforeach
                                     @endif 
 
                                     <div class="product-description border-product">
-                                        <!--<h6 class="product-title size-text">select size <span><a href="" data-toggle="modal"
-                                                    data-target="#sizemodal">size chart</a></span> </h6>
-                                        <div class="modal fade" id="sizemodal" tabindex="-1" role="dialog"
-                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Sheer Straight Kurta</h5>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                    </div>
-                                                    <div class="modal-body"><img src="{{asset('front-assets/images/size-chart.jpg')}}" alt=""
-                                                            class="img-fluid blur-up lazyload"></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                        <!--<div class="size-box">
-                                            <ul>
-                                                <li class="active"><a href="#">s</a></li>
-                                                <li><a href="#">m</a></li>
-                                                <li><a href="#">l</a></li>
-                                                <li><a href="#">xl</a></li>
-                                            </ul>
-                                        </div> -->
                                         <h6 class="product-title">quantity</h6>
                                         <div class="qty-box">
                                             <div class="input-group">
@@ -338,36 +327,6 @@
                                     <div class="tab-pane fade" id="top-profile" role="tabpanel"
                                         aria-labelledby="profile-top-tab">
                                         <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''}}</p>
-                                        <!--<div class="single-product-tables">
-                                            <table>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Febric</td>
-                                                        <td>Chiffon</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Color</td>
-                                                        <td>Red</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Material</td>
-                                                        <td>Crepe printed</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <table>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Length</td>
-                                                        <td>50 Inches</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Size</td>
-                                                        <td>S, M, L .XXL</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div> -->
                                     </div>
                                     <!-- <div class="tab-pane fade" id="top-contact" role="tabpanel"
                                         aria-labelledby="contact-top-tab">
@@ -650,5 +609,47 @@
 @endsection
 
 @section('script')
+
+<script type="text/javascript">
+    var ajaxCall = 'ToCancelPrevReq';
+    $('.changeVariant').click(function(){
+        var variants = [];
+        var options = [];
+        $('.changeVariant').each(function () {
+            var that = this;
+            if(this.checked == true){
+                variants.push($(that).attr('vid'));
+                options.push($(that).attr('optid'));
+            }
+        });
+
+        ajaxCall = $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ route('productVariant', $product->sku) }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "variants": variants, 
+                "options": options,
+            },
+            beforeSend : function() {
+                if(ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
+                    ajaxCall.abort();
+                }
+            },
+            success: function(response) {
+                var res = response.result;
+                //console.log(res);
+                //console.log(res.id);
+                $('#prod_variant_id').val(res.id);
+                $('#productPriceValue').html(res.productPrice);
+            },
+            error: function (data) {
+                
+            },
+        });
+    });
+
+</script>
 
 @endsection

@@ -124,7 +124,7 @@
                                 </div> -->
                             </div>
                             <div class="row mb-2">
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group mb-0 text-center">
                                         <input type="hidden" name="send_to" id="send_to" value="customize">
                                         <button class="btn btn-blue btn-block" type="submit"> Update </button>
@@ -180,7 +180,7 @@
                                 </div>-->
                             </div>
                             <div class="row mb-2">
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group mb-0 text-center">
                                         <input type="hidden" name="send_to" id="send_to" value="customize">
                                         <button class="btn btn-blue btn-block" type="submit"> Update </button>
@@ -243,7 +243,7 @@
                             </div>
 
                             <div class="row mb-2">
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group mb-0 text-center">
                                         <input type="hidden" name="send_to" id="send_to" value="customize">
                                         <button class="btn btn-blue btn-block" type="submit"> Update </button>
@@ -280,7 +280,7 @@
                                 </div>
                             </div>
                             <div class="row mb-2">
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group mb-0 text-center">
                                         <input type="hidden" name="send_to" id="send_to" value="customize">
                                         <button class="btn btn-blue btn-block" type="submit"> Update </button>
