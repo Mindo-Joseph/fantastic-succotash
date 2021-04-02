@@ -54,7 +54,7 @@ class FacebookController extends FrontController
             'redirect' => env('FACEBOOK_CALLBACK_URL'),
         ];*/
         
-        $aaa = Socialite::driver('facebook')->redirect();
+        return Socialite::driver('facebook')->redirect();
         /*dd($aaa);
         echo '1';
         dd($this->conp);
