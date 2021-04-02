@@ -20,15 +20,15 @@ class FacebookController extends FrontController
     public function formatConfig(array $config)
     {
         return array_merge([
-            'identifier' => $config['client_id'],
-            'secret' => $config['client_secret'],
+            'identifier' => '2879746935572704',
+            'secret' => '872261f0f489cfcada29ec2b571ba2e1',
             'callback_uri' => $this->formatRedirectUrl($config),
         ], $config);
     }
 
     protected function formatRedirectUrl(array $config)
     {
-        $redirect = value($config['redirect']);
+        $redirect = value('https://bahubali.royoorders.com/auth/facebook/callback');
 
         return Str::startsWith($redirect, '/')
                     ? $this->container->make('url')->to($redirect)
@@ -67,8 +67,6 @@ class FacebookController extends FrontController
     {
         try {
             $user = Socialite::driver('facebook')->user();
-
-            echo '<pre>'; print_r($user); echo '</pre>';die;
 
             $customer = User::where('facebook_auth_id', $user->getId())->first();
             if($customer){
