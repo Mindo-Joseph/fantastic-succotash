@@ -52,7 +52,7 @@ class FacebookController extends FrontController
             'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
             'redirect' => env('FACEBOOK_CALLBACK_URL'),
         ];*/
-        
+        echo '1';
         dd($this->conp);
         return Socialite::driver('facebook')->redirect();
     }
