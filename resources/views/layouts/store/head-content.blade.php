@@ -6,6 +6,7 @@
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/animate.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/themify-icons.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/bootstrap.css')}}">
+<link href="{{asset('assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" id="bs-default-stylesheet" />
 <!-- Theme css -->
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/color1.css')}}" media="screen" id="color">
 

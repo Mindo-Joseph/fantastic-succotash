@@ -52,7 +52,28 @@
             <div class="col-lg-6">
                 <h3>Login</h3>
                 <div class="theme-card">
-                    <form class="theme-form" name="customerLogin" id="customerLogin" type="post" action="">
+                    @if(session('preferences')->fb_login == 1 || session('preferences')->twitter_login == 1 || session('preferences')->google_login == 1 || session('preferences')->apple_login == 1)
+                        <div class="form-row mb-5">
+                            <h3>Social Login</h3>
+                            <div class="col-md-12">
+                                <div class="social-logins">
+                                    @if(session('preferences')->fb_login == 1)
+                                        <a href="{{url('auth/facebook')}}"><img src="{{asset('assets/images/social-fb-login.png')}}">
+                                    @endif
+                                    @if(session('preferences')->twitter_login == 1)
+                                        <img src="{{asset('assets/images/twitter-login.png')}}">
+                                    @endif
+                                    @if(session('preferences')->google_login == 1)
+                                        <img src="{{asset('assets/images/google-login.png')}}">
+                                    @endif
+                                    @if(session('preferences')->apple_login == 1)
+                                        <img src="{{asset('assets/images/apple-login.png')}}">
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    <form name="customerLogin" id="customerLogin" action="{{route('customer.login')}}" class="theme-form" type="post" method="post"> @csrf
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="text" class="form-control" id="email" placeholder="Email" required="">
@@ -61,7 +82,10 @@
                             <label for="review">Password</label>
                             <input type="password" class="form-control" id="review"
                                 placeholder="Enter your password" required="">
-                        </div><a href="#" class="btn btn-solid">Login</a>
+                        </div>
+                        <input type="hidden" name="device_type" value="web">
+                        <input type="hidden" name="device_token" value="web">
+                        <button type="submit" class="btn btn-solid">Login</button>
                     </form>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Product'])
+@extends('layouts.store', ['title' => 'Register'])
 
 @section('css')
 <style type="text/css">
@@ -33,25 +33,39 @@
     .product-right .size-box ul li.active {
         background-color: inherit;
     }
-    .iti__flag-container li{
+    .iti__flag-container li, .flag-container li{
         display: block;
     }
-    .iti.iti--allow-dropdown {
+    .iti.iti--allow-dropdown, .allow-dropdown {
         position: relative;
         display: inline-block;
         width: 100%;
     }
-    .iti.iti--allow-dropdown .phone {
-        padding: 17px 0 17px 55px;
+    .iti.iti--allow-dropdown .phone, .flag-container .phone {
+        padding: 17px 0 17px 100px !important;
+    }
+    .social-logins{
+        text-align: center;
+    }
+    .social-logins img{
+        width: 100px;
+        height: 100px;
+        border-radius: 100%;
+        margin-right: 20px;
+    }
+    .register-page .theme-card .theme-form input {
+        margin-bottom: 5px;
+    }
+    .invalid-feedback{
+        display: block;
     }
 </style>
 <link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
-    
 @endsection
 
 @section('content')
 
- <header>
+<header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
@@ -62,28 +76,74 @@
             <div class="col-lg-12">
                 <h3>create account</h3>
                 <div class="theme-card">
-                    <form class="theme-form" name="customerRegi" id="customerRegi" type="post" action="">
-                        <div class="form-row">
+                    @if(session('preferences')->fb_login == 1 || session('preferences')->twitter_login == 1 || session('preferences')->google_login == 1 || session('preferences')->apple_login == 1)
+                        <div class="form-row mb-5">
+                            <h3>Social Login</h3>
+                            <div class="col-md-12">
+                                <div class="social-logins">
+                                    @if(session('preferences')->fb_login == 1)
+                                        <a href="{{url('auth/facebook')}}"><img src="{{asset('assets/images/social-fb-login.png')}}">
+                                    @endif
+                                    @if(session('preferences')->twitter_login == 1)
+                                        <img src="{{asset('assets/images/twitter-login.png')}}">
+                                    @endif
+                                    @if(session('preferences')->google_login == 1)
+                                        <img src="{{asset('assets/images/google-login.png')}}">
+                                    @endif
+                                    @if(session('preferences')->apple_login == 1)
+                                        <img src="{{asset('assets/images/apple-login.png')}}">
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <form name="register" id="register" action="{{route('customer.register')}}" class="theme-form" method="post"> @csrf
+                        <div class="form-row mb-3">
                             <div class="col-md-6">
                                 <label for="email">First Name</label>
-                                <input type="text" class="form-control" id="fname" placeholder="First Name"
-                                    required="">
+                                <input type="text" class="form-control" id="name" placeholder="First Name" required="" name="name" value="{{ old('name')}}">
+                                @if($errors->first('name'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                @endif 
                             </div>
                             <div class="col-md-6">
                                 <label for="review">Phone Number</label>
-                                <input type="tel" class="form-control phone" id="phone" placeholder="Phone Number"
-                                    required="">
+                                <input type="tel" class="form-control phone" id="phone" placeholder="Phone Number"  required="" name="phone_number" value="{{ old('phone_number')}}">
+
+                                <input type="hidden" id="phoneHidden" name="phoneHidden">
+                                @if($errors->first('phone_number'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('phone_number') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                         </div>
-                        <div class="form-row">
+                        <div class="form-row mb-3">
                             <div class="col-md-6">
                                 <label for="email">Email</label>
-                                <input type="text" class="form-control" id="email" placeholder="Email" required="">
+                                <input type="email" class="form-control" id="email" placeholder="Email" required="" name="email" value="{{ old('email')}}">
+                                @if($errors->first('email'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                             <div class="col-md-6">
                                 <label for="review">Password</label>
-                                <input type="password" class="form-control" id="review" placeholder="Enter your password" required="">
-                            </div><a href="#" class="btn btn-solid">create Account</a>
+                                <input type="password" class="form-control" id="review" placeholder="Enter your password" required="" name="password">
+                                @if($errors->first('password'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            <input type="hidden" name="device_type" value="web">
+                            <input type="hidden" name="device_token" value="web">
+                            <input type="hidden" id="countryData" name="countryData" value="us">
+                            <button type="submit" class="btn btn-solid mt-3 submitRegister">Create Account</button>
                         </div>
                     </form>
                 </div>
@@ -97,10 +157,12 @@
 @section('script')
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
 <script>
+
     var input = document.querySelector("#phone");
     window.intlTelInput(input, {
-      // allowDropdown: false,
-      // autoHideDialCode: false,
+        separateDialCode: true,
+        //allowDropdown: true,
+        //autoHideDialCode: true,
       // autoPlaceholder: "off",
       // dropdownContainer: document.body,
       // excludeCountries: ["us"],
@@ -111,15 +173,29 @@
       //     callback(countryCode);
       //   });
       // },
-      // hiddenInput: "full_number",
-      // initialCountry: "auto",
+        hiddenInput: "full_number",
+        //initialCountry: "auto",
       // localizedCountries: { 'de': 'Deutschland' },
-      // nationalMode: false,
+        //nationalMode: false,
       // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
-      // placeholderNumberType: "MOBILE",
+        //placeholderNumberType: "MOBILE",
       // preferredCountries: ['cn', 'jp'],
-      // separateDialCode: true,
+        //separateDialCode: true,
       utilsScript: "{{asset('assets/js/utils.js')}}",
     });
-  </script>
+
+    $(document).ready(function () {
+        $("#phone").keypress(function (e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+            return true;
+        });
+    });
+
+    $('.iti__country').click(function(){
+        var code = $(this).attr('data-country-code');
+        $('#countryData').val(code);
+    })
+</script>
 @endsection

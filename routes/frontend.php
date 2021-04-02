@@ -27,12 +27,14 @@ Route::group(['middleware' => ['domain']], function () {
 		'uses' => 'Front\CustomerAuthController@resetPasswordForm'
 	]);
 
+	Route::post('user/facebook/callback','Front\CustomerAuthController@fblogin');
+
 	Route::post('validateEmail','Front\CustomerAuthController@validateEmail')->name('validateEmail');
 
-	Route::post('login','Front\CustomerAuthController@login')->name('user.login');
-	Route::post('register','Front\CustomerAuthController@register')->name('user.register');
-	Route::post('forgotPassword','Front\CustomerAuthController@forgotPassword')->name('user.forgotPass');
-	Route::post('resetPassword','Front\CustomerAuthController@resetPassword')->name('user.resetPass');
+	Route::post('user/login','Front\CustomerAuthController@login')->name('customer.login');
+	Route::post('user/register','Front\CustomerAuthController@register')->name('customer.register');
+	Route::post('user/forgotPassword','Front\CustomerAuthController@forgotPassword')->name('customer.forgotPass');
+	Route::post('user/resetPassword','Front\CustomerAuthController@resetPassword')->name('customer.resetPass');
 	
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
 	Route::post('primaryData', 'Front\UserhomeController@changePrimaryData')->name('changePrimaryData');
@@ -46,5 +48,11 @@ Route::group(['middleware' => ['domain']], function () {
 
     Route::get('vendor/{id?}', 'Front\VendorController@vendorProducts')->name('vendorDetail');
     Route::post('vendor/filters/{id}', 'Front\VendorController@vendorFilters')->name('vendorProductFilters');
+
+    /*Route::get('facebook', function () {
+	    return view('facebook');
+	});*/
+	Route::get('auth/facebook', 'Front\FacebookController@redirectToFacebook');
+	Route::get('auth/facebook/callback', 'Front\FacebookController@handleFacebookCallback');
 
 });

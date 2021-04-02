@@ -27,10 +27,10 @@ class SignupRequest extends FormRequest
             'name' => 'required|min:3|max:50',
             'email' => 'required|email|max:50||unique:users',
             'password' => 'required|string|min:6|max:50',
-            'phone_number' => 'required|numeric|digits:10|unique:users',
+            'phone_number' => 'required|string|min:10|max:15|unique:users',
             'device_type' => 'required|string',
             'device_token' => 'required|string',
-            'country_id' => 'required|string',
+            //'country_id' => 'required|string',
         ];
     }
 }

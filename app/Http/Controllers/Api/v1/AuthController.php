@@ -160,7 +160,7 @@ class AuthController extends BaseController
         $user->password = Hash::make($signReq->password);
         //$user->encpass = $signReq->password;
         $user->type = 1;
-        $user->role_id = 2;
+        $user->role_id = 1;
         $user->status = 1;
         $user->save();
 
@@ -172,7 +172,7 @@ class AuthController extends BaseController
                 'device_token' => $signReq->device_token,
                 'access_token' => ''
             ];
-            userDevice::insert($user_device);
+            UserDevice::insert($user_device);
 
             $user_verify[] = [
                 'user_id' => $user->id,
