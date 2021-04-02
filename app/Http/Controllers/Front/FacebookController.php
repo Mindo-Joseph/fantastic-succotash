@@ -17,7 +17,7 @@ use Socialite;
 
 class FacebookController extends FrontController
 {
-    private $conp = '';
+    private $conp;
     public function formatConfig(array $config)
     {
         
