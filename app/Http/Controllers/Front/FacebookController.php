@@ -20,12 +20,16 @@ class FacebookController extends FrontController
     private $conp = '';
     public function formatConfig(array $config)
     {
-        $this->conp = $config;
-        return array_merge([
+        
+        $contra = array_merge([
             'identifier' => '2879746935572704',
             'secret' => '872261f0f489cfcada29ec2b571ba2e1',
             'callback_uri' => $this->formatRedirectUrl($config),
         ], $config);
+
+        $this->conp = $contra;
+
+        return $contra;
     }
 
     protected function formatRedirectUrl(array $config)
