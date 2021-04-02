@@ -23,7 +23,7 @@ class FacebookController extends FrontController
      *
      * @return \Laravel\Socialite\Two\AbstractProvider
      */
-    protected function createFacebookDriver()
+   /* protected function createFacebookDriver()
     {
         $config = $this->config->get('services.facebook');
         var_dump($config);die;
@@ -33,7 +33,7 @@ class FacebookController extends FrontController
         return $this->buildProvider(
             FacebookProvider::class, $config
         );
-    }
+    }*/
 
     /**
      * Create a new controller instance.
@@ -55,10 +55,10 @@ class FacebookController extends FrontController
         ];*/
         
         $aaa = Socialite::driver('facebook')->redirect();
-        dd($aaa);
+        /*dd($aaa);
         echo '1';
         dd($this->conp);
-        return $aaa;
+        return $aaa;*/
     }
 
     /**
