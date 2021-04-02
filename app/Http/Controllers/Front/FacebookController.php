@@ -18,27 +18,20 @@ use Socialite;
 class FacebookController extends FrontController
 {
     private $conp;
-    public function formatConfig(array $config)
+    /**
+     * Create an instance of the specified driver.
+     *
+     * @return \Laravel\Socialite\Two\AbstractProvider
+     */
+    protected function createFacebookDriver()
     {
-        
-        $contra = array_merge([
-            'identifier' => '2879746935572704',
-            'secret' => '872261f0f489cfcada29ec2b571ba2e1',
-            'callback_uri' => $this->formatRedirectUrl($config),
-        ], $config);
+        $config = $this->config->get('services.facebook');
 
-        $this->conp = $contra;
+        $this->conp = $config;
 
-        return $contra;
-    }
-
-    protected function formatRedirectUrl(array $config)
-    {
-        $redirect = value('https://bahubali.royoorders.com/auth/facebook/callback');
-
-        return Str::startsWith($redirect, '/')
-                    ? $this->container->make('url')->to($redirect)
-                    : $redirect;
+        return $this->buildProvider(
+            FacebookProvider::class, $config
+        );
     }
 
     /**
