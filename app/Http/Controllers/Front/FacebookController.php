@@ -17,21 +17,29 @@ use Socialite;
 
 class FacebookController extends FrontController
 {
+    public function formatConfig(array $config)
+    {
+        return array_merge([
+            'identifier' => $config['client_id'],
+            'secret' => $config['client_secret'],
+            'callback_uri' => $this->formatRedirectUrl($config),
+        ], $config);
+    }
+
+    protected function formatRedirectUrl(array $config)
+    {
+        $redirect = value($config['redirect']);
+
+        return Str::startsWith($redirect, '/')
+                    ? $this->container->make('url')->to($redirect)
+                    : $redirect;
+    }
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    protected function createFacebookDriver()
-    {
-        $config = $this->config->get('services.facebook');
-        dd($config);
-
-        return $this->buildProvider(
-            FacebookProvider::class, $config
-        );
-    }
-
     public function redirectToFacebook()
     {
         /*echo $a = env('FACEBOOK_CLIENT_ID'); echo ' - ';
@@ -46,10 +54,7 @@ class FacebookController extends FrontController
             'redirect' => env('FACEBOOK_CALLBACK_URL'),
         ];*/
         
-        $config = $this->config->get('services.facebook');
-        dd($config);
-
-
+        
         return Socialite::driver('facebook')->redirect();
     }
 
