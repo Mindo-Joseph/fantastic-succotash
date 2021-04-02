@@ -68,7 +68,7 @@ class FacebookController extends FrontController
         try {
             $user = Socialite::driver('facebook')->user();
 
-            dd($user->toArray());
+            echo '<pre>'; print_r($user); echo '</pre>';die;
 
             $customer = User::where('facebook_auth_id', $user->getId())->first();
             if($customer){
