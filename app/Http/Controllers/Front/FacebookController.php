@@ -55,6 +55,7 @@ class FacebookController extends FrontController
         ];*/
         
         $aaa = Socialite::driver('facebook')->redirect();
+        dd($aaa);
         echo '1';
         dd($this->conp);
         return $aaa;
