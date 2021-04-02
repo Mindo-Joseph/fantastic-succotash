@@ -17,9 +17,10 @@ use Socialite;
 
 class FacebookController extends FrontController
 {
+    private $conp = '';
     public function formatConfig(array $config)
     {
-        print_r($config);die;
+        $this->conp = $config;
         return array_merge([
             'identifier' => '2879746935572704',
             'secret' => '872261f0f489cfcada29ec2b571ba2e1',
@@ -55,7 +56,7 @@ class FacebookController extends FrontController
             'redirect' => env('FACEBOOK_CALLBACK_URL'),
         ];*/
         
-        
+        dd($this->conp);
         return Socialite::driver('facebook')->redirect();
     }
 
