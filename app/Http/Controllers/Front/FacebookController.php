@@ -65,38 +65,31 @@ class FacebookController extends FrontController
      */
     public function handleFacebookCallback()
     {
-        /*$facebook2 = [
-            'client_id' => env('FACEBOOK_CLIENT_ID'),
-            'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
-            'redirect' => env('FACEBOOK_CALLBACK_URL'),
-        ];*/
         try {
             $user = Socialite::driver('facebook')->user();
-            $user_name = $user->getName();
-            $user_email = $user->getEmail();
-            $facebook_auth_id = $user->getId();
-            /* other code */
 
-            $user = User::where('facebook_auth_id', $user->getId())->first();
-            if($user){
-                Auth::login($user);
+            dd($user->toArray());
+
+            $customer = User::where('facebook_auth_id', $user->getId())->first();
+            if($customer){
+                Auth::login($customer);
                 return redirect()->route('userHome');
             }
 
-            $user = new User();
+            $customer = new User();
 
-            $user->name = $user->getName();
-            $user->email = $user->getEmail();
-            $user->facebook_auth_id = $user->getId();
-            $user->password = Hash::make($user->getId());
-            $user->type = 1;
-            $user->status = 1;
-            $user->role_id = 1;
-            $user->save();
+            $customer->name = $user->getName();
+            $customer->email = $user->getEmail();
+            $customer->facebook_auth_id = $user->getId();
+            $customer->password = Hash::make($user->getId());
+            $customer->type = 1;
+            $customer->status = 1;
+            $customer->role_id = 1;
+            $customer->save();
 
-            if($user->id > 0){
+            if($customer->id > 0){
                 $user_device[] = [
-                    'user_id' => $user->id,
+                    'user_id' => $customer->id,
                     'device_type' => 'web',
                     'device_token' => 'web',
                     'access_token' => ''
@@ -104,12 +97,12 @@ class FacebookController extends FrontController
                 UserDevice::insert($user_device);
 
                 $user_verify[] = [
-                    'user_id' => $user->id,
+                    'user_id' => $customer->id,
                     'is_email_verified' => 0,
                     'is_phone_verified' => 0
                 ];
                 UserVerification::insert($user_verify);
-                Auth::login($user);
+                Auth::login($customer);
                 return redirect()->route('userHome');
             }
         } catch (Exception $e) {
