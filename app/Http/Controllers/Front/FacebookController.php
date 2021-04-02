@@ -26,6 +26,7 @@ class FacebookController extends FrontController
     protected function createFacebookDriver()
     {
         $config = $this->config->get('services.facebook');
+        dd($config);
 
         $this->conp = $config;
 
