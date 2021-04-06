@@ -28,18 +28,18 @@ class FacebookController extends FrontController
 
         //echo $ss = session('preferences')->fb_client_id ; echo ' == ';
         //echo $ss = session('preferences')->fb_client_secret;
-        //$driver;
+        echo $driver;
         if($driver == 'facebook'){
             $config['client_id'] = $ClientPreferences->fb_client_id;
             $config['client_secret'] = $ClientPreferences->fb_client_secret;
-            $config['redirect'] = 'https://'.$domain.'/auth/callback/facebook';
+            $config['redirect'] = 'https://'.$domain.'/auth/callback/facebook';die;
 
             return  Socialite::buildProvider(FacebookProvider::class, $config);
 
         } elseif ($driver == 'twitter'){
-            $config['client_id'] = $ClientPreferences->twitter_client_id;
-            $config['client_secret'] = $ClientPreferences->twitter_client_id;
-            $config['redirect'] = 'https://'.$domain.'/auth/callback/twitter';
+            echo $config['client_id'] = $ClientPreferences->twitter_client_id;
+            echo $config['client_secret'] = $ClientPreferences->twitter_client_id;
+            echo $config['redirect'] = 'https://'.$domain.'/auth/callback/twitter';die;
 
             return  Socialite::buildProvider(TwitterProvider::class, $config);
             
