@@ -72,7 +72,7 @@ class FacebookController extends FrontController
             $usr = $this->makeSocialDriver($domain, $driver);
             $user = $usr->user();
 
-            $customer = User::where('status' '!=', 2);
+            $customer = User::where('status', '!=', 2);
             if($driver == 'facebook'){
                 $customer = $customer->where('facebook_auth_id', $user->getId());
             } elseif ($driver == 'twitter'){
