@@ -103,12 +103,12 @@ class FacebookController extends FrontController
                 return redirect()->route('userHome');
             }
 
-            dd($user);
-
             $customer = new User();
 
+            $eml = $user->getId().'twitter-xyz.com';
+
             $customer->name = $user->getName();
-            $customer->email = $user->getEmail();
+            $customer->email = empty($user->getEmail()) ? $eml : $user->getEmail();
             $customer->facebook_auth_id = $user->getId();
             $customer->password = Hash::make($user->getId());
             $customer->type = 1;
