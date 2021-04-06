@@ -103,6 +103,8 @@ class FacebookController extends FrontController
                 return redirect()->route('userHome');
             }
 
+            dd($user);
+
             $customer = new User();
 
             $customer->name = $user->getName();
