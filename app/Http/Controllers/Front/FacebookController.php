@@ -85,7 +85,6 @@ class FacebookController extends FrontController
     {
         try {
             $usr = $this->configDriver($request, $domain, $driver);
-            dd($usr);
             $user = $usr->user();
 
             $customer = User::where('status', '!=', 2);
