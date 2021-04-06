@@ -32,7 +32,7 @@ class FacebookController extends FrontController
         if($driver == 'facebook'){
             echo $config['client_id'] = $ClientPreferences->fb_client_id;
             echo $config['client_secret'] = $ClientPreferences->fb_client_secret;
-            $config['redirect'] = 'http://'.$domain.'/auth/callback/facebook';
+            echo $config['redirect'] = 'http://'.$domain.'/auth/callback/facebook';die;
 
             return  Socialite::buildProvider(FacebookProvider::class, $config);
 
