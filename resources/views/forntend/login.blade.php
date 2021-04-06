@@ -58,13 +58,13 @@
                             <div class="col-md-12">
                                 <div class="social-logins">
                                     @if(session('preferences')->fb_login == 1)
-                                        <a href="{{url('auth/facebook')}}"><img src="{{asset('assets/images/social-fb-login.png')}}">
+                                        <a href="{{url('auth/facebook')}}"><img src="{{asset('assets/images/social-fb-login.png')}}"></a>
                                     @endif
                                     @if(session('preferences')->twitter_login == 1)
-                                        <img src="{{asset('assets/images/twitter-login.png')}}">
+                                        <a href="{{url('auth/twitter')}}"><img src="{{asset('assets/images/twitter-login.png')}}"></a>
                                     @endif
                                     @if(session('preferences')->google_login == 1)
-                                        <img src="{{asset('assets/images/google-login.png')}}">
+                                        <a href="{{url('auth/google')}}"><img src="{{asset('assets/images/google-login.png')}}"> </a>
                                     @endif
                                     @if(session('preferences')->apple_login == 1)
                                         <img src="{{asset('assets/images/apple-login.png')}}">
