@@ -60,9 +60,9 @@ class FacebookController extends FrontController
             $config['redirect'] = 'https://'.$domain.'/auth/callback/twitter';
 
             //return Socialite::buildProvider(TwitterProvider::class, $config);
-
+            $container = new Container();
             return new TwitterProvider(
-                Container::make('request'), new TwitterServer(Socialite::formatConfig($config))
+                $container->make('request'), new TwitterServer(Socialite::formatConfig($config))
             );
 
             /*$array_merge = array_merge([
