@@ -62,7 +62,7 @@ class FacebookController extends FrontController
             //return Socialite::buildProvider(TwitterProvider::class, $config);
 
             return new TwitterProvider(
-                $this->container->make('request'), new TwitterServer(Socialite::formatConfig($config))
+                Container::make('request'), new TwitterServer(Socialite::formatConfig($config))
             );
 
             /*$array_merge = array_merge([
@@ -75,15 +75,6 @@ class FacebookController extends FrontController
                 $this->container->make('request'), new TwitterServer($array_merge)
             );  */          
         }
-    }
-
-    private function formatRedirectUrl(array $config)
-    {
-        $redirect = value($config['redirect']);
-
-        return Str::startsWith($redirect, '/')
-                    ? $this->container->make('url')->to($redirect)
-                    : $redirect;
     }
 
     public function redirectToSocial($domain = '', $redirecting = 'facebook')
