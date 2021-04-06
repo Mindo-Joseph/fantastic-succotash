@@ -6,6 +6,7 @@ use App\Http\Controllers\Front\FrontController;
 use App\Models\{ClientLanguage, ClientCurrency, User, Country, UserDevice, UserVerification, ClientPreference};
 use Illuminate\Http\Request;
 
+use Closure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Manager;
 use Illuminate\Support\Str;
@@ -38,7 +39,6 @@ class FacebookController extends FrontController
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->config = $container->make('config');
     }
 
     private function configDriver($domain = '', $driver = 'facebook'){
