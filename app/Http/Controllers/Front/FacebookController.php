@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{ClientLanguage, ClientCurrency, User, Country, UserDevice, UserVerification};
 use Illuminate\Http\Request;
+
 use Session;
 use Carbon\Carbon;
 use Config;
@@ -76,8 +77,9 @@ class FacebookController extends FrontController
      *
      * @return void
      */
-    public function redirectToFacebook()
+    public function redirectToFacebook(Request $request)
     {
+        $provider = new AbstractProvider($request, 'clientId', 'clientSecret', 'clientId', $guzzle = []);
         /*echo $a = env('FACEBOOK_CLIENT_ID'); echo ' - ';
         echo $a = env('FACEBOOK_CLIENT_ID'); echo ' - ';
         echo $a = env('FACEBOOK_CLIENT_ID'); echo ' - ';
