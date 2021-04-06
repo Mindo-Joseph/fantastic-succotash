@@ -27,7 +27,7 @@ use Laravel\Socialite\SocialiteManager;
 use League\OAuth1\Client\Server\Twitter as TwitterServer;
 use Socialite;
 
-class FacebookController extends FrontController
+class FacebookController extends Manager
 {
     /**
      * Create a new manager instance.
@@ -62,7 +62,7 @@ class FacebookController extends FrontController
             //return Socialite::buildProvider(TwitterProvider::class, $config);
             $container = new Container();
             return new TwitterProvider(
-                $container->make('request'), new TwitterServer(Socialite::formatConfig($config))
+                Manager::container->make('request'), new TwitterServer(Socialite::formatConfig($config))
             );
 
             /*$array_merge = array_merge([
