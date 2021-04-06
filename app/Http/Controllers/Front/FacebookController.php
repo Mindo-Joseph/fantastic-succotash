@@ -61,7 +61,7 @@ class FacebookController extends FrontController
 
             //return Socialite::buildProvider(TwitterProvider::class, $config);
             return new TwitterProvider(
-                SocialiteManager::make('request'), new TwitterServer(Socialite::formatConfig($config))
+                $config, new TwitterServer(Socialite::formatConfig($config))
             );
 
             /*$array_merge = array_merge([
