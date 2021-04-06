@@ -58,7 +58,9 @@ class FacebookController extends SocialiteManager
             'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
             'redirect' => env('FACEBOOK_CALLBACK_URL'),
         ];*/
-        
+        $driver = Socialite::driver('facebook');
+        echo '<pre>';print_r($driver); echo '</pre>';
+        dd($driver);die;
         return Socialite::driver('facebook')->redirect();
         /*dd($aaa);
         echo '1';
