@@ -62,7 +62,7 @@ class FacebookController extends Manager
             //return Socialite::buildProvider(TwitterProvider::class, $config);
             $container = new Container();
             return new TwitterProvider(
-                Manager::container->make('request'), new TwitterServer(Socialite::formatConfig($config))
+                $this->container->make('request'), new TwitterServer(Socialite::formatConfig($config))
             );
 
             /*$array_merge = array_merge([
