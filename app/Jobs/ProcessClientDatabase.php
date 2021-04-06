@@ -86,7 +86,9 @@ class ProcessClientDatabase implements ShouldQueue
                 'verify_phone'          => 0,
                 'web_template_id'       => 1,
                 'app_template_id'       => 2,
-                'need_delivery_service' => 0
+                'need_delivery_service' => 0,
+                'primary_color'         => '#32B5FC',
+                'secondary_color'       => '#41A2E6'
             ];
             $cli_currs = [
                 'client_code' => $client['code'],
