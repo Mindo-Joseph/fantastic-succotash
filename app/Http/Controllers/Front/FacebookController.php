@@ -12,32 +12,63 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Socialite\Two\FacebookProvider;
+use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\SocialiteManager;
 use Socialite;
 
-class FacebookController extends SocialiteManager
+class FacebookController extends FrontController
 {
     private $conp;
+    public $scopeSeparator = ',';
+    public $parameters = [];
     /**
-     * Create an instance of the specified driver.
+     * Get the GET parameters for the code request.
      *
-     * @return \Laravel\Socialite\Two\AbstractProvider
+     * @param  string|null  $state
+     * @return array
      */
-    protected function createFacebookDriver()
+    protected function getCodeFields($state = null)
     {
-        echo '1';die;
-        $config = $this->config->get('services.facebook');
+        echo "asdasdasd";die;
+        $fields = [
+            'client_id' => 'qewqweqeweeeqwewq',
+            'redirect_uri' => 'wqeeeeeeeeeeeeeeeeeeeqewqewqe',
+            'scope' => $this->formatScopes(AbstractProvider::getScopes(), $this->scopeSeparator),
+            'response_type' => 'code',
+        ];
 
-        return $this->buildProvider(
-            FacebookProvider::class, $config
-        );
+        if ($this->usesState()) {
+            $fields['state'] = $state;
+        }
+
+        if ($this->usesPKCE()) {
+            $fields['code_challenge'] = $this->getCodeChallenge();
+            $fields['code_challenge_method'] = $this->getCodeChallengeMethod();
+        }
+
+        return array_merge($fields, $this->parameters);
     }
 
-    public function with($driver)
+    /**
+     * Generates the PKCE code challenge based on the PKCE code verifier in the session.
+     *
+     * @return string
+     */
+    protected function getCodeChallenge()
     {
-        echo '2';die;
-        return $this->driver($driver);
+        $hashed = hash('sha256', $this->request->session()->get('code_verifier'), true);
+
+        return rtrim(strtr(base64_encode($hashed), '+/', '-_'), '=');
+    }
+
+    /**
+     * Returns the hash method used to calculate the PKCE code challenge.
+     *
+     * @return string
+     */
+    protected function getCodeChallengeMethod()
+    {
+        return 'S256';
     }
 
     /**
