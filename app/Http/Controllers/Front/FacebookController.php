@@ -28,6 +28,19 @@ use Socialite;
 
 class FacebookController extends FrontController
 {
+    /**
+     * Create a new manager instance.
+     *
+     * @param  \Illuminate\Contracts\Container\Container  $container
+     * @return void
+     */
+    private $container;
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+        $this->config = $container->make('config');
+    }
+
     private function configDriver($domain = '', $driver = 'facebook'){
         $ClientPreferences = ClientPreference::select('fb_login', 'fb_client_id', 'fb_client_secret', 'fb_client_url', 'twitter_login', 'twitter_client_id', 'twitter_client_secret', 'twitter_client_url', 'google_login', 'google_client_id', 'google_client_secret', 'google_client_url', 'apple_login', 'apple_client_id', 'apple_client_secret', 'apple_client_url')->first();
 
