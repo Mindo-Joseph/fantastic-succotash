@@ -16,7 +16,7 @@ use Laravel\Socialite\Two\FacebookProvider;
 use Laravel\Socialite\SocialiteManager;
 use Socialite;
 
-class FacebookController extends FrontController
+class FacebookController extends SocialiteManager
 {
     private $conp;
     /**
