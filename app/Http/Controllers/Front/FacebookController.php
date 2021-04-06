@@ -36,7 +36,7 @@ class FacebookController extends FrontController
      * @return void
      */
 
-    private function configDriver($domain = '', $driver = 'facebook'){
+    private function configDriver(Request $request, $domain = '', $driver = 'facebook'){
         $ClientPreferences = ClientPreference::select('fb_login', 'fb_client_id', 'fb_client_secret', 'fb_client_url', 'twitter_login', 'twitter_client_id', 'twitter_client_secret', 'twitter_client_url', 'google_login', 'google_client_id', 'google_client_secret', 'google_client_url', 'apple_login', 'apple_client_id', 'apple_client_secret', 'apple_client_url')->first();
 
        
@@ -61,7 +61,7 @@ class FacebookController extends FrontController
 
             //return Socialite::buildProvider(TwitterProvider::class, $config);
             return new TwitterProvider(
-                $config, new TwitterServer(Socialite::formatConfig($config))
+                $request, new TwitterServer(Socialite::formatConfig($config))
             );
 
             /*$array_merge = array_merge([
