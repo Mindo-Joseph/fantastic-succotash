@@ -64,7 +64,9 @@ class FacebookController extends FrontController
             $config['client_secret'] = $ClientPreferences->twitter_client_secret;
             $config['redirect'] = 'https://'.$domain.'/auth/callback/twitter';
 
-            $array_merge = array_merge([
+            return Socialite::buildProvider(TwitterProvider::class, $config);
+
+            /*$array_merge = array_merge([
                 'identifier' => $config['client_id'],
                 'secret' => $config['client_secret'],
                 'callback_uri' => $this->formatRedirectUrl($config),
@@ -72,7 +74,7 @@ class FacebookController extends FrontController
 
             return new TwitterProvider(
                 $this->container->make('request'), new TwitterServer($array_merge)
-            );            
+            );  */          
         }
     }
 
