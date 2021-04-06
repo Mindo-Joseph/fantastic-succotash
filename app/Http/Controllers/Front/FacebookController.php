@@ -93,7 +93,7 @@ class FacebookController extends FrontController
         #clientId: "2879746935572704"
   #clientSecret: "872261f0f489cfcada29ec2b571ba2e1"
   #redirectUrl: "https://bahubali.royoorders.com/auth/facebook/callback"
-        echo $driver->clientId; echo "  --   ";
+        dd($driver->clientId); echo "  --   ";
         echo $driver->clientSecret; echo "  --   ";
         echo $driver->redirectUrl; echo "  --   ";
         //echo '<pre>';print_r($driver->toArray()); echo '</pre>';
