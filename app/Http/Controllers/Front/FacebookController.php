@@ -28,7 +28,7 @@ class FacebookController extends FrontController
 
         //echo $ss = session('preferences')->fb_client_id ; echo ' == ';
         //echo $ss = session('preferences')->fb_client_secret;
-        echo $driver;
+        //$driver;
         if($driver == 'facebook'){
             $config['client_id'] = $ClientPreferences->fb_client_id;
             $config['client_secret'] = $ClientPreferences->fb_client_secret;
@@ -37,15 +37,15 @@ class FacebookController extends FrontController
             return  Socialite::buildProvider(FacebookProvider::class, $config);
 
         } elseif ($driver == 'twitter'){
-            echo $config['client_id'] = $ClientPreferences->twitter_client_id;
-            echo $config['client_secret'] = $ClientPreferences->twitter_client_id;
-            echo $config['redirect'] = 'https://'.$domain.'/auth/callback/twitter';die;
+            $config['client_id'] = $ClientPreferences->twitter_client_id;
+            $config['client_secret'] = $ClientPreferences->twitter_client_secret;
+            $config['redirect'] = 'https://'.$domain.'/auth/callback/twitter';
 
             return  Socialite::buildProvider(TwitterProvider::class, $config);
             
         } elseif ($driver == 'google'){
-            $config['client_id'] = $ClientPreferences->twitter_client_id;
-            $config['client_secret'] = $ClientPreferences->twitter_client_id;
+            $config['client_id'] = $ClientPreferences->google_client_id;
+            $config['client_secret'] = $ClientPreferences->google_client_secret;
             $config['redirect'] = 'https://'.$domain.'/auth/callback/google';
 
             return  Socialite::buildProvider(GoogleProvider::class, $config);
