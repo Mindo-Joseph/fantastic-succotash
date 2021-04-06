@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{ClientLanguage, ClientCurrency, User, Country, UserDevice, UserVerification};
+use App\Models\{ClientLanguage, ClientCurrency, User, Country, UserDevice, UserVerification, ClientPreference};
 use Illuminate\Http\Request;
 
 use Session;
@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Two\FacebookProvider;
+use Laravel\Socialite\Two\GoogleProvider;
+use Laravel\Socialite\One\TwitterProvider
 use Laravel\Socialite\SocialiteManager;
 use Socialite;
 
@@ -21,24 +23,42 @@ class FacebookController extends FrontController
 {
     private $conp;
 
-    private function makeFacebookDriver($domain = ''){
+    private function makeSocialDriver($domain = '', $driver = 'facebook'){
+        $ClientPreferences = ClientPreference::select('fb_login', 'fb_client_id', 'fb_client_secret', 'fb_client_url', 'twitter_login', 'twitter_client_id', 'twitter_client_secret', 'twitter_client_url', 'google_login', 'google_client_id', 'google_client_secret', 'google_client_url', 'apple_login', 'apple_client_id', 'apple_client_secret', 'apple_client_url')->first();
 
-        $config['client_id'] = 'aaaaaaaaaa';
-        $config['client_secret'] = 'aaaaaaaaaaaaaaaaaa';
-        $config['redirect'] = 'http://'.$domain.'/auth/facebook/callback';
-        return  Socialite::buildProvider(FacebookProvider::class, $config);
+        //echo $ss = session('preferences')->fb_client_id ; echo ' == ';
+        //echo $ss = session('preferences')->fb_client_secret;
+        $client_id = '';
+        $client_secret = '';
+        if($driver == 'facebook'){
+            $config['client_id'] = $ClientPreferences->twitter_client_id;
+            $config['client_secret'] = $ClientPreferences->twitter_client_id;
+            $config['redirect'] = 'http://'.$domain.'/auth/callback/facebook';
+
+            return  Socialite::buildProvider(FacebookProvider::class, $config);
+
+        } elseif ($driver == 'twitter'){
+            $config['client_id'] = $ClientPreferences->twitter_client_id;
+            $config['client_secret'] = $ClientPreferences->twitter_client_id;
+            $config['redirect'] = 'http://'.$domain.'/auth/callback/twitter';
+
+            return  Socialite::buildProvider(TwitterProvider::class, $config);
+            
+        } elseif ($driver == 'google'){
+            $config['client_id'] = $ClientPreferences->twitter_client_id;
+            $config['client_secret'] = $ClientPreferences->twitter_client_id;
+            $config['redirect'] = 'http://'.$domain.'/auth/callback/google';
+
+            return  Socialite::buildProvider(GoogleProvider::class, $config);
+            
+        }
     }
-    
 
-    public function redirectToFacebook(Request $request)
+    public function redirectToSocial($domain = '', $redirecting = 'facebook')
     {
-        //$driver = Socialite::driver('facebook');
-        //return Socialite::driver('facebook')->redirect();
-        $fb = $this->makeFacebookDriver('www.facebook.com');
+        $fb = $this->makeSocialDriver($domain, $redirecting);
 
-        dd($fb);
         return $fb->redirect();
-        
     }
 
     /**
@@ -46,12 +66,23 @@ class FacebookController extends FrontController
      *
      * @return void
      */
-    public function handleFacebookCallback()
+    public function handleSocialCallback($domain = '', $driver = 'facebook')
     {
         try {
-            $user = Socialite::driver('facebook')->user();
+            $usr = $this->makeSocialDriver($domain, $driver);
+            $user = $usr->user();
 
-            $customer = User::where('facebook_auth_id', $user->getId())->first();
+            $customer = User::where('status' '!=', 2);
+            if($driver == 'facebook'){
+                $customer = $customer->where('facebook_auth_id', $user->getId());
+            } elseif ($driver == 'twitter'){
+                $customer = $customer->where('twitter_auth_id', $user->getId());
+
+            } elseif ($driver == 'google'){
+                $customer = $customer->where('google_auth_id', $user->getId());
+            }
+            $customer = $customer->first();
+
             if($customer){
                 Auth::login($customer);
                 return redirect()->route('userHome');

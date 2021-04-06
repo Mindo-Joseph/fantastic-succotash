@@ -52,7 +52,10 @@ Route::group(['middleware' => ['domain']], function () {
     /*Route::get('facebook', function () {
 	    return view('facebook');
 	});*/
-	Route::get('auth/facebook', 'Front\FacebookController@redirectToFacebook');
-	Route::get('auth/facebook/callback', 'Front\FacebookController@handleFacebookCallback');
+
+	Route::get('auth/{driver}', 'Front\FacebookController@redirectToSocial');
+	Route::get('auth/callback/{driver}', 'Front\FacebookController@handleSocialCallback');
+	/*Route::get('auth/facebook', 'Front\FacebookController@redirectToFacebook');
+	Route::get('auth/facebook/callback', 'Front\FacebookController@handleFacebookCallback');*/
 
 });
