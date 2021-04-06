@@ -62,7 +62,7 @@ class HomeController extends BaseController
             $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
                     $query->select('vendor_id')
                     ->from(with(new ServiceArea)->getTable())
-                    ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
+                    ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$lats." ".$longs.")'))");
             });
         }
         $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
