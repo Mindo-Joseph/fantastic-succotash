@@ -90,12 +90,9 @@ class FacebookController extends FrontController
             'redirect' => env('FACEBOOK_CALLBACK_URL'),
         ];*/
         $driver = Socialite::driver('facebook');
-        #clientId: "2879746935572704"
-  #clientSecret: "872261f0f489cfcada29ec2b571ba2e1"
-  #redirectUrl: "https://bahubali.royoorders.com/auth/facebook/callback"
-        dd($driver->clientId); echo "  --   ";
-        echo $driver->clientSecret; echo "  --   ";
-        echo $driver->redirectUrl; echo "  --   ";
+  
+        //dd($driver->clientId); echo "  --   ";
+        
         //echo '<pre>';print_r($driver->toArray()); echo '</pre>';
         dd($driver);die;
         return Socialite::driver('facebook')->redirect();
