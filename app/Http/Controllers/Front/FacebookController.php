@@ -105,11 +105,19 @@ class FacebookController extends FrontController
 
             $customer = new User();
 
-            $eml = $user->getId().'twitter-xyz.com';
+            $eml = $user->getId().'@twitter-xyz.com';
 
             $customer->name = $user->getName();
             $customer->email = empty($user->getEmail()) ? $eml : $user->getEmail();
-            $customer->facebook_auth_id = $user->getId();
+
+            if($driver == 'facebook'){
+                $customer->facebook_auth_id = $user->getId();
+            } elseif ($driver == 'twitter'){
+                $customer->twitter_auth_id = $user->getId();
+
+            } elseif ($driver == 'google'){
+                $customer->google_auth_id = $user->getId();
+            }
             $customer->password = Hash::make($user->getId());
             $customer->type = 1;
             $customer->status = 1;
