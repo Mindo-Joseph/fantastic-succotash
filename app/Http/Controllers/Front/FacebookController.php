@@ -100,7 +100,7 @@ class FacebookController extends FrontController
     public function handleSocialCallback($domain = '', $driver = 'facebook')
     {
         try {
-            $usr = $this->makeSocialDriver($domain, $driver);
+            $usr = $this->configDriver($domain, $driver);
             $user = $usr->user();
 
             $customer = User::where('status', '!=', 2);
