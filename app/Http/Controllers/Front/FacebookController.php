@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Two\FacebookProvider;
 use Laravel\Socialite\Two\GoogleProvider;
-use Laravel\Socialite\One\TwitterProvider
+use Laravel\Socialite\One\TwitterProvider;
 use Laravel\Socialite\SocialiteManager;
 use Socialite;
 
