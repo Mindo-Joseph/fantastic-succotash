@@ -5,14 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{ClientLanguage, ClientCurrency, User, Country, UserDevice, UserVerification, ClientPreference};
 use Illuminate\Http\Request;
-
-use Closure;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Manager;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
-use Illuminate\Contracts\Container\Container;
-
 use Session;
 use Carbon\Carbon;
 use Config;
@@ -76,9 +69,9 @@ class FacebookController extends FrontController
         }
     }
 
-    public function redirectToSocial($domain = '', $redirecting = 'facebook')
+    public function redirectToSocial(Request $request, $domain = '', $redirecting = 'facebook')
     {
-        $fb = $this->configDriver($domain, $redirecting);
+        $fb = $this->configDriver($request, $domain, $redirecting);
 
         return $fb->redirect();
     }
@@ -88,10 +81,10 @@ class FacebookController extends FrontController
      *
      * @return void
      */
-    public function handleSocialCallback($domain = '', $driver = 'facebook')
+    public function handleSocialCallback(Request $request, $domain = '', $driver = 'facebook')
     {
         try {
-            $usr = $this->configDriver($domain, $driver);
+            $usr = $this->configDriver($request, $domain, $driver);
             $user = $usr->user();
 
             $customer = User::where('status', '!=', 2);
