@@ -6,6 +6,11 @@ use App\Http\Controllers\Front\FrontController;
 use App\Models\{ClientLanguage, ClientCurrency, User, Country, UserDevice, UserVerification, ClientPreference};
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Manager;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
+
 use Session;
 use Carbon\Carbon;
 use Config;
