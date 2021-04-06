@@ -60,9 +60,8 @@ class FacebookController extends Manager
             $config['redirect'] = 'https://'.$domain.'/auth/callback/twitter';
 
             //return Socialite::buildProvider(TwitterProvider::class, $config);
-            $container = new Container();
             return new TwitterProvider(
-                $this->container->make('request'), new TwitterServer(Socialite::formatConfig($config))
+                SocialiteManager::make('request'), new TwitterServer(Socialite::formatConfig($config))
             );
 
             /*$array_merge = array_merge([
