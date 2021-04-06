@@ -175,8 +175,9 @@ class ProductController extends BaseController
         ]);
     }
 
-    public function categoryData($cid = 0)
+    public function categoryData(Request $request, $cid = 0)
     {
+        $paginate = $request->has('limit') ? $request->limit : 12;
         if($cid == 0){
             return response()->json(['error' => 'No record found.'], 404);
         }
@@ -200,18 +201,18 @@ class ProductController extends BaseController
             return response()->json(['error' => 'No record found.'], 200);
         }
         $response['category'] = $category;
-        $response['listData'] = $this->listData($langId, $cid, $category->type->redirect_to);
+        $response['listData'] = $this->listData($langId, $cid, $category->type->redirect_to, $paginate);
 
         return response()->json([
             'data' => $response,
         ]);
     }
 
-    public function listData($langId, $cid, $tpye = ''){
+    public function listData($langId, $cid, $tpye = '', $limit = 12){
         
         if($tpye == 'vendor' || $tpye == 'Vendor'){
 
-            $vendorIds = array();
+            /*$vendorIds = array();
 
             $vendorWithCategory = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
                         ->select('products.id', 'products.vendor_id')
@@ -220,7 +221,7 @@ class ProductController extends BaseController
                 foreach ($vendorWithCategory as $key => $value) {
                     $vendorIds[] = $value->vendor_id;
                 }
-            }
+            }*/
 
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
 
@@ -231,8 +232,8 @@ class ProductController extends BaseController
                         ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
                 });
             }*/
-            $vendorData = $vendorData->where('status', '!=', $this->field_status)
-                            ->whereIn('id', $vendorIds)->get();
+            $vendorData = $vendorData->where('status', '!=', $this->field_status)->paginate($limit);
+                            //->whereIn('id', $vendorIds)
 
             return $vendorData;
 
@@ -249,7 +250,7 @@ class ProductController extends BaseController
                             $q->groupBy('product_id');
                         },
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('pc.category_id', $cid)->get();
+                    ->where('pc.category_id', $cid)->paginate($limit);
 
             if(!empty($products)){
                 foreach ($products as $key => $value) {
