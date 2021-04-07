@@ -96,7 +96,7 @@ class FacebookController extends FrontController
         try {
 
             $customer = new User();
-            if($redirecting == 'apple'){
+            if($driver == 'apple'){
                 $usr = Socialite::driver("sign-in-with-apple");
                 $user = $usr->user();
                 dd($user);
