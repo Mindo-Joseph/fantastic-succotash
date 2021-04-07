@@ -810,6 +810,10 @@
                 "jwt",
                 "php"
             ],
+            "support": {
+                "issues": "https://github.com/firebase/php-jwt/issues",
+                "source": "https://github.com/firebase/php-jwt/tree/v5.2.1"
+            },
             "time": "2021-02-12T00:02:00+00:00"
         },
         {
@@ -983,13 +987,10 @@
                 }
             ],
             "description": "Add Apple's new single-signon feature to your site with ease.",
-<<<<<<< HEAD
-=======
             "support": {
                 "issues": "https://github.com/GeneaLabs/laravel-sign-in-with-apple/issues",
                 "source": "https://github.com/GeneaLabs/laravel-sign-in-with-apple/tree/0.5.0"
             },
->>>>>>> 1f09a6f574e3071f53ba61c2a2c847ae5c8a50a7
             "funding": [
                 {
                     "url": "https://github.com/mikebronner",
@@ -1046,13 +1047,10 @@
                 }
             ],
             "description": "Automatically manager user persistence and resolution for any Laravel Socialite provider.",
-<<<<<<< HEAD
-=======
             "support": {
                 "issues": "https://github.com/GeneaLabs/laravel-socialiter/issues",
                 "source": "https://github.com/GeneaLabs/laravel-socialiter/tree/0.3.3"
             },
->>>>>>> 1f09a6f574e3071f53ba61c2a2c847ae5c8a50a7
             "funding": [
                 {
                     "url": "https://github.com/mikebronner",
@@ -1723,15 +1721,11 @@
                 "laravel",
                 "oauth"
             ],
-<<<<<<< HEAD
-            "time": "2021-03-02T16:50:47+00:00"
-=======
             "support": {
                 "issues": "https://github.com/laravel/socialite/issues",
                 "source": "https://github.com/laravel/socialite"
             },
             "time": "2021-04-06T14:38:16+00:00"
->>>>>>> 1f09a6f574e3071f53ba61c2a2c847ae5c8a50a7
         },
         {
             "name": "laravel/tinker",
@@ -1976,6 +1970,10 @@
                 }
             ],
             "description": "Yet another clock abstraction",
+            "support": {
+                "issues": "https://github.com/lcobucci/clock/issues",
+                "source": "https://github.com/lcobucci/clock/tree/2.0.x"
+            },
             "funding": [
                 {
                     "url": "https://github.com/lcobucci",
@@ -2046,6 +2044,10 @@
                 "JWS",
                 "jwt"
             ],
+            "support": {
+                "issues": "https://github.com/lcobucci/jwt/issues",
+                "source": "https://github.com/lcobucci/jwt/tree/4.1.4"
+            },
             "funding": [
                 {
                     "url": "https://github.com/lcobucci",
@@ -3994,6 +3996,9 @@
                 "socialite",
                 "socialite apple"
             ],
+            "support": {
+                "source": "https://github.com/SocialiteProviders/Apple/tree/5.0.2"
+            },
             "time": "2021-03-25T22:34:09+00:00"
         },
         {
@@ -4057,6 +4062,10 @@
             ],
             "description": "Easily add new or override built-in providers in Laravel Socialite.",
             "homepage": "https://socialiteproviders.com/",
+            "support": {
+                "issues": "https://github.com/SocialiteProviders/Manager/issues",
+                "source": "https://github.com/SocialiteProviders/Manager/tree/4.0.1"
+            },
             "time": "2020-12-01T23:09:06+00:00"
         },
         {
@@ -6484,63 +6493,6 @@
                 "issues": "https://github.com/symfony/thanks/issues",
                 "source": "https://github.com/symfony/thanks/tree/v1.2.10"
             },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-10-14T17:47:37+00:00"
-        },
-        {
-            "name": "symfony/thanks",
-            "version": "v1.2.10",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/thanks.git",
-                "reference": "e9c4709560296acbd4fe9e12b8d57a925aa7eae8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/thanks/zipball/e9c4709560296acbd4fe9e12b8d57a925aa7eae8",
-                "reference": "e9c4709560296acbd4fe9e12b8d57a925aa7eae8",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.0|^2.0",
-                "php": ">=5.5.9"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.2-dev"
-                },
-                "class": "Symfony\\Thanks\\Thanks"
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Thanks\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                }
-            ],
-            "description": "Encourages sending ⭐ and 💵 to fellow PHP package maintainers (not limited to Symfony components)!",
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -9645,5 +9597,5 @@
         "php": "^7.4.0|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
