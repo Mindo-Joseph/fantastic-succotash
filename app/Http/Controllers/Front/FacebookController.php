@@ -25,7 +25,8 @@ use Socialite;
 use Laravel\Socialite\Two\User as OAuthTwoUser;
 use GeneaLabs\LaravelSocialiter\Facades\Socialiter;
 
-
+//use SocialiteProviders\Apple\Provider as AppleProvider;
+//use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class FacebookController extends FrontController
 {
@@ -76,6 +77,7 @@ class FacebookController extends FrontController
     public function redirectToSocial(Request $request, $domain = '', $redirecting = 'facebook')
     {
         if($redirecting == 'apple'){
+
             return Socialite::driver("sign-in-with-apple")->redirect();
 
         }else{
@@ -97,7 +99,12 @@ class FacebookController extends FrontController
 
             $customer = new User();
             if($driver == 'apple'){
+
                 $usr = Socialite::driver("sign-in-with-apple");
+
+
+
+               // $usr = Socialite::driver("sign-in-with-apple");
                 //$user = $usr->user();
                 dd($usr);
             }else{
