@@ -9,6 +9,8 @@ use InvalidArgumentException;
 use Session;
 use Carbon\Carbon;
 use Config;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -18,7 +20,12 @@ use Laravel\Socialite\Two\GoogleProvider;
 use Laravel\Socialite\One\TwitterProvider;
 use Laravel\Socialite\SocialiteManager;
 use League\OAuth1\Client\Server\Twitter as TwitterServer;
+
 use Socialite;
+use Laravel\Socialite\Two\User as OAuthTwoUser;
+use GeneaLabs\LaravelSocialiter\Facades\Socialiter;
+
+
 
 class FacebookController extends FrontController
 {
@@ -56,22 +63,25 @@ class FacebookController extends FrontController
             return new TwitterProvider(
                 $request, new TwitterServer(Socialite::formatConfig($config))
             );
+        } elseif ($driver == 'apple'){
+            $config['client_id'] = $ClientPreferences->google_client_id;
+            $config['client_secret'] = $ClientPreferences->google_client_secret;
+            $config['redirect'] = 'https://'.$domain.'/auth/callback/google';
 
-            /*$array_merge = array_merge([
-                'identifier' => $config['client_id'],
-                'secret' => $config['client_secret'],
-                'callback_uri' => $this->formatRedirectUrl($config),
-            ], $config);
-
-            return new TwitterProvider(
-                $this->container->make('request'), new TwitterServer($array_merge)
-            );  */          
+            return Socialite::buildProvider(GoogleProvider::class, $config);
+            
         }
     }
 
     public function redirectToSocial(Request $request, $domain = '', $redirecting = 'facebook')
     {
-        $fb = $this->configDriver($request, $domain, $redirecting);
+        if($redirecting == 'apple'){
+            return Socialite::driver("sign-in-with-apple")->redirect();
+
+        }else{
+            $fb = $this->configDriver($request, $domain, $redirecting);
+        }
+        
 
         return $fb->redirect();
     }
