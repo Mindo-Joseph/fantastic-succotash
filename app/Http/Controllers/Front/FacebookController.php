@@ -94,9 +94,21 @@ class FacebookController extends FrontController
     public function handleSocialCallback(Request $request, $domain = '', $driver = 'facebook')
     {
         try {
-            $usr = $this->configDriver($request, $domain, $driver);
-            $user = $usr->user();
-            dd($user);
+
+            $customer = new User();
+            if($redirecting == 'apple'){
+                $usr = Socialite::driver("sign-in-with-apple");
+                $user = $usr->user();
+                dd($user);
+            }else{
+
+                $usr = $this->configDriver($request, $domain, $driver);
+                $user = $usr->user();
+
+            }
+
+
+            
 
             $customer = User::where('status', '!=', 2);
             if($driver == 'facebook'){
@@ -114,7 +126,7 @@ class FacebookController extends FrontController
                 return redirect()->route('userHome');
             }
 
-            $customer = new User();
+            
 
             $eml = $user->getId().'@twitter-xyz.com';
 
