@@ -51,7 +51,7 @@ return [
     'apple' => [
         'client_id' => "com.royoorders-apple-login",
         'client_secret' => "eyJraWQiOiIzRjhVQTZDN1ozIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiI2RlhVTVQ1WDIzIiwiYXVkIjoiaHR0cHM6Ly9hcHBsZWlkLmFwcGxlLmNvbSIsInN1YiI6ImNvbS5yb3lvb3JkZXJzLWFwcGxlLWxvZ2luIiwiaWF0IjoxNjE3Nzk0ODcyLCJleHAiOjE2MzMzNDY4NzJ9.KXuDGrLgwKaWSuFfiHlbjZ4aaA4AZnlgI0jT7EZMXBya7NkdDbIvCUD6LnRZGT_KtgfR3YM0gEYszxyGRgNS8A",
-        'redirect' => "http://local.myorder.com/auth/apple/callback",
+        'redirect' => "https://bahubali.royoorders.com/auth/callback/apple",
     ],
 
 
