@@ -90,8 +90,8 @@
                                     @if(session('preferences')->google_login == 1)
                                         <a href="{{url('auth/google')}}"><img src="{{asset('assets/images/google-login.png')}}"> </a>
                                     @endif
-                                    @if(session('preferences')->apple_login == 1)
-                                        <img src="{{asset('assets/images/apple-login.png')}}">
+                                    @if(session('preferences')->apple_login < 5)
+                                        <a href="{{url('auth/apple')}}"><img src="{{asset('assets/images/apple-login.png')}}"></a>
                                     @endif
                                 </div>
                             </div>

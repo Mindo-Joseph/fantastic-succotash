@@ -49,13 +49,21 @@ Route::group(['middleware' => ['domain']], function () {
     Route::get('vendor/{id?}', 'Front\VendorController@vendorProducts')->name('vendorDetail');
     Route::post('vendor/filters/{id}', 'Front\VendorController@vendorFilters')->name('vendorProductFilters');
 
+    Route::get('brand/{id?}', 'Front\BrandController@categoryProduct')->name('brandDetail');
+    Route::post('brand/filters/{id}', 'Front\BrandController@categoryFilters')->name('brandProductFilters');
+
     /*Route::get('facebook', function () {
 	    return view('facebook');
 	});*/
 
 	Route::get('auth/{driver}', 'Front\FacebookController@redirectToSocial');
 	Route::get('auth/callback/{driver}', 'Front\FacebookController@handleSocialCallback');
+
 	/*Route::get('auth/facebook', 'Front\FacebookController@redirectToFacebook');
 	Route::get('auth/facebook/callback', 'Front\FacebookController@handleFacebookCallback');*/
 
+});
+
+Route::group(['middleware' => ['auth:user','domain'], 'prefix' => '/user'], function () {
+	Route::get('profile', 'Front\FacebookController@redirectToSocial')->name('userProfile');
 });

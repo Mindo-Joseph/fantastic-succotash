@@ -28,13 +28,14 @@ class CreatePromocodesTable extends Migration
             $table->integer('discount_percentage')->unsigned()->nullable();
             $table->integer('min_order_amount')->unsigned()->nullable();
             $table->integer('max_order_amount')->unsigned()->nullable();
-            $table->smallInteger('position')->unsigned()->default(1)->comment('similar like priority');
+            $table->tinyInteger('status')->default(0)->comment('0- pending, 1- Active, 2- blocked, 3- inactive');
             $table->integer('min_quantity')->unsigned()->nullable();
             $table->integer('max_quantity')->unsigned()->nullable();
             $table->boolean('is_fixed')->default(true);
             $table->timestamp('starts_at')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->bigInteger('vendor_id')->unsigned()->nullable();
+            $table->tinyInteger('status')->default(0)->comment('0 - not active, 1 - Active');
             $table->timestamps();
             $table->softDeletes();
 
