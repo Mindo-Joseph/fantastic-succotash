@@ -111,9 +111,10 @@ class FacebookController extends FrontController
             $customer = new User();
             if($driver == 'apple'){
 
-                $usr = Socialite::driver("sign-in-with-apple")->login();
+                $usr = Socialite::driver("apple");
+                dd($usr);
 
-                $user = $usr->login();
+                //$user = $usr->login();
                 // or you can use the facade:
                 // Socialiter::driver("sign-in-with-apple")->login();
 
@@ -124,7 +125,7 @@ class FacebookController extends FrontController
 
                // $usr = Socialite::driver("sign-in-with-apple");
                 //$user = $usr->user();
-                dd($user);
+                dd($usr);
 
 
             }else{
