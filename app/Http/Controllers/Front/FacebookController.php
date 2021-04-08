@@ -23,7 +23,7 @@ use League\OAuth1\Client\Server\Twitter as TwitterServer;
 
 use Socialite;
 use Laravel\Socialite\Two\User as OAuthTwoUser;
-use GeneaLabs\LaravelSocialiter\Facades\Socialiter;
+//use GeneaLabs\LaravelSocialiter\Facades\Socialiter;
 
 use GeneaLabs\LaravelSocialiter\Socialiter;
 use Illuminate\Http\RedirectResponse;
