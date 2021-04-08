@@ -117,7 +117,8 @@ class FacebookController extends FrontController
 
             }else{
 
-                $usr = $this->configDriver($request, $domain, $driver);
+                $usr = $this->configDriver($request, $domain, $driver)->stateless();
+                dd($usr);
                 $user = $usr->user();
 
             }
