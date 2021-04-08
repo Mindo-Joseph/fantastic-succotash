@@ -25,7 +25,7 @@ use Socialite;
 use Laravel\Socialite\Two\User as OAuthTwoUser;
 //use GeneaLabs\LaravelSocialiter\Facades\Socialiter;
 
-use GeneaLabs\LaravelSocialiter\Socialiter;
+//use GeneaLabs\LaravelSocialiter\Socialiter;
 use Illuminate\Http\RedirectResponse;
 
 
@@ -75,27 +75,20 @@ class FacebookController extends FrontController
             $config['redirect'] = 'https://'.$domain.'/auth/callback/google';
 
             return Socialite::buildProvider(GoogleProvider::class, $config);
-            
         }
     }
-
-
-
-
 
     public function redirectToSocial(Request $request, $domain = '', $redirecting = 'facebook')
     {
         if($redirecting == 'apple'){
 
-            return Socialite::driver("sign-in-with-apple")->scopes(["name", "email"])->redirect();
+            return Socialite::driver("apple")->redirect();
 
             //return Socialite::driver("sign-in-with-apple")->redirect();
 
         }else{
             $fb = $this->configDriver($request, $domain, $redirecting);
         }
-        
-
         return $fb->redirect();
     }
 
