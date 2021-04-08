@@ -104,8 +104,8 @@ class FacebookController extends FrontController
             $customer = new User();
             if($driver == 'apple'){
 
-                $usr = Socialite::driver("apple");
-                $user = $usr->user();
+                //$usr = Socialite::driver("apple");
+                $user = Socialite::driver($provider)->stateless()->user();
                 dd($user);
 
                 //
