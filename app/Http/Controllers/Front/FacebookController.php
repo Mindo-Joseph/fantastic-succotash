@@ -75,7 +75,7 @@ class FacebookController extends FrontController
     {
         if($redirecting == 'apple'){
 
-            return Socialite::driver("apple")->scopes(["name", "email"])->redirect();
+            return Socialite::driver("apple")->scopes(["name", "email"])->stateless()->redirect();
 
             //return Socialite::driver("sign-in-with-apple")->redirect();
 
