@@ -87,9 +87,7 @@ class FacebookController extends FrontController
     {
         if($redirecting == 'apple'){
 
-            return Socialite::driver("sign-in-with-apple")
-            ->scopes(["name", "email"])
-            ->redirect();
+            return Socialite::driver("sign-in-with-apple")->scopes(["name", "email"])->redirect();
 
             //return Socialite::driver("sign-in-with-apple")->redirect();
 
@@ -113,11 +111,11 @@ class FacebookController extends FrontController
             $customer = new User();
             if($driver == 'apple'){
 
-                $usr = Socialite::driver("sign-in-with-apple");
+                $usr = Socialite::driver("sign-in-with-apple")->login();
 
-
+                $user = $usr->login();
                 // or you can use the facade:
-                //$user = Socialiter::driver("sign-in-with-apple")->login();
+                // Socialiter::driver("sign-in-with-apple")->login();
 
 
                 //$usr = Socialite::driver("sign-in-with-apple");
@@ -126,15 +124,7 @@ class FacebookController extends FrontController
 
                // $usr = Socialite::driver("sign-in-with-apple");
                 //$user = $usr->user();
-                dd($usr);
-            
-
-
-
-
-
-
-
+                dd($user);
 
 
             }else{
