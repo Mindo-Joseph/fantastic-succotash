@@ -49,14 +49,15 @@ return [
     ],
 
     'apple' => [
-        'client_id' => "com.royoorders-apple-login",
-        'client_secret' => "eyJraWQiOiIzRjhVQTZDN1ozIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiI2RlhVTVQ1WDIzIiwiYXVkIjoiaHR0cHM6Ly9hcHBsZWlkLmFwcGxlLmNvbSIsInN1YiI6ImNvbS5yb3lvb3JkZXJzLWFwcGxlLWxvZ2luIiwiaWF0IjoxNjE3Nzk0ODcyLCJleHAiOjE2MzMzNDY4NzJ9.KXuDGrLgwKaWSuFfiHlbjZ4aaA4AZnlgI0jT7EZMXBya7NkdDbIvCUD6LnRZGT_KtgfR3YM0gEYszxyGRgNS8A",
-        'redirect' => "https://bahubali.royoorders.com/auth/callback/apple",
+        'client_id' => env('SIGN_IN_WITH_APPLE_CLIENT_ID'),
+        'client_secret' => env('SIGN_IN_WITH_APPLE_CLIENT_SECRET'),
+        'redirect' => env('SIGN_IN_WITH_APPLE_REDIRECT')
     ],
 
-    'SIGN_IN_WITH_APPLE' => [
-        'SIGN_IN_WITH_APPLE_REDIRECT'       => "https://bahubali.royoorders.com/auth/callback/apple",
-        'SIGN_IN_WITH_APPLE_CLIENT_ID'      => "com.royoorders-apple-login",
-        'SIGN_IN_WITH_APPLE_CLIENT_SECRET'  => "eyJraWQiOiIzRjhVQTZDN1ozIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiI2RlhVTVQ1WDIzIiwiYXVkIjoiaHR0cHM6Ly9hcHBsZWlkLmFwcGxlLmNvbSIsInN1YiI6ImNvbS5yb3lvb3JkZXJzLWFwcGxlLWxvZ2luIiwiaWF0IjoxNjE3Nzk0ODcyLCJleHAiOjE2MzMzNDY4NzJ9.KXuDGrLgwKaWSuFfiHlbjZ4aaA4AZnlgI0jT7EZMXBya7NkdDbIvCUD6LnRZGT_KtgfR3YM0gEYszxyGRgNS8A",
+    "sign_in_with_apple" => [
+        "login" => env("SIGN_IN_WITH_APPLE_LOGIN"),
+        "redirect" => env("SIGN_IN_WITH_APPLE_REDIRECT"),
+        "client_id" => env("SIGN_IN_WITH_APPLE_CLIENT_ID"),
+        "client_secret" => env("SIGN_IN_WITH_APPLE_CLIENT_SECRET"),
     ],
 ];
