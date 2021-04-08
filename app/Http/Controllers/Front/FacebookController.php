@@ -30,8 +30,8 @@ use Illuminate\Http\RedirectResponse;
 
 
 
-//use SocialiteProviders\Apple\Provider as AppleProvider;
-//use SocialiteProviders\Manager\SocialiteWasCalled;
+use SocialiteProviders\Apple\Provider as AppleProvider;
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class FacebookController extends FrontController
 {
