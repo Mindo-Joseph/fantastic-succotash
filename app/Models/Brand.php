@@ -35,4 +35,8 @@ class Brand extends Model
       //$values['small'] = url('showImage/small/' . $img);
       return $values;
     }
+
+    public function products(){
+       return $this->hasMany('App\Models\Product', 'brand_id', 'id'); 
+    }
 }

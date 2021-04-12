@@ -7,7 +7,7 @@ use App\Model\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor};
+use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
 use Validation;
 use DB;
 
@@ -141,27 +141,30 @@ class ProductController extends BaseController
         if($vid == 0){
             return response()->json(['error' => 'No record found.'], 404);
         }
+        $paginate = $request->has('limit') ? $request->limit : 12;
         $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
         $langId = Auth::user()->language;
-
-        $vendor = Vendor::with(['products' => function($q){
-                    $q->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating');
-                    },
-                    'products.media.image', 'products.translation' => function($q) use($langId){
-                    $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
-                    },
-                    'products.variant' => function($q) use($langId){
-                        $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
-                        $q->groupBy('product_id');
-                    },
-                ])->select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery')
-                ->where('id', $vid)->first();
-
+        $vendor = Vendor::select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 
+                    'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery')
+                    ->where('id', $vid)->first();
         if(!$vendor){
             return response()->json(['error' => 'No record found.'], 200);
         }
-        if(!empty($vendor->products)){
-            foreach ($vendor->products as $key => $value) {
+
+        $products = Product::with(['media.image', 'translation' => function($q) use($langId){
+                    $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                    },
+                    'variant' => function($q) use($langId){
+                        $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                        $q->groupBy('product_id');
+                    },
+                ])
+                ->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating')
+                ->where('vendor_id', $vid)
+                ->where('is_live', 1)->paginate($paginate);
+        
+        if(!empty($products)){
+            foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
                     $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
                 }
@@ -169,6 +172,7 @@ class ProductController extends BaseController
         }
 
         $response['vendor'] = $vendor;
+        $response['products'] = $products;
 
         return response()->json([
             'data' => $response,
@@ -266,6 +270,51 @@ class ProductController extends BaseController
             $arr = array();
             return $arr;
         }
+    }
+
+    public function productsByBrand(Request $request, $brandId = 0)
+    {
+        if($brandId == 0 || $brandId < 0){
+            return response()->json(['error' => 'No record found.'], 404);
+        }
+        $paginate = $request->has('limit') ? $request->limit : 12;
+        $brand = Brand::with('translation')->select('id', 'image')
+                    ->where('status', '!=', 2)
+                    ->where('id', $brandId)->first();
+
+        if(!$brand){
+            return response()->json(['error' => 'No record found.'], 200);
+        }
+        
+        $langId = Auth::user()->language;
+
+        $products = Product::with(['media.image', 'translation' => function($q) use($langId){
+                    $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                    },
+                    'variant' => function($q) use($langId){
+                        $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                        $q->groupBy('product_id');
+                    },
+                ])
+                ->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'brand_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating')
+                ->where('brand_id', $brandId)
+                ->where('is_live', 1)->paginate($paginate);
+        
+        $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+        if(!empty($products)){
+            foreach ($products as $key => $value) {
+                foreach ($value->variant as $k => $v) {
+                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                }
+            }
+        }
+
+        $response['brand'] = $brand;
+        $response['products'] = $products;
+
+        return response()->json([
+            'data' => $response,
+        ]);
     }
 
     /*public function getCode(Request $request)

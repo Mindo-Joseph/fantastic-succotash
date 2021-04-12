@@ -43,10 +43,16 @@
     }
     .product-right .size-box ul li.active {
         background-color: inherit;
-        }
+    }
+    .login-page .theme-card .theme-form input {
+        margin-bottom: 5px;
+    }
+    .invalid-feedback{
+        display: block;
+    }
 </style>
 
-<section class="login-page section-b-space">
+<section class="section-b-space">
     <div class="container">
         <div class="row">
             <div class="col-lg-6">
@@ -73,19 +79,42 @@
                             </div>
                         </div>
                     @endif
-                    <form name="customerLogin" id="customerLogin" action="{{route('customer.login')}}" class="theme-form" type="post" method="post"> @csrf
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="text" class="form-control" id="email" placeholder="Email" required="">
+
+
+                    <form name="login" id="login" action="{{route('customer.loginData')}}" class="theme-form" method="post"> @csrf
+                        <div class="form-row mb-3">
+                            <div class="col-md-12 mb-3">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control @if(isset($errors) && $errors->has('email')) is-invalid @endif" id="email" placeholder="Email"  name="email" value="{{ old('email')}}" required="">
+                                @if($errors->first('email'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                                @endif
+                                @if(\Session::has('err_email'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{!! \Session::get('err_email') !!}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="col-md-12">
+                                <label for="review">Password</label>
+                                <input type="password" class="form-control @if(isset($errors) && $errors->has('password')) is-invalid @endif" id="review" placeholder="Enter your password"  name="password" required="">
+                                @if($errors->first('password') || \Session::has('Error'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                                @endif
+                                @if(\Session::has('err_password'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{!! \Session::get('err_password') !!}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            <input type="hidden" name="device_type" value="web">
+                            <input type="hidden" name="device_token" value="web">
+                            <button type="submit" class="btn btn-solid mt-3 submitLogin">Login</button>
                         </div>
-                        <div class="form-group">
-                            <label for="review">Password</label>
-                            <input type="password" class="form-control" id="review"
-                                placeholder="Enter your password" required="">
-                        </div>
-                        <input type="hidden" name="device_type" value="web">
-                        <input type="hidden" name="device_token" value="web">
-                        <button type="submit" class="btn btn-solid">Login</button>
                     </form>
                 </div>
             </div>
@@ -94,8 +123,8 @@
                 <div class="theme-card authentication-right">
                     <h6 class="title-font">Create A Account</h6>
                     <p>Sign up for a free account at our store. Registration is quick and easy. It allows you to be
-                        able to order from our shop. To start shopping click register.</p><a href="#"
-                        class="btn btn-solid">Create an Account</a>
+                        able to order from our shop. To start shopping click register.</p>
+                        <a href="{{route('customer.register')}}" class="btn btn-solid">Create an Account</a>
                 </div>
             </div>
         </div>

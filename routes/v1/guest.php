@@ -13,6 +13,7 @@ Route::group([
         Route::post('get-products', 'Api\v1\ProductController@productList');
         Route::get('category/{id?}', 'Api\v1\ProductController@categoryData');
         Route::get('vendor/{id?}', 'Api\v1\ProductController@productsByVendor');
+        Route::get('brand/{id?}', 'Api\v1\ProductController@productsByBrand');
         
     });
 

@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, User, Country, UserDevice, UserVerification};
 use Illuminate\Http\Request;
-use App\Http\Requests\{LoginRequest, SignupRequest};
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\SignupRequest;
 use Session;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redis;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Config;
 use Password;
 use App\Notifications\PasswordReset;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 
 class CustomerAuthController extends FrontController
 {
@@ -25,7 +26,7 @@ class CustomerAuthController extends FrontController
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
 
-        return view('forntend/login')->with(['navCategories' => $navCategories]);
+        return view('forntend/account/login')->with(['navCategories' => $navCategories]);
     }
 
     /**     * Display register Form     */
@@ -35,7 +36,7 @@ class CustomerAuthController extends FrontController
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
 
-        return view('forntend/register')->with(['navCategories' => $navCategories]);
+        return view('forntend/account/register')->with(['navCategories' => $navCategories]);
     }
 
     /**     * Display forgotPassword Form     */
@@ -45,7 +46,7 @@ class CustomerAuthController extends FrontController
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
 
-        return view('forntend/forgotPassword')->with(['navCategories' => $navCategories]);
+        return view('forntend/account/forgotPassword')->with(['navCategories' => $navCategories]);
     }
 
     /**     * Display resetPassword Form     */
@@ -55,16 +56,24 @@ class CustomerAuthController extends FrontController
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
 
-        return view('forntend/resetPassword')->with(['navCategories' => $navCategories]);
+        return view('forntend/account/resetPassword')->with(['navCategories' => $navCategories]);
     }
 
 
     /**     * Display login Form     */
-    public function login(LoginRequest $request, $domain = '')
+    public function login(LoginRequest $req, $domain = '')
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-            dd(Auth::user());
+
+        if (Auth::attempt(['email' => $req->email, 'password' => $req->password])) {
+            $userid = Auth::id();
+            return redirect()->route('user.verify');
         }
+
+        $checkEmail = User::where('email', $req->email)->first();
+        if($checkEmail){
+            return redirect()->back()->with('err_password', 'Password not matched. Please enter correct password.');
+        }
+        return redirect()->back()->with('err_email', 'Email not exist. Please enter correct email.');
     }
 
     /**     * Display register Form     */
@@ -100,7 +109,7 @@ class CustomerAuthController extends FrontController
             ];
             UserVerification::insert($user_verify);
             Auth::login($user);
-            return redirect()->route('userHome');
+            return redirect()->route('user.verify');
         }
     }
 

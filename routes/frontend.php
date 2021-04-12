@@ -27,11 +27,11 @@ Route::group(['middleware' => ['domain']], function () {
 		'uses' => 'Front\CustomerAuthController@resetPasswordForm'
 	]);
 
-	Route::post('user/facebook/callback','Front\CustomerAuthController@fblogin');
+	//Route::post('user/facebook/callback','Front\CustomerAuthController@fblogin');
 
 	Route::post('validateEmail','Front\CustomerAuthController@validateEmail')->name('validateEmail');
 
-	Route::post('user/login','Front\CustomerAuthController@login')->name('customer.login');
+	Route::post('user/loginData','Front\CustomerAuthController@login')->name('customer.loginData');
 	Route::post('user/register','Front\CustomerAuthController@register')->name('customer.register');
 	Route::post('user/forgotPassword','Front\CustomerAuthController@forgotPassword')->name('customer.forgotPass');
 	Route::post('user/resetPassword','Front\CustomerAuthController@resetPassword')->name('customer.resetPass');
@@ -62,8 +62,15 @@ Route::group(['middleware' => ['domain']], function () {
 	/*Route::get('auth/facebook', 'Front\FacebookController@redirectToFacebook');
 	Route::get('auth/facebook/callback', 'Front\FacebookController@handleFacebookCallback');*/
 
+	//Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
+
+
 });
 
-Route::group(['middleware' => ['auth:user','domain'], 'prefix' => '/user'], function () {
-	Route::get('profile', 'Front\FacebookController@redirectToSocial')->name('userProfile');
-});
+Route::group([
+      'middleware' => ['domain', 'webAuth']
+    ], function() {
+        Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
+		Route::get('user/profile', 'Front\UserController@profile')->name('user.profile');
+		Route::get('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInfromation');
+    });

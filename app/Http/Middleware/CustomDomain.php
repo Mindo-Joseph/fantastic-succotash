@@ -29,7 +29,6 @@ class CustomDomain
       $existRedis = Redis::get($domain);
 
       //$callback = http://local.myorder.com/auth/facebook/callback
-      
 
       if(!$existRedis){
         $client = Client::select('name', 'email', 'phone_number', 'is_deleted', 'is_blocked', 'logo', 'company_name', 'company_address', 'status', 'code', 'database_name', 'database_host', 'database_port', 'database_username', 'database_password', 'custom_domain', 'sub_domain')
