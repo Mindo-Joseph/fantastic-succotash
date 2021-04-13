@@ -115,7 +115,7 @@
                                 </div>
                             </div> -->
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="database_host" class="control-label">DATABASE HOST</label>
                                     @if(!isset($client) || !isset($client->id))
@@ -155,7 +155,7 @@
                                     </span>
                                     @endif
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-6">
                                 <div class="form-group">
