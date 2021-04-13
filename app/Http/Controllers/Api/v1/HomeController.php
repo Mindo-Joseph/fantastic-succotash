@@ -47,7 +47,8 @@ class HomeController extends BaseController
                 if(!empty($value->link) && $value->link == 'vendor'){
                     $bannerLink = $value->redirect_vendor_id;
                 }
-                $value->redirect_link = $bannerLink;
+                $value->redirect_to = $bannerLink;
+                $value->redirect_id = $bannerLink;
 
                 unset($value->redirect_category_id);
                 unset($value->redirect_vendor_id);
