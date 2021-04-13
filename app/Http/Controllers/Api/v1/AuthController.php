@@ -110,7 +110,7 @@ class AuthController extends BaseController
         $token1 = new Token;
 
         $token = $token1->make([
-            'key' => 'royoorders'.$user->id,
+            'key' => 'royoorders-jwt',
             'issuer' => 'royoorders.com',
             'expiry' => strtotime('+1 month'),
             'issuedAt' => time(),
@@ -254,38 +254,18 @@ class AuthController extends BaseController
      */
     public function sendToken(Request $request, $uid = 0)
     {
+       // echo "dadasd";die;
         $user = User::where('id', Auth::user()->id)->first();
+        //print_r($user->toArray());die;
         if(!$user){
             return response()->json(['error' => 'Invalid User', 'message' => 'User not found'], 404);
         }
         if($request->has('type')){
             $verify = UserVerification::where('user_id', $user->id)->first();
             if($request->type == 'email'){
-                $mailCode = substr(md5(microtime()), 0, 6);
+                $mailCode = substr(md5(microtime()), 0, 20);
                 $verify->email_token = $mailCode;
-                //$mailbody = 
-
-                $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
-
-                //$user->notify(new VerifyEmail());
-                $this->setMailDetail($client);
-
-                \Mail::send('email.verify', ['customer_name' => $order_details->customer->name,'content' => $sms_body,'agent_name' => $order_details->agent->name,'agent_profile' =>$agent_profile,'number_plate' =>$order_details->agent->plate_number,'client_logo'=>$client_logo,'link'=>$link], function ($message) use($sendto,$client_details,$mail) {
-                        $message->from($mail->from_address,$client_details->name);
-                        $message->to($sendto)->subject('Order Update | '.$client_details->company_name);
-                 });
-
-                \Mail::send('email.verify', 
-                    ['customer_name' => ucwords($user->name),
-                        'code_text' => 'Enter below code to verify yoour account',
-                        'code' => $mailCode,
-                        'logo' => 'Enter below code to verify yoour account',
-                        'link'=>$link
-                    ], 
-                    function ($message) use($sendto, $client_details, $mail) {
-                     $message->from($mail->from_address,$client_details->name);
-                     $message->to($sendto)->subject('Order Update | '.$client_details->company_name);
-                });
+                $sendmail = $this->sendVerificationMail($mailCode);
             }
 
             if($request->type == 'phone'){
@@ -302,12 +282,34 @@ class AuthController extends BaseController
         return view('forntend/account/verify_account')->with();
     }
 
+    /**
+     * Logout user (Revoke the token)
+     *
+     * @return [string] message
+     */
+    public function sendVerificationMail($code)
+    {
+        $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
 
+        //$user->notify(new VerifyEmail());
+        $link = $mailCode;
+        $this->setMailDetail($client);
 
-
-
-
-
+        \Mail::send('email.verify', 
+            ['customer_name' => 
+            $order_details->customer->name,
+            'content' => $sms_body,
+            'agent_name' => $order_details->agent->name,
+            'agent_profile' =>$agent_profile,
+            'number_plate' =>$order_details->agent->plate_number,
+            'client_logo'=>$client_logo,
+            'link'=>$link], function ($message) use($sendto,$client_details,$mail) {
+                $message->from($mail->from_address,$client_details->name);
+                $message->to($sendto)->subject('Order Update | '.$client_details->company_name);
+         });
+        return '1';
+    }
+    
 
     /**
      * Logout user (Revoke the token)

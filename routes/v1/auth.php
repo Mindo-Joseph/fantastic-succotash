@@ -9,6 +9,7 @@ Route::group([
     Route::group([
       'middleware' => ['dbCheck', 'AppAuth']
     ], function() {
+        Route::post('sendToken', 'Api\v1\AuthController@sendToken');
         Route::get('logout', 'Api\v1\AuthController@logout');
     });
     Route::group([
@@ -20,6 +21,9 @@ Route::group([
         Route::post('reset_password', 'Api\v1\AuthController@resetPassword');
         Route::post('register', 'Api\v1\AuthController@signup');
         //Route::get('cmscontent','Api\ActivityController@cmsData');
+
+        
+        Route::post('register', 'Api\v1\AuthController@signup');
 
     });
 

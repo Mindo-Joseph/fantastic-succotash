@@ -42,7 +42,7 @@ class VendorController extends FrontController
                 ->where('brand_id', $brandId)
                 ->where('is_live', 1)->paginate($paginate);
         
-        $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+        $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {

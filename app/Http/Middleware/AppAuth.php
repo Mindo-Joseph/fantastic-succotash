@@ -3,7 +3,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Routing\Route;
-use App\Model\{BlockedToken, Agent};
+use App\Models\{BlockedToken, User};
 use Illuminate\Support\Facades\Cache;
 use Request;
 use Config;
@@ -26,12 +26,13 @@ class AppAuth
 
         $token = $header['authorization'][0];
 
-        if (!Token::check($token, 'codebrewInd'))
+        if (!Token::check($token, 'royoorders-jwt'))
         {
             return response()->json(['error' => 'Invalid Token', 'message' => 'Session Expired'], 401);
             abort(404);
         }
-        
+
+        //echo $token = $header['authorization'][0];
         $tokenBlock = BlockedToken::where('token', $token)->first();
 
         if($tokenBlock)
@@ -40,7 +41,7 @@ class AppAuth
             abort(404);
         }
 
-        $agent = Agent::where('access_token', $token)->first();
+        $agent = User::where('auth_token', $token)->first();
 
         if(!$agent)
         {

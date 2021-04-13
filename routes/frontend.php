@@ -49,7 +49,7 @@ Route::group(['middleware' => ['domain']], function () {
     Route::get('vendor/{id?}', 'Front\VendorController@vendorProducts')->name('vendorDetail');
     Route::post('vendor/filters/{id}', 'Front\VendorController@vendorFilters')->name('vendorProductFilters');
 
-    Route::get('brand/{id?}', 'Front\BrandController@categoryProduct')->name('brandDetail');
+    Route::get('brand/{id?}', 'Front\BrandController@brandProducts')->name('brandDetail');
     Route::post('brand/filters/{id}', 'Front\BrandController@categoryFilters')->name('brandProductFilters');
 
     /*Route::get('facebook', function () {
