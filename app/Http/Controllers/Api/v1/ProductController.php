@@ -277,16 +277,18 @@ class ProductController extends BaseController
         if($brandId == 0 || $brandId < 0){
             return response()->json(['error' => 'No record found.'], 404);
         }
+        $langId = Auth::user()->language;
         $paginate = $request->has('limit') ? $request->limit : 12;
-        $brand = Brand::with('translation')->select('id', 'image')
+        $brand = Brand::with(['translation' => function($q) use($langId){
+                        $q->select('title', 'brand_id');
+                        $q->where('language_id', $langId);
+                    }])->select('id', 'image')
                     ->where('status', '!=', 2)
                     ->where('id', $brandId)->first();
 
         if(!$brand){
             return response()->json(['error' => 'No record found.'], 200);
         }
-        
-        $langId = Auth::user()->language;
 
         $products = Product::with(['media.image', 'translation' => function($q) use($langId){
                     $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);

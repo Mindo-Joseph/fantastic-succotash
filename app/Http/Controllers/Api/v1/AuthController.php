@@ -84,12 +84,12 @@ class AuthController extends BaseController
         $user = User::where('email', $loginReq->email)->first();
 
         if(!$user){
-            $errors['errors']['email'] = 'Invalid email';
+            $errors['error'] = 'Invalid email';
             return response()->json($errors, 422);
         }
 
         if(!Auth::attempt(['email' => $loginReq->email, 'password' => $loginReq->password])){
-            $errors['errors']['password'] = 'Invalid password';
+            $errors['error'] = 'Invalid password';
             return response()->json($errors, 422);
         }
 
@@ -154,8 +154,25 @@ class AuthController extends BaseController
      * User registraiotn
      * @return [status, email, need_email_verify, need_phone_verify]
      */
-    public function signup(SignupRequest $signReq)
+    public function signup(Request $signReq)
     {
+        $validator = Validator::make($signReq->all(), [
+            'name' => 'required|string|min:3|max:50',
+            'email' => 'required|email|max:50||unique:users',
+            'password' => 'required|string|min:6|max:50',
+            'phone_number' => 'required|string|min:10|max:15|unique:users',
+            'device_type' => 'required|string',
+            'device_token' => 'required|string'
+        ]);
+ 
+        if($validator->fails()){
+            foreach($validator->errors()->toArray() as $error_key => $error_value){
+                $errors['error'] = $error_value[0];
+                return response()->json($errors, 422);
+            }
+        }
+
+
         $user = new User();
 
         foreach ($signReq->only('name', 'email', 'phone_number', 'country_id') as $key => $value) {

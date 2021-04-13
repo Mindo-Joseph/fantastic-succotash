@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Hash;
 
-class VendorController extends FrontController
+class BrandController extends FrontController
 {
     private $field_status = 2;
     
@@ -21,12 +21,15 @@ class VendorController extends FrontController
      */
     public function brandProducts(Request $request, $domain = '', $brandId = 0)
     {
+        $vid = '';
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
         $navCategories = $this->categoryNav($langId);
 
-        $brand = Brand::with('translation')->select('id', 'image')
+        $brand = Brand::with(['translation' => function($q) use($langId){
+                    $q->where('language_id', $langId);
+                    }])->select('id', 'image')
                     ->where('status', '!=', 2)
                     ->where('id', $brandId)->firstOrFail();
 
@@ -40,7 +43,7 @@ class VendorController extends FrontController
                 ])
                 ->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'brand_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating')
                 ->where('brand_id', $brandId)
-                ->where('is_live', 1)->paginate($paginate);
+                ->where('is_live', 1)->paginate(8);
         
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
         if(!empty($products)){
@@ -50,15 +53,6 @@ class VendorController extends FrontController
                 }
             }
         }
-
-        if(!empty($listData)){
-            foreach ($listData as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
-                }
-            }
-        }
-
         $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
                             $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
                             $zx->select('variant_options.*', 'vt.title');
@@ -68,10 +62,10 @@ class VendorController extends FrontController
                     ->join('variant_translations as vt','vt.variant_id','vr.id')
                     ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
                     ->where('vt.language_id', $langId)
-                    ->whereIn('product_id', function($qry) use($vid){ 
+                    /*->whereIn('product_id', function($qry) use($vid){ 
                         $qry->select('id')->from('products')
                             ->where('vendor_id', $vid);
-                        })
+                        })*/
                     ->groupBy('product_variant_sets.variant_type_id')->get();
 
         $navCategories = Session::get('navCategories');
@@ -80,12 +74,12 @@ class VendorController extends FrontController
             $navCategories = $this->categoryNav($langId);
         }
         $vendorIds[] = $vid;
-        //dd($brands->toArray());
+        dd($brand->toArray());
 
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
 
-        return view('forntend/vendor-products')->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
+        return view('forntend/vendor-products')->with(['brand' => $brand, 'products' => $products, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
     }
 
     /**
