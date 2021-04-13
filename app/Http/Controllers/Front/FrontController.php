@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Front;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{Client, Category, Product};
+use App\Models\{Client, Category, Product, ClientPreference};
 use Session;
+use App;
+use Config;
 
 class FrontController extends Controller
 {
@@ -69,6 +71,35 @@ class FrontController extends Controller
             }
         }
         return $products;
+    }
+
+    public function setMailDetail($client)
+    {
+        // print_r($client);
+        $mail = ClientPreference::where('client_id',$client->id)->first();
+
+
+        if(isset($mail)){
+
+            $config = array(
+                'driver' => $mail->driver,
+                'host' => $mail->host,
+                'port' => $mail->port,
+                'encryption' => $mail->encryption,
+                'username' => $mail->username,
+                'password' => $mail->password,
+                'sendmail' => '/usr/sbin/sendmail -bs',
+                'pretend' => false,
+            );
+
+            Config::set('mail', $config);
+
+            $app = App::getInstance();
+            $app->register('Illuminate\Mail\MailServiceProvider');
+        }
+
+
+        return;
     }
     
 }

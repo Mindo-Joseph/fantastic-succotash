@@ -44,11 +44,16 @@ class DbChooserApi
         if(!$existRedis){
         $client = Client::select('name', 'email', 'phone_number', 'is_deleted', 'is_blocked', 'logo', 'company_name', 'company_address', 'status', 'code', 'database_name', 'database_host', 'database_port', 'database_username', 'database_password')
                     ->where('code', $clientCode)
-                    ->firstOrFail();
+                    ->first();
 
-        Redis::set($clientCode, json_encode($client->toArray()), 'EX', 36000);
+          if (!$client){
+              
+              return response()->json(['error' => 'Invalid Code', 'message' => 'Invalid Code'], 401);
+              abort(404);
+          }
 
-        $existRedis = Redis::get($clientCode);
+          Redis::set($clientCode, json_encode($client->toArray()), 'EX', 36000);
+          $existRedis = Redis::get($clientCode);
         }
 
         $redisData = json_decode($existRedis);

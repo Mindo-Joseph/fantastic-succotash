@@ -39,6 +39,14 @@ class CreateCartsTable extends Migration
             $table->dateTime('added_on')->nullable();
             $table->bigInteger('theme_id')->unsigned()->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->index('is_guest');
+            $table->index('is_gift');
+            $table->index('status');
+            $table->index('checkout_method');
+            $table->index('exchange_rate');
+            $table->index('added_on');
         });
     }
 

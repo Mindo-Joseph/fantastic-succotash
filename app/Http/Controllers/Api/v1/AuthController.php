@@ -95,15 +95,16 @@ class AuthController extends BaseController
 
         $user = Auth::user();
 
-        $prefer = ClientPreference::select('theme_admin', 'distance_unit', 'currency_id', 'map_provider', 'language_id', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
+        $prefer = ClientPreference::select('theme_admin', 'distance_unit', 'map_provider', 'date_format','time_format', 'map_key','sms_provider','verify_email','verify_phone', 'app_template_id', 'web_template_id')->first();
 
         if(($prefer->verify_email == 1) || ($prefer->verify_phone == 1)){
-            $verified = UserVerification::where('user_id', $user->id)->first();
+            $verified = UserVerification::select('user_id', 'is_email_verified', 'is_phone_verified')
+                    ->where('user_id', $user->id)->first();
 
-            if(!$verified || ($verified->is_verified  != 1)){
+            /*if(!$verified || ($verified->is_verified  != 1)){
                 $errors['errors']['email'] = 'Email or password not verified';
                 return response()->json($errors, 422);
-            }
+            }*/
         }
 
         $token1 = new Token;
@@ -140,6 +141,7 @@ class AuthController extends BaseController
         $data['email'] = $user->email;
         $data['phone_number'] = $user->phone_number;
         $data['client_preference'] = $prefer;
+        $data['verify_details'] = $verified;
 
         return response()->json([
             'data' => $data,
@@ -163,6 +165,7 @@ class AuthController extends BaseController
         $user->role_id = 1;
         $user->status = 1;
         $user->save();
+        
 
         if($user->id > 0){
 
@@ -180,7 +183,7 @@ class AuthController extends BaseController
                 'is_phone_verified' => 0
             ];
             UserVerification::insert($user_verify);
-            $prefer = ClientPreference::select('verify_email','verify_phone','app_template_id','web_template_id')->first();
+            $prefer = ClientPreference::select('theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
             //$response['need_email_verify'] = $prefer->verify_email;
             //$response['need_phone_verify'] = $prefer->verify_phone;
 
@@ -198,12 +201,16 @@ class AuthController extends BaseController
             $user->auth_token = $token;
             $user->save();
 
+            $verified = UserVerification::select('user_id', 'is_email_verified', 'is_phone_verified')
+                    ->where('user_id', $user->id)->first();
+
             $response['status'] = 'Success';
             $response['auth_token'] =  $token;
             $response['name'] = $user->name;
             $response['email'] = $user->email;
             $response['phone_number'] = $user->phone_number;
             $response['client_preference'] = $prefer;
+            $response['verify_details'] = $verified;
 
             return response()->json([
                 'data' => $response
@@ -239,6 +246,60 @@ class AuthController extends BaseController
             return response()->json(['errors' => $errors], 404);
         }
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sendToken(Request $request, $uid = 0)
+    {
+        $user = User::where('id', Auth::user()->id)->firstOrFail();
+        if($request->has('type')){
+            $verify = UserVerification::where('user_id', $user->id)->first();
+            if($request->type == 'email'){
+                $mailCode = substr(md5(microtime()), 0, 6);
+                $verify->email_token = $mailCode;
+                //$mailbody = 
+
+                $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
+
+                //$user->notify(new VerifyEmail());
+                $this->setMailDetail($client);
+
+                \Mail::send('email.verify', 
+                    ['customer_name' => ucwords($user->name),
+                        'code_text' => 'Enter below code to verify yoour account',
+                        'code' => $mailCode,
+                        'logo' => 'Enter below code to verify yoour account',
+                        'link'=>$link
+                    ], 
+                    function ($message) use($sendto, $client_details, $mail) {
+                     $message->from($mail->from_address,$client_details->name);
+                     $message->to($sendto)->subject('Order Update | '.$client_details->company_name);
+                });
+            }
+
+            if($request->type == 'phone'){
+                $phoneCode = substr(md5(microtime()), 0, 6);
+                $verify->phone_token = $phoneCode;
+
+                //$user->notify(new VerifyEmail());
+            }
+
+            $verify->save();
+        }
+
+        /**     * Display resetPassword Form     */
+        return view('forntend/account/verify_account')->with();
+    }
+
+
+
+
+
+
+
 
     /**
      * Logout user (Revoke the token)

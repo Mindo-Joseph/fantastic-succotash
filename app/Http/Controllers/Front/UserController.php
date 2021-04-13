@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, User, ClientCurrency, ClientPreference, UserVerification};
+use App\Models\{Currency, Banner, Client, Category, Brand, Product, ClientLanguage, User, ClientCurrency, ClientPreference, UserVerification};
 use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
@@ -85,11 +85,28 @@ class UserController extends FrontController
             if($request->type == 'email'){
                 $mailCode = substr(md5(microtime()), 0, 6);
                 $verify->email_token = $mailCode;
+                //$mailbody = 
 
-                $user->notify(new VerifyEmail());
+                $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
+
+
+
+                //$user->notify(new VerifyEmail());
+                $this->setMailDetail($client);
+
+                \Mail::send('email.verify', 
+                    ['customer_name' => ucwords($user->name),
+                        'code_text' => 'Enter below code to verify yoour account',
+                        'code' => $mailCode,
+                        'logo' => 'Enter below code to verify yoour account',
+                        'link'=>$link
+                    ], 
+                    function ($message) use($sendto, $client_details, $mail) {
+                     $message->from($mail->from_address,$client_details->name);
+                     $message->to($sendto)->subject('Order Update | '.$client_details->company_name);
+                });
             }
-            
-            
+
             if($request->type == 'phone'){
                 $phoneCode = substr(md5(microtime()), 0, 6);
                 $verify->phone_token = $phoneCode;
@@ -98,8 +115,6 @@ class UserController extends FrontController
             }
 
             $verify->save();
-            
-
         }
 
         /**     * Display resetPassword Form     */

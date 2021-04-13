@@ -39,7 +39,7 @@ class CheckClient
             
         if (isset($database_name)) {
             $default = [
-                'driver' => env('DB_CONNECTION', 'mysql'),
+                'driver' => env('DB0_CONNECTION', 'mysql'),
                 'host' => env('DB_HOST'),
                 'port' => env('DB_PORT'),
                 'database' => $database_name,
