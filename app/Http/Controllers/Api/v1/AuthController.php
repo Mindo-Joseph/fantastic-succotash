@@ -98,14 +98,16 @@ class AuthController extends BaseController
         $prefer = ClientPreference::select('theme_admin', 'distance_unit', 'map_provider', 'date_format','time_format', 'map_key','sms_provider','verify_email','verify_phone', 'app_template_id', 'web_template_id')->first();
 
         if(($prefer->verify_email == 1) || ($prefer->verify_phone == 1)){
-            $verified = UserVerification::select('user_id', 'is_email_verified', 'is_phone_verified')
-                    ->where('user_id', $user->id)->first();
+            
 
             /*if(!$verified || ($verified->is_verified  != 1)){
                 $errors['errors']['email'] = 'Email or password not verified';
                 return response()->json($errors, 422);
             }*/
         }
+
+        $verified = UserVerification::select('user_id', 'is_email_verified', 'is_phone_verified')
+                    ->where('user_id', $user->id)->first();
 
         $token1 = new Token;
 
