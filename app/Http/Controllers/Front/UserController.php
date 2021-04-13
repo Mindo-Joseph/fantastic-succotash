@@ -89,7 +89,7 @@ class UserController extends FrontController
 
                 $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
 
-
+                \Mail::to($user->email)->send(new VerifyMail($user));
 
                 //$user->notify(new VerifyEmail());
                 $this->setMailDetail($client);

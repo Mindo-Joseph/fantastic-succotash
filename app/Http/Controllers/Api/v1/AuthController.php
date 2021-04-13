@@ -254,7 +254,10 @@ class AuthController extends BaseController
      */
     public function sendToken(Request $request, $uid = 0)
     {
-        $user = User::where('id', Auth::user()->id)->firstOrFail();
+        $user = User::where('id', Auth::user()->id)->first();
+        if(!$user){
+            return response()->json(['error' => 'Invalid User', 'message' => 'User not found'], 404);
+        }
         if($request->has('type')){
             $verify = UserVerification::where('user_id', $user->id)->first();
             if($request->type == 'email'){

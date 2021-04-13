@@ -43,11 +43,13 @@ class HomeController extends BaseController
                 $bannerLink = '';
                 if(!empty($value->link) && $value->link == 'category'){
                     $bannerLink = $value->redirect_category_id;
+                    $value->redirect_to = $value->link;
                 }
                 if(!empty($value->link) && $value->link == 'vendor'){
                     $bannerLink = $value->redirect_vendor_id;
+                    $value->redirect_to = ucwords($value->link);
                 }
-                $value->redirect_to = $value->link;
+               
                 $value->redirect_id = $bannerLink;
 
                 unset($value->redirect_category_id);
