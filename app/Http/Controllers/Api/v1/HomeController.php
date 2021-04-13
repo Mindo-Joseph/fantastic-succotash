@@ -42,10 +42,10 @@ class HomeController extends BaseController
             foreach ($banners as $key => $value) {
                 $bannerLink = '';
                 if(!empty($value->link) && $value->link == 'category'){
-                    $bannerLink = 'category/'.$value->redirect_category_id;
+                    $bannerLink = $value->redirect_category_id;
                 }
                 if(!empty($value->link) && $value->link == 'vendor'){
-                    $bannerLink = 'vendor/'.$value->redirect_vendor_id;
+                    $bannerLink = $value->redirect_vendor_id;
                 }
                 $value->redirect_link = $bannerLink;
 
