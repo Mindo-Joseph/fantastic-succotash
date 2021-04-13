@@ -35,7 +35,26 @@ class HomeController extends BaseController
         $homeData['languages'] = ClientLanguage::with('language')->select('language_id', 'is_primary')
                                 ->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 
-        $homeData['banners'] = Banner::select("id", "name", "description", "image", "link")->orderBy('sorting', 'asc')->get();
+        $banners = Banner::select("id", "name", "description", "image", "link", 'redirect_category_id', 'redirect_vendor_id')->orderBy('sorting', 'asc')->get();
+
+        if($banners){
+
+            foreach ($banners as $key => $value) {
+                $bannerLink = '';
+                if(!empty($value->link) && $value->link == 'category'){
+                    $bannerLink = 'category/'.$value->redirect_category_id;
+                }
+                if(!empty($value->link) && $value->link == 'vendor'){
+                    $bannerLink = 'vendor/'.$value->redirect_vendor_id;
+                }
+                $value->redirect_link = $bannerLink;
+
+                unset($value->redirect_category_id);
+                unset($value->redirect_vendor_id);
+            }
+        }
+
+        $homeData['banners'] = $banners;
 
         $homeData['currencies'] = ClientCurrency::with('currency')->select('currency_id', 'is_primary', 'doller_compare')->orderBy('is_primary', 'desc')->get();
         return response()->json([

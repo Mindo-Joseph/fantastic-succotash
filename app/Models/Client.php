@@ -43,7 +43,7 @@ class Client extends Authenticatable
     */
     public function preferences()
     {
-      return $this->hasOne('App\Models\ClientPreference', 'client_code', 'code')->select('theme_admin', 'client_code', 'distance_unit', 'currency_id', 'date_format', 'time_format', 'fb_login', 'twitter_login', 'google_login', 'apple_login', 'map_provider', 'app_template_id', 'is_hyperlocal', 'verify_email', 'verify_phone', 'primary_color', 'secondary_color');
+      return $this->hasOne('App\Models\ClientPreference', 'client_code', 'code')->select('theme_admin', 'client_code', 'distance_unit', 'currency_id', 'date_format', 'time_format', 'fb_login', 'twitter_login', 'google_login', 'apple_login', 'map_provider', 'app_template_id', 'is_hyperlocal', 'verify_email', 'verify_phone', 'primary_color', 'secondary_color', 'map_key');
     }
 
     public function getEncpassAttribute($value)
