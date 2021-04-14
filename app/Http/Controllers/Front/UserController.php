@@ -23,13 +23,12 @@ class UserController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function verifyAccount(Request $request, $doamin = '')
+    public function verifyAccount(Request $request, $domain = '')
     {
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $preference = ClientPreference::select('verify_email', 'verify_phone')->where('id', '>', 0)->first();
 
-        
         $verify = UserVerification::select('is_email_verified', 'is_phone_verified')
                     ->where('user_id', Auth::user()->id)->first();
 
@@ -63,13 +62,19 @@ class UserController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function profile(Request $request, $doamin = '')
+    public function profile(Request $request, $domain = '')
     {
-        dd(Session::all());
-        dd(Auth::user());
+        $verify = User::with('country', 'address')->select('name', 'email', 'phone_number', 'type', 'country_id')
+                    ->where('user_id', Auth::user()->id)->first();
+
+
+
+
+
+
 
         /**     * Display resetPassword Form     */
-        return view('forntend/account/verify_account')->with();
+        return view('forntend/account/profile')->with();
     }
 
     /**
@@ -77,7 +82,7 @@ class UserController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendToken(Request $request, $doamin = '', $uid = 0)
+    public function sendToken(Request $request, $domain = '', $uid = 0)
     {
         $user = User::where('id', Auth::user()->id)->firstOrFail();
         if($request->has('type')){

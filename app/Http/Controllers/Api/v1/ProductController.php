@@ -254,7 +254,7 @@ class ProductController extends BaseController
                             $q->groupBy('product_id');
                         },
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('pc.category_id', $cid)->paginate($limit);
+                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->paginate($limit);
 
             if(!empty($products)){
                 foreach ($products as $key => $value) {

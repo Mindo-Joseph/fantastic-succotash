@@ -56,23 +56,7 @@
                         <!-- brand filter start -->
                         <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left"
                                     aria-hidden="true"></i> back</span></div>
-                        <div class="collection-collapse-block open">
-                            @if(!empty($brands) && count($brands) > 0)
-                            <h3 class="collapse-block-title">brand</h3>
-                            <div class="collection-collapse-block-content">
-                                <div class="collection-brand-filter">
-                                    @foreach($brands as $key => $val)
-                                        <div class="custom-control custom-checkbox collection-filter-checkbox">
-                                            <input type="checkbox" class="custom-control-input productFilter" fid="{{$val->brand_id}}" used="brands" id="brd{{$val->brand_id}}">
-                                            @foreach($val->brand->translation as $k => $v)
-                                                <label class="custom-control-label" for="brd{{$val->brand_id}}">{{$v->title}}</label>
-                                            @endforeach
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            @endif
-                        </div>
+                      
 
                         @if(!empty($variantSets) && count($variantSets) > 0)
                           @foreach($variantSets as $key => $sets)
@@ -162,13 +146,13 @@
                             <div class="col-sm-12">
                                 <div class="top-banner-wrapper">
                                     
-                                    @if(!empty($vendor->banner))
-                                      <a href="#"><img alt="" src="{{$vendor->banner['proxy_url'] . '1000/400' . $vendor->banner['image_path']}}" class="img-fluid blur-up lazyload" style="width: 100%;max-height: 400px;overflow: hidden;"></a>
+                                    @if(!empty($brand->image))
+                                      <a href="#"><img alt="" src="{{$brand->image['proxy_url'] . '1000/400' . $brand->image['image_path']}}" class="img-fluid blur-up lazyload" style="width: 100%;max-height: 400px;overflow: hidden;"></a>
                                     @endif
 
                                         
                                     <div class="top-banner-content small-section">
-                                        <h4>{{ $vendor->name }}</h4>
+                                        <h4>{{ isset($brand->translation[0]->title) ? $brand->translation[0]->title : '' }}</h4>
                                     </div>
                                 </div>
                                 <div class="collection-product-wrapper">
@@ -226,8 +210,8 @@
                                         <div class="product-wrapper-grid">
                                             <div class="row margin-res">
 
-                                              @if(!empty($listData))
-                                                @foreach($listData as $key => $data)
+                                              @if(!empty($products))
+                                                @foreach($products as $key => $data)
 
                                                 <?php $imagePath = $imagePath2 = '';
                                                 $mediaCount = count($data->media);
@@ -278,7 +262,7 @@
                                             </div>
                                         </div>
                                         <div class="pagination pagination-rounded justify-content-end mb-0">
-                                            {{ $listData->links() }}
+                                            {{ $products->links() }}
                                         </div>
                                     </div>
                                     <!-- <div class="product-pagination">
@@ -364,7 +348,7 @@
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
-            url: "{{ route('vendorProductFilters', $vendor->id) }}",
+            url: "{{ route('brandProductFilters', $brand->id) }}",
             data: {
                 "_token": "{{ csrf_token() }}",
                 "brands": brands,

@@ -74,19 +74,19 @@ class BrandController extends FrontController
             $navCategories = $this->categoryNav($langId);
         }
         $vendorIds[] = $vid;
-        dd($brand->toArray());
+        //dd($brand->toArray());
 
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
 
-        return view('forntend/vendor-products')->with(['brand' => $brand, 'products' => $products, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
+        return view('forntend/brand-products')->with(['brand' => $brand, 'products' => $products, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
     }
 
     /**
      * Product filters on category Page
      * @return \Illuminate\Http\Response
      */
-    public function vendorFilters(Request $request, $domain = '', $vid = 0)
+    public function brandFilters(Request $request, $domain = '', $brandId = 0)
     {
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
@@ -148,7 +148,7 @@ class BrandController extends FrontController
                             $q->groupBy('product_id');
                         },
                     ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating')
-                    ->where('vendor_id', $vid)
+                    ->where('brand_id', $brandId)
                     ->where('is_live', 1)
                     ->whereIn('id', function($qr) use($startRange, $endRange){ 
                         $qr->select('product_id')->from('product_variants')
@@ -159,10 +159,7 @@ class BrandController extends FrontController
         if(!empty($productIds)){
             $products = $products->whereIn('id', $productIds);
         }
-        
-        if($request->has('brands') && !empty($request->brands)){
-            $products = $products->whereIn('brand_id', $request->brands);
-        }
+
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
         
         $products = $products->paginate($pagiNate);
