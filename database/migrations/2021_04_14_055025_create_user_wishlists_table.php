@@ -15,7 +15,14 @@ class CreateUserWishlistsTable extends Migration
     {
         Schema::create('user_wishlists', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('user_id')->unsigned()->nullable();
+            $table->bigInteger('product_id')->unsigned()->nullable();
+            $table->bigInteger('product_variant_id')->unsigned()->nullable();
+            $table->timestamp('added_on')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('product_variant_id')->references('id')->on('product_variants')->onDelete('cascade');
         });
     }
 

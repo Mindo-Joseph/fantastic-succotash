@@ -67,6 +67,12 @@
                                 <input type="file" accept="image/*" data-plugins="dropify" name="logo" data-default-file="{{Auth::user()->logo['proxy_url'] . '400/400' . Auth::user()->logo['image_path']}}" />
                                 <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
                             </div>
+
+                            <div class="col-md-8 text-center">
+                                <div class="form-group">
+                                    <h1>{{Auth::user()->code}}</h1>
+                                </div>                               
+                            </div>
                         </div>
 
                         <div class=" row">

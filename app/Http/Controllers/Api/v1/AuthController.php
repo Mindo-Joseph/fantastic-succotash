@@ -267,34 +267,75 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendToken(Request $request, $uid = 0)
+    public function sendToken(Request $request, $domain = '', $uid = 0)
     {
-       // echo "dadasd";die;
         $user = User::where('id', Auth::user()->id)->first();
-        //print_r($user->toArray());die;
         if(!$user){
-            return response()->json(['error' => 'Invalid User', 'message' => 'User not found'], 404);
+            return response()->json(['errors' => 'User not found.'], 404);
         }
+
         if($request->has('type')){
+            $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
+
+            $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
+                        'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from')
+                        ->where('id', '>', 0)->first();
+
             $verify = UserVerification::where('user_id', $user->id)->first();
-            if($request->type == 'email'){
-                $mailCode = substr(md5(microtime()), 0, 20);
-                $verify->email_token = $mailCode;
-                $sendmail = $this->sendVerificationMail($mailCode);
+            if(!$verify){
+                $verify = new UserVerification();
+                $verify->user_id = $user->id;
+                $verify->is_email_verified = 0;
+                $verify->is_phone_verified = 0; 
             }
-
+            $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
             if($request->type == 'phone'){
-                $phoneCode = substr(md5(microtime()), 0, 6);
+                $phoneCode = mt_rand(100000, 999999);
                 $verify->phone_token = $phoneCode;
-
-                //$user->notify(new VerifyEmail());
+                $verify->phone_token_valid_till = $newDateTime;
             }
 
+            if($request->type == 'email'){
+
+                $mailCode = mt_rand(100000, 999999);
+                $verify->email_token = $mailCode;
+                $verify->email_token_valid_till = $newDateTime;
+
+                if(empty($prefer->mail_driver) || empty($prefer->mail_host) || empty($prefer->mail_port) || empty($prefer->mail_port) || empty($prefer->mail_password) || empty($prefer->mail_encryption)){
+
+                    return response()->json(['error' => 'Mail server is not configured. Please contact administration.'], 404);
+                }
+
+                $confirured = $this->setMailDetail($prefer->mail_driver, $prefer->mail_host, $prefer->mail_port, $prefer->mail_username, $prefer->mail_password, $prefer->mail_encryption);
+
+                if($confirured == 2){
+                    return response()->json(['error' => 'Mail server is not configured. Please contact administration.'], 404);
+                }
+
+                $client_name = $client->name;
+                $mail_from = $client->email;
+                $sendto = $user->email;
+
+                try{
+                    Mail::send('email.verify',[
+                                'customer_name' => ucwords($user->name),
+                                'code_text' => 'Enter below code to verify yoour account',
+                                'code' => $mailCode,
+                                'logo' => 'Enter below code to verify yoour account',
+                                'link'=>"link"
+                            ],
+                            function ($message) use($sendto, $client_name, $mail_from) {
+                            $message->from($mail_from, $client_name);
+                            $message->to($sendto)->subject('OTP to verify account');
+                    });
+                }
+                catch(\Exception $e){
+                    return response()->json(['errors' => 'Unable to send email. Please check email or try later.'], 404);
+                }
+            }
             $verify->save();
         }
-
-        /**     * Display resetPassword Form     */
-        return view('forntend/account/verify_account')->with();
+        return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 404);      
     }
 
     /**
