@@ -115,6 +115,25 @@
         });
     });
 
+    $('.addWishList').click(function(){
+        var sku = $(this).attr('proSku');
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ route('addWishlist') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "sku": sku
+            },
+            success: function(response) {
+            
+            },
+            error: function (data) {
+                //location.reload();
+            },
+        });
+    });
+
     function openSearch() {
         document.getElementById("search-overlay").style.display = "block";
     }

@@ -51,6 +51,10 @@ class User extends Authenticatable
         $this->notify(new PasswordReset($token));
     }
 
+    public function address(){
+       return $this->hasMany('App\Models\UserAddress'); 
+    }
+
     /*
     bucketname:- royoorders2.0-assets
 

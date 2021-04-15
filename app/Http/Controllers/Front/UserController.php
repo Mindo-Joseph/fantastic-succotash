@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Image;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\Mail;
 
 
 class UserController extends FrontController
@@ -62,70 +63,51 @@ class UserController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function profile(Request $request, $domain = '')
-    {
-        $verify = User::with('country', 'address')->select('name', 'email', 'phone_number', 'type', 'country_id')
-                    ->where('user_id', Auth::user()->id)->first();
-
-
-
-
-
-
-
-        /**     * Display resetPassword Form     */
-        return view('forntend/account/profile')->with();
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function sendToken(Request $request, $domain = '', $uid = 0)
     {
         $user = User::where('id', Auth::user()->id)->firstOrFail();
         if($request->has('type')){
+
             $verify = UserVerification::where('user_id', $user->id)->first();
-            if($request->type == 'email'){
-                $mailCode = substr(md5(microtime()), 0, 6);
-                $verify->email_token = $mailCode;
-                //$mailbody = 
-
-                $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
-
-                \Mail::to($user->email)->send(new VerifyMail($user));
-
-                //$user->notify(new VerifyEmail());
-                $this->setMailDetail($client);
-
-                \Mail::send('email.verify', 
-                    ['customer_name' => ucwords($user->name),
-                        'code_text' => 'Enter below code to verify yoour account',
-                        'code' => $mailCode,
-                        'logo' => 'Enter below code to verify yoour account',
-                        'link'=>$link
-                    ], 
-                    function ($message) use($sendto, $client_details, $mail) {
-                     $message->from($mail->from_address,$client_details->name);
-                     $message->to($sendto)->subject('Order Update | '.$client_details->company_name);
-                });
-            }
 
             if($request->type == 'phone'){
-                $phoneCode = substr(md5(microtime()), 0, 6);
+                $phoneCode = mt_rand(100000, 999999);
                 $verify->phone_token = $phoneCode;
 
                 //$user->notify(new VerifyEmail());
             }
 
+            if($request->type == 'email'){
+
+                $mailCode = mt_rand(100000, 999999);
+                $verify->email_token = $mailCode;
+                $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
+
+                $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
+                $this->setMailDetail($client);
+
+                $phoneCode = substr(md5(microtime()), 0, 6);
+                $verify->phone_token = $phoneCode;
+
+                $client_details = $client->name;
+                $mail = "gargpuneet217@gmail.com";
+                $sendto = "editerzframes@gmail.com";
+
+                Mail::send('email.verify',[
+                                'customer_name' => 'Puneet',
+                                'code_text' => 'Enter below code to verify yoour account',
+                                'code' => $fourRandomDigit,
+                                'logo' => 'Enter below code to verify yoour account',
+                                'link'=>"link"
+                            ],
+                            function ($message) use($sendto, $client_details, $mail) {
+                            $message->from($mail,$client_details);
+                            $message->to($sendto)->subject('Order Update | '.$client_details);
+                });
+
+            }
             $verify->save();
         }
-
-        /**     * Display resetPassword Form     */
-        return view('forntend/account/verify_account')->with();
+            
     }
-
-    
-
 }

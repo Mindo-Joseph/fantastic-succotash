@@ -68,9 +68,20 @@ Route::group(['middleware' => ['domain']], function () {
 });
 
 Route::group([
-      'middleware' => ['domain', 'webAuth']
+		'middleware' => ['domain', 'webAuth']
     ], function() {
         Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
-		Route::get('user/profile', 'Front\UserController@profile')->name('user.profile');
 		Route::get('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInfromation');
+
+		Route::get('user/profile', 'Front\ProfileController@profile')->name('user.profile');
+		Route::get('user/wishlists', 'Front\ProfileController@wishlists')->name('user.wishlists');
+		Route::post('wishlist/update', 'Front\ProfileController@updateWishlist')->name('addWishlist');
+		Route::get('user/addressBook', 'Front\ProfileController@addresBook')->name('user.addressBook');
+		Route::get('user/orders', 'Front\ProfileController@orders')->name('user.orders');
+		Route::get('user/newsLetter', 'Front\ProfileController@newsLetter')->name('user.newsLetter');
+		Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
+		Route::get('user/changePassword', 'Front\ProfileController@changePassword')->name('user.changePassword');
+		Route::get('user/logout', 'Front\ProfileController@logout')->name('user.logout');
+        Route::get('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
+
     });
