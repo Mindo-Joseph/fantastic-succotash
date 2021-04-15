@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Client;
 
-use App\Models\UserWishlist;
 use Illuminate\Http\Request;
 
-class UserWishlistController extends Controller
+class LoyaltyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +13,7 @@ class UserWishlistController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -24,7 +23,7 @@ class UserWishlistController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -41,10 +40,10 @@ class UserWishlistController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UserWishlist  $userWishlist
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(UserWishlist $userWishlist)
+    public function show($id)
     {
         //
     }
@@ -52,10 +51,10 @@ class UserWishlistController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\UserWishlist  $userWishlist
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(UserWishlist $userWishlist)
+    public function edit($id)
     {
         //
     }
@@ -64,10 +63,10 @@ class UserWishlistController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserWishlist  $userWishlist
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserWishlist $userWishlist)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +74,10 @@ class UserWishlistController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserWishlist  $userWishlist
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UserWishlist $userWishlist)
+    public function destroy($id)
     {
         //
     }

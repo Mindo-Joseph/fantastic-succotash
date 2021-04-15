@@ -78,6 +78,10 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 		Route::post('product/variantRows','Client\ProductController@makeVariantRows')->name('product.makeRows');
 		Route::post('product/variantImage/update','Client\ProductController@updateVariantImage')->name('product.variant.update');
 
+		Route::resource('loyalty','Client\BannerController');
+		Route::post('loyalty/saveOrder','Client\BannerController@saveOrder');
+		Route::post('loyalty/changeValidity','Client\BannerController@validity');
+
 	});
 
 	Route::group(['middleware' => 'auth:client', 'prefix' => '/admin'], function () {
