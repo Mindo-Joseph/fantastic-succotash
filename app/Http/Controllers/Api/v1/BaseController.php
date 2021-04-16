@@ -21,6 +21,7 @@ class BaseController extends Controller
 	    // $sid = getenv("TWILIO_SID");
 	    // $token = getenv("TWILIO_AUTH_TOKEN");
 	    // $twilio_number = getenv("TWILIO_NUMBER");
+        $to = "+918950473361";
         try{
             $client = new TwilioClient($sms_key, $sms_secret);
             $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
@@ -151,8 +152,8 @@ class BaseController extends Controller
             'encryption' => $mail_encryption,
             'username' => $mail_username,
             'password' => $mail_password,
-            //'sendmail' => '/usr/sbin/sendmail -bs',
-            //'pretend' => false,
+            'sendmail' => '/usr/sbin/sendmail -bs',
+            'pretend' => false,
         );
 
         Config::set('mail', $config);
