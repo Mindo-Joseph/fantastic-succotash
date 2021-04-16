@@ -58,11 +58,6 @@ class User extends Authenticatable
     public function device(){
        return $this->hasMany('App\Models\UserDevice'); 
     }
-
-    public function verify(){
-       return $this->hasOne('App\Models\UserVerification')->select('user_id', 'email_token', 'phone_token', 'is_email_verified', 'is_phone_verified'); 
-    }
-
     /*
     bucketname:- royoorders2.0-assets
 

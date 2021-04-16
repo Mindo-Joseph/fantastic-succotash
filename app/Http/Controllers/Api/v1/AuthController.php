@@ -103,9 +103,8 @@ class AuthController extends BaseController
                 return response()->json($errors, 422);
             }*/
         }
-
-        $verified = UserVerification::select('user_id', 'is_email_verified', 'is_phone_verified')
-                    ->where('user_id', $user->id)->first();
+        $verified['is_email_verified'] = $user->is_email_verified;
+        $verified['is_phone_verified'] = $user->is_phone_verified;
 
         $token1 = new Token;
 
@@ -174,15 +173,24 @@ class AuthController extends BaseController
         foreach ($signReq->only('name', 'email', 'phone_number', 'country_id') as $key => $value) {
             $user->{$key} = $value;
         }
+
+        $phoneCode = mt_rand(100000, 999999);
+        $emailCode = mt_rand(100000, 999999);
+        $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
+
         $user->password = Hash::make($signReq->password);
-        //$user->encpass = $signReq->password;
         $user->type = 1;
+        $user->is_email_verified = 0;
+        $user->is_phone_verified = 0;
         $user->role_id = 1;
         $user->status = 1;
+        $user->phone_token = $phoneCode;
+        $user->email_token = $emailCode;
+        $user->phone_token_valid_till = $sendTime;
+        $user->email_token_valid_till = $sendTime;
         $user->save();
 
         $token1 = new Token;
-
         $token = $token1->make([
             'key' => 'royoorders-jwt',
             'issuer' => 'royoorders.com',
@@ -194,7 +202,6 @@ class AuthController extends BaseController
 
         $user->auth_token = $token;
         $user->save();
-        
 
         if($user->id > 0){
             $response['status'] = 'Success';
@@ -202,8 +209,6 @@ class AuthController extends BaseController
             $response['name'] = $user->name;
             $response['email'] = $user->email;
             $response['phone_number'] = $user->phone_number;
-
-            $verified['user_id'] = $user->id;
             $verified['is_email_verified'] = 0;
             $verified['is_phone_verified'] = 0;
 
@@ -231,21 +236,6 @@ class AuthController extends BaseController
                 'access_token' => ''
             ];
             UserDevice::insert($user_device);
-
-            $phoneCode = mt_rand(100000, 999999);
-            $emailCode = mt_rand(100000, 999999);
-            $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
-
-            $user_verify[] = [
-                'user_id' => $user->id,
-                'phone_token' => $phoneCode,
-                'email_token' => $emailCode,
-                'phone_token_valid_till' => $sendTime,
-                'email_token_valid_till' => $sendTime,
-                'is_email_verified' => 0,
-                'is_phone_verified' => 0
-            ];
-            UserVerification::insert($user_verify);
 
             if(!empty($prefer->sms_key) && !empty($prefer->sms_secret) && !empty($prefer->sms_from)){
 
@@ -328,80 +318,70 @@ class AuthController extends BaseController
             return response()->json(['errors' => 'User not found.'], 404);
         }
 
-        if($request->has('type')){
-            $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
+        if($user->is_email_verified == 1 && $user->is_phone_verified == 1){
+            return response()->json(['message' => 'Account already verified.'], 200); 
+        }
 
-            $data = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
-                        'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from')
-                        ->where('id', '>', 0)->first();
+        $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
+        $data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from','mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
 
-            $verify = UserVerification::where('user_id', $user->id)->first();
+        $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
+        if($user->is_phone_verified == 0){
 
             $otp = mt_rand(100000, 999999);
-            $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
+            $user->phone_token = $otp;
+            $user->phone_token_valid_till = $newDateTime;
+            $provider = $data->sms_provider;
+            $to = $user->phone_number;
+            $body = "Dear ".ucwords($user->name).", Please enter OTP ".$otp." to verify your account.";
 
-            if(!$verify){
-                $verify = new UserVerification();
-                $verify->user_id = $user->id;
-                $verify->is_email_verified = 0;
-                $verify->is_phone_verified = 0; 
-            }
-            if($request->type == 'phone'){
-                $verify->phone_token = $otp;
-                $verify->phone_token_valid_till = $newDateTime;
-            }
-            if($request->type == 'email'){
-                $verify->email_token = $otp;
-                $verify->email_token_valid_till = $newDateTime;
-            }
-            $verify->save();
-            $notified = 0;
-            if($request->type == 'phone'){
-
-                $provider = $data->sms_provider;
-                $to = $user->phone_number;
-                $body = "Dear ".ucwords($user->name).", Please enter OTP ".$phoneCode." to verify your account.";
-
-                if(!empty($data->sms_key) && !empty($data->sms_secret) && !empty($data->sms_from)){
-                    $send = $this->sendSms($provider, $data->sms_key, $data->sms_secret, $data->sms_from, $to, $body);
-                    if($send){
-                        $notified = 1;
-                    }
+            if(!empty($data->sms_key) && !empty($data->sms_secret) && !empty($data->sms_from)){
+                $send = $this->sendSms($provider, $data->sms_key, $data->sms_secret, $data->sms_from, $to, $body);
+                if($send){
+                    $notified = 1;
                 }
             }
-            if($request->type == 'email'){
-                if(!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)){
+        }
 
-                    $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+        
+        if($user->is_email_verified == 0){
 
-                    $client_name = $client->name;
-                    $mail_from = $data->mail_from;
-                    $sendto = $user->email;
-                    try{
-                        Mail::send('email.verify',[
-                                'customer_name' => ucwords($user->name),
-                                'code_text' => 'Enter below code to verify yoour account',
-                                'code' => $otp,
-                                'logo' => 'Enter below code to verify yoour account',
-                                'link'=>"link"
-                            ],
-                            function ($message) use($sendto, $client_name, $mail_from) {
-                            $message->from($mail_from, $client_name);
-                            $message->to($sendto)->subject('OTP to verify account');
-                        });
-                        $notified = 1;
-                    }
-                    catch(\Exception $e){
-                        return response()->json(['errors' => $e->getMessage()], 404);
-                        //return response()->json(['errors' => 'Mail server is not configured. Please contact admin.'], 404);
-                    }
+            $otp = mt_rand(100000, 999999);
+            $user->email_token = $otp;
+            $user->email_token_valid_till = $newDateTime;
+            if(!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)){
+
+                $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+
+                $client_name = $client->name;
+                $mail_from = $data->mail_from;
+                $sendto = $user->email;
+                try{
+                    Mail::send('email.verify',[
+                            'customer_name' => ucwords($user->name),
+                            'code_text' => 'Enter below code to verify yoour account',
+                            'code' => $otp,
+                            'logo' => 'Enter below code to verify yoour account',
+                            'link'=>"link"
+                        ],
+                        function ($message) use($sendto, $client_name, $mail_from) {
+                        $message->from($mail_from, $client_name);
+                        $message->to($sendto)->subject('OTP to verify account');
+                    });
+                    $notified = 1;
                 }
-            }
-            if($notified = 1){
-                return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 200); 
-            }else{
-                return response()->json(['success' => 'Provider service is not configured. Please contact administration.'], 404); 
-            }
+                catch(\Exception $e){
+                    $user->save();
+                    //return response()->json(['errors' => $e->getMessage()], 404);
+                    //return response()->json(['errors' => 'Mail server is not configured. Please contact admin.'], 404);
+                }
+            }            
+        }
+        $user->save();
+        if($notified = 1){
+            return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 200); 
+        }else{
+            return response()->json(['success' => 'Provider service is not configured. Please contact administration.'], 404); 
         }
     }
 
@@ -416,44 +396,36 @@ class AuthController extends BaseController
         if(!$user || !$request->has('type')){
             return response()->json(['errors' => 'User not found.'], 404);
         }
-
-        $verify = UserVerification::where('user_id', $user->id);
-
-        if($request->type == 'phone'){
-            $verify = $verify->where('phone_token', $request->otp);
-        }
-        if($request->type == 'email'){
-            $verify = $verify->where('email_token', $request->otp);
-        }
-        $verify = $verify->first();
-
         $currentTime = \Carbon\Carbon::now()->toDateTimeString();
 
-        if(!$verify){
-            return response()->json(['errors' => 'OTP is not valid'], 404);
-        }
-        
-        $optValid = ($request->type == 'phone') ?  : $verify->email_token_valid_till;
-
         if($request->type == 'phone'){
-            if($currentTime > $verify->phone_token_valid_till){
+
+            if($user->phone_token != $request->otp){
+                return response()->json(['errors' => 'OTP is not valid'], 404);
+            }
+
+            if($currentTime > $user->phone_token_valid_till){
                 return response()->json(['errors' => 'OTP has been expired.'], 404);
             }
-            $verify->phone_token = NULL;
-            $verify->phone_token_valid_till = NULL;
-            $verify->is_phone_verified = 1;
+            $user->phone_token = NULL;
+            $user->phone_token_valid_till = NULL;
+            $user->is_phone_verified = 1;
         }
 
         if($request->type == 'email'){
-            if($currentTime > $verify->email_token_valid_till){
+
+            if($user->email_token != $request->otp){
+                return response()->json(['errors' => 'OTP is not valid'], 404);
+            }
+
+            if($currentTime > $user->email_token_valid_till){
                 return response()->json(['errors' => 'OTP has been expired.'], 404);
             }
-            $verify->email_token = NULL;
-            $verify->email_token_valid_till = NULL;
-            $verify->is_email_verified = 1;
-
+            $user->email_token = NULL;
+            $user->email_token_valid_till = NULL;
+            $user->is_email_verified = 1;
         }
-        $verify->save();
+        $user->save();
         return response()->json([
             'message' => 'Account verified successfully.',
             'data' => array('verified' => True)

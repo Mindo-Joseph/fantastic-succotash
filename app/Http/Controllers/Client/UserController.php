@@ -16,14 +16,7 @@ class UserController extends BaseController
      */
     public function index()
     {
-        $users = User::with('role', 'country', 'verify')->select('id', 'name', 'email', 'phone_number', 'status', 'role_id', 'system_id')->orderBy('id', 'desc')->paginate(20);
-        foreach ($users as $key => $value) {
-            // if(empty($users->verify)){
-            //     $userv = new UserVerification();
-            //     $userv->user_id = $value->id;
-            //     $userv->save();
-            // }
-        }
+        $users = User::with('role', 'country')->select('id', 'name', 'email', 'phone_number', 'status', 'role_id', 'system_id', 'email_token', 'phone_token', 'is_email_verified', 'is_phone_verified')->orderBy('id', 'desc')->paginate(20);
         //dd($users->toArray());
         return view('backend/users/index')->with(['users' => $users]);
     }
