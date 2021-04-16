@@ -87,6 +87,7 @@
                         <span> Banner </span>
                     </a>
                 </li> 
+                
                 <!--<li>
                     <a href="#SettingSidebar" data-toggle="collapse">
                         <i data-feather="settings"></i>
@@ -141,6 +142,12 @@
                         <span> Promocode </span>
                     </a>
                 </li>
+                <li>   
+                    <a href="{{route('loyalty.index')}}" >
+                        <i data-feather="columns"></i>
+                        <span> Loyalty Cards </span>
+                    </a>
+                </li> 
             </ul>
         </div>
         <div id="sidebar-menu" style="display: none;">

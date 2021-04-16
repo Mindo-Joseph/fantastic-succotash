@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CartItem;
+use App\Models\UserWishlist;
 use Illuminate\Http\Request;
 
-class CartItemController extends Controller
+class UserWishlistController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class CartItemController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\CartItem  $cartItem
+     * @param  \App\Models\UserWishlist  $userWishlist
      * @return \Illuminate\Http\Response
      */
-    public function show(CartItem $cartItem)
+    public function show(UserWishlist $userWishlist)
     {
         //
     }
@@ -52,10 +52,10 @@ class CartItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\CartItem  $cartItem
+     * @param  \App\Models\UserWishlist  $userWishlist
      * @return \Illuminate\Http\Response
      */
-    public function edit(CartItem $cartItem)
+    public function edit(UserWishlist $userWishlist)
     {
         //
     }
@@ -64,10 +64,10 @@ class CartItemController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CartItem  $cartItem
+     * @param  \App\Models\UserWishlist  $userWishlist
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CartItem $cartItem)
+    public function update(Request $request, UserWishlist $userWishlist)
     {
         //
     }
@@ -75,10 +75,10 @@ class CartItemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\CartItem  $cartItem
+     * @param  \App\Models\UserWishlist  $userWishlist
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CartItem $cartItem)
+    public function destroy(UserWishlist $userWishlist)
     {
         //
     }

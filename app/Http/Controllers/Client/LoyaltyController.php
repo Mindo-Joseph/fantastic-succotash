@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Client;
 
-use App\Models\CartItem;
 use Illuminate\Http\Request;
 
-class CartItemController extends Controller
+class LoyaltyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +13,7 @@ class CartItemController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -24,7 +23,7 @@ class CartItemController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -41,10 +40,10 @@ class CartItemController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\CartItem  $cartItem
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(CartItem $cartItem)
+    public function show($id)
     {
         //
     }
@@ -52,10 +51,10 @@ class CartItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\CartItem  $cartItem
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(CartItem $cartItem)
+    public function edit($id)
     {
         //
     }
@@ -64,10 +63,10 @@ class CartItemController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CartItem  $cartItem
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CartItem $cartItem)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +74,10 @@ class CartItemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\CartItem  $cartItem
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CartItem $cartItem)
+    public function destroy($id)
     {
         //
     }
