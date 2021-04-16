@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\{LoginRequest, SignupRequest};
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Client, ClientPreference, BlockedToken, Otp, Country, UserDevice, UserVerification};
+use App\Models\{User, Client, ClientPreference, BlockedToken, Otp, Country, UserDevice, UserVerification, ClientLanguage};
 use Validation;
 use DB;
 use JWT\Token;
@@ -198,6 +198,15 @@ class AuthController extends BaseController
                 'is_phone_verified' => 0
             ];
             UserVerification::insert($user_verify);
+
+            /*data = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
+                        'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from')
+                        ->where('id', '>', 0)->first();*/
+
+
+
+
+
             $prefer = ClientPreference::select('theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
             //$response['need_email_verify'] = $prefer->verify_email;
             //$response['need_phone_verify'] = $prefer->verify_phone;
@@ -277,7 +286,7 @@ class AuthController extends BaseController
         if($request->has('type')){
             $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
 
-            $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
+            $data = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
                         'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from')
                         ->where('id', '>', 0)->first();
 
@@ -290,9 +299,22 @@ class AuthController extends BaseController
             }
             $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
             if($request->type == 'phone'){
+
                 $phoneCode = mt_rand(100000, 999999);
                 $verify->phone_token = $phoneCode;
                 $verify->phone_token_valid_till = $newDateTime;
+                $to = $user->phone_number;
+                $body = "Dear ".ucwords($user->name).",</br> Please enter OTP ".$phoneCode." to verify your account.";
+
+                $provider = $data->sms_provider;
+                if(empty($data->sms_key) || empty($data->sms_secret) || empty($data->sms_from)){
+                    $send = $this->sendSms($provider, $data->sms_key, $data->sms_secret, $data->sms_from, $to, $body);
+
+                    if($send){
+                        return response()->json(['success' => 'An otp has been sent to your phone. Please enter to verify your account.'], 404);
+                    }
+                }
+                return response()->json(['error' => 'SMS provider is not configured. Please contact administration.'], 404);
             }
 
             if($request->type == 'email'){
@@ -301,12 +323,11 @@ class AuthController extends BaseController
                 $verify->email_token = $mailCode;
                 $verify->email_token_valid_till = $newDateTime;
 
-                if(empty($prefer->mail_driver) || empty($prefer->mail_host) || empty($prefer->mail_port) || empty($prefer->mail_port) || empty($prefer->mail_password) || empty($prefer->mail_encryption)){
-
+                if(empty($data->mail_driver) || empty($data->mail_host) || empty($data->mail_port) || empty($data->mail_port) || empty($data->mail_password) || empty($data->mail_encryption)){
                     return response()->json(['error' => 'Mail server is not configured. Please contact administration.'], 404);
                 }
 
-                $confirured = $this->setMailDetail($prefer->mail_driver, $prefer->mail_host, $prefer->mail_port, $prefer->mail_username, $prefer->mail_password, $prefer->mail_encryption);
+                $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
 
                 if($confirured == 2){
                     return response()->json(['error' => 'Mail server is not configured. Please contact administration.'], 404);
@@ -332,10 +353,11 @@ class AuthController extends BaseController
                 catch(\Exception $e){
                     return response()->json(['errors' => 'Unable to send email. Please check email or try later.'], 404);
                 }
+                return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 404); 
             }
             $verify->save();
         }
-        return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 404);      
+             
     }
 
     /**

@@ -42,10 +42,6 @@ class User extends Authenticatable
        return $this->belongsTo('App\Models\Country')->select("id", "code", "name"); 
     }
 
-    public function role(){
-       return $this->belongsTo('App\Models\Role')->select("id", "role"); 
-    }
-
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new PasswordReset($token));
@@ -53,6 +49,18 @@ class User extends Authenticatable
 
     public function address(){
        return $this->hasMany('App\Models\UserAddress'); 
+    }
+
+    public function role(){
+       return $this->belongsTo('App\Models\Role')->select('id', 'role'); 
+    }
+
+    public function device(){
+       return $this->hasMany('App\Models\UserDevice'); 
+    }
+
+    public function verify(){
+       return $this->hasOne('App\Models\UserVerification')->select('user_id', 'email_token', 'phone_token', 'is_email_verified', 'is_phone_verified'); 
     }
 
     /*

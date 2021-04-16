@@ -136,8 +136,6 @@ class FacebookController extends FrontController
                 return redirect()->route('userHome');
             }
 
-            
-
             $eml = $user->getId().'@twitter-xyz.com';
 
             $customer->name = $user->getName();

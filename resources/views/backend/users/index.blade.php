@@ -1,22 +1,8 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Options'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Banner'])
 
 @section('css')
-<style type="text/css">
-    .modal.fadeIn {
-      opacity:.4;
-    }
-    .pac-container, .pac-container .pac-item { z-index: 99999 !important; }
-
-    .modal-header{
-        padding: 12px 1rem 0px !important;
-    }
-    .modal-body{
-        padding: padding:10px 1rem !important;
-    }
-    .modal-body .card-box{
-        padding: 0px 1rem !important;
-    }
-</style>
+<link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -45,110 +31,121 @@
                                     <span>{!! \Session::get('success') !!}</span>
                                 </div>
                                 @endif
+                                @if (\Session::has('error_delete'))
+                                <div class="alert alert-danger">
+                                    <span>{!! \Session::get('error_delete') !!}</span>
+                                </div>
+                                @endif
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <!--<button class="btn btn-blue waves-effect waves-light text-sm-right addVendor"><i class="mdi mdi-plus-circle mr-1"></i> Add </button> -->
+                            <button class="btn btn-blue waves-effect waves-light text-sm-right openBannerModal"
+                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
+                            </button>
                         </div>
-
                     </div>
 
                     <div class="table-responsive">
-                        <table class="table table-centered table-nowrap table-striped" id="products-datatable">
+                        <form name="saveOrder" id="saveOrder"> @csrf </form>
+                        <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
                             <thead>
                                 <tr>
+                                    <th>Image</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
-                                    <th>Country</th>
-                                    <th>Status</th>
-                                    <th>Role</th>
+                                    <th>Email Token</th>
+                                    <th>Phone Token</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="post_list">
                                 @foreach($users as $user)
-                                <tr>
-                                    <td> {{$user->name}} </td>
-                                    <td> {{$user->email}} </td>
-                                    <td> {{$user->phone_number}} </td>
-                                    <td> {{$user->country->name}} </td>
-                                    <td>
-                                        @if($user->status == 0)
-                                            Pending
-                                        @elseif($user->status == 1)
-                                            Active
-                                        @elseif($user->status == 2)
-                                            Block
-                                        @else
-                                            Inactive
-                                        @endif
-                                    </td>
-                                    <td> {{ $user->role->role }} </td>
-                                    <td>
-                                        @if($user->status == 0)
-                                            <a class="btn btn-blue waves-effect waves-light text-sm-right"
-                                             href="{{route('customer.account.action', ['user' => $user->id, 'action' => 1])}}" onclick="return confirm('Are you sure? You want to approve customer account.')"><i class="mdi mdi-lock-open-check mr-1"></i> Approve User
-                                            </a>  
-                                        @elseif($user->status == 1)
-                                            <a class="btn btn-danger waves-effect waves-light text-sm-right"
-                                             href="{{route('customer.account.action', ['user' => $user->id, 'action' => 2])}}" onclick="return confirm('Are you sure? You want to block customer account.')"><i class="mdi mdi-lock mr-1"></i> Block User
-                                            </a>
-                                        @elseif($user->status == 2)
-                                            <a class="btn btn-blue waves-effect waves-light text-sm-right"
-                                             href="{{route('customer.account.action', ['user' => $user->id, 'action' => 1])}}" onclick="return confirm('Are you sure? You want to activate customer account.')"><i class="mdi mdi-lock-open-variant mr-1"></i> Activate User
-                                            </a>
-                                        @endif
+
+                                <tr data-row-id="{{$user->id}}">
+                                    <td> image </td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->phone_number }}</td>
+                                    <td>{{(!empty($user->verify->email_token)) ? $user->verify->email_token : 'N/A'}}</td>
+                                    <td>{{(!empty($user->verify->phone_token)) ? $user->verify->phone_token : 'N/A'}}</td>
+                                    <td> 
+                                        <div class="form-ul" style="width: 60px;">
+                                            <div class="inner-div" style="float: left;">
+                                                <a class="action-icon openBannerModal" userId="{{$user->id}}" href="#"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                            </div>
+                                            <div class="inner-div">
+                                                <form method="POST" action="{{ route('customer.destroy', $user->id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <div class="form-group">
+                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the user.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
-                                @endforeach
+                               @endforeach
                             </tbody>
                         </table>
                     </div>
                     <div class="pagination pagination-rounded justify-content-end mb-0">
-                        {{ $users->links() }}
+                        $user->links()
                     </div>
-
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
         </div> <!-- end col -->
     </div>
-
-
 </div>
-@include('backend.users.modals')
+
+@include('backend.banner.modals')
 @endsection
 
 @section('script')
 
-@include('backend.users.pagescript')  
+<script type="text/javascript">
+    function assignSortAttach() {
+      $("table").sortable({
+        axis: "y",
+        cursor: "grabbing",
+        handle: ".handle",
+        cancel: "thead",
+        opacity: 0.6,
+        placeholder: "two-place",
+        helper: function(e, item) {
+          if (!item.hasClass("selected")) {
+            item.addClass("selected");
+          }
+          console.log("Selected: ", $(".selected"));
+          var elements = $(".selected").not(".ui-sortable-placeholder").clone();
+          console.log("Making helper from: ", elements);
+          // Hide selected Elements
+          $(".selected").not(".ui-sortable-placeholder").addClass("hidden");
+          var helper = $("<table />");
+          helper.append(elements);
+          console.log("Helper: ", helper);
+          return helper;
+        },
+        start: function(e, ui) {
+          var elements = $(".selected.hidden").not('.ui-sortable-placeholder');
+          console.log("Start: ", elements);
+          ui.item.data("items", elements);
+        },
+        update: function(e, ui) {
+          console.log("Receiving: ", ui.item.data("items"));
+          ui.item.before(ui.item.data("items")[1], ui.item.data("items")[0]);
+        },
+        stop: function(e, ui) {
+          $('.selected.hidden').not('.ui-sortable-placeholder').removeClass('hidden');
+          $('.selected').removeClass('selected');
+        }
+      });
+    }
+</script>
 
-<!-- @parent
 
-@if(count($errors->add) > 0)
-<script>
-$(function() {
-    $('#add-client-modal').modal({
-        show: true
-    });
-});
-</script>
-@elseif(count($errors->update) > 0)
-<script>
-$(function() {
-    $('#update-client-modal').modal({
-        show: true
-    });
-});
-</script>
-@endif
-@if(\Session::has('getClient'))
-<script>
-$(function() {
-    $('#update-client-modal').modal({
-        show: true
-    });
-});
-</script>
-@endif -->
+@include('backend.banner.pagescript')
+
 @endsection

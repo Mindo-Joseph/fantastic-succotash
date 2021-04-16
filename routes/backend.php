@@ -65,7 +65,7 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 		Route::post('vendor/deleteArea/{vid}','Client\ServiceAreaController@destroy')->name('vendor.serviceArea.delete');
 
 		Route::resource('order','Client\OrderController');
-		Route::get('customers','Client\UserController@index')->name('customers');
+		Route::resource('customer','Client\UserController');
 		Route::get('customer/account/{user}/{action}','Client\UserController@changeStatus')->name('customer.account.action');
 
 		Route::resource('product','Client\ProductController');
@@ -77,7 +77,6 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 		Route::post('product/translation','Client\ProductController@translation')->name('product.translation');
 		Route::post('product/variantRows','Client\ProductController@makeVariantRows')->name('product.makeRows');
 		Route::post('product/variantImage/update','Client\ProductController@updateVariantImage')->name('product.variant.update');
-
 	});
 
 	Route::group(['middleware' => 'auth:client', 'prefix' => '/admin'], function () {

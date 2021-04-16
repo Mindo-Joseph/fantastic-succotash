@@ -56,7 +56,7 @@
                 </li>
 
                 <li>
-                    <a href="{{route('customers')}}" >
+                    <a href="{{route('customer.index')}}" >
                         <i data-feather="users"></i>
                         <span> Customers </span>
                     </a>
