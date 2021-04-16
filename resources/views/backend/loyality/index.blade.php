@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Banner'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Loyalty Cards'])
 
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
@@ -10,6 +10,7 @@
 <link href="{{asset('assets/libs/bootstrap-select/bootstrap-select.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/bootstrap-touchspin/bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
+<style>.error{color: red;}</style>
 @endsection
 
 @section('content')
@@ -21,7 +22,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Banner</h4>
+                <h4 class="page-title">Loyalty cards</h4>
             </div>
         </div>
     </div>
@@ -46,8 +47,11 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right openBannerModal"
-                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
+                        <button class="btn btn-blue waves-effect waves-light text-sm-right"
+                              data-toggle="modal" data-target=".redeemPoint"><i class="mdi mdi-plus-circle mr-1"></i> Change Redeem Point
+                            </button>
+                            <button class="btn btn-blue waves-effect waves-light text-sm-right"
+                              data-toggle="modal" data-target=".addModal"><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </button>
                         </div>
                     </div>
@@ -58,48 +62,39 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Image</th>
                                     <th>Name</th>
-                                    <th>Duration</th>
-                                    <th>Redirect To</th>
+                                    <th>Description</th>
+                                    <th>Minimum Points</th>
                                     <th></th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="post_list">
-                                @foreach($banners as $ban)
+                                @foreach($loyaltycards as $ban)
 
                                 <tr data-row-id="{{$ban->id}}">
                                     <td class="draggableTd"><span class="dragula-handle"></span></td>
-                                    <td> 
-                                        <img src="{{$ban->image['proxy_url'].'400/160'.$ban->image['image_path']}}" alt="{{$ban->id}}" >
-                                    </td>
 
                                     <td> {{ $ban->name }} </td>
-                                    <td> {{ $ban->start_date_time }} <br/> to <br/> {{$ban->end_date_time}}</td>
+
+                                    <td> {{ $ban->description }} </td>
+
+                                    <td> {{ $ban->minimum_points }} </td>
+                                   
                                     <td> 
-                                        @if($ban->link == 'category')
-                                            Category
-                                        @elseif($ban->link == 'vendor')
-                                            Vendor
-                                        @else
-                                            N/A
-                                        @endif
-                                     </td>
-                                    <td> 
-                                        <input type="checkbox" bid="{{$ban->id}}" id="cur_{{$ban->id}}" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#039cfd" {{($ban->validity_on == '1') ? 'checked' : ''}} >
+                                        <input type="checkbox" bid="{{$ban->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#039cfd" {{($ban->status == '0') ? 'checked' : ''}} >
                                      </td>
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
-                                                <a class="action-icon openBannerModal" userId="{{$ban->id}}" href="#"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                                <a class="action-icon openEditModal" loyaltyID="{{$ban->id}}" href="#"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
                                             </div>
                                             <div class="inner-div">
-                                                <form method="POST" action="{{ route('banner.destroy', $ban->id) }}">
+                                                <form method="POST" action="{{ route('loyalty.destroy', $ban->id) }}">
                                                     @csrf
                                                     @method('DELETE')
                                                     <div class="form-group">
-                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the banner.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
+                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the loyalty card.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
 
                                                     </div>
                                                 </form>
@@ -112,7 +107,7 @@
                         </table>
                     </div>
                     <div class="pagination pagination-rounded justify-content-end mb-0">
-                        {{-- $banners->links() --}}
+                        {{-- $loyaltycards->links() --}}
                     </div>
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
@@ -120,52 +115,11 @@
     </div>
 </div>
 
-@include('backend.banner.modals')
+@include('backend.loyality.modals')
 @endsection
 
 @section('script')
 
-<script type="text/javascript">
-    function assignSortAttach() {
-      $("table").sortable({
-        axis: "y",
-        cursor: "grabbing",
-        handle: ".handle",
-        cancel: "thead",
-        opacity: 0.6,
-        placeholder: "two-place",
-        helper: function(e, item) {
-          if (!item.hasClass("selected")) {
-            item.addClass("selected");
-          }
-          console.log("Selected: ", $(".selected"));
-          var elements = $(".selected").not(".ui-sortable-placeholder").clone();
-          console.log("Making helper from: ", elements);
-          // Hide selected Elements
-          $(".selected").not(".ui-sortable-placeholder").addClass("hidden");
-          var helper = $("<table />");
-          helper.append(elements);
-          console.log("Helper: ", helper);
-          return helper;
-        },
-        start: function(e, ui) {
-          var elements = $(".selected.hidden").not('.ui-sortable-placeholder');
-          console.log("Start: ", elements);
-          ui.item.data("items", elements);
-        },
-        update: function(e, ui) {
-          console.log("Receiving: ", ui.item.data("items"));
-          ui.item.before(ui.item.data("items")[1], ui.item.data("items")[0]);
-        },
-        stop: function(e, ui) {
-          $('.selected.hidden').not('.ui-sortable-placeholder').removeClass('hidden');
-          $('.selected').removeClass('selected');
-        }
-      });
-    }
-</script>
-
-
-@include('backend.banner.pagescript')
+@include('backend.loyality.pagescript')
 
 @endsection
