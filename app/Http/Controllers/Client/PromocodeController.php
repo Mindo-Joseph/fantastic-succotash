@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Promocode, Vendor, PromocodeUser, PromocodeProduct};
-use App\Models\PromocodeRestriction;
+use App\Models\{Promocode, Vendor, PromocodeUser, PromocodeProduct, PromocodeRestriction};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,7 +30,7 @@ class PromocodeController extends BaseController
      */
     public function create()
     {
-        return view('promocode.create-promocodes');
+        //return view('promocode.create');
     }
 
     /**

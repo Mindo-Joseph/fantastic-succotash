@@ -46,12 +46,6 @@
                         </div>
                     </div>
 
-
-
-
-
-
-
                     <div class="table-responsive">
                         <form name="saveOrder" id="saveOrder"> @csrf </form>
                         <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
@@ -111,7 +105,7 @@
                         </table>
                     </div>
                     <div class="pagination pagination-rounded justify-content-end mb-0">
-                        {{-- $banners->links() --}}
+                        {{-- $promocode->links() --}}
                     </div>
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
