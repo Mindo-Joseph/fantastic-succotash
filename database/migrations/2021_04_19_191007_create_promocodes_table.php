@@ -29,7 +29,6 @@ class CreatePromocodesTable extends Migration
             $table->tinyInteger('is_deleted')->default(0)->comment('0- No, 1- yes')->nullable();
             $table->integer('created_by')->nullable();
             $table->timestamps();
-            
         });
     }
 
