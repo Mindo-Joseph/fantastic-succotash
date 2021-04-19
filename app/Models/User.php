@@ -42,10 +42,6 @@ class User extends Authenticatable
        return $this->belongsTo('App\Models\Country')->select("id", "code", "name"); 
     }
 
-    public function role(){
-       return $this->belongsTo('App\Models\Role')->select("id", "role"); 
-    }
-
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new PasswordReset($token));
@@ -55,6 +51,13 @@ class User extends Authenticatable
        return $this->hasMany('App\Models\UserAddress'); 
     }
 
+    public function role(){
+       return $this->belongsTo('App\Models\Role')->select('id', 'role'); 
+    }
+
+    public function device(){
+       return $this->hasMany('App\Models\UserDevice'); 
+    }
     /*
     bucketname:- royoorders2.0-assets
 

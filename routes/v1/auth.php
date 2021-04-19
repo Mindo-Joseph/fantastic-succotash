@@ -10,6 +10,7 @@ Route::group([
       'middleware' => ['dbCheck', 'AppAuth']
     ], function() {
         Route::post('sendToken', 'Api\v1\AuthController@sendToken');
+        Route::post('verifyAccount', 'Api\v1\AuthController@verifyToken');
         Route::get('logout', 'Api\v1\AuthController@logout');
     });
     Route::group([

@@ -15,15 +15,21 @@ use Config;
 class BaseController extends Controller
 {
     private $field_status = 2;
-	protected function sendSms($recipients, $message)
+	protected function sendSms($provider, $sms_key, $sms_secret, $sms_from, $to, $body)
 	{
 		//echo $recipients;die;
-	    $sid = getenv("TWILIO_SID");
-	    $token = getenv("TWILIO_AUTH_TOKEN");
-	    $twilio_number = getenv("TWILIO_NUMBER");
-	    $client = new TwilioClient($account_sid, $auth_token);
-	    $client->messages->create('+91'.$recipients, 
-	            ['from' => $twilio_number, 'body' => $message] );
+	    // $sid = getenv("TWILIO_SID");
+	    // $token = getenv("TWILIO_AUTH_TOKEN");
+	    // $twilio_number = getenv("TWILIO_NUMBER");
+        $to = "+918950473361";
+        try{
+            $client = new TwilioClient($sms_key, $sms_secret);
+            $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+        }
+        catch(\Exception $e){
+            return '2';
+        }
+        return '1';
 	}
 
 	public function buildTree($elements, $parentId = 1) {
@@ -38,7 +44,6 @@ class BaseController extends Controller
                 $branch[] = $element;
             }
         }
-
         return $branch;
     }
 
@@ -147,8 +152,8 @@ class BaseController extends Controller
             'encryption' => $mail_encryption,
             'username' => $mail_username,
             'password' => $mail_password,
-            //'sendmail' => '/usr/sbin/sendmail -bs',
-            //'pretend' => false,
+            'sendmail' => '/usr/sbin/sendmail -bs',
+            'pretend' => false,
         );
 
         Config::set('mail', $config);
