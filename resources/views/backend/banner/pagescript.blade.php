@@ -87,7 +87,6 @@
                         backdrop: 'static',
                         keyboard: false
                     });
-                    
                 }
                 var now = new Date();
                 runPicker();

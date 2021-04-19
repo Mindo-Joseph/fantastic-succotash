@@ -107,6 +107,10 @@ class Product extends Model
       return $this->hasMany('App\Models\ProductVariant', 'product_id', 'pro_id')->select('id', 'sku', 'product_id'); 
     }
 
+    public function inwishlist(){
+       return $this->hasOne('App\Models\UserWishlist')->select('product_id'); 
+    }
+
 
     /*public function allvariants(){
         return $this->hasMany('App\Models\ProductVariantSet')

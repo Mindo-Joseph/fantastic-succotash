@@ -5,22 +5,31 @@ namespace App\Http\Controllers\Api\v1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Twilio\Rest\Client as TwilioClient;
-use App\Models\{Client, Category};
 use Mail;
 use ConvertCurrency;
+use App\Models\{Client, Category, Product, ClientPreference};
+use Session;
+use App;
+use Config;
 
 class BaseController extends Controller
 {
     private $field_status = 2;
-	protected function sendSms($recipients, $message)
+	protected function sendSms($provider, $sms_key, $sms_secret, $sms_from, $to, $body)
 	{
 		//echo $recipients;die;
-	    $sid = getenv("TWILIO_SID");
-	    $token = getenv("TWILIO_AUTH_TOKEN");
-	    $twilio_number = getenv("TWILIO_NUMBER");
-	    $client = new TwilioClient($account_sid, $auth_token);
-	    $client->messages->create('+91'.$recipients, 
-	            ['from' => $twilio_number, 'body' => $message] );
+	    // $sid = getenv("TWILIO_SID");
+	    // $token = getenv("TWILIO_AUTH_TOKEN");
+	    // $twilio_number = getenv("TWILIO_NUMBER");
+        $to = "+918950473361";
+        try{
+            $client = new TwilioClient($sms_key, $sms_secret);
+            $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+        }
+        catch(\Exception $e){
+            return '2';
+        }
+        return '1';
 	}
 
 	public function buildTree($elements, $parentId = 1) {
@@ -35,7 +44,6 @@ class BaseController extends Controller
                 $branch[] = $element;
             }
         }
-
         return $branch;
     }
 
@@ -133,5 +141,26 @@ class BaseController extends Controller
         $currency = ConvertCurrency::convert('USD',[$curr], $price);
         return $currency[0]['convertedAmount'];
        // print_r();die;
+    }
+
+    public function setMailDetail($mail_driver, $mail_host, $mail_port, $mail_username, $mail_password, $mail_encryption)
+    {
+        $config = array(
+            'driver' => $mail_driver,
+            'host' => $mail_host,
+            'port' => $mail_port,
+            'encryption' => $mail_encryption,
+            'username' => $mail_username,
+            'password' => $mail_password,
+            'sendmail' => '/usr/sbin/sendmail -bs',
+            'pretend' => false,
+        );
+
+        Config::set('mail', $config);
+        $app = App::getInstance();
+        $app->register('Illuminate\Mail\MailServiceProvider');
+        return '1';
+        
+       // return '2';
     }
 }

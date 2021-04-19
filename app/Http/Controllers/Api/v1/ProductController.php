@@ -25,7 +25,12 @@ class ProductController extends BaseController
         /*if(!$request->has('product_sku')){
             return response()->json(['error' => 'No record found.'], 404);
         }*/
-        $products = Product::with(['variant' => function($v){
+        $userid = Auth::user()->id;
+
+        $products = Product::with(['inwishlist' => function($qry) use($userid){
+                        $qry->where('user_id', $userid);
+                    },
+                    'variant' => function($v){
                         $v->select('id', 'sku', 'product_id', 'title', 'quantity','price','barcode','tax_category_id');
                     },
                     'variant.vimage.pimage.image', 'related', 'upSell', 'crossSell', 'vendor', 'media.image', 'addOn' => function($q1) use($langId){
@@ -58,6 +63,8 @@ class ProductController extends BaseController
                    // ->where('sku', $request->product_sku)
                     ->where('id', $pid)
                     ->first();
+
+
 
         if(!$products){
             return response()->json(['error' => 'No record found.'], 404);
@@ -141,6 +148,7 @@ class ProductController extends BaseController
         if($vid == 0){
             return response()->json(['error' => 'No record found.'], 404);
         }
+        $userid = Auth::user()->id;
         $paginate = $request->has('limit') ? $request->limit : 12;
         $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
         $langId = Auth::user()->language;
@@ -151,7 +159,10 @@ class ProductController extends BaseController
             return response()->json(['error' => 'No record found.'], 200);
         }
 
-        $products = Product::with(['media.image', 'translation' => function($q) use($langId){
+        $products = Product::with(['inwishlist' => function($qry) use($userid){
+                        $qry->where('user_id', $userid);
+                    },
+                    'media.image', 'translation' => function($q) use($langId){
                     $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                     },
                     'variant' => function($q) use($langId){
@@ -185,6 +196,7 @@ class ProductController extends BaseController
         if($cid == 0){
             return response()->json(['error' => 'No record found.'], 404);
         }
+        $userid = Auth::user()->id;
         $langId = Auth::user()->language;
         $category = Category::with(['tags',
                     'type'  => function($q){
@@ -201,18 +213,33 @@ class ProductController extends BaseController
                     ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
                     ->where('id', $cid)->first();
 
+        $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
+                            $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
+                            $zx->select('variant_options.*', 'vt.title');
+                            $zx->where('vt.language_id', $langId);
+                        }
+                    ])->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id')
+                    ->join('variant_translations as vt','vt.variant_id','vr.id')
+                    ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
+                    ->where('vt.language_id', $langId)
+                    ->whereIn('product_variant_sets.product_id', function($qry) use($cid){ 
+                        $qry->select('product_id')->from('product_categories')
+                            ->where('category_id', $cid);
+                        })
+                    ->groupBy('product_variant_sets.variant_type_id')->get();
+
         if(!$category){
             return response()->json(['error' => 'No record found.'], 200);
         }
         $response['category'] = $category;
-        $response['listData'] = $this->listData($langId, $cid, $category->type->redirect_to, $paginate);
+        $response['listData'] = $this->listData($langId, $cid, $category->type->redirect_to, $paginate, $userid);
 
         return response()->json([
             'data' => $response,
         ]);
     }
 
-    public function listData($langId, $cid, $tpye = '', $limit = 12){
+    public function listData($langId, $cid, $tpye = '', $limit = 12, $userid){
         
         if($tpye == 'vendor' || $tpye == 'Vendor'){
 
@@ -246,7 +273,10 @@ class ProductController extends BaseController
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
 
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
-                    ->with(['media.image', 'translation' => function($q) use($langId){
+                    ->with(['inwishlist' => function($qry) use($userid){
+                        $qry->where('user_id', $userid);
+                    },
+                    'media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
                         'variant' => function($q) use($langId){
@@ -277,6 +307,7 @@ class ProductController extends BaseController
         if($brandId == 0 || $brandId < 0){
             return response()->json(['error' => 'No record found.'], 404);
         }
+        $userid = Auth::user()->id;
         $langId = Auth::user()->language;
         $paginate = $request->has('limit') ? $request->limit : 12;
         $brand = Brand::with(['translation' => function($q) use($langId){
@@ -290,7 +321,10 @@ class ProductController extends BaseController
             return response()->json(['error' => 'No record found.'], 200);
         }
 
-        $products = Product::with(['media.image', 'translation' => function($q) use($langId){
+        $products = Product::with(['inwishlist' => function($qry) use($userid){
+                        $qry->where('user_id', $userid);
+                    },
+                    'media.image', 'translation' => function($q) use($langId){
                     $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                     },
                     'variant' => function($q) use($langId){

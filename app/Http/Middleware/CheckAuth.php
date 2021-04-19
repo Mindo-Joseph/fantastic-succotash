@@ -26,10 +26,11 @@ class CheckAuth
         
         $user = new User();
 
-        if (isset($header['authorization']) && Token::check($header['authorization'][0], 'codebrewInd'))
+        if (isset($header['authorization']) && Token::check($header['authorization'][0], 'royoorders-jwt'))
         {
             $token = $header['authorization'][0];
-            //$tokenBlock = BlockedToken::where('token', $token)->first();
+
+            $tokenBlock = BlockedToken::where('token', $token)->first();
 
             if($tokenBlock)
             {
@@ -39,14 +40,11 @@ class CheckAuth
 
             $user = User::where('auth_token', $token)->first();
 
-            if(!$agent)
+            if(!$user)
             {
                 return response()->json(['error' => 'Invalid Session', 'message' => 'Invalid Token or session has been expired.'], 401);
                 abort(404);
             }
-            Auth::login($user);
-            //return response()->json(['error' => 'Invalid Token', 'message' => 'Session Expired'], 401);
-            //abort(404);
         }
 
         $languages = ClientLanguage::where('is_primary', 1)->first();
