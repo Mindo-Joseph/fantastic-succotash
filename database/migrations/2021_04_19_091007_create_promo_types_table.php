@@ -15,6 +15,8 @@ class CreatePromoTypesTable extends Migration
     {
         Schema::create('promo_types', function (Blueprint $table) {
             $table->id();
+            $table->string('title', 100);
+            $table->tinyInteger('status')->default(1)->comment('1 - Active, 2 - Block, 3 - delete');
             $table->timestamps();
         });
     }

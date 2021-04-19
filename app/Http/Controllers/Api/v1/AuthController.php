@@ -301,7 +301,6 @@ class AuthController extends BaseController
         }
         $user = $user->first();
         if(!$user){
-            $errors['error'] = ;
             return response()->json(['error' => 'User not found'], 404);
         }
     }

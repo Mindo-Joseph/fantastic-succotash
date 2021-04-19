@@ -159,6 +159,21 @@ class ProductController extends BaseController
             return response()->json(['error' => 'No record found.'], 200);
         }
 
+        $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
+                            $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
+                            $zx->select('variant_options.*', 'vt.title');
+                            $zx->where('vt.language_id', $langId);
+                        }
+                    ])->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id')
+                    ->join('variant_translations as vt','vt.variant_id','vr.id')
+                    ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
+                    ->where('vt.language_id', $langId)
+                    ->whereIn('product_variant_sets.product_id', function($qry) use($cid){ 
+                        $qry->select('product_id')->from('product_categories')
+                            ->where('category_id', $cid);
+                        })
+                    ->groupBy('product_variant_sets.variant_type_id')->get();
+
         $products = Product::with(['inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
                     },
@@ -184,6 +199,8 @@ class ProductController extends BaseController
 
         $response['vendor'] = $vendor;
         $response['products'] = $products;
+        $response['filterData'] = $variantSets;
+        
 
         return response()->json([
             'data' => $response,
