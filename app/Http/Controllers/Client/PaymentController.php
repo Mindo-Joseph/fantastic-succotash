@@ -122,8 +122,6 @@ class PaymentController extends BaseController
             ]
         )->send();
 
-        
-            // $response = $gateway->purchase(['amount' => '10.00', 'card' => $card])->send();
             if ($response->isSuccessful()) {
                 // mark order as complete
                 dd("successfull");
@@ -133,12 +131,6 @@ class PaymentController extends BaseController
                 // display error to customer
                 exit($response->getMessage());
             }
-        // } 
-        // catch (\Exception $e) {
-        //     // internal error, log exception and display a generic message to the customer
-        //     exit('Sorry, there was an error processing your payment. Please try again later.');
-        // }
-
-        // return view('backend/stripe/form');
+       
     }
 }
