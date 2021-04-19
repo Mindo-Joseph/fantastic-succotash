@@ -82,6 +82,8 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 		Route::post('loyalty/changeStatus','Client\LoyaltyController@changeStatus')->name('loyalty.changeStatus');
 		Route::post('loyalty/getRedeemPoints','Client\LoyaltyController@getRedeemPoints')->name('loyalty.getRedeemPoints');
 		Route::post('loyalty/setRedeemPoints','Client\LoyaltyController@setRedeemPoints')->name('loyalty.setRedeemPoints');
+		Route::get('stripe/showForm','Client\PaymentController@showForm')->name('stripe.form');
+		Route::post('stripe/make','Client\PaymentController@makePayment')->name('stripe.makePayment');
 
 	});
 
