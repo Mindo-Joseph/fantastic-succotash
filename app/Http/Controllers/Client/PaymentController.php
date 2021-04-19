@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Omnipay\Omnipay;
 
 class PaymentController extends BaseController
 {
@@ -83,5 +84,61 @@ class PaymentController extends BaseController
     public function destroy(Payment $payment)
     {
         //
+    }
+
+    public function showForm()
+    {
+        return view('backend/stripe/form');
+    }
+
+    public function makePayment(Request $request)
+    {
+        // dd($request->all());
+
+        $token = $request->stripeToken;
+
+        // Setup payment gateway
+        $gateway = Omnipay::create('Stripe');
+        $gateway->setApiKey('sk_test_51IhpwhSFHEA938FwRPiQSAH5xF6DcjO5GCASiud9cGMJ0v8UJyRfCb7IQAMbXbuPMe7JphA1izxZOsIclvmOgqUV00Zpk85xfl');
+
+        // Example form data
+        $formData = [
+            'number' => '4000056655665556',
+            'description' => '4242424242424242',
+            'expiryMonth' => '6',
+            'expiryYear' => '2026',
+            'cvv' => '123'
+        ];
+
+        // try {
+
+        // Send purchase request
+        $response = $gateway->purchase(
+            [
+                'amount' => '10.00',
+                'currency' => 'INR',
+                'card' => $formData,
+                'token' => $token,
+            ]
+        )->send();
+
+        
+            // $response = $gateway->purchase(['amount' => '10.00', 'card' => $card])->send();
+            if ($response->isSuccessful()) {
+                // mark order as complete
+                dd("successfull");
+            } elseif ($response->isRedirect()) {
+                $response->redirect();
+            } else {
+                // display error to customer
+                exit($response->getMessage());
+            }
+        // } 
+        // catch (\Exception $e) {
+        //     // internal error, log exception and display a generic message to the customer
+        //     exit('Sorry, there was an error processing your payment. Please try again later.');
+        // }
+
+        // return view('backend/stripe/form');
     }
 }
