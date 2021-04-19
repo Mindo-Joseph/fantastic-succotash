@@ -24,6 +24,7 @@
                     </span>
                 </div>
             </div>
+            
             <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('title', 'Enable',['class' => 'control-label']) !!} 

@@ -241,6 +241,7 @@
 
 
 
+    
 
 
     $("#user-modal #add_user").submit(function(e) {
@@ -271,3 +272,14 @@
 
     
 </script>
+
+<link href="{{asset('assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
+
+@section('script')
+    <!-- Plugins js-->
+    
+    <script src="{{asset('assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
+
+    <!-- Page js-->
+    <script src="{{asset('assets/js/pages/form-pickers.init.js')}}"></script>
+@endsection
