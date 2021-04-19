@@ -3,108 +3,218 @@
         <h4 class="header-title mb-3"></h4>
 
         <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-6">
-                @if(isset($banner->id))
-                    <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$banner->image['proxy_url'].'600/400'.$banner->image['image_path']}}" />
-                @else
-                    <input data-default-file="" type="file" data-plugins="dropify" name="image" accept="image/*" class="dropify"/>
-                @endif
-                <p class="text-muted text-center mt-2 mb-0">Upload banner image</p>
-            </div>
-        </div>
-
-        <div class="row">
             <div class="col-md-6">
                 <div class="form-group" id="nameInput">
-                    {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
-                    {!! Form::text('name', $banner->name, ['class' => 'form-control']) !!}
+                    {!! Form::label('title', 'PromoCode',['class' => 'control-label']) !!}
+                    {!! Form::text('code', $promo->code, ['class' => 'form-control']) !!}
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>
                     </span>
                 </div>
             </div>
-            
+            <div class="col-md-6">
+                <div class="form-group" id="nameInput">
+                    {!! Form::label('title', 'PromoCode',['class' => 'control-label']) !!}
+                    {!! Form::text('name', $promo->name, ['class' => 'form-control']) !!}
+                    <span class="invalid-feedback" role="alert">
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    {!! Form::label('title', 'Enable',['class' => 'control-label']) !!} 
+                    {!! Form::label('title', 'Promo Type',['class' => 'control-label']) !!}
+                    <select class="selectize-select form-control" name="vendor_id">
+                        <option value="">Select</option>
+                        @foreach($promoTypes as $key => $types)
+                            <option value="{{$types->id}}">{{$types->title}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group" id="amountInput">
+                    {!! Form::label('title', 'Amount',['class' => 'control-label']) !!}
+                    {!! Form::number('amount', $promo->amount, ['class' => 'form-control', 'placeholder'=>'Enter total amount']) !!}
+                    <input class="form-control" id="example-number" type="number" name="" >
+                    @error('amount')
+                        <span class="text-danger">{{$message}}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group" id="expiry_dateInput">
+                    {!! Form::label('title', 'Expiry Date',['class' => 'control-label']) !!}
+                    {!! Form::text('expiry_date', $promo->expiry_date, ['class' => 'form-control']) !!}
+                    <span class="invalid-feedback" role="alert">
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="form-group">
+                    {!! Form::label('title', 'Allow Free Delivery',['class' => 'control-label']) !!} 
                     <div>
-                        <?php $validity = (isset($banner->id) && $banner->id > 0) ? 'validity_edit' : 'validity_add'; ?>
-                        @if((isset($banner) && $banner->validity_on == '0'))
-                         <input type="checkbox" data-plugin="switchery" name="validity_on" class="form-control {{$validity}}" data-color="#039cfd">
-                        @else
-                         <input type="checkbox" data-plugin="switchery" name="validity_on" class="form-control {{$validity}}" data-color="#039cfd" checked='checked'>
-                        @endif
-                        
+                        <input type="checkbox" data-plugin="switchery" name="free_delivery" class="form-control switch1" data-color="#039cfd" checked='checked'>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group" id="start_date_timeInput">
-                    @php 
-                    $minDate = Date('Y-m-d');
-                    @endphp
-                    {!! Form::label('title', 'Start Date',['class' => 'control-label']) !!}
-                    {!! Form::text('start_date_time', $banner->start_date_time, ['class' => 'form-control downside datetime-datepicker', 'id' => 'start-datepicker', 'min' => $minDate]) !!}
- 
-                <span class="invalid-feedback" role="alert">
-                    <input type="hidden" name="banner_id" value="{{isset($banner->id) ? $banner->id : ''}}">
-                        <strong></strong>
-                    </span>
+            <div class="col-md-4 text-center">
+                <div class="form-group">
+                    {!! Form::label('title', 'First Order Only',['class' => 'control-label']) !!} 
+                    <div>
+                        <input type="checkbox" data-plugin="switchery" name="first_order" class="form-control switch1" data-color="#039cfd" checked='checked'>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="form-group">
+                    {!! Form::label('title', 'Paid By',['class' => 'control-label']) !!} 
+                    <div class="radio radio-info form-check-inline">
+                        <input type="radio" id="inlineRadio1" value="admin" name="radioInline" checked>
+                        <label for="inlineRadio1"> Admin</label>
+                    </div>
+                    <div class="radio form-check-inline">
+                        <input type="radio" id="inlineRadio2" value="vendor" name="radioInline">
+                        <label for="inlineRadio2"> Vendor</label>
+                    </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="form-group" id="end_date_timeInput">
-                    {!! Form::label('title', 'End Date',['class' => 'control-label']) !!}
-                    {!! Form::text('end_date_time', $banner->end_date_time, ['class' => 'form-control downside datetime-datepicker', 'id' => 'end-datepicker' ]) !!}
+                <div class="form-group" id="minimum_amountInput">
+                    {!! Form::label('title', 'Minimum Amount',['class' => 'control-label']) !!}
+                    {!! Form::text('minimum_amount', $promo->minimum_amount, ['class' => 'form-control']) !!}
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>
                     </span>
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-6">
-                <div class="form-group">
-                    {!! Form::label('title', 'Assign To',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control assignToSelect" name="assignTo">
-                        <option value="">Select</option>
-                        <option value="category" {{($banner->link == 'category') ? 'selected' : ''}}>Category</option>
-                        <option value="vendor" {{($banner->link == 'vendor') ? 'selected' : ''}}>Vendor</option>
-                    </select>
- 
+                <div class="form-group" id="maximum_amountInput">
+                    {!! Form::label('title', 'Maximum Amount',['class' => 'control-label']) !!}
+                    {!! Form::text('maximum_amount', $promo->maximum_amount, ['class' => 'form-control']) !!}
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>
                     </span>
                 </div>
             </div>
-        </div>
-        <div class="row category_vendor" style="{{(empty($banner->link)) ? 'display: none;' : ''}}">
-            <div class="col-md-6 category_list" style="{{($banner->link == 'category') ? '' : 'display: none;'}}">
-                <input type="hidden" id="bannerId" url="{{ (isset($banner->id) && $banner->id > 0) ? route('banner.update', $banner->id) : route('banner.store') }}">
-                <div class="form-group">
-                    {!! Form::label('title', 'Select Category',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control" name="category_id">
-                        <option value="">Select</option>
-                        @foreach($categories as $key => $cate)
-                        <option value="{{$cate->id}}" {{($cate->id == $banner->redirect_category_id) ? 'selected' : ''}}>{{$cate->slug}}</option>
-                        @endforeach
-                    </select>
+            <div class="col-md-6">
+                <div class="form-group" id="limit_per_userInput">
+                    {!! Form::label('title', 'Limit Per User',['class' => 'control-label']) !!}
+                    {!! Form::text('limit_per_user', $promo->limit_per_user, ['class' => 'form-control']) !!}
+                    <span class="invalid-feedback" role="alert">
+                        <strong></strong>
+                    </span>
                 </div>
             </div>
-            <div class="col-md-6 vendor_list" style="{{($banner->link == 'vendor') ? '' : 'display: none;'}}">
-                <div class="form-group">
-                    {!! Form::label('title', 'Select Vendor',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control" name="vendor_id">
-                        <option value="">Select</option>
-                        @foreach($vendors as $key => $vend)
-                            <option value="{{$vend->id}}" {{($vend->id == $banner->redirect_vendor_id) ? 'selected' : ''}}>{{$vend->name}}</option>
-                        @endforeach
-                    </select>
+            <div class="col-md-6">
+                <div class="form-group" id="total_limitInput">
+                    {!! Form::label('title', 'Total Limit',['class' => 'control-label']) !!}
+                    {!! Form::text('total_limit', $promo->total_limit, ['class' => 'form-control']) !!}
+                    <span class="invalid-feedback" role="alert">
+                        <strong></strong>
+                    </span>
                 </div>
             </div>
-        </div>
+
+            
+
+
+
+
+
+
+
     </div>
 </div>
+
+
+
+
+
+<!-- 
+
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="RoleName"></label>
+        <input type="text" class="form-control" name="name" id="inputRoleName" placeholder="Enter promocode">
+        @error('name')
+            <span class="text-danger">{{$message}}</span>
+        @enderror
+    </div>
+    
+
+    <div class="form-group mb-3 col-md-6">
+        
+    </div>
+    <div class="form-group mb-3 col-md-6">
+        <label></label>
+        <input type="text" id="humanfd-datepicker" name="expiry_date" class="form-control" placeholder="October 9, 2018">
+        @error('expiry_date')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+    </div>
+
+    <div class="form-group mb-3 col-md-6">
+        <label for="">Allow Free Delivery</label> <br>
+        <input type="checkbox" checked data-plugin="switchery" name="free_delivery" data-color="#039cfd" />
+        @error('free_delivery')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+    </div>
+
+    <div class="form-group mb-3 col-md-6">
+        <label for="">First Order Only</label> <br>
+        <input type="checkbox" checked data-plugin="switchery" name="first_order" data-color="#039cfd" />
+        @error('first_order')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+    </div>
+
+
+    <div class="form-group mb-6 col-md-6">
+        <label for="example-number">Minimum Amount</label>
+        <input class="form-control" id="example-number" type="number" name="minimum_amount" placeholder="Enter Minimum Amount">
+        @error('minimum_amount')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+    </div>
+
+
+    <div class="form-group mb-6 col-md-6">
+        <label for="example-number">Maximum Amount</label>
+        <input class="form-control" id="example-number1" type="number" name="maximum_amount" placeholder="Enter Maximum Amount">
+        @error('maximum_amount')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+    </div>
+    <div class="form-group mb-3 col-md-6">
+        <label>Limit Per Users</label>
+        <input class="form-control" id="example-number" type="number" name="limit_per_user" placeholder="Enter limit per users">
+        @error('limit_per_user')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+    </div>
+
+    <div class="form-group  col-md-6">
+        <label>Total Limit</label>
+        <input class="form-control" id="example-number" type="number" name="total_limit" placeholder="Enter total limits">
+        @error('total_limit')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+    </div>
+
+    
+    <div class="form-group col-md-6">
+        <p class="font-weight-bold text-muted">Restriction Types</p>
+        <select class="form-control" name="restriction_types" data-toggle="select2">
+            <option>Select</option>
+            <option value="0">Product</option>
+            <option value="1">Vendor</option>
+            <option value="2">Category</option>
+        </select>
+        @error('restriction_types')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+    </div>
+</div> -->

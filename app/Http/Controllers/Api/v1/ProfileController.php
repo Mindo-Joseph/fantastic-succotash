@@ -42,11 +42,11 @@ class ProfileController extends BaseController
         		->where('user_id', Auth::user()->id)->paginate($paginate);
 
 
-    	if(!empty($wishList->product)){
-    		foreach ($wishList->product as $key => $product) {
-    			if(!empty($wishList->product)){
-		    		foreach ($product->variant as $k => $vari) {
-			            $vari[$k]->multiplier = $clientCurrency->doller_compare;
+    	if(!empty($wishList)){
+    		foreach ($wishList as $key => $prod) {
+    			if(!empty($prod->product->variant)){
+		    		foreach ($prod->product->variant as $k => $vari) {
+			            $vari->multiplier = $clientCurrency->doller_compare;
 			        }
 		    	}
 	        }
