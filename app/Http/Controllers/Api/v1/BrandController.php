@@ -88,16 +88,18 @@ class BrandController extends BaseController
      * Product filters on category Page
      * @return \Illuminate\Http\Response
      */
-    public function brandFilters(Request $request, $domain = '', $brandId = 0)
+    public function brandFilters(Request $request, $brandId = 0)
     {
+        //dd($request->all());
         if($brandId == 0 || $brandId < 0){
             return response()->json(['error' => 'No record found.'], 404);
         }
         $userid = Auth::user()->id;
         $langId = Auth::user()->language;
+        $curId = Auth::user()->currency;
         $paginate = $request->has('limit') ? $request->limit : 12;
         $setArray = $optionArray = array();
-        $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+        $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
 
         if($request->has('variants') && !empty($request->variants)){
             $setArray = array_unique($request->variants);
@@ -119,9 +121,6 @@ class BrandController extends BaseController
         }
 
         $variantIds = $productIds = array();
-
-        // $orderBy = 'id';
-        // $sort = 'desc';
 
         $setArray = $optionArray = array();
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
@@ -170,15 +169,24 @@ class BrandController extends BaseController
             }
         }
 
+        $order_type = $request->has('order_type') ? $request->order_type : '';
+
         $products = Product::with(['media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
-                        'variant' => function($q) use($langId, $variantIds){
+                        'variant' => function($q) use($langId, $variantIds, $order_type){
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             if(!empty($variantIds)){
                                 $q->whereIn('id', $variantIds);
                             }
                             $q->groupBy('product_id');
+                            if(!empty($order_type) && $order_type == 'low_to_high'){
+                                $q->orderBy('price', 'asc');
+                            }
+
+                            if(!empty($order_type) && $order_type == 'high_to_low'){
+                                $q->orderBy('price', 'desc');
+                            }
                         },
                     ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating')
                     ->where('brand_id', $brandId)
@@ -192,8 +200,11 @@ class BrandController extends BaseController
         if(!empty($productIds)){
             $products = $products->whereIn('id', $productIds);
         }
+        if(!empty($order_type) && $request->order_type == 'rating'){
+            $products = $products->orderBy('averageRating', 'desc');
+        }
 
-        $products = $products->paginate($pagiNate);
+        $products = $products->paginate($paginate);
 
         if(!empty($products)){
             foreach ($products as $key => $value) {
@@ -202,9 +213,8 @@ class BrandController extends BaseController
                 }
             }
         }
-        $listData = $products;
-
-        $returnHTML = view('forntend.ajax.productList')->with(['listData' => $listData])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML));
+        return response()->json([
+            'data' => $products,
+        ]);
     }
 }

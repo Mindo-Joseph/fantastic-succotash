@@ -138,6 +138,7 @@ class VendorController extends FrontController
                 $productIds = $new_pIds;
             }
         }
+        $order_type = $request->has('order_type') ? $request->order_type : '';
 
         $products = Product::with(['media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
@@ -146,6 +147,12 @@ class VendorController extends FrontController
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             if(!empty($variantIds)){
                                 $q->whereIn('id', $variantIds);
+                            }
+                            if(!empty($order_type) && $order_type == 'low_to_high'){
+                                $q->orderBy('price', 'asc');
+                            }
+                            if(!empty($order_type) && $order_type == 'high_to_low'){
+                                $q->orderBy('price', 'desc');
                             }
                             $q->groupBy('product_id');
                         },
@@ -161,9 +168,12 @@ class VendorController extends FrontController
         if(!empty($productIds)){
             $products = $products->whereIn('id', $productIds);
         }
-        
+
         if($request->has('brands') && !empty($request->brands)){
             $products = $products->whereIn('brand_id', $request->brands);
+        }
+        if(!empty($order_type) && $request->order_type == 'rating'){
+            $products = $products->orderBy('averageRating', 'desc');
         }
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
         

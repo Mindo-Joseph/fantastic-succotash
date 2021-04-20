@@ -140,7 +140,6 @@ class CategoryController extends FrontController
                     ->with('variant1.vset')
                     ->select('id as pro_id', 'sku')
                     ->where('pc.category_id', $cid)->get();
-
         dd($products->toArray());*/
 
         $langId = Session::get('customerLanguage');
