@@ -1,58 +1,37 @@
 <?php
 
-namespace App\Http\Controllers\Front;
+namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ProductVariantSet};
+use App\Http\Controllers\Api\v1\BaseController;
+use App\Model\Client;
 use Illuminate\Http\Request;
-use Session;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Hash;
+use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
+use Validation;
+use DB;
 
-class VendorController extends FrontController
+class VendorController extends BaseController
 {
     private $field_status = 2;
-    
     /**
-     * Display product By Vendor
+     * Get Company ShortCode
      *
-     * @return \Illuminate\Http\Response
      */
-    public function vendorProducts(Request $request, $domain = '', $vid = 0)
+    public function productsByVendor(Request $request, $vid = 0)
     {
-        $langId = Session::get('customerLanguage');
-        $curId = Session::get('customerCurrency');
-        $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
-
-        $vendor = Vendor::select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery')
-                ->where('id', $vid)->firstOrFail();
-
-        /*'media' => function($q){
-            $q->groupBy('product_id');
-        },*/
-        $brands = Product::with(['brand.translation'=> function($q) use($langId){
-                    $q->select('title', 'brand_id')->where('brand_translations.language_id', $langId);
-                }])->select('brand_id')->where('vendor_id', $vid)
-                ->where('brand_id', '>', 1)->groupBy('brand_id')->get();
-
-        $listData = Product::with(['media.image',
-                        'translation' => function($q) use($langId){
-                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
-                        },
-                        'variant' => function($q) use($langId){
-                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
-                            $q->groupBy('product_id');
-                        },
-                    ])->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating')
-                    ->where('is_live', 1)->where('vendor_id', $vid)->paginate(8);
-
-        if(!empty($listData)){
-            foreach ($listData as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
-                }
-            }
+        if($vid == 0){
+            return response()->json(['error' => 'No record found.'], 404);
+        }
+        $userid = Auth::user()->id;
+        $paginate = $request->has('limit') ? $request->limit : 12;
+        $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+        $langId = Auth::user()->language;
+        $vendor = Vendor::select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 
+                    'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery')
+                    ->where('id', $vid)->first();
+        if(!$vendor){
+            return response()->json(['error' => 'No record found.'], 200);
         }
 
         $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
@@ -70,28 +49,48 @@ class VendorController extends FrontController
                         })
                     ->groupBy('product_variant_sets.variant_type_id')->get();
 
-        $navCategories = Session::get('navCategories');
-
-        if(empty($navCategories)){
-            $navCategories = $this->categoryNav($langId);
+        $products = Product::with(['inwishlist' => function($qry) use($userid){
+                        $qry->where('user_id', $userid);
+                    },
+                    'media.image', 'translation' => function($q) use($langId){
+                    $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                    },
+                    'variant' => function($q) use($langId){
+                        $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                        $q->groupBy('product_id');
+                    },
+                ])
+                ->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating')
+                ->where('vendor_id', $vid)
+                ->where('is_live', 1)->paginate($paginate);
+        
+        if(!empty($products)){
+            foreach ($products as $key => $value) {
+                foreach ($value->variant as $k => $v) {
+                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                }
+            }
         }
-        $vendorIds[] = $vid;
-        //dd($brands->toArray());
+        $response['vendor'] = $vendor;
+        $response['products'] = $products;
+        $response['filterData'] = $variantSets;
 
-        $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
-        $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-
-        return view('forntend/vendor-products')->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
+        return response()->json([
+            'data' => $response,
+        ]);
     }
 
     /**
      * Product filters on category Page
      * @return \Illuminate\Http\Response
      */
-    public function vendorFilters(Request $request, $domain = '', $vid = 0)
+    public function vendorFilters(Request $request, $vid = 0)
     {
-        $langId = Session::get('customerLanguage');
-        $curId = Session::get('customerCurrency');
+        if($vid == 0 || $vid < 0){
+            return response()->json(['error' => 'No record found.'], 404);
+        }
+        $langId = Auth::user()->language;
+        $curId = Auth::user()->currency;
         $setArray = $optionArray = array();
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
 
@@ -113,7 +112,6 @@ class VendorController extends FrontController
                 $multiArray[$request->variants[$key]][] = $value;
             }
         }
-
         $variantIds = $productIds = array();
 
         if(!empty($multiArray)){
@@ -175,9 +173,9 @@ class VendorController extends FrontController
         if(!empty($order_type) && $request->order_type == 'rating'){
             $products = $products->orderBy('averageRating', 'desc');
         }
-        $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
+        $paginate = $request->has('limit') ? $request->limit : 12;
         
-        $products = $products->paginate($pagiNate);
+        $products = $products->paginate($paginate);
 
         if(!empty($products)){
             foreach ($products as $key => $value) {
@@ -186,10 +184,8 @@ class VendorController extends FrontController
                 }
             }
         }
-        $listData = $products;
-
-        $returnHTML = view('forntend.ajax.productList')->with(['listData' => $listData])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML));
+        return response()->json([
+            'data' => $products,
+        ]);
     }
-
 }

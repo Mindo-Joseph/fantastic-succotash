@@ -1,31 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\Front;
+namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ProductVariantSet};
+use App\Http\Controllers\Api\v1\BaseController;
+use App\Model\Client;
 use Illuminate\Http\Request;
-use Session;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Hash;
+use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
+use Validation;
+use DB;
 
-class CategoryController extends FrontController
+class CategoryController extends BaseController
 {
     private $field_status = 2;
-    
-    /** 
-     * Display product and vendor list By Category id
+    /**
+     * Get Company ShortCode
      *
-     * @return \Illuminate\Http\Response
      */
-    public function categoryProduct(Request $request, $domain = '', $cid = 0)
+    public function categoryData(Request $request, $cid = 0)
     {
-        $langId = Session::get('customerLanguage');
-        $curId = Session::get('customerCurrency');
-        $category = Category::with(['tags', 'brands.translation' => function($q) use($langId){
-                        $q->where('brand_translations.language_id', $langId);
-                    },
+        $paginate = $request->has('limit') ? $request->limit : 12;
+        if($cid == 0){
+            return response()->json(['error' => 'No record found.'], 404);
+        }
+        $userid = Auth::user()->id;
+        $langId = Auth::user()->language;
+        $category = Category::with(['tags',
                     'type'  => function($q){
                         $q->select('id', 'title as redirect_to');
                     },
@@ -38,16 +39,7 @@ class CategoryController extends FrontController
                         ->where('category_translations.language_id', $langId);
                     }])
                     ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
-                    ->where('id', $cid)->firstOrFail();
-
-        $navCategories = $this->categoryNav($langId);
-        $vendorIds = array();
-        $vendorList = Vendor::select('id', 'name')->where('status', '!=', $this->field_status)->get();
-        if(!empty($vendorList)){
-            foreach ($vendorList as $key => $value) {
-                $vendorIds[] = $value->id;
-            }
-        }
+                    ->where('id', $cid)->first();
 
         $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
                             $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
@@ -64,28 +56,34 @@ class CategoryController extends FrontController
                         })
                     ->groupBy('product_variant_sets.variant_type_id')->get();
 
-        //dd($variantSets->toArray());
+        if(!$category){
+            return response()->json(['error' => 'No record found.'], 200);
+        }
+        $response['category'] = $category;
+        $response['filterData'] = $variantSets;
+        $response['listData'] = $this->listData($langId, $cid, $category->type->redirect_to, $paginate, $userid);
 
-        $listData = $this->listData($langId, $cid, $category->type->redirect_to);
-
-        //dd($listData->toArray());
-        $category->type->redirect_to;
-        $page = ($category->type->redirect_to == 'vendor' || $category->type->redirect_to == 'Vendor') ? 'vendor' : 'product';
-
-        $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
-        $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-
-        //dd($category->toArray());
-        return view('forntend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
+        return response()->json([
+            'data' => $response,
+        ]);
     }
 
-    public function listData($langId, $cid, $tpye = ''){
-
-        $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
+    public function listData($langId, $cid, $tpye = '', $limit = 12, $userid){
         
         if($tpye == 'vendor' || $tpye == 'Vendor'){
 
-            $vendorData = Vendor::select('id', 'name', 'logo', 'banner', 'order_pre_time', 'order_min_amount');
+            /*$vendorIds = array();
+
+            $vendorWithCategory = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
+                        ->select('products.id', 'products.vendor_id')
+                        ->where('pc.category_id', $cid)->groupBy('products.vendor_id')->get();
+            if($vendorWithCategory){
+                foreach ($vendorWithCategory as $key => $value) {
+                    $vendorIds[] = $value->vendor_id;
+                }
+            }*/
+
+            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
 
             /*if($preferences->is_hyperlocal == 1){
                 $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
@@ -94,17 +92,20 @@ class CategoryController extends FrontController
                         ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
                 });
             }*/
-            $vendorData = $vendorData->where('status', '!=', $this->field_status)->paginate($pagiNate);
+            $vendorData = $vendorData->where('status', '!=', $this->field_status)->paginate($limit);
+                            //->whereIn('id', $vendorIds)
 
             return $vendorData;
 
         }elseif($tpye == 'product' || $tpye == 'Product'){
 
-            $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
+            $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
 
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
-                    ->with(['media.image',
-                        'translation' => function($q) use($langId){
+                    ->with(['inwishlist' => function($qry) use($userid){
+                        $qry->where('user_id', $userid);
+                    },
+                    'media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
                         'variant' => function($q) use($langId){
@@ -112,7 +113,7 @@ class CategoryController extends FrontController
                             $q->groupBy('product_id');
                         },
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->paginate($pagiNate);
+                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->paginate($limit);
 
             if(!empty($products)){
                 foreach ($products as $key => $value) {
@@ -134,16 +135,13 @@ class CategoryController extends FrontController
      * Product filters on category Page
      * @return \Illuminate\Http\Response
      */
-    public function categoryFilters(Request $request, $domain = '', $cid = 0)
+    public function categoryFilters(Request $request, $cid = 0)
     {
-        /*$products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
-                    ->with('variant1.vset')
-                    ->select('id as pro_id', 'sku')
-                    ->where('pc.category_id', $cid)->get();
-        dd($products->toArray());*/
-
-        $langId = Session::get('customerLanguage');
-        $curId = Session::get('customerCurrency');
+        if($cid == 0 || $cid < 0){
+            return response()->json(['error' => 'No record found.'], 404);
+        }
+        $langId = Auth::user()->language;
+        $curId = Auth::user()->currency;
         $setArray = $optionArray = array();
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
 
@@ -166,17 +164,6 @@ class CategoryController extends FrontController
             }
         }
 
-        //$combinations = $this->array_combinations($multiArray);
-        //$variantSetData = ProductVariantSet::select('product_id', 'product_variant_id');
-        /*if(!empty($multiArray)){
-            foreach ($multiArray as $key => $value) {
-                $variantSetData = $variantSetData->whereIn('product_variant_id', function($qry) use($key, $value){ 
-                        $qry->select('product_variant_id')->from('product_variant_sets')
-                            ->whereIn('variant_type_id', $key)
-                            ->whereIn('variant_option_id', $value);
-                        })
-            }
-        }*/
         $variantIds = $productIds = array();
 
         if(!empty($multiArray)){
@@ -201,26 +188,7 @@ class CategoryController extends FrontController
                 $productIds = $new_pIds;
             }
         }
-
-        /*if($request->has('options') && !empty($request->options)){
-            $optionArray = $request->options;
-        }
-        $variantSetData = ProductVariantSet::join('product_categories as pc', 'product_variant_sets.product_id', 'pc.product_id' )->select('product_variant_sets.*');
-        if(!empty($setArray)){
-            $variantSetData = $variantSetData->whereIn('product_variant_sets.variant_type_id', $setArray);
-        }
-        if(!empty($optionArray)){
-            $variantSetData = $variantSetData->whereIn('product_variant_sets.variant_option_id', $optionArray);
-        }
-        echo $variantSetData = $variantSetData->groupBy('product_variant_sets.product_id')->toSql();die;
-
-        dd($variantSetData->toArray());
-        
-        foreach ($variantSetData as $key => $value) {
-            $variantIds[] = $value->product_variant_id;
-            $productIds[] = $value->product_id;
-        }*/
-       // print_r($variantIds);die;
+        $order_type = $request->has('order_type') ? $request->order_type : '';
 
         $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
                     ->with(['media.image',
@@ -231,6 +199,12 @@ class CategoryController extends FrontController
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             if(!empty($variantIds)){
                                 $q->whereIn('id', $variantIds);
+                            }
+                            if(!empty($order_type) && $order_type == 'low_to_high'){
+                                $q->orderBy('price', 'asc');
+                            }
+                            if(!empty($order_type) && $order_type == 'high_to_low'){
+                                $q->orderBy('price', 'desc');
                             }
                             $q->groupBy('product_id');
                         },
@@ -250,9 +224,12 @@ class CategoryController extends FrontController
         if($request->has('brands') && !empty($request->brands)){
             $products = $products->whereIn('products.brand_id', $request->brands);
         }
-        $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
+        if(!empty($order_type) && $request->order_type == 'rating'){
+            $products = $products->orderBy('averageRating', 'desc');
+        }
+        $paginate = $request->has('limit') ? $request->limit : 12;
         
-        $products = $products->paginate($pagiNate);
+        $products = $products->paginate($paginate);
 
         if(!empty($products)){
             foreach ($products as $key => $value) {
@@ -261,35 +238,8 @@ class CategoryController extends FrontController
                 }
             }
         }
-        $listData = $products;
-        //dd($listData->toArray());
-
-        $returnHTML = view('forntend.ajax.productList')->with(['listData' => $listData])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML));
+        return response()->json([
+            'data' => $products,
+        ]);
     }
-
-    private function array_combinations($arrays)
-    {
-        $result = array();
-        $arrays = array_values($arrays);
-        $sizeIn = sizeof($arrays);
-        $size = $sizeIn > 0 ? 1 : 0;
-        foreach ($arrays as $array)
-            $size = $size * sizeof($array);
-        for ($i = 0; $i < $size; $i ++)
-        {
-            $result[$i] = array();
-            for ($j = 0; $j < $sizeIn; $j ++)
-                array_push($result[$i], current($arrays[$j]));
-            for ($j = ($sizeIn -1); $j >= 0; $j --)
-            {
-                if (next($arrays[$j]))
-                    break;
-                elseif (isset ($arrays[$j]))
-                    reset($arrays[$j]);
-            }
-        }
-        return $result;
-    }
-
 }

@@ -30,7 +30,7 @@ class PromocodeController extends BaseController
     {
         $promoTypes = \DB::table('promo_types')->where('status', 1)->get();
         $promocode = new Promocode();
-        $returnHTML = view('backend.promocode.form')->with(['promocode' => $promocode,  'promoTypes' => $promoTypes])->render();
+        $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode,  'promoTypes' => $promoTypes])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -56,8 +56,8 @@ class PromocodeController extends BaseController
         //     'paid_by' => 'required',
         //     'restriction_types' => 'required'
         // ]);
-        // $promocode_restriction = new PromoCodeRestriction();
-        // $promocode_restriction->restriction_type = $request->restriction_types;
+        $promocode_restriction = new PromoCodeRestriction();
+        $promocode_restriction->restriction_type = $request->restriction_types;
         
         $promocode = new Promocode();
         $promocode->name = $request->name;
@@ -133,7 +133,7 @@ class PromocodeController extends BaseController
 
         $promocode = Promocode::find($request->id);
         $promocode->name = $request->name;
-        $promocode->type = $request->types;
+        // $promocode->type = $request->types;
         $promocode->amount = $request->amount;
         $promocode->expiry_date = $request->expiry_date;
         $promocode->allow_free_delivery = ($request->has('free_delivery') && $request->free_delivery == 'on') ? 1 : 0;

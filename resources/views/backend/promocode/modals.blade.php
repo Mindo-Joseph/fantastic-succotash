@@ -9,7 +9,7 @@
             </div>
 
 
-            <div class="modal-body" id="addCardBox">
+            <div class="modal-body" id="addCardBox1">
                 <section>
                     <form action="{{route('promocode.store')}}" method="POST">
                         @csrf
@@ -27,7 +27,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <p class="text-muted mt-3 mb-2">Types</p>
+                                <!-- <p class="text-muted mt-3 mb-2">Types</p>
                                 <div class="radio radio-info form-check-inline">
                                     <input type="radio" id="inlineRadio3" value="option3" name="radioInline3" checked>
                                     <label for="inlineRadio3"> Inline One </label>
@@ -39,14 +39,14 @@
                                 <div class="radio form-check-inline">
                                     <input type="radio" id="inlineRadio5" value="option5" name="radioInline5">
                                     <label for="inlineRadio5"> Inline Two </label>
-                                </div>
-                                <!-- <p class="font-weight-bold text-muted">Types</p>
+                                </div> -->
+                                <p class="font-weight-bold text-muted">Types</p>
                                 <select class="form-control" name="types" data-toggle="select2">
                                     <option>Select</option>
                                     <option value="0">Fixed</option>
                                     <option value="1">Percentage</option>
                                     <option value="2">Fixed per product</option>
-                                </select> -->
+                                </select>
                                 @error('types')
                                 <span class="text-danger">{{$message}}</span>
                                 @enderror
@@ -154,7 +154,7 @@
 <!--Modal for create ends here  -->
 
 
-<div id="add-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div id="add-promo-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -177,7 +177,7 @@
     </div>
 </div>
 
-<div id="edit-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div id="edit--promo-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
