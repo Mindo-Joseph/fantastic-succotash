@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Promocode, Vendor, PromocodeUser, PromocodeProduct};
-use App\Models\PromocodeRestriction;
+use App\Models\{Promocode, Vendor, PromocodeUser, PromocodeProduct, PromocodeRestriction};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,10 +17,8 @@ class PromocodeController extends BaseController
     public function index()
     {
         $promocodes = Promocode::all();
-        return view('backend/promocode/index')->with(['promocodes' => $promocodes]);
-
-        // $promocode = Promocode::all();
-        // return view('promocode.show-promocode', compact('promocode'));
+        $promoTypes = \DB::table('promo_types')->where('status', 1)->get();
+        return view('backend/promocode/index')->with(['promocodes' => $promocodes, 'promoTypes' => $promoTypes]);
     }
 
     /**
@@ -31,7 +28,10 @@ class PromocodeController extends BaseController
      */
     public function create()
     {
-        return view('promocode.create-promocodes');
+        $promoTypes = \DB::table('promo_types')->where('status', 1)->get();
+        $promocode = new Promocode();
+        $returnHTML = view('backend.promocode.form')->with(['promocode' => $promocode,  'promoTypes' => $promoTypes])->render();
+        return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
     /**
@@ -56,8 +56,8 @@ class PromocodeController extends BaseController
         //     'paid_by' => 'required',
         //     'restriction_types' => 'required'
         // ]);
-        $promocode_restriction = new PromoCodeRestriction();
-        $promocode_restriction->restriction_type = $request->restriction_types;
+        // $promocode_restriction = new PromoCodeRestriction();
+        // $promocode_restriction->restriction_type = $request->restriction_types;
         
         $promocode = new Promocode();
         $promocode->name = $request->name;

@@ -12,6 +12,8 @@ use DB;
 use Illuminate\Support\Facades\Storage;
 use Config;
 use ConvertCurrency;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends BaseController
 {
@@ -40,11 +42,11 @@ class ProfileController extends BaseController
         		->where('user_id', Auth::user()->id)->paginate($paginate);
 
 
-    	if(!empty($wishList->product)){
-    		foreach ($wishList->product as $key => $product) {
-    			if(!empty($wishList->product)){
-		    		foreach ($product->variant as $k => $vari) {
-			            $vari[$k]->multiplier = $clientCurrency->doller_compare;
+    	if(!empty($wishList)){
+    		foreach ($wishList as $key => $prod) {
+    			if(!empty($prod->product->variant)){
+		    		foreach ($prod->product->variant as $k => $vari) {
+			            $vari->multiplier = $clientCurrency->doller_compare;
 			        }
 		    	}
 	        }
@@ -157,6 +159,31 @@ class ProfileController extends BaseController
      */
     public function changePassword(Request $request, $domain = '')
     {
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:6|max:50',
+            'confirm_password' => 'required|same:new_password',
+        ]);
+ 
+        if($validator->fails()){
+            foreach($validator->errors()->toArray() as $error_key => $error_value){
+                $errors['error'] = $error_value[0];
+                return response()->json($errors, 422);
+            }
+        }
+
+        $current_password = Auth::User()->password;           
+        if(!Hash::check($request->current_password, $current_password))
+        {
+            return response()->json(['error' => 'Password did not matched.'], 404);
+        }
+        $user_id = Auth::User()->id;                       
+        $obj_user = User::find(Auth::User()->id);
+        $obj_user->password = Hash::make($request_data['new_password']);
+        $obj_user->save(); 
+        return response()->json([
+            'message' => 'Password updated successfully.',
+        ]);
     }
 
     /**
@@ -167,5 +194,4 @@ class ProfileController extends BaseController
     public function logout(Request $request)
     {
     }
-
 }

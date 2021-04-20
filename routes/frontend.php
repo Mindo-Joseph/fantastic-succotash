@@ -35,7 +35,8 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('user/register','Front\CustomerAuthController@register')->name('customer.register');
 	Route::post('user/forgotPassword','Front\CustomerAuthController@forgotPassword')->name('customer.forgotPass');
 	Route::post('user/resetPassword','Front\CustomerAuthController@resetPassword')->name('customer.resetPass');
-	
+	Route::get('user/resetSuccess','Front\CustomerAuthController@resetSuccess')->name('customer.resetSuccess');
+
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
 	Route::post('primaryData', 'Front\UserhomeController@changePrimaryData')->name('changePrimaryData');
 	Route::post('paginateValue', 'Front\UserhomeController@changePaginate')->name('changePaginate');
@@ -66,9 +67,7 @@ Route::group(['middleware' => ['domain']], function () {
 
 
 });
-
-Route::group([
-		'middleware' => ['domain', 'webAuth']
+div
     ], function() {
         Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
 		Route::get('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInfromation');
@@ -82,6 +81,7 @@ Route::group([
 		Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
 		Route::get('user/changePassword', 'Front\ProfileController@changePassword')->name('user.changePassword');
 		Route::get('user/logout', 'Front\ProfileController@logout')->name('user.logout');
-        Route::get('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
+        Route::post('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
+        Route::post('verifTokenProcess', 'Front\UserController@verifyToken')->name('user.verifyToken');
 
     });

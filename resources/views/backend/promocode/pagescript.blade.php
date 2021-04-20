@@ -48,8 +48,8 @@
         $('.selectpicker').selectpicker();
     }
 
-    $(".openBannerModal").click(function (e) {
-
+    $(".openPromoModal").click(function (e) {
+        alert('af');
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -57,7 +57,7 @@
         });
         e.preventDefault();
 
-        var uri = "{{route('banner.create')}}";
+        var uri = "{{route('promocode.create')}}";
        
         var uid = $(this).attr('userId');
         if(uid > 0){

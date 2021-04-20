@@ -73,39 +73,24 @@ class FrontController extends Controller
         return $products;
     }
 
-    public function setMailDetail($client)
+    public function setMailDetail($mail_driver, $mail_host, $mail_port, $mail_username, $mail_password, $mail_encryption)
     {
-        $mail = ClientPreference::where('client_id',$client->id)->first();
+        $config = array(
+            'driver' => $mail_driver,
+            'host' => $mail_host,
+            'port' => $mail_port,
+            'encryption' => $mail_encryption,
+            'username' => $mail_username,
+            'password' => $mail_password,
+            'sendmail' => '/usr/sbin/sendmail -bs',
+            'pretend' => false,
+        );
 
-        if(isset($mail)){
-
-            // $config = array(
-            //     'driver' => $mail->driver,
-            //     'host' => $mail->host,
-            //     'port' => $mail->port,
-            //     'encryption' => $mail->encryption,
-            //     'username' => $mail->username,
-            //     'password' => $mail->password,
-            //     'sendmail' => '/usr/sbin/sendmail -bs',
-            //     'pretend' => false,
-            // );
-
-            $config = array(
-                'driver' => 'smtp',
-                'host' => 'smtp.mailtrap.io',
-                'port' => '2525',
-                'encryption' => 'tls',
-                'username' => 'd62be4fa52c2e7',
-                'password' => '7daec137d2b13d',
-                'sendmail' => '/usr/sbin/sendmail -bs',
-                'pretend' => false,
-            );
-
-            Config::set('mail', $config);
-            $app = App::getInstance();
-            $app->register('Illuminate\Mail\MailServiceProvider');
-            return '1';
-        }
-        return '2';
+        Config::set('mail', $config);
+        $app = App::getInstance();
+        $app->register('Illuminate\Mail\MailServiceProvider');
+        return '1';
+        
+       // return '2';
     }
 }

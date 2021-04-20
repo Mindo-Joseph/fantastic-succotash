@@ -248,7 +248,7 @@ class AuthController extends BaseController
 
             if(!empty($prefer->mail_driver) && !empty($prefer->mail_host) && !empty($prefer->mail_port) && !empty($prefer->mail_port) && !empty($prefer->mail_password) && !empty($prefer->mail_encryption)){
 
-                $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
+                $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
 
                 $confirured = $this->setMailDetail($prefer->mail_driver, $prefer->mail_host, $prefer->mail_port, $prefer->mail_username, $prefer->mail_password, $prefer->mail_encryption);
 
@@ -260,7 +260,7 @@ class AuthController extends BaseController
                             'customer_name' => ucwords($signReq->name),
                             'code_text' => 'Enter below code to verify yoour account',
                             'code' => 'qweqwewqe',
-                            'logo' => 'Enter below code to verify yoour account',
+                            'logo' => $client->logo['original'],
                             'link'=>"link"
                         ],
                         function ($message) use($sendto, $client_name, $mail_from) {
@@ -301,11 +301,10 @@ class AuthController extends BaseController
         }
         $user = $user->first();
         if(!$user){
-            $errors['user'] = 'User not found';
-            return response()->json(['errors' => $errors], 404);
+            return response()->json(['error' => 'User not found'], 404);
         }
     }
-
+//$errors
     /**
      * Display a listing of the resource.
      *
@@ -315,14 +314,14 @@ class AuthController extends BaseController
     {
         $user = User::where('id', Auth::user()->id)->first();
         if(!$user){
-            return response()->json(['errors' => 'User not found.'], 404);
+            return response()->json(['error' => 'User not found.'], 404);
         }
 
         if($user->is_email_verified == 1 && $user->is_phone_verified == 1){
             return response()->json(['message' => 'Account already verified.'], 200); 
         }
 
-        $client = Client::select('id', 'name', 'email', 'phone_number')->where('id', '>', 0)->first();
+        $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
         $data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from','mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
 
         $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
@@ -343,7 +342,6 @@ class AuthController extends BaseController
             }
         }
 
-        
         if($user->is_email_verified == 0){
 
             $otp = mt_rand(100000, 999999);
@@ -361,7 +359,7 @@ class AuthController extends BaseController
                             'customer_name' => ucwords($user->name),
                             'code_text' => 'Enter below code to verify yoour account',
                             'code' => $otp,
-                            'logo' => 'Enter below code to verify yoour account',
+                            'logo' => $client->logo['original'],
                             'link'=>"link"
                         ],
                         function ($message) use($sendto, $client_name, $mail_from) {
@@ -378,7 +376,7 @@ class AuthController extends BaseController
             }            
         }
         $user->save();
-        if($notified = 1){
+        if($notified == 1){
             return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 200); 
         }else{
             return response()->json(['success' => 'Provider service is not configured. Please contact administration.'], 404); 
@@ -394,18 +392,23 @@ class AuthController extends BaseController
     {
         $user = User::where('id', Auth::user()->id)->first();
         if(!$user || !$request->has('type')){
-            return response()->json(['errors' => 'User not found.'], 404);
+            return response()->json(['error' => 'User not found.'], 404);
         }
         $currentTime = \Carbon\Carbon::now()->toDateTimeString();
+
+        $message = 'Account verified successfully.';
+        if($request->has('is_forget_password') && $request->is_forget_password == 1){
+            $message = 'OTP matched successfully.';
+        }
 
         if($request->type == 'phone'){
 
             if($user->phone_token != $request->otp){
-                return response()->json(['errors' => 'OTP is not valid'], 404);
+                return response()->json(['error' => 'OTP is not valid'], 404);
             }
 
             if($currentTime > $user->phone_token_valid_till){
-                return response()->json(['errors' => 'OTP has been expired.'], 404);
+                return response()->json(['error' => 'OTP has been expired.'], 404);
             }
             $user->phone_token = NULL;
             $user->phone_token_valid_till = NULL;
@@ -415,11 +418,11 @@ class AuthController extends BaseController
         if($request->type == 'email'){
 
             if($user->email_token != $request->otp){
-                return response()->json(['errors' => 'OTP is not valid'], 404);
+                return response()->json(['error' => 'OTP is not valid'], 404);
             }
 
             if($currentTime > $user->email_token_valid_till){
-                return response()->json(['errors' => 'OTP has been expired.'], 404);
+                return response()->json(['error' => 'OTP has been expired.'], 404);
             }
             $user->email_token = NULL;
             $user->email_token_valid_till = NULL;
@@ -427,8 +430,8 @@ class AuthController extends BaseController
         }
         $user->save();
         return response()->json([
-            'message' => 'Account verified successfully.',
-            'data' => array('verified' => True)
+            'message' => $message,
+            'data' => array('Success' => True)
         ]);
     }
 
@@ -455,101 +458,107 @@ class AuthController extends BaseController
      */
     public function validateEmail(Request $request)
     {
-        if(!Auth::attempt(['email' => request('email')])){ 
-            return response()->json(['email' => 'Invalid email'], 422);
-        }
+        // if(!Auth::attempt(['email' => request('email')])){ 
+        //     return response()->json(['email' => 'Invalid email'], 422);
+        // }
     }
 
     public function forgotPassword(Request $request)
     {
-
-        $input = $request->all();
-        $rules = array(
-            'email' => "required|email",
-        );
-        $validator = Validator::make($input, $rules);
-        if ($validator->fails()) {
-            $arr = array("status" => 400, "message" => $validator->errors()->first(), "data" => array());
-        }
-
-        $set_token = substr(md5(microtime()), 0, 30);
-
-        /*\DB::table('password_resets')->insert([
-            'email' => $request->email,
-            'token' => $set_token,
-            'created_at' => Carbon::now()
-        ]);*/
-        $user = User::where('email', $request->email)->first();
-        if(!$user){
-            $errors['errors']['email'] = 'Invalid email';
-            return response()->json($errors, 422);
-        }
-        $arr['email'] = $request->email;
-        try {
-
-            $send = $user->sendPasswordResetNotification($set_token);
-            
-            return response()->json([
-                'message' => 'Password reset link has been sent to your registered email',
-                'data' => $arr
-            ]);
-
-            //$notify = Mail::to($request->only('email'))->send(new PasswordReset($request->email, $set_token));
-            //$notify = $user->notify(new PasswordReset($request->only('email')));
-
-            //Mail::mailer('postmark')->to($request->only('email'))->send(new PasswordReset($request->only('email')));
-            /*$response = Password::sendResetLink($request->only('email'), function (Message $message) {
-                $message->subject('Reset passowrd email.');*/
-            //});
-           /* switch ($response) {
-                case Password::RESET_LINK_SENT:
-                    return \Response::json(array("status" => 200, "message" => trans($response), "data" => array()));
-                case Password::INVALID_USER:
-                    return \Response::json(array("status" => 400, "message" => trans($response), "data" => array()));
-            }*/
-        } catch (\Swift_TransportException $ex) {
-            $arr = array("status" => 400, "message" => $ex->getMessage(), "data" => []);
-        } catch (Exception $ex) {
-            $arr = array("status" => 400, "message" => $ex->getMessage(), "data" => []);
-        }
-
-        return response()->json([
-            'data' => $arr
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|max:50'
         ]);
-    }
-
-
-    public function change_password(Request $request)
-    {
-        $input = $request->all();
-        $userid = Auth::guard('api')->user()->id;
-        $rules = array(
-            'old_password' => 'required',
-            'new_password' => 'required|min:6',
-            'confirm_password' => 'required|same:new_password',
-        );
-        $validator = Validator::make($input, $rules);
-        if ($validator->fails()) {
-            $arr = array("status" => 400, "message" => $validator->errors()->first(), "data" => array());
-        } else {
-            try {
-                if ((Hash::check(request('old_password'), Auth::user()->password)) == false) {
-                    $arr = array("status" => 400, "message" => "Check your old password.", "data" => array());
-                } else if ((Hash::check(request('new_password'), Auth::user()->password)) == true) {
-                    $arr = array("status" => 400, "message" => "Please enter a password which is not similar then current password.", "data" => array());
-                } else {
-                    User::where('id', $userid)->update(['password' => Hash::make($input['new_password'])]);
-                    $arr = array("status" => 200, "message" => "Password updated successfully.", "data" => array());
-                }
-            } catch (\Exception $ex) {
-                if (isset($ex->errorInfo[2])) {
-                    $msg = $ex->errorInfo[2];
-                } else {
-                    $msg = $ex->getMessage();
-                }
-                $arr = array("status" => 400, "message" => $msg, "data" => array());
+ 
+        if($validator->fails()){
+            foreach($validator->errors()->toArray() as $error_key => $error_value){
+                $errors['error'] = $error_value[0];
+                return response()->json($errors, 422);
             }
         }
-        return \Response::json($arr);
+        $user = User::where('email', $request->email)->first();
+        if(!$user){
+            return response()->json(['error' => 'Invalid email'], 404);
+        }
+        $notified = 1;
+
+        $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
+        $data = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
+       
+        $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
+        $otp = mt_rand(100000, 999999);
+        $user->email_token = $otp;
+        $user->email_token_valid_till = $newDateTime;
+        if(!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)){
+
+            $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+
+            $client_name = $client->name;
+            $mail_from = $data->mail_from;
+            $sendto = $user->email;
+            try{
+                Mail::send('email.verify',[
+                        'customer_name' => ucwords($user->name),
+                        'code_text' => 'We have gotton a forget password request from your account. Please enter below otp of verify that it is you.',
+                        'code' => $otp,
+                        'logo' => $client->logo['original'],
+                        'link'=>"link"
+                    ],
+                    function ($message) use($sendto, $client_name, $mail_from) {
+                    $message->from($mail_from, $client_name);
+                    $message->to($sendto)->subject('OTP to verify account');
+                });
+                $notified = 1;
+            }
+            catch(\Exception $e){
+                $user->save();
+                //return response()->json(['errors' => $e->getMessage()], 404);
+                //return response()->json(['errors' => 'Mail server is not configured. Please contact admin.'], 404);
+            }
+        }
+
+        $user->save();
+        if($notified == 1){
+            return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 200);
+        } 
+    }
+
+    /**
+     * reset password.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function resetPassword(Request $request, $domain = '')
+    {
+        $validator = Validator::make($signReq->all(), [
+            'email' => 'required|string',
+            'otp' => 'required|string|min:6|max:50',
+            'new_password' => 'required|string|min:6|max:50',
+            'confirm_password' => 'required|same:new_password',
+        ]);
+ 
+        if($validator->fails()){
+            foreach($validator->errors()->toArray() as $error_key => $error_value){
+                $errors['error'] = $error_value[0];
+                return response()->json($errors, 422);
+            }
+        }
+        $user = User::where('email', $request->email)->first();
+        if(!$user)
+        {
+            return response()->json(['error' => 'User not found.'], 404);
+        }
+        if($user->email_token != $request->otp){
+            return response()->json(['error' => 'OTP is not valid'], 404);
+        }
+        $currentTime = \Carbon\Carbon::now()->toDateTimeString();
+        if($currentTime > $user->phone_token_valid_till){
+            return response()->json(['error' => 'OTP has been expired.'], 404);
+        }
+        
+        $user->password = Hash::make($request['new_password']);
+        $user->save(); 
+        return response()->json([
+            'message' => 'Password updated successfully.',
+        ]);
     }
 }
