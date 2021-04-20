@@ -13,15 +13,15 @@ Route::group([
         Route::post('get-products', 'Api\v1\ProductController@productList');
 
 
-        Route::get('category/{id?}', 'Api\v1\ProductController@categoryData');
-        Route::get('category/filters/{id?}', 'Api\v1\ProductController@categoryFilter');
+        Route::get('category/{id?}', 'Api\v1\CategoryController@categoryData');
+        Route::post('category/filters/{id?}', 'Api\v1\CategoryController@categoryFilters');
         
 
         Route::get('brand/{id?}', 'Api\v1\BrandController@productsByBrand');
-        Route::get('brand/filters/{id?}', 'Api\v1\BrandController@brandFilter');
+        Route::post('brand/filters/{id?}', 'Api\v1\BrandController@brandFilters');
 
         Route::get('vendor/{id?}', 'Api\v1\VendorController@productsByVendor');
-        Route::get('vendor/filters/{id?}', 'Api\v1\VendorController@vendorFilter');
+        Route::post('vendor/filters/{id?}', 'Api\v1\VendorController@vendorFilters');
         
         
     });
