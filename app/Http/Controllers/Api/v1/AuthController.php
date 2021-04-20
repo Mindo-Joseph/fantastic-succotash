@@ -320,6 +320,7 @@ class AuthController extends BaseController
         if($user->is_email_verified == 1 && $user->is_phone_verified == 1){
             return response()->json(['message' => 'Account already verified.'], 200); 
         }
+        $notified = 1;
 
         $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
         $data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from','mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
