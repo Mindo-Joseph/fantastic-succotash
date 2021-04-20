@@ -224,7 +224,7 @@
                                         <div class="qty-box">
                                             <div class="input-group">
                                                 <span class="input-group-prepend"><button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i></button> </span>
-                                                <input type="text" name="quantity" class="form-control input-number" value="1">
+                                                <input type="text" name="quantity" class="form-control input-number quantity_count" value="1">
                                                 <span class="input-group-prepend"><button type="button" class="btn quantity-right-plus" data-type="plus" data-field=""><i class="ti-angle-right"></i></button></span>
                                             </div>
                                         </div>
@@ -255,7 +255,7 @@
                                     @endif
 
                                     <div class="product-buttons"><a href="#" data-toggle="modal"
-                                            data-target="#addtocart" class="btn btn-solid">add to cart</a> <a
+                                            data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a> <a
                                             href="#" class="btn btn-solid">buy now</a></div>
                                     <div class="border-product">
                                         <h6 class="product-title">product details</h6>
@@ -640,7 +640,7 @@
             success: function(response) {
                 var res = response.result;
                 //console.log(res);
-                //console.log(res.id);
+                console.log(res.id);
                 $('#prod_variant_id').val(res.id);
                 $('#productPriceValue').html(res.productPrice);
             },
@@ -650,6 +650,34 @@
         });
     });
 
+</script>
+
+<script>
+    $('.addToCart').click(function() {
+        addToCart();
+    });
+
+    function addToCart() {
+        console.log($('.quantity_count').val());
+        ajaxCall = $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ route('addToCart') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "product_id": "{{$product->id}}",
+                "variant_id": $('#prod_variant_id').val(),
+                "quantity": $('.quantity_count').val(),
+            },
+            success: function(response) {
+                console.log(response);
+                // $(".otp-section").attr("style", "display:block")
+            },
+            error: function(data) {
+
+            },
+        });
+    }
 </script>
 
 @endsection
