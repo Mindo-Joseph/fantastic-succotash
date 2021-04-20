@@ -41,8 +41,7 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right openPromoModal"
-                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add </button>
+                            <button class="btn btn-blue waves-effect waves-light text-sm-right openPromoModal" userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add </button>
                         </div>
                     </div>
 
@@ -66,7 +65,7 @@
                             <tbody id="post_list">
                                 @foreach($promocodes as $promo)
 
-                                <tr data-row-id="{{$ban->id}}">
+                                <tr data-row-id="">
                                     <td class="draggableTd"><span class="dragula-handle"></span></td>
                                     <td>{{$promo->name}}</td>
                                     <td>{{$promo->name}}</td>
@@ -76,17 +75,15 @@
                                     <td>{{$promo->name}}</td>
                                     <td>{{$promo->name}}</td>
                                     <td>{{$promo->name}}</td>
-
-
                                     <td>
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
-                                                <a class="action-icon openBannerModal" userId="{{$ban->id}}" href="#">
+                                                <a class="action-icon openBannerModal" userId="" href="#">
                                                     <h3> <i class="mdi mdi-square-edit-outline"></i></h3>
                                                 </a>
                                             </div>
                                             <div class="inner-div">
-                                                <form method="POST" action="{{ route('banner.destroy', $ban->id) }}">
+                                                <form method="POST" action="">
                                                     @csrf
                                                     @method('DELETE')
                                                     <div class="form-group">
@@ -157,7 +154,6 @@
     //     });
     // }
 </script>
-
 
 @include('backend.promocode.pagescript')
 

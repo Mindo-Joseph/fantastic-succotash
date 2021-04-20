@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Promocode, Vendor, PromocodeUser, PromocodeProduct, PromocodeRestriction};
+use App\Models\{Promocode, PromoTypes, Vendor, PromocodeUser, PromocodeProduct, PromocodeRestriction};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class PromocodeController extends BaseController
 {
@@ -17,7 +18,7 @@ class PromocodeController extends BaseController
     public function index()
     {
         $promocodes = Promocode::all();
-        $promoTypes = \DB::table('promo_types')->where('status', 1)->get();
+        $promoTypes = PromoTypes::where('status', 1)->get();
         return view('backend/promocode/index')->with(['promocodes' => $promocodes, 'promoTypes' => $promoTypes]);
     }
 
@@ -28,10 +29,10 @@ class PromocodeController extends BaseController
      */
     public function create()
     {
-        $promoTypes = \DB::table('promo_types')->where('status', 1)->get();
+        $promoTypes = PromoTypes::where('status', 1)->get();
         $promocode = new Promocode();
         $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode,  'promoTypes' => $promoTypes])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML));
+        return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
     /**
@@ -42,38 +43,24 @@ class PromocodeController extends BaseController
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'name' => 'required',
-        //     'types' => 'required',
-        //     'amount' => 'required',
-        //     'expiry_date' => 'required',
-        //     'free_delivery' => 'required',
-        //     'first_order' => 'required',
-        //     'minimum_amount' => 'required',
-        //     'maximum_amount' => 'required',
-        //     'limit_per_user' => 'required',
-        //     'total_limit' => 'required',
-        //     'paid_by' => 'required',
-        //     'restriction_types' => 'required'
-        // ]);
-        $promocode_restriction = new PromoCodeRestriction();
-        $promocode_restriction->restriction_type = $request->restriction_types;
-        
-        $promocode = new Promocode();
-        $promocode->name = $request->name;
-        $promocode->type = $request->types;
-        $promocode->amount = $request->amount;
-        $promocode->expiry_date = $request->expiry_date;
-        $promocode->allow_free_delivery = ($request->has('free_delivery') && $request->free_delivery == 'on') ? 1 : 0;
-        $promocode->first_order_only = ($request->has('first_order') && $request->first_order == 'on') ? 1 : 0;
-        $promocode->minimum_spend = $request->minimum_amount;
-        $promocode->maximum_spend = $request->maximum_amount;
-        $promocode->limit_per_user = $request->limit_per_user;
-        $promocode->limit_total = $request->total_limit;
-        $promocode->Paid_by_vendor_admin = $request->radioInline;
-        $promocode->save();
 
-        $promocode->promocoderestriction()->save($promocode_restriction);
+        $rules = array(
+            'name' => 'required|string|max:150',
+            'amount' => 'required|numeric',
+            'promo_type_id' => 'required',
+            'expity_date' => 'required',
+            'minimum_spend' => 'required|numeric',
+            'maximum_spend' => 'required|numeric',
+            'limit_per_user' => 'required|numeric',
+            'total_limit' => 'required|numeric',
+        );
+        
+      
+
+        $validation  = Validator::make($request->all(), $rules)->validate();
+        $promo_types = new PromoTypes();
+        $promo_types->status = $request->types;
+        Promocode::create($request->all());
         return back()->with('Data_Inserted', 'Data has been Inserted successfully!');
     }
 
@@ -97,9 +84,9 @@ class PromocodeController extends BaseController
     public function edit($id)
     {
         $promocode = Promocode::find($id);
-        $promocode_restriction =PromocodeRestriction::where('promocode_id',$id)->first();
+        $promocode_restriction = PromocodeRestriction::where('promocode_id', $id)->first();
         // dd($promocode_restriction->restriction_type);
-        return view('promocode.edit-promocode', ['promocode'=>$promocode,'restriction_type'=>$promocode_restriction->restriction_type]);
+        return view('promocode.edit-promocode', ['promocode' => $promocode, 'restriction_type' => $promocode_restriction->restriction_type]);
     }
 
     /**
@@ -112,7 +99,7 @@ class PromocodeController extends BaseController
     public function update(Request $request)
     {
         // dd($request->all());
-         // $request->validate([
+        // $request->validate([
         //     'name' => 'required',
         //     'types' => 'required',
         //     'amount' => 'required',
@@ -126,7 +113,7 @@ class PromocodeController extends BaseController
         //     'paid_by' => 'required',
         //     'restriction_types' => 'required'
         // ]);
-        $promocode_restriction =  PromoCodeRestriction::where('promocode_id',$request->id)->first();
+        $promocode_restriction =  PromoCodeRestriction::where('promocode_id', $request->id)->first();
 
         // dd($promocode_restriction);
         $promocode_restriction->restriction_type = $request->restriction_types;

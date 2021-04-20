@@ -28,6 +28,7 @@
         });
     });
 
+    
     $('.openAddModal').click(function(){
         $('#add-form').modal({
             //backdrop: 'static',

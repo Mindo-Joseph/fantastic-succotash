@@ -1,4 +1,4 @@
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -27,7 +27,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <!-- <p class="text-muted mt-3 mb-2">Types</p>
+                                <p class="text-muted mt-3 mb-2">Types</p>
                                 <div class="radio radio-info form-check-inline">
                                     <input type="radio" id="inlineRadio3" value="option3" name="radioInline3" checked>
                                     <label for="inlineRadio3"> Inline One </label>
@@ -39,7 +39,7 @@
                                 <div class="radio form-check-inline">
                                     <input type="radio" id="inlineRadio5" value="option5" name="radioInline5">
                                     <label for="inlineRadio5"> Inline Two </label>
-                                </div> -->
+                                </div>
                                 <p class="font-weight-bold text-muted">Types</p>
                                 <select class="form-control" name="types" data-toggle="select2">
                                     <option>Select</option>
@@ -56,6 +56,13 @@
                                 <label for="example-number">Amount</label>
                                 <input class="form-control" id="example-number" type="number" name="amount" placeholder="Enter total amount">
                                 @error('amount')
+                                <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group mb-3 col-md-6">
+                                <label>Expiry Date</label>
+                                <input type="text" id="humanfd-datepicker" name="expiry_date" class="form-control" placeholder="October 9, 2018">
+                                @error('expiry_date')
                                 <span class="text-danger">{{$message}}</span>
                                 @enderror
                             </div>
@@ -150,7 +157,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!--Modal for create ends here  -->
 
 
@@ -169,7 +176,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-blue waves-effect waves-light submitEditForm">Submit</button>
+                    <button type="button" class="btn btn-blue waves-effect waves-light submitAddForm">Submit</button>
                 </div>
 
             </form>
