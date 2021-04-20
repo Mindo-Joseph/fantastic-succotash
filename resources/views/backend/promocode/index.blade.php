@@ -41,11 +41,11 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-<<<<<<< HEAD
-                            <button id="exampleModalLabel" data-toggle="modal" data-target="#exampleModal" class="btn btn-blue waves-effect waves-light text-sm-right openPromoModal" userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
-=======
+
+                            <!-- <button id="exampleModalLabel" data-toggle="modal" data-target="#exampleModal" class="btn btn-blue waves-effect waves-light text-sm-right openPromoModal" userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add -->
+
                             <button id="openPromoModal" data-toggle="modal" class="btn btn-blue waves-effect waves-light text-sm-right openPromoModal" userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
->>>>>>> 0080c66aa1d94cc92b9c8c0c549ef01f989317fd
+
                             </button>
                         </div>
                     </div>
