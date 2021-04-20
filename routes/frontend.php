@@ -66,7 +66,6 @@ Route::group(['middleware' => ['domain']], function () {
 
 
 });
-
 Route::group(['middleware' => ['domain', 'webAuth']], function() {
         Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
         Route::get('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInfromation');
@@ -83,3 +82,4 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
         Route::get('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
 
 });
+
