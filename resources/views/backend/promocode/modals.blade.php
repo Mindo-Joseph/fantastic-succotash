@@ -9,7 +9,7 @@
             </div>
 
 
-            <div class="modal-body" id="addCardBox">
+            <div class="modal-body" id="addCardBox1">
                 <section>
                     <form action="{{route('promocode.store')}}" method="POST">
                         @csrf
@@ -154,7 +154,7 @@
 <!--Modal for create ends here  -->
 
 
-<div id="add-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div id="add-promo-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -177,7 +177,7 @@
     </div>
 </div>
 
-<div id="edit-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div id="edit--promo-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

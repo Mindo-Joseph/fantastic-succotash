@@ -41,12 +41,8 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-
-                            <!-- <button id="exampleModalLabel" data-toggle="modal" data-target="#exampleModal" class="btn btn-blue waves-effect waves-light text-sm-right openPromoModal" userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add -->
-
-                            <button id="openPromoModal" data-toggle="modal" class="btn btn-blue waves-effect waves-light text-sm-right openPromoModal" userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
-
-                            </button>
+                            <button class="btn btn-blue waves-effect waves-light text-sm-right openPromoModal"
+                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add </button>
                         </div>
                     </div>
 
@@ -123,43 +119,43 @@
 @section('script')
 
 <script type="text/javascript">
-    function assignSortAttach() {
-        $("table").sortable({
-            axis: "y",
-            cursor: "grabbing",
-            handle: ".handle",
-            cancel: "thead",
-            opacity: 0.6,
-            placeholder: "two-place",
-            helper: function(e, item) {
-                if (!item.hasClass("selected")) {
-                    item.addClass("selected");
-                }
-                console.log("Selected: ", $(".selected"));
-                var elements = $(".selected").not(".ui-sortable-placeholder").clone();
-                console.log("Making helper from: ", elements);
-                // Hide selected Elements
-                $(".selected").not(".ui-sortable-placeholder").addClass("hidden");
-                var helper = $("<table />");
-                helper.append(elements);
-                console.log("Helper: ", helper);
-                return helper;
-            },
-            start: function(e, ui) {
-                var elements = $(".selected.hidden").not('.ui-sortable-placeholder');
-                console.log("Start: ", elements);
-                ui.item.data("items", elements);
-            },
-            update: function(e, ui) {
-                console.log("Receiving: ", ui.item.data("items"));
-                ui.item.before(ui.item.data("items")[1], ui.item.data("items")[0]);
-            },
-            stop: function(e, ui) {
-                $('.selected.hidden').not('.ui-sortable-placeholder').removeClass('hidden');
-                $('.selected').removeClass('selected');
-            }
-        });
-    }
+    // function assignSortAttach() {
+    //     $("table").sortable({
+    //         axis: "y",
+    //         cursor: "grabbing",
+    //         handle: ".handle",
+    //         cancel: "thead",
+    //         opacity: 0.6,
+    //         placeholder: "two-place",
+    //         helper: function(e, item) {
+    //             if (!item.hasClass("selected")) {
+    //                 item.addClass("selected");
+    //             }
+    //             console.log("Selected: ", $(".selected"));
+    //             var elements = $(".selected").not(".ui-sortable-placeholder").clone();
+    //             console.log("Making helper from: ", elements);
+    //             // Hide selected Elements
+    //             $(".selected").not(".ui-sortable-placeholder").addClass("hidden");
+    //             var helper = $("<table />");
+    //             helper.append(elements);
+    //             console.log("Helper: ", helper);
+    //             return helper;
+    //         },
+    //         start: function(e, ui) {
+    //             var elements = $(".selected.hidden").not('.ui-sortable-placeholder');
+    //             console.log("Start: ", elements);
+    //             ui.item.data("items", elements);
+    //         },
+    //         update: function(e, ui) {
+    //             console.log("Receiving: ", ui.item.data("items"));
+    //             ui.item.before(ui.item.data("items")[1], ui.item.data("items")[0]);
+    //         },
+    //         stop: function(e, ui) {
+    //             $('.selected.hidden').not('.ui-sortable-placeholder').removeClass('hidden');
+    //             $('.selected').removeClass('selected');
+    //         }
+    //     });
+    // }
 </script>
 
 
