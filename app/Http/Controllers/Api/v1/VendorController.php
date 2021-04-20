@@ -86,7 +86,7 @@ class VendorController extends BaseController
      */
     public function vendorFilters(Request $request, $domain = '', $vid = 0)
     {
-        if($cid == 0 || $cid < 0){
+        if($vid == 0 || $vid < 0){
             return response()->json(['error' => 'No record found.'], 404);
         }
         $langId = Auth::user()->language;
