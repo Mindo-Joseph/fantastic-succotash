@@ -43,9 +43,9 @@ class VendorController extends BaseController
                     ->join('variant_translations as vt','vt.variant_id','vr.id')
                     ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
                     ->where('vt.language_id', $langId)
-                    ->whereIn('product_variant_sets.product_id', function($qry) use($cid){ 
-                        $qry->select('product_id')->from('product_categories')
-                            ->where('category_id', $cid);
+                    ->whereIn('product_id', function($qry) use($vid){ 
+                        $qry->select('id')->from('products')
+                            ->where('vendor_id', $vid);
                         })
                     ->groupBy('product_variant_sets.variant_type_id')->get();
 
@@ -84,7 +84,7 @@ class VendorController extends BaseController
      * Product filters on category Page
      * @return \Illuminate\Http\Response
      */
-    public function vendorFilters(Request $request, $domain = '', $vid = 0)
+    public function vendorFilters(Request $request, $vid = 0)
     {
         if($vid == 0 || $vid < 0){
             return response()->json(['error' => 'No record found.'], 404);
@@ -137,14 +137,12 @@ class VendorController extends BaseController
             }
         }
         $order_type = $request->has('order_type') ? $request->order_type : '';
+
         $products = Product::with(['media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
                         'variant' => function($q) use($langId, $variantIds){
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
-                            if(!empty($variantIds)){
-                                $q->whereIn('id', $variantIds);
-                            }
                             if(!empty($variantIds)){
                                 $q->whereIn('id', $variantIds);
                             }
@@ -168,16 +166,16 @@ class VendorController extends BaseController
         if(!empty($productIds)){
             $products = $products->whereIn('id', $productIds);
         }
-        
+
         if($request->has('brands') && !empty($request->brands)){
             $products = $products->whereIn('brand_id', $request->brands);
         }
         if(!empty($order_type) && $request->order_type == 'rating'){
             $products = $products->orderBy('averageRating', 'desc');
         }
-        $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
+        $paginate = $request->has('limit') ? $request->limit : 12;
         
-        $products = $products->paginate($pagiNate);
+        $products = $products->paginate($paginate);
 
         if(!empty($products)){
             foreach ($products as $key => $value) {
