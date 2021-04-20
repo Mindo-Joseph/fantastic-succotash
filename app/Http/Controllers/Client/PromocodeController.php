@@ -30,7 +30,7 @@ class PromocodeController extends BaseController
     {
         $promoTypes = \DB::table('promo_types')->where('status', 1)->get();
         $promocode = new Promocode();
-        $returnHTML = view('backend.promocode.form')->with(['promocode' => $promocode,  'promoTypes' => $promoTypes])->render();
+        $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode,  'promoTypes' => $promoTypes])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 

@@ -1,41 +1,58 @@
 <script>
-    var bannerOn = $('.chk_box');
-
-    $(bannerOn).on("change" , function() {
-        var ban_id = $(this).attr('bid');
-        var chk = $('#cur_' + ban_id + ':checked').length;
-
+    $(".openPromoModal").click(function (e) {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
             }
         });
-        $.ajax({
-            type: "post",
-            dataType: "json",
-            url: "{{ url('client/banner/changeValidity') }}",
-            data: {
-                _token: CSRF_TOKEN,
-                value: chk,
-                banId: ban_id
-            },
-            success: function(response) {
+        e.preventDefault();
 
-                if (response.status == 'success') {
+        var uri = "{{route('promocode.create')}}";
+       
+        var uid = $(this).attr('userId');
+        if(uid > 0){
+            uri = "<?php echo url('client/promocode'); ?>" + '/' + uid + '/edit';
+        }
+
+        $.ajax({
+            type: "get",
+            url: uri,
+            data: '',
+            dataType: 'json',
+            success: function (data) {
+                if(uid > 0){
+                    $('#add-promo-form #editCardBox').html(data.html);
+                    $('#add-promo-form').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    elems1 = document.getElementsByClassName('switch1Edit');
+                    elems2 = document.getElementsByClassName('switch2Edit');
+                    var switchery = new Switchery(elems1[0]);
+                    var switchery = new Switchery(elems2[0]);
+                    
+                }else{
+                    $('#add-promo-form #addCardBox').html(data.html);
+                    $('#add-promo-form').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                    elems1 = document.getElementsByClassName('switch1');
+                    elems2 = document.getElementsByClassName('switch2');
+                    var switchery = new Switchery(elems1[0]);
+                    var switchery = new Switchery(elems2[0]);
+                    
                 }
-                return response;
+
+            },
+            error: function (data) {
+                console.log('data2');
             }
         });
     });
 
-    $('.openAddModal').click(function(){
-        $('#add-form').modal({
-            //backdrop: 'static',
-            keyboard: false
-        });
-        //var now = ;
-        runPicker();
-    });
+    
 
     function runPicker(){
         $('.datetime-datepicker').flatpickr({
@@ -48,63 +65,7 @@
         $('.selectpicker').selectpicker();
     }
 
-    $(".openPromoModal").click(function (e) {
-        alert('af');
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        e.preventDefault();
 
-        var uri = "{{route('promocode.create')}}";
-       
-        var uid = $(this).attr('userId');
-        if(uid > 0){
-            uri = "<?php echo url('client/banner'); ?>" + '/' + uid + '/edit';
-
-        }
-
-        $.ajax({
-            type: "get",
-            url: uri,
-            data: '',
-            dataType: 'json',
-            success: function (data) {
-                if(uid > 0){
-                    $('#edit-form #editCardBox').html(data.html);
-                    $('#edit-form').modal({
-                        backdrop: 'static',
-                        keyboard: false
-                    });
-                    
-                }else{
-                    $('#add-form #AddCardBox').html(data.html);
-                    $('#add-form').modal({
-                        backdrop: 'static',
-                        keyboard: false
-                    });
-                    
-                }
-                var now = new Date();
-                runPicker();
-                $('.dropify').dropify();
-                $('.selectize-select').selectize();
-                elem1 = document.getElementsByClassName('validity_add');
-                if(elem1.length > 0){
-                    var switchery = new Switchery(elem1[0]);
-                }
-                elem2 = document.getElementsByClassName('validity_edit');
-                if(elem2.length > 0){
-                    var switchery = new Switchery(elem2[0]);
-                }
-
-            },
-            error: function (data) {
-                console.log('data2');
-            }
-        });
-    });
 
     $(document).on('change', '.assignToSelect', function(){
         var val = $(this).val();
@@ -225,25 +186,6 @@
         });
     }
 
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
     $("#user-modal #add_user").submit(function(e) {
             e.preventDefault();
     });
@@ -267,19 +209,5 @@
         saveCustomer(urls, formData, inp = 'Edit', modal = 'edit-user-modal');
         console.log(urls);
     });
-
-    
-
-    
+  
 </script>
-
-<link href="{{asset('assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
-
-@section('script')
-    <!-- Plugins js-->
-    
-    <script src="{{asset('assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
-
-    <!-- Page js-->
-    <script src="{{asset('assets/js/pages/form-pickers.init.js')}}"></script>
-@endsection

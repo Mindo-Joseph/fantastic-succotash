@@ -111,7 +111,6 @@ class ProductController extends FrontController
                     }
                 }
                 $pv_ids = $newIds;
-               
             }
         }
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
@@ -125,5 +124,4 @@ class ProductController extends FrontController
         return response()->json(array('error' => true, 'result' => NULL));
     }
 
-    
 }
