@@ -42,6 +42,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('/product/{id}','Front\ProductController@index')->name('productDetail');
 	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
 	Route::post('/product/cart','Front\ProductController@addToCart')->name('addToCart');
+	Route::get('cartProducts','Front\ProductController@getCartProducts')->name('getCartProducts');
 	
 
 	Route::get('category/{id?}', 'Front\CategoryController@categoryProduct')->name('categoryDetail');

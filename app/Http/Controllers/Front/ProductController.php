@@ -124,7 +124,6 @@ class ProductController extends FrontController
         return response()->json(array('error' => true, 'result' => NULL));
     }
 
-<<<<<<< HEAD
     private function randomString()
     {
         $random_string = substr(md5(microtime()), 0, 32);
@@ -220,7 +219,30 @@ class ProductController extends FrontController
         }
         // dd($request->all());
     }
+
+     /**
+     * get products from cart
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getCartProducts($domain = '')
+    {
+        if (Auth::user()) {
+            return response()->json("aagya main!");
+        }
+        else{
+            if (!isset($_COOKIE["uuid"])) {
+                return response()->json("uuid not aagya main!");
+            }
+            else{
+                $val = $_COOKIE["uuid"];
+                $cart = Cart::where('unique_identifier', $val)->first();
+                $cartproducts = $cart->cartProducts()->get();
+                return response()->json($cartproducts);
+            }
+            
+        }
+        
+    }
 }
-=======
-}
->>>>>>> 5d1e7d88431230c8f08019a9e197d9cc36873fd1
+
