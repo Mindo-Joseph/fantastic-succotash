@@ -145,208 +145,6 @@ class ProductController extends BaseController
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function storeOld(Request $request)
-    {
-        //dd($request->all());
-        $rule = array(
-            'sku' => 'required|unique:products',
-        );
-
-        $validation  = Validator::make($request->all(), $rule);
-
-        if ($validation->fails()) {
-            return redirect()->back()->withInput()->withErrors($validation);
-        }
-
-        $yes = '2';
-
-        $product = new Product();
-        foreach ($request->only('sku', 'is_live', 'url_slug', 'vendor_id', 'type_id', 'country_origin_id', 'weight', 'weight_unit') as $key => $value) {
-            $product->{$key} = $value;
-        }
-        $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
-        $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;
-        $product->is_physical               = ($request->has('is_physical') && $request->is_physical == 'on') ? 1 : 0;
-        $product->has_inventory             = ($request->has('has_inventory') && $request->has_inventory == 'on') ? 1 : 0;
-        $product->sell_when_out_of_stock    = ($request->has('sell_stock_out') && $request->sell_stock_out == 'on') ? 1 : 0;
-        $product->requires_shipping         = ($request->has('require_ship') && $request->require_ship == 'on') ? 1 : 0;
-        $product->Requires_last_mile        = ($request->has('last_mile') && $request->last_mile == 'on') ? 1 : 0;
-
-       
-        $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
-        $product->category_id = ($request->has('category') && count($request->category) > 0) ? $request->category[0] : '';
-
-        $product->save();
-
-        if($product->id > 0){
-            $updateImage = array();            
-
-            if($request->has('fileIds')){
-                $image = ProductImage::whereIn('id', $request->fileIds)->update(['product_id' => $product->id]);
-            }
-
-            $cat = $addonsArray = $upArray = $crossArray = $relateArray = array();
-
-            if($request->has('category') && count($request->category) > 0){
-                foreach ($request->category as $key => $value) {
-                    $cat[] = [
-                        'product_id' => $product->id,
-                        'Category_id' => $value
-                    ];
-                }
-                ProductCategory::insert($cat);
-            }
-
-            if($request->has('addon_sets') && count($request->addon_sets) > 0){
-                foreach ($request->addon_sets as $key => $value) {
-                    $addonsArray[] = [
-                        'product_id' => $product->id,
-                        'addon_id' => $value
-                    ];
-                }
-                ProductAddon::insert($addonsArray);
-            }
-
-            if($request->has('up_cell') && count($request->up_cell) > 0 && $yes == '1'){
-                foreach ($request->up_cell as $key => $value) {
-                    $upArray[] = [
-                        'product_id' => $product->id,
-                        'upsell_product_id' => $value
-                    ];
-                }
-                ProductUpSell::insert($upArray);
-            }
-
-            if($request->has('cross_cell') && count($request->cross_cell) > 0 && $yes == '1'){
-                foreach ($request->cross_cell as $key => $value) {
-                    $crossArray[] = [
-                        'product_id' => $product->id,
-                        'cross_product_id' => $value
-                    ];
-                }
-                ProductCrossSell::insert($crossArray);
-            }
-
-            if($request->has('releted_product') && count($request->releted_product) > 0 && $yes == '1'){
-                foreach ($request->releted_product as $key => $value) {
-                    $relateArray[] = [
-                        'product_id' => $product->id,
-                        'related_product_id' => $value
-                    ];
-                }
-                ProductRelated::insert($relateArray);
-            }
-            $prodVarSet = array();
-            $i = 0;
-
-            $varOptArray = array();
-
-
-            if($request->has('variant_skus') && !empty($request->variant_skus)){
-                $varOpts = explode(';', $request->all_variant_set);
-                if(count($varOpts) > 0){
-                    foreach ($varOpts as $varOpt) { //1=>1,2,3
-                        $ops = explode('=>', $varOpt);
-                        $varOptArray[$ops[0]] = explode(',' ,$ops[1]);
-                    }
-                }
-
-                foreach ($request->variant_skus as $key => $value) {
-                    $proVariant = new ProductVariant();
-                    $proVariant->sku = $value.'-'.$product->id;
-                    $proVariant->product_id = $product->id;
-                    $proVariant->title = $request->variant_titles[$key];
-                    $proVariant->quantity = $request->variant_quantity[$key];
-                    $proVariant->price = $request->variant_price[$key];
-                    $proVariant->position = 1;
-                    $proVariant->compare_at_price = $request->variant_compare_price[$key];
-                    $proVariant->barcode = $this->generateBarcodeNumber();
-                    $proVariant->cost_price = $request->variant_cost_price[$key];
-                    $proVariant->currency_id = 1;
-                    $proVariant->tax_category_id = $request->tax_category;
-                    $proVariant->inventory_policy = '';
-                    $proVariant->fulfillment_service = '';
-                    $proVariant->inventory_management = '';
-                    $proVariant->save();
-
-                    $img = ''; $fname = 'variantImage-'.$key;
-                    if($request->has($fname) && !empty($request->{$fname})){
-                        $image = new ProductImage();
-                        $image->media_type = 1;
-                        $file = $request->file($fname);
-                        $image->product_id = $product->id;
-                        //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-                        //$image->path = $request->file($fname)->storeAs('/product', $file_name, 'public');
-                        $image->path = Storage::disk('s3')->put($this->folderName, $file,'public');
-                        $image->save();
-                        $img = $image->id;
-
-                    }
-                    foreach ($request->variant[$key] as $k => $v) {
-
-                        $prodVarSet[$i] = [
-                            'product_id' => $product->id,
-                            'product_variant_id' => $proVariant->id,
-                            'variant_option_id' => $v,
-                        ];
-
-                        foreach ($varOptArray as $key => $value) {
-
-                            if(in_array($v, $value)){
-                                $prodVarSet[$i]['variant_type_id'] = $key;
-                            }
-
-                        }
-                        
-                        if(!empty($img)){
-                            $prodVarSet[$i]['media_id'] = $img;
-                        }
-                        $i++;
-                    } 
-                }
-
-                ProductVariantSet::insert($prodVarSet);
-
-            }else{
-                $proVariant = new ProductVariant();
-                $proVariant->sku = $request->sku;
-                $proVariant->product_id = $product->id;
-                $proVariant->title = $request->product_name;
-                $proVariant->quantity = $request->quantity;
-                $proVariant->price = $request->price;
-                $proVariant->position = 1;
-                $proVariant->compare_at_price = $request->compare_at_price;
-                $proVariant->barcode = $this->generateBarcodeNumber();
-                $proVariant->cost_price = $request->cost_price;
-                $proVariant->currency_id = 1;
-                $proVariant->tax_category_id = $request->tax_category;
-                $proVariant->inventory_policy = '';
-                $proVariant->fulfillment_service = '';
-                $proVariant->inventory_management = '';
-                $proVariant->save();
-            }
-
-            $datatrans[] = [
-                'title' => $request->product_name,
-                'body_html' => $request->body_html,
-                'meta_title' => $request->meta_title,
-                'meta_keyword' => $request->meta_keyword,
-                'meta_description' => $request->meta_description,
-                'product_id' => $product->id,
-                'language_id' => $request->language_id
-            ];
-            ProductTranslation::insert($datatrans);
-
-        }
-        return redirect()->back()->with('success', 'Product added successfully!');
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  \App\Product  $product
@@ -365,7 +163,7 @@ class ProductController extends BaseController
      */
     public function edit($domain = '', $id)
     {
-        $product = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image')->where('id', $id)->firstOrFail();
+        $product = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related' , 'upSell' , 'crossSell')->where('id', $id)->firstOrFail();
         //dd($product->toArray());
         $type = Type::all();
         $countries = Country::all();
@@ -399,10 +197,20 @@ class ProductController extends BaseController
 
         $taxCate = TaxCategory::all();
 
-        $existOptions = $addOn_ids = array();
+        $related_ids = $upSell_ids = $crossSell_ids = $existOptions = $addOn_ids = array();
 
         foreach ($product->addOn as $key => $value) {
             $addOn_ids[] = $value->addon_id;
+        }
+
+        foreach ($product->related as $key => $value) {
+            $related_ids[] = $value->related_product_id;
+        }
+        foreach ($product->upSell as $key => $value) {
+            $upSell_ids[] = $value->upsell_product_id;
+        }
+        foreach ($product->crossSell as $key => $value) {
+            $crossSell_ids[] = $value->cross_product_id;
         }
 
         foreach ($product->vatoptions as $key => $value) {
@@ -410,8 +218,12 @@ class ProductController extends BaseController
                 $existOptions[] = $value->variant_option_id;
             }
         }
+        $otherProducts = Product::with('primary')->select('id', 'sku')
+                        ->where('is_live', 1)->where('id', '!=', $product->id)->get();
 
-        return view('backend/product/edit', ['typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands]);
+        //dd($otherProducts->toArray());
+
+        return view('backend/product/edit', ['typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, ]);
     }
 
     /**
@@ -429,7 +241,6 @@ class ProductController extends BaseController
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
         }
 
-        $yes = '2'; //'url_slug',
         foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live', 'brand_id') as $k => $val) {
             $product->{$k} = $val;
         }
@@ -497,7 +308,7 @@ class ProductController extends BaseController
                 ProductAddon::insert($addonsArray);
             }
 
-            if($request->has('up_cell') && count($request->up_cell) > 0 && $yes == '1'){
+            if($request->has('up_cell') && count($request->up_cell) > 0){
                 foreach ($request->up_cell as $key => $value) {
                     $upArray[] = [
                         'product_id' => $product->id,
@@ -507,7 +318,7 @@ class ProductController extends BaseController
                 ProductUpSell::insert($upArray);
             }
 
-            if($request->has('cross_cell') && count($request->cross_cell) > 0 && $yes == '1'){
+            if($request->has('cross_cell') && count($request->cross_cell) > 0){
                 foreach ($request->cross_cell as $key => $value) {
                     $crossArray[] = [
                         'product_id' => $product->id,
@@ -517,7 +328,7 @@ class ProductController extends BaseController
                 ProductCrossSell::insert($crossArray);
             }
 
-            if($request->has('releted_product') && count($request->releted_product) > 0 && $yes == '1'){
+            if($request->has('releted_product') && count($request->releted_product) > 0){
                 foreach ($request->releted_product as $key => $value) {
                     $relateArray[] = [
                         'product_id' => $product->id,
@@ -922,9 +733,7 @@ class ProductController extends BaseController
                                     </div>';
                         }
                     }
-
                 }
-
                 return response()->json(['htmlData' => $resp]); 
 
             }else{
@@ -993,4 +802,15 @@ class ProductController extends BaseController
         return response()->json(array('success' => 'false', 'msg' => 'Something went wrong!'));
         
     }
+
+    public function deleteImage(Request $request, $domain = '', $pid = 0, $imgId = 0){
+
+        $product = Product::findOrfail($pid);
+        $img = VendorMedia::findOrfail($imgId);
+
+        $img->delete();
+        return redirect()->back()->with('success', 'Product image deleted successfully!');
+        
+    }
+  
 }

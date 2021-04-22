@@ -374,7 +374,7 @@ class AuthController extends BaseController
                     //return response()->json(['errors' => $e->getMessage()], 404);
                     //return response()->json(['errors' => 'Mail server is not configured. Please contact admin.'], 404);
                 }
-            }            
+            }
         }
         $user->save();
         if($notified == 1){
