@@ -177,9 +177,10 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         $client = Client::where('id', $id)->first();
+        //dd($client->toArray());
         $client->status = $request->action;
         $msg = '';
         if($request->action == 3){
@@ -191,6 +192,16 @@ class ClientController extends Controller
         }
         $client->save();
         return redirect()->back()->with('success', 'Client account ' . $msg . ' successfully!');
+    }
+
+    public function remove($id)
+    {
+        $client = Client::where('id', $id)->first();
+        
+        $cmd =  \DB::statement("DROP DATABASE `royo_".$client->database_name."`");
+       
+        $client->delete();
+        return redirect()->back()->with('success', 'Client account deleted successfully!');
     }
 
     /**

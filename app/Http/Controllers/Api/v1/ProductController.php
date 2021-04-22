@@ -33,7 +33,20 @@ class ProductController extends BaseController
                     'variant' => function($v){
                         $v->select('id', 'sku', 'product_id', 'title', 'quantity','price','barcode','tax_category_id');
                     },
-                    'variant.vimage.pimage.image', 'related', 'upSell', 'crossSell', 'vendor', 'media.image', 'addOn' => function($q1) use($langId){
+                    'variant.vimage.pimage.image', 'vendor', 'media.image', 'related.detail', 'upSell.detail', 'crossSell.detail', 
+                    'related.translation'  => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html');
+                        $q->where('language_id', $langId);
+                    },
+                    'upSell.translation'  => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html');
+                        $q->where('language_id', $langId);
+                    },
+                    'crossSell.translation'  => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html');
+                        $q->where('language_id', $langId);
+                    },
+                    'addOn' => function($q1) use($langId){
                         $q1->join('addon_sets as set', 'set.id', 'product_addons.addon_id');
                         $q1->join('addon_set_translations as ast', 'ast.addon_id', 'set.id');
                         $q1->select('product_addons.product_id', 'set.min_select', 'set.max_select', 'ast.title', 'product_addons.addon_id');
@@ -81,6 +94,11 @@ class ProductController extends BaseController
             }
         }
 
+        dd($products->toArray());
+        $homeData['related'] = $this->metaProducts($langId, Auth::user()->currency, 'related');
+        $homeData['upSell'] = $this->metaProducts($langId, Auth::user()->currency, 'upSell');
+        $homeData['crossSell'] = $this->metaProducts($langId, Auth::user()->currency, 'crossSell');
+
         $response['products'] = $products;
 
         return response()->json([
@@ -88,7 +106,7 @@ class ProductController extends BaseController
         ]);
     }
 
-    public function productList(Request $request)
+    public function metaProducts(Request $request)
     {
         $did = $request->id;
         $langId = Auth::user()->language;
