@@ -131,39 +131,7 @@ echo '<pre>';print_r($currencyList->toArray()); -->
                                 <li class="onhover-div mobile-cart">
                                     <div><img src="{{asset('front-assets/images/icon/cart.png')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-shopping-cart"></i></div>
                                     <ul class="show-div shopping-cart">
-                                        <li>
-                                            <div class="media">
-                                                <a href="#"><img alt="" class="mr-3" src="{{asset('front-assets/images/fashion/product/1.jpg')}}"></a>
-                                                <div class="media-body">
-                                                    <a href="#">
-                                                        <h4>item name</h4>
-                                                    </a>
-                                                    <h4><span>1 x $ 299.00</span></h4>
-                                                </div>
-                                            </div>
-                                            <div class="close-circle"><a href="#"><i class="fa fa-times" aria-hidden="true"></i></a></div>
-                                        </li>
-                                        <li>
-                                            <div class="media">
-                                                <a href="#"><img alt="" class="mr-3" src="{{asset('front-assets/images/fashion/product/2.jpg')}}"></a>
-                                                <div class="media-body">
-                                                    <a href="#">
-                                                        <h4>item name</h4>
-                                                    </a>
-                                                    <h4><span>1 x $ 299.00</span></h4>
-                                                </div>
-                                            </div>
-                                            <div class="close-circle"><a href="#"><i class="fa fa-times" aria-hidden="true"></i></a></div>
-                                        </li>
-                                        <li>
-                                            <div class="total">
-                                                <h5>subtotal : <span>$299.00</span></h5>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="buttons"><a href="cart.html" class="view-cart">view
-                                                    cart</a> <a href="#" class="checkout">checkout</a></div>
-                                        </li>
+                                        <!-- Append Cart Products from Javascript -->
                                     </ul>
                                 </li>
                             </ul>
@@ -188,10 +156,26 @@ echo '<pre>';print_r($currencyList->toArray()); -->
             data: '',
             dataType: 'json',
             success: function(data) {
-                console.log(data);
+                if(data == "null"){
+                    $(".shopping-cart").append("<li><div class='total'><h5>No Products</h5></div></li>");
+                }
+                else{
+                var products = JSON.parse(data.products);
+                var price = JSON.parse(data.price);
+                var images = JSON.parse(data.image);
+                var quantity = JSON.parse(data.quantity);   
+                var total = 0;
+                for (i = 0; i < products.length; i++) {
+                    total += parseInt(price[i]);
+                    $(".shopping-cart").append("<li><div class='media'><a href='#'><img alt='' class='mr-3' src='"+images[i]['0'].pimage.image.path.proxy_url+'200/200'+images[i]['0'].pimage.image.path.image_path+"'></a><div class='media-body'><a href='#'><h4>"+products[i]+"</h4></a><h4><span>"+quantity[i] +" x $" +  price[i]+"</span></h4></div></div><div class='close-circle'><a href='#'><i class='fa fa-times' aria-hidden='true'></i></a></div></li>");
+                }
+
+                $(".shopping-cart").append("<li><div class='total'><h5>subtotal : <span>"+total+"</span></h5></div></li>");
+                $(".shopping-cart").append("<li><div class='buttons'><a href='{{ route('showCart') }}' class='view-cart'>viewcart</a> <a href='#' class='checkout'>checkout</a></div></li>");
+            }
             },
             error: function(data) {
-                console.log('data2');
+                console.log('Error Found : '+data);
             }
         });
     });

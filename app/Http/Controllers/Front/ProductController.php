@@ -151,20 +151,19 @@ class ProductController extends FrontController
 
             $currency = ClientCurrency::where('is_primary', '=', 1)->first();
             $userFind = Cart::where('user_id', $user_id)->first();
-            if(!$userFind){
-            $cart = new Cart;
-            $cart->unique_identifier = Auth::user()->system_id;
-            $cart->user_id = $user_id;
-            $cart->created_by = $user_id;
-            $cart->status = '0';
-            $cart->is_gift = '1';
-            $cart->item_count = '1';
-            $cart->currency_id = $currency->currency->id;
-            $cart->save();
+            if (!$userFind) {
+                $cart = new Cart;
+                $cart->unique_identifier = Auth::user()->system_id;
+                $cart->user_id = $user_id;
+                $cart->created_by = $user_id;
+                $cart->status = '0';
+                $cart->is_gift = '1';
+                $cart->item_count = '1';
+                $cart->currency_id = $currency->currency->id;
+                $cart->save();
 
-            $cartInfo = $cart->id;
-            }
-            else{
+                $cartInfo = $cart->id;
+            } else {
                 $cartInfo = $userFind;
             }
         } else {
@@ -220,29 +219,59 @@ class ProductController extends FrontController
         // dd($request->all());
     }
 
-     /**
+    /**
      * get products from cart
      *
      * @return \Illuminate\Http\Response
      */
     public function getCartProducts($domain = '')
     {
+        $userId = 0;
         if (Auth::user()) {
-            return response()->json("aagya main!");
-        }
-        else{
-            if (!isset($_COOKIE["uuid"])) {
-                return response()->json("uuid not aagya main!");
+            $userId = Auth::user()->id;
+        } elseif (isset($_COOKIE["uuid"])) {
+            $user = User::where('system_id', $_COOKIE["uuid"])->first();
+            if (!$user) {
+                return response()->json("null");
             }
-            else{
-                $val = $_COOKIE["uuid"];
-                $cart = Cart::where('unique_identifier', $val)->first();
-                $cartproducts = $cart->cartProducts()->get();
-                return response()->json($cartproducts);
-            }
-            
+            $userId = $user->id;
+        } else {
+            return response()->json("null");
         }
-        
+
+        $cart = Cart::where('user_id', $userId)->first();
+        $cartproducts = $cart->cartProducts()->get();
+        $products = array();
+        $quantity = array();
+        $price = array();
+        $images = array();
+        foreach ($cartproducts as $carpro) {
+            $pro = Product::find($carpro->product_id);
+            $products[] = $pro->sku;
+            $quantity[] = $carpro->quantity;
+            $products_variant = ProductVariant::with('image.pimage.image')->find($carpro->variant_id);
+            $price[] = $products_variant->price;
+            $images[] = $products_variant->image;
+        }
+
+        return response()->json([
+            'products' => json_encode($products),
+            'quantity' => json_encode($quantity),
+            'price' => json_encode($price),
+            'image' => json_encode($images)
+        ]);
+    }
+
+    /**
+     * Show Main Cart
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showCart($domain = '')
+    {
+        //   dd("fewge");
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+        return view('forntend/cart')->with(['navCategories' => $navCategories]);
     }
 }
-
