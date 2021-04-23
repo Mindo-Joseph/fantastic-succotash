@@ -144,7 +144,11 @@ echo '<pre>';print_r($currencyList->toArray()); -->
 </div>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function(){
+        cartHeader();
+    });
+    function cartHeader(){
+        $(".shopping-cart").html(" ");
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -156,8 +160,8 @@ echo '<pre>';print_r($currencyList->toArray()); -->
             data: '',
             dataType: 'json',
             success: function(data) {
-                if(data == "null"){
-                    $(".shopping-cart").append("<li><div class='total'><h5>No Products</h5></div></li>");
+                if(data.res == "null"){
+                    $(".shopping-cart").html(data.html);
                 }
                 else{
                 var products = JSON.parse(data.products);
@@ -166,11 +170,11 @@ echo '<pre>';print_r($currencyList->toArray()); -->
                 var quantity = JSON.parse(data.quantity);   
                 var total = 0;
                 for (i = 0; i < products.length; i++) {
-                    total += parseInt(price[i]);
+                    total += parseInt(price[i]) * parseInt(quantity[i]);
                     $(".shopping-cart").append("<li><div class='media'><a href='#'><img alt='' class='mr-3' src='"+images[i]['0'].pimage.image.path.proxy_url+'200/200'+images[i]['0'].pimage.image.path.image_path+"'></a><div class='media-body'><a href='#'><h4>"+products[i]+"</h4></a><h4><span>"+quantity[i] +" x $" +  price[i]+"</span></h4></div></div><div class='close-circle'><a href='#'><i class='fa fa-times' aria-hidden='true'></i></a></div></li>");
                 }
 
-                $(".shopping-cart").append("<li><div class='total'><h5>subtotal : <span>"+total+"</span></h5></div></li>");
+                $(".shopping-cart").append("<li><div class='total'><h5>subtotal : <span id='totalCart'>"+total+"</span></h5></div></li>");
                 $(".shopping-cart").append("<li><div class='buttons'><a href='{{ route('showCart') }}' class='view-cart'>viewcart</a> <a href='#' class='checkout'>checkout</a></div></li>");
             }
             },
@@ -178,5 +182,6 @@ echo '<pre>';print_r($currencyList->toArray()); -->
                 console.log('Error Found : '+data);
             }
         });
-    });
+    }
+    
 </script>
