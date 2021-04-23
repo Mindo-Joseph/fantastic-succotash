@@ -33,19 +33,7 @@ class ProductController extends BaseController
                     'variant' => function($v){
                         $v->select('id', 'sku', 'product_id', 'title', 'quantity','price','barcode','tax_category_id');
                     },
-                    'variant.vimage.pimage.image', 'vendor', 'media.image', 'related.detail', 'upSell.detail', 'crossSell.detail', 
-                    'related.translation'  => function($q) use($langId){
-                        $q->select('product_id', 'title', 'body_html');
-                        $q->where('language_id', $langId);
-                    },
-                    'upSell.translation'  => function($q) use($langId){
-                        $q->select('product_id', 'title', 'body_html');
-                        $q->where('language_id', $langId);
-                    },
-                    'crossSell.translation'  => function($q) use($langId){
-                        $q->select('product_id', 'title', 'body_html');
-                        $q->where('language_id', $langId);
-                    },
+                    'variant.vimage.pimage.image', 'vendor', 'media.image', 'related', 'upSell', 'crossSell', 
                     'addOn' => function($q1) use($langId){
                         $q1->join('addon_sets as set', 'set.id', 'product_addons.addon_id');
                         $q1->join('addon_set_translations as ast', 'ast.addon_id', 'set.id');
@@ -77,8 +65,6 @@ class ProductController extends BaseController
                     ->where('id', $pid)
                     ->first();
 
-
-
         if(!$products){
             return response()->json(['error' => 'No record found.'], 404);
         }
@@ -94,11 +80,14 @@ class ProductController extends BaseController
             }
         }
 
-        dd($products->toArray());
-        $homeData['related'] = $this->metaProducts($langId, Auth::user()->currency, 'related');
-        $homeData['upSell'] = $this->metaProducts($langId, Auth::user()->currency, 'upSell');
-        $homeData['crossSell'] = $this->metaProducts($langId, Auth::user()->currency, 'crossSell');
+        $response['products'] = $products;
+        $response['relatedProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'relate', $products->related);
+        $response['upSellProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'upSell', $products->upSell);
+        $response['crossProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'cross', $products->crossSell);
 
+        unset($products->related);
+        unset($products->upSell);
+        unset($products->crossSell);
         $response['products'] = $products;
 
         return response()->json([
@@ -106,58 +95,47 @@ class ProductController extends BaseController
         ]);
     }
 
-    public function metaProducts(Request $request)
+    public function metaProduct($langId, $multiplier, $for = 'relate', $productArray = [])
     {
-        $did = $request->id;
-        $langId = Auth::user()->language;
-        $for = $request->has('for') ? $request->for : 'category';
-
-        $products = Product::with('pimage', 'baseprice')
-                        ->join('product_translations as trans', 'trans.product_id', 'products.id');
-        if($for == 'category'){
-            $products = $products->join('product_categories as pc', 'pc.product_id', 'products.id')
-                        ->where('pc.category_id', $did);
-        }
-        if($for == 'vendor'){
-            $products = $products->where('products.vendor_id', $did);
-        }
-        $products = $products->select('trans.title', 'trans.body_html', 'products.sku', 'products.id')->get();
-
-
-        if(!$products || count($products) < 1){
-            $reps['message'] = 'No record found.';
-            return response()->json(['data' => $reps]);
+        if(empty($productArray)){
+            return $productArray;
         }
 
-        foreach ($products as $key => $value) {
-
-            if(!empty($value->pimage) && count($value->pimage) > 0){
-                $imgs = array();
-                foreach ($value->pimage as $k => $v) {
-                    $products[$key]->image = \Storage::disk('s3')->url($v->path);
-                }
-            }else{
-                $products[$key]->image = \Storage::disk('s3')->url('default/default_image.png');
+        $productIds = array();
+        foreach ($productArray as $key => $value) {
+            if($for == 'relate'){
+                $productIds[] = $value->related_product_id;
             }
+            if($for == 'upSell'){
+                $productIds[] = $value->upsell_product_id;
+            }
+            if($for == 'cross'){
+                $productIds[] = $value->cross_product_id;
+            }
+        }
 
-            unset($products[$key]->pimage);
+        $products = Product::with(['media' => function($q){
+                            $q->groupBy('product_id');
+                        }, 'media.image',
+                        'translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                        },
+                        'variant' => function($q) use($langId){
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->groupBy('product_id');
+                        },
+                    ])->select('id', 'sku', 'averageRating')
+                    ->whereIn('id', $productIds);
 
-            if(!empty($value->baseprice) && count($value->baseprice) > 0){
+        $products = $products->get();
 
-                    //echo '<pre>';print_r($value->baseprice->toArray());die;
-                $prodPrice = $value->baseprice[0]->price;
-
-                if(!empty($value->baseprice[0]->price) && $value->baseprice[0]->price > 0 && Auth::user()->currency != 'USD'){
-                    $value->variants{$row}->multiplier = $clientCurrency->doller_compare;
+        if(!empty($products)){
+            foreach ($products as $key => $value) {
+                foreach ($value->variant as $k => $v) {
+                    $value->variant{$k}->multiplier = $multiplier;
                 }
             }
-            $products[$key]->price = $prodPrice;
-            unset($products[$key]->baseprice);
-
         }
-
-        return response()->json([
-            'data' => $products,
-        ]);
+        return $products;
     }
 }
