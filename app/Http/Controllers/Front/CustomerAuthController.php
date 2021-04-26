@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Client, Category, Brand, Product, ClientPreference, Vendor, ClientCurrency, User, Country, UserDevice};
+use App\Models\{Currency, Client, Category, Brand, Cart, Product, ClientPreference, Vendor, ClientCurrency, User, Country, UserDevice};
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
@@ -70,12 +70,29 @@ class CustomerAuthController extends FrontController
         return view('forntend/account/resetSuccess')->with(['navCategories' => $navCategories]);
     }
 
+    /**     * check if cookie already exist     */
+    public function checkCookies($userid)
+    {
+        if (isset($_COOKIE['uuid'])) {
+            $userFind = User::where('system_id', $_COOKIE['uuid'])->first();
+            $cart = Cart::where('user_id', $userFind->id)->first();
+            $cart->user_id = $userid;
+            $cart->save();
+
+            setcookie("uuid", "", time() - 3600);
+
+            $userFind->delete();
+
+            return redirect()->route('user.checkout');
+        }
+    }
+
     /**     * Display login Form     */
     public function login(LoginRequest $req, $domain = '')
     {
-
         if (Auth::attempt(['email' => $req->email, 'password' => $req->password])) {
             $userid = Auth::id();
+            $this->checkCookies($userid);
             return redirect()->route('user.verify');
         }
 
@@ -115,11 +132,6 @@ class CustomerAuthController extends FrontController
         $user->email_token_valid_till = $sendTime;
         $user->save();
 
-        
-
-
-
-
         if ($user->id > 0) {
             $user_device[] = [
                 'user_id' => $user->id,
@@ -129,6 +141,7 @@ class CustomerAuthController extends FrontController
             ];
             UserDevice::insert($user_device);
             Auth::login($user);
+            $this->checkCookies($user->id);
             return redirect()->route('user.verify');
         }
     }
@@ -136,9 +149,6 @@ class CustomerAuthController extends FrontController
     /**     * Display forgotPassword Form     */
     public function forgotPassword(Request $request, $domain = '')
     {
-        // dd("111");
-
-
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:50'
         ]);
@@ -152,8 +162,6 @@ class CustomerAuthController extends FrontController
         $user = User::where('email', $request->email)->first();
         if (!$user) {
             return redirect()->back()->with('err_email', 'Email not exist. Please enter correct email.');
-
-            // return response()->json(['error' => 'Invalid email'], 404);
         }
         $notified = 1;
 
@@ -167,7 +175,6 @@ class CustomerAuthController extends FrontController
         if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
 
             $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
-
             $client_name = $client->name;
             $mail_from = $data->mail_from;
             $sendto = $user->email;
@@ -189,24 +196,18 @@ class CustomerAuthController extends FrontController
                 $notified = 1;
             } catch (\Exception $e) {
                 $user->save();
-                //return response()->json(['errors' => $e->getMessage()], 404);
-                //return response()->json(['errors' => 'Mail server is not configured. Please contact admin.'], 404);
             }
         }
 
         $user->save();
         if ($notified == 1) {
-            // dd("sent");
             return redirect()->route('customer.resetPassword');
-
-            // return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 200);
         }
     }
 
     /**     * Display resetPassword Form     */
     public function resetPassword(Request $request, $domain = '')
     {
-        // dd("qwqwq");
         $validator = Validator::make($request->all(), [
             'email' => 'required|string',
             'otp' => 'required|string|min:6|max:50',
@@ -218,27 +219,22 @@ class CustomerAuthController extends FrontController
             foreach ($validator->errors()->toArray() as $error_key => $error_value) {
                 $errors['error'] = $error_value[0];
                 return redirect()->back()->with($errors);
-                // return response()->json($errors, 422);
             }
         }
         $user = User::where('email', $request->email)->first();
         if (!$user) {
             return redirect()->back()->with('err_email', 'User not found.');
-            // return response()->json(['error' => 'User not found.'], 404);
         }
         if ($user->email_token != $request->otp) {
             return redirect()->back()->with('err_otp', 'OTP is not valid');
-            // return response()->json(['error' => 'OTP is not valid'], 404);
         }
         $currentTime = \Carbon\Carbon::now()->toDateTimeString();
         if ($currentTime > $user->email_token_valid_till) {
             return redirect()->back()->with('err_otp', 'OTP has been expired.');
-            // return response()->json(['error' => 'OTP has been expired.'], 404);
         }
 
         $user->password = Hash::make($request['new_password']);
         $user->save();
-        // dd("Password updated successfully.");
         return redirect()->route('customer.resetSuccess');
     }
 
@@ -251,5 +247,11 @@ class CustomerAuthController extends FrontController
     public function fblogin(Request $request, $domain = '')
     {
         dd($request->all());
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('customer.login');
     }
 }

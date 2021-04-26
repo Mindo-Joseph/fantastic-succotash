@@ -126,7 +126,7 @@
                             </td>
                         </tr> -->
                     </tbody>
-                   
+
                 </table>
                 <table class="table cart-table table-responsive-md shopping-cart-footer">
                     <!-- <tfoot>
@@ -142,7 +142,7 @@
         </div>
         <div class="row cart-buttons">
             <div class="col-6"><a href="#" class="btn btn-solid">continue shopping</a></div>
-            <div class="col-6"><a href="#" class="btn btn-solid">check out</a></div>
+            <div class="col-6"><a class="btn btn-solid checkout" style="color: white;" onMouseOver="this.style.color='black'" onMouseOut="this.style.color='white'">check out</a></div>
         </div>
     </div>
 </section>
@@ -153,9 +153,9 @@
 
 
 <script>
-var total1 = 0;
+    var total1 = 0;
     $(document).ready(function() {
-        
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -168,9 +168,9 @@ var total1 = 0;
             dataType: 'json',
             success: function(data) {
                 console.log(data);
-                if(data.res == "null"){
+                if (data.res == "null") {
                     $(".shopping-cart1").html(data.html);
-                }else {
+                } else {
                     var variants = JSON.parse(data.variants);
                     // console.log(variants[0].set);
                     var cp_id = JSON.parse(data.cart_products);
@@ -178,18 +178,18 @@ var total1 = 0;
                     var price = JSON.parse(data.price);
                     var images = JSON.parse(data.image);
                     var quantity = JSON.parse(data.quantity);
-                   
+
                     for (i = 0; i < products.length; i++) {
                         var vari = "<ul>";
-                        for(j = 0; j < variants.length; j++){
-                            vari += "<li>"+variants[i].set[j].title+"</li>";
+                        for (j = 0; j < variants.length; j++) {
+                            vari += "<li>" + variants[i].set[j].title + "</li>";
                             vari += "<br>";
                         }
                         vari += "</ul>";
 
                         console.log(vari);
                         total1 += parseInt(price[i]) * parseInt(quantity[i]);
-                        $(".shopping-cart1").append("<tr id='tbody"+cp_id[i]+"'><td><a href='#'><img src=" + images[i]['0'].pimage.image.path.proxy_url + '200/200' + images[i]['0'].pimage.image.path.image_path + " alt=''></a></td><td><a href='#'>" + products[i] + "</a><div class='mobile-cart-content row'><div class='col-xs-3'><div class='qty-box'><div class='input-group'><input type='number' min='1' name='quantity' id='quant' class='form-control input-number quant' value=" + quantity[i] + "></div></div></div><div class='col-xs-3'><h2 class='td-color' id='price"+cp_id[i]+"'>$" + price[i] + "</h2></div><div class='col-xs-3'><h2 class='td-color'><a href='#' class='icon'><i class='ti-close'></i></a></h2></div></div></td><td>"+vari+"</td><td><h2>$" + price[i] + "</h2></td><td><div class='qty-box'><div class='input-group'><input type='number' min='1' name='quantity' id='quant' class='form-control input-number quant' data-id="+cp_id[i]+" value=" + quantity[i] + "></div></div></td><td><a class='icon closed' data-id="+cp_id[i]+"><i class='ti-close'></i></a></td><td><h2 class='td-color' data-id="+cp_id[i]+" id='h2"+cp_id[i]+"'>$" + parseInt(price[i]) * parseInt(quantity[i]) + "</h2></td></tr>");
+                        $(".shopping-cart1").append("<tr id='tbody" + cp_id[i] + "'><td><a href='#'><img src=" + images[i]['0'].pimage.image.path.proxy_url + '200/200' + images[i]['0'].pimage.image.path.image_path + " alt=''></a></td><td><a href='#'>" + products[i] + "</a><div class='mobile-cart-content row'><div class='col-xs-3'><div class='qty-box'><div class='input-group'><input type='number' min='1' name='quantity' id='quant' class='form-control input-number quant' value=" + quantity[i] + "></div></div></div><div class='col-xs-3'><h2 class='td-color' id='price" + cp_id[i] + "'>$" + price[i] + "</h2></div><div class='col-xs-3'><h2 class='td-color'><a href='#' class='icon'><i class='ti-close'></i></a></h2></div></div></td><td>" + vari + "</td><td><h2>$" + price[i] + "</h2></td><td><div class='qty-box'><div class='input-group'><input type='number' min='1' name='quantity' id='quant' class='form-control input-number quant' data-id=" + cp_id[i] + " value=" + quantity[i] + "></div></div></td><td><a class='icon closed' data-id=" + cp_id[i] + "><i class='ti-close'></i></a></td><td><h2 class='td-color' data-id=" + cp_id[i] + " id='h2" + cp_id[i] + "'>$" + parseInt(price[i]) * parseInt(quantity[i]) + "</h2></td></tr>");
                     }
 
                     $(".shopping-cart-footer").append("<tfoot><tr><td>total price :</td><td><h2 id='total'>$" + total1 + "</h2></td></tr></tfoot>");
@@ -201,11 +201,10 @@ var total1 = 0;
         });
     });
     $(document).on('change', '.quant', function() {
-        updateQuantity($(this).attr("data-id"),$(this).val() );
-           
-        });
+        updateQuantity($(this).attr("data-id"), $(this).val());
+    });
 
-      
+
     function updateQuantity(cp_id, quantity) {
         ajaxCall = $.ajax({
             type: "post",
@@ -219,12 +218,12 @@ var total1 = 0;
             success: function(response) {
                 console.log(total1);
                 cartHeader();
-                var latest_price = parseInt($("#price"+cp_id).html().substring(1)) * parseInt(quantity);
-                total1 = total1 - parseInt($("#h2"+cp_id).html().substring(1));
+                var latest_price = parseInt($("#price" + cp_id).html().substring(1)) * parseInt(quantity);
+                total1 = total1 - parseInt($("#h2" + cp_id).html().substring(1));
                 total1 = total1 + latest_price;
-                $("#h2"+cp_id).html("$"+latest_price);
-                $("#total").html("$"+total1);
-                $("#totalCart").html("$"+total1);
+                $("#h2" + cp_id).html("$" + latest_price);
+                $("#total").html("$" + total1);
+                $("#totalCart").html("$" + total1);
             },
             error: function(data) {
 
@@ -233,7 +232,7 @@ var total1 = 0;
     }
 
     $(document).on('click', '.closed', function() {
-        var total2 = total1 - parseInt($("#h2"+$(this).attr("data-id")).html().substring(1));
+        var total2 = total1 - parseInt($("#h2" + $(this).attr("data-id")).html().substring(1));
         console.log(total2);
         var idd = $(this).attr("data-id");
         ajaxCall = $.ajax({
@@ -247,19 +246,36 @@ var total1 = 0;
             success: function(response) {
                 console.log(response);
                 total1 = total2;
-                $("#total").html("$"+total1);
-                $("#totalCart").html("$"+total1);
-                $("#tbody"+idd).remove(); 
+                $("#total").html("$" + total1);
+                $("#totalCart").html("$" + total1);
+                $("#tbody" + idd).remove();
                 cartHeader();
             },
             error: function(data) {
 
             },
         });
-           
+
+    });
+
+    $(document).on('click', '.checkout', function() {
+        console.log("checkout");
+        ajaxCall = $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "{{ route('checkUserLogin') }}",
+            success: function(response) {
+                if(response == 'no'){
+                    window.location.href = "{{ route('customer.login') }}";
+                }
+                else if(response == 'yes'){
+                    window.location.href = "{{ route('user.checkout') }}";
+                }
+            },
+            error: function(data) {
+            },
         });
-
-
+    });
 </script>
 
 @endsection

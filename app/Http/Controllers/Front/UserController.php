@@ -154,7 +154,7 @@ class UserController extends FrontController
         
         $user = User::where('id', Auth::user()->id)->first();
         if(!$user || !$request->has('type')){
-            return redirect()->back()->with('err_otp', 'User not found.'); 
+            return response()->json(['error' => 'User not found!'], 404); 
         }
         $currentTime = \Carbon\Carbon::now()->toDateTimeString();
 
@@ -166,11 +166,11 @@ class UserController extends FrontController
         if($request->type == 'phone'){
 
             if($user->phone_token != $request->otp){
-                return redirect()->back()->with('err_otp', 'OTP is not valid');
+                return response()->json(['error' => 'OTP is not valid'], 404);
             }
 
             if($currentTime > $user->phone_token_valid_till){
-                return redirect()->back()->with('err_otp', 'OTP has been expired.'); 
+                return response()->json(['error' => 'OTP has been expired.'], 404); 
             }
             $user->phone_token = NULL;
             $user->phone_token_valid_till = NULL;
@@ -180,18 +180,43 @@ class UserController extends FrontController
         if($request->type == 'email'){
 
             if($user->email_token != $request->otp){
-                return redirect()->back()->with('err_otp', 'OTP is not valid'); 
+                return response()->json(['error' => 'OTP is not valid'], 404); 
             }
 
             if($currentTime > $user->email_token_valid_till){
-                return redirect()->back()->with('err_otp', 'OTP has been expired.'); 
+                return response()->json(['error' => 'OTP has been expired.'], 404); 
             }
             $user->email_token = NULL;
             $user->email_token_valid_till = NULL;
             $user->is_email_verified = 1;
         }
         $user->save();
-        return redirect()->route('userHome');
+        return response()->json(['success' => 'OTP verified'], 202); 
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function checkUserLogin($domain = '')
+    {
+        if(Auth::user()){
+            return response()->json("yes");
+        }
+        else{
+            return response()->json("no");
+        }
+        dd("ewgwg");
     }
 
+     /**
+     * Display a listing of the resource.
+     */
+    public function checkout($domain = '')
+    {
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+        return view('forntend/checkout')->with(['navCategories' => $navCategories]);
+    }
 }
