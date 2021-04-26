@@ -35,7 +35,15 @@ class HomeController extends BaseController
         $homeData['languages'] = ClientLanguage::with('language')->select('language_id', 'is_primary')
                                 ->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 
-        $banners = Banner::select("id", "name", "description", "image", "link", 'redirect_category_id', 'redirect_vendor_id')->where('status', '1')->orderBy('sorting', 'asc')->get();
+        $banners = Banner::select("id", "name", "description", "image", "link", 'redirect_category_id', 'redirect_vendor_id')
+                    ->where('status', 1)
+                    ->where(function($q){
+                        $q->whereNull('start_date_time')->orWhere(function($q2){
+                            $q2->whereDate('start_date_time', '<=', Carbon::now())
+                                ->whereDate('end_date_time', '>=', Carbon::now());
+                        });
+                    })
+                    ->orderBy('sorting', 'asc')->get();
 
         if($banners){
 

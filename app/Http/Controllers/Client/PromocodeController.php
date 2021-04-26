@@ -35,7 +35,7 @@ class PromocodeController extends BaseController
         $vendors = Vendor::select('id', 'name')->where('status', 1)->get();
         $categories = Category::select('id', 'slug')->get();
 
-        $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode,  'promoTypes' => $promoTypes, 'categories' => $categories, 'vendors' => $vendors, 'products' => $products])->render();
+        $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode,  'promoTypes' => $promoTypes, 'categories' => $categories, 'vendors' => $vendors, 'products' => $products, 'restrictionType' => '', 'include' => '0', 'exclude' => '0'])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
@@ -121,18 +121,21 @@ class PromocodeController extends BaseController
         $products = Product::select('id', 'sku')->where('is_live', 1)->get();
         $vendors = Vendor::select('id', 'name')->where('status', 1)->get();
         $categories = Category::select('id', 'slug')->get();
-        $includedIds = $excludedIds = array();
+        $dataIds = array();
         $restrictionType = '';
+        $include = $exclude = 0;
         foreach ($promocode->restriction as $key => $value) {
+            $dataIds[] = $value->data_id;
             if ($value->is_included == 1) {
-                $includedIds[] = $value->data_id;
+                $include = 1;
             }
             if ($value->is_excluded == 1) {
-                $excludedIds[] = $value->data_id;
+                $exclude = 1;
             }
             $restrictionType = $value->restriction_type;
         }
-        $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode, 'promoTypes' => $promoTypes, 'includedIds' => $includedIds, 'excludedIds' => $excludedIds, 'restrictionType' => $restrictionType, 'categories' => $categories, 'vendors' => $vendors, 'products' => $products])->render();
+        dd($dataIds);
+        $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode, 'promoTypes' => $promoTypes, 'dataIds' => $dataIds, 'restrictionType' => $restrictionType, 'categories' => $categories, 'vendors' => $vendors, 'products' => $products, 'include' => $include, 'exclude' => $exclude])->render();
 
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }

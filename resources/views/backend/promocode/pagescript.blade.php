@@ -26,8 +26,8 @@
                         backdrop: 'static',
                         keyboard: false
                     });
-                    elems1 = document.getElementsByClassName('switch1');
-                    elems2 = document.getElementsByClassName('switch2');
+                    elems1 = document.getElementsByClassName('switch1Edit');
+                    elems2 = document.getElementsByClassName('switch2Edit');
                     var switchery = new Switchery(elems1[0]);
                     var switchery = new Switchery(elems2[0]);
 
@@ -81,6 +81,48 @@
         runPicker();
     });
 
+    $(document).on('change', '.promoTypeField', function(e) {
+        var type = $(this).val();
+        document.getElementsByClassName("amountInputField")[0].value = 1;  
+        if(type == 1){
+            document.getElementsByClassName("amountInputField")[0].setAttribute("max", "100"); 
+        } else {
+            document.getElementsByClassName("amountInputField")[0].setAttribute("max", ""); 
+        }
+    });
+
+     var point=false;
+    var count=0;
+    function check(e,value){
+        var type = document.getElementsByClassName("promoTypeField")[0].value;
+        if(type == 1){
+            if(count==3)return false;
+            var unicode=e.charCode? e.charCode : e.keyCode;
+            
+            if( unicode == 46 && point==true)
+                   return false;
+            if( unicode == 46 && point==false)
+            {
+                    point=true;
+            }
+            if (unicode!=8)if((unicode<48||unicode>57)&&unicode!=46)return false;
+            if(point==true)count++;
+        }
+    }
+
+    function checkLength(){
+        var type = document.getElementsByClassName("promoTypeField")[0].value;
+        if(type == 1){
+            var fieldVal = document.getElementsByClassName("amountInputField")[0].value;
+            if(fieldVal <= 100){
+                return true;
+            } else {
+                var str = document.getElementsByClassName("amountInputField")[0].value;
+                str = str.substring(0, str.length - 1);
+                document.getElementsByClassName("amountInputField")[0].value = str;
+            }
+        }
+    }
 
     $(document).on('click', '.submitAddForm', function(e) {
         e.preventDefault();
