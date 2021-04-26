@@ -11,16 +11,17 @@ class Promocode extends Model
 
     protected $table = 'promocodes';
 
-  protected $fillable = ['name', 'amount', 'expiry_date', 'promo_type_id', 'allow_free_delivery', 'minimum_spend', 'maximum_spend', 'first_order_only', 'limit_per_user', 'limit_total', 'paid_by_vendor_admin'];
+    protected $fillable = ['name', 'amount', 'expiry_date', 'promo_type_id', 'allow_free_delivery', 'minimum_spend', 'maximum_spend', 'first_order_only', 'limit_per_user', 'limit_total', 'paid_by_vendor_admin'];
 
-    public function promocoderestriction()
+    public function restriction()
     {
-        return $this->hasOne(PromocodeRestriction::class);
+        return $this->hasMany(PromocodeRestriction::class);
     }
 
 
-    public function PromoTypes()
+    public function type()
     {
-        return $this->belongsTo(PromoTypes::class);
+        return $this->belongsTo(PromoType::class, 'promo_type_id', 'id')->select('id', 'title')->where('status', 1);
     }
 }
+

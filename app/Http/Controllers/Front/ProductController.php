@@ -124,7 +124,7 @@ class ProductController extends FrontController
         return response()->json(array('error' => true, 'result' => NULL));
     }
 
-<<<<<<< HEAD
+
     private function randomString()
     {
         $random_string = substr(md5(microtime()), 0, 32);
@@ -221,6 +221,3 @@ class ProductController extends FrontController
         // dd($request->all());
     }
 }
-=======
-}
->>>>>>> 5d1e7d88431230c8f08019a9e197d9cc36873fd1

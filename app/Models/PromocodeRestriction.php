@@ -15,3 +15,4 @@ class PromocodeRestriction extends Model
         return $this->belongsTo(Promocode::class);
     }
 }
+

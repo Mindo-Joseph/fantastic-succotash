@@ -22,14 +22,14 @@ include_once "images.php";
 include_once "godpanel.php";
 
 Route::domain('{domain}')->middleware(['subdomain'])->group(function() {
-<<<<<<< HEAD
+
 	include_once "frontend.php";
 	include_once "backend.php";
 	
-=======
+
     include_once "frontend.php";
     include_once "backend.php";
->>>>>>> 4758393ba74c520259be028f1d25c64f5190f2d5
+
 
     /*Route::get('/', function (Request $request) {
         echo "flskdfksdjfk";die;
