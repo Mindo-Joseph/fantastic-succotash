@@ -218,9 +218,7 @@ class ProductController extends FrontController
         }
         // dd($request->all());
     }
-<<<<<<< HEAD
-}
-=======
+
 
     /**
      * get products from cart
@@ -313,4 +311,3 @@ class ProductController extends FrontController
         return response()->json('successfully deleted');
     }
 }
->>>>>>> 355774d83b91e942fb8232795625e3f0494d457d
