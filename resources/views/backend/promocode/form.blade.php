@@ -12,6 +12,12 @@
                     </span>
                 </div>
 
+                <?php $action = '';
+                if(isset($promo->id) && $promo->id > 0){
+                    $action = 'Edit';
+                }
+                ?>
+
                 <!-- <div class="form-group">
                     <label>PromoCode</label>
                     <input type="text" class="form-control" name="name" id="inputRoleName" placeholder="Enter promocode">
@@ -30,7 +36,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('title', 'Promo Type',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control" name="promo_type_id">
+                    <select class="selectize-select form-control promoTypeField" name="promo_type_id">
                         <option selected>select..</option>
                         @foreach($promoTypes as $key => $types)
                         <option value="{{$types->id}}" @if(isset($promo->id) && $promo->id > 0 && $types->id == $promo->promo_type_id) selected @endif >{{$types->title}}</option>
@@ -39,9 +45,11 @@
                 </div>
             </div>
             <div class="col-md-6">
+                <?php 
+                $pricevalue = (isset($promo->id) && $promo->id > 0 && $promo->promo_type_id == 1) ? (int)$promo->amount : $promo->amount; ?>
                 <div class="form-group" id="amountInput">
                     {!! Form::label('title', 'Amount',['class' => 'control-label']) !!}
-                    {!! Form::number('amount', $promo->amount, ['class' => 'form-control', 'placeholder'=>'Enter total amount']) !!}
+                    {!! Form::number('amount', $pricevalue, ['class' => 'form-control amountInputField', 'id' => 'amountInputField', 'placeholder'=>'Enter total amount', 'max' => "10000", 'min' => "1", "onKeyPress" => "return check(event,value)", "onInput" => "checkLength()"]) !!}
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>
                     </span>
@@ -71,7 +79,7 @@
                 <div class="form-group">
                     {!! Form::label('title', 'Allow Free Delivery',['class' => 'control-label']) !!}
                     <div>
-                        <input type="checkbox" data-plugin="switchery" name="allow_free_delivery" class="form-control switch1" data-color="#039cfd" checked='checked'>
+                        <input type="checkbox" data-plugin="switchery" name="allow_free_delivery" class="form-control switch1{{$action}}" data-color="#039cfd" @if(isset($promo->id) && $promo->id > 0 && $promo->allow_free_delivery == 1) checked @endif>
                     </div>
                 </div>
             </div>
@@ -79,7 +87,7 @@
                 <div class="form-group">
                     {!! Form::label('title', 'First Order Only',['class' => 'control-label']) !!}
                     <div>
-                        <input type="checkbox" data-plugin="switchery" name="first_order_only" class="form-control switch2" data-color="#039cfd" checked='checked'>
+                        <input type="checkbox" data-plugin="switchery" name="first_order_only" class="form-control switch2{{$action}}" data-color="#039cfd" @if(isset($promo->id) && $promo->id > 0 && $promo->first_order_only == 1) checked @endif>
                     </div>
                 </div>
             </div>
@@ -144,9 +152,9 @@
                     {!! Form::label('title', 'Apply Restriction On',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control inlineRadioOptions" name="inlineRadioOptions" for="{{(isset($promo->id) && $promo->id > 0) ? 'edit' : 'add'}}">
                         <option value=''>select..</option>
-                        <option value='0'>Products</option>
-                        <option value='1'>Vendors</option>
-                        <option value='2'>Categories</option>
+                        <option value='0' @if($restrictionType == 1) selected @endif>Products</option>
+                        <option value='1' @if($restrictionType == 2) selected @endif>Vendors</option>
+                        <option value='2' @if($restrictionType == 3) selected @endif>Categories</option>
                     </select>
                 </div>
             </div>
@@ -154,38 +162,39 @@
                 <div class="form-group">
                     {!! Form::label('title', 'Restriction Type',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control" name="applied_type">
-                        <option value='include'>Include</option>
-                        <option value='exclude'>Exclude</option>
+                        <option value='include' @if($include == 1) selected @endif>Include</option>
+                        <option value='exclude' @if($exclude == 1) selected @endif>Exclude</option>
                     </select>
                 </div>
             </div>
 
-            <div class="col-md-6" style="display: none;" id="productsList">
+            <div class="col-md-6" style="{{($restrictionType == 1) ? '' : 'display: none;'}}" id="productsList">
                 <div class="form-group">
                     {!! Form::label('title', 'Products',['class' => 'control-label']) !!}
                     <select class="form-control select2-multiple" id="IncludeProduct" name="productList[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                        {{print_r($dataIds)}}
                         @foreach($products as $sk)
-                        <option value="{{$sk->id}}">{{$sk->sku}}</option>
+                        <option value="{{$sk->id}}" @if($restrictionType == 1 && in_array($sk->id, $dataIds)) selected @endif>{{$sk->sku}}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
-            <div class="col-md-6" style="display: none;" id="vendorsList">
+            <div class="col-md-6" style="{{($restrictionType == 2) ? '' : 'display: none;'}}" id="vendorsList">
                 <div class="form-group">
                     {!! Form::label('title', 'Vendors',['class' => 'control-label']) !!}
                     <select class="form-control select2-multiple" id="IncludeVendor" name="vendorList[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
                         @foreach($vendors as $nm)
-                        <option value="{{$nm->id}}">{{$nm->name}}</option>
+                        <option value="{{$nm->id}}" @if($restrictionType == 2 && in_array($nm->id, $dataIds)) selected @endif>{{$nm->name}}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
-            <div class="col-md-6" style="display: none;" id="categoriesList">
+            <div class="col-md-6" style="{{($restrictionType == 3) ? '' : 'display: none;'}}" id="categoriesList">
                 <div class="form-group">
                     {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
                     <select class="form-control select2-multiple" id="IncludeCategory" name="categoryList[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
                         @foreach($categories as $slu)
-                        <option value="{{$slu->id}}">{{$slu->slug}}</option>
+                        <option value="{{$slu->id}}" @if($restrictionType == 3 && in_array($slu->id, $dataIds)) selected @endif>{{$slu->slug}}</option>
                         @endforeach
                     </select>
                 </div>

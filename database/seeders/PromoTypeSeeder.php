@@ -16,27 +16,12 @@ class PromoTypeSeeder extends Seeder
         $maps = array(
             array(
                 'id' => 1,
-                'title' => 'Voucher',
-                'status' => '1'
-            ),
-            array(
-                'id' => 2,
                 'title' => 'Percentage Discount',
                 'status' => '1'
             ),
             array(
-                'id' => 3,
-                'title' => 'Amount Discount',
-                'status' => '1'
-            ),
-            array(
-                'id' => 4,
-                'title' => 'Cashback',
-                'status' => '1'
-            ),
-            array(
-                'id' => 5,
-                'title' => 'Offer Free Product',
+                'id' => 2,
+                'title' => 'Fixed Ammount',
                 'status' => '1'
             ),
         ); 
