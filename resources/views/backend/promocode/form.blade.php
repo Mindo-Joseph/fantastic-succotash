@@ -94,14 +94,16 @@
             <input type="hidden" id="promocode_id" url="{{ (isset($promo->id) && $promo->id > 0) ? route('promocode.update', $promo->id) : route('promocode.store') }}">
             <div class="col-md-4 text-center">
                 <div class="form-group">
-                    {!! Form::label('title', 'Paid By',['class' => 'control-label']) !!} <br><br>
-                    <div class="radio radio-info form-check-inline">
-                        <input type="radio" id="inlineRadio1" value="1" name="radioInline" checked>
-                        <label for="inlineRadio1"> Admin</label>
-                    </div>
-                    <div class="radio form-check-inline">
-                        <input type="radio" id="inlineRadio2" value="0" name="radioInline">
-                        <label for="inlineRadio2"> Vendor</label>
+                    {!! Form::label('title', 'Paid By',['class' => 'control-label']) !!}
+                    <div>
+                        <div class="radio radio-info form-check-inline">
+                            <input type="radio" id="inlineRadio1" value="1" name="radioInline" checked>
+                            <label for="inlineRadio1"> Admin</label>
+                        </div>
+                        <div class="radio form-check-inline">
+                            <input type="radio" id="inlineRadio2" value="0" name="radioInline">
+                            <label for="inlineRadio2"> Vendor</label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -152,9 +154,9 @@
                     {!! Form::label('title', 'Apply Restriction On',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control inlineRadioOptions" name="inlineRadioOptions" for="{{(isset($promo->id) && $promo->id > 0) ? 'edit' : 'add'}}">
                         <option value=''>select..</option>
-                        <option value='0' @if($restrictionType == 1) selected @endif>Products</option>
-                        <option value='1' @if($restrictionType == 2) selected @endif>Vendors</option>
-                        <option value='2' @if($restrictionType == 3) selected @endif>Categories</option>
+                        <option value='0' @if($restrictionType == 0) selected @endif>Products</option>
+                        <option value='1' @if($restrictionType == 1) selected @endif>Vendors</option>
+                        <option value='2' @if($restrictionType == 2) selected @endif>Categories</option>
                     </select>
                 </div>
             </div>
@@ -167,34 +169,33 @@
                     </select>
                 </div>
             </div>
-
-            <div class="col-md-6" style="{{($restrictionType == 1) ? '' : 'display: none;'}}" id="productsList">
+            <div class="col-md-6" style="{{($restrictionType == 0) ? '' : 'display: none;'}}" id="productsList">
                 <div class="form-group">
                     {!! Form::label('title', 'Products',['class' => 'control-label']) !!}
                     <select class="form-control select2-multiple" id="IncludeProduct" name="productList[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                        {{print_r($dataIds)}}
+
                         @foreach($products as $sk)
-                        <option value="{{$sk->id}}" @if($restrictionType == 1 && in_array($sk->id, $dataIds)) selected @endif>{{$sk->sku}}</option>
+                        <option value="{{$sk->id}}" @if($restrictionType == 0 && in_array($sk->id, $dataIds)) selected @endif>{{$sk->sku}}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
-            <div class="col-md-6" style="{{($restrictionType == 2) ? '' : 'display: none;'}}" id="vendorsList">
+            <div class="col-md-6" style="{{($restrictionType == 1) ? '' : 'display: none;'}}" id="vendorsList">
                 <div class="form-group">
                     {!! Form::label('title', 'Vendors',['class' => 'control-label']) !!}
                     <select class="form-control select2-multiple" id="IncludeVendor" name="vendorList[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
                         @foreach($vendors as $nm)
-                        <option value="{{$nm->id}}" @if($restrictionType == 2 && in_array($nm->id, $dataIds)) selected @endif>{{$nm->name}}</option>
+                        <option value="{{$nm->id}}" @if($restrictionType == 1 && in_array($nm->id, $dataIds)) selected @endif>{{$nm->name}}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
-            <div class="col-md-6" style="{{($restrictionType == 3) ? '' : 'display: none;'}}" id="categoriesList">
+            <div class="col-md-6" style="{{($restrictionType == 2) ? '' : 'display: none;'}}" id="categoriesList">
                 <div class="form-group">
                     {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
                     <select class="form-control select2-multiple" id="IncludeCategory" name="categoryList[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
                         @foreach($categories as $slu)
-                        <option value="{{$slu->id}}" @if($restrictionType == 3 && in_array($slu->id, $dataIds)) selected @endif>{{$slu->slug}}</option>
+                        <option value="{{$slu->id}}" @if($restrictionType == 2 && in_array($slu->id, $dataIds)) selected @endif>{{$slu->slug}}</option>
                         @endforeach
                     </select>
                 </div>

@@ -194,4 +194,52 @@ class ProfileController extends BaseController
     public function logout(Request $request)
     {
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAvatar(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'avatar' => 'required|string'
+        ]); 
+        if($validator->fails()){
+            foreach($validator->errors()->toArray() as $error_key => $error_value){
+                $errors['error'] = $error_value[0];
+                return response()->json($errors, 422);
+            }
+        }
+
+        $img = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->avatar));
+
+        $user = User::where('id', Auth::user()->id)->first();
+
+        if(!empty($user->image)){
+            Storage::disk('s3')->delete($user->image); 
+        }
+
+        $imgType = ($request->has('type')) ? $request->type : 'jpg';
+        $imageName = 'profile/'.$user->id.substr(md5(microtime()), 0, 15).'.'.$imgType;
+
+        $save = Storage::disk('s3')->put($imageName, $img, 'public');
+
+        $user->image = $imageName;
+        $user->save();
+        return response()->json([
+            'message' => 'Profile image updated successfully.',
+            'data' => $user->image,
+            'save' => $save
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateProfile(Request $request)
+    {
+    }
 }

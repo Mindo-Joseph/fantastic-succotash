@@ -44,6 +44,9 @@ Route::group([
         Route::get('newsLetter', 'Api\v1\ProfileController@newsLetter')->name('user.newsLetter');
         Route::get('account', 'Api\v1\ProfileController@account')->name('user.account');
         Route::post('changePassword', 'Api\v1\ProfileController@changePassword')->name('user.changePassword');
+
+        Route::post('update/image', 'Api\v1\ProfileController@updateAvatar')->name('user.avatar');
+        Route::post('update/profile', 'Api\v1\ProfileController@updateProfile')->name('user.updateProfile');
     });
   
 });
