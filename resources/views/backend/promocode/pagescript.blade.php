@@ -13,7 +13,7 @@
         if (uid > 0) {
             uri = "<?php echo url('client/promocode'); ?>" + '/' + uid + '/edit';
         }
-
+       
         $.ajax({
             type: "get",
             url: uri,
@@ -21,16 +21,17 @@
             dataType: 'json',
             success: function(data) {
                 if (uid > 0) {
-                    $('#add-promo-form #editCardBox').html(data.html);
-                    $('#add-promo-form').modal({
+                    $('#edit-promo-form #editCardBox').html(data.html);
+                    $('#edit-promo-form').modal({
                         backdrop: 'static',
                         keyboard: false
                     });
-                    elems1 = document.getElementsByClassName('switch1Edit');
-                    elems2 = document.getElementsByClassName('switch2Edit');
+                    elems1 = document.getElementsByClassName('switch1');
+                    elems2 = document.getElementsByClassName('switch2');
                     var switchery = new Switchery(elems1[0]);
                     var switchery = new Switchery(elems2[0]);
 
+                    $('#edit-promo-form .select2-multiple').select2();
                 } else {
                     $('#add-promo-form #addCardBox').html(data.html);
                     $('#add-promo-form').modal({
@@ -42,8 +43,15 @@
                     elems2 = document.getElementsByClassName('switch2');
                     var switchery = new Switchery(elems1[0]);
                     var switchery = new Switchery(elems2[0]);
+                    $('#add-promo-form .select2-multiple').select2();
+                    // $('#add-promo-form #products2').select2();
+                    // $('#add-promo-form #categories1').select2();
+                    // $('#add-promo-form #categories2').select2();
+                    // $('#add-promo-form #products1').select2();
+                    // $('#add-promo-form #products2').select2();
 
                 }
+                
                 runPicker();
             },
             error: function(data) {
@@ -73,24 +81,6 @@
         runPicker();
     });
 
-
-
-    // $(document).on('change', '.assignToSelect', function() {
-    //     var val = $(this).val();
-    //     if (val == 'category') {
-    //         $('.modal .category_vendor').show();
-    //         $('.modal .category_list').show();
-    //         $('.modal .vendor_list').hide();
-    //     } else if (val == 'vendor') {
-    //         $('.modal .category_vendor').show();
-    //         $('.modal .category_list').hide();
-    //         $('.modal .vendor_list').show();
-    //     } else {
-    //         $('.modal .category_vendor').hide();
-    //         $('.modal .category_list').hide();
-    //         $('.modal .vendor_list').hide();
-    //     }
-    // });
 
     $(document).on('click', '.submitAddForm', function(e) {
         e.preventDefault();
@@ -126,10 +116,11 @@
             contentType: false,
             processData: false,
             success: function(response) {
-
+               
                 if (response.status == 'success') {
-                    $(".modal .close").click();
-                    location.reload();
+                  
+                    // $(".modal .close").click();
+                     location.reload();
                 } else {
                     $(".show_all_error.invalid-feedback").show();
                     $(".show_all_error.invalid-feedback").text(response.message);
@@ -194,4 +185,39 @@
     $("#user-modal #add_user").submit(function(e) {
         e.preventDefault();
     });
+
+    $(document).on('click', '.inlineRadioOptions', function() {
+        var val = $(this).val();
+        var apply = $(this).attr('for');
+        if(val == '0'){
+            $('#'+apply+'-promo-form #productsList').show();
+            $('#'+apply+'-promo-form #vendorsList').hide();
+            $('#'+apply+'-promo-form #categoriesList').hide();
+        }else if(val == 1){
+            $('#'+apply+'-promo-form #productsList').hide();
+            $('#'+apply+'-promo-form #vendorsList').show();
+            $('#'+apply+'-promo-form #categoriesList').hide();
+        }else if(val == 2){
+            $('#'+apply+'-promo-form #productsList').hide();
+            $('#'+apply+'-promo-form #vendorsList').hide();
+            $('#'+apply+'-promo-form #categoriesList').show();
+        }else{
+            $('#'+apply+'-promo-form #productsList').hide();
+            $('#'+apply+'-promo-form #vendorsList').hide();
+            $('#'+apply+'-promo-form #categoriesList').hide();
+        }
+    });
+    
+
+
+    function myfunction(id) {
+        console.log(id);
+        $("#vendorsList").css("display", "none");
+        $("#categoriesList").css("display", "none");
+        $("#productsList").css("display", "none");
+        var idd = "#" + id;
+        console.log(idd);
+        $("#" + id).css("display", "block");
+
+    }
 </script>

@@ -176,7 +176,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-blue waves-effect waves-light submitAddForm">Submit</button>
+                    <button type="submit" class="btn btn-blue waves-effect waves-light submitAddForm">Submit</button>
                 </div>
 
             </form>
@@ -184,7 +184,7 @@
     </div>
 </div>
 
-<div id="edit--promo-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div id="edit-promo-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -198,9 +198,8 @@
                 <div class="modal-body" id="editCardBox">
 
                 </div>
-
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-blue waves-effect waves-light submitEditForm">Submit</button>
+                    <button type="submit" class="btn btn-blue waves-effect waves-light submitEditForm">Submit</button>
                 </div>
 
             </form>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Promocode, PromoTypes, Vendor, PromocodeUser, PromocodeProduct, PromocodeRestriction};
+use App\Models\{Promocode, Product, Vendor, PromoType, Category, PromocodeUser, PromocodeProduct, PromocodeRestriction};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -17,9 +17,9 @@ class PromocodeController extends BaseController
      */
     public function index()
     {
-        $promocodes = Promocode::all();
-        $promoTypes = PromoTypes::where('status', 1)->get();
-        return view('backend/promocode/index')->with(['promocodes' => $promocodes, 'promoTypes' => $promoTypes]);
+        $promocodes = Promocode::with('type', 'restriction')->get();
+
+        return view('backend/promocode/index')->with(['promocodes' => $promocodes]);
     }
 
     /**
@@ -29,9 +29,13 @@ class PromocodeController extends BaseController
      */
     public function create()
     {
-        $promoTypes = PromoTypes::where('status', 1)->get();
+        $promoTypes = PromoType::where('status', 1)->get();
         $promocode = new Promocode();
-        $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode,  'promoTypes' => $promoTypes])->render();
+        $products = Product::select('id', 'sku')->where('is_live', 1)->get();
+        $vendors = Vendor::select('id', 'name')->where('status', 1)->get();
+        $categories = Category::select('id', 'slug')->get();
+
+        $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode,  'promoTypes' => $promoTypes, 'categories' => $categories, 'vendors' => $vendors, 'products' => $products])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
@@ -43,25 +47,54 @@ class PromocodeController extends BaseController
      */
     public function store(Request $request)
     {
-
         $rules = array(
-            'name' => 'required|string|max:150',
+            'name' => 'required|string|max:150||unique:promocodes',
             'amount' => 'required|numeric',
             'promo_type_id' => 'required',
-            'expity_date' => 'required',
+            'expiry_date' => 'required',
             'minimum_spend' => 'required|numeric',
             'maximum_spend' => 'required|numeric',
             'limit_per_user' => 'required|numeric',
-            'total_limit' => 'required|numeric',
+            'limit_total' => 'required|numeric',
         );
-        
-      
 
         $validation  = Validator::make($request->all(), $rules)->validate();
-        $promo_types = new PromoTypes();
+        $promo_types = new PromoType();
         $promo_types->status = $request->types;
-        Promocode::create($request->all());
-        return back()->with('Data_Inserted', 'Data has been Inserted successfully!');
+
+
+        $promocode = Promocode::create($request->all());
+        $promocode->first_order_only = ($request->has('first_order_only') && $request->first_order_only == 'on') ? 1 : 0;
+        $promocode->allow_free_delivery = ($request->has('allow_free_delivery') && $request->allow_free_delivery == 'on') ? 1 : 0;
+        $promocode->Paid_by_vendor_admin = $request->radioInline;
+        $inlineRadioOptions = $request->inlineRadioOptions;
+        $is_include = ($request->applied_type == 'include') ? 1 : 0;
+        $is_exclude = ($request->applied_type == 'exclude') ? 1 : 0;
+        $data = $excludeData = array();
+        if ($inlineRadioOptions == 0) {
+            $excludeData = $request->input('productList');
+        }
+        if ($inlineRadioOptions == 1) {
+            $excludeData = $request->input('vendorList');
+        }
+        if ($inlineRadioOptions == 2) {
+            $excludeData = $request->input('categoryList');
+        }
+
+        if (!empty($excludeData)) {
+            foreach ($excludeData as $res) {
+                $data[] = [
+                    'promocode_id' => $promocode->id,
+                    'restriction_type' => $inlineRadioOptions,
+                    'data_id' => $res,
+                    'is_excluded' => $is_exclude,
+                    'is_included' => $is_include,
+                ];
+            }
+        }
+        PromocodeRestriction::insert($data);
+
+        return response()->json(array('status' => 'success', 'Data_Inserted' => 'Data has been Inserted successfully!'));
     }
 
     /**
@@ -81,12 +114,27 @@ class PromocodeController extends BaseController
      * @param  \App\Promocode  $promocode
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($domain = '', $id)
     {
-        $promocode = Promocode::find($id);
-        $promocode_restriction = PromocodeRestriction::where('promocode_id', $id)->first();
-        // dd($promocode_restriction->restriction_type);
-        return view('promocode.edit-promocode', ['promocode' => $promocode, 'restriction_type' => $promocode_restriction->restriction_type]);
+        $promoTypes = PromoType::where('status', 1)->get();
+        $promocode = Promocode::with('restriction')->where('id', $id)->first();
+        $products = Product::select('id', 'sku')->where('is_live', 1)->get();
+        $vendors = Vendor::select('id', 'name')->where('status', 1)->get();
+        $categories = Category::select('id', 'slug')->get();
+        $includedIds = $excludedIds = array();
+        $restrictionType = '';
+        foreach ($promocode->restriction as $key => $value) {
+            if ($value->is_included == 1) {
+                $includedIds[] = $value->data_id;
+            }
+            if ($value->is_excluded == 1) {
+                $excludedIds[] = $value->data_id;
+            }
+            $restrictionType = $value->restriction_type;
+        }
+        $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode, 'promoTypes' => $promoTypes, 'includedIds' => $includedIds, 'excludedIds' => $excludedIds, 'restrictionType' => $restrictionType, 'categories' => $categories, 'vendors' => $vendors, 'products' => $products])->render();
+
+        return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
     /**
@@ -96,43 +144,39 @@ class PromocodeController extends BaseController
      * @param  \App\Promocode  $promocode
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $domain = '', $id = 0)
     {
-        // dd($request->all());
-        // $request->validate([
-        //     'name' => 'required',
-        //     'types' => 'required',
-        //     'amount' => 'required',
-        //     'expiry_date' => 'required',
-        //     'free_delivery' => 'required',
-        //     'first_order' => 'required',
-        //     'minimum_amount' => 'required',
-        //     'maximum_amount' => 'required',
-        //     'limit_per_user' => 'required',
-        //     'total_limit' => 'required',
-        //     'paid_by' => 'required',
-        //     'restriction_types' => 'required'
-        // ]);
-        $promocode_restriction =  PromoCodeRestriction::where('promocode_id', $request->id)->first();
+        $rules = array(
+            'name' => 'required|string|max:150',
+            'amount' => 'required|numeric',
+            'promo_type_id' => 'required',
+            'expiry_date' => 'required',
+            'minimum_spend' => 'required|numeric',
+            'maximum_spend' => 'required|numeric',
+            'limit_per_user' => 'required|numeric',
+            'limit_total' => 'required|numeric',
+        );
+        //$promocode_restriction =  PromoCodeRestriction::where('promocode_id', $request->id)->first();
 
         // dd($promocode_restriction);
-        $promocode_restriction->restriction_type = $request->restriction_types;
+        //$promocode_restriction->restriction_type = $request->restriction_types;
 
-        $promocode = Promocode::find($request->id);
+        $promocode = Promocode::find($id);
         $promocode->name = $request->name;
         // $promocode->type = $request->types;
         $promocode->amount = $request->amount;
         $promocode->expiry_date = $request->expiry_date;
-        $promocode->allow_free_delivery = ($request->has('free_delivery') && $request->free_delivery == 'on') ? 1 : 0;
-        $promocode->first_order_only = ($request->has('first_order') && $request->first_order == 'on') ? 1 : 0;
-        $promocode->minimum_spend = $request->minimum_amount;
-        $promocode->maximum_spend = $request->maximum_amount;
+        $promocode->allow_free_delivery = ($request->has('first_order_only') && $request->first_order_only == 'on') ? 1 : 0;
+        $promocode->first_order_only =  ($request->has('allow_free_delivery') && $request->allow_free_delivery == 'on') ? 1 : 0;
+        $promocode->minimum_spend = $request->minimum_spend;
+        $promocode->maximum_spend = $request->maximum_spend;
         $promocode->limit_per_user = $request->limit_per_user;
-        $promocode->limit_total = $request->total_limit;
+        $promocode->limit_total = $request->limit_total;
         $promocode->Paid_by_vendor_admin = $request->radioInline;
         $promocode->save();
-        $promocode->promocoderestriction()->save($promocode_restriction);
-        return back()->with('Data_Updated', 'Data has been Updated successfully!');
+        // $promocode->promocoderestriction()->save($promocode_restriction);
+        // return back()->with('', 'Data has been Updated successfully!');
+        return response()->json(array('status' => 'success', 'Data_Updated' => 'Data has been Updated successfully!'));
     }
 
     /**
@@ -141,10 +185,9 @@ class PromocodeController extends BaseController
      * @param  \App\Promocode  $promocode
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($domain = '', $id)
     {
-        $promocode = Promocode::find($id);
-        $promocode->delete();
-        return redirect('/showall-promocode');
+        Promocode::where('id', $id)->delete();
+        return redirect()->back()->with('success', 'Promocode deleted successfully!');
     }
 }

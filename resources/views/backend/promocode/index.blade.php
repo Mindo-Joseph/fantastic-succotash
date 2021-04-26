@@ -33,6 +33,11 @@
                                     <span>{!! \Session::get('success') !!}</span>
                                 </div>
                                 @endif
+                                @if (\Session::has('Data_Updated'))
+                                <div class="alert alert-success">
+                                    <span>{!! \Session::get('Data_Updated') !!}</span>
+                                </div>
+                                @endif
                                 @if (\Session::has('error_delete'))
                                 <div class="alert alert-danger">
                                     <span>{!! \Session::get('error_delete') !!}</span>
@@ -51,43 +56,43 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Code</th>
-                                    <th>Name</th>
-                                    <th>Used</th>
-                                    <th>Max Uses</th>
-                                    <th>Type</th>
-                                    <th>Discount</th>
-                                    <th>Start On</th>
-                                    <th>End On</th>
+                                    <th>Promo Code</th>
+                                    <th>Promo Types</th>
+                                    <th>Total Amount</th>
+                                    <th>Expiry Date</th>
+                                    <th>Minimum amount to spend</th>
+                                    <th>Maximum amount to spend</th>
+                                    <th>Limit Per User</th>
+                                    <th>Total limit</th>
+                                    <!-- <th>End On</th> -->
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="post_list">
                                 @foreach($promocodes as $promo)
-
                                 <tr data-row-id="">
                                     <td class="draggableTd"><span class="dragula-handle"></span></td>
                                     <td>{{$promo->name}}</td>
-                                    <td>{{$promo->name}}</td>
-                                    <td>{{$promo->name}}</td>
-                                    <td>{{$promo->name}}</td>
-                                    <td>{{$promo->name}}</td>
-                                    <td>{{$promo->name}}</td>
-                                    <td>{{$promo->name}}</td>
-                                    <td>{{$promo->name}}</td>
+                                    <td>{{$promo->type->title}}</td>
+                                    <td>{{$promo->amount}}</td>
+                                    <td>{{$promo->expiry_date}}</td>
+                                    <td>{{$promo->minimum_spend}}</td>
+                                    <td>{{$promo->maximum_spend}}</td>
+                                    <td>{{$promo->limit_per_user}}</td>
+                                    <td>{{$promo->limit_total}}</td>
                                     <td>
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
-                                                <a class="action-icon openBannerModal" userId="" href="#">
+                                                <a class="action-icon openPromoModal" userId="{{$promo->id}}" href="#">
                                                     <h3> <i class="mdi mdi-square-edit-outline"></i></h3>
                                                 </a>
                                             </div>
                                             <div class="inner-div">
-                                                <form method="POST" action="">
+                                                <form method="POST" action="{{route('promocode.destroy', $promo->id) }}">
                                                     @csrf
                                                     @method('DELETE')
                                                     <div class="form-group">
-                                                        <button type="submit" onclick="return confirm('Are you sure? You want to delete the banner.')" class="btn btn-primary-outline action-icon">
+                                                        <button type="submit" onclick="return confirm('Are you sure? You want to delete the Promocode.')" class="btn btn-primary-outline action-icon">
                                                             <h3><i class="mdi mdi-delete"></i></h3>
                                                         </button>
 
@@ -97,6 +102,7 @@
                                         </div>
                                     </td>
                                 </tr>
+
                                 @endforeach
                             </tbody>
                         </table>

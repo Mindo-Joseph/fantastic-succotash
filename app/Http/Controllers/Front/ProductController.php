@@ -218,6 +218,9 @@ class ProductController extends FrontController
         }
         // dd($request->all());
     }
+<<<<<<< HEAD
+}
+=======
 
     /**
      * get products from cart
@@ -232,11 +235,11 @@ class ProductController extends FrontController
         } elseif (isset($_COOKIE["uuid"])) {
             $user = User::where('system_id', $_COOKIE["uuid"])->first();
             if (!$user) {
-                return response()->json("null");
+                return response()->json(array('res' => 'null', 'html'=>"<li><div class='total'><h5>No Products</h5></div></li>"));
             }
             $userId = $user->id;
         } else {
-            return response()->json("null");
+            return response()->json(array('res' => 'null', 'html'=>"<li><div class='total'><h5>No Products</h5></div></li>"));
         }
 
         $cart = Cart::where('user_id', $userId)->first();
@@ -245,16 +248,21 @@ class ProductController extends FrontController
         $quantity = array();
         $price = array();
         $images = array();
+        $cp_id = array();
         foreach ($cartproducts as $carpro) {
+            if($carpro->status == '0'){
+            $cp_id[] = $carpro->id;
             $pro = Product::find($carpro->product_id);
             $products[] = $pro->sku;
             $quantity[] = $carpro->quantity;
             $products_variant = ProductVariant::with('image.pimage.image')->find($carpro->variant_id);
             $price[] = $products_variant->price;
             $images[] = $products_variant->image;
+            }
         }
 
         return response()->json([
+            'cart_products' => json_encode($cp_id),
             'products' => json_encode($products),
             'quantity' => json_encode($quantity),
             'price' => json_encode($price),
@@ -274,4 +282,35 @@ class ProductController extends FrontController
         $navCategories = $this->categoryNav($langId);
         return view('forntend/cart')->with(['navCategories' => $navCategories]);
     }
+    
+
+    /**
+     * Update Quantityt
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateQuantity($domain = '', Request $request)
+    {
+        $cartProduct = CartProduct::find($request->cartproduct_id);
+
+        $cartProduct->quantity = $request->quantity;
+
+        $cartProduct->save();
+        
+        return response()->json("Successfully Updated");
+    }
+
+     /**
+     * Delete Cart Product
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteCartProduct($domain = '', Request $request)
+    {
+    //    dd($request->cartproduct_id);
+       $update = CartProduct::where('id', '=', $request->cartproduct_id)
+        ->update(['status' => '2']);
+        return response()->json('successfully deleted');
+    }
 }
+>>>>>>> 355774d83b91e942fb8232795625e3f0494d457d

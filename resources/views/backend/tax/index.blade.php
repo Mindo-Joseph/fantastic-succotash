@@ -93,6 +93,7 @@
                             </tbody>
                         </table>
                     </div>
+                    
                     <div class="pagination pagination-rounded justify-content-end mb-0"></div>
                 </div>
             </div> 

@@ -52,7 +52,6 @@ class BannerController extends BaseController
         $banner = Banner::where('id', $id)->first();
         $categories = Category::select('id', 'slug')
                     ->where('status', $this->fstatus)->where('can_add_products', 1)->where('id', '>', 1)->get();
-        
         $vendors = Vendor::select('id', 'name')->where('status', $this->fstatus)->get();
         $returnHTML = view('backend.banner.form')->with(['banner' => $banner,  'vendors' => $vendors, 'categories' => $categories])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
@@ -201,6 +200,7 @@ class BannerController extends BaseController
 
     }
 
+    
     /**
      * update the validity of banner.
      *
