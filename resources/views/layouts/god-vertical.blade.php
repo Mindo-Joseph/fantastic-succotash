@@ -3,7 +3,7 @@
 
     <head>
         @include('layouts.shared.title-meta', ['title' => $title])
-        @include('layouts.shared.head-content', ["demo" => "creative"])
+        @include('layouts.shared.god-head-content', ["demo" => "creative"])
 
         @yield('css')
 

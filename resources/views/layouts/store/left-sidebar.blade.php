@@ -1,5 +1,4 @@
-
-@php 
+@php
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 
@@ -26,32 +25,34 @@ echo '<pre>';print_r($currencyList->toArray()); -->
                                 <ul id="sub-menu" class="sm pixelstrap sm-vertical">
                                     @foreach($navCategories as $cate)
                                     <li> <a href="{{route('categoryDetail', $cate['id'])}}">{{$cate['name']}}</a>
-                                        
+
                                         @if(!empty($cate['children']))
                                         <ul class="mega-menu clothing-menu">
                                             <div class="row m-0">
-                                            @foreach($cate['children'] as $childs)
-                                            <li class="col-xl-4">
+                                                @foreach($cate['children'] as $childs)
+                                                <li class="col-xl-4">
 
-                                                <div class="link-section">
-                                                    <a href="{{route('categoryDetail', $childs['id'])}}"><h5>{{$childs['name']}}</h5></a>
-                                                    @if(!empty($childs['children']))
-                                                    <ul>
-                                                        @foreach($childs['children'] as $chld)
+                                                    <div class="link-section">
+                                                        <a href="{{route('categoryDetail', $childs['id'])}}">
+                                                            <h5>{{$childs['name']}}</h5>
+                                                        </a>
+                                                        @if(!empty($childs['children']))
+                                                        <ul>
+                                                            @foreach($childs['children'] as $chld)
                                                             <li><a href="{{route('categoryDetail', $chld['id'])}}">{{$chld['name']}}</a></li>
-                                                        @endforeach
-                                                    </ul>
-                                                    @endif
+                                                            @endforeach
+                                                        </ul>
+                                                        @endif
 
-                                                </div>
+                                                    </div>
 
-                                               <!-- <div class="col-xl-4">
+                                                    <!-- <div class="col-xl-4">
                                                     <a href="#" class="mega-menu-banner"><img
                                                             src="{{asset('front-assets/images/mega-menu/fashion.jpg')}}"
                                                             alt="" class="img-fluid blur-up lazyload"></a>
                                                 </div> -->
-                                            </li> 
-                                            @endforeach
+                                                </li>
+                                                @endforeach
                                             </div>
                                         </ul>
                                         @endif
@@ -72,13 +73,12 @@ echo '<pre>';print_r($currencyList->toArray()); -->
                             <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
                             <ul id="main-menu" class="sm pixelstrap sm-horizontal">
                                 <li>
-                                    <div class="mobile-back text-right">Back<i class="fa fa-angle-right pl-2"
-                                            aria-hidden="true"></i></div>
+                                    <div class="mobile-back text-right">Back<i class="fa fa-angle-right pl-2" aria-hidden="true"></i></div>
                                 </li>
                                 <li>
                                     <a href="{{route('userHome')}}">Home</a>
                                 </li>
-                              
+
                             </ul>
                         </nav>
                     </div>
@@ -86,29 +86,23 @@ echo '<pre>';print_r($currencyList->toArray()); -->
                         <div class="icon-nav">
                             <form name="filterData" id="filterData" action="{{route('changePrimaryData')}}">
                                 @csrf
-                              <input type="hidden" id="cliLang" name="cliLang" value="{{session('customerLanguage')}}">
-                              <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
+                                <input type="hidden" id="cliLang" name="cliLang" value="{{session('customerLanguage')}}">
+                                <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
                             </form>
                             <ul>
                                 <li class="onhover-div mobile-search">
-                                    <div><img src="{{asset('front-assets/images/icon/search.png')}}" onclick="openSearch()"
-                                            class="img-fluid blur-up lazyload" alt=""> <i class="ti-search"
-                                            onclick="openSearch()"></i></div>
+                                    <div><img src="{{asset('front-assets/images/icon/search.png')}}" onclick="openSearch()" class="img-fluid blur-up lazyload" alt=""> <i class="ti-search" onclick="openSearch()"></i></div>
                                     <div id="search-overlay" class="search-overlay">
-                                        <div> <span class="closebtn" onclick="closeSearch()"
-                                                title="Close Overlay">×</span>
+                                        <div> <span class="closebtn" onclick="closeSearch()" title="Close Overlay">×</span>
                                             <div class="overlay-content">
                                                 <div class="container">
                                                     <div class="row">
                                                         <div class="col-xl-12">
                                                             <form>
                                                                 <div class="form-group">
-                                                                    <input type="text" class="form-control"
-                                                                        id="exampleInputPassword1"
-                                                                        placeholder="Search a Product">
+                                                                    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Search a Product">
                                                                 </div>
-                                                                <button type="submit" class="btn btn-primary"><i
-                                                                        class="fa fa-search"></i></button>
+                                                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -135,47 +129,9 @@ echo '<pre>';print_r($currencyList->toArray()); -->
                                     </div>
                                 </li>
                                 <li class="onhover-div mobile-cart">
-                                    <div><img src="{{asset('front-assets/images/icon/cart.png')}}"
-                                            class="img-fluid blur-up lazyload" alt=""> <i
-                                            class="ti-shopping-cart"></i></div>
+                                    <div><img src="{{asset('front-assets/images/icon/cart.png')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-shopping-cart"></i></div>
                                     <ul class="show-div shopping-cart">
-                                        <li>
-                                            <div class="media">
-                                                <a href="#"><img alt="" class="mr-3"
-                                                        src="{{asset('front-assets/images/fashion/product/1.jpg')}}"></a>
-                                                <div class="media-body">
-                                                    <a href="#">
-                                                        <h4>item name</h4>
-                                                    </a>
-                                                    <h4><span>1 x $ 299.00</span></h4>
-                                                </div>
-                                            </div>
-                                            <div class="close-circle"><a href="#"><i class="fa fa-times"
-                                                        aria-hidden="true"></i></a></div>
-                                        </li>
-                                        <li>
-                                            <div class="media">
-                                                <a href="#"><img alt="" class="mr-3"
-                                                        src="{{asset('front-assets/images/fashion/product/2.jpg')}}"></a>
-                                                <div class="media-body">
-                                                    <a href="#">
-                                                        <h4>item name</h4>
-                                                    </a>
-                                                    <h4><span>1 x $ 299.00</span></h4>
-                                                </div>
-                                            </div>
-                                            <div class="close-circle"><a href="#"><i class="fa fa-times"
-                                                        aria-hidden="true"></i></a></div>
-                                        </li>
-                                        <li>
-                                            <div class="total">
-                                                <h5>subtotal : <span>$299.00</span></h5>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="buttons"><a href="cart.html" class="view-cart">view
-                                                    cart</a> <a href="#" class="checkout">checkout</a></div>
-                                        </li>
+                                        <!-- Append Cart Products from Javascript -->
                                     </ul>
                                 </li>
                             </ul>
@@ -186,3 +142,46 @@ echo '<pre>';print_r($currencyList->toArray()); -->
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function(){
+        cartHeader();
+    });
+    function cartHeader(){
+        $(".shopping-cart").html(" ");
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: "get",
+            url: "{{ route('getCartProducts') }}",
+            data: '',
+            dataType: 'json',
+            success: function(data) {
+                if(data.res == "null"){
+                    $(".shopping-cart").html(data.html);
+                }
+                else{
+                var products = JSON.parse(data.products);
+                var price = JSON.parse(data.price);
+                var images = JSON.parse(data.image);
+                var quantity = JSON.parse(data.quantity);   
+                var total = 0;
+                for (i = 0; i < products.length; i++) {
+                    total += parseInt(price[i]) * parseInt(quantity[i]);
+                    $(".shopping-cart").append("<li><div class='media'><a href='#'><img alt='' class='mr-3' src='"+images[i]['0'].pimage.image.path.proxy_url+'200/200'+images[i]['0'].pimage.image.path.image_path+"'></a><div class='media-body'><a href='#'><h4>"+products[i]+"</h4></a><h4><span>"+quantity[i] +" x $" +  price[i]+"</span></h4></div></div><div class='close-circle'><a href='#'><i class='fa fa-times' aria-hidden='true'></i></a></div></li>");
+                }
+
+                $(".shopping-cart").append("<li><div class='total'><h5>subtotal : <span id='totalCart'>"+total+"</span></h5></div></li>");
+                $(".shopping-cart").append("<li><div class='buttons'><a href='{{ route('showCart') }}' class='view-cart'>viewcart</a> <a href='#' class='checkout'>checkout</a></div></li>");
+            }
+            },
+            error: function(data) {
+                console.log('Error Found : '+data);
+            }
+        });
+    }
+    
+</script>

@@ -70,6 +70,7 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     Route::post('product/translation', 'Client\ProductController@translation')->name('product.translation');
     Route::post('product/variantRows', 'Client\ProductController@makeVariantRows')->name('product.makeRows');
     Route::post('product/variantImage/update', 'Client\ProductController@updateVariantImage')->name('product.variant.update');
+    Route::get('product/image/delete/{pid}/{id}', 'Client\ProductController@deleteImage')->name('product.deleteImg');
 
     Route::resource('loyalty', 'Client\LoyaltyController');
     Route::post('loyalty/changeStatus', 'Client\LoyaltyController@changeStatus')->name('loyalty.changeStatus');

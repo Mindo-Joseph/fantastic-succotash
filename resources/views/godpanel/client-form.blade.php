@@ -179,7 +179,7 @@
                             </div>
 
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="database_username" class="control-label">DATABASE USERNAME</label>
                                     <input type="text" class="form-control" name="database_username" id="database_username"
@@ -204,7 +204,7 @@
                                     </span>
                                     @endif
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-6">
                                 <div class="form-group">

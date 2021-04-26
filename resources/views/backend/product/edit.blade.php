@@ -68,6 +68,12 @@
         right: 6px;
         top:4px;
     }
+    .product-box.editPage .product-action{
+        padding: 0.5rem 1rem 0 0.5rem;
+    }
+    .product-box.editPage .product-action .btn{
+        padding: 0px 2px;
+    }
 </style>
 @endsection
 
@@ -416,18 +422,23 @@
 
                 <div class="card-box">
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Product Images</h5>
+
                     <div class="row mb-2">
                         @if(isset($product->media) && !empty($product->media))
                             @foreach($product->media as $media)
-                            <div class="col-4" style="overflow: hidden;">
+                            <div class="col-4 product-box editPage" style="overflow: hidden;">
                             <?php 
                                 $mediaPath = Storage::disk('s3')->url('default/default_image.png');
-
                                     if(isset($media->image) && is_array($media->image->path)){
                                         $mediaPath = $media->image->path['proxy_url'].'300/300'.$media->image->path['image_path'];
                                     }
                                 ?>
-                                <img src="{{$mediaPath}}" style="width:100%;" class="vimg_{{$media->id}}"/>
+                                <div class="product-action">
+                                    <a href="{{route('product.deleteImg',[$product->id, $media->image->id])}}" class="btn btn-danger btn-xs waves-effect waves-light" onclick="return confirm('Are you sure? You want to delete the image.')"><i class="mdi mdi-close" {{$media->image}}></i></a>
+                                </div>
+                                <div class="bg-light">
+                                    <img src="{{$mediaPath}}" style="width:100%;" class="vimg_{{$media->id}}"/>
+                                </div>
                             </div>
                             @endforeach
                         @endif
@@ -441,8 +452,7 @@
                     <div class="row mb-2">
                         <div class="col-12">
                             {!! Form::label('title', 'Select Addon Set',['class' => 'control-label']) !!}
-                            <select class="form-control selectizeInput" name="addon_sets[]" multiple placeholder="Select gear...">
-                                <option value="">Select gear...</option>
+                            <select class="form-control select2-multiple" name="addon_sets[]" data-toggle="select2" multiple="multiple" placeholder="Select addon...">
                                 @foreach($addons as $set)
                                 <option value="{{$set->id}}" @if(in_array($set->id, $addOn_ids)) selected @endif>{{$set->title}}</option>
                                 @endforeach
@@ -452,60 +462,27 @@
                     <div class="row mb-2">
                         <div class="col-12">
                             {!! Form::label('title', 'Up Cell Products',['class' => 'control-label']) !!}
-                            <select class="form-control selectizeInput" name="up_cell[]" multiple placeholder="Select gear...">
-                                <option value="">Select gear...</option>
-                                <optgroup label="Climbing">
-                                    <option value="pitons">Pitons</option>
-                                    <option value="cams">Cams</option>
-                                    <option value="nuts">Nuts</option>
-                                    <option value="bolts">Bolts</option>
-                                    <option value="stoppers">Stoppers</option>
-                                    <option value="sling">Sling</option>
-                                </optgroup>
-                                <optgroup label="Skiing">
-                                    <option value="skis">Skis</option>
-                                    <option value="skins">Skins</option>
-                                    <option value="poles">Poles</option>
-                                </optgroup>
+                            <select class="form-control select2-multiple" name="up_cell[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
+                                @foreach($otherProducts as $otherProduct)
+                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $upSell_ids)) selected @endif>{{$otherProduct->sku}}</option>
+                                @endforeach
                             </select>
                         </div>
 
                         <div class="col-12">
                             {!! Form::label('title', 'Cross Cell Products',['class' => 'control-label']) !!}
-                            <select class="form-control selectizeInput" name="cross_cell[]" multiple placeholder="Select gear...">
-                                <option value="">Select gear...</option>
-                                <optgroup label="Climbing">
-                                    <option value="pitons">Pitons</option>
-                                    <option value="cams">Cams</option>
-                                    <option value="nuts">Nuts</option>
-                                    <option value="bolts">Bolts</option>
-                                    <option value="stoppers">Stoppers</option>
-                                    <option value="sling">Sling</option>
-                                </optgroup>
-                                <optgroup label="Skiing">
-                                    <option value="skis">Skis</option>
-                                    <option value="skins">Skins</option>
-                                    <option value="poles">Poles</option>
-                                </optgroup>
+                            <select class="form-control select2-multiple" name="cross_cell[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
+                                @foreach($otherProducts as $otherProduct)
+                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $crossSell_ids)) selected @endif>{{$otherProduct->sku}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-12">
                             {!! Form::label('title', 'Related Products',['class' => 'control-label']) !!}
-                            <select class="form-control selectizeInput" name="releted_product[]" multiple placeholder="Select gear...">
-                                <option value="">Select gear...</option>
-                                <optgroup label="Climbing">
-                                    <option value="pitons">Pitons</option>
-                                    <option value="cams">Cams</option>
-                                    <option value="nuts">Nuts</option>
-                                    <option value="bolts">Bolts</option>
-                                    <option value="stoppers">Stoppers</option>
-                                    <option value="sling">Sling</option>
-                                </optgroup>
-                                <optgroup label="Skiing">
-                                    <option value="skis">Skis</option>
-                                    <option value="skins">Skins</option>
-                                    <option value="poles">Poles</option>
-                                </optgroup>
+                            <select class="form-control select2-multiple" name="releted_product[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
+                                @foreach($otherProducts as $otherProduct)
+                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $related_ids)) selected @endif>{{$otherProduct->sku}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -514,7 +491,6 @@
         </div>
     </form>
 </div>
-
 <div id="upload-media" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
