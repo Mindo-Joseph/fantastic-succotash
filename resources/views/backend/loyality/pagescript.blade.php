@@ -34,7 +34,7 @@
             },
             success: function(response) {
                 console.log(response.value);
-                $(".primaryKey").html("1 "+response.symbol+" =");
+                $(".primaryKey").html("1 " + response.symbol + " =");
                 $("#redeem_points_per_primary_currency").val(response.value);
             },
         });

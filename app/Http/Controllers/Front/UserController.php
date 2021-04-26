@@ -76,7 +76,7 @@ class UserController extends FrontController
 
         $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
         $data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from','mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
-
+        $notified = 0;
         $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
         if($request->type == "phone"){
             if($user->is_phone_verified == 0){
@@ -95,9 +95,8 @@ class UserController extends FrontController
                     }
                 }
             }
-    
         }
-        $notified = 0;
+
         if($user->is_email_verified == 0){
 
             $otp = mt_rand(100000, 999999);
@@ -126,14 +125,17 @@ class UserController extends FrontController
                 }
                 catch(\Exception $e){
                     $user->save();
-                    dd($e->getMessage());
-                    //return response()->json(['errors' => $e->getMessage()], 404);
-                    //return response()->json(['errors' => 'Mail server is not configured. Please contact admin.'], 404);
+                    
                 }
             }            
         }
         $user->save();
         if($notified == 1){
+            return response()->json([
+                'status'=>'success',
+                'message' => 'OTP has been sent.Please check.',
+                
+            ]);
             // dd("dgroeiuger");
             return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 200); 
         }else{
