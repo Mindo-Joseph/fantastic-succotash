@@ -58,7 +58,7 @@
                 </div> -->
                 <br>
 
-                <label for="purchase">Order Amount for 1 Loyalty Point (as per primary currency)</label>
+                <label for="purchase">Order Amount to earn 1 loyalty point (as per primary currency)</label>
 
                 <div class="row mb-2">
                     <div class="col-md-6">
@@ -132,7 +132,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary setredeempoints">Save changes</button>
-                </div>x
+                </div>
             </form>
         </div>
     </div>

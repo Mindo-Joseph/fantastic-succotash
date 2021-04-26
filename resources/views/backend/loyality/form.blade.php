@@ -50,14 +50,14 @@
 </div> -->
 <br>
 
-<label for="purchase">Order Amount for 1 Loyalty Point (as per primary currency)</label>
+<label for="purchase">Order Amount to earn 1 loyalty point (as per primary currency)</label>
 
 <div class="row mb-2">
     <div class="col-md-6">
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">1 Loyalty Point =</span>
+                    <span class="input-group-text" id="basic-addon1">1 Loyalty Point </span>
                 </div>
                 <input type="text" onkeypress="return isNumberKey(event);" class="form-control"  value="{{$lc->amount_per_loyalty_point}}" name="amount_per_loyalty_point" id="amount_per_loyalty_point" placeholder="Value" aria-label="Username" aria-describedby="basic-addon1">
             </div>
