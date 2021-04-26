@@ -78,6 +78,7 @@
                         <tr class="table-head">
                             <th scope="col">image</th>
                             <th scope="col">product name</th>
+                            <th scope="col">variants</th>
                             <th scope="col">price</th>
                             <th scope="col">quantity</th>
                             <th scope="col">action</th>
@@ -170,6 +171,8 @@ var total1 = 0;
                 if(data.res == "null"){
                     $(".shopping-cart1").html(data.html);
                 }else {
+                    var variants = JSON.parse(data.variants);
+                    // console.log(variants[0].set);
                     var cp_id = JSON.parse(data.cart_products);
                     var products = JSON.parse(data.products);
                     var price = JSON.parse(data.price);
@@ -177,8 +180,16 @@ var total1 = 0;
                     var quantity = JSON.parse(data.quantity);
                    
                     for (i = 0; i < products.length; i++) {
+                        var vari = "<ul>";
+                        for(j = 0; j < variants.length; j++){
+                            vari += "<li>"+variants[i].set[j].title+"</li>";
+                            vari += "<br>";
+                        }
+                        vari += "</ul>";
+
+                        console.log(vari);
                         total1 += parseInt(price[i]) * parseInt(quantity[i]);
-                        $(".shopping-cart1").append("<tr id='tbody"+cp_id[i]+"'><td><a href='#'><img src=" + images[i]['0'].pimage.image.path.proxy_url + '200/200' + images[i]['0'].pimage.image.path.image_path + " alt=''></a></td><td><a href='#'>" + products[i] + "</a><div class='mobile-cart-content row'><div class='col-xs-3'><div class='qty-box'><div class='input-group'><input type='number' min='1' name='quantity' id='quant' class='form-control input-number quant' value=" + quantity[i] + "></div></div></div><div class='col-xs-3'><h2 class='td-color' id='price"+cp_id[i]+"'>$" + price[i] + "</h2></div><div class='col-xs-3'><h2 class='td-color'><a href='#' class='icon'><i class='ti-close'></i></a></h2></div></div></td><td><h2>$" + price[i] + "</h2></td><td><div class='qty-box'><div class='input-group'><input type='number' min='1' name='quantity' id='quant' class='form-control input-number quant' data-id="+cp_id[i]+" value=" + quantity[i] + "></div></div></td><td><a class='icon closed' data-id="+cp_id[i]+"><i class='ti-close'></i></a></td><td><h2 class='td-color' data-id="+cp_id[i]+" id='h2"+cp_id[i]+"'>$" + parseInt(price[i]) * parseInt(quantity[i]) + "</h2></td></tr>");
+                        $(".shopping-cart1").append("<tr id='tbody"+cp_id[i]+"'><td><a href='#'><img src=" + images[i]['0'].pimage.image.path.proxy_url + '200/200' + images[i]['0'].pimage.image.path.image_path + " alt=''></a></td><td><a href='#'>" + products[i] + "</a><div class='mobile-cart-content row'><div class='col-xs-3'><div class='qty-box'><div class='input-group'><input type='number' min='1' name='quantity' id='quant' class='form-control input-number quant' value=" + quantity[i] + "></div></div></div><div class='col-xs-3'><h2 class='td-color' id='price"+cp_id[i]+"'>$" + price[i] + "</h2></div><div class='col-xs-3'><h2 class='td-color'><a href='#' class='icon'><i class='ti-close'></i></a></h2></div></div></td><td>"+vari+"</td><td><h2>$" + price[i] + "</h2></td><td><div class='qty-box'><div class='input-group'><input type='number' min='1' name='quantity' id='quant' class='form-control input-number quant' data-id="+cp_id[i]+" value=" + quantity[i] + "></div></div></td><td><a class='icon closed' data-id="+cp_id[i]+"><i class='ti-close'></i></a></td><td><h2 class='td-color' data-id="+cp_id[i]+" id='h2"+cp_id[i]+"'>$" + parseInt(price[i]) * parseInt(quantity[i]) + "</h2></td></tr>");
                     }
 
                     $(".shopping-cart-footer").append("<tfoot><tr><td>total price :</td><td><h2 id='total'>$" + total1 + "</h2></td></tr></tfoot>");

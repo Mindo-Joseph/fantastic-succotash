@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Front\FrontController;
 use Carbon\Carbon;
 use Auth;
+use Session;
 
 class ProfileController extends FrontController
 {
@@ -103,7 +104,7 @@ class ProfileController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function logout(Request $request')
+    public function logout(Request $request, $domain = '')
     {
     }
 }

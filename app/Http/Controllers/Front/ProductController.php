@@ -204,7 +204,14 @@ class ProductController extends FrontController
                 $cartInfo = Cart::where('user_id', $user_id)->first();
             }
 
-            $cartProduct = new CartProduct;
+            $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->first();
+            if($checkIfExist){
+                $checkIfExist->quantity = (int)$checkIfExist->quantity + 1;
+                $cartInfo->cartProducts()->save($checkIfExist);
+                return response()->json($user_id);
+            }
+            else{
+                $cartProduct = new CartProduct;
             $cartProduct->product_id = $request->product_id;
             $cartProduct->quantity  = $request->quantity;
             $cartProduct->created_by  = $user_id;
@@ -213,6 +220,9 @@ class ProductController extends FrontController
             $cartProduct->is_tax_applied  = '1';
 
             $cartInfo->cartProducts()->save($cartProduct);
+            }
+            
+
 
             return response()->json($user_id);
         }
@@ -247,13 +257,17 @@ class ProductController extends FrontController
         $price = array();
         $images = array();
         $cp_id = array();
+        $variants = array();
         foreach ($cartproducts as $carpro) {
             if($carpro->status == '0'){
             $cp_id[] = $carpro->id;
+            $products_variant = ProductVariant::with(['image.pimage.image', 'set'])->find($carpro->variant_id);
+            
             $pro = Product::find($carpro->product_id);
+            $variants[] = $products_variant->toArray();
             $products[] = $pro->sku;
             $quantity[] = $carpro->quantity;
-            $products_variant = ProductVariant::with('image.pimage.image')->find($carpro->variant_id);
+            
             $price[] = $products_variant->price;
             $images[] = $products_variant->image;
             }
@@ -264,7 +278,8 @@ class ProductController extends FrontController
             'products' => json_encode($products),
             'quantity' => json_encode($quantity),
             'price' => json_encode($price),
-            'image' => json_encode($images)
+            'image' => json_encode($images),
+            'variants' => json_encode($variants)
         ]);
     }
 

@@ -22,8 +22,17 @@ Route::group([
 
         Route::get('vendor/{id?}', 'Api\v1\VendorController@productsByVendor');
         Route::post('vendor/filters/{id?}', 'Api\v1\VendorController@vendorFilters');
-        
-        
+    });
+
+
+    Route::group([
+      'middleware' => ['dbCheck', 'systemAuth']
+    ], function() {
+        Route::get('cart/list', 'Api\v1\CartController@index');
+        Route::post('cart/add', 'Api\v1\CartController@add');
+        Route::get('cart/remove', 'Api\v1\CartController@remove');
+        Route::post('cart/updateQuantity', 'Api\v1\CartController@updateQuantity');
+
     });
 
 });
