@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'domainAdmin' => \App\Http\Middleware\CustomDomainAdmin::class,
         'subdomain' => \App\Http\Middleware\SubdomainMiddleware::class,
         'webAuth' => \App\Http\Middleware\WebAuth::class,
+        'systemAuth'    =>\App\Http\Middleware\SystemAuth::class,
     ];
 }

@@ -72,7 +72,7 @@ Route::group(['middleware' => ['domain']], function () {
 
 Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
-    Route::get('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInfromation');
+    //Route::get('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInfromation');
 
     Route::get('user/profile', 'Front\ProfileController@profile')->name('user.profile');
     Route::get('user/wishlists', 'Front\ProfileController@wishlists')->name('user.wishlists');
@@ -84,5 +84,8 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/changePassword', 'Front\ProfileController@changePassword')->name('user.changePassword');
     Route::get('user/logout', 'Front\ProfileController@logout')->name('user.logout');
     Route::get('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
+
+	Route::post('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
+	Route::post('verifTokenProcess', 'Front\UserController@verifyToken')->name('user.verifyToken');
 
 });

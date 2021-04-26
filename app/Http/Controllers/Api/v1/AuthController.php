@@ -20,43 +20,6 @@ use Illuminate\Support\Facades\Mail;
 
 class AuthController extends BaseController
 {
-	/**
-     * Login user and create token
-     *
-     * @param  [string] phone_number
-     * @param  [string] OTP
-     * @return [string] access_token
-     * @return [string] token_type
-     * @return [string] expires_at
-     */
-    /*public function sendOtp(Request $request)
-    {
-    	//echo "Connected ".DB::connection()->getDatabaseName();
-        $request->validate([
-            'phone_number' => 'required|numeric',
-        ]);
-        
-        $agent = Agent::where('phone_number', $request->phone_number)->first();
-
-        if (!$agent) {
-	        return response()->json([
-	            'message' => 'User not found'], 404);
-	    }
-        $otp = new Otp();
-        $otp->phone = $data['phone_number'] = $agent->phone_number;
-        $otp->opt = $data['otp'] = rand(111111,999999);
-        $otp->valid_till = $data['valid_till'] = Date('Y-m-d H:i:s', strtotime("+10 minutes"));
-
-        $otp->save();
-
-        //parent::sendSms($request->phone_number, 'Your OTP for login into Royo App is ' . $data['otp']);
-
-        return response()->json([
-            'data' => $data,
-        ]);
-
-    }*/
-
     /**
      * Get Country List
      * * @return country array
@@ -72,11 +35,6 @@ class AuthController extends BaseController
     /**
      * Login user and create token
      *
-     * @param  [string] phone_number
-     * @param  [string] OTP
-     * @return [string] access_token
-     * @return [string] token_type
-     * @return [string] expires_at
      */
     public function login(LoginRequest $loginReq)
     {
@@ -154,12 +112,12 @@ class AuthController extends BaseController
     public function signup(Request $signReq)
     {
         $validator = Validator::make($signReq->all(), [
-            'name' => 'required|string|min:3|max:50',
-            'email' => 'required|email|max:50||unique:users',
-            'password' => 'required|string|min:6|max:50',
-            'phone_number' => 'required|string|min:10|max:15|unique:users',
-            'device_type' => 'required|string',
-            'device_token' => 'required|string'
+            'name'          => 'required|string|min:3|max:50',
+            'email'         => 'required|email|max:50||unique:users',
+            'password'      => 'required|string|min:6|max:50',
+            'phone_number'  => 'required|string|min:10|max:15|unique:users',
+            'device_type'   => 'required|string',
+            'device_token'  => 'required|string'
         ]);
  
         if($validator->fails()){
@@ -279,32 +237,6 @@ class AuthController extends BaseController
         }
     }
 
-    /**
-     * Get Country List
-     * * @return country array
-     */
-    public function sendVerificationOtp(Request $request)
-    {
-        $errors = array();
-        if(!$request->has('email') && !$request->has('phone_number')){
-            $errors['email'] = 'Please enter email';
-            $errors['phone_number'] = 'Please enter phone number';
-            return response()->json(['errors' => $errors], 422);
-        }
-
-        $user = User::where('id' > 0);
-        if($request->has('email')){
-            $user = $user->where('email', $request->email);
-        }
-        if($request->has('phone_number')){
-            $user = $user->where('phone_number', $request->phone_number);
-        }
-        $user = $user->first();
-        if(!$user){
-            return response()->json(['error' => 'User not found'], 404);
-        }
-    }
-//$errors
     /**
      * Display a listing of the resource.
      *
@@ -560,6 +492,20 @@ class AuthController extends BaseController
         $user->save(); 
         return response()->json([
             'message' => 'Password updated successfully.',
+        ]);
+    }
+
+    /**
+     * Logout user (Revoke the token)
+     *
+     * @return [string] message
+     */
+    public function sacialData(Request $request)
+    {
+        
+
+        return response()->json([
+            'message' => 'Successfully logged out'
         ]);
     }
 }
