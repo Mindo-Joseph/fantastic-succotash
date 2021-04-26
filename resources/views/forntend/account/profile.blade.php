@@ -160,7 +160,7 @@
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
-            url: "{{ route('verifyInfromation', Auth::user()->id) }}",
+            url: "{{ route('verifyInformation', Auth::user()->id) }}",
             data: {
                 "_token": "{{ csrf_token() }}",
                 "type": $type, 

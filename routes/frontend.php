@@ -73,7 +73,8 @@ Route::group(['middleware' => ['domain']], function () {
 
 Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
-    //Route::get('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInfromation');
+    Route::post('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInformation');
+    Route::get('user/resetSuccess','Front\CustomerAuthController@resetSuccess')->name('customer.resetSuccess');
 
     Route::get('user/profile', 'Front\ProfileController@profile')->name('user.profile');
     Route::get('user/wishlists', 'Front\ProfileController@wishlists')->name('user.wishlists');
