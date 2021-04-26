@@ -22,7 +22,7 @@
                         My Account
                         <ul class="onhover-show-div">
                             <li><a href="#" data-lng="en">Profile</a></li>
-                            <li><a href="#" data-lng="es">Logout</a></li>
+                            <li><a href="{{route('user.logout')}}" data-lng="es">Logout</a></li>
                         </ul>
                     </li>
                 </ul>
