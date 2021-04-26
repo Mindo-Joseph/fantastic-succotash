@@ -671,6 +671,7 @@
             },
             success: function(response) {
                 console.log(response);
+                cartHeader();
                 // $(".otp-section").attr("style", "display:block")
             },
             error: function(data) {
