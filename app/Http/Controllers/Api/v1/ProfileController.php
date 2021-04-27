@@ -276,7 +276,7 @@ class ProfileController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function updateProfile(Request $request)
+    public function updateLol(Request $request)
     {
         $usr = Auth::user()->id; 
         $validator = Validator::make($request->all(), [
