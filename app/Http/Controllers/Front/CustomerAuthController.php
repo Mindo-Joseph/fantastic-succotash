@@ -73,15 +73,19 @@ class CustomerAuthController extends FrontController
     /**     * check if cookie already exist     */
     public function checkCookies($userid)
     {
-        if (isset($_COOKIE['uuid'])) {
-            $userFind = User::where('system_id', $_COOKIE['uuid'])->first();
-            $cart = Cart::where('user_id', $userFind->id)->first();
-            $cart->user_id = $userid;
-            $cart->save();
-
-            setcookie("uuid", "", time() - 3600);
-
-            $userFind->delete();
+        if (\Cookie::has('uuid')) {
+            $existCookie = \Cookie::get('uuid');
+            
+            $userFind = User::where('system_id', $existCookie)->first();
+            if($userFind){
+                $cart = Cart::where('user_id', $userFind->id)->first();
+                if($cart){
+                    $cart->user_id = $userid;
+                    $cart->save();
+                }
+                $userFind->delete();
+            }
+            \Cookie::queue(Cookie::forget('uuid'));
 
             return redirect()->route('user.checkout');
         }

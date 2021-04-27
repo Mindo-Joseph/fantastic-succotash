@@ -46,6 +46,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('viewcart','Front\ProductController@showCart')->name('showCart');
 	Route::post('/product/updateCartQuantity','Front\ProductController@updateQuantity')->name('updateQuantity');
 	Route::post('/product/deletecartproduct','Front\ProductController@deleteCartProduct')->name('deleteCartProduct');
+	Route::get('userAddress','Front\UserController@getUserAddress')->name('getUserAddress');
 
 	Route::get('category/{id?}', 'Front\CategoryController@categoryProduct')->name('categoryDetail');
     Route::post('category/filters/{id}', 'Front\CategoryController@categoryFilters')->name('productFilters');
