@@ -241,5 +241,132 @@ class ProfileController extends BaseController
      */
     public function updateProfile(Request $request)
     {
+        $usr = Auth::user()->id; 
+        $validator = Validator::make($request->all(), [
+            'name'          => 'required|string|min:3|max:50',
+            'email'         => 'required|email|max:50||unique:users,email,'.$usr,
+            'phone_number'  => 'required|string|min:10|max:15|unique:users,phone_number,'.$usr,
+        ]);
+
+        if($validator->fails()){
+            foreach($validator->errors()->toArray() as $error_key => $error_value){
+                $errors['error'] = $error_value[0];
+                return response()->json($errors, 422);
+            }
+        }
+
+        $user = User::where('id', $usr)->first();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone_number = $request->phone_number;
+        $user->save();
+        return response()->json([
+            'message' => 'Profile updated successfully.',
+            'data' => [ 
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone_number' => $user->phone_number,
+            ],
+        ]);
+
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateProfile(Request $request)
+    {
+        $usr = Auth::user()->id; 
+        $validator = Validator::make($request->all(), [
+            'name'          => 'required|string|min:3|max:50',
+            'email'         => 'required|email|max:50||unique:users,email,'.$usr,
+            'phone_number'  => 'required|string|min:10|max:15|unique:users,phone_number,'.$usr,
+        ]);
+
+        if($validator->fails()){
+            foreach($validator->errors()->toArray() as $error_key => $error_value){
+                $errors['error'] = $error_value[0];
+                return response()->json($errors, 422);
+            }
+        }
+
+        $user = User::where('id', $usr)->first();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone_number = $request->phone_number;
+        $user->save();
+        return response()->json([
+            'message' => 'Profile updated successfully.',
+            'data' => [ 
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone_number' => $user->phone_number,
+            ],
+        ]);
+
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function userAddress(Request $request, $addressId = 0)
+    {
+        $validator = Validator::make($request->all(), [
+            'address' => 'required',
+            'street' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'country_id' => 'required',
+            'pincode' => 'required|numeric|min:5|max:6',
+        ]);
+
+        if($validator->fails()){
+            foreach($validator->errors()->toArray() as $error_key => $error_value){
+                $errors['error'] = $error_value[0];
+                return response()->json($errors, 422);
+            }
+        }
+
+        $message = "Address updated successfully.";
+
+        $address = UserAddress::where('id', $addressId)->where('user_id', Auth::user()->id)->first();
+        if(!$address){
+            $message = "Address added successfully.";
+            $address = new UserAddress();
+            $address->user_id = Auth::user()->id;
+        }
+        $addressType = 3;
+        if($request->has('address_type')){
+            if($request->address_type == 'home' || $request->address_type == 'Home'){
+                $addressType = 1;
+            }elseif($request->address_type == 'office' || $request->address_type == 'Office'){
+                $addressType = 2;
+            }
+        }
+        
+        $address->address = $request->address;
+        $address->street = $request->street;
+        $address->city = $request->city;
+        $address->state = $request->state;
+        $address->latitude = $request->latitude;
+        $address->longitude = $request->longitude;
+        $address->country_id = $request->country_id;
+        $address->pincode = $request->pincode;
+        $address->is_primary = $request->has('is_primary') ? 1 : 0;
+        $address->type = $addressType;
+        
+        $address->save();
+
+        return response()->json([
+            'message' => 'Profile updated successfully.',
+            'data' => $address,
+        ]);
+
     }
 }

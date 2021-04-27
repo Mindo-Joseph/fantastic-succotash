@@ -47,6 +47,7 @@ Route::group([
 
         Route::post('update/image', 'Api\v1\ProfileController@updateAvatar')->name('user.avatar');
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile')->name('user.updateProfile');
+        Route::post('user/address/{id?}', 'Api\v1\ProfileController@userAddress')->name('user.address');
     });
   
 });
