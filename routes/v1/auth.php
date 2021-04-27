@@ -36,18 +36,19 @@ Route::group([
     Route::group([
       'middleware' => ['dbCheck', 'AppAuth']
     ], function() {
-        Route::get('profile', 'Api\v1\ProfileController@profile')->name('user.profile');
-        Route::get('wishlists', 'Api\v1\ProfileController@wishlists')->name('user.wishlists');
-        Route::get('wishlist/update/{pid?}', 'Api\v1\ProfileController@updateWishlist')->name('addWishlist');
-        Route::get('addressBook/{id?}', 'Api\v1\ProfileController@addressBook')->name('user.addressBook');
-        Route::get('orders', 'Api\v1\ProfileController@orders')->name('user.orders');
-        Route::get('newsLetter', 'Api\v1\ProfileController@newsLetter')->name('user.newsLetter');
-        Route::get('account', 'Api\v1\ProfileController@account')->name('user.account');
-        Route::post('changePassword', 'Api\v1\ProfileController@changePassword')->name('user.changePassword');
+        Route::get('profile', 'Api\v1\ProfileController@profile');
+        Route::get('wishlists', 'Api\v1\ProfileController@wishlists');
+        Route::get('wishlist/update/{pid?}', 'Api\v1\ProfileController@updateWishlist');
+        Route::get('addressBook/{id?}', 'Api\v1\ProfileController@addressBook');
+        Route::get('orders', 'Api\v1\ProfileController@orders');
+        Route::get('newsLetter', 'Api\v1\ProfileController@newsLetter');
+        Route::get('account', 'Api\v1\ProfileController@account');
+        Route::post('changePassword', 'Api\v1\ProfileController@changePassword');
 
-        Route::post('update/image', 'Api\v1\ProfileController@updateAvatar')->name('user.avatar');
-        Route::post('update/profile', 'Api\v1\ProfileController@updateProfile')->name('user.updateProfile');
-        Route::post('user/address/{id?}', 'Api\v1\ProfileController@userAddress')->name('user.address');
+        Route::post('update/image', 'Api\v1\ProfileController@updateAvatar');
+        Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');
+        Route::post('user/getAddress', 'Api\v1\ProfileController@getAddress');
+        Route::get('primary/address/{id}', 'Api\v1\ProfileController@primaryAddress');
     });
   
 });

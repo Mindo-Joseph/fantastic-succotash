@@ -138,4 +138,64 @@ class ProductController extends BaseController
         }
         return $products;
     }
+
+    /**
+     * Display product variant data
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getVariantData(Request $request, $sku)
+    {
+        if(!$request->has('variants')){
+            return response()->json(['error' => 'Variants should not be empty.'], 422);
+        }
+        if(!$request->has('options')){
+            return response()->json(['error' => 'Options should not be empty.'], 422);
+        }
+
+        $product = Product::select('id')->where('sku', $sku)->first();
+        if(!$product){
+            return response()->json(['error' => 'No record found.'], 404);
+        }
+
+        $langId = Auth::user()->language;
+        $userid = Auth::user()->id;
+        $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+
+        $pv_ids = array();
+
+        foreach ($request->options as $key => $value) {
+            $newIds = array();
+
+            $product_variant = ProductVariantSet::where('variant_type_id', $request->variants[$key])
+                ->where('variant_option_id', $request->options[$key]);
+
+            if (!empty($pv_ids)) {
+                $product_variant = $product_variant->whereIn('product_variant_id', $pv_ids);
+            }
+            $product_variant = $product_variant->where('product_id', $product->id)->get();
+
+            if ($product_variant) {
+                foreach ($product_variant as $key => $value) {
+                    $newIds[] = $value->product_variant_id;
+                }
+            }
+            $pv_ids = $newIds;
+        }
+
+        $variantData = ProductVariant::select('id', 'sku', 'quantity', 'price',  'barcode', 'product_id')
+            ->where('id', $pv_ids[0])->first();
+
+        $variantData = ProductVariant::with('image.imagedata')
+                    ->select('id','sku', 'quantity', 'price',  'barcode', 'product_id')
+                    ->where('id', $pv_ids[0])->first();
+
+
+        if ($variantData) {
+            $variantData->productPrice = $variantData->price * $clientCurrency->doller_compare;
+        }
+        return response()->json([
+            'data' => $variantData,
+        ]);
+    }
 }

@@ -98,18 +98,16 @@ class ProfileController extends BaseController
      */
     public function addressBook($id = '')
     {
-    	$user = UserAddress::where('user_id', Auth::user()->id);
-    	if($id > 0){
-    		$user = $user->where('id', $id);
-    	}
-    	$user = $user->first();
+        $address = UserAddress::where('user_id', Auth::user()->id);
 
-        if(!$user){
-            return response()->json(['error' => 'No record found.'], 404);
+        if($id > 0){
+            $address = $address->where('id', $id);
         }
 
+         $address = $address->orderBy('is_primary', 'desc')->get();
+
         return response()->json([
-        	'data' => $user,
+            'data' => $address,
         ]);
     }
 
@@ -255,55 +253,80 @@ class ProfileController extends BaseController
             }
         }
 
+        $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
+                        'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
+
         $user = User::where('id', $usr)->first();
+
         $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone_number = $request->phone_number;
-        $user->save();
-        return response()->json([
-            'message' => 'Profile updated successfully.',
-            'data' => [ 
-                'name' => $user->name,
-                'email' => $user->email,
-                'phone_number' => $user->phone_number,
-            ],
-        ]);
+        $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
 
-    }
+        if($user->phone_number != trim($request->phone_number)){
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function updateLol(Request $request)
-    {
-        $usr = Auth::user()->id; 
-        $validator = Validator::make($request->all(), [
-            'name'          => 'required|string|min:3|max:50',
-            'email'         => 'required|email|max:50||unique:users,email,'.$usr,
-            'phone_number'  => 'required|string|min:10|max:15|unique:users,phone_number,'.$usr,
-        ]);
+            $phoneCode = mt_rand(100000, 999999);
+            $user->phone_number = $request->phone_number;
+            $user->is_phone_verified = 0;
+            $user->phone_token = $phoneCode;
+            $user->phone_token_valid_till = $sendTime;
 
-        if($validator->fails()){
-            foreach($validator->errors()->toArray() as $error_key => $error_value){
-                $errors['error'] = $error_value[0];
-                return response()->json($errors, 422);
+            if(!empty($prefer->sms_key) && !empty($prefer->sms_secret) && !empty($prefer->sms_from)){
+
+                $provider = $prefer->sms_provider;
+                $to = $request->phone_number;
+                $body = "Dear ".ucwords($request->phone_number).", Please enter OTP ".$phoneCode." to verify your account.";
+                $send = $this->sendSms($provider, $prefer->sms_key, $prefer->sms_secret, $prefer->sms_from, $to, $body);
+                $response['send_otp'] = 1;
             }
         }
 
-        $user = User::where('id', $usr)->first();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone_number = $request->phone_number;
+        if($user->email != trim($request->email)){
+
+            $emailCode = mt_rand(100000, 999999);
+            $user->email = $request->email;
+            $user->is_email_verified = 0;
+            $user->email_token = $emailCode;
+            $user->email_token_valid_till = $sendTime;
+
+            if(!empty($prefer->mail_driver) && !empty($prefer->mail_host) && !empty($prefer->mail_port) && !empty($prefer->mail_port) && !empty($prefer->mail_password) && !empty($prefer->mail_encryption)){
+
+                $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
+
+                $confirured = $this->setMailDetail($prefer->mail_driver, $prefer->mail_host, $prefer->mail_port, $prefer->mail_username, $prefer->mail_password, $prefer->mail_encryption);
+
+                $client_name = $client->name;
+                $mail_from = $prefer->mail_from;
+                $sendto = $request->email;
+                try{
+                    Mail::send('email.verify',[
+                            'customer_name' => ucwords($request->name),
+                            'code_text' => 'Enter below code to verify yoour account',
+                            'code' => 'qweqwewqe',
+                            'logo' => $client->logo['original'],
+                            'link'=>"link"
+                        ],
+                        function ($message) use($sendto, $client_name, $mail_from) {
+                        $message->from($mail_from, $client_name);
+                        $message->to($sendto)->subject('OTP to verify account');
+                    });
+                    $response['send_email'] = 1;
+                }
+                catch(\Exception $e){
+                    return response()->json(['data' => $response]);
+                }
+            }
+        }
+        
         $user->save();
+
+        $data['name'] = $user->name;
+        $data['email'] = $user->email;
+        $data['phone_number'] = $user->phone_number;
+        $data['is_phone_verified'] = $user->is_phone_verified;
+        $data['is_email_verified'] = $user->is_email_verified;
+
         return response()->json([
             'message' => 'Profile updated successfully.',
-            'data' => [ 
-                'name' => $user->name,
-                'email' => $user->email,
-                'phone_number' => $user->phone_number,
-            ],
+            'data' => $data
         ]);
 
     }
@@ -323,7 +346,7 @@ class ProfileController extends BaseController
             'latitude' => 'required',
             'longitude' => 'required',
             'country_id' => 'required',
-            'pincode' => 'required|numeric|min:5|max:6',
+            'pincode' => 'required|string|between:5,6',
         ]);
 
         if($validator->fails()){
@@ -333,6 +356,10 @@ class ProfileController extends BaseController
             }
         }
 
+        if($request->has('is_primary') && $request->is_primary == 1){
+            $add = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
+        }
+
         $message = "Address updated successfully.";
 
         $address = UserAddress::where('id', $addressId)->where('user_id', Auth::user()->id)->first();
@@ -340,6 +367,7 @@ class ProfileController extends BaseController
             $message = "Address added successfully.";
             $address = new UserAddress();
             $address->user_id = Auth::user()->id;
+            $address->is_primary = $request->has('is_primary') ? 1 : 0;
         }
         $addressType = 3;
         if($request->has('address_type')){
@@ -358,14 +386,35 @@ class ProfileController extends BaseController
         $address->longitude = $request->longitude;
         $address->country_id = $request->country_id;
         $address->pincode = $request->pincode;
-        $address->is_primary = $request->has('is_primary') ? 1 : 0;
         $address->type = $addressType;
         
         $address->save();
 
         return response()->json([
-            'message' => 'Profile updated successfully.',
+            'message' => $message,
             'data' => $address,
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function primaryAddress($addressId = 0)
+    {
+        $address = UserAddress::where('id', $addressId)->where('user_id', Auth::user()->id)->first();
+
+        if(!$address){
+            return response()->json(['error' => 'Address not found.'], 404);
+        }
+
+        $add = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
+
+        $add = UserAddress::where('user_id', Auth::user()->id)->where('id', $addressId)->update(['is_primary' => 1]);
+
+        return response()->json([
+            'message' => 'Address is set as primary address successfully.',
         ]);
 
     }
