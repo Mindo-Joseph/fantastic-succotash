@@ -8,17 +8,17 @@
         padding-bottom: 20px;
     }
 </style>
-    
+
 @endsection
 
 @section('content')
 
- <header>
+<header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
 <style type="text/css">
-    .productVariants .firstChild{
+    .productVariants .firstChild {
         min-width: 150px;
         text-align: left !important;
         border-radius: 0% !important;
@@ -26,7 +26,9 @@
         cursor: default;
         border: none !important;
     }
-    .product-right .color-variant li, .productVariants .otherChild{
+
+    .product-right .color-variant li,
+    .productVariants .otherChild {
         height: 35px;
         width: 35px;
         border-radius: 50%;
@@ -35,15 +37,17 @@
         border: 1px solid #f7f7f7;
         text-align: center;
     }
-    .productVariants .otherSize{
+
+    .productVariants .otherSize {
         height: auto !important;
         width: auto !important;
         border: none !important;
         border-radius: 0%;
     }
+
     .product-right .size-box ul li.active {
         background-color: inherit;
-        }
+    }
 </style>
 <section class="section-b-space">
     <div class="collection-wrapper">
@@ -81,21 +85,21 @@
                                 </div>
                             </div>
                             <div class="media">
-                                
+
                                 <div class="media-body">
                                     <h4>24 X 7 service</h4>
                                     <p>online service for new customer</p>
                                 </div>
                             </div>
                             <div class="media">
-                                
+
                                 <div class="media-body">
                                     <h4>festival offer</h4>
                                     <p>new online special festival offer</p>
                                 </div>
                             </div>
                             <div class="media border-0 m-0">
-                                
+
                                 <div class="media-body">
                                     <h4>online payment</h4>
                                     <p>Contrary to popular belief.</p>
@@ -108,30 +112,30 @@
                         <h5 class="title-border">new product</h5>
                         <div class="offer-slider slide-1">
                             @foreach($newProducts as $newProds)
-                                <div>
+                            <div>
                                 @foreach($newProds as $new)
-                                    <?php $imagePath = '';
-                                    foreach ($new['media'] as $k => $v) {
-                                        $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
-                                    } ?>
-                                    <div class="media">
-                                        <a href="{{route('productDetail', $new['sku'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
-                                        <div class="media-body align-self-center">
-                                            <div class="rating">
-                                                @for($i = 1; $i < 6; $i++)
-                                                    <i class="fa fa-star"></i>
+                                <?php $imagePath = '';
+                                foreach ($new['media'] as $k => $v) {
+                                    $imagePath = $v['image']['path']['proxy_url'] . '300/300' . $v['image']['path']['image_path'];
+                                } ?>
+                                <div class="media">
+                                    <a href="{{route('productDetail', $new['sku'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt=""></a>
+                                    <div class="media-body align-self-center">
+                                        <div class="rating">
+                                            @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
                                                 @endfor
-                                            </div>
-                                            <a href="{{route('productDetail', $new['sku'])}}">
-                                                <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
-                                            </a>
-                                            <h4>
-                                                <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                                {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
                                         </div>
+                                        <a href="{{route('productDetail', $new['sku'])}}">
+                                            <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
+                                        </a>
+                                        <h4>
+                                            <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
+                                            {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}}
+                                        </h4>
                                     </div>
-                                @endforeach
                                 </div>
+                                @endforeach
+                            </div>
                             @endforeach
                         </div>
                     </div>
@@ -148,18 +152,18 @@
                             <div class="col-lg-6">
                                 <div class="product-slick">
                                     @if(!empty($product->media))
-                                        @foreach($product->media as $k => $img)
-                                            <div><img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" alt="" src="{{$img->image->path['proxy_url'].'600/800'.$img->image->path['image_path']}}"></div>
-                                        @endforeach
+                                    @foreach($product->media as $k => $img)
+                                    <div><img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" alt="" src="{{$img->image->path['proxy_url'].'600/800'.$img->image->path['image_path']}}"></div>
+                                    @endforeach
                                     @endif
                                 </div>
                                 <div class="row">
                                     <div class="col-12 p-0">
                                         <div class="slider-nav">
                                             @if(!empty($product->media))
-                                                @foreach($product->media as $k => $img)
-                                                    <div><img class="img-fluid blur-up lazyload" alt="" src="{{$img->image->path['proxy_url'].'300/300'.$img->image->path['image_path']}}"></div>
-                                                @endforeach
+                                            @foreach($product->media as $k => $img)
+                                            <div><img class="img-fluid blur-up lazyload" alt="" src="{{$img->image->path['proxy_url'].'300/300'.$img->image->path['image_path']}}"></div>
+                                            @endforeach
                                             @endif
                                         </div>
                                     </div>
@@ -173,32 +177,32 @@
                                     <h3 id="productPriceValue">{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</h3>
                                     @if(!empty($product->variantSet))
 
-                                        @foreach($product->variantSet as $key => $variant)
-                                         @if($variant->type == 1 || $variant->type == 2)
+                                    @foreach($product->variantSet as $key => $variant)
+                                    @if($variant->type == 1 || $variant->type == 2)
 
-                                            <div class="size-box">
-                                                <ul class="productVariants">
-                                                    <li class="firstChild">{{$variant->title}}</li>
-                                                    <li class="otherSize">
+                                    <div class="size-box">
+                                        <ul class="productVariants">
+                                            <li class="firstChild">{{$variant->title}}</li>
+                                            <li class="otherSize">
 
-                                                    @foreach($variant->option2 as $k => $optn)
+                                                @foreach($variant->option2 as $k => $optn)
 
-                                                    <?php $var_id = $variant->variant_type_id;
-                                                        $opt_id = $optn->variant_option_id;
-                                                        $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';
-                                                    ?>
-                                                    <label class="radio d-inline-block txt-14">{{$optn->title}}
-                                                        <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="changeVariant dataVar{{$var_id}}">
-                                                        <span class="checkround"></span>
-                                                    </label>
-                                                    
-                                                    @endforeach
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                                <?php $var_id = $variant->variant_type_id;
+                                                $opt_id = $optn->variant_option_id;
+                                                $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';
+                                                ?>
+                                                <label class="radio d-inline-block txt-14">{{$optn->title}}
+                                                    <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="changeVariant dataVar{{$var_id}}">
+                                                    <span class="checkround"></span>
+                                                </label>
 
-                                         @else
-                                            <!-- <div class="size-box">
+                                                @endforeach
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    @else
+                                    <!-- <div class="size-box">
                                                 <ul class="productVariants">
                                                     <li class="firstChild">{{$variant->title}}</li>
                                                     @foreach($variant->option2 as $k => $optn)
@@ -215,37 +219,41 @@
                                                     @endforeach
                                                 </ul>
                                             </div> -->
-                                         @endif
-                                        @endforeach
-                                    @endif 
+                                    @endif
+                                    @endforeach
+                                    @endif
 
                                     <div class="product-description border-product">
-                                        <h6 class="product-title">quantity</h6>
+                                        @if($product->variant[0]->quantity == "120")
+                                        <h6 class="product-title">quantity: <span id="instock" style="color: green;">In Stock ({{$product->variant[0]->quantity}})</span></h6>
                                         <div class="qty-box">
                                             <div class="input-group">
                                                 <span class="input-group-prepend"><button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i></button> </span>
-                                                <input type="text" name="quantity" class="form-control input-number quantity_count" value="1">
-                                                <span class="input-group-prepend"><button type="button" class="btn quantity-right-plus" data-type="plus" data-field=""><i class="ti-angle-right"></i></button></span>
+                                                <input type="text" name="quantity" id="quantity" class="form-control input-number quantity_count" value="1">
+                                                <span class="input-group-prepend quant-plus"><button type="button" class="btn quantity-right-plus " data-type="plus" data-field=""><i class="ti-angle-right"></i></button></span>
                                             </div>
                                         </div>
+                                        @endif
                                     </div>
 
                                     @if(!empty($product->addOn))
                                     <div class="border-product">
                                         <h6 class="product-title">Addon List</h6>
-                                        
+
                                         <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
                                             <tbody>
                                                 @foreach($product->addOn as $row => $addon)
                                                 <tr>
-                                                    <td><h4 addon_id="{{$addon->addon_id}}" class="header-title productAddon">{{$addon->title}}</h4></td>
                                                     <td>
-                                                         @foreach($addon->setoptions as $k => $option)
-                                                            <div class="checkbox checkbox-success form-check-inline">
-                                                                <input type="checkbox" id="inlineCheckbox{{$k}}" name="addonData[$row][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}">
-                                                                <label class="pl-2" for="inlineCheckbox{{$k}}"> {{$option->title .' ($'.$option->price.')' }}</label>
-                                                            </div>
-                                                         @endforeach
+                                                        <h4 addon_id="{{$addon->addon_id}}" class="header-title productAddon">{{$addon->title}}</h4>
+                                                    </td>
+                                                    <td>
+                                                        @foreach($addon->setoptions as $k => $option)
+                                                        <div class="checkbox checkbox-success form-check-inline">
+                                                            <input type="checkbox" id="inlineCheckbox{{$k}}" class="chkPassport" name="addonData[$row][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}">
+                                                            <label class="pl-2" for="inlineCheckbox{{$k}}"> {{$option->title .' ($'.$option->price.')' }}</label>
+                                                        </div>
+                                                        @endforeach
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -254,9 +262,7 @@
                                     </div>
                                     @endif
 
-                                    <div class="product-buttons"><a href="#" data-toggle="modal"
-                                            data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a> <a
-                                            href="#" class="btn btn-solid">buy now</a></div>
+                                    <div class="product-buttons"><a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a> <a href="#" class="btn btn-solid">buy now</a></div>
                                     <div class="border-product">
                                         <h6 class="product-title">product details</h6>
                                         <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''}}</p>
@@ -298,14 +304,10 @@
                         <div class="row">
                             <div class="col-sm-12 col-lg-12">
                                 <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
-                                    <li class="nav-item"><a class="nav-link active" id="top-home-tab"
-                                            data-toggle="tab" href="#top-home" role="tab" aria-selected="true"><i
-                                                class="icofont icofont-ui-home"></i>Description</a>
+                                    <li class="nav-item"><a class="nav-link active" id="top-home-tab" data-toggle="tab" href="#top-home" role="tab" aria-selected="true"><i class="icofont icofont-ui-home"></i>Description</a>
                                         <div class="material-border"></div>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-toggle="tab"
-                                            href="#top-profile" role="tab" aria-selected="false"><i
-                                                class="icofont icofont-man-in-glasses"></i>Details</a>
+                                    <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-toggle="tab" href="#top-profile" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Details</a>
                                         <div class="material-border"></div>
                                     </li>
                                     <!--<li class="nav-item"><a class="nav-link" id="contact-top-tab" data-toggle="tab"
@@ -313,19 +315,15 @@
                                                 class="icofont icofont-contacts"></i>Video</a>
                                         <div class="material-border"></div>
                                     </li> -->
-                                    <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab"
-                                            href="#top-review" role="tab" aria-selected="false"><i
-                                                class="icofont icofont-contacts"></i>Write Review</a>
+                                    <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab" href="#top-review" role="tab" aria-selected="false"><i class="icofont icofont-contacts"></i>Write Review</a>
                                         <div class="material-border"></div>
                                     </li>
                                 </ul>
                                 <div class="tab-content nav-material" id="top-tabContent">
-                                    <div class="tab-pane fade show active" id="top-home" role="tabpanel"
-                                        aria-labelledby="top-home-tab">
+                                    <div class="tab-pane fade show active" id="top-home" role="tabpanel" aria-labelledby="top-home-tab">
                                         <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''}}</p>
                                     </div>
-                                    <div class="tab-pane fade" id="top-profile" role="tabpanel"
-                                        aria-labelledby="profile-top-tab">
+                                    <div class="tab-pane fade" id="top-profile" role="tabpanel" aria-labelledby="profile-top-tab">
                                         <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''}}</p>
                                     </div>
                                     <!-- <div class="tab-pane fade" id="top-contact" role="tabpanel"
@@ -336,8 +334,7 @@
                                                 allow="autoplay; encrypted-media" allowfullscreen></iframe>
                                         </div>
                                     </div> -->
-                                    <div class="tab-pane fade" id="top-review" role="tabpanel"
-                                        aria-labelledby="review-top-tab">
+                                    <div class="tab-pane fade" id="top-review" role="tabpanel" aria-labelledby="review-top-tab">
                                         <form class="theme-form">
                                             <div class="form-row">
                                                 <div class="col-md-12">
@@ -345,33 +342,27 @@
                                                         <label>Rating</label>
                                                         <div class="media-body ml-3">
                                                             <div class="rating three-star">
-                                                                @for($i = 1; $i < 6; $i++)
-                                                                    <i class="fa fa-star"></i>
-                                                                @endfor
+                                                                @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
+                                                                    @endfor
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="name">Name</label>
-                                                    <input type="text" class="form-control" id="name"
-                                                        placeholder="Enter Your name" required>
+                                                    <input type="text" class="form-control" id="name" placeholder="Enter Your name" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="email">Email</label>
-                                                    <input type="text" class="form-control" id="email"
-                                                        placeholder="Email" required>
+                                                    <input type="text" class="form-control" id="email" placeholder="Email" required>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="review">Review Title</label>
-                                                    <input type="text" class="form-control" id="review"
-                                                        placeholder="Enter your Review Subjects" required>
+                                                    <input type="text" class="form-control" id="review" placeholder="Enter your Review Subjects" required>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="review">Review Title</label>
-                                                    <textarea class="form-control"
-                                                        placeholder="Wrire Your Testimonial Here"
-                                                        id="exampleFormControlTextarea1" rows="6"></textarea>
+                                                    <textarea class="form-control" placeholder="Wrire Your Testimonial Here" id="exampleFormControlTextarea1" rows="6"></textarea>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <button class="btn btn-solid" type="submit">Submit YOur
@@ -403,24 +394,17 @@
                 <div class="product-box">
                     <div class="img-wrapper">
                         <div class="front">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/33.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#"><img src="{{asset('front-assets/images/pro3/33.jpg')}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
                         </div>
                         <div class="back">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/34.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#"><img src="{{asset('front-assets/images/pro3/34.jpg')}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
                         </div>
                         <div class="cart-info cart-wrap">
-                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i
-                                    class="ti-shopping-cart"></i></button> <a href="javascript:void(0)"
-                                title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#"
-                                data-toggle="modal" data-target="#quick-view" title="Quick View"><i
-                                    class="ti-search" aria-hidden="true"></i></a> <a href="compare.html"
-                                title="Compare"><i class="ti-reload" aria-hidden="true"></i></a></div>
+                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> <a href="javascript:void(0)" title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#" data-toggle="modal" data-target="#quick-view" title="Quick View"><i class="ti-search" aria-hidden="true"></i></a> <a href="compare.html" title="Compare"><i class="ti-reload" aria-hidden="true"></i></a>
+                        </div>
                     </div>
                     <div class="product-detail">
-                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-                                class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
+                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
                         <a href="product-page(no-sidebar).html">
                             <h6>Slim Fit Cotton Shirt</h6>
                         </a>
@@ -437,24 +421,17 @@
                 <div class="product-box">
                     <div class="img-wrapper">
                         <div class="front">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/1.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#"><img src="{{asset('front-assets/images/pro3/1.jpg')}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
                         </div>
                         <div class="back">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/2.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#"><img src="{{asset('front-assets/images/pro3/2.jpg')}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
                         </div>
                         <div class="cart-info cart-wrap">
-                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i
-                                    class="ti-shopping-cart"></i></button> <a href="javascript:void(0)"
-                                title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#"
-                                data-toggle="modal" data-target="#quick-view" title="Quick View"><i
-                                    class="ti-search" aria-hidden="true"></i></a> <a href="compare.html"
-                                title="Compare"><i class="ti-reload" aria-hidden="true"></i></a></div>
+                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> <a href="javascript:void(0)" title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#" data-toggle="modal" data-target="#quick-view" title="Quick View"><i class="ti-search" aria-hidden="true"></i></a> <a href="compare.html" title="Compare"><i class="ti-reload" aria-hidden="true"></i></a>
+                        </div>
                     </div>
                     <div class="product-detail">
-                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-                                class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
+                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
                         <a href="product-page(no-sidebar).html">
                             <h6>Slim Fit Cotton Shirt</h6>
                         </a>
@@ -471,24 +448,17 @@
                 <div class="product-box">
                     <div class="img-wrapper">
                         <div class="front">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/27.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#"><img src="{{asset('front-assets/images/pro3/27.jpg')}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
                         </div>
                         <div class="back">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/28.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#"><img src="{{asset('front-assets/images/pro3/28.jpg')}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
                         </div>
                         <div class="cart-info cart-wrap">
-                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i
-                                    class="ti-shopping-cart"></i></button> <a href="javascript:void(0)"
-                                title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#"
-                                data-toggle="modal" data-target="#quick-view" title="Quick View"><i
-                                    class="ti-search" aria-hidden="true"></i></a> <a href="compare.html"
-                                title="Compare"><i class="ti-reload" aria-hidden="true"></i></a></div>
+                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> <a href="javascript:void(0)" title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#" data-toggle="modal" data-target="#quick-view" title="Quick View"><i class="ti-search" aria-hidden="true"></i></a> <a href="compare.html" title="Compare"><i class="ti-reload" aria-hidden="true"></i></a>
+                        </div>
                     </div>
                     <div class="product-detail">
-                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-                                class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
+                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
                         <a href="product-page(no-sidebar).html">
                             <h6>Slim Fit Cotton Shirt</h6>
                         </a>
@@ -505,24 +475,17 @@
                 <div class="product-box">
                     <div class="img-wrapper">
                         <div class="front">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/35.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#"><img src="{{asset('front-assets/images/pro3/35.jpg')}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
                         </div>
                         <div class="back">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/36.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#"><img src="{{asset('front-assets/images/pro3/36.jpg')}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
                         </div>
                         <div class="cart-info cart-wrap">
-                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i
-                                    class="ti-shopping-cart"></i></button> <a href="javascript:void(0)"
-                                title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#"
-                                data-toggle="modal" data-target="#quick-view" title="Quick View"><i
-                                    class="ti-search" aria-hidden="true"></i></a> <a href="compare.html"
-                                title="Compare"><i class="ti-reload" aria-hidden="true"></i></a></div>
+                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> <a href="javascript:void(0)" title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#" data-toggle="modal" data-target="#quick-view" title="Quick View"><i class="ti-search" aria-hidden="true"></i></a> <a href="compare.html" title="Compare"><i class="ti-reload" aria-hidden="true"></i></a>
+                        </div>
                     </div>
                     <div class="product-detail">
-                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-                                class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
+                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
                         <a href="product-page(no-sidebar).html">
                             <h6>Slim Fit Cotton Shirt</h6>
                         </a>
@@ -539,24 +502,17 @@
                 <div class="product-box">
                     <div class="img-wrapper">
                         <div class="front">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/2.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#"><img src="{{asset('front-assets/images/pro3/2.jpg')}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
                         </div>
                         <div class="back">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/1.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#"><img src="{{asset('front-assets/images/pro3/1.jpg')}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
                         </div>
                         <div class="cart-info cart-wrap">
-                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i
-                                    class="ti-shopping-cart"></i></button> <a href="javascript:void(0)"
-                                title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#"
-                                data-toggle="modal" data-target="#quick-view" title="Quick View"><i
-                                    class="ti-search" aria-hidden="true"></i></a> <a href="compare.html"
-                                title="Compare"><i class="ti-reload" aria-hidden="true"></i></a></div>
+                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> <a href="javascript:void(0)" title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#" data-toggle="modal" data-target="#quick-view" title="Quick View"><i class="ti-search" aria-hidden="true"></i></a> <a href="compare.html" title="Compare"><i class="ti-reload" aria-hidden="true"></i></a>
+                        </div>
                     </div>
                     <div class="product-detail">
-                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-                                class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
+                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
                         <a href="product-page(no-sidebar).html">
                             <h6>Slim Fit Cotton Shirt</h6>
                         </a>
@@ -573,24 +529,17 @@
                 <div class="product-box">
                     <div class="img-wrapper">
                         <div class="front">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/28.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#"><img src="{{asset('front-assets/images/pro3/28.jpg')}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
                         </div>
                         <div class="back">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/27.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#"><img src="{{asset('front-assets/images/pro3/27.jpg')}}" class="img-fluid blur-up lazyload bg-img" alt=""></a>
                         </div>
                         <div class="cart-info cart-wrap">
-                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i
-                                    class="ti-shopping-cart"></i></button> <a href="javascript:void(0)"
-                                title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#"
-                                data-toggle="modal" data-target="#quick-view" title="Quick View"><i
-                                    class="ti-search" aria-hidden="true"></i></a> <a href="compare.html"
-                                title="Compare"><i class="ti-reload" aria-hidden="true"></i></a></div>
+                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> <a href="javascript:void(0)" title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#" data-toggle="modal" data-target="#quick-view" title="Quick View"><i class="ti-search" aria-hidden="true"></i></a> <a href="compare.html" title="Compare"><i class="ti-reload" aria-hidden="true"></i></a>
+                        </div>
                     </div>
                     <div class="product-detail">
-                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-                                class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
+                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
                         <a href="product-page(no-sidebar).html">
                             <h6>Slim Fit Cotton Shirt</h6>
                         </a>
@@ -612,12 +561,12 @@
 
 <script type="text/javascript">
     var ajaxCall = 'ToCancelPrevReq';
-    $('.changeVariant').click(function(){
+    $('.changeVariant').click(function() {
         var variants = [];
         var options = [];
-        $('.changeVariant').each(function () {
+        $('.changeVariant').each(function() {
             var that = this;
-            if(this.checked == true){
+            if (this.checked == true) {
                 variants.push($(that).attr('vid'));
                 options.push($(that).attr('optid'));
             }
@@ -629,11 +578,11 @@
             url: "{{ route('productVariant', $product->sku) }}",
             data: {
                 "_token": "{{ csrf_token() }}",
-                "variants": variants, 
+                "variants": variants,
                 "options": options,
             },
-            beforeSend : function() {
-                if(ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
+            beforeSend: function() {
+                if (ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
                     ajaxCall.abort();
                 }
             },
@@ -642,16 +591,55 @@
                 console.log(res.id);
                 $('#prod_variant_id').val(res.id);
                 $('#productPriceValue').html(res.productPrice);
+                $('#instock').html("In Stock (" + res.quantity + ")");
             },
-            error: function (data) {
-                
+            error: function(data) {
+
             },
         });
     });
-
 </script>
 
 <script>
+var addonids = [];
+var addonoptids = [];
+    $(function() {0
+        $(".chkPassport").click(function() {
+            var addonId = $(this).attr("addonId");
+            var addonOptId = $(this).attr("addonOptId");
+            if ($(this).is(":checked")) {
+                addonids.push(addonId); 
+                addonoptids.push(addonOptId);
+                console.log(addonoptids);
+            } else {
+                addonids.splice(addonids.indexOf(addonId), 1);
+                addonoptids.splice(addonoptids.indexOf(addonOptId), 1);
+                console.log(addonoptids);
+            }
+        });
+    });
+
+    $(document).on('click', '.quantity-right-plus', function() {
+        var quan = parseInt($('.quantity_count').val());
+        var str = $('#instock').html();
+        var res = parseInt(str.substring(10, str.length - 1));
+        if (quan > res) {
+            alert("Quantity is not available in stock");
+            $('.quantity_count').val(res)
+        }
+
+    });
+
+    $(document).on('change', '.quantity_count', function() {
+        var quan = $(this).val();
+        var str = $('#instock').html();
+        var res = parseInt(str.substring(10, str.length - 1));
+        if (quan > res) {
+            alert("Quantity is not available in stock");
+            $('.quantity_count').val(res)
+        }
+    });
+
     $('.addToCart').click(function() {
         addToCart();
     });
@@ -667,6 +655,8 @@
                 "product_id": "{{$product->id}}",
                 "variant_id": $('#prod_variant_id').val(),
                 "quantity": $('.quantity_count').val(),
+                "addonID" : addonids,
+                "addonoptID" : addonoptids,
             },
             success: function(response) {
                 console.log(response);
@@ -674,7 +664,7 @@
                 // $(".otp-section").attr("style", "display:block")
             },
             error: function(data) {
-
+                console.log(data);
             },
         });
     }

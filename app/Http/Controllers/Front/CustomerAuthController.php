@@ -85,7 +85,7 @@ class CustomerAuthController extends FrontController
                 }
                 $userFind->delete();
             }
-            \Cookie::queue(Cookie::forget('uuid'));
+            \Cookie::queue(\Cookie::forget('uuid'));
 
             return redirect()->route('user.checkout');
         }
