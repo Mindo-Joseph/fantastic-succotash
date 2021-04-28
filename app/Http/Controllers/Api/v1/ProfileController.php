@@ -41,7 +41,6 @@ class ProfileController extends BaseController
                 ])->select( "id", "user_id", "product_id")
         		->where('user_id', Auth::user()->id)->paginate($paginate);
 
-
     	if(!empty($wishList)){
     		foreach ($wishList as $key => $prod) {
     			if(!empty($prod->product->variant)){
@@ -177,7 +176,7 @@ class ProfileController extends BaseController
         }
         $user_id = Auth::User()->id;                       
         $obj_user = User::find(Auth::User()->id);
-        $obj_user->password = Hash::make($request_data['new_password']);
+        $obj_user->password = Hash::make($request->new_password);
         $obj_user->save(); 
         return response()->json([
             'message' => 'Password updated successfully.',
@@ -328,7 +327,6 @@ class ProfileController extends BaseController
             'message' => 'Profile updated successfully.',
             'data' => $data
         ]);
-
     }
 
     /**
@@ -416,6 +414,5 @@ class ProfileController extends BaseController
         return response()->json([
             'message' => 'Address is set as primary address successfully.',
         ]);
-
     }
 }
