@@ -93,6 +93,8 @@ class AuthController extends BaseController
         $user->auth_token = $token;
         $user->save();
 
+        $checkSystemUser = $this->checkCookies($user->id);
+
         $data['auth_token'] =  $token;
         $data['name'] = $user->name;
         $data['email'] = $user->email;
@@ -162,6 +164,7 @@ class AuthController extends BaseController
         $user->save();
 
         if($user->id > 0){
+            $checkSystemUser = $this->checkCookies($user->id);
             $response['status'] = 'Success';
             $response['auth_token'] =  $token;
             $response['name'] = $user->name;

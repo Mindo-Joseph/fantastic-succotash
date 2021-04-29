@@ -55,7 +55,8 @@ class FrontController extends Controller
                             $q->groupBy('product_id');
                         },
                     ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating');
-        if($where !== ''){
+        
+                    if($where !== ''){
             $products = $products->where($where, 1);
         }
         if(is_array($venderIds) && count($venderIds) > 0){
@@ -98,15 +99,16 @@ class FrontController extends Controller
     public function checkCookies($userid)
     {
         if (isset($_COOKIE['uuid'])) {
-            $userFind = User::where('system_id', $_COOKIE['uuid'])->first();
-            $cart = Cart::where('user_id', $userFind->id)->first();
-            $cart->user_id = $userid;
-            $cart->save();
-
+            $userFind = User::where('system_id', Auth::user()->system_user)->first();
+            if($userFind){
+                $cart = Cart::where('user_id', $userFind->id)->first();
+                if($cart){
+                    $cart->user_id = $userid;
+                    $cart->save();
+                }
+                $userFind->delete();
+            }
             setcookie("uuid", "", time() - 3600);
-
-            $userFind->delete();
-
             return redirect()->route('user.checkout');
         }
     }

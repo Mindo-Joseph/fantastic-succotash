@@ -36,7 +36,7 @@ Route::group([
       'middleware' => 'dbCheck'
     ], function() {
         Route::post('social/info', 'Api\v1\SocialController@getKeys');
-        Route::post('social/login', 'Api\v1\SocialController@login');
+        Route::post('social/login/{driver}', 'Api\v1\SocialController@login');
     });
 
 

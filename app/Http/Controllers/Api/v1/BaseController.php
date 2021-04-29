@@ -11,6 +11,7 @@ use App\Models\{Client, Category, Product, ClientPreference};
 use Session;
 use App;
 use Config;
+use Illuminate\Support\Facades\Auth;
 
 class BaseController extends Controller
 {
@@ -168,16 +169,17 @@ class BaseController extends Controller
     public function checkCookies($userid)
     {
         if (isset(Auth::user()->system_user) && !empty(Auth::user()->system_user)) {
-            $userFind = User::where('system_id', $_COOKIE['uuid'])->first();
-            $cart = Cart::where('user_id', $userFind->id)->first();
-            $cart->user_id = $userid;
-            $cart->save();
 
-            setcookie("uuid", "", time() - 3600);
-
-            $userFind->delete();
-
-            return redirect()->route('user.checkout');
+            $userFind = User::where('system_id', Auth::user()->system_user)->first();
+            if($userFind){
+                $cart = Cart::where('user_id', $userFind->id)->first();
+                if($cart){
+                    $cart->user_id = $userid;
+                    $cart->save();
+                }
+                $userFind->delete();
+            }
         }
+        return $userid;
     }
 }

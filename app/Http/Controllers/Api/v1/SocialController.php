@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Agent, AgentLog, Client, ClientPreference, Cms, Order, Task, TaskProof};
+use App\Models\{User, Product, Cart, ClientCurrency, Brand, CartAddon, UserDevice, ClientPreference};
 use Validation;
 use DB;
 use JWT\Token;
@@ -47,37 +47,60 @@ class SocialController extends BaseController
 
     public function login(Request $request, $driver = '')
     {
-        $customer = User::where('id', '>', 0);
-        if($driver == 'facebook'){
-            $customer = $customer->where('facebook_auth_id', $request->auth_id);
-        } elseif ($driver == 'twitter'){
-            $customer = $customer->where('twitter_auth_id', $request->auth_id);
-
-        } elseif ($driver == 'google'){
-            $customer = $customer->where('google_auth_id', $request->auth_id);
+        $validator = Validator::make($request->all(), [
+            'name'          => 'required|string|min:3|max:50',
+            'auth_id'       => 'required|string',
+            'device_type'   => 'required|string',
+            'device_token'  => 'required|string'
+        ]);
+        if($validator->fails()){
+            foreach($validator->errors()->toArray() as $error_key => $error_value){
+                $errors['error'] = $error_value[0];
+                return response()->json($errors, 422);
+            }
         }
-        $customer = $customer->first();
 
+        $email = ($request->has('email') && !empty($request->email)) ? $request->email : 'xyz';
+
+        $customer = User::where('id', '>', 0)->where('email', $email)->first();
         if(!$customer){
 
-            $customer = new User();
-            $eml = $request->auth_id.'@'.$driver.'-xyz.com';
-
-            $customer->name = $request->name;
-            $customer->email = empty($request->email) ? $eml : $request->email;
-            $customer->password = Hash::make($user->getId());
-            $customer->type = 1;
-            
-            $customer->role_id = 1;
-
+            $customer = User::where('id', '>', 0);
             if($driver == 'facebook'){
-                $customer->facebook_auth_id = $user->getId();
+                $customer = $customer->where('facebook_auth_id', $request->auth_id);
             } elseif ($driver == 'twitter'){
-                $customer->twitter_auth_id = $user->getId();
+                $customer = $customer->where('twitter_auth_id', $request->auth_id);
 
             } elseif ($driver == 'google'){
-                $customer->google_auth_id = $user->getId();
+                $customer = $customer->where('google_auth_id', $request->auth_id);
             }
+            $customer = $customer->first();
+
+            if(!$customer){
+                $customer = new User();
+                $customer->name = $request->name;
+                $eml = $request->auth_id.'@'.$driver.'-xyz.com';
+                $customer->email = ($request->has('email') && !empty($request->email)) ? $request->email : $eml;
+                $customer->password = Hash::make($request->auth_id);
+                $customer->type = 1;
+                $customer->role_id = 1;
+                
+            }
+        }
+
+        if($driver == 'facebook'){
+            $customer->facebook_auth_id = $request->auth_id;
+        } elseif ($driver == 'twitter'){
+            $customer->twitter_auth_id = $request->auth_id;
+
+        } elseif ($driver == 'google'){
+            $customer->google_auth_id = $request->auth_id;
+        } elseif ($driver == 'apple'){
+            $customer->apple_auth_id = $request->auth_id;
+        }
+
+        if($request->has('phone_number')){
+            $customer->phone_number = $request->phone_number;
         }
 
         $customer->status = 1;
@@ -99,19 +122,24 @@ class SocialController extends BaseController
         $customer->save();
 
         if($customer->id > 0){
-            $user_device[] = [
-                'user_id' => $customer->id,
-                'device_type' => $request->device_type,
-                'device_token' => $request->device_token,
-                'access_token' => ''
-            ];
-            UserDevice::insert($user_device);
+
+            $checkSystemUser = $this->checkCookies($customer->id);
+
+            $user_device = UserDevice::where('user_id', $customer->id)->where('device_type', '!=', 'web')->first();
+            if(!$user_device){
+                $user_device = new UserDevice();
+                $user_device->user_id = $customer->id;
+                $user_device->access_token = '';
+            }
+            $user_device->device_type = $request->device_type;
+            $user_device->device_token = $request->device_token;
+            $user_device->save();
 
             $response['status'] = 'Success';
             $response['auth_token'] =  $token;
-            $response['name'] = $user->name;
-            $response['email'] = $user->email;
-            $response['phone_number'] = $user->phone_number;
+            $response['name'] = $customer->name;
+            $response['email'] = $customer->email;
+            $response['phone_number'] = $customer->phone_number;
             $verified['is_email_verified'] = 1;
             $verified['is_phone_verified'] = 1;
 
