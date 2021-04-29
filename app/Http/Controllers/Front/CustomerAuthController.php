@@ -70,6 +70,7 @@ class CustomerAuthController extends FrontController
         return view('forntend/account/resetSuccess')->with(['navCategories' => $navCategories]);
     }
 
+
     /**     * check if cookie already exist     */
     public function checkCookies($userid)
     {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet};
 use Illuminate\Http\Request;
 use Session;
 use Auth;
@@ -142,7 +142,8 @@ class ProductController extends FrontController
     {
         $langId = Session::get('customerLanguage');
 
-        if ($request->has('addonID') && $request->has('addonID')) {
+        if ($request->has('addonID') && $request->has('addonoptID')) {
+
             $addon_ids = $request->addonID;
             $addon_options = $request->addonoptID;
 
@@ -176,16 +177,6 @@ class ProductController extends FrontController
             }
         }
 
-
-
-
-
-
-
-
-
-
-        dd("fef");
         $user_id = ' ';
         $cartInfo = ' ';
         if (Auth::user()) {
@@ -204,7 +195,7 @@ class ProductController extends FrontController
                 $cart->currency_id = $currency->currency->id;
                 $cart->save();
 
-                $cartInfo = $cart->id;
+                $cartInfo = $cart;
             } else {
                 $cartInfo = $userFind;
             }
@@ -215,7 +206,7 @@ class ProductController extends FrontController
 
                 $token = $this->randomString();
                 setcookie("uuid", $token, time() + (10 * 365 * 24 * 60 * 60), "/");
-                // 86400 = 1 day
+
                 $val = $token;
                 $user = new User;
                 $user->name = "Test";
@@ -240,34 +231,45 @@ class ProductController extends FrontController
 
                 $cartInfo = $cart;
             } else {
-                dd("grergerg");
                 $val = $_COOKIE["uuid"];
                 $userInfo = User::where('system_id', $val)->first();
                 $user_id = $userInfo->id;
 
                 $cartInfo = Cart::where('user_id', $user_id)->first();
 
-                $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->first();
+                $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cartInfo->id)->first();
                 if ($checkIfExist) {
                     $checkIfExist->quantity = (int)$checkIfExist->quantity + 1;
                     $cartInfo->cartProducts()->save($checkIfExist);
                     return response()->json($user_id);
                 }
             }
-
-            $cartProduct = new CartProduct;
-            $cartProduct->product_id = $request->product_id;
-            $cartProduct->cart_id  = $cartInfo->id;
-            $cartProduct->quantity  = $request->quantity;
-            $cartProduct->created_by  = $user_id;
-            $cartProduct->status  = '0';
-            $cartProduct->variant_id  = $request->variant_id;
-            $cartProduct->is_tax_applied  = '1';
-            $cartProduct->save();
-            //$cartInfo->cartProducts()->save($cartProduct);
-
-            return response()->json($user_id);
         }
+
+        $cartProduct = new CartProduct;
+        $cartProduct->product_id = $request->product_id;
+        $cartProduct->cart_id  = $cartInfo->id;
+        $cartProduct->quantity  = $request->quantity;
+        $cartProduct->created_by  = $user_id;
+        $cartProduct->status  = '0';
+        $cartProduct->variant_id  = $request->variant_id;
+        $cartProduct->is_tax_applied  = '1';
+        $cartProduct->save();
+        //$cartInfo->cartProducts()->save($cartProduct);
+
+        if ($request->has('addonID') && $request->has('addonID')) {
+            foreach ($addon_ids as $key => $value) {
+                $aa = $addon_ids[$key];
+                $bb = $addon_options[$key];
+                $cartAddOn = new CartAddon;
+                $cartAddOn->cart_product_id = $cartProduct->id;
+                $cartAddOn->addon_id = $aa;
+                $cartAddOn->option_id = $bb;
+                $cartAddOn->save();
+            }
+        }
+
+        return response()->json($user_id);
         // dd($request->all());
     }
 

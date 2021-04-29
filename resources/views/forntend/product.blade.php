@@ -224,7 +224,6 @@
                                     @endif
 
                                     <div class="product-description border-product">
-                                        @if($product->variant[0]->quantity == "120")
                                         <h6 class="product-title">quantity: <span id="instock" style="color: green;">In Stock ({{$product->variant[0]->quantity}})</span></h6>
                                         <div class="qty-box">
                                             <div class="input-group">
@@ -233,7 +232,6 @@
                                                 <span class="input-group-prepend quant-plus"><button type="button" class="btn quantity-right-plus " data-type="plus" data-field=""><i class="ti-angle-right"></i></button></span>
                                             </div>
                                         </div>
-                                        @endif
                                     </div>
 
                                     @if(!empty($product->addOn))

@@ -32,10 +32,18 @@ Route::group([
     'prefix' => 'v1'
 ], function () {
 
+    Route::group([
+      'middleware' => 'dbCheck'
+    ], function() {
+        Route::post('social/info', 'Api\v1\SocialController@getKeys');
+        Route::post('social/login', 'Api\v1\SocialController@login');
+    });
+
 
     Route::group([
       'middleware' => ['dbCheck', 'AppAuth']
     ], function() {
+
         Route::get('profile', 'Api\v1\ProfileController@profile');
         Route::get('wishlists', 'Api\v1\ProfileController@wishlists');
         Route::get('wishlist/update/{pid?}', 'Api\v1\ProfileController@updateWishlist');

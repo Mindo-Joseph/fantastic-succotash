@@ -153,6 +153,8 @@ class FacebookController extends FrontController
             $customer->type = 1;
             $customer->status = 1;
             $customer->role_id = 1;
+            $customer->is_email_verified = 1;
+            $customer->is_phone_verified = 1;
             $customer->save();
 
             if($customer->id > 0){
@@ -164,12 +166,6 @@ class FacebookController extends FrontController
                 ];
                 UserDevice::insert($user_device);
 
-                $user_verify[] = [
-                    'user_id' => $customer->id,
-                    'is_email_verified' => 0,
-                    'is_phone_verified' => 0
-                ];
-                UserVerification::insert($user_verify);
                 Auth::login($customer);
                 return redirect()->route('userHome');
             }

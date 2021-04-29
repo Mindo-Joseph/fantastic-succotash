@@ -62,8 +62,8 @@
                                 aria-hidden="true"></i> back</span></div>
                     <div class="block-content">
                         <ul>
-                            <li class="active"><a href="#">Account Info</a></li>
-                            <li><a href="{{route('user.addressBook')}}">Address Book</a></li>
+                            <li><a href="#">Account Info</a></li>
+                            <li class="active"><a href="{{route('user.addressBook')}}">Address Book</a></li>
                             <li><a href="#">My Orders</a></li>
                             <li><a href="#">My Wishlist</a></li>
                             <li><a href="#">Newsletter</a></li>
@@ -78,41 +78,35 @@
                 <div class="dashboard-right">
                     <div class="dashboard">
                         <div class="page-title">
-                            <h2>My Dashboard</h2>
+                            <h2>Address Book</h2>
                         </div>
                         <div class="welcome-msg">
                             <h5>Hello, {{ucwords(Auth::user()->name)}} !</h5>
-                            <p>From your My Account Dashboard you have the ability to view a snapshot of your recent
-                                account activity and update your account information. Select a link below to view or
-                                edit information.</p>
+                            <p>Here are all your addresses</p>
                         </div>
                         <div class="box-account box-info">
                             <div class="box-head">
-                                <h2>Account Information</h2>
+                                <h2></h2>
+                                <a href="{{route('addNewAddress')}}">Add new Address</a>
                             </div>
-                            <div class="row">
+                            <div class="row mb-3">
+                            @foreach($useraddress as $add)
                                 <div class="col-sm-6">
                                     <div class="box">
                                         <div class="box-title">
-                                            <h3>Contact Information</h3><a href="#">Edit</a>
+                                            <h3 style="float: left;">Address</h3><span style="float: right;"><a href="{{ route('setPrimaryAddress', $add->id) }}" class="mr-2">Set Primary</a> <a href="{{ route('deleteAddress', $add->id) }}" class="mr-2">Delete</a> <a href="{{ route('editAddress', $add->id) }}" class="mr-2">Edit</a></span>
                                         </div>
                                         <div class="box-content">
-                                            <h6>{{ucwords(Auth::user()->name)}}</h6>
-                                            <h6>{{Auth::user()->email}}</h6>
-                                            <h6>{{Auth::user()->phone_number}}</h6>
+                                            <h6>Address: {{$add->address}}</h6>
+                                            <h6>Street: {{$add->street}}</h6>
+                                            <h6>City: {{$add->city}}</h6>
+                                            <h6>State: {{$add->state}}</h6>
+                                            <h6>Country: {{$add->country->name}}</h6>
+                                            <h6>Pincode: {{$add->pincode}}</h6>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="box">
-                                        <div class="box-title">
-                                            <h3>Newsletters</h3><a href="#">Edit</a>
-                                        </div>
-                                        <div class="box-content">
-                                            <p>You are currently not subscribed to any newsletter.</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                             <div>
                                 <div class="box">
