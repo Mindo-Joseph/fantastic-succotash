@@ -1,4 +1,7 @@
 <?php
+
+use App\Http\Controllers\SearchController;
+
 Route::get('admin/login', function () {
     return view('auth/login');
 })->name('admin.login');
@@ -81,7 +84,13 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 
     Route::get('stripe/showForm', 'Client\PaymentController@showForm')->name('stripe.form');
     Route::post('stripe/make', 'Client\PaymentController@makePayment')->name('stripe.makePayment');
+
+
+    
 });
+
+
+Route::get('/search11',[SearchController::class,'search']);
 
 Route::group(['middleware' => 'auth:client', 'prefix' => '/admin'], function () {
     Route::get('/', 'Client\DashBoardController@index')->name('home');

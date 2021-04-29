@@ -322,4 +322,6 @@ class ProductController extends FrontController
             ->update(['status' => '2']);
         return response()->json('successfully deleted');
     }
+
 }
+
