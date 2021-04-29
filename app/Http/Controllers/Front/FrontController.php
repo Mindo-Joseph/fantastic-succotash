@@ -55,7 +55,8 @@ class FrontController extends Controller
                             $q->groupBy('product_id');
                         },
                     ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating');
-        if($where !== ''){
+        
+                    if($where !== ''){
             $products = $products->where($where, 1);
         }
         if(is_array($venderIds) && count($venderIds) > 0){

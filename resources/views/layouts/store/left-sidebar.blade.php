@@ -98,9 +98,9 @@ echo '<pre>';print_r($currencyList->toArray()); -->
                                                 <div class="container">
                                                     <div class="row">
                                                         <div class="col-xl-12">
-                                                            <form>
+                                                            <form action="/search" method="GET">
                                                                 <div class="form-group">
-                                                                    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Search a Product">
+                                                                    <input type="text" class="form-control" id="exampleInputPassword1" name="query" placeholder="Search a Product">
                                                                 </div>
                                                                 <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
                                                             </form>

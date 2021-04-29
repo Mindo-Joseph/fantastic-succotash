@@ -43,7 +43,7 @@
         </div>
     </section>
     <!-- Home slider end -->
-
+<!-- category -->
     <section class="section-b-space border-section border-top-0">
         <div class="row">
             <div class="col">
@@ -138,7 +138,7 @@
                                         $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                                     } ?>
                                     <div class="media">
-                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
+                                        <a href="{{route('productDetail', $new['sku'])}}"><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                         <div class="media-body align-self-center">
                                             <div class="rating">
                                                 @for($i = 1; $i < 6; $i++)
