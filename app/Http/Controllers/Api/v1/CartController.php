@@ -7,7 +7,7 @@ use App\Model\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand};
+use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, AddonSet};
 use Validation;
 use DB;
 use Illuminate\Support\Facades\Hash;
@@ -42,8 +42,10 @@ class CartController extends BaseController
      */
     public function add(Request $request)
     {
+        $langId = Auth::user()->language;
         $user_id = '';
         $cartInfo = '';
+
         $product = Product::where('sku', $request->sku)->first();
         if(!$product){
             return response()->json(['error' => 'Invalid product.'], 404);
@@ -52,6 +54,50 @@ class CartController extends BaseController
         $productVariant = ProductVariant::where('product_id', $product->id)->where('id', $request->product_variant_id)->first();
         if(!$productVariant){
             return response()->json(['error' => 'Invalid product variant.'], 404);
+        }
+
+        if($product->sell_when_out_of_stock == 0 && $productVariant->quantity < $request->quantity){
+            return response()->json(['error' => 'You Can not order more than ' . $productVariant->quantity . ' quantity.'], 404);
+        }
+
+        $addon_ids = $addon_options = array();
+
+        if($request->has('addon_ids')){
+            $addon_ids = $request->addon_ids;
+        }
+
+        if($request->has('addon_options')){
+            $addon_options = $request->addon_options;
+        }
+
+        $addonSets = array();
+
+        foreach($addon_options as $key => $opt){
+            $addonSets[$addon_ids[$key]][] = $opt;
+        }
+
+        foreach($addonSets as $key => $value){
+            $addon = AddonSet::join('addon_set_translations as ast', 'ast.addon_id', 'addon_sets.id')
+                        ->select('addon_sets.id', 'addon_sets.min_select', 'addon_sets.max_select', 'ast.title')
+                        ->where('ast.language_id', $langId)
+                        ->where('addon_sets.status', '!=', '2')
+                        ->where('addon_sets.id', $key)->first();
+            if(!$addon){
+                return response()->json(['error' => 'Invalid addon or delete by admin. Try again with remove some.'], 404);
+            }
+            if($addon->min_select > count($value)){
+                return response()->json([
+                    'error' => 'Select minimum ' . $addon->min_select .' options of ' .$addon->title,
+                    'data' => $addon
+                ], 404);
+            }
+            if($addon->max_select < count($value)){
+                return response()->json([
+                    'error' => 'You can select maximum ' . $addon->min_select .' options of ' .$addon->title,
+                    'data' => $addon
+
+                ], 404);
+            }
         }
 
         if (Auth::user()->id && Auth::user()->id > 0) {
@@ -71,7 +117,6 @@ class CartController extends BaseController
                 $user->save();
             }
             $user_id = $user->id;
-
         }
 
         $cart = Cart::where('user_id', $user_id)->first();
@@ -83,7 +128,7 @@ class CartController extends BaseController
             $cart->is_gift = '0';
             $cart->status = '0';
             $cart->item_count = $request->quantity;
-            $cart->currency_id = Auth::user()->currency;            
+            $cart->currency_id = Auth::user()->currency;
         }else{
             $cart->item_count = $cart->item_count + $request->quantity;
         }
@@ -107,7 +152,6 @@ class CartController extends BaseController
             $cartProduct->status  = '0';
             $cartProduct->variant_id  = $productVariant->id;
             $cartProduct->is_tax_applied  = '1';
-            //$cartProduct->tax_rate_id = $product->
             $cartProduct->save();
         }
 

@@ -11,11 +11,10 @@ Route::group([
         Route::post('header', 'Api\v1\HomeController@headerContent');
         Route::get('product/{id}', 'Api\v1\ProductController@productById');
         Route::post('get-products', 'Api\v1\ProductController@productList');
-
+        Route::post('productByVariant/{id}','Api\v1\ProductController@getVariantData')->name('productVariant');
 
         Route::get('category/{id?}', 'Api\v1\CategoryController@categoryData');
         Route::post('category/filters/{id?}', 'Api\v1\CategoryController@categoryFilters');
-        
 
         Route::get('brand/{id?}', 'Api\v1\BrandController@productsByBrand');
         Route::post('brand/filters/{id?}', 'Api\v1\BrandController@brandFilters');

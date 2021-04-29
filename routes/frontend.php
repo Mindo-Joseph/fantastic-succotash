@@ -46,6 +46,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('viewcart','Front\ProductController@showCart')->name('showCart');
 	Route::post('/product/updateCartQuantity','Front\ProductController@updateQuantity')->name('updateQuantity');
 	Route::post('/product/deletecartproduct','Front\ProductController@deleteCartProduct')->name('deleteCartProduct');
+	Route::get('userAddress','Front\UserController@getUserAddress')->name('getUserAddress');
 
 	Route::get('category/{id?}', 'Front\CategoryController@categoryProduct')->name('categoryDetail');
     Route::post('category/filters/{id}', 'Front\CategoryController@categoryFilters')->name('productFilters');
@@ -63,6 +64,8 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('auth/{driver}', 'Front\FacebookController@redirectToSocial');
 	Route::get('auth/callback/{driver}', 'Front\FacebookController@handleSocialCallback');
 
+
+	Route::get('UserCheck', 'Front\UserController@checkUserLogin')->name('checkUserLogin');
 	/*Route::get('auth/facebook', 'Front\FacebookController@redirectToFacebook');
 	Route::get('auth/facebook/callback', 'Front\FacebookController@handleFacebookCallback');*/
 
@@ -84,10 +87,13 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/newsLetter', 'Front\ProfileController@newsLetter')->name('user.newsLetter');
     Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
     Route::get('user/changePassword', 'Front\ProfileController@changePassword')->name('user.changePassword');
-    Route::get('user/logout', 'Front\ProfileController@logout')->name('user.logout');
+    Route::get('user/logout', 'Front\CustomerAuthController@logout')->name('user.logout');
     Route::get('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
 
 	Route::post('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
 	Route::post('verifTokenProcess', 'Front\UserController@verifyToken')->name('user.verifyToken');
+
+	Route::get('user/checkout', 'Front\UserController@checkout')->name('user.checkout');
+
 
 });

@@ -126,68 +126,49 @@
     </div>
 </section>
 
-<section class="login-page section-b-space otp-section" style="display: none;">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-5">
-                <div class="dashboard-right">
-                    <div class="dashboard">
-                        <div class="box-account box-info">
-                            <div class="box-head">
-                                <h2>Enter OTP</h2>
-                            </div>
-                            <div class="row">
-                                <form name="register" id="register" action="{{route('user.verifyToken')}}" class="theme-form" method="post"> @csrf
-
-                                    <div class="modal-body">
-                                        <div class="form-row mb-3">
-                                            <div class="col-md-6">
-                                                <label for="otp">OTP</label>
-                                                <input type="hidden" class="form-control" id="name" value="email" required="" name="type">
-                                                <input type="text" class="form-control" id="name" placeholder="OTP" required="" name="otp">
-                                                @if($errors->first('otp'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('otp') }}</strong>
-                                                </span>
-                                                @endif
-                                                @if(\Session::has('err_otp'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{!! \Session::get('err_otp') !!}</strong>
-                                                </span>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
-
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<!-- <div class="modal otp_modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Enter OTP</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            
+            <form id="verifyToken" class="theme-form"> @csrf
+
+                <div class="modal-body">
+                    <div class="form-row mb-3">
+                        <div class="col-md-6">
+                            <label for="otp">OTP</label>
+                            <input type="hidden" class="form-control" id="name" value="email" required="" name="type">
+                            <input type="text" class="form-control" id="otp" placeholder="OTP" required="" name="otp">
+                            
+                            <span class="invalid-feedback" role="alert">
+                                <strong class="invalid-feedback2" ></strong>
+                            </span>
+                            
+                            <!-- @if(\Session::has('err_otp'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong class="invalid-feedback2" >{!! \Session::get('err_otp') !!}</strong>
+                            </span>
+                            @endif -->
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+
+            </form>
+
         </div>
     </div>
-</div> -->
+</div>
+
 @endsection
 
 @section('script')
@@ -218,13 +199,42 @@
             },
             success: function(response) {
                 console.log(response);
-                $(".otp-section").attr("style", "display:block")
+                $("#exampleModalCenter").modal("show")
             },
             error: function(data) {
 
             },
         });
     }
+
+    $("#verifyToken").submit(function(event) {
+        event.preventDefault();  
+       console.log("fregwr");
+       var form = document.getElementById('verifyToken');
+        var formData = new FormData(form);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ route('user.verifyToken') }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                console.log(response);
+                window.location.href = "{{route('user.verify')}}";
+            },
+            error: function(data) {
+                $(".invalid-feedback2").html(data.responseJSON.error);
+                console.log(data.responseJSON.error);
+            },
+        });
+    });
 </script>
 
 @endsection

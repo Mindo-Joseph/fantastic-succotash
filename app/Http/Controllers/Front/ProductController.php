@@ -202,33 +202,30 @@ class ProductController extends FrontController
                 $user_id = $userInfo->id;
 
                 $cartInfo = Cart::where('user_id', $user_id)->first();
+
+                $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->first();
+                if ($checkIfExist) {
+                    $checkIfExist->quantity = (int)$checkIfExist->quantity + 1;
+                    $cartInfo->cartProducts()->save($checkIfExist);
+                    return response()->json($user_id);
+                }
             }
 
-            $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->first();
-            if($checkIfExist){
-                $checkIfExist->quantity = (int)$checkIfExist->quantity + 1;
-                $cartInfo->cartProducts()->save($checkIfExist);
-                return response()->json($user_id);
-            }
-            else{
+          
                 $cartProduct = new CartProduct;
-            $cartProduct->product_id = $request->product_id;
-            $cartProduct->quantity  = $request->quantity;
-            $cartProduct->created_by  = $user_id;
-            $cartProduct->status  = '0';
-            $cartProduct->variant_id  = $request->variant_id;
-            $cartProduct->is_tax_applied  = '1';
+                $cartProduct->product_id = $request->product_id;
+                $cartProduct->quantity  = $request->quantity;
+                $cartProduct->created_by  = $user_id;
+                $cartProduct->status  = '0';
+                $cartProduct->variant_id  = $request->variant_id;
+                $cartProduct->is_tax_applied  = '1';
 
-            $cartInfo->cartProducts()->save($cartProduct);
-            }
-            
-
-
+                $cartInfo->cartProducts()->save($cartProduct);
+         
             return response()->json($user_id);
         }
         // dd($request->all());
     }
-
 
     /**
      * get products from cart
@@ -243,11 +240,11 @@ class ProductController extends FrontController
         } elseif (isset($_COOKIE["uuid"])) {
             $user = User::where('system_id', $_COOKIE["uuid"])->first();
             if (!$user) {
-                return response()->json(array('res' => 'null', 'html'=>"<li><div class='total'><h5>No Products</h5></div></li>"));
+                return response()->json(array('res' => 'null', 'html' => "<li><div class='total'><h5>No Products</h5></div></li>"));
             }
             $userId = $user->id;
         } else {
-            return response()->json(array('res' => 'null', 'html'=>"<li><div class='total'><h5>No Products</h5></div></li>"));
+            return response()->json(array('res' => 'null', 'html' => "<li><div class='total'><h5>No Products</h5></div></li>"));
         }
 
         $cart = Cart::where('user_id', $userId)->first();
@@ -259,17 +256,17 @@ class ProductController extends FrontController
         $cp_id = array();
         $variants = array();
         foreach ($cartproducts as $carpro) {
-            if($carpro->status == '0'){
-            $cp_id[] = $carpro->id;
-            $products_variant = ProductVariant::with(['image.pimage.image', 'set'])->find($carpro->variant_id);
-            
-            $pro = Product::find($carpro->product_id);
-            $variants[] = $products_variant->toArray();
-            $products[] = $pro->sku;
-            $quantity[] = $carpro->quantity;
-            
-            $price[] = $products_variant->price;
-            $images[] = $products_variant->image;
+            if ($carpro->status == '0') {
+                $cp_id[] = $carpro->id;
+                $products_variant = ProductVariant::with(['image.pimage.image', 'set'])->find($carpro->variant_id);
+
+                $pro = Product::find($carpro->product_id);
+                $variants[] = $products_variant->toArray();
+                $products[] = $pro->sku;
+                $quantity[] = $carpro->quantity;
+
+                $price[] = $products_variant->price;
+                $images[] = $products_variant->image;
             }
         }
 
@@ -295,7 +292,7 @@ class ProductController extends FrontController
         $navCategories = $this->categoryNav($langId);
         return view('forntend/cart')->with(['navCategories' => $navCategories]);
     }
-    
+
 
     /**
      * Update Quantityt
@@ -309,20 +306,22 @@ class ProductController extends FrontController
         $cartProduct->quantity = $request->quantity;
 
         $cartProduct->save();
-        
+
         return response()->json("Successfully Updated");
     }
 
-     /**
+    /**
      * Delete Cart Product
      *
      * @return \Illuminate\Http\Response
      */
     public function deleteCartProduct($domain = '', Request $request)
     {
-    //    dd($request->cartproduct_id);
-       $update = CartProduct::where('id', '=', $request->cartproduct_id)
-        ->update(['status' => '2']);
+        //    dd($request->cartproduct_id);
+        $update = CartProduct::where('id', '=', $request->cartproduct_id)
+            ->update(['status' => '2']);
         return response()->json('successfully deleted');
     }
+
 }
+

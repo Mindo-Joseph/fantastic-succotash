@@ -39,7 +39,7 @@ class AddonSetController extends BaseController
     public function store(Request $request)
     {
         $count = count($request->price);
-        $min = ($request->min_select < 1) ? 1 : $request->min_select;
+        $min = ($request->min_select < 1) ? 0 : $request->min_select;
         $max = ($request->max_select < 1) ? 1 : $request->max_select;
 
         $min = ($min > $count) ? $count : $min;
@@ -138,7 +138,7 @@ class AddonSetController extends BaseController
     {
         //dd($request->all());
         $count = count($request->price);
-        $min = ($request->min_select < 1) ? 1 : $request->min_select;
+        $min = ($request->min_select < 1) ? 0 : $request->min_select;
         $max = ($request->max_select < 1) ? 1 : $request->max_select;
 
         $min = ($min > $count) ? $count : $min;

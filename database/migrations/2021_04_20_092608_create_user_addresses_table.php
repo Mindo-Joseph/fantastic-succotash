@@ -25,7 +25,7 @@ class CreateUserAddressesTable extends Migration
             $table->bigInteger('country_id')->unsigned()->nullable();
             $table->string('pincode', 60)->nullable();
             $table->tinyInteger('is_primary')->default('0')->comment('1 for yes, 0 for no');
-            $table->tinyInteger('tpye')->default('0')->comment('home, office', 'other');
+            $table->tinyInteger('type')->default('1')->comment('1 - home', '2 - office', '3 - other');
 
             $table->timestamps();
 

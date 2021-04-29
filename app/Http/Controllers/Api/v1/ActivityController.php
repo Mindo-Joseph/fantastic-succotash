@@ -6,11 +6,10 @@ use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Model\{User, Agent, AgentLog, Client, ClientPreference, Cms, Order, Task, TaskProof};
+use App\Models\{User, Agent, AgentLog, Client, ClientPreference, Cms, Order, Task, TaskProof};
 use Validation;
 use DB;
 use Illuminate\Support\Facades\Storage;
-use App\Model\Roster;
 use Config;
 
 class ActivityController extends BaseController

@@ -639,7 +639,6 @@
             },
             success: function(response) {
                 var res = response.result;
-                //console.log(res);
                 console.log(res.id);
                 $('#prod_variant_id').val(res.id);
                 $('#productPriceValue').html(res.productPrice);
