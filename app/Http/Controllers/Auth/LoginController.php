@@ -62,7 +62,6 @@ class LoginController extends Controller
            
             return redirect()->route('client.dashboard');
         }
-
         return redirect()->back()->with('Error', 'Invalid Credentials');
     }
 
@@ -79,6 +78,6 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        return redirect()->to('user/login');
+        return redirect()->to('/');
     }
 }

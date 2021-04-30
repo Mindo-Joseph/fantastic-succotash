@@ -30,6 +30,11 @@
     if(isset(Session::get('preferences')->map_key) && !empty(Session::get('preferences')->map_key)){
         $mapKey = session('preferences')->map_key;
     }
+
+    $webColor = '#ff4c3b';
+    if(isset(Session::get('preferences')->primary_color ) && !empty(Session::get('preferences')->primary_color )){
+        $webColor = session('preferences')->primary_color ;
+    }
 @endphp
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{$mapKey}}&v=3.exp&libraries=places,drawing"></script>
@@ -126,7 +131,7 @@
                 "sku": sku
             },
             success: function(response) {
-            
+
             },
             error: function (data) {
                 //location.reload();
@@ -141,4 +146,13 @@
     function closeSearch() {
         document.getElementById("search-overlay").style.display = "none";
     }
+    $('document').ready(function(){
+
+        var color_picker1 = '{{$webColor}}';
+        document.documentElement.style.setProperty('--theme-deafult', color_picker1);
+        /*document.getElementById("ColorPicker1").onchange = function() {
+            color_picker1 = this.value;
+            document.documentElement.style.setProperty('--theme-deafult', color_picker1);
+        };*/
+    })
 </script>
