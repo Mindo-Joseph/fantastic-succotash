@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Models\{UserWishlist, User, Product};
+use App\Models\{UserWishlist, User, Product, UserAddress};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Front\FrontController;
 use Carbon\Carbon;
@@ -53,6 +53,11 @@ class ProfileController extends FrontController
      */
     public function addresBook(Request $request, $domain = '')
     {
+        $langId = Session::get('customerLanguage');
+        $useraddress = UserAddress::where('user_id', Auth::user()->id)->with('country')->get();
+        // dd($useraddress[0]->country->toArray());
+        $navCategories = $this->categoryNav($langId);
+        return view('forntend/account/addressbook')->with(['useraddress' => $useraddress, 'navCategories' => $navCategories]);
     }
 
     /**
@@ -107,4 +112,5 @@ class ProfileController extends FrontController
     public function logout(Request $request, $domain = '')
     {
     }
+
 }
