@@ -17,8 +17,9 @@ class SearchController extends FrontController
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         $inp = $request->input('query');
+
         if (empty($inp)) { 
-            return view('backend.searchbar.search')->with(['products' => [],  'categories' => [], 'vendors' => [], 'navCategories' => $navCategories, 'search' => $inp]);
+            return view('backend.searchbar.search')->with(['products' => [],  'categories' => [], 'vendors' => [], 'navCategories' => $navCategories, 'search' => Null]);
         }
         // $langId = Session::get('customerLanguage');
         $prodTrans = ProductTranslation::select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')
@@ -80,10 +81,6 @@ class SearchController extends FrontController
             })->get();
 
 
-
-        // dd($categories->toArray());
-
-        // $categories  = Category::where('slug', 'LIKE', '%' . $request->input('query') . '%')->where('status', 1)->get()->toArray();
         $vendors  = Vendor::where('name', 'LIKE', '%' . $request->input('query') . '%')->get();
 
         return view('backend.searchbar.search')->with(['products' => $products,  'categories' => $categories, 'vendors' => $vendors, 'navCategories' => $navCategories, 'search' => $inp]);
