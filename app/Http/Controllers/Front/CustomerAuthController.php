@@ -70,6 +70,28 @@ class CustomerAuthController extends FrontController
         return view('forntend/account/resetSuccess')->with(['navCategories' => $navCategories]);
     }
 
+
+    /**     * check if cookie already exist     */
+    public function checkCookies($userid)
+    {
+        if (\Cookie::has('uuid')) {
+            $existCookie = \Cookie::get('uuid');
+            
+            $userFind = User::where('system_id', $existCookie)->first();
+            if($userFind){
+                $cart = Cart::where('user_id', $userFind->id)->first();
+                if($cart){
+                    $cart->user_id = $userid;
+                    $cart->save();
+                }
+                $userFind->delete();
+            }
+            \Cookie::queue(\Cookie::forget('uuid'));
+
+            return redirect()->route('user.checkout');
+        }
+    }
+
     /**     * Display login Form     */
     public function login(LoginRequest $req, $domain = '')
     {

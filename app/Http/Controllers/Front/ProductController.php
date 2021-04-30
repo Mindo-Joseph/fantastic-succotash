@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Cart, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet};
 use Illuminate\Http\Request;
 use Session;
 use Auth;
@@ -127,10 +127,6 @@ class ProductController extends FrontController
     private function randomString()
     {
         $random_string = substr(md5(microtime()), 0, 32);
-        // after creating, check if string is already used
-
-
-
         while (User::where('system_id', $random_string)->exists()) {
             $random_string = substr(md5(microtime()), 0, 32);
         }
@@ -144,6 +140,43 @@ class ProductController extends FrontController
      */
     public function addToCart(Request $request, $domain = '')
     {
+        $langId = Session::get('customerLanguage');
+
+        if ($request->has('addonID') && $request->has('addonoptID')) {
+
+            $addon_ids = $request->addonID;
+            $addon_options = $request->addonoptID;
+
+            $addonSets = array();
+
+            foreach ($addon_options as $key => $opt) {
+                $addonSets[$addon_ids[$key]][] = $opt;
+            }
+
+            foreach ($addonSets as $key => $value) {
+                $addon = AddonSet::join('addon_set_translations as ast', 'ast.addon_id', 'addon_sets.id')
+                    ->select('addon_sets.id', 'addon_sets.min_select', 'addon_sets.max_select', 'ast.title')
+                    ->where('ast.language_id', $langId)
+                    ->where('addon_sets.status', '!=', '2')
+                    ->where('addon_sets.id', $key)->first();
+                if (!$addon) {
+                    return response()->json(['error' => 'Invalid addon or delete by admin. Try again with remove some.'], 404);
+                }
+                if ($addon->min_select > count($value)) {
+                    return response()->json([
+                        'error' => 'Select minimum ' . $addon->min_select . ' options of ' . $addon->title,
+                        'data' => $addon
+                    ], 404);
+                }
+                if ($addon->max_select < count($value)) {
+                    return response()->json([
+                        'error' => 'You can select maximum ' . $addon->min_select . ' options of ' . $addon->title,
+                        'data' => $addon
+                    ], 404);
+                }
+            }
+        }
+
         $user_id = ' ';
         $cartInfo = ' ';
         if (Auth::user()) {
@@ -162,17 +195,18 @@ class ProductController extends FrontController
                 $cart->currency_id = $currency->currency->id;
                 $cart->save();
 
-                $cartInfo = $cart->id;
+                $cartInfo = $cart;
             } else {
                 $cartInfo = $userFind;
             }
         } else {
+
             $val = ' ';
-            // dd($_COOKIE["uuid"]);
             if (!isset($_COOKIE["uuid"])) {
+
                 $token = $this->randomString();
                 setcookie("uuid", $token, time() + (10 * 365 * 24 * 60 * 60), "/");
-                // 86400 = 1 day
+
                 $val = $token;
                 $user = new User;
                 $user->name = "Test";
@@ -203,27 +237,39 @@ class ProductController extends FrontController
 
                 $cartInfo = Cart::where('user_id', $user_id)->first();
 
-                $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->first();
+                $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cartInfo->id)->first();
                 if ($checkIfExist) {
                     $checkIfExist->quantity = (int)$checkIfExist->quantity + 1;
                     $cartInfo->cartProducts()->save($checkIfExist);
                     return response()->json($user_id);
                 }
             }
-
-          
-                $cartProduct = new CartProduct;
-                $cartProduct->product_id = $request->product_id;
-                $cartProduct->quantity  = $request->quantity;
-                $cartProduct->created_by  = $user_id;
-                $cartProduct->status  = '0';
-                $cartProduct->variant_id  = $request->variant_id;
-                $cartProduct->is_tax_applied  = '1';
-
-                $cartInfo->cartProducts()->save($cartProduct);
-         
-            return response()->json($user_id);
         }
+
+        $cartProduct = new CartProduct;
+        $cartProduct->product_id = $request->product_id;
+        $cartProduct->cart_id  = $cartInfo->id;
+        $cartProduct->quantity  = $request->quantity;
+        $cartProduct->created_by  = $user_id;
+        $cartProduct->status  = '0';
+        $cartProduct->variant_id  = $request->variant_id;
+        $cartProduct->is_tax_applied  = '1';
+        $cartProduct->save();
+        //$cartInfo->cartProducts()->save($cartProduct);
+
+        if ($request->has('addonID') && $request->has('addonID')) {
+            foreach ($addon_ids as $key => $value) {
+                $aa = $addon_ids[$key];
+                $bb = $addon_options[$key];
+                $cartAddOn = new CartAddon;
+                $cartAddOn->cart_product_id = $cartProduct->id;
+                $cartAddOn->addon_id = $aa;
+                $cartAddOn->option_id = $bb;
+                $cartAddOn->save();
+            }
+        }
+
+        return response()->json($user_id);
         // dd($request->all());
     }
 

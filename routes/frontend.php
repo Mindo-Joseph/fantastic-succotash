@@ -82,7 +82,15 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/profile', 'Front\ProfileController@profile')->name('user.profile');
     Route::get('user/wishlists', 'Front\ProfileController@wishlists')->name('user.wishlists');
     Route::post('wishlist/update', 'Front\ProfileController@updateWishlist')->name('addWishlist');
+
     Route::get('user/addressBook', 'Front\ProfileController@addresBook')->name('user.addressBook');
+	Route::get('user/setPrimaryAddress/{id}', 'Front\AddressController@setPrimaryAddress')->name('setPrimaryAddress');
+	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
+	Route::get('user/editAddress/{id}', 'Front\AddressController@edit')->name('editAddress');
+	Route::get('user/addAddress', 'Front\AddressController@add')->name('addNewAddress');
+	Route::post('user/store', 'Front\AddressController@store')->name('address.store');
+	Route::post('user/update/{id}', 'Front\AddressController@update')->name('address.update');
+
     Route::get('user/orders', 'Front\ProfileController@orders')->name('user.orders');
     Route::get('user/newsLetter', 'Front\ProfileController@newsLetter')->name('user.newsLetter');
     Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
