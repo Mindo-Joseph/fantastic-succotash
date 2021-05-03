@@ -90,9 +90,16 @@
                 <div class="col-xl-2 col-md-4 col-sm-6">
                     <div class="product-box">
                         <div class="img-wrapper">
-                            <a href="{{route('categoryDetail', $category['id'])}}">
-                                <div class="category-image"> <img src="{{$category['icon']['proxy_url']}}200/200{{$category['icon']['image_path']}}"></div>
-                            </a>
+                            <div class="front">
+                                <a href="{{route('categoryDetail', $category['id'])}}">
+                                    <div class="category-image"> <img src="{{$category['icon']['proxy_url']}}200/200{{$category['icon']['image_path']}}"></div>
+                                </a>
+                                <div class="back">
+                                    <a href="{{route('categoryDetail', $category['id'])}}">
+                                        <div class="category-image"> <img src="{{$category['icon']['proxy_url']}}200/200{{$category['icon']['image_path']}}"></div>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div class="product-detail">
                             <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
@@ -127,7 +134,12 @@
                                 $imagePath = $v['image']['path']['proxy_url'] . '200/200' . $v['image']['path']['image_path'];
                             } ?>
                             <div class="img-wrapper">
-                                <a href="{{route('productDetail', $product->url_slug)}}"><img src="{{$imagePath}}" alt=""></a>
+                                <div class="front">
+                                    <a href="{{route('productDetail', $product->url_slug)}}"><img src="{{$imagePath}}" alt=""></a>
+                                </div>
+                                <div class="back">
+                                    <a href="{{route('productDetail', $product->url_slug)}}"><img src="{{$imagePath}}" alt=""></a>
+                                </div>
                             </div>
                         </div>
                         <div class="product-detail">
