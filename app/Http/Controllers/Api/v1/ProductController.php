@@ -190,8 +190,8 @@ class ProductController extends BaseController
                     ->select('id','sku', 'quantity', 'price',  'barcode', 'product_id')
                     ->where('id', $pv_ids[0])->first();
 
-
         if ($variantData) {
+            $variantData->multiplier = $clientCurrency->doller_compare;
             $variantData->productPrice = $variantData->price * $clientCurrency->doller_compare;
         }
         return response()->json([

@@ -31,8 +31,13 @@ class CartController extends BaseController
         }
 
         $cartData = $this->getCart($user_id);
-
+        if($cartData && !empty($cartData)){
+            return response()->json([
+                'data' => $cartData,
+            ]);
+        }
         return response()->json([
+            'message' => "No product found in cart",
             'data' => $cartData,
         ]);
     }
@@ -204,6 +209,9 @@ class CartController extends BaseController
         $payable_amount = 0;
         $discount_amount = 0;
         $discount_percent = 0;
+        if(empty($cartData->cartProducts) || count($cartData->cartProducts) < 1){
+            return false;
+        }
         if($cartData){
 
             foreach ($cartData->cartProducts as $ck => $prod) {
@@ -270,5 +278,143 @@ class CartController extends BaseController
         $cartData->discount_percent = $discount_percent;
 
         return $cartData;
+    }
+
+    /**
+     * Get Cart Items
+     *
+     */
+    public function updateQuantity(Request $request)
+    {
+        if ($request->quantity < 1) {
+            return response()->json(['error' => 'Quantity should not be less than 1'], 422);
+        }
+
+        $user = User::where('status', '!=', '2');
+
+        if (Auth::user()->id && Auth::user()->id > 0) {
+            $user = $user->where('id', Auth::user()->id);
+
+        }else{
+            if(empty(Auth::user()->system_user)){
+                return response()->json(['error' => 'System id should not be empty.'], 404);
+            }
+            $user = $user->where('system_id', Auth::user()->system_user);
+        }
+        $user = $user = $user->first();
+        if(!$user){
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $cart = Cart::where('user_id', $user->id)->where('id', $request->cart_id)->first();
+        if(!$cart){
+            return response()->json(['error' => 'User cart not exist.'], 404);
+        }
+
+        $cartProduct = CartProduct::where('cart_id', $cart->id)->where('id', $request->cart_product_id)->first();
+        if(!$cartProduct){
+            return response()->json(['error' => 'Product not exist in cart.'], 404);
+        }
+        $cartProduct->quantity = $request->quantity;
+        $cartProduct->save();
+
+        $totalProducts = CartProduct::where('cart_id', $cart->id)->sum('quantity');
+
+        $cart->item_count = $totalProducts;
+        $cart->save();
+
+        $cartData = $this->getCart($user_id);
+
+        return response()->json([
+            'data' => $cartData,
+        ]);
+    }
+
+    /**
+     * Get Cart Items
+     *
+     */
+    public function getItemCount(Request $request)
+    {
+
+        $user = User::where('status', '!=', '2');
+
+        if (Auth::user()->id && Auth::user()->id > 0) {
+            $user = $user->where('id', Auth::user()->id);
+
+        }else{
+            if(empty(Auth::user()->system_user)){
+                return response()->json(['error' => 'System id should not be empty.'], 404);
+            }
+            $user = $user->where('system_id', Auth::user()->system_user);
+        }
+        $user = $user = $user->first();
+        if(!$user){
+            return response()->json(['error' => 'User not found'], 404);
+        }
+        $cart = Cart::where('user_id', $user->id)->first();
+        if(!$cart){
+            return response()->json(['error' => 'User cart not exist.'], 404);
+        }
+
+        $totalProducts = CartProduct::where('cart_id', $cart->id)->sum('quantity');
+
+        $cart->item_count = $totalProducts;
+        $cart->save();
+        return response()->json([
+            'total_item' => $cart->item_count,
+        ]);
+    }
+
+    /**
+     * Get Cart Items
+     *
+     */
+    public function removeItem(Request $request)
+    {
+        $user = User::where('status', '!=', '2');
+
+        if (Auth::user()->id && Auth::user()->id > 0) {
+            $user = $user->where('id', Auth::user()->id);
+
+        }else{
+            if(empty(Auth::user()->system_user)){
+                return response()->json(['error' => 'System id should not be empty.'], 404);
+            }
+            $user = $user->where('system_id', Auth::user()->system_user);
+        }
+        $user = $user = $user->first();
+        if(!$user){
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $cart = Cart::where('user_id', $user->id)->where('id', $request->cart_id)->first();
+        if(!$cart){
+            return response()->json(['error' => 'User cart not exist.'], 404);
+        }
+
+        $cartProduct = CartProduct::where('cart_id', $cart->id)->where('id', $request->cart_product_id)->first();
+        if(!$cartProduct){
+            return response()->json(['error' => 'Product not exist in cart.'], 404);
+        }
+
+        $totalProducts = CartProduct::where('cart_id', $cart->id)->sum('quantity');
+
+        if(!$totalProducts || $totalProducts < 1){
+            $cart->delete();
+            return response()->json([
+                "message" => "Product removed from cart successfully.",
+                'data' => array(),
+            ]);
+        }
+
+        $cart->item_count = $totalProducts;
+        $cart->save();
+        $cartData = $this->getCart($user_id);
+        return response()->json([
+            "message" => "Product removed from cart successfully.",
+            'data' => $cartData,
+        ]);
+
     }
 }

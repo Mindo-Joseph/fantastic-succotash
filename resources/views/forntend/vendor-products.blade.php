@@ -85,26 +85,26 @@
                                 <div class="collection-brand-filter">
 
                                     @if($sets->type == 2)
-                                    @foreach($sets->options as $ok => $opt)
-                                    <div class="chiller_cb small_label d-inline-block color-selector">
-                                        <?php $checkMark = ($key == 0) ? 'checked' : ''; ?>
-                                        <input class="custom-control-input productFilter" type="checkbox" {{$checkMark}} id="Opt{{$key.'-'.$opt->id}}" fid="{{$sets->variant_type_id}}" used="variants" optid="{{$opt->id}}">
-                                        <label for="Opt{{$key.'-'.$opt->id}}"></label>
-                                        @if(strtoupper($opt->hexacode) == '#FFF' || strtoupper($opt->hexacode) == '#FFFFFF')
-                                        <span style="background: #FFFFFF; border-color:#000;" class="check_icon white_check"></span>
-                                        @else
-                                        <span class="check_icon" style="background:{{$opt->hexacode}}; border-color: {{$opt->hexacode}};"></span>
-                                        @endif
-                                    </div>
-                                    @endforeach
+                                        @foreach($sets->options as $ok => $opt)
+                                        <div class="chiller_cb small_label d-inline-block color-selector">
+                                            <?php $checkMark = ($key == 0) ? 'checked' : ''; ?>
+                                            <input class="custom-control-input productFilter" type="checkbox" {{$checkMark}} id="Opt{{$key.'-'.$opt->id}}" fid="{{$sets->variant_type_id}}" used="variants" optid="{{$opt->id}}">
+                                            <label for="Opt{{$key.'-'.$opt->id}}"></label>
+                                            @if(strtoupper($opt->hexacode) == '#FFF' || strtoupper($opt->hexacode) == '#FFFFFF')
+                                            <span style="background: #FFFFFF; border-color:#000;" class="check_icon white_check"></span>
+                                            @else
+                                            <span class="check_icon" style="background:{{$opt->hexacode}}; border-color: {{$opt->hexacode}};"></span>
+                                            @endif
+                                        </div>
+                                        @endforeach
 
                                     @else
-                                    @foreach($sets->options as $ok => $opt)
-                                    <div class="custom-control custom-checkbox collection-filter-checkbox">
-                                        <input type="checkbox" class="custom-control-input productFilter" id="Opt{{$key.'-'.$opt->id}}" fid="{{$sets->variant_type_id}}" type="variants" optid="{{$opt->id}}">
-                                        <label class="custom-control-label" for="Opt{{$key.'-'.$opt->id}}">{{$opt->title}}</label>
-                                    </div>
-                                    @endforeach
+                                        @foreach($sets->options as $ok => $opt)
+                                        <div class="custom-control custom-checkbox collection-filter-checkbox">
+                                            <input type="checkbox" class="custom-control-input productFilter" id="Opt{{$key.'-'.$opt->id}}" fid="{{$sets->variant_type_id}}" type="variants" optid="{{$opt->id}}">
+                                            <label class="custom-control-label" for="Opt{{$key.'-'.$opt->id}}">{{$opt->title}}</label>
+                                        </div>
+                                        @endforeach
                                     @endif
 
                                 </div>
@@ -332,7 +332,7 @@
         max: 50000,
         from: 200,
         to: 50000,
-        prefix: " "
+        prefix: ""
     });
 
     var ajaxCall = 'ToCancelPrevReq';
