@@ -80,6 +80,16 @@ class ProductController extends BaseController
             }
         }
 
+        foreach ($products->variant as $key => $value) {
+            if($products->sell_when_out_of_stock == 1){
+                $value->stock_check = '1';
+            }elseif($value->quantity > 0){
+                $value->stock_check = '1';
+            }else{
+                $value->stock_check = 0;
+            }
+        }
+
         $response['products'] = $products;
         $response['relatedProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'relate', $products->related);
         $response['upSellProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'upSell', $products->upSell);
@@ -190,6 +200,14 @@ class ProductController extends BaseController
                     }])
                     ->select('product_variants.id','product_variants.sku', 'product_variants.quantity', 'product_variants.price',  'product_variants.barcode', 'product_variants.product_id', 'pro.sku', 'pro.url_slug', 'pro.weight', 'pro.weight_unit', 'pro.vendor_id', 'pro.is_new', 'pro.is_featured', 'pro.is_physical', 'pro.has_inventory', 'pro.has_variant', 'pro.sell_when_out_of_stock', 'pro.requires_shipping', 'pro.Requires_last_mile', 'pro.averageRating')
                     ->where('product_variants.id', $pv_ids[0])->first();
+
+        if($variantData->sell_when_out_of_stock == 1){
+            $variantData->stock_check = '1';
+        }elseif($variantData->quantity > 0){
+            $variantData->stock_check = '1';
+        }else{
+            $variantData->stock_check = 0;
+        }
 
         if ($variantData) {
             $variantData->multiplier = $clientCurrency->doller_compare;
