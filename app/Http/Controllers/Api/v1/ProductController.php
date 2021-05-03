@@ -26,6 +26,13 @@ class ProductController extends BaseController
             return response()->json(['error' => 'No record found.'], 404);
         }*/
         $userid = Auth::user()->id;
+        $pvIds = array();
+        $proVariants = ProductVariant::select('id', 'product_id')->where('product_id', $pid)->get();
+        if($proVariants){
+            foreach ($proVariants as $key => $value) {
+                $pvIds[] = $value->id;
+            }
+        }
 
         $products = Product::with(['inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
@@ -33,7 +40,7 @@ class ProductController extends BaseController
                     'variant' => function($v){
                         $v->select('id', 'sku', 'product_id', 'title', 'quantity','price','barcode','tax_category_id');
                     },
-                    'variant.vimage.pimage.image', 'vendor', 'media.image', 'related', 'upSell', 'crossSell', 
+                    'variant.vimage.pimage.image', 'vendor', 'media.image', 'related', 'upSell', 'crossSell',
                     'addOn' => function($q1) use($langId){
                         $q1->join('addon_sets as set', 'set.id', 'product_addons.addon_id');
                         $q1->join('addon_set_translations as ast', 'ast.addon_id', 'set.id');
@@ -46,11 +53,12 @@ class ProductController extends BaseController
                         $z->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title');
                         $z->where('vt.language_id', $langId);
                     },
-                    'variantSet.options' => function($zx) use($langId){
-                        $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
-                        $zx->select('variant_options.*', 'vt.title');
-                        $zx->where('vt.language_id', $langId);
-                    },
+                    'variantSet.options' => function($zx) use($langId, $pvIds){
+                        $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id')
+                        ->select('variant_options.*', 'vt.title', 'pvs.product_variant_id', 'pvs.variant_type_id')
+                        ->whereIn('pvs.product_variant_id', $pvIds)
+                        ->where('vt.language_id', $langId);
+                    }, 
                     'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $langId);
@@ -64,7 +72,7 @@ class ProductController extends BaseController
                    // ->where('sku', $request->product_sku)
                     ->where('id', $pid)
                     ->first();
-
+        dd($products->toArray());
         if(!$products){
             return response()->json(['error' => 'No record found.'], 404);
         }
