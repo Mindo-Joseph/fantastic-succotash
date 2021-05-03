@@ -47,7 +47,6 @@ class Product extends Model
       }else{
         return $this->hasMany('App\Models\ProductTranslation'); 
       }
-
     }
 
   	/*public function english(){

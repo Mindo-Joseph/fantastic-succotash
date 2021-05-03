@@ -60,7 +60,7 @@ class ProductController extends BaseController
                         $q2->select('addon_options.id', 'addon_options.title', 'addon_options.price', 'apt.title', 'addon_options.addon_id');
                         $q2->where('apt.language_id', $langId);
                     },
-                    ])->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id')
+                    ])->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'is_new', 'is_featured', 'is_physical', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating')
                    // ->where('sku', $request->product_sku)
                     ->where('id', $pid)
                     ->first();
@@ -183,12 +183,13 @@ class ProductController extends BaseController
             $pv_ids = $newIds;
         }
 
-        $variantData = ProductVariant::select('id', 'sku', 'quantity', 'price',  'barcode', 'product_id')
-            ->where('id', $pv_ids[0])->first();
-
-        $variantData = ProductVariant::with('image.imagedata')
-                    ->select('id','sku', 'quantity', 'price',  'barcode', 'product_id')
-                    ->where('id', $pv_ids[0])->first();
+        $variantData = ProductVariant::join('products as pro', 'product_variants.product_id', 'pro.id')
+                    ->with(['media.image', 'translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                        $q->where('language_id', $langId);
+                    }])
+                    ->select('product_variants.id','product_variants.sku', 'product_variants.quantity', 'product_variants.price',  'product_variants.barcode', 'product_variants.product_id', 'pro.sku', 'pro.url_slug', 'pro.weight', 'pro.weight_unit', 'pro.vendor_id', 'pro.is_new', 'pro.is_featured', 'pro.is_physical', 'pro.has_inventory', 'pro.has_variant', 'pro.sell_when_out_of_stock', 'pro.requires_shipping', 'pro.Requires_last_mile', 'pro.averageRating')
+                    ->where('product_variants.id', $pv_ids[0])->first();
 
         if ($variantData) {
             $variantData->multiplier = $clientCurrency->doller_compare;

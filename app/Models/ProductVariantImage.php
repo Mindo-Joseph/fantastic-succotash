@@ -10,7 +10,7 @@ class ProductVariantImage extends Model
 	    return $this->belongsTo('App\Models\ProductImage','product_image_id','id')->select('id', 'media_id'); 
 	}
 
-	public function imagedata(){
+	public function image(){
 	    return $this->belongsTo('App\Models\VendorMedia','product_image_id','id')->select('id' ,'media_type', 'path'); 
 	}
 }
