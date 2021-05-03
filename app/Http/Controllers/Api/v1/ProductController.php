@@ -72,7 +72,6 @@ class ProductController extends BaseController
                    // ->where('sku', $request->product_sku)
                     ->where('id', $pid)
                     ->first();
-        dd($products->toArray());
         if(!$products){
             return response()->json(['error' => 'No record found.'], 404);
         }
