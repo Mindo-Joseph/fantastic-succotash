@@ -200,6 +200,10 @@ class ProductController extends BaseController
             $pv_ids = $newIds;
         }
 
+        if(empty($pv_ids)){
+            return response()->json(['error' => 'Invalid product sets or product has been removed.'], 404);
+        }
+
         $variantData = ProductVariant::join('products as pro', 'product_variants.product_id', 'pro.id')
                     ->with(['media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
