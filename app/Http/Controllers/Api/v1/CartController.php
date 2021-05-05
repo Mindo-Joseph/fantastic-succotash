@@ -201,7 +201,7 @@ class CartController extends BaseController
         $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
         $cartData = Cart::with(['coupon.promo', 'cartProducts.addon.option' => function($qry) use($langId){
                             $qry->where('language_id', $langId);
-                        }, 'cartProducts.pvariant.image.imagedata', 'cartProducts.product.media.image']) 
+                        }, 'cartProducts.pvariant.media.image', 'cartProducts.product.media.image']) 
                     ->select('id', 'is_gift', 'item_count')
                     ->where('status', '0')
                     ->where('user_id', $user_id)->first();
@@ -383,7 +383,7 @@ class CartController extends BaseController
             }
             $user = $user->where('system_id', Auth::user()->system_user);
         }
-        $user = $user = $user->first();
+        $user = $user->first();
         if(!$user){
             return response()->json(['error' => 'User not found'], 404);
         }
