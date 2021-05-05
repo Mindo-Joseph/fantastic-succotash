@@ -41,11 +41,11 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('paginateValue', 'Front\UserhomeController@changePaginate')->name('changePaginate');
 	Route::get('/product/{id}','Front\ProductController@index')->name('productDetail');
 	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
-	Route::post('/product/cart','Front\ProductController@addToCart')->name('addToCart');
-	Route::get('cartProducts','Front\ProductController@getCartProducts')->name('getCartProducts');
-	Route::get('viewcart','Front\ProductController@showCart')->name('showCart');
-	Route::post('/product/updateCartQuantity','Front\ProductController@updateQuantity')->name('updateQuantity');
-	Route::post('/product/deletecartproduct','Front\ProductController@deleteCartProduct')->name('deleteCartProduct');
+	Route::post('/product/cart','Front\CartController@addToCart')->name('addToCart');
+	Route::get('cartProducts','Front\CartController@getCartProducts')->name('getCartProducts');
+	Route::get('viewcart','Front\CartController@showCart')->name('showCart');
+	Route::post('/product/updateCartQuantity','Front\CartController@updateQuantity')->name('updateQuantity');
+	Route::post('/product/deletecartproduct','Front\CartController@deleteCartProduct')->name('deleteCartProduct');
 	Route::get('userAddress','Front\UserController@getUserAddress')->name('getUserAddress');
 
 	Route::get('category/{id?}', 'Front\CategoryController@categoryProduct')->name('categoryDetail');
@@ -66,6 +66,10 @@ Route::group(['middleware' => ['domain']], function () {
 
 
 	Route::get('UserCheck', 'Front\UserController@checkUserLogin')->name('checkUserLogin');
+
+	Route::get('stripe/showForm/{token}', 'Front\PaymentController@showFormApp')->name('stripe.formApp');
+    Route::post('stripe/make', 'Front\PaymentController@makePayment')->name('stripe.makePayment');
+
 	/*Route::get('auth/facebook', 'Front\FacebookController@redirectToFacebook');
 	Route::get('auth/facebook/callback', 'Front\FacebookController@handleFacebookCallback');*/
 

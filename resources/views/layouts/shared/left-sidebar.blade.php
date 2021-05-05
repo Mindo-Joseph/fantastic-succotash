@@ -148,12 +148,6 @@
                         <span> Loyalty Cards </span>
                     </a>
                 </li> 
-                <li>   
-                    <a href="{{route('stripe.form')}}" >
-                        <i data-feather="columns"></i>
-                        <span> Payments </span>
-                    </a>
-                </li> 
             </ul>
         </div>
         <div id="sidebar-menu" style="display: none;">

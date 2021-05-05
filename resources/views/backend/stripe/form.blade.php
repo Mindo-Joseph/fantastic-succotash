@@ -39,31 +39,30 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right openBannerModal"
-                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
+                            <button class="btn btn-blue waves-effect waves-light text-sm-right openBannerModal" userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </button>
                         </div>
                     </div>
 
                     <form method="post" id="paymentFrm" enctype="multipart/form-data" action="{{route('stripe.makePayment')}}">
-                     @csrf
+                        @csrf
                         <div class="form-group">
                             <input type="text" name="name" class="form-control" placeholder="Name" required>
-                        </div>  
+                        </div>
 
                         <div class="form-group">
                             <input type="email" name="email" class="form-control" placeholder="email@you.com" required />
                         </div>
 
-                         <div class="form-group">
-                            <input type="number" name="card_num" id="card_num" class="form-control" placeholder="Card Number" autocomplete="off"  required>
+                        <div class="form-group">
+                            <input type="number" name="card_num" id="card_num" class="form-control" placeholder="Card Number" autocomplete="off" required>
                         </div>
-                       
-                        
+
+
                         <div class="row">
-                        4242424242424242
+                            4242424242424242
                             <div class="col-sm-8">
-                                 <div class="row">
+                                <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <input type="text" name="exp_month" maxlength="2" class="form-control" id="card-expiry-month" placeholder="MM" required>
@@ -80,19 +79,19 @@
 
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input type="text" name="cvc" id="card-cvc" maxlength="3" class="form-control" autocomplete="off" placeholder="CVC"  required>
+                                    <input type="text" name="cvc" id="card-cvc" maxlength="3" class="form-control" autocomplete="off" placeholder="CVC" required>
                                 </div>
                             </div>
                         </div>
-                        
 
-                       
+
+
 
                         <div class="form-group text-right">
-                          <button class="btn btn-secondary" type="reset">Reset</button>
-                          <button type="button" id="payBtn" class="btn btn-success">Submit Payment</button>
+                            <button class="btn btn-secondary" type="reset">Reset</button>
+                            <button type="button" id="payBtn" class="btn btn-success">Submit Payment</button>
                         </div>
-                    </form>  
+                    </form>
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
         </div> <!-- end col -->
@@ -106,9 +105,9 @@
 <script src="https://js.stripe.com/v2/"></script>
 
 <script type="text/javascript">
-        //set your publishable key
+    //set your publishable key
     Stripe.setPublishableKey('pk_test_51IhpwhSFHEA938Fwmi5DmvgIhuS7sT0oVrxl0OWeG2FdiOLHUysQex9BH7xokl1En3wTe3JzgYyc1Axf8mlFrAWa00bTN1EPKM');
-    
+
     //callback to handle the response from stripe
     function stripeResponseHandler(status, response) {
         if (response.error) {
@@ -134,7 +133,7 @@
             console.log("hogya");
             //disable the submit button to prevent repeated clicks
             $('#payBtn').attr("disabled", "disabled");
-            
+
             //create single-use token to charge the user
             Stripe.createToken({
                 number: $('#card_num').val(),
@@ -142,7 +141,7 @@
                 exp_month: $('#card-expiry-month').val(),
                 exp_year: $('#card-expiry-year').val()
             }, stripeResponseHandler);
-            
+
             //submit from callback
             return false;
         });

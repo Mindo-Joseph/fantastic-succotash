@@ -82,8 +82,8 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 
     Route::resource('promocode', 'Client\PromocodeController');
 
-    Route::get('stripe/showForm', 'Client\PaymentController@showForm')->name('stripe.form');
-    Route::post('stripe/make', 'Client\PaymentController@makePayment')->name('stripe.makePayment');
+    // Route::get('stripe/showForm', 'Client\PaymentController@showForm')->name('stripe.form');
+    // Route::post('stripe/make', 'Client\PaymentController@makePayment')->name('stripe.makePayment');
 
 
     

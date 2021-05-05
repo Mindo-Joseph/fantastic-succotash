@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Client;
+namespace App\Http\Controllers\Front;
 
-use App\Http\Controllers\Client\BaseController;
+use App\Http\Controllers\Front\FrontController;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Omnipay\Omnipay;
 
-class PaymentController extends BaseController
+class PaymentController extends FrontController
 {
     /**
      * Display a listing of the resource.
@@ -92,8 +92,24 @@ class PaymentController extends BaseController
         return view('backend/stripe/form');
     }
 
-    public function showFormApp($domain='',$token)
+    public function showFormApp($domain='',$token = '')
     {
+        $uid = 0;
+        if(Auth::user()){
+            $uid = Auth::user()->id;
+        }elseif(!empty($token)){
+            $userCart = Cart::where('uniqueIdenteri', $token)->first();
+            if(!$userCart){
+                // sent to error page
+            }
+            $uid = $userCart->user_id;
+        }else{
+            // sent to error page
+        }
+
+        $user = User::select()->where('id', $uid);
+
+        $userId = Auth::user()->id;
         // dd($token);
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
