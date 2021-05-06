@@ -450,7 +450,7 @@ class CartController extends BaseController
         if(!$cartProduct){
             return response()->json(['error' => 'Product not exist in cart.'], 404);
         }
-
+        $cartProduct->delete();
         $totalProducts = CartProduct::where('cart_id', $cart->id)->sum('quantity');
 
         if(!$totalProducts || $totalProducts < 1){
