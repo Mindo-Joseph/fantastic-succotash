@@ -107,5 +107,5 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 
 	Route::get('user/checkout', 'Front\UserController@checkout')->name('user.checkout');
 
-
+	Route::post('user/placeorder', 'Front\OrderController@placeOrder')->name('user.placeorder');
 });
