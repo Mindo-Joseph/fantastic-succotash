@@ -204,6 +204,10 @@ class CartController extends BaseController
         $cartID = $cart->id;
 
         $cartData = CartProduct::with(['vendor', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
+                        'vendorProducts.product.translation' => function($q) use($langId){
+                            $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                            $q->where('language_id', $langId);
+                        },
                         'vendorProducts'=> function($qry) use($cartID){
                             $qry->where('cart_id', $cartID);
                         },
@@ -326,9 +330,6 @@ class CartController extends BaseController
         $cart->total_discount_percent = $total_discount_percent;
 
         $cart->products = $cartData;
-
-        $cart->products = $cartData;
-
         return $cart;
     }
 

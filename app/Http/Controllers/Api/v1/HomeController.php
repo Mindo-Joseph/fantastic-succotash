@@ -164,7 +164,8 @@ class HomeController extends BaseController
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                         },
-                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating');
+                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating')
+                    ->where('is_live', 1);
         if($where !== ''){
             $products = $products->where($where, 1);
         }
@@ -253,29 +254,39 @@ class HomeController extends BaseController
             })->where('vendors.status', '!=', '2')->get();
         }
 
-        $response['products'] = Product::join('product_translations as pt', 'pt.product_id', 'products.id')
-            ->select('products.id', 'products.sku', 'products.url_slug')
-            ->where('ct.language_id', $langId)
-            ->where(function ($q) use ($keyword) {
-                $q->where('ct.name', ' LIKE', '%' . $keyword . '%')
-                    ->orWhere('ct.trans-slug', 'LIKE', '%' . $keyword . '%')
-                    ->orWhere('ct.meta_title', 'LIKE', '%' . $keyword . '%')
-                    ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
-                    ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
-            })->where('categories.status', '!=', '2')->get();
-
-
         $products = Product::join('product_translations as pt', 'pt.product_id', 'products.id')
-                    ->with(['media.image', 'variant.vimage.pimage.image', 'translation' => function ($query) use ($langId) {
-                        $query->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
-                        $query->where('language_id', $langId);
-                    }])
-                    ->select("id", "sku", "url_slug")
-            
-            ->where(function ($q) use ($inp, $productIds) {
-                $q->whereIn('id', $productIds)
-                    ->orWhere('url_slug', 'LIKE', '%' . $inp . '%');
-            })->get();
+                    ->with(['media.image', 'variant'])
+                    ->select('products.id', 'products.sku', 'products.url_slug', 'pt.title', 'pt.body_html', 'pt.meta_title','pt.meta_keyword', 'pt.meta_description')
+                    ->where('ct.language_id', $langId)
+                    ->where(function ($q) use ($keyword) {
+                        $q->where('ct.name', ' LIKE', '%' . $keyword . '%')
+                            ->orWhere('ct.trans-slug', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('ct.meta_title', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
+                });
 
+        if($for == 'category'){
+            $prodIds = array();
+
+            $productCategory = ProductCategory::select('product_id')->where('category_id', $dataId)->get();
+            foreach ($productCategory as $key => $value) {
+                $prodIds[] = $value->product_id;
+            }
+
+            $products = $products->whereIn('id', $prodIds);
+        }
+
+        if($for == 'vendor'){
+            $products = $products->where('vendor_id', $dataId);
+        }
+
+        if($for == 'brand'){
+            $products = $products->where('brand_id', $dataId);
+        }
+
+        $response['products'] = $products->where('is_live', 1)->get();
+
+        return $response;
     }
 }

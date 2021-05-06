@@ -75,6 +75,7 @@ Route::group(['middleware' => ['domain']], function () {
 
 	//Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
 
+	Route::get('user/cart/ding/dong/ping/pong', 'Front\CartController@getCartData')->name('user.dingPong');
 
 });
 
