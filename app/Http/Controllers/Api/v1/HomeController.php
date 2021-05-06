@@ -227,7 +227,7 @@ class HomeController extends BaseController
 
     }
 
-    public function searchData($langId, $curId, $for, $keyword, $dataId)
+    public function search($langId, $curId, $for, $keyword, $dataId)
     {
         $response = array();
         if($for == 'all'){
