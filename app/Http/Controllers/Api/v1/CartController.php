@@ -470,10 +470,7 @@ class CartController extends BaseController
 
     }
 
-    /**
-     * Get Cart Items
-     *
-     */
+    /**         *       Empty cart       *          */
     public function emptyCart($cartId = 0)
     {
         $user = User::where('status', '!=', '2');
@@ -501,8 +498,6 @@ class CartController extends BaseController
 
         return response()->json([
             "message" => "Empty cart successfully.",
-            'data' => $cartData,
         ]);
-
     }
 }
