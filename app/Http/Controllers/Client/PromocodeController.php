@@ -34,8 +34,9 @@ class PromocodeController extends BaseController
         $products = Product::select('id', 'sku')->where('is_live', 1)->get();
         $vendors = Vendor::select('id', 'name')->where('status', 1)->get();
         $categories = Category::select('id', 'slug')->get();
+        $dataIds = array();
 
-        $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode,  'promoTypes' => $promoTypes, 'categories' => $categories, 'vendors' => $vendors, 'products' => $products, 'restrictionType' => '', 'include' => '0', 'exclude' => '0'])->render();
+        $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode,  'promoTypes' => $promoTypes, 'categories' => $categories, 'vendors' => $vendors, 'products' => $products, 'restrictionType' => '', 'include' => '0', 'exclude' => '0', 'dataIds' => $dataIds])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 

@@ -111,6 +111,11 @@ class Product extends Model
        return $this->hasOne('App\Models\UserWishlist')->select('product_id'); 
     }
 
+    public function taxCategory()
+    {
+        return $this->belongsTo('App\Models\TaxCategory', 'tax_category_id', 'id')->select('id', 'title', 'code');
+    }
+
 
     /*public function allvariants(){
         return $this->hasMany('App\Models\ProductVariantSet')

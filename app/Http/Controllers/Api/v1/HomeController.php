@@ -164,7 +164,8 @@ class HomeController extends BaseController
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                         },
-                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating');
+                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating')
+                    ->where('is_live', 1);
         if($where !== ''){
             $products = $products->where($where, 1);
         }
@@ -183,4 +184,109 @@ class HomeController extends BaseController
         return $products;
     }
 
+    public function searchData(Request $request, $for = 'all', $dataId = 0)
+    {
+        $langId = Auth::user()->language;
+        $curId = Auth::user()->language;
+        if($for != 'all' && $for != 'category' && $for != 'vendor'  && $for != 'brand'){
+            return response()->json(['error' => 'No record found.'], 404);
+        } 
+        if($for != 'all' && $dataId < 1){
+            return response()->json(['error' => 'Invalid request.'], 404);
+        }
+
+        if (empty($request->keyword)) {
+            return response()->json([
+                'data' => array('products' => [],  'categories' => [], 'vendors' => [], 'brands' => []),
+            ]);
+        }
+
+        $response = array();
+        switch ($for) {
+            case 'category':
+                $category = Category::find($dataId);
+                if(!$category){
+                    return response()->json(['error' => 'No record found.'], 404);
+                }
+                break;
+            case 'vendor':
+                $vendor = Vendor::find($dataId);
+                if(!$vendor){
+                    return response()->json(['error' => 'No record found.'], 404);
+                }
+                break;
+            case 'brand':
+                $brand = Brand::find($dataId);
+                if(!$vendor){
+                    return response()->json(['error' => 'No record found.'], 404);
+                }
+                break;
+            default:
+                $a = 'hello';
+        }
+        $response = $this->search($langId, $curId, $for, $request->keyword, $dataId);
+
+    }
+
+    public function search($langId, $curId, $for, $keyword, $dataId)
+    {
+        $response = array();
+        if($for == 'all'){
+            $response['categories'] = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
+            ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.type_id', 'categories.image', 'ct.name', 'ct.trans-slug', 'ct.meta_title', 'ct.meta_description', 'ct.meta_keywords', 'ct.category_id')
+            ->where('ct.language_id', $langId)
+            ->where(function ($q) use ($keyword) {
+                $q->where('ct.name', ' LIKE', '%' . $keyword . '%')
+                    ->orWhere('ct.trans-slug', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('ct.meta_title', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
+            })->where('categories.status', '!=', '2')->get();
+
+            $response['brands'] = Brand::join('brand_translations as bt', 'bt.brand_id', 'brands.id')
+            ->select('brands.id', 'brands.image', 'bt.title')
+            ->where('bt.title', 'LIKE', '%' . $keyword . '%')
+            ->where('brands.status', '!=', '2')
+            ->orderBy('brands.position', 'asc')->get();
+
+            $response['vendors']  = Vendor::where(function ($q) use ($keyword) {
+                $q->where('name', ' LIKE', '%' . $keyword . '%')->orWhere('address', 'LIKE', '%' . $keyword . '%');
+            })->where('vendors.status', '!=', '2')->get();
+        }
+
+        $products = Product::join('product_translations as pt', 'pt.product_id', 'products.id')
+                    ->with(['media.image', 'variant'])
+                    ->select('products.id', 'products.sku', 'products.url_slug', 'pt.title', 'pt.body_html', 'pt.meta_title','pt.meta_keyword', 'pt.meta_description')
+                    ->where('ct.language_id', $langId)
+                    ->where(function ($q) use ($keyword) {
+                        $q->where('ct.name', ' LIKE', '%' . $keyword . '%')
+                            ->orWhere('ct.trans-slug', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('ct.meta_title', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
+                });
+
+        if($for == 'category'){
+            $prodIds = array();
+
+            $productCategory = ProductCategory::select('product_id')->where('category_id', $dataId)->get();
+            foreach ($productCategory as $key => $value) {
+                $prodIds[] = $value->product_id;
+            }
+
+            $products = $products->whereIn('id', $prodIds);
+        }
+
+        if($for == 'vendor'){
+            $products = $products->where('vendor_id', $dataId);
+        }
+
+        if($for == 'brand'){
+            $products = $products->where('brand_id', $dataId);
+        }
+
+        $response['products'] = $products->where('is_live', 1)->get();
+
+        return $response;
+    }
 }
