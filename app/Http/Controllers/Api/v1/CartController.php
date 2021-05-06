@@ -184,8 +184,6 @@ class CartController extends BaseController
         }
         $cart = $this->getCart($user_id);
 
-        //$cartData = Cart::with('products')->select('id', 'item_count')->where('user_id', $user_id)->first();
-
         return response()->json([
             'data' => $cart,
         ]);
