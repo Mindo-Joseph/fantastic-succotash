@@ -38,4 +38,8 @@ class ProductVariant extends Model
         return $this->hasMany('App\Models\ProductTranslation', 'product_id', 'product_id');
     }
 
+    public function tax()
+    {
+        return $this->belongsTo('App\Models\TaxCategory', 'tax_category_id', 'id')->select('id', 'title', 'code');
+    }
 }

@@ -21,6 +21,8 @@ Route::group([
 
         Route::get('vendor/{id?}', 'Api\v1\VendorController@productsByVendor');
         Route::post('vendor/filters/{id?}', 'Api\v1\VendorController@vendorFilters');
+
+        Route::post('vendor/{type}/{id?}', 'Api\v1\HomeController@searchData');
     });
 
     Route::group([

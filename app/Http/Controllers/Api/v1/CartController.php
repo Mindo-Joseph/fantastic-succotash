@@ -153,7 +153,7 @@ class CartController extends BaseController
                 $cartProduct->status  = '0';
                 $cartProduct->variant_id  = $productVariant->id;
                 $cartProduct->is_tax_applied  = '1';
-                $cartProduct->tax_rate_id  = $product->tax_category_id;
+                $cartProduct->tax_category_id  = $product->tax_category_id;
                 $cartProduct->quantity = $request->quantity;
                 $cartProduct->currency_id = Auth::user()->currency;
             }else{
@@ -199,85 +199,139 @@ class CartController extends BaseController
     {
         $langId = Auth::user()->language;
         $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
-        $cartData = Cart::with(['coupon.promo', 'cartProducts.addon.option' => function($qry) use($langId){
-                            $qry->where('language_id', $langId);
-                        }, 'cartProducts.pvariant.media.image', 'cartProducts.product.media.image']) 
-                    ->select('id', 'is_gift', 'item_count')
+        $cart = Cart::with('coupon.promo')->select('id', 'is_gift', 'item_count')
                     ->where('status', '0')
                     ->where('user_id', $user_id)->first();
 
-        $payable_amount = 0;
-        $discount_amount = 0;
-        $discount_percent = 0;
-        if(empty($cartData->cartProducts) || count($cartData->cartProducts) < 1){
+        $cartID = $cart->id;
+
+        $cartData = CartProduct::with(['vendor', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
+                        'vendorProducts'=> function($qry) use($cartID){
+                            $qry->where('cart_id', $cartID);
+                        },
+                        'vendorProducts.addon.option' => function($qry) use($langId){
+                            $qry->where('language_id', $langId);
+                        }, 'vendorProducts.product.taxCategory.taxRate', 
+                    ])->select('vendor_id')->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
+
+        $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0;
+        if(empty($cartData) || count($cartData) < 1){
             return false;
         }
         if($cartData){
 
-            foreach ($cartData->cartProducts as $ck => $prod) {
+            foreach ($cartData as $ven_key => $vendorData) {
 
-                $divider = $prod->doller_compare;
+                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0;
 
-                $price_in_currency = $prod->pvariant->price / $divider;
-                $quantity_price = $price_in_currency * $prod->quantity;
+                foreach ($vendorData->vendorProducts as $ven_key => $prod) {
 
-                $prod->pvariant->price_in_cart = $prod->pvariant->price;
-                $prod->pvariant->price = $price_in_currency;
-                $prod->pvariant->multiplier = $clientCurrency->doller_compare;
-                $prod->pvariant->quantity_price = $quantity_price;
+                    $quantity_price = 0;
 
-                $payable_amount = $payable_amount + ($quantity_price * $clientCurrency->doller_compare);
+                    $divider = $prod->doller_compare;
 
-                foreach ($prod->addon as $ck => $addons) {
+                    $price_in_currency = $prod->pvariant->price / $divider;
+                    $quantity_price = $price_in_currency * $prod->quantity;
 
-                    $opt_price_in_currency = $addons->option->price / $divider;
-                    $opt_quantity_price = $opt_price_in_currency * $prod->quantity;
+                    $prod->pvariant->price_in_cart = $prod->pvariant->price;
+                    $prod->pvariant->price = $price_in_currency;
+                    $prod->pvariant->multiplier = $clientCurrency->doller_compare;
+                    $prod->pvariant->quantity_price = $quantity_price;
 
-                    $addons->option->price_in_cart = $addons->option->price;
-                    $addons->option->price = $opt_price_in_currency;
-                    $addons->option->multiplier = $clientCurrency->doller_compare;
-                    $addons->option->quantity_price = $opt_quantity_price;
+                    $payable_amount = $payable_amount + $quantity_price;
+                    $taxData = array();
 
-                    $payable_amount = $payable_amount + ($opt_quantity_price * $clientCurrency->doller_compare);
+
+                    if(!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0){
+
+                        foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
+
+                            $rate = round($tax_value->tax_rate);
+                            $tax_amount = $price_in_currency * $rate / 100;
+                            $product_tax = $tax_amount * $prod->quantity;
+
+                            $taxData[$tckey]['identifier'] = $tax_value->identifier;
+                            $taxData[$tckey]['rate'] = $rate;
+                            $taxData[$tckey]['tax_amount'] = $tax_amount;
+                            $taxData[$tckey]['product_tax'] = $product_tax;
+
+                            $payable_amount = $payable_amount + $product_tax;
+                        }
+                    }
+                    $prod->taxdata = $taxData;
+
+                    unset($prod->product->taxCategory);
+
+                    foreach ($prod->addon as $ck => $addons) {
+
+                        $opt_price_in_currency = $addons->option->price / $divider;
+                        $opt_quantity_price = $opt_price_in_currency * $prod->quantity;
+
+                        $addons->option->price_in_cart = $addons->option->price;
+                        $addons->option->price = $opt_price_in_currency;
+                        $addons->option->multiplier = $clientCurrency->doller_compare;
+                        $addons->option->quantity_price = $opt_quantity_price;
+
+                        $payable_amount = $payable_amount + ($opt_quantity_price * $clientCurrency->doller_compare);
+                    }
+
+                    if(isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)){
+                        $prod->cartImg = $prod->pvariant->image->imagedata;
+                    }else{
+                        $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
+                    }
+
+                    $deliver_charge = 0;
+                    $prod->deliver_charge = $deliver_charge;
+                    $payable_amount = $payable_amount + $deliver_charge;
+
                 }
+                $vendorData->payable_amount = $payable_amount;
+                $vendorData->discount_amount = $discount_amount;
+                $vendorData->discount_percent = $discount_percent;
+                $vendorData->taxable_amount = $taxable_amount;
 
-                if(isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)){
-                    $prod->cartImg = $prod->pvariant->image->imagedata;
-                }else{
-                    $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
-                }
-            }
-
-            $is_percent = 0;
-            $amount_value = 0;
-
-            foreach ($cartData->coupon as $ck => $code) {
-                if($code->promo->promo_type_id == 1){
-                    $is_percent = 1;
-                    $discount_percent = $discount_percent + round($code->promo->amount);
-                }else{
-                    $amount_value = $amount_value + $code->promo->amount;
-                }
+                $total_payable_amount = $total_payable_amount + $payable_amount;
+                $total_taxable_amount = $total_taxable_amount + $taxable_amount;
+                $total_discount_amount = $total_discount_amount + $discount_amount;
+                $total_discount_percent = $total_discount_percent + $discount_percent;
             }
         }
+
+        $is_percent = 0;
+        $amount_value = 0;
+
+        foreach ($cart->coupon as $ck => $code) {
+            if($code->promo->promo_type_id == 1){
+                $is_percent = 1;
+                $total_discount_percent = $total_discount_percent + round($code->promo->amount);
+            }else{
+                $amount_value = $amount_value + $code->promo->amount;
+            }
+        }
+        
         if($is_percent == 1){
-            $discount_percent = ($discount_percent > 100) ? 100 : $discount_percent;
-            $discount_amount = ($payable_amount * $discount_percent) / 100;
+            $total_discount_percent = ($total_discount_percent > 100) ? 100 : $total_discount_percent;
+            $total_discount_amount = ($total_payable_amount * $total_discount_percent) / 100;
         }
 
         if($amount_value > 0){
             $amount_value = $amount_value * $clientCurrency->doller_compare;
-            $discount_amount = $discount_amount + $amount_value;
+            $total_discount_amount = $total_discount_amount + $amount_value;
             
         }
-        $payable_amount = $payable_amount - $discount_amount;
+        $total_payable_amount = $total_payable_amount - $total_discount_amount;
 
-        $cartData->total_amount = $payable_amount + $discount_amount;
-        $cartData->payable_amount = $payable_amount;
-        $cartData->discount_amount = $discount_amount;
-        $cartData->discount_percent = $discount_percent;
+        $cart->gross_amount = $total_payable_amount + $total_discount_amount;
+        $cart->total_payable_amount = $total_payable_amount;
+        $cart->total_discount_amount = $total_discount_amount;
+        $cart->total_discount_percent = $total_discount_percent;
 
-        return $cartData;
+        $cart->products = $cartData;
+
+        $cart->products = $cartData;
+
+        return $cart;
     }
 
     /**
