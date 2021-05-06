@@ -82,17 +82,16 @@
                             <th scope="col">price</th>
                             <th scope="col">quantity</th>
                             <th scope="col">action</th>
-                            <th scope="col">total</th>
+                            <th scope="col">product total</th>
+                            <th scope="col">tax</th>
+                            <th scope="col">payable amount</th>
                         </tr>
                     </thead>
                     <tbody class="shopping-cart1">
                         <tr>
                             <td>
-                                <h2 class="td-color">Mc. Donald's</h2>
+                                <h4 class="td-color">Mc. Donald's</h4>
                             </td>
-                        </tr>
-                        <tr>
-                            <td></td>
                             <td>
                                 <a href="#"><img src="{{asset('assets/images/products/product-1.png')}}" alt=""></a>
                             </td>
@@ -113,9 +112,17 @@
                             <td>
                                 <h2 class="td-color">$4539.00</h2>
                             </td>
+                            <td>
+                                <h2 class="td-color">$4539.00</h2>
+                            </td>
+                            <td>
+                                <h2 class="td-color">$4539.00</h2>
+                            </td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td>
+                                <h4 class="td-color">Mc. Donald's</h4>
+                            </td>
                             <td>
                                 <a href="#"><img src="{{asset('assets/images/products/product-1.png')}}" alt=""></a>
                             </td>
@@ -133,6 +140,36 @@
                                 </div>
                             </td>
                             <td><a href="#" class="icon"><i class="ti-close"></i></a></td>
+                            <td>
+                                <h2 class="td-color">$4539.00</h2>
+                            </td>
+                            <td>
+                                <h2 class="td-color">$4539.00</h2>
+                            </td>
+                            <td>
+                                <h2 class="td-color">$4539.00</h2>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="3"></td>
+                            <td>
+                                <h2>Total</h2>
+                            </td>
+                            <td>
+                                <div class="qty-box">
+                                    <div class="input-group">
+                                        <input type="number" name="quantity" class="form-control input-number" value="1">
+                                    </div>
+                                </div>
+                            </td>
+                            <td><a href="#" class="icon"><i class="ti-close"></i></a></td>
+                            <td>
+                                <h2 class="td-color">$4539.00</h2>
+                            </td>
+                            <td>
+                                <h2 class="td-color">$4539.00</h2>
+                            </td>
                             <td>
                                 <h2 class="td-color">$4539.00</h2>
                             </td>
@@ -140,11 +177,8 @@
 
                         <tr>
                             <td>
-                                <h2 class="td-color">KFC's</h2>
+                                <h4 class="td-color">KFC's</h4>
                             </td>
-                        </tr>
-                        <tr>
-                            <td></td>
                             <td>
                                 <a href="#"><img src="{{asset('assets/images/products/product-1.png')}}" alt=""></a>
                             </td>
@@ -165,9 +199,17 @@
                             <td>
                                 <h2 class="td-color">$4539.00</h2>
                             </td>
+                            <td>
+                                <h2 class="td-color">$4539.00</h2>
+                            </td>
+                            <td>
+                                <h2 class="td-color">$4539.00</h2>
+                            </td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td>
+                                <h4 class="td-color">KFC's</h4>
+                            </td>
                             <td>
                                 <a href="#"><img src="{{asset('assets/images/products/product-1.png')}}" alt=""></a>
                             </td>
@@ -185,6 +227,12 @@
                                 </div>
                             </td>
                             <td><a href="#" class="icon"><i class="ti-close"></i></a></td>
+                            <td>
+                                <h2 class="td-color">$4539.00</h2>
+                            </td>
+                            <td>
+                                <h2 class="td-color">$4539.00</h2>
+                            </td>
                             <td>
                                 <h2 class="td-color">$4539.00</h2>
                             </td>
@@ -193,24 +241,6 @@
                 </table>
                 <table class="table cart-table table-responsive-md shopping-cart-footer">
                     <tfoot>
-                        <tr>
-                            <td>Total :</td>
-                            <td>
-                                <h2>$6935.00</h2>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Coupom (First Order) :</td>
-                            <td>
-                                <h2>$6935.00</h2>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Delivery Fee :</td>
-                            <td>
-                                <h2>$6935.00</h2>
-                            </td>
-                        </tr>
                         <tr>
                             <td>Total :</td>
                             <td>
