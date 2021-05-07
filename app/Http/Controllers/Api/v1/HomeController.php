@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency};
+use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory};
 use Validation;
 use DB;
 use Illuminate\Support\Facades\Storage;
@@ -217,18 +217,22 @@ class HomeController extends BaseController
                 break;
             case 'brand':
                 $brand = Brand::find($dataId);
-                if(!$vendor){
+                if(!$brand){
                     return response()->json(['error' => 'No record found.'], 404);
                 }
                 break;
             default:
                 $a = 'hello';
         }
-        $response = $this->search($langId, $curId, $for, $request->keyword, $dataId);
-
+        $userid = Auth::user()->id;
+        $response = $this->search($langId, $curId, $for, $request->keyword, $dataId, $userid);
+        return response()->json([
+            'data' => $response,
+            'keyword' => $request->keyword,
+        ]);
     }
 
-    public function search($langId, $curId, $for, $keyword, $dataId)
+    public function search($langId, $curId, $for, $keyword, $dataId, $userid)
     {
         $response = array();
         if($for == 'all'){
@@ -255,15 +259,27 @@ class HomeController extends BaseController
         }
 
         $products = Product::join('product_translations as pt', 'pt.product_id', 'products.id')
-                    ->with(['media.image', 'variant'])
-                    ->select('products.id', 'products.sku', 'products.url_slug', 'pt.title', 'pt.body_html', 'pt.meta_title','pt.meta_keyword', 'pt.meta_description')
-                    ->where('ct.language_id', $langId)
+                    ->with(['media.image', 'inwishlist' => function($qry) use($userid){
+                        $qry->where('user_id', $userid);
+                    },
+                    'variant' => function($q) use($langId){
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->groupBy('product_id');
+                    },
+                    'translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                        },
+                    ])
+                    ->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
+                    ->where('pt.language_id', $langId)
                     ->where(function ($q) use ($keyword) {
-                        $q->where('ct.name', ' LIKE', '%' . $keyword . '%')
-                            ->orWhere('ct.trans-slug', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('ct.meta_title', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
-                            ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
+                            $q->where('products.sku', ' LIKE', '%' . $keyword . '%')
+                            ->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('pt.title', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('pt.body_html', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('pt.meta_title', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('pt.meta_keyword', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('pt.meta_description', 'LIKE', '%' . $keyword . '%');
                 });
 
         if($for == 'category'){
@@ -274,18 +290,28 @@ class HomeController extends BaseController
                 $prodIds[] = $value->product_id;
             }
 
-            $products = $products->whereIn('id', $prodIds);
+            $products = $products->whereIn('products.id', $prodIds);
         }
 
         if($for == 'vendor'){
-            $products = $products->where('vendor_id', $dataId);
+            $products = $products->where('products.vendor_id', $dataId);
         }
 
         if($for == 'brand'){
-            $products = $products->where('brand_id', $dataId);
+            $products = $products->where('products.brand_id', $dataId);
         }
 
-        $response['products'] = $products->where('is_live', 1)->get();
+        $products = $products->where('products.is_live', 1)->get();
+        $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
+        if(!empty($products)){
+            foreach ($products as $key => $value) {
+                foreach ($value->variant as $k => $v) {
+                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                }
+            }
+        }
+
+        $response['products'] = $products;
 
         return $response;
     }
