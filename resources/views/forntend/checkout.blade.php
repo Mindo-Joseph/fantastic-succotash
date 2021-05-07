@@ -54,7 +54,7 @@
     <div class="container">
         <div class="checkout-page">
             <div class="checkout-form">
-                <form>
+                <form method="post" action="{{route('user.placeorder')}}"> @csrf
                     <div class="row">
                         <div class="col-lg-6 col-sm-12 col-xs-12">
                             <div class="checkout-title">
@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <div class="field-label">Last Name</div>
-                                    <input type="text" name="last-name" id="last-name" value="" placeholder="">
+                                    <input type="text" name="last_name" id="last_name" value="" placeholder="">
                                 </div>
                                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <div class="field-label">Phone</div>
@@ -75,7 +75,7 @@
                                 </div>
                                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <div class="field-label">Email Address</div>
-                                    <input type="text" name="email-address" id="email-address" value="" placeholder="">
+                                    <input type="text" name="email_address" id="email_address" value="" placeholder="">
                                 </div>
                                 <div class="form-group col-md-12 col-sm-12 col-xs-12">
                                     <div class="field-label">Country</div>
@@ -85,6 +85,7 @@
                                 </div>
                                 <div class="form-group col-md-12 col-sm-12 col-xs-12">
                                     <div class="field-label">Address</div>
+                                    <input type="hidden" name="address_id" id="address_id" value="" >
                                     <input type="text" name="address" id="address" value="" placeholder="Street address">
                                 </div>
                                 <div class="form-group col-md-12 col-sm-12 col-xs-12">
@@ -163,7 +164,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="text-right"><a href="#" class="btn-solid btn">Place Order</a></div>
+                                    <div class="text-right"><button type="submit" class="btn-solid btn">Place Order</button></div>
                                 </div>
                             </div>
                         </div>
@@ -231,14 +232,16 @@
             data: '',
             dataType: 'json',
             success: function(data) {
+                console.log(data.address.id);
                 $("#first_name").val("{{Auth::user()->name}}");
                 $("#phone").val("{{Auth::user()->phone_number}}");
-                $("#email-address").val("{{Auth::user()->email}}");
+                $("#email_address").val("{{Auth::user()->email}}");
                 $("#address").val(data.address.address);
+                $("#address_id").val(data.address.id);
                 $("#city").val(data.address.city);
                 $("#state").val(data.address.state);
                 $("#pincode").val(data.address.pincode);
-                $(".countries").append("<option selected>"+data.country.name+"</option>");
+                $(".countries").append("<option selected value='"+data.country.id+"'>"+data.country.name+"</option>");
             },
             error: function(data) {
                 console.log('Error Found : ' + data);
