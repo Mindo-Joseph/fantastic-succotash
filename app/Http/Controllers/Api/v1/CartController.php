@@ -216,7 +216,7 @@ class CartController extends BaseController
                         }, 'vendorProducts.product.taxCategory.taxRate', 
                     ])->select('vendor_id')->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
 
-        $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0;
+        $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if(empty($cartData) || count($cartData) < 1){
             return false;
         }
@@ -224,7 +224,7 @@ class CartController extends BaseController
 
             foreach ($cartData as $ven_key => $vendorData) {
 
-                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0;
+                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0.00;
 
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
 
@@ -233,12 +233,15 @@ class CartController extends BaseController
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
 
                     $price_in_currency = $prod->pvariant->price / $divider;
-                    $quantity_price = $price_in_currency * $prod->quantity;
+
+                    $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
+
+                    $quantity_price = $price_in_doller_compare * $prod->quantity;
 
                     $prod->pvariant->price_in_cart = $prod->pvariant->price;
                     $prod->pvariant->price = $price_in_currency;
                     $prod->pvariant->multiplier = $clientCurrency->doller_compare;
-                    $prod->pvariant->quantity_price = $quantity_price;
+                    $prod->pvariant->quantity_price = number_format($quantity_price, 2);
 
                     $payable_amount = $payable_amount + $quantity_price;
                     $taxData = array();
@@ -249,13 +252,14 @@ class CartController extends BaseController
                         foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
 
                             $rate = round($tax_value->tax_rate);
-                            $tax_amount = $price_in_currency * $rate / 100;
-                            $product_tax = $tax_amount * $prod->quantity;
+                            $tax_amount = ($price_in_doller_compare * $rate) / 100;
+                            $product_tax = $quantity_price * $rate / 100;
 
                             $taxData[$tckey]['identifier'] = $tax_value->identifier;
                             $taxData[$tckey]['rate'] = $rate;
-                            $taxData[$tckey]['tax_amount'] = $tax_amount;
-                            $taxData[$tckey]['product_tax'] = $product_tax;
+                            $taxData[$tckey]['tax_amount'] = number_format($tax_amount, 2);
+                            $taxData[$tckey]['product_tax'] = number_format($product_tax, 2);
+                            $taxable_amount = $taxable_amount + $product_tax;
 
                             $payable_amount = $payable_amount + $product_tax;
                         }
@@ -267,14 +271,16 @@ class CartController extends BaseController
                     foreach ($prod->addon as $ck => $addons) {
 
                         $opt_price_in_currency = $addons->option->price / $divider;
-                        $opt_quantity_price = $opt_price_in_currency * $prod->quantity;
+                        $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
+
+                        $opt_quantity_price = number_format($opt_price_in_doller_compare * $prod->quantity, 2);
 
                         $addons->option->price_in_cart = $addons->option->price;
                         $addons->option->price = $opt_price_in_currency;
                         $addons->option->multiplier = $clientCurrency->doller_compare;
                         $addons->option->quantity_price = $opt_quantity_price;
 
-                        $payable_amount = $payable_amount + ($opt_quantity_price * $clientCurrency->doller_compare);
+                        $payable_amount = $payable_amount + $opt_quantity_price;
                     }
 
                     if(isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)){
@@ -282,16 +288,16 @@ class CartController extends BaseController
                     }else{
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
-
                     $deliver_charge = 0;
-                    $prod->deliver_charge = $deliver_charge;
+                    $prod->deliver_charge = number_format($deliver_charge, 2);
                     $payable_amount = $payable_amount + $deliver_charge;
 
                 }
-                $vendorData->payable_amount = $payable_amount;
-                $vendorData->discount_amount = $discount_amount;
-                $vendorData->discount_percent = $discount_percent;
-                $vendorData->taxable_amount = $taxable_amount;
+                $vendorData->payable_amount = number_format($payable_amount, 2);
+                $vendorData->discount_amount = number_format($discount_amount, 2);
+                $vendorData->discount_percent = number_format($discount_percent, 2);
+                $vendorData->taxable_amount = number_format($taxable_amount, 2);
+                $vendorData->product_total_amount = number_format(($payable_amount - $taxable_amount), 2);
 
                 $total_payable_amount = $total_payable_amount + $payable_amount;
                 $total_taxable_amount = $total_taxable_amount + $taxable_amount;
@@ -324,10 +330,10 @@ class CartController extends BaseController
         }
         $total_payable_amount = $total_payable_amount - $total_discount_amount;
 
-        $cart->gross_amount = $total_payable_amount + $total_discount_amount;
-        $cart->total_payable_amount = $total_payable_amount;
-        $cart->total_discount_amount = $total_discount_amount;
-        $cart->total_discount_percent = $total_discount_percent;
+        $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount), 2);
+        $cart->total_payable_amount = number_format($total_payable_amount, 2);
+        $cart->total_discount_amount = number_format($total_discount_amount, 2);
+        $cart->total_discount_percent = number_format($total_discount_percent, 2);
 
         $cart->products = $cartData;
         return $cart;
