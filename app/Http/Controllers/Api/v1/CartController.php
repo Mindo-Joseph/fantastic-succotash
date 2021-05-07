@@ -241,7 +241,7 @@ class CartController extends BaseController
                     $prod->pvariant->price_in_cart = $prod->pvariant->price;
                     $prod->pvariant->price = $price_in_currency;
                     $prod->pvariant->multiplier = $clientCurrency->doller_compare;
-                    $prod->pvariant->quantity_price = number_format($quantity_price, 2);
+                    $prod->pvariant->quantity_price = $quantity_price;
 
                     $payable_amount = $payable_amount + $quantity_price;
                     $taxData = array();
@@ -257,8 +257,8 @@ class CartController extends BaseController
 
                             $taxData[$tckey]['identifier'] = $tax_value->identifier;
                             $taxData[$tckey]['rate'] = $rate;
-                            $taxData[$tckey]['tax_amount'] = number_format($tax_amount, 2);
-                            $taxData[$tckey]['product_tax'] = number_format($product_tax, 2);
+                            $taxData[$tckey]['tax_amount'] = $tax_amount;
+                            $taxData[$tckey]['product_tax'] = $product_tax;
                             $taxable_amount = $taxable_amount + $product_tax;
 
                             $payable_amount = $payable_amount + $product_tax;
@@ -273,7 +273,7 @@ class CartController extends BaseController
                         $opt_price_in_currency = $addons->option->price / $divider;
                         $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
 
-                        $opt_quantity_price = number_format($opt_price_in_doller_compare * $prod->quantity, 2);
+                        $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
 
                         $addons->option->price_in_cart = $addons->option->price;
                         $addons->option->price = $opt_price_in_currency;
@@ -289,15 +289,15 @@ class CartController extends BaseController
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
                     $deliver_charge = 0;
-                    $prod->deliver_charge = number_format($deliver_charge, 2);
+                    $prod->deliver_charge = $deliver_charge;
                     $payable_amount = $payable_amount + $deliver_charge;
 
                 }
-                $vendorData->payable_amount = number_format($payable_amount, 2);
-                $vendorData->discount_amount = number_format($discount_amount, 2);
-                $vendorData->discount_percent = number_format($discount_percent, 2);
-                $vendorData->taxable_amount = number_format($taxable_amount, 2);
-                $vendorData->product_total_amount = number_format(($payable_amount - $taxable_amount), 2);
+                $vendorData->payable_amount = $payable_amount;
+                $vendorData->discount_amount = $discount_amount;
+                $vendorData->discount_percent = $discount_percent;
+                $vendorData->taxable_amount = $taxable_amount;
+                $vendorData->product_total_amount = ($payable_amount - $taxable_amount);
 
                 $total_payable_amount = $total_payable_amount + $payable_amount;
                 $total_taxable_amount = $total_taxable_amount + $taxable_amount;
@@ -330,10 +330,10 @@ class CartController extends BaseController
         }
         $total_payable_amount = $total_payable_amount - $total_discount_amount;
 
-        $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount), 2);
-        $cart->total_payable_amount = number_format($total_payable_amount, 2);
-        $cart->total_discount_amount = number_format($total_discount_amount, 2);
-        $cart->total_discount_percent = number_format($total_discount_percent, 2);
+        $cart->gross_amount = ($total_payable_amount + $total_discount_amount);
+        $cart->total_payable_amount = $total_payable_amount;
+        $cart->total_discount_amount = $total_discount_amount;
+        $cart->total_discount_percent = $total_discount_percent;
 
         $cart->products = $cartData;
         return $cart;

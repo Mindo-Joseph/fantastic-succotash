@@ -34,6 +34,8 @@ Route::group([
         Route::post('cart/updateQuantity', 'Api\v1\CartController@updateQuantity');
         Route::get('cart/totalItems', 'Api\v1\CartController@getItemCount');
 
+        Route::get('coupons/{id?}', 'Api\v1\CouponController@list');
+
     });
 
 });
