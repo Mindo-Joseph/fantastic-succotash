@@ -201,6 +201,10 @@ class CartController extends BaseController
                     ->where('status', '0')
                     ->where('user_id', $user_id)->first();
 
+        if(!$cart){
+            return false;
+        }
+
         $cartID = $cart->id;
 
         $cartData = CartProduct::with(['vendor', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
