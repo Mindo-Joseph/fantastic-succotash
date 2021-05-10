@@ -229,12 +229,13 @@ class CartController extends BaseController
         if(empty($cartData) || count($cartData) < 1){
             return false;
         }
-        dd($cartData->toArray());;
+
         if($cartData){
 
             foreach ($cartData as $ven_key => $vendorData) {
 
                 $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0.00;
+                $vendorAddons = array();
 
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
 
@@ -275,23 +276,28 @@ class CartController extends BaseController
                         }
                     }
                     $prod->taxdata = $taxData;
+                    
+                    if(!empty($prod->addon)){
+                        foreach ($prod->addon as $ck => $addons) {
+
+                            $opt_price_in_currency = $addons->option->price / $divider;
+                            $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
+
+                            $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
+
+                            $addons->option->price_in_cart = $addons->option->price;
+                            $addons->option->price = $opt_price_in_currency;
+                            $addons->option->multiplier = $clientCurrency->doller_compare;
+                            $addons->option->quantity_price = $opt_quantity_price;
+                             $addons->option->quantity = $prod->quantity;
+
+                            $payable_amount = $payable_amount + $opt_quantity_price;
+                        }
+                        $vendorAddons = $prod->addon;
+                    }
 
                     unset($prod->product->taxCategory);
-
-                    foreach ($prod->addon as $ck => $addons) {
-
-                        $opt_price_in_currency = $addons->option->price / $divider;
-                        $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
-
-                        $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
-
-                        $addons->option->price_in_cart = $addons->option->price;
-                        $addons->option->price = $opt_price_in_currency;
-                        $addons->option->multiplier = $clientCurrency->doller_compare;
-                        $addons->option->quantity_price = $opt_quantity_price;
-
-                        $payable_amount = $payable_amount + $opt_quantity_price;
-                    }
+                    unset($prod->addon);
 
                     if(isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)){
                         $prod->cartImg = $prod->pvariant->image->imagedata;
@@ -307,8 +313,10 @@ class CartController extends BaseController
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
                 $vendorData->taxable_amount = $taxable_amount;
-                $vendorData->product_total_amount = ($payable_amount - $taxable_amount);
+                $vendorData->vendor_addons = $vendorAddons;
 
+
+                $vendorData->product_total_amount = ($payable_amount - $taxable_amount);
                 $total_payable_amount = $total_payable_amount + $payable_amount;
                 $total_taxable_amount = $total_taxable_amount + $taxable_amount;
                 $total_discount_amount = $total_discount_amount + $discount_amount;
