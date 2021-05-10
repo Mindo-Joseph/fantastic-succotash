@@ -5,7 +5,7 @@
                 <h4 class="modal-title">Add Celebrity</h4><br>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <form id="save_loyality_form">
+            <form id="save_loyality_form" enctype="multipart/form-data">
                 @csrf
                 <div class="row mb-3">
                     <div class="col-md-3"></div>

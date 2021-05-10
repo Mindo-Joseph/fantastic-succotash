@@ -18,10 +18,10 @@ class CelebrityController extends BaseController
      */
     public function index()
     {
-        $loyaltycards = Celebrity::where('status', '!=', '3')->get();
-        // dd($loyaltycards);
-        // $loyaltycards = LoyaltyCard::where('status', '!=', '2')->get();
-        return view('backend/celebrity/index')->with(['loyaltycards' => $loyaltycards]);
+        $celebrities = Celebrity::where('status', '!=', '3')->get();
+        // dd($celebrities->toArray());
+        // $celebrities = LoyaltyCard::where('status', '!=', '2')->get();
+        return view('backend/celebrity/index')->with(['celebrities' => $celebrities]);
     }
 
     /**
@@ -59,10 +59,15 @@ class CelebrityController extends BaseController
         $celebrity = new Celebrity();
         $celebrity->name = $request->input('name');
         $celebrity->email = $request->input('email');
-        $celebrity->avatar = Storage::disk('s3')->put('/celebrity', $request->file('image'),'public');
         $celebrity->phone_number = $request->input('phone_number');
         $celebrity->address = $request->input('address');
         $celebrity->status = '1';
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $images = Storage::disk('s3')->put('/celebrity', $file,'public');
+            $celebrity->avatar = $images;
+        }
 
         $celebrity->save();
 

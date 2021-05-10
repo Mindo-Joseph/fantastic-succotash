@@ -68,29 +68,32 @@
                                 </tr>
                             </thead>
                             <tbody id="post_list">
-                                @foreach($loyaltycards as $ban)
+                                @foreach($celebrities as $celeb)
 
-                                <tr data-row-id="{{$ban->id}}">
-                                    <td class="draggableTd"><span class="dragula-handle"></span></td>
+                                <tr data-row-id="{{$celeb->id}}">
+                                    <!-- <td class="draggableTd"><span class="dragula-handle"></span></td> -->
+                                    <td> 
+                                        <img src="{{$celeb->avatar['proxy_url'].'100/100'.$celeb->avatar['image_path']}}" alt="{{$celeb->id}}" >
+                                    </td>
 
-                                    <td> {{ $ban->name }} </td>
+                                    <td> {{ $celeb->name }} </td>
 
-                                    <td> {{ $ban->email }} </td>
+                                    <td> {{ $celeb->email }} </td>
 
-                                    <td> {{ $ban->phone_number }} </td>
+                                    <td> {{ $celeb->phone_number }} </td>
 
-                                    <td> {{ $ban->address }} </td>
+                                    <td> {{ $celeb->address }} </td>
                                    
                                     <td> 
-                                        <input type="checkbox" bid="{{$ban->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#039cfd" {{($ban->status == '1') ? 'checked' : ''}} >
+                                        <input type="checkbox" bid="{{$celeb->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#039cfd" {{($celeb->status == '1') ? 'checked' : ''}} >
                                      </td>
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
-                                                <a class="action-icon openEditModal" loyaltyID="{{$ban->id}}" href="#"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                                <a class="action-icon openEditModal" loyaltyID="{{$celeb->id}}" href="#"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
                                             </div>
                                             <div class="inner-div">
-                                                <form method="POST" action="{{ route('celebrity.destroy', $ban->id) }}">
+                                                <form method="POST" action="{{ route('celebrity.destroy', $celeb->id) }}">
                                                     @csrf
                                                     @method('DELETE')
                                                     <div class="form-group">
