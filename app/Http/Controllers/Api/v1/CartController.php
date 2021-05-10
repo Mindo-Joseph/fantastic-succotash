@@ -220,6 +220,9 @@ class CartController extends BaseController
                         'vendorProducts'=> function($qry) use($cartID){
                             $qry->where('cart_id', $cartID);
                         },
+                        'vendorProducts.addon.set' => function($qry) use($langId){
+                            $qry->where('language_id', $langId);
+                        },
                         'vendorProducts.addon.option' => function($qry) use($langId){
                             $qry->where('language_id', $langId);
                         }, 'vendorProducts.product.taxCategory.taxRate', 
