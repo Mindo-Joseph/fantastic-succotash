@@ -9,7 +9,7 @@ class Celebrity extends Model
 {
   protected $fillable = ['name', 'email', 'avatar', 'phone_number', 'address', 'status'];
 
-    public function getImageAttribute($value)
+    public function getAvatarAttribute($value)
     {
       $values = array();
       $img = 'default/default_image.png';
