@@ -494,7 +494,7 @@ class CartController extends FrontController
 
         $cartData = $this->getCart($user->id);
 
-        echo '<pre>';print_r($cartData->toArray());echo '</pre>';
+        return response()->json($cartData->toArray());
 
     }
 }

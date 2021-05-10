@@ -23,11 +23,11 @@ class CreateOrderProductsTable extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('variant_id')->nullable();
             $table->tinyInteger('is_tax_applied')->comment('0-No, 1-Yes');
-            $table->unsignedBigInteger('tax_rate_id')->nullable();
+            $table->unsignedBigInteger('tax_category_id')->nullable();
 
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('set null');
-            $table->foreign('tax_rate_id')->references('id')->on('tax_rates')->onDelete('set null');
+            $table->foreign('tax_category_id')->references('id')->on('tax_categories')->onDelete('set null');
             $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('set null');
             $table->foreign('variant_id')->references('id')->on('product_variants')->onDelete('set null');
 
