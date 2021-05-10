@@ -183,6 +183,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
+        Laravel\Scout\ScoutServiceProvider::class,
 
     ],
 

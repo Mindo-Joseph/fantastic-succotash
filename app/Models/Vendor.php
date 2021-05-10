@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Vendor extends Model
 {
+  use Searchable;
     public function serviceArea(){
        return $this->hasMany('App\Models\ServiceArea')->select('vendor_id', 'geo_array', 'name'); 
     }
@@ -38,5 +40,12 @@ class Vendor extends Model
       $values['image_path'] = env('IMG_URL2').'/'.\Storage::disk('s3')->url($img);
       $values['image_fit'] = env('FIT_URl');
       return $values;
+    }
+
+    public function toSearchableArray()
+    {
+      $array = $this->toArray();
+         
+      return array('id' => $array['id'], 'name' => $array['name']);
     }
 }

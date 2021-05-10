@@ -6,12 +6,15 @@ use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory};
+use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory, BrandTranslation};
 use Validation;
 use DB;
 use Illuminate\Support\Facades\Storage;
 use Config;
 use ConvertCurrency;
+
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 
 class HomeController extends BaseController
 {
@@ -184,7 +187,7 @@ class HomeController extends BaseController
         return $products;
     }
 
-    public function searchData(Request $request, $for = 'all', $dataId = 0)
+    public function searchDataOld(Request $request, $for = 'all', $dataId = 0)
     {
         $langId = Auth::user()->language;
         $curId = Auth::user()->language;
@@ -232,7 +235,7 @@ class HomeController extends BaseController
         ]);
     }
 
-    public function search($langId, $curId, $for, $keyword, $dataId, $userid)
+    public function searchOld($langId, $curId, $for, $keyword, $dataId, $userid)
     {
         $response = array();
         if($for == 'all'){
@@ -314,5 +317,126 @@ class HomeController extends BaseController
         $response['products'] = $products;
 
         return $response;
+    }
+
+    public function globalSearch(Request $request, $for = 'all', $dataId = 0)
+    {
+        $keyword = $request->keyword;
+        $langId = Auth::user()->language;
+        $curId = Auth::user()->language;
+
+        if($for == 'all'){
+            $categories = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
+                ->select('categories.id', 'categories.slug', 'ct.name', 'ct.trans-slug', 'ct.meta_title', 'ct.meta_description', 'ct.meta_keywords', 'ct.category_id')
+                ->where('ct.language_id', $langId)
+                ->where(function ($q) use ($keyword) {
+                    $q->where('ct.name', ' LIKE', '%' . $keyword . '%')
+                        ->orWhere('ct.trans-slug', 'LIKE', '%' . $keyword . '%')
+                        ->orWhere('ct.meta_title', 'LIKE', '%' . $keyword . '%')
+                        ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
+                        ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
+                })->where('categories.status', '!=', '2')->get();
+
+            $response = array();
+            foreach ($categories as $key => $value) {
+                $value->type = 'category';
+
+                $response[] = $value;
+            }
+
+            $brands = Brand::join('brand_translations as bt', 'bt.brand_id', 'brands.id')
+                    ->select('brands.id', 'bt.title')
+                    ->where('bt.title', 'LIKE', '%' . $keyword . '%')
+                    ->where('brands.status', '!=', '2')
+                    ->where('bt.language_id', $langId)
+                    ->orderBy('brands.position', 'asc')->get();
+
+            foreach ($brands as $key => $value) {
+                $value->type = 'brand';
+
+                $response[] = $value;
+            }
+
+
+            $vendors  = Vendor::select('id', 'name', 'address')->where(function ($q) use ($keyword) {
+                    $q->where('name', ' LIKE', '%' . $keyword . '%')->orWhere('address', 'LIKE', '%' . $keyword . '%');
+                })->where('vendors.status', '!=', '2')->get();
+
+            foreach ($vendors as $key => $value) {
+                $value->type = 'vendor';
+
+                $response[] = $value;
+            }
+
+            $products = Product::join('product_translations as pt', 'pt.product_id', 'products.id')
+                        ->select('products.id', 'products.sku', 'pt.title', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
+                        ->where('pt.language_id', $langId)
+                        ->where(function ($q) use ($keyword) {
+                                $q->where('products.sku', ' LIKE', '%' . $keyword . '%')
+                                ->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')
+                                ->orWhere('pt.title', 'LIKE', '%' . $keyword . '%')
+                                ->orWhere('pt.body_html', 'LIKE', '%' . $keyword . '%')
+                                ->orWhere('pt.meta_title', 'LIKE', '%' . $keyword . '%')
+                                ->orWhere('pt.meta_keyword', 'LIKE', '%' . $keyword . '%')
+                                ->orWhere('pt.meta_description', 'LIKE', '%' . $keyword . '%');
+                    })->where('products.is_live', 1)->get();
+          
+            foreach ($products as $key => $value) {
+                $value->type = 'product';
+
+                $response[] = $value;
+            }
+            return response()->json([
+                'data' => $response,
+                'keyword' => $request->keyword,
+            ]);
+        }else{
+            $products = Product::join('product_translations as pt', 'pt.product_id', 'products.id')
+                        ->select('products.id', 'products.sku', 'pt.title', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
+                        ->where('pt.language_id', $langId)
+                        ->where(function ($q) use ($keyword) {
+                                $q->where('products.sku', ' LIKE', '%' . $keyword . '%')
+                                ->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')
+                                ->orWhere('pt.title', 'LIKE', '%' . $keyword . '%')
+                                ->orWhere('pt.body_html', 'LIKE', '%' . $keyword . '%')
+                                ->orWhere('pt.meta_title', 'LIKE', '%' . $keyword . '%')
+                                ->orWhere('pt.meta_keyword', 'LIKE', '%' . $keyword . '%')
+                                ->orWhere('pt.meta_description', 'LIKE', '%' . $keyword . '%');
+                });
+
+            if($for == 'category'){
+                $prodIds = array();
+
+                $productCategory = ProductCategory::select('product_id')->where('category_id', $dataId)->get();
+                if($productCategory){
+                    foreach ($productCategory as $key => $value) {
+                        $prodIds[] = $value->product_id;
+                    }
+                }
+
+                $products = $products->whereIn('products.id', $prodIds);
+            }
+
+            if($for == 'vendor'){
+                $products = $products->where('products.vendor_id', $dataId);
+            }
+
+            if($for == 'brand'){
+                $products = $products->where('products.brand_id', $dataId);
+            }
+
+            $products = $products->where('products.is_live', 1)->get();
+
+            foreach ($products as $key => $value) {
+                $value->type = 'product';
+
+                $response[] = $value;
+            }
+            return response()->json([
+                'data' => $response,
+                'keyword' => $request->keyword,
+            ]);
+        }
+        
     }
 }

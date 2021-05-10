@@ -97,14 +97,18 @@ class PromocodeController extends BaseController
             $is_include = ($request->applied_type == 'include') ? 1 : 0;
             $is_exclude = ($request->applied_type == 'exclude') ? 1 : 0;
             $data = $excludeData = array();
+            $fieldKey = '';
             if ($inlineRadioOptions == 0) {
                 $excludeData = $request->input('productList');
+                $fieldKey = 'product_id';
             }
             if ($inlineRadioOptions == 1) {
                 $excludeData = $request->input('vendorList');
+                $fieldKey = 'vendor_id';
             }
             if ($inlineRadioOptions == 2) {
                 $excludeData = $request->input('categoryList');
+                $fieldKey = 'data_id';
             }
 
             if (!empty($excludeData)) {
@@ -112,7 +116,7 @@ class PromocodeController extends BaseController
                     $data[] = [
                         'promocode_id' => $promocode->id,
                         'restriction_type' => $inlineRadioOptions,
-                        'data_id' => $res,
+                        $fieldKey => $res,
                         'is_excluded' => $is_exclude,
                         'is_included' => $is_include,
                     ];
