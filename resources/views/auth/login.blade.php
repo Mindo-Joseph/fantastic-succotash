@@ -33,7 +33,7 @@
                                             </span>
                                         </a>
                                     </div>
-                                    <p class="text-muted mb-4 mt-3">Enter1 your email address and password to access admin panel.</p>
+                                    <p class="text-muted mb-4 mt-3">Enter your email address and password to access admin panel.</p>
                                 </div>
 
                                 <form action="{{route('client.login')}}" method="POST" novalidate>

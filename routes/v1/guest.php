@@ -22,7 +22,7 @@ Route::group([
         Route::get('vendor/{id?}', 'Api\v1\VendorController@productsByVendor');
         Route::post('vendor/filters/{id?}', 'Api\v1\VendorController@vendorFilters');
 
-        Route::post('vendor/{type}/{id?}', 'Api\v1\HomeController@searchData');
+        Route::post('search/{type}/{id?}', 'Api\v1\HomeController@globalSearch');
     });
 
     Route::group([
@@ -33,6 +33,9 @@ Route::group([
         Route::post('cart/remove', 'Api\v1\CartController@removeItem');
         Route::post('cart/updateQuantity', 'Api\v1\CartController@updateQuantity');
         Route::get('cart/totalItems', 'Api\v1\CartController@getItemCount');
+        Route::get('cart/empty', 'Api\v1\CartController@emptyCart');
+
+        Route::get('coupons/{id?}', 'Api\v1\CouponController@list');
 
     });
 

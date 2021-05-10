@@ -21,16 +21,21 @@ class CartController extends BaseController
      */
     public function index(Request $request)
     {
-        $user_id = '';
-        if (Auth::user()->id && Auth::user()->id > 0) {
-            $user_id = Auth::user()->id;
+        $user = User::where('status', '!=', '2');
+        if (Auth::user() && Auth::user()->id > 0) {
+            $user = $user->where('id', Auth::user()->id);
         }else{
             if(empty(Auth::user()->system_user)){
                 return response()->json(['error' => 'System id should not be empty.'], 404);
             }
+            $user = $user->where('system_id', Auth::user()->system_user);
+        }
+        $user = $user = $user->first();
+        if(!$user){
+            return response()->json(['error' => 'User not found'], 404);
         }
 
-        $cartData = $this->getCart($user_id);
+        $cartData = $this->getCart($user->id);
         if($cartData && !empty($cartData)){
             return response()->json([
                 'data' => $cartData,
@@ -201,6 +206,10 @@ class CartController extends BaseController
                     ->where('status', '0')
                     ->where('user_id', $user_id)->first();
 
+        if(!$cart){
+            return false;
+        }
+
         $cartID = $cart->id;
 
         $cartData = CartProduct::with(['vendor', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
@@ -216,7 +225,7 @@ class CartController extends BaseController
                         }, 'vendorProducts.product.taxCategory.taxRate', 
                     ])->select('vendor_id')->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
 
-        $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0;
+        $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if(empty($cartData) || count($cartData) < 1){
             return false;
         }
@@ -224,7 +233,7 @@ class CartController extends BaseController
 
             foreach ($cartData as $ven_key => $vendorData) {
 
-                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0;
+                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0.00;
 
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
 
@@ -233,7 +242,10 @@ class CartController extends BaseController
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
 
                     $price_in_currency = $prod->pvariant->price / $divider;
-                    $quantity_price = $price_in_currency * $prod->quantity;
+
+                    $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
+
+                    $quantity_price = $price_in_doller_compare * $prod->quantity;
 
                     $prod->pvariant->price_in_cart = $prod->pvariant->price;
                     $prod->pvariant->price = $price_in_currency;
@@ -249,13 +261,14 @@ class CartController extends BaseController
                         foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
 
                             $rate = round($tax_value->tax_rate);
-                            $tax_amount = $price_in_currency * $rate / 100;
-                            $product_tax = $tax_amount * $prod->quantity;
+                            $tax_amount = ($price_in_doller_compare * $rate) / 100;
+                            $product_tax = $quantity_price * $rate / 100;
 
                             $taxData[$tckey]['identifier'] = $tax_value->identifier;
                             $taxData[$tckey]['rate'] = $rate;
                             $taxData[$tckey]['tax_amount'] = $tax_amount;
                             $taxData[$tckey]['product_tax'] = $product_tax;
+                            $taxable_amount = $taxable_amount + $product_tax;
 
                             $payable_amount = $payable_amount + $product_tax;
                         }
@@ -267,14 +280,16 @@ class CartController extends BaseController
                     foreach ($prod->addon as $ck => $addons) {
 
                         $opt_price_in_currency = $addons->option->price / $divider;
-                        $opt_quantity_price = $opt_price_in_currency * $prod->quantity;
+                        $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
+
+                        $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
 
                         $addons->option->price_in_cart = $addons->option->price;
                         $addons->option->price = $opt_price_in_currency;
                         $addons->option->multiplier = $clientCurrency->doller_compare;
                         $addons->option->quantity_price = $opt_quantity_price;
 
-                        $payable_amount = $payable_amount + ($opt_quantity_price * $clientCurrency->doller_compare);
+                        $payable_amount = $payable_amount + $opt_quantity_price;
                     }
 
                     if(isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)){
@@ -282,7 +297,6 @@ class CartController extends BaseController
                     }else{
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
-
                     $deliver_charge = 0;
                     $prod->deliver_charge = $deliver_charge;
                     $payable_amount = $payable_amount + $deliver_charge;
@@ -292,6 +306,7 @@ class CartController extends BaseController
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
                 $vendorData->taxable_amount = $taxable_amount;
+                $vendorData->product_total_amount = ($payable_amount - $taxable_amount);
 
                 $total_payable_amount = $total_payable_amount + $payable_amount;
                 $total_taxable_amount = $total_taxable_amount + $taxable_amount;
@@ -324,7 +339,7 @@ class CartController extends BaseController
         }
         $total_payable_amount = $total_payable_amount - $total_discount_amount;
 
-        $cart->gross_amount = $total_payable_amount + $total_discount_amount;
+        $cart->gross_amount = ($total_payable_amount + $total_discount_amount);
         $cart->total_payable_amount = $total_payable_amount;
         $cart->total_discount_amount = $total_discount_amount;
         $cart->total_discount_percent = $total_discount_percent;
@@ -389,7 +404,6 @@ class CartController extends BaseController
      */
     public function getItemCount(Request $request)
     {
-
         $user = User::where('status', '!=', '2');
 
         if (Auth::user()->id && Auth::user()->id > 0) {

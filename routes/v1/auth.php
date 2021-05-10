@@ -57,6 +57,8 @@ Route::group([
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');
         Route::post('user/getAddress', 'Api\v1\ProfileController@getAddress');
         Route::get('primary/address/{id}', 'Api\v1\ProfileController@primaryAddress');
+
+        Route::post('user/address/{id?}', 'Api\v1\ProfileController@userAddress');
     });
   
 });
