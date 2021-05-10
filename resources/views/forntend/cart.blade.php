@@ -262,5 +262,120 @@
 
 @section('script')
 
+<script>
 
+var total1 = 0;
+    $(document).ready(function() {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: "get",
+            url: "{{ route('getCartProducts') }}",
+            data: '',
+            dataType: 'json',
+            success: function(data) {
+                if (data.res == "null") {
+                    $(".shopping-cart1").html(data.html);
+                } else {
+                    console.log(data);
+                    var products = data.products;
+                    for (i = 0; i < products.length; i++) {
+                        var vendor_products = products[i].vendor_products;
+                        for (j = 0; j < vendor_products.length; j=j+2) {
+                            console.log(products[i].vendor.name);
+                            console.log(vendor_products[j].pvariant.media[0].image.path.proxy_url + '200/200' + vendor_products[j].pvariant.media[0].image.path.image_path);
+                            console.log(vendor_products[j].product.sku);
+                            console.log(vendor_products[j].pvariant.quantity_price);
+                            console.log(vendor_products[j].quantity);
+                            
+                        }
+                    }
+                }
+            },
+            error: function(data) {
+                console.log('Error Found : ' + data);
+            }
+        });
+    });
+    // $(document).on('change', '.quant', function() {
+    //     updateQuantity($(this).attr("data-id"), $(this).val());
+    // });
+
+
+    // function updateQuantity(cp_id, quantity) {
+    //     ajaxCall = $.ajax({
+    //         type: "post",
+    //         dataType: "json",
+    //         url: "{{ route('updateQuantity') }}",
+    //         data: {
+    //             "_token": "{{ csrf_token() }}",
+    //             "cartproduct_id": cp_id,
+    //             "quantity": quantity,
+    //         },
+    //         success: function(response) {
+    //             console.log(total1);
+    //             cartHeader();
+    //             var latest_price = parseInt($("#price" + cp_id).html().substring(1)) * parseInt(quantity);
+    //             total1 = total1 - parseInt($("#h2" + cp_id).html().substring(1));
+    //             total1 = total1 + latest_price;
+    //             $("#h2" + cp_id).html("$" + latest_price);
+    //             $("#total").html("$" + total1);
+    //             $("#totalCart").html("$" + total1);
+    //         },
+    //         error: function(data) {
+
+    //         },
+    //     });
+    // }
+
+    // $(document).on('click', '.closed', function() {
+    //     var total2 = total1 - parseInt($("#h2" + $(this).attr("data-id")).html().substring(1));
+    //     console.log(total2);
+    //     var idd = $(this).attr("data-id");
+    //     ajaxCall = $.ajax({
+    //         type: "post",
+    //         dataType: "json",
+    //         url: "{{ route('deleteCartProduct') }}",
+    //         data: {
+    //             "_token": "{{ csrf_token() }}",
+    //             "cartproduct_id": $(this).attr("data-id"),
+    //         },
+    //         success: function(response) {
+    //             console.log(response);
+    //             total1 = total2;
+    //             $("#total").html("$" + total1);
+    //             $("#totalCart").html("$" + total1);
+    //             $("#tbody" + idd).remove();
+    //             cartHeader();
+    //         },
+    //         error: function(data) {
+
+    //         },
+    //     });
+
+    // });
+
+    // $(document).on('click', '.checkout', function() {
+    //     console.log("checkout");
+    //     ajaxCall = $.ajax({
+    //         type: "get",
+    //         dataType: "json",
+    //         url: "{{ route('checkUserLogin') }}",
+    //         success: function(response) {
+    //             if(response == 'no'){
+    //                 window.location.href = "{{ route('customer.login') }}";
+    //             }
+    //             else if(response == 'yes'){
+    //                 window.location.href = "{{ route('user.checkout') }}";
+    //             }
+    //         },
+    //         error: function(data) {
+    //         },
+    //     });
+    // });
+</script>
 @endsection

@@ -165,17 +165,14 @@ echo '<pre>';print_r($currencyList->toArray()); -->
                 if (data.res == "null") {
                     $(".shopping-cart").html(data.html);
                 } else {
-                    var products = JSON.parse(data.products);
-                    var price = JSON.parse(data.price);
-                    var images = JSON.parse(data.image);
-                    var quantity = JSON.parse(data.quantity);
-                    var total = 0;
+                    var products = data.products;
                     for (i = 0; i < products.length; i++) {
-                        total += parseInt(price[i]) * parseInt(quantity[i]);
-                        $(".shopping-cart").append("<li><div class='media'><a href='#'><img alt='' class='mr-3' src='" + images[i]['0'].pimage.image.path.proxy_url + '200/200' + images[i]['0'].pimage.image.path.image_path + "'></a><div class='media-body'><a href='#'><h4>" + products[i] + "</h4></a><h4><span>" + quantity[i] + " x $" + price[i] + "</span></h4></div></div><div class='close-circle'><a href='#'><i class='fa fa-times' aria-hidden='true'></i></a></div></li>");
+                        var vendor_products = products[i].vendor_products;
+                        for (j = 0; j < vendor_products.length; j=j+2) {
+                        $(".shopping-cart").append("<li><div class='media'><a href='#'><img alt='' class='mr-3' src='" + vendor_products[j].pvariant.media[0].image.path.proxy_url + '200/200' + vendor_products[j].pvariant.media[0].image.path.image_path + "'></a><div class='media-body'><a href='#'><h4>" + vendor_products[j].product.sku + "</h4></a><h4><span>" + vendor_products[j].quantity + " x $" + products[i].payable_amount + "</span></h4></div></div><div class='close-circle'><a href='#'><i class='fa fa-times' aria-hidden='true'></i></a></div></li>");
+                        }
                     }
-
-                    $(".shopping-cart").append("<li><div class='total'><h5>subtotal : <span id='totalCart'>" + total + "</span></h5></div></li>");
+                    $(".shopping-cart").append("<li><div class='total'><h5>subtotal : <span id='totalCart'>" + data.total_payable_amount + "</span></h5></div></li>");
                     $(".shopping-cart").append("<li><div class='buttons'><a href='{{ route('showCart') }}' class='view-cart'>viewcart</a> <a href='#' class='checkout'>checkout</a></div></li>");
                 }
             },
