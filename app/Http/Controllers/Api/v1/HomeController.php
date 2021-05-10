@@ -332,9 +332,9 @@ class HomeController extends BaseController
                 ->where(function ($q) use ($keyword) {
                     $q->where('ct.name', ' LIKE', '%' . $keyword . '%')
                         ->orWhere('ct.trans-slug', 'LIKE', '%' . $keyword . '%')
-                        ->orWhere('ct.meta_title', 'LIKE', '%' . $keyword . '%')
-                        ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
-                        ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
+                        // ->orWhere('ct.meta_title', 'LIKE', '%' . $keyword . '%')
+                        // ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
+                        // ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
                 })->where('categories.status', '!=', '2')->get();
 
             $response = array();
@@ -437,6 +437,6 @@ class HomeController extends BaseController
                 'keyword' => $request->keyword,
             ]);
         }
-        
+
     }
 }
