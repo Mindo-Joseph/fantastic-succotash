@@ -92,7 +92,7 @@
                         </table>
                     </div>
                     <div class="pagination pagination-rounded justify-content-end mb-0">
-                        $user->links()
+                        {{-- $users->links() --}}
                     </div>
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
