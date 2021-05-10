@@ -101,7 +101,6 @@ class CelebrityController extends BaseController
     {
         //
         $loyaltyCard = Celebrity::where('id', $id)->first();
-        // dd($loyaltyCard);
         $returnHTML = view('backend.celebrity.form')->with(['lc' => $loyaltyCard])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
