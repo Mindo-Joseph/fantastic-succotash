@@ -39,9 +39,9 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right openBannerModal"
+                            <!-- <button class="btn btn-blue waves-effect waves-light text-sm-right openBannerModal"
                              userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
-                            </button>
+                            </button> -->
                         </div>
                     </div>
 
@@ -56,7 +56,7 @@
                                     <th>Phone (Is Verified)</th>
                                     <th>Email Token</th>
                                     <th>Phone Token</th>
-                                    <th>Action</th>
+                                    <!-- <th>Action</th> -->
                                 </tr>
                             </thead>
                             <tbody id="post_list">
@@ -69,7 +69,7 @@
                                     <td>{{ $user->phone_number }}</td>
                                     <td>{{(!empty($user->email_token)) ? $user->email_token : 'N/A'}}</td>
                                     <td>{{(!empty($user->phone_token)) ? $user->phone_token : 'N/A'}}</td>
-                                    <td> 
+                                    <!-- <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
                                                 <a class="action-icon openBannerModal" userId="{{$user->id}}" href="#"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
@@ -85,7 +85,7 @@
                                                 </form>
                                             </div>
                                         </div>
-                                    </td>
+                                    </td> -->
                                 </tr>
                                @endforeach
                             </tbody>
