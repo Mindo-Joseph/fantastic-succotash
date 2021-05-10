@@ -331,12 +331,12 @@ class HomeController extends BaseController
                 ->where('ct.language_id', $langId)
                 ->where(function ($q) use ($keyword) {
                     $q->where('ct.name', ' LIKE', '%' . $keyword . '%')
-                        ->orWhere('ct.trans-slug', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('categories.slug', 'LIKE', '%' . $keyword . '%')
+                        ->orWhere('ct.trans-slug', 'LIKE', '%' . $keyword . '%');
                         // ->orWhere('ct.meta_title', 'LIKE', '%' . $keyword . '%')
                         // ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
                         // ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
                 })->where('categories.status', '!=', '2')->get();
-
             $response = array();
             foreach ($categories as $key => $value) {
                 $value->type = 'category';
@@ -374,7 +374,7 @@ class HomeController extends BaseController
                         ->where(function ($q) use ($keyword) {
                                 $q->where('products.sku', ' LIKE', '%' . $keyword . '%')
                                 ->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')
-                                 ->orWhere('pt.title', 'LIKE', '%' . $keyword . '%')
+                                 ->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
                                 // ->orWhere('pt.body_html', 'LIKE', '%' . $keyword . '%')
                                 // ->orWhere('pt.meta_title', 'LIKE', '%' . $keyword . '%')
                                 // ->orWhere('pt.meta_keyword', 'LIKE', '%' . $keyword . '%')
