@@ -327,7 +327,7 @@ class HomeController extends BaseController
 
         if($for == 'all'){
             $categories = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
-                ->select('categories.id', 'categories.slug', 'ct.name', 'ct.trans-slug', 'ct.meta_title', 'ct.meta_description', 'ct.meta_keywords', 'ct.category_id')
+                ->select('categories.id', 'categories.slug', 'ct.name as dataname', 'ct.trans-slug', 'ct.meta_title', 'ct.meta_description', 'ct.meta_keywords', 'ct.category_id')
                 ->where('ct.language_id', $langId)
                 ->where(function ($q) use ($keyword) {
                     $q->where('ct.name', ' LIKE', '%' . $keyword . '%')
@@ -345,7 +345,7 @@ class HomeController extends BaseController
             }
 
             $brands = Brand::join('brand_translations as bt', 'bt.brand_id', 'brands.id')
-                    ->select('brands.id', 'bt.title')
+                    ->select('brands.id', 'bt.title  as dataname')
                     ->where('bt.title', 'LIKE', '%' . $keyword . '%')
                     ->where('brands.status', '!=', '2')
                     ->where('bt.language_id', $langId)
@@ -358,7 +358,7 @@ class HomeController extends BaseController
             }
 
 
-            $vendors  = Vendor::select('id', 'name', 'address')->where(function ($q) use ($keyword) {
+            $vendors  = Vendor::select('id', 'name  as dataname', 'address')->where(function ($q) use ($keyword) {
                     $q->where('name', ' LIKE', '%' . $keyword . '%')->orWhere('address', 'LIKE', '%' . $keyword . '%');
                 })->where('vendors.status', '!=', '2')->get();
 
@@ -369,16 +369,16 @@ class HomeController extends BaseController
             }
 
             $products = Product::join('product_translations as pt', 'pt.product_id', 'products.id')
-                        ->select('products.id', 'products.sku', 'pt.title', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
+                        ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
                         ->where('pt.language_id', $langId)
                         ->where(function ($q) use ($keyword) {
                                 $q->where('products.sku', ' LIKE', '%' . $keyword . '%')
                                 ->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')
-                                ->orWhere('pt.title', 'LIKE', '%' . $keyword . '%')
-                                ->orWhere('pt.body_html', 'LIKE', '%' . $keyword . '%')
-                                ->orWhere('pt.meta_title', 'LIKE', '%' . $keyword . '%')
-                                ->orWhere('pt.meta_keyword', 'LIKE', '%' . $keyword . '%')
-                                ->orWhere('pt.meta_description', 'LIKE', '%' . $keyword . '%');
+                                 ->orWhere('pt.title', 'LIKE', '%' . $keyword . '%')
+                                // ->orWhere('pt.body_html', 'LIKE', '%' . $keyword . '%')
+                                // ->orWhere('pt.meta_title', 'LIKE', '%' . $keyword . '%')
+                                // ->orWhere('pt.meta_keyword', 'LIKE', '%' . $keyword . '%')
+                                // ->orWhere('pt.meta_description', 'LIKE', '%' . $keyword . '%');
                     })->where('products.is_live', 1)->get();
           
             foreach ($products as $key => $value) {
