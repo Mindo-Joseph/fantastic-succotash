@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{LoyaltyCard, Celebrity};
+use App\Models\{LoyaltyCard, Celebrity, Product};
 use Dotenv\Loader\Loader;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -65,15 +65,16 @@ class CelebrityController extends BaseController
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $images = Storage::disk('s3')->put('/celebrity', $file,'public');
+            $images = Storage::disk('s3')->put('/celebrity', $file, 'public');
             $celebrity->avatar = $images;
         }
 
         $celebrity->save();
 
-        if($celebrity->id > 0){
+        $celebrity->products()->sync($request->products);
+        if ($celebrity->id > 0) {
             return response()->json([
-                'status'=>'success',
+                'status' => 'success',
                 'message' => 'Celebrity created Successfully!',
                 'data' => $celebrity
             ]);
@@ -97,11 +98,16 @@ class CelebrityController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($domain = '',$id)
+    public function edit($domain = '', $id)
     {
         //
-        $loyaltyCard = Celebrity::where('id', $id)->first();
-        $returnHTML = view('backend.celebrity.form')->with(['lc' => $loyaltyCard])->render();
+        $celebrity = Celebrity::where('id', $id)->first();
+        $pros = array();
+        foreach ($celebrity->products as $repo) {
+            $pros[] = $repo->id;
+        }
+        $products = Product::all();
+        $returnHTML = view('backend.celebrity.form')->with(['lc' => $celebrity, 'products' => $products, 'pros' => $pros])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
@@ -112,9 +118,48 @@ class CelebrityController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($domain = '', Request $request, $id)
     {
         //
+        //  dd($request->all());
+        $rules = array(
+            'name' => 'required|string|max:150',
+            'email' => 'required|string|max:150|unique:celebrities,email,' . $id,
+            'phone_number' => 'required',
+            'address' => 'required',
+        );
+
+        if ($request->hasFile('image')) {    /* upload logo file */
+            $rules['image'] =  'image|mimes:jpeg,png,jpg,gif';
+        }
+
+        $validation  = Validator::make($request->all(), $rules)->validate();
+
+        $celebrity = Celebrity::where('id', $id)->firstOrFail();;
+        $celebrity->name = $request->input('name');
+        $celebrity->email = $request->input('email');
+        $celebrity->phone_number = $request->input('phone_number');
+        $celebrity->address = $request->input('address');
+        $celebrity->status = '1';
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $images = Storage::disk('s3')->put('/celebrity', $file, 'public');
+            $celebrity->avatar = $images;
+        }
+
+        $celebrity->save();
+
+        $celebrity->products()->sync($request->products);
+
+
+        if ($celebrity->id > 0) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Celebrity created Successfully!',
+                'data' => $celebrity
+            ]);
+        }
     }
 
     /**
@@ -143,4 +188,15 @@ class CelebrityController extends BaseController
         $loyaltyCard->save();
     }
 
+    /**
+     * Get the default value of Redeem Point
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getProducts($domain = '')
+    {
+        $products = Product::all();
+        return response()->json($products);
+    }
 }

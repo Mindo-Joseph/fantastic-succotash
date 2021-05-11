@@ -57,6 +57,15 @@
                         </div>
                     </div>
 
+                    <div class="col-md-6" id="product_list">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Products',['class' => 'control-label']) !!}
+                            <select class="form-control select2-multiple" id="products" name="products[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                             
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="modal-footer">
@@ -78,6 +87,7 @@
                 @csrf
                 @method('PUT')
                 <div class="modal-body" id="editLoyaltyBox">
+
                 </div>
 
                 <div class="modal-footer">

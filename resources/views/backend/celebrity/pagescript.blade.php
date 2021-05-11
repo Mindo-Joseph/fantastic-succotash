@@ -46,12 +46,14 @@
             data: '',
             dataType: 'json',
             success: function(data) {
-
                 $('#edit-loyalty-modal #editLoyaltyBox').html(data.html);
                 $('#edit-loyalty-modal').modal({
                     backdrop: 'static',
                     keyboard: false
                 });
+                $('.dropify').dropify();
+                $('.select2-multiple').select2();
+
             },
             error: function(data) {
                 console.log('data2');
@@ -74,7 +76,6 @@
         var form = document.getElementById('update_loyality_form');
         var formData = new FormData(form);
         var url = document.getElementById('lc_id').getAttribute('url');
-
         saveData(formData, 'edit', url);
 
     });
@@ -129,4 +130,23 @@
             }
         });
     }
+
+    $(document).ready(function() {
+        $.ajax({
+            url: "{{ route('celebrity.getProducts') }}",
+            type: "POST",
+            data: {
+                "_token": "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                console.log(response[0].id);
+                for( i = 0; i<response.length; i++){
+                    $("#products").append("<option value="+response[i].id+">"+response[i].sku+"</option>");
+                }
+                // $(".primaryKey").html("1 " + response.symbol + " =");
+                // $("#redeem_points_per_primary_currency").val(response.value);
+            },
+        });
+    });
+
 </script>
