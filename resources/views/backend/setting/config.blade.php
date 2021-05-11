@@ -605,16 +605,22 @@
                     <h4 class="header-title">Basic Website Configuration</h4>
                     <p class="sub-header"></p>
                     <div class="row mb-2">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group mb-3 switchery-demo">
                                 <label for="verify_email" class="mr-3">Verify Email</label>
                                 <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->verify_email == '1'))  checked='checked' @endif>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group mb-3 ">
                                 <label for="verify_phone" class="mr-3">Verify Phone</label>
                                 <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->verify_phone == '1'))  checked='checked' @endif>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3 ">
+                                <label for="celebrity_check" class="mr-3">Celebrity Promotion</label>
+                                <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->celebrity_check == '1'))  checked='checked' @endif>
                             </div>
                         </div>
                     </div>

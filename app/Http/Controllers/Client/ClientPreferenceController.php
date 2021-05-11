@@ -131,6 +131,8 @@ class ClientPreferenceController extends BaseController
         if($request->has('verify_email')){
             $preference->verify_email = ($request->has('verify_email') && $request->verify_email == 'on') ? 1 : 0;
             $preference->verify_phone = ($request->has('verify_phone') && $request->verify_phone == 'on') ? 1 : 0;
+            $preference->celebrity_check = ($request->has('celebrity_check') && $request->celebrity_check == 'on') ? 1 : 0;
+            
             
         }
 
