@@ -457,7 +457,7 @@ class CartController extends BaseController
                 $total_discount_percent = $total_discount_percent + $discount_percent;
             }
         }
-        $is_percent = 0;
+        $amount_value = $is_percent = 0;
         foreach ($cart->coupon as $ck => $code) {
             if($code->promo->promo_type_id == 1){
                 $is_percent = 1;
