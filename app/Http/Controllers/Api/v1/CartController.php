@@ -368,11 +368,10 @@ class CartController extends BaseController
             foreach ($cartData as $ven_key => $vendorData) {
 
                 $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0.00;
-                $vendorAddons = array();
 
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
-
-                    $quantity_price = 0;
+                    $quantity_price = 0; 
+                    $vendorAddons = array();
 
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
 
