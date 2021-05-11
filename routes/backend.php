@@ -82,6 +82,7 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 
     Route::resource('celebrity', 'Client\CelebrityController');
     Route::post('celebrity/changeStatus', 'Client\CelebrityController@changeStatus')->name('celebrity.changeStatus');
+    Route::post('loyalty/getProducts', 'Client\CelebrityController@getProducts')->name('celebrity.getProducts');
 
     Route::resource('promocode', 'Client\PromocodeController');
 
