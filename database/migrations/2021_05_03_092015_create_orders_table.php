@@ -31,11 +31,11 @@ class CreateOrdersTable extends Migration
             $table->decimal('total_discount')->unsigned()->nullable();
             $table->decimal('taxable_amount')->unsigned()->nullable();
             $table->decimal('payable_amount')->unsigned()->nullable();
-            $table->unsignedBigInteger('tax_rate_id')->nullable();
+            $table->unsignedBigInteger('tax_category_id')->nullable();
             $table->unsignedBigInteger('promocode_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('address_id')->references('id')->on('user_addresses')->onDelete('set null');
-            $table->foreign('tax_rate_id')->references('id')->on('tax_rates')->onDelete('set null');
+            $table->foreign('tax_category_id')->references('id')->on('tax_categories')->onDelete('set null');
             $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('set null');
             $table->foreign('promocode_id')->references('id')->on('promocodes')->onDelete('set null');
             $table->timestamps();

@@ -148,6 +148,12 @@
                         <span> Loyalty Cards </span>
                     </a>
                 </li> 
+                <li>   
+                    <a href="{{route('celebrity.index')}}" >
+                        <i data-feather="columns"></i>
+                        <span> Celebrities </span>
+                    </a>
+                </li> 
             </ul>
         </div>
         <div id="sidebar-menu" style="display: none;">

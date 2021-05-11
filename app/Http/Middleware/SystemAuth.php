@@ -49,17 +49,17 @@ class SystemAuth
         }else if(!isset($header['systemuser'])){
             return response()->json(['error' => 'Invalid system user', 'message' => 'Please provide unique system id.'], 401);
                 abort(404);
-        }else{
+        }
+        else{
             $systemUser = $header['systemuser'][0];
-            $exist = User::where('system_id', $systemUser)->first();
-
-            if(!$exist){
-                $user->system_user = $systemUser;
-            }else{
-                $user = $exist;
+            if(empty($systemUser)){
+                return response()->json(['error' => 'System id should not be empty.'], 404);
+            }
+            $user = $user->where('system_id', $systemUser)->first();
+            if(!$user){
+                return response()->json(['error' => 'System user not found.'], 404);
             }
         }
-
         $languages = ClientLanguage::where('is_primary', 1)->first();
         $primary_cur = ClientCurrency::where('is_primary', 1)->first();
 

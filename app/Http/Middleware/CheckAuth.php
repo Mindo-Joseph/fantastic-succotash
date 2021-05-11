@@ -46,6 +46,11 @@ class CheckAuth
                 abort(404);
             }
         }
+        if(isset($header['systemuser'])){
+            $systemUser = $header['systemuser'][0];
+            //$exist = User::where('system_id', $systemUser)->first();
+            $user->system_user = $systemUser;
+        }
 
         $languages = ClientLanguage::where('is_primary', 1)->first();
         $primary_cur = ClientCurrency::where('is_primary', 1)->first();

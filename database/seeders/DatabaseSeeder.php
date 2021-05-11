@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
               MapProviderSeeder::class,
               SmsProviderSeeder::class,
               TemplateSeeder::class,
+              PromoTypeSeeder::class,
               //CategorySeeder::class,
               //CategoryTranslationSeeder::class,
               CommonDataSeeder::class,
