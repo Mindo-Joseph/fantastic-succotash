@@ -5,17 +5,14 @@
                 <h4 class="modal-title">Add Promocode</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-
             <form id="addPromoForm" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body" id="addCardBox">
 
                 </div>
-
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-blue waves-effect waves-light submitAddForm">Submit</button>
                 </div>
-
             </form>
         </div>
     </div>

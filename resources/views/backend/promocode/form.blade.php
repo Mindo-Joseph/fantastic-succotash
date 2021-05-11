@@ -1,7 +1,6 @@
 <div class="row">
     <div class="col-md-12 card-box">
         <h4 class="header-title mb-3"></h4>
-
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group" id="nameInput">
@@ -11,27 +10,11 @@
                         <strong></strong>
                     </span>
                 </div>
-
                 <?php $action = '';
                 if(isset($promo->id) && $promo->id > 0){
                     $action = 'Edit';
                 }
                 ?>
-
-                <!-- <div class="form-group">
-                    <label>PromoCode</label>
-                    <input type="text" class="form-control" name="name" id="inputRoleName" placeholder="Enter promocode">
-                    @error('name')
-                    <span class="text-danger">{{$message}}</span>
-                    @enderror
-                </div> -->
-                <!-- <div class="form-group" id="nameInput">
-                    {!! Form::label('title', 'PromoCode',['class' => 'control-label']) !!}
-                    {!! Form::text('code', $promo->code, ['class' => 'form-control']) !!}
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                </div> -->
             </div>
             <div class="col-md-6">
                 <div class="form-group">
@@ -97,11 +80,11 @@
                     {!! Form::label('title', 'Paid By',['class' => 'control-label']) !!}
                     <div>
                         <div class="radio radio-info form-check-inline">
-                            <input type="radio" id="inlineRadio1" value="1" name="radioInline" checked>
+                            <input type="radio" id="inlineRadio1" value="1" name="radioInline" @if(isset($promo->id) && $promo->id > 0 && $promo->paid_by_vendor_admin == 1) checked @endif>
                             <label for="inlineRadio1"> Admin</label>
                         </div>
                         <div class="radio form-check-inline">
-                            <input type="radio" id="inlineRadio2" value="0" name="radioInline">
+                            <input type="radio" id="inlineRadio2" value="0" name="radioInline" @if(isset($promo->id) && $promo->id > 0 && $promo->paid_by_vendor_admin == 0) checked @endif >
                             <label for="inlineRadio2"> Vendor</label>
                         </div>
                     </div>
@@ -152,145 +135,42 @@
             <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('title', 'Apply Restriction On',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control inlineRadioOptions" name="inlineRadioOptions" for="{{(isset($promo->id) && $promo->id > 0) ? 'edit' : 'add'}}">
+                    <select class="selectize-select form-control inlineRadioOptions" name="restriction_on" for="{{(isset($promo->id) && $promo->id > 0) ? 'edit' : 'add'}}">
                         <option value=''>select..</option>
-                        <option value='0' @if($restrictionType == 0) selected @endif>Products</option>
-                        <option value='1' @if($restrictionType == 1) selected @endif>Vendors</option>
-                        <option value='2' @if($restrictionType == 2) selected @endif>Categories</option>
+                        <option value='0' @if($promo->restriction_on == 0) selected @endif>Products</option>
+                        <option value='1' @if($promo->restriction_on == 1) selected @endif>Vendors</option>
                     </select>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('title', 'Restriction Type',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control" name="applied_type">
-                        <option value='include' @if($include == 1) selected @endif>Include</option>
-                        <option value='exclude' @if($exclude == 1) selected @endif>Exclude</option>
+                    <select class="selectize-select form-control" name="restriction_type">
+                        <option value='include' @if($promo->restriction_type == 1) selected @endif>Include</option>
+                        <option value='exclude' @if($promo->restriction_type == 1) selected @endif>Exclude</option>
                     </select>
                 </div>
             </div>
-            <div class="col-md-6" style="{{($restrictionType == 0) ? '' : 'display: none;'}}" id="productsList">
+            <div class="col-md-6" style="{{($promo->restriction_on == 0) ? '' : 'display: none;'}}" id="productsList">
                 <div class="form-group">
                     {!! Form::label('title', 'Products',['class' => 'control-label']) !!}
                     <select class="form-control select2-multiple" id="IncludeProduct" name="productList[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-
                         @foreach($products as $sk)
-                        <option value="{{$sk->id}}" @if($restrictionType == 0 && in_array($sk->id, $dataIds)) selected @endif>{{$sk->sku}}</option>
+                        <option value="{{$sk->id}}" @if($promo->restriction_on == 0 && in_array($sk->id, $dataIds)) selected @endif>{{$sk->sku}}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
-            <div class="col-md-6" style="{{($restrictionType == 1) ? '' : 'display: none;'}}" id="vendorsList">
+            <div class="col-md-6" style="{{($promo->restriction_on == 1) ? '' : 'display: none;'}}" id="vendorsList">
                 <div class="form-group">
                     {!! Form::label('title', 'Vendors',['class' => 'control-label']) !!}
                     <select class="form-control select2-multiple" id="IncludeVendor" name="vendorList[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
                         @foreach($vendors as $nm)
-                        <option value="{{$nm->id}}" @if($restrictionType == 1 && in_array($nm->id, $dataIds)) selected @endif>{{$nm->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6" style="{{($restrictionType == 2) ? '' : 'display: none;'}}" id="categoriesList">
-                <div class="form-group">
-                    {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
-                    <select class="form-control select2-multiple" id="IncludeCategory" name="categoryList[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                        @foreach($categories as $slu)
-                        <option value="{{$slu->id}}" @if($restrictionType == 2 && in_array($slu->id, $dataIds)) selected @endif>{{$slu->slug}}</option>
+                        <option value="{{$nm->id}}" @if($promo->restriction_on == 1 && in_array($nm->id, $dataIds)) selected @endif>{{$nm->name}}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
         </div>
-
-
-
-        <!-- {!! Form::label('title', ' Types ',['class' => 'control-label']) !!}
-        <div class="form-group">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" onclick="myfunction('categoriesList')" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="2">
-                <label class="form-check-label" for="inlineRadio1">Categories</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" onclick="myfunction('vendorsList')" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="1">
-                <label class="form-check-label" for="inlineRadio2">Vendors</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" onclick="myfunction('productsList')" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="0">
-                <label class="form-check-label" for="inlineRadio3">Products</label>
-            </div>
-        </div> -->
-
-
-
-        <!-- <div class="row" style="display: none;" id="productsList" >
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="product"> Include Products</label>
-                    <select class="form-control select2-multiple" id="IncludeProduct" name="includeProducts[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                        @foreach($products as $sk)
-                        <option value="{{$sk->id}}">{{$sk->sku}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="product"> Exclude Products</label>
-                    <select class="form-control select2-multiple" id="ExcludeProduct" name="excludeProducts[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                        @foreach($products as $sk)
-                        <option value="{{$sk->id}}">{{$sk->sku}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="row" style="display: none;" id="vendorsList">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="product">Include Vendors</label>
-                    <select class="form-control select2-multiple" id="IncludeVendor" name="includeVendors[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                        @foreach($vendors as $nm)
-                        <option value="{{$nm->id}}">{{$nm->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="product"> Exclude Vendors</label>
-                    <select class="form-control select2-multiple" id="ExcludeVendor" name="excludeVendors[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                        @foreach($vendors as $nm)
-                        <option value="{{$nm->id}}">{{$nm->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="row" style="display: none;" id="categoriesList">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="product">Include Categories</label>
-                    <select class="form-control select2-multiple" id="IncludeCategory" name="includeCategories[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                        @foreach($categories as $slu)
-                        <option value="{{$slu->id}}">{{$slu->slug}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="product">Exclude Categories</label>
-                    <select class="form-control select2-multiple" id="ExcludeCategory" name="excludeCategories[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                        @foreach($categories as $slu)
-                        <option value="{{$slu->id}}">{{$slu->slug}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div> -->
-
     </div>
 </div>

@@ -25,18 +25,17 @@ Route::group([
         Route::post('search/{type}/{id?}', 'Api\v1\HomeController@globalSearch');
     });
 
-    Route::group([
-      'middleware' => ['dbCheck', 'systemAuth']
-    ], function() {
+    Route::group(['middleware' => ['dbCheck', 'systemAuth']], function() {
         Route::get('cart/list', 'Api\v1\CartController@index');
         Route::post('cart/add', 'Api\v1\CartController@add');
         Route::post('cart/remove', 'Api\v1\CartController@removeItem');
         Route::post('cart/updateQuantity', 'Api\v1\CartController@updateQuantity');
         Route::get('cart/totalItems', 'Api\v1\CartController@getItemCount');
         Route::get('cart/empty', 'Api\v1\CartController@emptyCart');
-
         Route::get('coupons/{id?}', 'Api\v1\CouponController@list');
-
+        Route::post('promo-code/list', 'Api\v1\PromoCodeController@postPromoCodeList');
+        Route::post('promo-code/verify', 'Api\v1\PromoCodeController@postVerifyPromoCode');
+        Route::post('promo-code/remove', 'Api\v1\PromoCodeController@postRemovePromoCode');
     });
 
 });
