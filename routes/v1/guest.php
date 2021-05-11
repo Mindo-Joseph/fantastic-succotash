@@ -30,7 +30,6 @@ Route::group([
       'middleware' => ['dbCheck', 'systemAuth']
     ], function() {
         Route::get('cart/list', 'Api\v1\CartController@index');
-        
         Route::post('cart/remove', 'Api\v1\CartController@removeItem');
         Route::post('cart/updateQuantity', 'Api\v1\CartController@updateQuantity');
         Route::get('cart/totalItems', 'Api\v1\CartController@getItemCount');
