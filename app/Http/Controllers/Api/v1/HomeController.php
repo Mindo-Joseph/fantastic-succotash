@@ -324,7 +324,7 @@ class HomeController extends BaseController
         $keyword = $request->keyword;
         $langId = Auth::user()->language;
         $curId = Auth::user()->language;
-
+        $response = array();
         if($for == 'all'){
             $categories = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
                 ->select('categories.id', 'categories.slug', 'ct.name as dataname', 'ct.trans-slug', 'ct.meta_title', 'ct.meta_description', 'ct.meta_keywords', 'ct.category_id')
@@ -337,7 +337,7 @@ class HomeController extends BaseController
                         // ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
                         // ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
                 })->where('categories.status', '!=', '2')->get();
-            $response = array();
+            
             foreach ($categories as $key => $value) {
                 $value->type = 'category';
 
