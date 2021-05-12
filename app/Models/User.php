@@ -84,21 +84,11 @@ class User extends Authenticatable
 
     public function rules($id = ''){
         $rules = array(
-            'name' => 'required|string|max:50',
-            'phone_number' => 'required',
-            //'database_path' => 'required',
-            //'database_username' => 'required|max:50',
-            //'database_password' => 'required|max:50',
-            'company_name' => 'required',
-            'company_address' => 'required',
-            //'custom_domain' => 'required',
+            'name'          => 'required|string|min:3|max:50',
+            'email'         => 'required|email|max:50||unique:users',
+            'password'      => 'required|string|min:6|max:50',
+            'phone_number'  => 'required|string|min:10|max:15|unique:users',
         );
-
-        if(empty($id)){
-            $rules['email'] = 'required|email|max:60|unique:clients';
-            $rules['encpass'] = 'required|string|max:60|min:6';
-            $rules['database_name'] = 'required|max:60|unique:clients';
-        }
 
         /*if(!empty($id)){
             $rule['email'] = 'email|max:60|unique:clients,email,'.$id;

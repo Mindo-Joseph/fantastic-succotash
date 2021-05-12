@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Image;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
+use Password;
+use App\Notifications\PasswordReset;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends BaseController
 {
@@ -57,27 +61,41 @@ class UserController extends BaseController
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name'          => 'required|string|min:3|max:50',
-            'email'         => 'required|email|max:50||unique:users',
-            'password'      => 'required|string|min:6|max:50',
-            'phone_number'  => 'required|string|min:10|max:15|unique:users',
-        ]);
-
-        if ($request->hasFile('image')) {    /* upload logo file */
-            $rules['image'] =  'image|mimes:jpeg,png,jpg,gif';
-        }
-
-        $validation  = Validator::make($request->all(), $rules)->validate();
         $customer = new User();
-        $savebanner = $this->save($request, $customer, 'false');
-        if($savebanner > 0){
+        $validation  = Validator::make($request->all(), $customer->rules())->validate();
+        
+        $saveId = $this->save($request, $customer, 'false');
+        if($saveId > 0){
             return response()->json([
                 'status'=>'success',
                 'message' => 'Customer created Successfully!',
                 'data' => $banner
             ]);
         }
+    }
+
+    /**
+     * save and update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function save(Request $request, User $user, $update = 'false')
+    {
+        $user->name = $request->name; 
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->phone_number = $request->phone_number;
+
+        $user->is_email_verified = ($request->has('is_email_verified') && $request->is_email_verified == 'on') ? 1 : 0; 
+        $user->is_phone_verified = ($request->has('is_phone_verified') && $request->is_phone_verified == 'on') ? 1 : 0; 
+
+        if ($request->hasFile('image')) {    /* upload logo file */
+            $file = $request->file('image');
+            $user->image = Storage::disk('s3')->put('/profile', $file,'public');
+        }
+        $user->save();
+        return $user->id;
     }
 
 }
