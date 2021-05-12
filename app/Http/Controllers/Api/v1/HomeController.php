@@ -324,22 +324,25 @@ class HomeController extends BaseController
         $keyword = $request->keyword;
         $langId = Auth::user()->language;
         $curId = Auth::user()->language;
-
+        $response = array();
         if($for == 'all'){
-            $categories = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
-                ->select('categories.id', 'categories.slug', 'ct.name as dataname', 'ct.trans-slug', 'ct.meta_title', 'ct.meta_description', 'ct.meta_keywords', 'ct.category_id')
-                ->where('ct.language_id', $langId)
-                ->where(function ($q) use ($keyword) {
-                    $q->where('ct.name', ' LIKE', '%' . $keyword . '%')
-                    ->orWhere('categories.slug', 'LIKE', '%' . $keyword . '%')
-                        ->orWhere('ct.trans-slug', 'LIKE', '%' . $keyword . '%');
-                        // ->orWhere('ct.meta_title', 'LIKE', '%' . $keyword . '%')
-                        // ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
-                        // ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
-                })->where('categories.status', '!=', '2')->get();
-            $response = array();
+            $categories = Category::with(['type'  => function($q){
+                        $q->select('id', 'title as redirect_to');
+                    }])
+                    ->join('category_translations as ct', 'ct.category_id', 'categories.id')
+                    ->select('categories.id', 'categories.slug', 'categories.type_id', 'ct.name as dataname', 'ct.trans-slug', 'ct.meta_title', 'ct.meta_description', 'ct.meta_keywords', 'ct.category_id')
+                    ->where('ct.language_id', $langId)
+                    ->where(function ($q) use ($keyword) {
+                        $q->where('ct.name', ' LIKE', '%' . $keyword . '%')
+                        ->orWhere('categories.slug', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('ct.trans-slug', 'LIKE', '%' . $keyword . '%');
+                            // ->orWhere('ct.meta_title', 'LIKE', '%' . $keyword . '%')
+                            // ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
+                            // ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
+                    })->where('categories.status', '!=', '2')->get();
+            
             foreach ($categories as $key => $value) {
-                $value->type = 'category';
+                $value->response_type = 'category';
 
                 $response[] = $value;
             }
@@ -352,7 +355,7 @@ class HomeController extends BaseController
                     ->orderBy('brands.position', 'asc')->get();
 
             foreach ($brands as $key => $value) {
-                $value->type = 'brand';
+                $value->response_type = 'brand';
 
                 $response[] = $value;
             }
@@ -363,7 +366,7 @@ class HomeController extends BaseController
                 })->where('vendors.status', '!=', '2')->get();
 
             foreach ($vendors as $key => $value) {
-                $value->type = 'vendor';
+                $value->response_type = 'vendor';
 
                 $response[] = $value;
             }
@@ -382,7 +385,7 @@ class HomeController extends BaseController
                     })->where('products.is_live', 1)->get();
           
             foreach ($products as $key => $value) {
-                $value->type = 'product';
+                $value->response_type = 'product';
 
                 $response[] = $value;
             }
@@ -428,7 +431,7 @@ class HomeController extends BaseController
             $products = $products->where('products.is_live', 1)->get();
 
             foreach ($products as $key => $value) {
-                $value->type = 'product';
+                $value->response_type = 'product';
 
                 $response[] = $value;
             }
