@@ -32,17 +32,17 @@ class PromoCodeController extends Controller{
             if(!$vendor){
                 return response()->json(['error' => 'Invalid vendor id.'], 404);
             }
-            $now = Carbon::now();
+            $now = Carbon::now()->toDateTimeString();
             $product_ids = Product::where('vendor_id', $request->vendor_id)->pluck("id");
             if($product_ids){
                 $promo_code_details = PromoCodeDetail::whereIn('refrence_id', $product_ids->toArray())->pluck('promocode_id');
                 if($promo_code_details->count() > 0){
-                    $result1 = Promocode::whereIn('id', $promo_code_details->toArray())->get();
+                    $result1 = Promocode::whereIn('id', $promo_code_details->toArray())->whereDate('expiry_date', '>=', $now)->get();
                     $promo_codes = $promo_codes->merge($result1);
                 }
                 $result2 = Promocode::where('restriction_on', 1)->whereHas('details', function($q) use($vendor_id){
                         $q->where('refrence_id', $vendor_id);
-                })->get();
+                })->whereDate('expiry_date', '>=', $now)->get();
                 $promo_codes = $promo_codes->merge($result2);
             }
             return $this->successResponse($promo_codes, '', 200);
