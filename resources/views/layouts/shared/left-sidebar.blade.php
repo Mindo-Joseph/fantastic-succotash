@@ -154,6 +154,12 @@
                         <span> Celebrities </span>
                     </a>
                 </li> 
+                <li>   
+                    <a href="{{route('wallet.index')}}" >
+                        <i data-feather="columns"></i>
+                        <span> Wallet </span>
+                    </a>
+                </li> 
             </ul>
         </div>
         <div id="sidebar-menu" style="display: none;">

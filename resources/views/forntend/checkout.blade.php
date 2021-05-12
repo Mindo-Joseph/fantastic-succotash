@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Product'])
+@extends('layouts.store', ['title' => 'Checkout'])
 
 @section('css')
 <style type="text/css">
@@ -141,7 +141,7 @@
                                             <ul>
                                                 <li>
                                                     <div class="radio-option">
-                                                        <input type="radio" name="payment-group" id="payment-1" checked="checked">
+                                                        <input type="radio" name="payment-group" value="1" id="payment-1" checked="checked">
                                                         <label for="payment-1">Check Payments<span class="small-text">Please send a check to Store
                                                                 Name, Store Street, Store Town, Store State /
                                                                 County, Store Postcode.</span></label>
@@ -149,7 +149,7 @@
                                                 </li>
                                                 <li>
                                                     <div class="radio-option">
-                                                        <input type="radio" name="payment-group" id="payment-2">
+                                                        <input type="radio" name="payment-group" value="2" id="payment-2">
                                                         <label for="payment-2">Cash On Delivery<span class="small-text">Please send a check to Store
                                                                 Name, Store Street, Store Town, Store State /
                                                                 County, Store Postcode.</span></label>
@@ -157,14 +157,14 @@
                                                 </li>
                                                 <li>
                                                     <div class="radio-option paypal">
-                                                        <input type="radio" name="payment-group" id="payment-3">
+                                                        <input type="radio" name="payment-group" value="3" id="payment-3">
                                                         <label for="payment-3">PayPal<span class="image"><img src="{{asset('front-assets/images/paypal.png')}}" alt=""></span></label>
                                                     </div>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="text-right"><button type="submit" class="btn-solid btn">Place Order</button></div>
+                                    <!-- <div class="text-right"><button type="submit" class="btn-solid btn">Place Order</button></div> -->
                                 </div>
                             </div>
                         </div>
