@@ -138,13 +138,8 @@ class CustomerAuthController extends FrontController
         $user->save();
 
         if ($user->id > 0) {
-            $user_device[] = [
-                'user_id' => $user->id,
-                'device_type' => 'web',
-                'device_token' => 'web',
-                'access_token' => ''
-            ];
-            UserDevice::insert($user_device);
+            $userCustomData = $this->userMetaData($user->id, 'web', 'web');
+
             Auth::login($user);
             $this->checkCookies($user->id);
             return redirect()->route('user.verify');
