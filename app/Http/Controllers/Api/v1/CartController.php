@@ -301,7 +301,7 @@ class CartController extends BaseController
 
         $cart->item_count = $totalProducts;
         $cart->save();
-        $cartData = $this->getCart($user->id);
+        $cartData = $this->getCart(Auth::user()->id);
         return response()->json([
             "message" => "Product removed from cart successfully.",
             'data' => $cartData,

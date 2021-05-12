@@ -85,7 +85,19 @@
                                                 </form>
                                             </div>
                                         </div>
-                                    </td> -->
+                                    </td> 
+name
+email
+phone_number
+email_verified_at
+password
+type
+country_id
+role_id
+image
+is_email_verified
+is_phone_verified
+                                -->
                                 </tr>
                                @endforeach
                             </tbody>
@@ -144,8 +156,6 @@
       });
     }
 </script>
-
-
 @include('backend.banner.pagescript')
 
 @endsection

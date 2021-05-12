@@ -112,4 +112,31 @@ class FrontController extends Controller
             return redirect()->route('user.checkout');
         }
     }
+
+    /**     * check if cookie already exist     */
+    public function userMetaData($userid, $device_type = 'web', $device_token = 'web')
+    {
+        $device = UserDevice::where('user_id', $userid)->first();
+        if(!$device){
+            $user_device[] = [
+                'user_id' => $userid,
+                'device_type' => $device_type,
+                'device_token' => $device_token,
+                'access_token' => ''
+            ];
+
+            UserDevice::insert($user_device);
+        }
+
+        $loyaltyPoints = UserLoyaltyPoint::where('user_id', $userid)->first();
+        if(!$loyaltyPoints){
+            $loyalty[] = [
+                'user_id' => $userid,
+                'points' => 0
+            ];
+
+            UserLoyaltyPoint::insert($loyalty);
+        }
+
+    }
 }

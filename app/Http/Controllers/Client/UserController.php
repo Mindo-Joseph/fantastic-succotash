@@ -39,4 +39,10 @@ class UserController extends BaseController
         return redirect()->back()->with('success', 'Customer account ' . $msg . ' successfully!');
     }
 
+    /**              Add customer             */
+    public function create()
+    {
+        
+    }
+
 }
