@@ -45,7 +45,7 @@ class CelebrityController extends BaseController
         // dd($request->all());
         $rules = array(
             'name' => 'required|string|max:150',
-            'email' => 'required|string|max:150|unique:celebrities',
+            'email' => 'required|email|max:150|unique:celebrities',
             'phone_number' => 'required',
             'address' => 'required',
         );
@@ -124,7 +124,7 @@ class CelebrityController extends BaseController
         //  dd($request->all());
         $rules = array(
             'name' => 'required|string|max:150',
-            'email' => 'required|string|max:150|unique:celebrities,email,' . $id,
+            'email' => 'required|email|max:150|unique:celebrities,email,' . $id,
             'phone_number' => 'required',
             'address' => 'required',
         );

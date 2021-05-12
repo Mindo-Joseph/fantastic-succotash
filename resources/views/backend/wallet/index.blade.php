@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Celebrity'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Wallet'])
 
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
@@ -22,7 +22,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Celebrity</h4>
+                <h4 class="page-title">Wallet</h4>
             </div>
         </div>
     </div>
@@ -46,11 +46,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right"
-                              data-toggle="modal" data-target=".addModal"><i class="mdi mdi-plus-circle mr-1"></i> Add
-                            </button>
-                        </div>
+                        
                     </div>
 
                     <div class="table-responsive">
@@ -60,33 +56,21 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone Number</th>
-                                    <th>Address</th>
-                                    <th></th>
+                                    <th>Balance</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="post_list">
-                                @foreach($celebrities as $celeb)
+                                @foreach($wallets as $celeb)
 
                                 <tr data-row-id="{{$celeb->id}}">
                                     <!-- <td class="draggableTd"><span class="dragula-handle"></span></td> -->
-                                    <td> 
-                                        <img src="{{$celeb->avatar['proxy_url'].'100/100'.$celeb->avatar['image_path']}}" alt="{{$celeb->id}}" >
-                                    </td>
+                                    <td></td>
 
-                                    <td> {{ $celeb->name }} </td>
+                                    <td> {{ $celeb->user->name }} </td>
 
-                                    <td> {{ $celeb->email }} </td>
-
-                                    <td> {{ $celeb->phone_number }} </td>
-
-                                    <td> {{ $celeb->address }} </td>
+                                    <td> {{ $celeb->balance }} </td>
                                    
-                                    <td> 
-                                        <input type="checkbox" bid="{{$celeb->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#039cfd" {{($celeb->status == '1') ? 'checked' : ''}} >
-                                     </td>
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
@@ -110,7 +94,7 @@
                         </table>
                     </div>
                     <div class="pagination pagination-rounded justify-content-end mb-0">
-                        {{-- $celebrities->links() --}}
+                        {{-- $wallets->links() --}}
                     </div>
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
@@ -118,11 +102,11 @@
     </div>
 </div>
 
-@include('backend.celebrity.modals')
+@include('backend.wallet.modals')
 @endsection
 
 @section('script')
 
-@include('backend.celebrity.pagescript')
+@include('backend.wallet.pagescript')
 
 @endsection
