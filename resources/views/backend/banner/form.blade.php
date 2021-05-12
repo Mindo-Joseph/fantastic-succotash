@@ -1,7 +1,6 @@
 <div class="row">
     <div class="col-md-12 card-box">
         <h4 class="header-title mb-3"></h4>
-
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6" id="imageInput">
@@ -16,7 +15,6 @@
                 </span>
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group" id="nameInput">

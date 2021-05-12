@@ -22,7 +22,7 @@ class AdminsTableDataSeeder extends Seeder
 		        'email' => 'admin@cbl.com',
 		        'email_verified_at' => now(),
 		        'password' => '$2y$10$08DOAQL70KwfBOp0vtyoyeawUKnz9x3aZGSvEflAhauLlJp7mWVjO', // password
-		        'remember_token' => Str::random(10),
+		        'remember_token' => \Str::random(10),
             ),
         ); 
         \DB::table('admins')->insert($maps);
