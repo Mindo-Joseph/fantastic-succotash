@@ -133,6 +133,8 @@
                                     </ul>
                                     <ul class="total">
                                         <li>Total <span class="count">$620.00</span></li>
+                                        <input type="hidden" name="total_amount"  value="620" placeholder="">
+
                                     </ul>
                                 </div>
                                 <div class="payment-box">
