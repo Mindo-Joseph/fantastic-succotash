@@ -2,19 +2,28 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add User</h4>
+                <h4 class="modal-title">Add Customer</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="add_user" action="{{ route('vendor.store') }}" method="POST">
                 @csrf
                 <div class="modal-body">
-                    
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6" id="imageInput">
+                            <input data-default-file="" type="file" data-plugins="dropify" name="image" accept="image/*" class="dropify"/>
+                            <p class="text-muted text-center mt-2 mb-0">Profile image</p>
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12 card-box">
                             <h4 class="header-title mb-3"></h4>
 
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group" id="nameInput">
                                         {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
                                         {!! Form::text('name', null, ['class' => 'form-control']) !!}
@@ -23,10 +32,7 @@
                                         </span>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group" id="emailInput">
                                         {!! Form::label('title', 'Email',['class' => 'control-label']) !!}
                                         {!! Form::email('email', null, ['class' => 'form-control']) !!}
@@ -34,29 +40,61 @@
                                             <strong></strong>
                                         </span>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
+                                </div>                                
+                                <div class="col-md-6">
                                     <div class="form-group" id="phone_numberInput">
                                         {!! Form::label('title', 'Phone Number',['class' => 'control-label']) !!}
-                                        {!! Form::text('phone_number', null, ['class' => 'form-control']) !!}
+                                        <input type="tel" class="form-control phone" id="phone" placeholder="Phone Number"  required="" name="phone_number" value="{{ old('phone_number')}}">
+
+                                        <input type="hidden" id="phoneHidden" name="phoneHidden">
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group" id="phone_numberInput">
-                                        {!! Form::label('title', 'Phone Number',['class' => 'control-label']) !!}
-                                        {!! Form::text('password', null, ['class' => 'form-control']) !!}
+                                <div class="col-md-6">
+                                    <div class="form-group" id="passwordInput">
+                                        {!! Form::label('title', 'Password',['class' => 'control-label']) !!}
+                                        <input type="password" class="form-control" id="password" placeholder="Password" required="" name="password" value="{{ old('password')}}">
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
+                                        <select class="selectize-select form-control" name="role_id">
+                                            <option value="1">Buyer</option>
+                                            <option value="2">Seller</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {!! Form::label('title', 'Country',['class' => 'control-label']) !!}
+                                        <select class="selectize-select form-control" name="country_id">
+                                            <option value="">Select</option>
+                                            @foreach($countries as $key => $val)
+                                                <option value="{{$val->id}}">{{$val->nicename}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {!! Form::label('title', 'Email Verified',['class' => 'control-label']) !!} 
+                                        <div>
+                                             <input type="checkbox" data-plugin="switchery" name="validity_on" class="form-control email_verify_add">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {!! Form::label('title', 'Phone Verified',['class' => 'control-label']) !!} 
+                                        <div>
+                                             <input type="checkbox" data-plugin="switchery" name="validity_on" class="form-control phone_verify_add">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
