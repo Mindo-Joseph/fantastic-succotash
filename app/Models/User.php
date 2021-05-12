@@ -81,4 +81,29 @@ class User extends Authenticatable
 
       return $values;
     }
+
+    public function rules($id = ''){
+        $rules = array(
+            'name' => 'required|string|max:50',
+            'phone_number' => 'required',
+            //'database_path' => 'required',
+            //'database_username' => 'required|max:50',
+            //'database_password' => 'required|max:50',
+            'company_name' => 'required',
+            'company_address' => 'required',
+            //'custom_domain' => 'required',
+        );
+
+        if(empty($id)){
+            $rules['email'] = 'required|email|max:60|unique:clients';
+            $rules['encpass'] = 'required|string|max:60|min:6';
+            $rules['database_name'] = 'required|max:60|unique:clients';
+        }
+
+        /*if(!empty($id)){
+            $rule['email'] = 'email|max:60|unique:clients,email,'.$id;
+            $rule['database_name'] = 'max:60|unique:clients,database_name,'.$id;
+        }*/
+        return $rules;
+    }
 }

@@ -48,10 +48,10 @@
             e.preventDefault();
     });
 
-    $(document).on('click', '.addVendorForm', function() { 
-        var form =  document.getElementById('add_customer');
+    $(document).on('click', '.submitCustomerForm', function() { 
+        var form =  document.getElementById('add_user');
         var formData = new FormData(form);
-        var urls = "{{URL::route('vendor.store')}}";
+        var urls = "{{URL::route('customer.store')}}";
         saveCustomer(urls, formData, inp = '', modal = 'user-modal');
     });
 

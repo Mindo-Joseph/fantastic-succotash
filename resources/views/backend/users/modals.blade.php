@@ -5,7 +5,7 @@
                 <h4 class="modal-title">Add Customer</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <form id="add_user" action="{{ route('vendor.store') }}" method="POST">
+            <form id="add_user" action="{{ route('customer.store') }}" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
@@ -44,7 +44,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group" id="phone_numberInput">
                                         {!! Form::label('title', 'Phone Number',['class' => 'control-label']) !!}
-                                        <input type="tel" class="form-control phone" id="phone" placeholder="Phone Number"  required="" name="phone_number" value="{{ old('phone_number')}}">
+                                        <input type="tel" class="form-control phone" id="phone" placeholder="Phone Number" name="phone_number" value="{{ old('phone_number')}}">
 
                                         <input type="hidden" id="phoneHidden" name="phoneHidden">
                                         <span class="invalid-feedback" role="alert">
