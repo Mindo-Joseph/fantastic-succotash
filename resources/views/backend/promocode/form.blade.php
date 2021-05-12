@@ -41,6 +41,15 @@
                     </select>
                 </div>
             </div>
+            <div class="col-md-12">
+                <div class="form-group" id="short_descInput">
+                    {!! Form::label('short_desc', 'Short Description',['class' => 'control-label']) !!}
+                    {!! Form::textarea('short_desc', $promo->short_desc, ['class' => 'form-control', 'placeholder'=>'Enter Short Description', 'rows' => 3]) !!}
+                    <span class="invalid-feedback" role="alert">
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
             <div class="col-md-6">
                 <?php 
                 $pricevalue = (isset($promo->id) && $promo->id > 0 && $promo->promo_type_id == 1) ? (int)$promo->amount : $promo->amount; ?>
@@ -69,7 +78,6 @@
                 </div>
 
             </div>
-
         </div>
         <div class="row">
             <div class="col-md-4 text-center">

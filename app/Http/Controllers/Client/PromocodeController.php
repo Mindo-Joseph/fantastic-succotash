@@ -49,6 +49,7 @@ class PromocodeController extends BaseController
             'name' => 'required|string|max:150||unique:promocodes,name,'.$id,
             'amount' => 'required|numeric',
             'promo_type_id' => 'required',
+            'short_desc' => 'required',
             'expiry_date' => 'required',
             'minimum_spend' => 'required|numeric',
             'maximum_spend' => 'required|numeric',
@@ -78,7 +79,7 @@ class PromocodeController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function save(Request $request, Promocode $promocode, $update = 'false'){
-        foreach ($request->only('name', 'amount', 'expiry_date', 'promo_type_id', 'minimum_spend', 'maximum_spend', 'limit_per_user', 'limit_total', 'paid_by_vendor_admin') as $key => $value) {
+        foreach ($request->only('name', 'amount', 'expiry_date', 'promo_type_id', 'minimum_spend', 'maximum_spend', 'limit_per_user', 'limit_total', 'paid_by_vendor_admin','short_desc') as $key => $value) {
             $promocode->{$key} = $value;
         }
         if ($request->hasFile('image')) {    /* upload logo file */
@@ -113,6 +114,7 @@ class PromocodeController extends BaseController
     public function store(Request $request)
     {
         $rules = array(
+            'short_desc' => 'required',
             'expiry_date' => 'required',
             'promo_type_id' => 'required',
             'amount' => 'required|numeric',
