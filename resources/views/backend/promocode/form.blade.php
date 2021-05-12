@@ -63,20 +63,18 @@
             </div>
             <div class="col-md-6">
                 <div class="">
-                    <div class="form-group" id="start_date_timeInput">
+                    <div class="form-group" id="expiry_dateInput">
                         @php
                         $minDate = Date('Y-m-d');
                         @endphp
-                        {!! Form::label('title', 'Expiry Date',['class' => 'control-label']) !!}
+                        {!! Form::label('expiry_date', 'Expiry Date',['class' => 'control-label']) !!}
                         {!! Form::text('expiry_date', $promo->expiry_date, ['class' => 'form-control downside datetime-datepicker', 'id' => 'start-datepicker', 'min' => $minDate]) !!}
-
                         <span class="invalid-feedback" role="alert">
                             <input type="hidden" name="promo_id" value="{{isset($promo->id) ? $promo->id : ''}}">
                             <strong></strong>
                         </span>
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="row">
@@ -115,8 +113,8 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="form-group" id="minimum_amountInput">
-                    {!! Form::label('title', 'Minimum Amount',['class' => 'control-label']) !!}
+                <div class="form-group" id="minimum_spendInput">
+                    {!! Form::label('minimum_spend', 'Minimum Amount',['class' => 'control-label']) !!}
                     {!! Form::text('minimum_spend', $promo->minimum_spend, ['class' => 'form-control']) !!}
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>
@@ -124,8 +122,8 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="form-group" id="maximum_amountInput">
-                    {!! Form::label('title', 'Maximum Amount',['class' => 'control-label']) !!}
+                <div class="form-group" id="maximum_spendInput">
+                    {!! Form::label('maximum_spend', 'Maximum Amount',['class' => 'control-label']) !!}
                     {!! Form::text('maximum_spend', $promo->maximum_spend, ['class' => 'form-control']) !!}
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>
@@ -136,7 +134,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group" id="limit_per_userInput">
-                    {!! Form::label('title', 'Limit Per User',['class' => 'control-label']) !!}
+                    {!! Form::label('limit_per_user', 'Limit Per User',['class' => 'control-label']) !!}
                     {!! Form::text('limit_per_user', $promo->limit_per_user, ['class' => 'form-control']) !!}
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>
@@ -144,8 +142,8 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="form-group" id="total_limitInput">
-                    {!! Form::label('title', 'Total Limit',['class' => 'control-label']) !!}
+                <div class="form-group" id="limit_totalInput">
+                    {!! Form::label('limit_total', 'Total Limit',['class' => 'control-label']) !!}
                     {!! Form::text('limit_total', $promo->limit_total, ['class' => 'form-control']) !!}
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>

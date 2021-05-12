@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\v1;
+
 use Carbon\Carbon;
 use App\Models\Cart;
 use App\Models\Vendor;
@@ -41,7 +42,7 @@ class PromoCodeController extends Controller{
                     $promo_codes = $promo_codes->merge($result1);
                 }
                 $result2 = Promocode::where('restriction_on', 1)->whereHas('details', function($q) use($vendor_id){
-                        $q->where('refrence_id', $vendor_id);
+                    $q->where('refrence_id', $vendor_id);
                 })->whereDate('expiry_date', '>=', $now)->get();
                 $promo_codes = $promo_codes->merge($result2);
             }
