@@ -40,13 +40,13 @@
                             <button class="btn btn-blue waves-effect waves-light text-sm-right openPromoModal" userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add </button>
                         </div>
                     </div>
-
                     <div class="table-responsive">
                         <form name="saveOrder" id="saveOrder"> @csrf </form>
                         <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Image</th>
                                     <th>Promo Code</th>
                                     <th>Promo Types</th>
                                     <th>Total Amount</th>
@@ -64,6 +64,9 @@
                                 @foreach($promocodes as $promo)
                                 <tr data-row-id="">
                                     <td class="draggableTd"><span class="dragula-handle"></span></td>
+                                    <td> 
+                                        <img src="{{$promo->image['proxy_url'].'200/100'.$promo->image['image_path']}}" alt="{{$promo->id}}" >
+                                    </td>
                                     <td>{{$promo->name}}</td>
                                     <td>{{$promo->type->title}}</td>
                                     <td>{{$promo->amount}}</td>

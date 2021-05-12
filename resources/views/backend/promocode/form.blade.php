@@ -2,6 +2,20 @@
     <div class="col-md-12 card-box">
         <h4 class="header-title mb-3"></h4>
         <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6" id="imageInput">
+                @if(isset($promo->id))
+                    <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$promo->image['proxy_url'].'600/400'.$promo->image['image_path']}}" />
+                @else
+                    <input data-default-file="" type="file" data-plugins="dropify" name="image" accept="image/*" class="dropify"/>
+                @endif
+                <p class="text-muted text-center mt-2 mb-0">Upload PromoCode image</p>
+                <span class="invalid-feedback" role="alert">
+                    <strong></strong>
+                </span>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-6">
                 <div class="form-group" id="nameInput">
                     {!! Form::label('title', 'Promocode ',['class' => 'control-label']) !!}

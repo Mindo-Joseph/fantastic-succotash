@@ -55,6 +55,9 @@ class PromocodeController extends BaseController
             'limit_per_user' => 'required|numeric',
             'limit_total' => 'required|numeric',
         );
+        if ($request->hasFile('image')) {    /* upload logo file */
+            $rules['image'] =  'image|mimes:jpeg,png,jpg,gif';
+        }
         $validation  = Validator::make($request->all(), $rules)->validate();
         $promocode = Promocode::findOrFail($id);
         $promoId = $this->save($request, $promocode, 'false');
@@ -74,10 +77,13 @@ class PromocodeController extends BaseController
      * @param  \App\Banner  $banner
      * @return \Illuminate\Http\Response
      */
-    public function save(Request $request, Promocode $promocode, $update = 'false')
-    {
+    public function save(Request $request, Promocode $promocode, $update = 'false'){
         foreach ($request->only('name', 'amount', 'expiry_date', 'promo_type_id', 'minimum_spend', 'maximum_spend', 'limit_per_user', 'limit_total', 'paid_by_vendor_admin') as $key => $value) {
             $promocode->{$key} = $value;
+        }
+        if ($request->hasFile('image')) {    /* upload logo file */
+            $file = $request->file('image');
+            $promocode->image = Storage::disk('s3')->put('/promocode', $file,'public');
         }
         $promocode->first_order_only = ($request->has('first_order_only') && $request->first_order_only == 'on') ? 1 : 0;
         $promocode->allow_free_delivery = ($request->has('allow_free_delivery') && $request->allow_free_delivery == 'on') ? 1 : 0;
@@ -107,15 +113,18 @@ class PromocodeController extends BaseController
     public function store(Request $request)
     {
         $rules = array(
-            'name' => 'required|string|max:150||unique:promocodes',
-            'amount' => 'required|numeric',
-            'promo_type_id' => 'required',
             'expiry_date' => 'required',
+            'promo_type_id' => 'required',
+            'amount' => 'required|numeric',
+            'limit_total' => 'required|numeric',
             'minimum_spend' => 'required|numeric',
             'maximum_spend' => 'required|numeric',
             'limit_per_user' => 'required|numeric',
-            'limit_total' => 'required|numeric',
+            'name' => 'required|string|max:150||unique:promocodes',
         );
+        if ($request->hasFile('image')) {    /* upload logo file */
+            $rules['image'] =  'image|mimes:jpeg,png,jpg,gif';
+        }
         $validation  = Validator::make($request->all(), $rules)->validate();
         $promocode = new Promocode();
         $promoId = $this->save($request, $promocode, 'false');

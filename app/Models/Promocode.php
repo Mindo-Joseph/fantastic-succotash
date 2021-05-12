@@ -11,7 +11,7 @@ class Promocode extends Model
 
     protected $table = 'promocodes';
 
-    protected $fillable = ['name', 'amount', 'expiry_date', 'promo_type_id', 'allow_free_delivery', 'minimum_spend', 'maximum_spend', 'first_order_only', 'limit_per_user', 'limit_total', 'paid_by_vendor_admin','restriction_on'];
+    protected $fillable = ['name', 'amount', 'expiry_date', 'promo_type_id', 'allow_free_delivery', 'minimum_spend', 'maximum_spend', 'first_order_only', 'limit_per_user', 'limit_total', 'paid_by_vendor_admin','restriction_on', 'image'];
 
     public function restriction()
     {
@@ -21,7 +21,17 @@ class Promocode extends Model
     {
         return $this->hasMany(PromoCodeDetail::class);
     }
-
+    public function getImageAttribute($value){
+        $img = 'default/default_image.png';
+        $values = array();
+        if(!empty($value)){
+            $img = $value;
+        }
+        $values['proxy_url'] = env('IMG_URL1');
+        $values['image_path'] = env('IMG_URL2').'/'.\Storage::disk('s3')->url($img);
+        $values['image_fit'] = env('FIT_URl');
+        return $values;
+    }
 
     public function type()
     {
