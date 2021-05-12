@@ -7,6 +7,9 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Omnipay\Omnipay;
+use Auth;
+use App\Models\{Order, User};
+
 
 class PaymentController extends FrontController
 {

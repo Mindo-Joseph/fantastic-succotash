@@ -41,7 +41,7 @@
                     <div class="col-md-6">
                         <div class="form-group" id="phone_numberInput">
                             {!! Form::label('title', 'Phone number',['class' => 'control-label']) !!}
-                            {!! Form::text('phone_number', null, ['class' => 'form-control', 'placeholder' => 'Phone Number']) !!}
+                            {!! Form::text('phone_number', null, ['class' => 'form-control', 'placeholder' => 'Phone Number' , 'onkeypress' => 'return isNumberKey(event);']) !!}
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
                             </span>
