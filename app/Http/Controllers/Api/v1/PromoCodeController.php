@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\v1;
 use Carbon\Carbon;
+use App\Models\Cart;
 use App\Models\Vendor;
 use App\Models\Product;
 use App\Models\Promocode;
+use App\Models\CartCoupon;
 use Illuminate\Http\Request;
 use App\Models\PromoCodeDetail;
 use App\Http\Traits\ApiResponser;
@@ -55,6 +57,14 @@ class PromoCodeController extends Controller{
             if($validator->fails()){
                 return $this->errorResponse($validator->messages(), 422);
             }
+            $cart_detail = Cart::where('id', $request->cart_id)->first();
+            if(!$cart_detail){
+                return $this->errorResponse('Invalid Cart Id', 422);
+            }
+            $cart_detail = Promocode::where('id', $request->coupon_id)->first();
+            if(!$cart_detail){
+                return $this->errorResponse('Invalid Promocode Id', 422);
+            }
             $cart_coupon = new CartCoupon();
             $cart_coupon->cart_id = $request->cart_id;
             $cart_coupon->coupon_id = $request->coupon_id;
@@ -70,6 +80,14 @@ class PromoCodeController extends Controller{
             if($validator->fails()){
                 return $this->errorResponse($validator->messages(), 422);
             }
+            $cart_detail = Cart::where('id', $request->cart_id)->first();
+            if(!$cart_detail){
+                return $this->errorResponse('Invalid Cart Id', 422);
+            }
+            $cart_detail = Promocode::where('id', $request->coupon_id)->first();
+            if(!$cart_detail){
+                return $this->errorResponse('Invalid Promocode Id', 422);
+            }
             CartCoupon::where('cart_id', $request->cart_id)->where('coupon_id', $request->coupon_id)->delete();
             return $this->successResponse(null, 'Promotion Code Removed Successfully.', 201);
         } catch (Exception $e) {
@@ -83,8 +101,8 @@ class PromoCodeController extends Controller{
     }
     public function validatePromoCode(){
         return Validator::make(request()->all(), [
-            'cart_id' => 'required|exists:carts, id',
-            'coupon_id' => 'required|exists:promocodes, id',
+            'cart_id' => 'required',
+            'coupon_id' => 'required',
         ]);
     }
 }
