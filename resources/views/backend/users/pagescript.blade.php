@@ -1,9 +1,15 @@
 <script>
-    $('.addVendor').click(function(){
+    $('.addUserModal').click(function(){
         $('#user-modal').modal({
             //backdrop: 'static',
             keyboard: false
         });
+        $('.dropify').dropify();
+        $('.selectize-select').selectize();
+        
+
+        
+
     });
 
     $(".editVendor").click(function (e) {  
