@@ -19,13 +19,13 @@ class OrderController extends FrontController
     public function placeOrder(Request $request, $domain = '')
     {
         if($request->input("payment-group") == '1'){
-            $value = $this->showFormApp($request);
-            dd($value->navCategories);
-            return view('forntend/orderPayment')->with(['navCategories' => $value]);
+            $langId = Session::get('customerLanguage');
+            $navCategories = $this->categoryNav($langId);
+            
+            return view('forntend/orderPayment')->with(['navCategories' => $navCategories]);
 
         }
-        dd("gerg");
-        dd($request->all());
+        // dd($request->all());
         $name = $request->first_name;
         if(!$request->last_name == null){
             $name = $name . " " . $request->last_name;
@@ -54,7 +54,6 @@ class OrderController extends FrontController
             $orderProducts->created_by = $cartpro['created_by'];
             $orderProducts->variant_id = $cartpro['variant_id'];
             $orderProducts->is_tax_applied = $cartpro['is_tax_applied'];
-            $orderProducts->tax_rate_id = $cartpro['tax_rate_id'];
             $orderProducts->save();
 
             $cartAddon = CartAddon::where('cart_product_id', $cartpro['id'])->get()->toArray();
@@ -76,11 +75,7 @@ class OrderController extends FrontController
         // dd($request->all());
        
         // dd($token);
-        $langId = Session::get('customerLanguage');
-        $navCategories = $this->categoryNav($langId);
-        
-        return response()->json(['navCategories' => $navCategories]);
-        return view('forntend/orderPayment')->with(['navCategories' => $navCategories]);
+       
     }
 
     public function makePayment(Request $request)

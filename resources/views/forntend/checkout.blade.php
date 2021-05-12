@@ -164,7 +164,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <!-- <div class="text-right"><button type="submit" class="btn-solid btn">Place Order</button></div> -->
+                                    <div class="text-right"><button type="submit" class="btn-solid btn">Place Order</button></div>
                                 </div>
                             </div>
                         </div>

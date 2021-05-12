@@ -92,13 +92,55 @@
                 <h3>Payment</h3>
                 <div class="theme-card">
                     <form method="post" class="theme-form" id="paymentFrm" enctype="multipart/form-data" action="{{route('placeorder.makePayment')}}"> @csrf
-                        <div class="form-row mb-3">
+                    <div class="form-row mb-3">
                             <div class="col-md-6">
-                                <label for="name">Name</label>
-                                <input type="text" class="form-control" id="name" placeholder="Name" required="" name="name" value="{{ old('name')}}">
+                                <label for="name">First Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Name" required="" name="name" value="freg" readonly>
                                 @if($errors->first('name'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('name') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <label for="last_name">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" placeholder="Last Name" required="" name="last_name" value="freg" readonly>
+                                @if($errors->first('last_name'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('last_name') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-row mb-3">
+                            <div class="col-md-6">
+                                <label for="phone">Phone</label>
+                                <input type="text" class="form-control" id="phone" placeholder="Phone" required="" name="phone" value="32534643" readonly>
+                                @if($errors->first('phone'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('phone') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" id="email" placeholder="Email" required="" name="email" value="ffegeg" readonly>
+                                @if($errors->first('email'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('email') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-row mb-3">
+                            <div class="col-md-6">
+                                <label for="amount">Amount</label>
+                                <input type="text" class="form-control" id="amount" placeholder="Amount" required="" name="amount" value="45345" readonly>
+                                @if($errors->first('amount'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('amount') }}</strong>
                                 </span>
                                 @endif
                             </div>
