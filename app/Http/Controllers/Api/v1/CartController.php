@@ -478,14 +478,14 @@ class CartController extends BaseController
             }
         }
         $amount_value = $is_percent = 0;
-        foreach ($cart->coupon as $ck => $code) {
-            if($code->promo->promo_type_id == 1){
-                $is_percent = 1;
-                $total_discount_percent = $total_discount_percent + round($code->promo->amount);
-            }else{
-                $amount_value = $amount_value + $code->promo->amount;
-            }
-        }
+        // foreach ($cart->coupon as $ck => $code) {
+        //     if($code->promo->promo_type_id == 1){
+        //         $is_percent = 1;
+        //         $total_discount_percent = $total_discount_percent + round($code->promo->amount);
+        //     }else{
+        //         $amount_value = $amount_value + $code->promo->amount;
+        //     }
+        // }
         
         if($is_percent == 1){
             $total_discount_percent = ($total_discount_percent > 100) ? 100 : $total_discount_percent;
