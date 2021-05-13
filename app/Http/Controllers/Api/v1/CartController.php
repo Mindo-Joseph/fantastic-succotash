@@ -360,35 +360,101 @@ class CartController extends BaseController
             return false;
         }
 
-        //dd($cartData->toArray());
-
         if($cartData){
-            $order_payable_amount = $order_taxable_amount = $order_discount_amount = $order_discount_percent = 0.00;
+            $total_tax = $total_paying = $total_disc_amount = 0.00;
 
             foreach ($cartData as $ven_key => $vendorData) {
 
-                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0.00;
+                $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
+
+                $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
+                $couponProducts = array();
+                if(!empty($cart->coupon) && ($cart->coupon->vendor_id == $vendorData->vendor_id)){
+
+                    $now = Carbon::now()->toDateTimeString();
+                    $couponData = array();
+
+                    $minimum_spend = $cart->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
+                    
+                    if($cart->coupon->promo->expiry_date < $now){
+                        $coupon_removed = 1;
+                        $coupon_removed_msg = 'Coupon code is expired.';
+                    }else{
+                        $couponData['coupon_id'] =  $cart->coupon->promo->id;
+                        $couponData['name'] =  $cart->coupon->promo->name;
+                        $couponData['disc_type'] = ($cart->coupon->promo->promo_type_id == 1) ? 'Percent' : 'Ammount';
+                        $couponData['expiry_date'] =  $cart->coupon->promo->expiry_date;
+                        $couponData['allow_free_delivery'] =  $cart->coupon->promo->allow_free_delivery;
+                        $couponData['minimum_spend'] =  $cart->coupon->promo->minimum_spend;
+                        $couponData['first_order_only'] = $cart->coupon->promo->first_order_only;
+                        $couponData['restriction_on'] = ($cart->coupon->promo->restriction_on == 1) ? 'Vendor' : 'Product';
+
+                        $vendorData->couponData = $couponData;
+
+                        $is_coupon_applied = 1;
+                        if($cart->coupon->promo->promo_type_id){
+                            $is_percent = 1;
+                            $discount_percent = round($cart->coupon->promo->amount);
+                        }else{
+                            $discount_amount = $cart->coupon->promo->amount * $clientCurrency->doller_compare;
+                        }
+                        
+                        if($cart->coupon->promo->restriction_on == 0){
+                            foreach ($cart->coupon->promo->details as $key => $value) {
+                                $couponProducts[] = $value->refrence_id;
+                            }
+                        }
+                    }
+                }
 
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
-                    $quantity_price = 0; 
-                    $vendorAddons = array();
+                    $price_in_currency = $price_in_doller_compare = $produ_qtys = $quantity_price = 0; 
+                    $taxData = $vendorAddons = array();
 
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
 
+                    $produ_qtys = $vendorData->vendorProducts{$pkey}->quantity;
+
                     $price_in_currency = round($prod->pvariant->price / $divider);
-
                     $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
+                    echo $quantity_price = $price_in_doller_compare * $produ_qtys;
 
-                    $quantity_price = $price_in_doller_compare * $prod->quantity;
+                    $proSum = $proSum + $quantity_price;
 
+                    if(isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)){
+                        $prod->cartImg = $prod->pvariant->image->imagedata;
+                    }else{
+                        $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
+                    }
+
+                    $prod->pvariant->original_quantity_price = $quantity_price;
+
+                    if(!empty($cart->coupon) && ($cart->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
+                        $disc = $discount_amount;
+                        if($minimum_spend < $quantity_price){
+                            if($is_percent == 1){
+                                $disc = ($quantity_price * $discount_percent)/ 100;
+                            }
+                            $quantity_price = $quantity_price - $disc;
+                            $proSumDis = $proSumDis + $disc;
+                            if($quantity_price < 0){
+                                $quantity_price = 0;
+                            }
+                            $codeApplied = 1;
+                            $prod->discount_amount = $disc;
+                        }else{
+                            $prod->coupon_msg = "To apply coupon minimum spend should be greater than ".$minimum_spend.'.';
+                            $prod->coupon_not_appiled = 1;
+                        }
+                    }
+                    $prod->coupon_appiled = $codeApplied;
                     $prod->pvariant->price_in_cart = $prod->pvariant->price;
                     $prod->pvariant->price = $price_in_currency;
                     $prod->pvariant->multiplier = $clientCurrency->doller_compare;
                     $prod->pvariant->quantity_price = $quantity_price;
+                    $prod->pvariant->qty = $produ_qtys;
 
                     $payable_amount = $payable_amount + $quantity_price;
-                    $taxData = array();
-
 
                     if(!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0){
 
@@ -430,79 +496,58 @@ class CartController extends BaseController
                             $payable_amount = $payable_amount + $opt_quantity_price;
                         }
                     }
-
                     unset($prod->product->taxCategory);
                     unset($prod->addon);
 
-                    if(isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)){
-                        $prod->cartImg = $prod->pvariant->image->imagedata;
-                    }else{
-                        $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
-                    }
                     $deliver_charge = 0;
                     $prod->deliver_charge = $deliver_charge;
                     $payable_amount = $payable_amount + $deliver_charge;
                     $prod->product_addons = $vendorAddons;
                 }
-                $is_coupon_applied = 0; $coupon_removed = 0; $coupon_removed_msg = '';
-                /*if($cart->coupon->vendor_id == $vendorData->vendor_id){
+                $couponApplied = 0;
 
-                    $now = Carbon::now()->toDateTimeString();
-                    $is_coupon_applied = 1;
-                    if($cart->coupon->promo->expiry_date < $now){
-                        $coupon_removed = 1;
-                        $coupon_removed_msg = 'Coupon code is expired.';
-                    }elseif($cart->coupon->promo->minimum_spend > $payable_amount){
-                        $coupon_removed = 1;
-                        $coupon_removed_msg = 'To apply this coupon spend minimum '.$cart->coupon->promo->minimum_spend;
-                    }else{
-                        if($cart->coupon->promo->restriction_on == 1){
-
+                if(!empty($cart->coupon) && ($cart->coupon->promo->restriction_on == 1)){
+                    if($minimum_spend < $proSum){
+                        if($is_percent == 1){
+                            $discount_amount = ($proSum * $discount_percent)/ 100;
                         }
+                        $payable_amount = $payable_amount - $discount_amount;
+                        $couponApplied = 1;
+                    }else{
+                        $vendorData->coupon_msg = "To apply coupon minimum spend should be greater than ".$minimum_spend.'.';
+                        $vendorData->coupon_not_appiled = 1;
                     }
-                }*/
+                }
+
+                $vendorData->coupon_removed = $coupon_removed;
+                $vendorData->coupon_removed_msg = $coupon_removed_msg;
 
 
+                $vendorData->coupon_apply_on_vendor = $couponApplied;
                 $vendorData->payable_amount = $payable_amount;
+                $vendorData->payable_amount = $payable_amount - $discount_amount;
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
                 $vendorData->taxable_amount = $taxable_amount;
                 $vendorData->is_coupon_applied = $is_coupon_applied;
 
                 $vendorData->product_total_amount = ($payable_amount - $taxable_amount);
-                $total_payable_amount = $total_payable_amount + $payable_amount;
-                $total_taxable_amount = $total_taxable_amount + $taxable_amount;
-                $total_discount_amount = $total_discount_amount + $discount_amount;
+
+                $total_paying = $total_paying + $payable_amount;
+                $total_tax = $total_tax + $taxable_amount;
+                $total_disc_amount = $total_disc_amount + $discount_amount;
                 $total_discount_percent = $total_discount_percent + $discount_percent;
 
+                $total_tax = $total_tax + $taxable_amount;
             }
         }
-        $amount_value = $is_percent = 0;
-        // foreach ($cart->coupon as $ck => $code) {
-        //     if($code->promo->promo_type_id == 1){
-        //         $is_percent = 1;
-        //         $total_discount_percent = $total_discount_percent + round($code->promo->amount);
-        //     }else{
-        //         $amount_value = $amount_value + $code->promo->amount;
-        //     }
-        // }
-        
-        if($is_percent == 1){
-            $total_discount_percent = ($total_discount_percent > 100) ? 100 : $total_discount_percent;
-            $total_discount_amount = ($total_payable_amount * $total_discount_percent) / 100;
-        }
+       
+        $total_paying = $total_paying - $total_disc_amount;
 
-        if($amount_value > 0){
-            $amount_value = $amount_value * $clientCurrency->doller_compare;
-            $total_discount_amount = $total_discount_amount + $amount_value;
-            
-        }
-        $total_payable_amount = $total_payable_amount - $total_discount_amount;
-
-        $cart->gross_amount = ($total_payable_amount + $total_discount_amount);
-        $cart->total_payable_amount = $total_payable_amount;
-        $cart->total_discount_amount = $total_discount_amount;
-        $cart->total_discount_percent = $total_discount_percent;
+        $cart->gross_amount = ($total_paying + $total_disc_amount);
+        $cart->total_payable_amount = $total_paying;
+        $cart->total_discount_amount = $total_disc_amount;
+        $cart->total_tax = $total_tax;
 
         $loyaltyPoints = $this->getLoyaltyPoints($user_id, $clientCurrency->doller_compare);
         $wallet = $this->getWallet($user_id, $clientCurrency->doller_compare, Auth::user()->currency);
@@ -511,7 +556,6 @@ class CartController extends BaseController
         $cart->wallet = $wallet;
 
         $cart->products = $cartData;
-
         return $cart;
     }
 }
