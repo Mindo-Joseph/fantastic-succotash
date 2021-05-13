@@ -13,7 +13,7 @@ class AlterCartCouponsForVendorIdFieldTable extends Migration
      */
     public function up()
     {
-        Schema::table('promocodes', function (Blueprint $table) {
+        Schema::table('cart_coupons', function (Blueprint $table) {
             $table->unsignedBigInteger('vendor_id')->nullable();
         });
     }
@@ -25,7 +25,7 @@ class AlterCartCouponsForVendorIdFieldTable extends Migration
      */
     public function down()
     {
-        Schema::table('promocodes', function (Blueprint $table) {
+        Schema::table('cart_coupons', function (Blueprint $table) {
             $table->dropColumn('vendor_id');
         });
     }
