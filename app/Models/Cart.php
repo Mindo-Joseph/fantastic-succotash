@@ -18,7 +18,7 @@ class Cart extends Model
 
     public function coupon()
     {
-      return $this->hasOne('App\Models\CartCoupon')->select("cart_id", "coupon_id");
+      return $this->hasOne('App\Models\CartCoupon')->select("cart_id", "coupon_id", "vendor_id");
     }
 
     public function product()

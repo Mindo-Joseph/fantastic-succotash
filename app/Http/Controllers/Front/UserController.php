@@ -221,10 +221,12 @@ class UserController extends FrontController
     /**
      * get Current User Address
      */
-    public function getUserAddress($domain = '')
-    {
+    public function getUserAddress($domain = ''){
+        $country = [];
         $address = UserAddress::where('user_id', Auth::user()->id)->where('is_primary', '1')->first();
-        $country = Country::where('id' , $address->country_id)->first();
+        if($address){
+            $country = Country::where('id' , $address->country_id)->first();
+        }
         return response()->json(['address' => $address, 'country'=>$country]);
     }
 }
