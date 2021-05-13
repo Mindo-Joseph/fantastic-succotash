@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Client, Category, Brand, Cart, Product, ClientPreference, Vendor, ClientCurrency, User, Country, UserDevice};
+use App\Models\{Currency, Client, Category, Brand, Cart, Product, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal};
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
@@ -108,18 +108,11 @@ class CustomerAuthController extends FrontController
         return redirect()->back()->with('err_email', 'Email not exist. Please enter correct email.');
     }
 
-     /**     * check if cookie already exist     */
-     public function createRandomNumber($digit)
-     {
-       
-     }
-
      
     /**     * Display register Form     */
     public function register(SignupRequest $req, $domain = '')
     {
-        dd($req->all());
-        
+       
         $user = new User();
 
         $county = Country::where('code', strtoupper($req->countryData))->first();
@@ -146,10 +139,15 @@ class CustomerAuthController extends FrontController
         $user->email_token_valid_till = $sendTime;
         $user->save();
 
+        $userRefferal = new UserRefferal();
+        $userRefferal->refferal_code = $this->randomData("user_refferals", 8, 'refferal_code');
+
         if($req->refferal_code != null){
-            dd("not null");
+            $userRefferal->reffered_by = $req->refferal_code;
         }
-        
+        $userRefferal->user_id = $user->id;
+        $userRefferal->save();
+
         if ($user->id > 0) {
             $userCustomData = $this->userMetaData($user->id, 'web', 'web');
 

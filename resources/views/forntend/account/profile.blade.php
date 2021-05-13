@@ -8,17 +8,17 @@
         padding-bottom: 20px;
     }
 </style>
-    
+
 @endsection
 
 @section('content')
 
- <header>
+<header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
 <style type="text/css">
-    .productVariants .firstChild{
+    .productVariants .firstChild {
         min-width: 150px;
         text-align: left !important;
         border-radius: 0% !important;
@@ -26,7 +26,9 @@
         cursor: default;
         border: none !important;
     }
-    .product-right .color-variant li, .productVariants .otherChild{
+
+    .product-right .color-variant li,
+    .productVariants .otherChild {
         height: 35px;
         width: 35px;
         border-radius: 50%;
@@ -35,19 +37,23 @@
         border: 1px solid #f7f7f7;
         text-align: center;
     }
-    .productVariants .otherSize{
+
+    .productVariants .otherSize {
         height: auto !important;
         width: auto !important;
         border: none !important;
         border-radius: 0%;
     }
+
     .product-right .size-box ul li.active {
         background-color: inherit;
     }
+
     .login-page .theme-card .theme-form input {
         margin-bottom: 5px;
     }
-    .invalid-feedback{
+
+    .invalid-feedback {
         display: block;
     }
 </style>
@@ -58,8 +64,7 @@
             <div class="col-lg-3">
                 <div class="account-sidebar"><a class="popup-btn">my account</a></div>
                 <div class="dashboard-left">
-                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left"
-                                aria-hidden="true"></i> back</span></div>
+                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i> back</span></div>
                     <div class="block-content">
                         <ul>
                             <li class="active"><a href="#">Account Info</a></li>
@@ -82,6 +87,12 @@
                         </div>
                         <div class="welcome-msg">
                             <h5>Hello, {{ucwords(Auth::user()->name)}} !</h5>
+
+                            <h3>Your Refferal Code: {{$userRefferal['refferal_code']}}</h3>
+                            <div class="box mb-2">
+                               <a href="{{route('user.sendRefferal')}}">Send Refferal</a>
+                            </div>
+
                             <p>From your My Account Dashboard you have the ability to view a snapshot of your recent
                                 account activity and update your account information. Select a link below to view or
                                 edit information.</p>
@@ -127,8 +138,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <h6>Default Shipping Address</h6>
-                                            <address>You have not set a default shipping address.<br><a
-                                                    href="#">Edit Address</a></address>
+                                            <address>You have not set a default shipping address.<br><a href="#">Edit Address</a></address>
                                         </div>
                                     </div>
                                 </div>
@@ -148,38 +158,37 @@
 
 <script type="text/javascript">
     var ajaxCall = 'ToCancelPrevReq';
-    $('.verifyEmail').click(function(){
+    $('.verifyEmail').click(function() {
         verifyUser('email');
     });
 
-    $('.verifyPhone').click(function(){
-       verifyUser('phone');
+    $('.verifyPhone').click(function() {
+        verifyUser('phone');
     });
 
-    function verifyUser($type = 'email'){
+    function verifyUser($type = 'email') {
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
             url: "{{ route('verifyInformation', Auth::user()->id) }}",
             data: {
                 "_token": "{{ csrf_token() }}",
-                "type": $type, 
+                "type": $type,
             },
-            beforeSend : function() {
-                if(ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
+            beforeSend: function() {
+                if (ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
                     ajaxCall.abort();
                 }
             },
             success: function(response) {
                 var res = response.result;
-                
+
             },
-            error: function (data) {
-                
+            error: function(data) {
+
             },
         });
     }
-
 </script>
 
 @endsection
