@@ -108,9 +108,18 @@ class CustomerAuthController extends FrontController
         return redirect()->back()->with('err_email', 'Email not exist. Please enter correct email.');
     }
 
+     /**     * check if cookie already exist     */
+     public function createRandomNumber($digit)
+     {
+       
+     }
+
+     
     /**     * Display register Form     */
     public function register(SignupRequest $req, $domain = '')
     {
+        dd($req->all());
+        
         $user = new User();
 
         $county = Country::where('code', strtoupper($req->countryData))->first();
@@ -137,6 +146,10 @@ class CustomerAuthController extends FrontController
         $user->email_token_valid_till = $sendTime;
         $user->save();
 
+        if($req->refferal_code != null){
+            dd("not null");
+        }
+        
         if ($user->id > 0) {
             $userCustomData = $this->userMetaData($user->id, 'web', 'web');
 

@@ -1,10 +1,7 @@
 @php
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
-
 @endphp
-<!-- echo '<pre>';print_r($languageList->toArray());
-echo '<pre>';print_r($currencyList->toArray()); -->
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
@@ -143,12 +140,10 @@ echo '<pre>';print_r($currencyList->toArray()); -->
         </div>
     </div>
 </div>
-
 <script>
     $(document).ready(function() {
         cartHeader();
     });
-
     function cartHeader() {
         $(".shopping-cart").html(" ");
         $.ajaxSetup({
@@ -173,7 +168,7 @@ echo '<pre>';print_r($currencyList->toArray()); -->
                         }
                     }
                     $(".shopping-cart").append("<li><div class='total'><h5>subtotal : <span id='totalCart'>" + data.total_payable_amount + "</span></h5></div></li>");
-                    $(".shopping-cart").append("<li><div class='buttons'><a href='{{ route('showCart') }}' class='view-cart'>viewcart</a> <a href='#' class='checkout'>checkout</a></div></li>");
+                    $(".shopping-cart").append("<li><div class='buttons'><a href='{{ route('showCart') }}' class='view-cart'>viewcart</a> <a class='checkout' href='{{ route('user.checkout') }}' >checkout</a></div></li>");
                 }
             },
             error: function(data) {

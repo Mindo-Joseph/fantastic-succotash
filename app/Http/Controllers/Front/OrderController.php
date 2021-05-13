@@ -30,7 +30,6 @@ class OrderController extends FrontController
 
     public function orderSave($request)
     {
-        // dd($request->first_name);
         $name = $request->first_name;
         if (!$request->last_name == null) {
             $name = $name . " " . $request->last_name;
@@ -45,10 +44,8 @@ class OrderController extends FrontController
         $order->recipient_number = $request->phone;
         $order->item_count = $cartProduct;
         $order->save();
-
         $cartProducts = CartProduct::where('cart_id', $cart->id)->get()->toArray();
         foreach ($cartProducts as $cartpro) {
-
             $productName = Product::where('id', $cartpro['product_id'])->first()->toArray();
             $orderProducts = new OrderProduct;
             $orderProducts->order_id = $order->id;
@@ -77,13 +74,9 @@ class OrderController extends FrontController
 
     public function makePayment(Request $request)
     {
-        // dd($request->all());
-
         $token = $request->stripeToken;
-
         $gateway = Omnipay::create('Stripe');
         $gateway->setApiKey('sk_test_51IhpwhSFHEA938FwRPiQSAH5xF6DcjO5GCASiud9cGMJ0v8UJyRfCb7IQAMbXbuPMe7JphA1izxZOsIclvmOgqUV00Zpk85xfl');
-
         $formData = [
             'number' => $request->card_num,
             'description' => $request->first_name,
@@ -91,7 +84,6 @@ class OrderController extends FrontController
             'expiryYear' => $request->exp_year,
             'cvv' => $request->cvc
         ];
-
         $response = $gateway->purchase(
             [
                 'amount' => $request->amount,
@@ -100,7 +92,6 @@ class OrderController extends FrontController
                 'token' => $token,
             ]
         )->send();
-
         if ($response->isSuccessful()) {
             // mark order as complete
             // dd($response->getData());
@@ -112,13 +103,10 @@ class OrderController extends FrontController
             $payment->type = "card";
             $payment->cart_id = $cart->id;
             $payment->save();
-
             $this->orderSave($request);
-
         } elseif ($response->isRedirect()) {
             $response->redirect();
         } else {
-            // display error to customer
             exit($response->getMessage());
         }
     }
