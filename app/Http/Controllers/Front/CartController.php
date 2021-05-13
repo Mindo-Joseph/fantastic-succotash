@@ -395,13 +395,14 @@ class CartController extends FrontController
 
         $is_percent = 0;
         $amount_value = 0;
-
-        foreach ($cart->coupon as $ck => $code) {
-            if($code->promo->promo_type_id == 1){
-                $is_percent = 1;
-                $total_discount_percent = $total_discount_percent + round($code->promo->amount);
-            }else{
-                $amount_value = $amount_value + $code->promo->amount;
+        if($cart->coupon){
+            foreach ($cart->coupon as $ck => $code) {
+                if($code->promo->promo_type_id == 1){
+                    $is_percent = 1;
+                    $total_discount_percent = $total_discount_percent + round($code->promo->amount);
+                }else{
+                    $amount_value = $amount_value + $code->promo->amount;
+                }
             }
         }
         
@@ -433,10 +434,21 @@ class CartController extends FrontController
      */
     public function showCart($domain = '')
     {
-        //   dd("fewge");
+        $cartData = [];
+        $user = User::where('status', '!=', '2');
+        if (Auth::user() && Auth::user()->id > 0) {
+            $user = $user->where('id', Auth::user()->id);
+        }else{
+            $system_user = 'bagiiiisaa';
+            $user = $user->where('system_id', $system_user);
+        }
+        $user = $user->first();
+        if($user){
+            $cartData = $this->getCart($user->id);
+        }
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/cart')->with(['navCategories' => $navCategories]);
+        return view('forntend/cart')->with(['navCategories' => $navCategories, 'cartData' => $cartData]);
     }
 
 
