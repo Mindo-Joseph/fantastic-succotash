@@ -133,6 +133,8 @@
                                     </ul>
                                     <ul class="total">
                                         <li>Total <span class="count">$620.00</span></li>
+                                        <input type="hidden" name="total_amount"  value="620" placeholder="">
+
                                     </ul>
                                 </div>
                                 <div class="payment-box">
@@ -164,7 +166,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <!-- <div class="text-right"><button type="submit" class="btn-solid btn">Place Order</button></div> -->
+                                    <div class="text-right"><button type="submit" class="btn-solid btn">Place Order</button></div>
                                 </div>
                             </div>
                         </div>

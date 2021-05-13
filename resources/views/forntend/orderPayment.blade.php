@@ -92,19 +92,62 @@
                 <h3>Payment</h3>
                 <div class="theme-card">
                     <form method="post" class="theme-form" id="paymentFrm" enctype="multipart/form-data" action="{{route('placeorder.makePayment')}}"> @csrf
+                    <div class="form-row mb-3">
+                    <input type="hidden" required="" name="address_id" value="{{$address_id}}" readonly>
+                            <div class="col-md-6">
+                                <label for="first_name">First Name</label>
+                                <input type="text" class="form-control" id="first_name" placeholder="Name" required="" name="first_name" value="{{$first_name}}" readonly>
+                                @if($errors->first('first_name'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('first_name') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <label for="last_name">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" placeholder="Last Name" required="" name="last_name" value="{{$last_name}}" readonly>
+                                @if($errors->first('last_name'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('last_name') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-row mb-3">
                             <div class="col-md-6">
-                                <label for="name">Name</label>
-                                <input type="text" class="form-control" id="name" placeholder="Name" required="" name="name" value="{{ old('name')}}">
-                                @if($errors->first('name'))
+                                <label for="phone">Phone</label>
+                                <input type="text" class="form-control" id="phone" placeholder="Phone" required="" name="phone" value="{{$phone}}" readonly>
+                                @if($errors->first('phone'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('name') }}</strong>
+                                    <strong>{{ $errors->first('phone') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" id="email" placeholder="Email" required="" name="email" value="{{$email_address}}" readonly>
+                                @if($errors->first('email'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('email') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-row mb-3">
+                            <div class="col-md-6">
+                                <label for="amount">Amount</label>
+                                <input type="text" class="form-control" id="amount" placeholder="Amount" required="" name="amount" value="{{$total_amount}}" readonly>
+                                @if($errors->first('amount'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('amount') }}</strong>
                                 </span>
                                 @endif
                             </div>
                             <div class="col-md-6">
                                 <label for="card_num">Card Number</label>
-                                <input type="number" class="form-control" id="card_num" placeholder="Card Number" name="card_num" value="{{ old('card_num')}}" autocomplete="off" required>
+                                <input type="number" class="form-control" id="card_num" placeholder="Card Number" name="card_num" value="4242424242424242" autocomplete="off" required>
                                 @if($errors->first('card_num'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('card_num') }}</strong>
@@ -116,7 +159,7 @@
                         <div class="form-row mb-3">
                             <div class="col-md-3">
                                 <label for="exp_month">Expiry Month</label>
-                                <input type="text" name="exp_month" maxlength="2" class="form-control" id="card-expiry-month" placeholder="MM" required>
+                                <input type="text" name="exp_month" maxlength="2" class="form-control" id="card-expiry-month" placeholder="MM" value="06" required>
                                 @if($errors->first('exp_month'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('exp_month') }}</strong>
@@ -134,7 +177,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="cvc">CVC</label>
-                                <input type="text" name="cvc" id="card-cvc" maxlength="3" class="form-control" autocomplete="off" placeholder="CVC" required>
+                                <input type="text" name="cvc" id="card-cvc" maxlength="3" class="form-control" autocomplete="off" placeholder="CVC" value="123" required>
                                 @if($errors->first('cvc'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('cvc') }}</strong>
@@ -164,6 +207,7 @@
 
     //callback to handle the response from stripe
     function stripeResponseHandler(status, response) {
+       
         if (response.error) {
             //enable the submit button
             $('#payBtn').removeAttr("disabled");
@@ -187,7 +231,7 @@
             console.log("hogya");
             //disable the submit button to prevent repeated clicks
             $('#payBtn').attr("disabled", "disabled");
-
+            
             //create single-use token to charge the user
             Stripe.createToken({
                 number: $('#card_num').val(),
@@ -195,7 +239,6 @@
                 exp_month: $('#card-expiry-month').val(),
                 exp_year: $('#card-expiry-year').val()
             }, stripeResponseHandler);
-
             //submit from callback
             return false;
         });
