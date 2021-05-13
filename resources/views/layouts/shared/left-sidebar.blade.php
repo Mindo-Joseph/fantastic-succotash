@@ -160,6 +160,12 @@
                         <span> Wallet </span>
                     </a>
                 </li> 
+                <li>   
+                    <a href="{{route('referandearn.index')}}" >
+                        <i data-feather="columns"></i>
+                        <span> Refer and Earn </span>
+                    </a>
+                </li> 
             </ul>
         </div>
         <div id="sidebar-menu" style="display: none;">

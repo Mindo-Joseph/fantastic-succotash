@@ -329,7 +329,7 @@ class CartController extends BaseController
     {
         $langId = Auth::user()->language;
         $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
-        $cart = Cart::with('coupon.promo')->select('id', 'is_gift', 'item_count')
+        $cart = Cart::with('coupon.promo.details')->select('id', 'is_gift', 'item_count')
                     ->where('status', '0')
                     ->where('user_id', $user_id)->first();
 
@@ -360,7 +360,7 @@ class CartController extends BaseController
             return false;
         }
 
-        //dd($cartData->toArray());
+        dd($cartData->toArray());
 
         if($cartData){
             $order_payable_amount = $order_taxable_amount = $order_discount_amount = $order_discount_percent = 0.00;
@@ -482,6 +482,12 @@ class CartController extends BaseController
         $cart->total_payable_amount = $total_payable_amount;
         $cart->total_discount_amount = $total_discount_amount;
         $cart->total_discount_percent = $total_discount_percent;
+
+        $loyaltyPoints = $this->getLoyaltyPoints($user_id, $clientCurrency->doller_compare);
+        $wallet = $this->getWallet($user_id, $clientCurrency->doller_compare, Auth::user()->currency);
+
+        $cart->loyaltyPoints = $loyaltyPoints;
+        $cart->wallet = $wallet;
 
         $cart->products = $cartData;
 

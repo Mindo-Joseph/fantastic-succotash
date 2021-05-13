@@ -19,7 +19,7 @@ class Promocode extends Model
     }
     public function details()
     {
-        return $this->hasMany(PromoCodeDetail::class);
+        return $this->hasMany(PromoCodeDetail::class)->select('id', 'promocode_id', 'refrence_id');
     }
     public function getImageAttribute($value){
         $img = 'default/default_image.png';
@@ -38,4 +38,3 @@ class Promocode extends Model
         return $this->belongsTo(PromoType::class, 'promo_type_id', 'id')->select('id', 'title')->where('status', 1);
     }
 }
-
