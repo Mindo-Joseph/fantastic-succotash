@@ -37,6 +37,11 @@ class CartProduct extends Model
     	// 		->select('product_variants.id', 'product_variants.sku as variant_sku', 'product_variants.product_id', 'product_variants.title', 'product_variants.price', 'product_variants.barcode', 'pro.sku as product_sku', 'pro.url_slug', 'pro.is_live', 'pro.weight', 'pro.weight_unit', 'pro.averageRating', 'pro.brand_id', 'pro.tax_category_id');
     }
 
+    public function coupon()
+    {
+      return $this->hasOne('App\Models\CartCoupon', 'cart_id', 'cart_id')->select("cart_id", "coupon_id");
+    }
+
     public function vendorProducts()
     {
       return $this->hasMany(CartProduct::class, 'vendor_id', 'vendor_id')->leftjoin('client_currencies as cc', 'cc.currency_id', 'cart_products.currency_id')

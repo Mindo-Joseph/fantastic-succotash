@@ -46,7 +46,7 @@
                                         {!! Form::label('title', 'Phone Number',['class' => 'control-label']) !!}
                                         <input type="tel" class="form-control phone" id="phone" placeholder="Phone Number" name="phone_number" value="{{ old('phone_number')}}">
 
-                                        <input type="hidden" id="phoneHidden" name="phoneHidden">
+                                        <input type="hidden" id="addphoneHidden" name="phoneHidden">
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
@@ -62,7 +62,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group" id="typeInput">
                                         {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
                                         <select class="selectize-select form-control" name="role_id">
                                             <option value="1">Buyer</option>
@@ -71,7 +71,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group" id="countryInput">
                                         {!! Form::label('title', 'Country',['class' => 'control-label']) !!}
                                         <select class="selectize-select form-control" name="country_id">
                                             <option value="">Select</option>
@@ -102,6 +102,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <input type="hidden" id="addCountryData" name="countryData" value="us">
                     <button type="submit" class="btn btn-blue waves-effect waves-light submitCustomerForm">Submit</button>
                 </div>
             </form>
@@ -117,47 +118,91 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
 
-            <form id="edit_customer" method="post" enctype="multipart/form-data">
+            <form id="add_user" method="POST">
                 @csrf
-                @method('PUT')
-                <div class="modal-body p-4" id="editCardBox">
-                    
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-blue waves-effect waves-light submitEditForm">Submit</button>
-                </div>
-                
-            </form>
-        </div>
-    </div>
-</div>
-
-<div id="show-map-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-full-width">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h4 class="modal-title">Select Location</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body p-4">
-                
-                <div class="row">
-                    <form id="task_form" action="#" method="POST" style="width: 100%">
-                        <div class="col-md-12">
-                            <div id="googleMap" style="height: 500px; min-width: 500px; width:100%"></div>
-                            <input type="hidden" name="lat_input" id="lat_map" value="0" />
-                            <input type="hidden" name="lng_input" id="lng_map" value="0" />
-                            <input type="hidden" name="for" id="map_for" value="" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6" id="imageInput">
+                            <input data-default-file="" type="file" data-plugins="dropify" name="image" accept="image/*" class="dropify"/>
+                            <p class="text-muted text-center mt-2 mb-0">Profile image</p>
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
                         </div>
-                    </form>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 card-box">
+                            <h4 class="header-title mb-3"></h4>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group" id="nameInputEdit">
+                                        {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
+                                        {!! Form::text('name', null, ['class' => 'form-control']) !!}
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group" id="emailInputEdit">
+                                        {!! Form::label('title', 'Email',['class' => 'control-label']) !!}
+                                        {!! Form::email('email', null, ['class' => 'form-control']) !!}
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
+                                    </div>
+                                </div>                                
+                                <div class="col-md-6">
+                                    <div class="form-group" id="phone_numberInputEdit">
+                                        {!! Form::label('title', 'Phone Number',['class' => 'control-label']) !!}
+                                        <input type="tel" class="form-control phone" id="phone" placeholder="Phone Number" name="phone_number" value="{{ old('phone_number')}}">
+
+                                        <input type="hidden" id="addphoneHidden" name="phoneHidden">
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group" id="passwordInputEdit">
+                                        {!! Form::label('title', 'Password',['class' => 'control-label']) !!}
+                                        <input type="password" class="form-control" id="password" placeholder="Password" required="" name="password" value="{{ old('password')}}">
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group" id="typeInputEdit">
+                                        {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
+                                        <select class="selectize-select form-control" name="role_id">
+                                            <option value="1">Buyer</option>
+                                            <option value="2">Seller</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group" id="countryInputEdit">
+                                        {!! Form::label('title', 'Country',['class' => 'control-label']) !!}
+                                        <select class="selectize-select form-control" name="country_id">
+                                            <option value="">Select</option>
+                                            @foreach($countries as $key => $val)
+                                                <option value="{{$val->id}}">{{$val->nicename}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-blue waves-effect waves-light selectMapLocation">Ok</button>
-                <!--<button type="Cancel" class="btn btn-blue waves-effect waves-light cancelMapLocation">cancel</button>-->
-            </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="editCountryData" name="editCountryData" value="us">
+                    <button type="submit" class="btn btn-blue waves-effect waves-light updateCustomerForm">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

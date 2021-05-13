@@ -14,11 +14,11 @@
 
 
 <!-- cart start -->
-<div class="addcart_btm_popup" id="fixed_cart_icon">
+<!-- <div class="addcart_btm_popup" id="fixed_cart_icon">
     <a href="#" class="fixed_cart">
         <i class="ti-shopping-cart"></i>
     </a>
-</div>
+</div> -->
 
 <div class="tap-top top-cls">
     <div>
@@ -32,10 +32,17 @@
     }
 
     $webColor = '#ff4c3b';
-    if(isset(Session::get('preferences')->primary_color ) && !empty(Session::get('preferences')->primary_color )){
-        $webColor = session('preferences')->primary_color ;
+    $darkMode = '';
+    if(isset(Session::get('preferences')->theme_admin) && ucwords(session('preferences')->theme_admin) == 'Dark'){
+        $darkMode = 'dark';
     }
 @endphp
+
+<style type="text/css">
+    .dark-light-btn, #setting-icon{
+        display: none;
+    }
+</style>
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{$mapKey}}&v=3.exp&libraries=places,drawing"></script>
 <!-- exitintent jquery-->
@@ -150,9 +157,12 @@
 
         var color_picker1 = '{{$webColor}}';
         document.documentElement.style.setProperty('--theme-deafult', color_picker1);
+        $('body').addClass("{{$darkMode}}");
+        
         /*document.getElementById("ColorPicker1").onchange = function() {
             color_picker1 = this.value;
             document.documentElement.style.setProperty('--theme-deafult', color_picker1);
         };*/
     })
+
 </script>
