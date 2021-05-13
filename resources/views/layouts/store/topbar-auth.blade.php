@@ -21,7 +21,7 @@
                     <li class="onhover-dropdown mobile-account"> <i class="fa fa-user" aria-hidden="true"></i>
                         My Account
                         <ul class="onhover-show-div">
-                            <li><a href="#" data-lng="en">Profile</a></li>
+                            <li><a href="{{route('user.profile')}}" data-lng="en">Profile</a></li>
                             <li><a href="{{route('user.logout')}}" data-lng="es">Logout</a></li>
                         </ul>
                     </li>

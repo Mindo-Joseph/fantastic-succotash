@@ -144,7 +144,7 @@ class FrontController extends Controller
                 'user_id' => $userid,
                 'type' => 1,
                 'balance' => 0,
-                'card_id' => $this->randomData('wallets'),
+                'card_id' => $this->randomData('wallets', 6, 'card_id'),
                 'card_qr_code' => $this->randomBarcode('wallets'),
                 'meta_field' => '',
             ];
@@ -155,12 +155,12 @@ class FrontController extends Controller
     }
 
     /* Create random and unique client code*/
-    public function randomData($table){
-        $random_string = substr(md5(microtime()), 0, 6);
+    public function randomData($table, $digit, $where){
+        $random_string = substr(md5(microtime()), 0, $digit);
         // after creating, check if string is already used
 
-        while(\DB::table($table)->where('card_id', $random_string)->exists()){
-            $random_string = substr(md5(microtime()), 0, 6);
+        while(\DB::table($table)->where($where, $random_string)->exists()){
+            $random_string = substr(md5(microtime()), 0, $digit);
         }
         return $random_string;
     }
