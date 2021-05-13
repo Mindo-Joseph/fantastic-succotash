@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{Client, Category, Product, ClientPreference};
+use App\Models\{Client, Category, Product, ClientPreference,UserDevice,UserLoyaltyPoint};
 use Session;
 use App;
 use Config;
@@ -28,7 +28,6 @@ class FrontController extends Controller
 
     public function buildTree($elements, $parentId = 1) {
         $branch = array();
-
         foreach ($elements as $element) {
             if ($element['parent_id'] == $parentId) {
                 $children = $this->buildTree($elements, $element['id']);
@@ -38,7 +37,6 @@ class FrontController extends Controller
                 $branch[] = $element;
             }
         }
-
         return $branch;
     }
 
@@ -114,8 +112,7 @@ class FrontController extends Controller
     }
 
     /**     * check if cookie already exist     */
-    public function userMetaData($userid, $device_type = 'web', $device_token = 'web')
-    {
+    public function userMetaData($userid, $device_type = 'web', $device_token = 'web'){
         $device = UserDevice::where('user_id', $userid)->first();
         if(!$device){
             $user_device[] = [
@@ -124,19 +121,15 @@ class FrontController extends Controller
                 'device_token' => $device_token,
                 'access_token' => ''
             ];
-
             UserDevice::insert($user_device);
         }
-
         $loyaltyPoints = UserLoyaltyPoint::where('user_id', $userid)->first();
         if(!$loyaltyPoints){
             $loyalty[] = [
                 'user_id' => $userid,
                 'points' => 0
             ];
-
             UserLoyaltyPoint::insert($loyalty);
         }
-
     }
 }

@@ -20,10 +20,8 @@ class CreatePaymentsTable extends Migration
             $table->string('balance_transaction');
             $table->string('type');
             $table->date('date');
-
             $table->unsignedBigInteger('cart_id')->nullable();
             $table->foreign('cart_id')->references('id')->on('carts')->onDelete('set null');
-
             $table->timestamps();
         });
     }

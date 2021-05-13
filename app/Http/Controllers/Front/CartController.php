@@ -474,32 +474,21 @@ class CartController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function getCartData($domain = '', Request $request)
-    {
-        $langId = Session::get('customerLanguage');
-        $curId = Session::get('customerCurrency');
-
+    public function getCartData($domain = '', Request $request){
         $user = User::where('status', '!=', '2');
-
+        $curId = Session::get('customerCurrency');
+        $langId = Session::get('customerLanguage');
         if (Auth::user() && Auth::user()->id > 0) {
             $user = $user->where('id', Auth::user()->id);
-
         }else{
-            //$system_user = $_COOKIE["uuid"];
-            // if (!isset($_COOKIE["uuid"])) {
-            //     echo "no system user"; die;
-            // }
             $system_user = 'bagiiiisaa';
             $user = $user->where('system_id', $system_user);
         }
         $user = $user->first();
-
-                if(!$user){
+        if(!$user){
             echo "no user"; die;
         }
-
         $cartData = $this->getCart($user->id);
-
         return response()->json($cartData->toArray());
 
     }
