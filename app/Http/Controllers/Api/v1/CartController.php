@@ -360,7 +360,7 @@ class CartController extends BaseController
             return false;
         }
 
-        dd($cartData->toArray());
+        //dd($cartData->toArray());
 
         if($cartData){
             $order_payable_amount = $order_taxable_amount = $order_discount_amount = $order_discount_percent = 0.00;
