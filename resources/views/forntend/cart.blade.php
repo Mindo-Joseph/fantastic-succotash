@@ -68,7 +68,6 @@
         </div>
     </div>
 </section>
-
 <section class="cart-section section-b-space">
     <div class="container">
         <div class="row">
@@ -88,155 +87,51 @@
                         </tr>
                     </thead>
                     <tbody class="shopping-cart1">
-                        <tr>
-                            <td>
-                                <h4 class="td-color">Mc. Donald's</h4>
-                            </td>
-                            <td>
-                                <a href="#"><img src="{{asset('assets/images/products/product-1.png')}}" alt=""></a>
-                            </td>
-                            <td>
-                                <a href="#">cotton shirt</a>
-                            </td>
-                            <td>
-                                <h2>$63.00</h2>
-                            </td>
-                            <td>
-                                <div class="qty-box">
-                                    <div class="input-group">
-                                        <input type="number" name="quantity" class="form-control input-number" value="1">
+                        @php
+                            $total_cart_amt = 0;
+                        @endphp
+                        @foreach($cartData->products as $product)
+                            @foreach($product['vendor_products'] as $vendor_product)
+                            @php
+                                $total_cart_amt = $product['payable_amount'];
+                            @endphp
+                            <tr>
+                                <td>
+                                    <h4 class="td-color">{{$product['vendor']['name']}}</h4>
+                                </td>
+                                <td>
+                                    <a href="#"><img src="{{asset('assets/images/products/product-1.png')}}" alt=""></a>
+                                </td>
+                                <td>
+                                    <a href="#">{{$vendor_product['product']['sku']}}</a>
+                                </td>
+                                <td>
+                                    <h2>${{$product['product_total_amount'] / $vendor_product['quantity']}}</h2>
+                                </td>
+                                <td>
+                                    <div class="qty-box">
+                                        <div class="input-group">
+                                            <input type="number" name="quantity" class="form-control input-number" value="{{$vendor_product['quantity']}}">
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td><a href="#" class="icon"><i class="ti-close"></i></a></td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <h4 class="td-color">Mc. Donald's</h4>
-                            </td>
-                            <td>
-                                <a href="#"><img src="{{asset('assets/images/products/product-1.png')}}" alt=""></a>
-                            </td>
-                            <td>
-                                <a href="#">cotton shirt</a>
-                            </td>
-                            <td>
-                                <h2>$63.00</h2>
-                            </td>
-                            <td>
-                                <div class="qty-box">
-                                    <div class="input-group">
-                                        <input type="number" name="quantity" class="form-control input-number" value="1">
-                                    </div>
-                                </div>
-                            </td>
-                            <td><a href="#" class="icon"><i class="ti-close"></i></a></td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="3"></td>
-                            <td>
-                                <h2>Total</h2>
-                            </td>
-                            <td>
-                                <div class="qty-box">
-                                    <div class="input-group">
-                                        <input type="number" name="quantity" class="form-control input-number" value="1">
-                                    </div>
-                                </div>
-                            </td>
-                            <td><a href="#" class="icon"><i class="ti-close"></i></a></td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <h4 class="td-color">KFC's</h4>
-                            </td>
-                            <td>
-                                <a href="#"><img src="{{asset('assets/images/products/product-1.png')}}" alt=""></a>
-                            </td>
-                            <td>
-                                <a href="#">cotton shirt</a>
-                            </td>
-                            <td>
-                                <h2>$63.00</h2>
-                            </td>
-                            <td>
-                                <div class="qty-box">
-                                    <div class="input-group">
-                                        <input type="number" name="quantity" class="form-control input-number" value="1">
-                                    </div>
-                                </div>
-                            </td>
-                            <td><a href="#" class="icon"><i class="ti-close"></i></a></td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <h4 class="td-color">KFC's</h4>
-                            </td>
-                            <td>
-                                <a href="#"><img src="{{asset('assets/images/products/product-1.png')}}" alt=""></a>
-                            </td>
-                            <td>
-                                <a href="#">cotton shirt</a>
-                            </td>
-                            <td>
-                                <h2>$63.00</h2>
-                            </td>
-                            <td>
-                                <div class="qty-box">
-                                    <div class="input-group">
-                                        <input type="number" name="quantity" class="form-control input-number" value="1">
-                                    </div>
-                                </div>
-                            </td>
-                            <td><a href="#" class="icon"><i class="ti-close"></i></a></td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$4539.00</h2>
-                            </td>
-                        </tr>
+                                </td>
+                                <td>
+                                    <a href="#" class="icon">
+                                        <i class="ti-close"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <h2 class="td-color">${{$product['product_total_amount']}}</h2>
+                                </td>
+                                <td>
+                                    <h2 class="td-color">${{$product['taxable_amount']}}</h2>
+                                </td>
+                                <td>
+                                    <h2 class="td-color">${{$product['payable_amount']}}</h2>
+                                </td>
+                            </tr>
+                            @endforeach
+                        @endforeach
                     </tbody>
                 </table>
                 <table class="table cart-table table-responsive-md shopping-cart-footer">
@@ -244,7 +139,7 @@
                         <tr>
                             <td>Total :</td>
                             <td>
-                                <h2>$6935.00</h2>
+                                <h2>${{ $total_cart_amt }}</h2>
                             </td>
                         </tr>
                     </tfoot>
@@ -252,8 +147,8 @@
             </div>
         </div>
         <div class="row cart-buttons">
-            <div class="col-6"><a href="#" class="btn btn-solid">continue shopping</a></div>
-            <div class="col-6"><a class="btn btn-solid checkout" style="color: white;" onMouseOver="this.style.color='black'" onMouseOut="this.style.color='white'">check out</a></div>
+            <div class="col-6"><a href="{{url('/')}}" class="btn btn-solid">continue shopping</a></div>
+            <div class="col-6"><a class="btn btn-solid checkout" style="color: white;" onMouseOver="this.style.color='black'" onMouseOut="this.style.color='white'" href="{{url('user/checkout')}}">check out</a></div>
         </div>
     </div>
 </section>

@@ -11,6 +11,7 @@
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/color1.css')}}" media="screen" id="color">
 
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/custom.css')}}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
 
 <meta name="_token" content="{{ csrf_token() }}">
 @yield('css')
