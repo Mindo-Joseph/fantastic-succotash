@@ -54,7 +54,7 @@
                         </div>
                         <div class="col-sm-4 text-right">
                             <button class="btn btn-blue waves-effect waves-light text-sm-right addUserModal"
-                             userId="0" style="display: none;"><i class="mdi mdi-plus-circle mr-1"></i> Add
+                             userId="0" style=""><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </button>
                         </div>
                     </div>
@@ -70,7 +70,8 @@
                                     <th>Phone (Is Verified)</th>
                                     <th>Email Token</th>
                                     <th>Phone Token</th>
-                                    <!-- <th>Action</th> -->
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="post_list">
@@ -83,25 +84,34 @@
                                     <td>{{ $user->phone_number }}</td>
                                     <td>{{(!empty($user->email_token)) ? $user->email_token : 'N/A'}}</td>
                                     <td>{{(!empty($user->phone_token)) ? $user->phone_token : 'N/A'}}</td>
-                                    <!-- <td> 
+                                    <td>
+                                        {{ ($user->status == 2) ? 'Block' : 'Active' }}
+                                    </td>
+                                    <td> 
                                         <div class="form-ul" style="width: 60px;">
-                                            <div class="inner-div" style="float: left;">
+                                            <!-- <div class="inner-div" style="float: left;">
                                                 <a class="action-icon openBannerModal" userId="{{$user->id}}" href="#"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                            </div> -->
+                                            <div class="inner-div" style="float: left;">
+                                                <a class="action-icon" userId="{{$user->id}}" href="{{route('customer.show', $user->id)}}"><h3> <i class="mdi mdi-eye"></i></h3></a> 
                                             </div>
-                                            <div class="inner-div">
-                                                <form method="POST" action="{{ route('customer.destroy', $user->id) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <div class="form-group">
-                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the user.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
-
-                                                    </div>
-                                                </form>
+                                            <?php 
+                                                $status = 2; $icon = 'mdi-lock';
+                                                $title = 'Block user account';
+                                            if($user->status == 2){
+                                                $status = 1; $icon = 'mdi-lock-open-variant'; 
+                                                $title = 'Activate user account';
+                                            } ?>
+                                            <div class="inner-div" style="float: left;">
+                                                <a class="action-icon" userId="{{$user->id}}" href="{{route('customer.account.action', [$user->id, $status])}}"><h3> <i class="mdi {{$icon}}" title="{{$title}}"></i></h3></a> 
+                                            </div>
+                                            <div class="inner-div" >
+                                                <a href="{{route('customer.account.action', [$user->id, 3])}}" onclick="return confirm('Are you sure? You want to delete the user.')" class="action-icon"> <h3> <i class="mdi mdi-delete" title="Delete user"></i></h3></a>
                                             </div>
                                         </div>
                                     </td> 
 
-                                -->
+                               
                                 </tr>
                                @endforeach
                             </tbody>
@@ -137,7 +147,7 @@
       //     callback(countryCode);
       //   });
       // },
-        hiddenInput: "full_number",
+        hiddenInput: "contact",
         //initialCountry: "auto",
       // localizedCountries: { 'de': 'Deutschland' },
         //nationalMode: false,
@@ -159,7 +169,7 @@
 
     $('.iti__country').click(function(){
         var code = $(this).attr('data-country-code');
-        $('#countryData').val(code);
+        document.getElementById('addCountryData').value = code;
     })
 </script>
 @include('backend.users.pagescript')

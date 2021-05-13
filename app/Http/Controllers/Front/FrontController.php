@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{Client, Category, Product, ClientPreference};
+use App\Models\{Client, Category, Product, ClientPreference, UserDevice, UserLoyaltyPoint, Wallet};
 use Session;
 use App;
 use Config;
@@ -138,5 +138,40 @@ class FrontController extends Controller
             UserLoyaltyPoint::insert($loyalty);
         }
 
+        $wallet = Wallet::where('user_id', $userid)->first();
+        if(!$wallet){
+            $walletData[] = [
+                'user_id' => $userid,
+                'type' => 1,
+                'balance' => 0,
+                'card_id' => $this->randomData('wallets'),
+                'card_qr_code' => $this->randomBarcode('wallets'),
+                'meta_field' => '',
+            ];
+
+            Wallet::insert($walletData);
+        }
+        return 1;
+    }
+
+    /* Create random and unique client code*/
+    public function randomData($table){
+        $random_string = substr(md5(microtime()), 0, 6);
+        // after creating, check if string is already used
+
+        while(\DB::table($table)->where('card_id', $random_string)->exists()){
+            $random_string = substr(md5(microtime()), 0, 6);
+        }
+        return $random_string;
+    }
+
+    public function randomBarcode($table){
+        $barCode = substr(md5(microtime()), 0, 14);
+        // $number = mt_rand(1000000000, 9999999999);
+
+        while( \DB::table($table)->where('card_qr_code', $barCode)->exists()){
+            $barCode = substr(md5(microtime()), 0, 14);
+        }
+        return $barCode;
     }
 }

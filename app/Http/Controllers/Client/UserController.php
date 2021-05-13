@@ -24,7 +24,9 @@ class UserController extends BaseController
     {
         $roles = Role::all();
         $countries = Country::all();
-        $users = User::with('role', 'country')->select('id', 'name', 'email', 'phone_number', 'status', 'role_id', 'system_id', 'email_token', 'phone_token', 'is_email_verified', 'is_phone_verified')->orderBy('id', 'desc')->paginate(20);
+        $users = User::with('role', 'country')->select('id', 'name', 'email', 'phone_number', 'status', 'role_id', 'system_id', 'email_token', 'phone_token', 'is_email_verified', 'is_phone_verified')
+                    ->where('status', '!=', 3)
+                    ->orderBy('id', 'desc')->paginate(20);
         //dd($users->toArray());
         return view('backend/users/index')->with(['users' => $users, 'roles' => $roles, 'countries' => $countries]);
     }
@@ -34,7 +36,7 @@ class UserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function changeStatus($uid, $action)
+    public function changeStatus($domain = '', $uid, $action)
     {
         $user = User::where('id', $uid)->firstOrFail();
         $user->status = $action;
@@ -43,14 +45,18 @@ class UserController extends BaseController
         if($action == 2){
             $msg = 'blocked';
         }
+        if($action == 3){
+            $msg = 'deleted';
+        }
 
         return redirect()->back()->with('success', 'Customer account ' . $msg . ' successfully!');
     }
 
     /**              Add customer             */
-    public function create()
+    public function show($domain = '', $uid)
     {
-        
+        $user = User::where('id', $uid)->firstOrFail();
+        dd($user->toArray());
     }
 
     /**
@@ -69,7 +75,8 @@ class UserController extends BaseController
             return response()->json([
                 'status'=>'success',
                 'message' => 'Customer created Successfully!',
-                'data' => $banner
+                'data' => $saveId,
+                'aaa' => $request->all()
             ]);
         }
     }
@@ -82,10 +89,14 @@ class UserController extends BaseController
      */
     public function save(Request $request, User $user, $update = 'false')
     {
+        $request->contact;
+        $request->phone_number;
+        $phone = ($request->has('contact') && !empty($request->contact)) ? $request->contact : '+1'.$request->phone_number;
+
         $user->name = $request->name; 
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->phone_number = $request->phone_number;
+        $user->phone_number = $phone;
 
         $user->is_email_verified = ($request->has('is_email_verified') && $request->is_email_verified == 'on') ? 1 : 0; 
         $user->is_phone_verified = ($request->has('is_phone_verified') && $request->is_phone_verified == 'on') ? 1 : 0; 
@@ -95,7 +106,20 @@ class UserController extends BaseController
             $user->image = Storage::disk('s3')->put('/profile', $file,'public');
         }
         $user->save();
+        $userCustomData = $this->userMetaData($user->id, 'web', 'web');
         return $user->id;
+    }
+
+
+    public function edit($domain = '', $id)
+    {
+        $user = User::where('id', $id)->first();
+
+        return response()->json(array('success' => true, 'user'=> $user->toArray() ));
+        
+
+        //$returnHTML = view('backend.banner.form')->with(['banner' => $banner,  'vendors' => $vendors, 'categories' => $categories])->render();
+        //return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
 }

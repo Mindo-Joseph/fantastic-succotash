@@ -11,6 +11,6 @@ class CartCoupon extends Model
 
     public function promo()
     {
-      return $this->belongsTo('App\Models\Promocode', 'coupon_id', 'id')->select('id', 'name', 'amount', 'allow_free_delivery', 'promo_type_id');
+      return $this->belongsTo('App\Models\Promocode', 'coupon_id', 'id')->select('id', 'name', 'amount', 'promo_type_id', 'expiry_date', 'allow_free_delivery', 'minimum_spend', 'maximum_spend', 'first_order_only', 'limit_total', 'restriction_on');
     }
 }

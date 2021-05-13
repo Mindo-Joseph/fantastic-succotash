@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Twilio\Rest\Client as TwilioClient;
 use Mail;
 use ConvertCurrency;
-use App\Models\{Client, Category, Product, ClientPreference};
+use App\Models\{Client, Category, Product, ClientPreference, Wallet, UserLoyaltyPoint, LoyaltyCard};
 use Session;
 use App;
 use Config;
@@ -182,4 +182,115 @@ class BaseController extends Controller
         }
         return $userid;
     }
+
+    /**     * check if cookie already exist     */
+    public function getLoyaltyPoints($userid, $multiplier)
+    {
+        $loyaltyPoints = UserLoyaltyPoint::where('user_id', $userid)->first();
+        $data = array();
+        if(!$loyaltyPoints){
+            $data['point'] = 0;
+            $data['amount'] = 0;
+        }elseif ($loyaltyPoints->points == 0) {
+            $data['point'] = 0;
+            $data['amount'] = 0;
+        }else{
+            $card = LoyaltyCard::select('id', 'redeem_points_per_primary_currency')->where('id', '>', 0)->first();
+            if(!$card){
+                $data['point'] = 0;
+                $data['amount'] = 0;
+            }else{
+                $data['point'] = $loyaltyPoints->points;
+                $amount = $loyaltyPoints->points / $card->redeem_points_per_primary_currency;
+                $data['amount'] = $amount * $multiplier;
+            }
+        }
+        
+        return $data;
+
+
+    }
+
+    /**     * check if cookie already exist     */
+    public function getWallet($userid, $multiplier, $currency = 147)
+    {
+        $wallet = Wallet::where('user_id', $userid)->first();
+        if(!$wallet){
+            $wallet = new Wallet();
+            $wallet->user_id = $userid;
+            $wallet->type = 1;
+            $wallet->balance = 0;
+            $wallet->card_id = $this->randomData('wallets');
+            $wallet->card_qr_code = $this->randomBarcode('wallets');
+            $wallet->meta_field = '';
+            $wallet->currency_id = $currency;
+            $wallet->save();
+        }
+        $balance = $wallet->balance * $multiplier;
+        return $balance;
+    }
+
+    /* Create random and unique client code*/
+    public function randomData($table){
+        $random_string = substr(md5(microtime()), 0, 6);
+        // after creating, check if string is already used
+
+        while(\DB::table($table)->where('card_id', $random_string)->exists()){
+            $random_string = substr(md5(microtime()), 0, 6);
+        }
+        return $random_string;
+    }
+
+    public function randomBarcode($table){
+        $barCode = substr(md5(microtime()), 0, 14);
+        // $number = mt_rand(1000000000, 9999999999);
+
+        while( \DB::table($table)->where('card_qr_code', $barCode)->exists()){
+            $barCode = substr(md5(microtime()), 0, 14);
+        }
+        return $barCode;
+    }
+
+    /**     * check if cookie already exist     */
+    public function userMetaData($userid, $device_type = 'web', $device_token = 'web', $currency = 147)
+    {
+        $device = UserDevice::where('user_id', $userid)->first();
+        if(!$device){
+            $user_device[] = [
+                'user_id' => $userid,
+                'device_type' => $device_type,
+                'device_token' => $device_token,
+                'access_token' => ''
+            ];
+
+            UserDevice::insert($user_device);
+        }
+
+        $loyaltyPoints = UserLoyaltyPoint::where('user_id', $userid)->first();
+        if(!$loyaltyPoints){
+            $loyalty[] = [
+                'user_id' => $userid,
+                'points' => 0
+            ];
+
+            UserLoyaltyPoint::insert($loyalty);
+        }
+
+        $wallet = Wallet::where('user_id', $userid)->first();
+        if(!$wallet){
+            $walletData[] = [
+                'user_id' => $userid,
+                'type' => 1,
+                'balance' => 0,
+                'card_id' => $this->randomData('wallets'),
+                'card_qr_code' => $this->randomBarcode('wallets'),
+                'meta_field' => '',
+                'currency_id' => $currency,
+            ];
+
+            Wallet::insert($walletData);
+        }
+        return 1;
+    }
+
 }

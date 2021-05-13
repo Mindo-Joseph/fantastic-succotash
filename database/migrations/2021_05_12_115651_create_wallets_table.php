@@ -16,14 +16,18 @@ class CreateWalletsTable extends Migration
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->tinyInteger('type')->default(0)->comment('0 - Platanium, 1 - Gold, 2 - Diamond');
-            $table->integer('balance')->nullable();
+            $table->tinyInteger('type')->default(1)->comment('1 - Silver, 2 - Gold, 3 - Platinum, 4 - Diamond');
+            $table->decimal('balance', 10, 2)->default(0)->nullable();
             $table->string('card_id')->nullable();
             $table->string('card_qr_code')->nullable();
             $table->string('meta_field')->nullable();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('currency_id')->default(147)->nullable();
             $table->timestamps();
+
+            $table->index('card_id');
+            $table->index('type');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('set null');
         });
     }
 
