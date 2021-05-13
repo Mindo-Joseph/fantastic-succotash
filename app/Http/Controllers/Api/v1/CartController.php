@@ -340,20 +340,20 @@ class CartController extends BaseController
         $cartID = $cart->id;
 
         $cartData = CartProduct::with(['vendor', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
-                        'vendorProducts.product.translation' => function($q) use($langId){
-                            $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
-                            $q->where('language_id', $langId);
-                        },
-                        'vendorProducts'=> function($qry) use($cartID){
-                            $qry->where('cart_id', $cartID);
-                        },
-                        'vendorProducts.addon.set' => function($qry) use($langId){
-                            $qry->where('language_id', $langId);
-                        },
-                        'vendorProducts.addon.option' => function($qry) use($langId){
-                            $qry->where('language_id', $langId);
-                        }, 'vendorProducts.product.taxCategory.taxRate', 
-                    ])->select('vendor_id')->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
+                    'vendorProducts.product.translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                        $q->where('language_id', $langId);
+                    },
+                    'vendorProducts'=> function($qry) use($cartID){
+                        $qry->where('cart_id', $cartID);
+                    },
+                    'vendorProducts.addon.set' => function($qry) use($langId){
+                        $qry->where('language_id', $langId);
+                    },
+                    'vendorProducts.addon.option' => function($qry) use($langId){
+                        $qry->where('language_id', $langId);
+                    }, 'vendorProducts.product.taxCategory.taxRate', 
+                ])->select('vendor_id')->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
 
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if(empty($cartData) || count($cartData) < 1){
@@ -444,16 +444,37 @@ class CartController extends BaseController
                     $payable_amount = $payable_amount + $deliver_charge;
                     $prod->product_addons = $vendorAddons;
                 }
+                $is_coupon_applied = 0; $coupon_removed = 0; $coupon_removed_msg = '';
+                /*if($cart->coupon->vendor_id == $vendorData->vendor_id){
+
+                    $now = Carbon::now()->toDateTimeString();
+                    $is_coupon_applied = 1;
+                    if($cart->coupon->promo->expiry_date < $now){
+                        $coupon_removed = 1;
+                        $coupon_removed_msg = 'Coupon code is expired.';
+                    }elseif($cart->coupon->promo->minimum_spend > $payable_amount){
+                        $coupon_removed = 1;
+                        $coupon_removed_msg = 'To apply this coupon spend minimum '.$cart->coupon->promo->minimum_spend;
+                    }else{
+                        if($cart->coupon->promo->restriction_on == 1){
+
+                        }
+                    }
+                }*/
+
+
                 $vendorData->payable_amount = $payable_amount;
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
                 $vendorData->taxable_amount = $taxable_amount;
+                $vendorData->is_coupon_applied = $is_coupon_applied;
 
                 $vendorData->product_total_amount = ($payable_amount - $taxable_amount);
                 $total_payable_amount = $total_payable_amount + $payable_amount;
                 $total_taxable_amount = $total_taxable_amount + $taxable_amount;
                 $total_discount_amount = $total_discount_amount + $discount_amount;
                 $total_discount_percent = $total_discount_percent + $discount_percent;
+
             }
         }
         $amount_value = $is_percent = 0;
