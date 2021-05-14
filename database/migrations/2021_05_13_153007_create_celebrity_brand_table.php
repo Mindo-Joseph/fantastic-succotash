@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCelebrityProductTable extends Migration
+class CreateCelebrityBrandTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCelebrityProductTable extends Migration
      */
     public function up()
     {
-        Schema::create('celebrity_product', function (Blueprint $table) {
+        Schema::create('celebrity_brands', function (Blueprint $table) {
             $table->unsignedBigInteger('celebrity_id')->nullable();
             $table->unsignedBigInteger('brand_id')->nullable();
 

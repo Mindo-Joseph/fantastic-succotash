@@ -25,6 +25,6 @@ class Celebrity extends Model
 
     public function brands()
     {
-        return $this->belongsToMany(Brand::class, 'celebrity_brand');
+        return $this->belongsToMany(Brand::class, 'celebrity_brands');
     }
 }
