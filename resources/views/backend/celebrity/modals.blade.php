@@ -31,7 +31,7 @@
                     <div class="col-md-6" id="country_list">
                         <div class="form-group">
                             {!! Form::label('title', 'Country',['class' => 'control-label']) !!}
-                            <select class="form-control select2-multiple" id="countries" name="countries" data-placeholder="Choose ...">
+                            <select class="form-control" id="countries" name="countries" data-placeholder="Choose ...">
                                 @foreach($countries as $ck => $cval)
                                     <option value="{{$cval->id}}"> {{$cval->nicename}}</option>
                                 @endforeach
