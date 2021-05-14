@@ -368,11 +368,11 @@ class CartController extends BaseController
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
 
                 $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
-                $couponProducts = array();
+                $couponData = $couponProducts = array();
                 if(!empty($cart->coupon) && ($cart->coupon->vendor_id == $vendorData->vendor_id)){
 
                     $now = Carbon::now()->toDateTimeString();
-                    $couponData = array();
+                    
 
                     $minimum_spend = $cart->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
                     
@@ -389,7 +389,7 @@ class CartController extends BaseController
                         $couponData['first_order_only'] = $cart->coupon->promo->first_order_only;
                         $couponData['restriction_on'] = ($cart->coupon->promo->restriction_on == 1) ? 'Vendor' : 'Product';
 
-                        $vendorData->couponData = $couponData;
+                        
 
                         $is_coupon_applied = 1;
                         if($cart->coupon->promo->promo_type_id){
@@ -513,6 +513,7 @@ class CartController extends BaseController
                 $couponApplied = 0;
 
                 if(!empty($cart->coupon) && ($cart->coupon->promo->restriction_on == 1)){
+                    $minimum_spend = $cart->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
                     if($minimum_spend < $proSum){
                         if($is_percent == 1){
                             $discount_amount = ($proSum * $discount_percent)/ 100;
@@ -524,11 +525,7 @@ class CartController extends BaseController
                         $vendorData->coupon_not_appiled = 1;
                     }
                 }
-
-                $vendorData->coupon_removed = $coupon_removed;
-                $vendorData->coupon_removed_msg = $coupon_removed_msg;
-
-
+                $vendorData->couponData = $couponData;
                 $vendorData->coupon_apply_on_vendor = $couponApplied;
                 $vendorData->payable_amount = $payable_amount;
                 $vendorData->payable_amount = $payable_amount - $discount_amount;
