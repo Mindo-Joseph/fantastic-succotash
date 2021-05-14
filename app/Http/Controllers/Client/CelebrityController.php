@@ -46,7 +46,7 @@ class CelebrityController extends BaseController
         $rules = array(
             'name' => 'required|string|max:150',
             //'email' => 'required|email|max:150|unique:celebrities',
-            'phone_number' => 'required',
+            //'phone_number' => 'required',
             'address' => 'required',
         );
 

@@ -11,7 +11,7 @@
                     <div class="col-md-3"></div>
                     <div class="col-md-6" id="imageInput">
                         <input data-default-file="" type="file" data-plugins="dropify" name="image" accept="image/*" class="dropify" />
-                        <p class="text-muted text-center mt-2 mb-0">Upload banner image</p>
+                        <p class="text-muted text-center mt-2 mb-0">Upload image</p>
                         <span class="invalid-feedback" role="alert">
                             <strong></strong>
                         </span>
@@ -60,8 +60,8 @@
                     <div class="col-md-6" id="product_list">
                         <div class="form-group">
                             {!! Form::label('title', 'Products',['class' => 'control-label']) !!}
-                            <select class="form-control select2-multiple" id="products" name="products[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                             
+                            <select class="form-control select2-multiple" id="brands" name="brands[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+
                             </select>
                         </div>
                     </div>

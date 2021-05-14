@@ -15,9 +15,10 @@ class CreateCelebrityProductTable extends Migration
     {
         Schema::create('celebrity_product', function (Blueprint $table) {
             $table->unsignedBigInteger('celebrity_id')->nullable();
+            $table->unsignedBigInteger('brand_id')->nullable();
+
             $table->foreign('celebrity_id')->references('id')->on('celebrities')->onDelete('cascade');
-            $table->unsignedBigInteger('product_id')->nullable();
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
         });
     }
 
