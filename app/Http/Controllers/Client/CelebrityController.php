@@ -47,8 +47,6 @@ class CelebrityController extends BaseController
         // dd($request->all());
         $rules = array(
             'name' => 'required|string|max:150',
-            //'email' => 'required|email|max:150|unique:celebrities',
-            //'phone_number' => 'required',
             'address' => 'required',
         );
 
@@ -60,8 +58,7 @@ class CelebrityController extends BaseController
 
         $celebrity = new Celebrity();
         $celebrity->name = $request->input('name');
-        $celebrity->email = $request->input('email');
-        $celebrity->phone_number = $request->input('phone_number');
+        $celebrity->country_id = $request->input('countries');
         $celebrity->address = $request->input('address');
         $celebrity->status = '1';
 
@@ -73,7 +70,7 @@ class CelebrityController extends BaseController
 
         $celebrity->save();
 
-        $celebrity->products()->sync($request->products);
+        $celebrity->brands()->sync($request->brands);
         if ($celebrity->id > 0) {
             return response()->json([
                 'status' => 'success',
@@ -104,11 +101,12 @@ class CelebrityController extends BaseController
     {
         $celeb = Celebrity::where('id', $id)->first();
         $pros = array();
-        foreach ($celeb->products as $repo) {
+        foreach ($celeb->brands as $repo) {
             $pros[] = $repo->id;
         }
+        $countries = Country::all();
         $brands = Brand::all();
-        $returnHTML = view('backend.celebrity.form')->with(['lc' => $celeb, 'brands' => $brands, 'pros' => $pros])->render();
+        $returnHTML = view('backend.celebrity.form')->with(['lc' => $celeb, 'brands' => $brands, 'pros' => $pros, 'countries' => $countries])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
@@ -125,8 +123,8 @@ class CelebrityController extends BaseController
         //  dd($request->all());
         $rules = array(
             'name' => 'required|string|max:150',
-            'email' => 'required|email|max:150|unique:celebrities,email,' . $id,
-            'phone_number' => 'required',
+            // 'email' => 'required|email|max:150|unique:celebrities,email,' . $id,
+            // 'phone_number' => 'required',
             'address' => 'required',
         );
 
@@ -138,8 +136,7 @@ class CelebrityController extends BaseController
 
         $celebrity = Celebrity::where('id', $id)->firstOrFail();;
         $celebrity->name = $request->input('name');
-        $celebrity->email = $request->input('email');
-        $celebrity->phone_number = $request->input('phone_number');
+        $celebrity->country_id = $request->input('countries');
         $celebrity->address = $request->input('address');
         $celebrity->status = '1';
 
@@ -151,7 +148,7 @@ class CelebrityController extends BaseController
 
         $celebrity->save();
 
-        $celebrity->products()->sync($request->products);
+        $celebrity->brands()->sync($request->brands);
 
 
         if ($celebrity->id > 0) {
@@ -198,8 +195,7 @@ class CelebrityController extends BaseController
     public function getBrandList($domain = '')
     {
         
-        dd($countries->toArray());
-
-        return response()->json(['brands' => $brands, 'countries' => $countries]);
+        $brands = Brand::all();
+        return response()->json(['brands' => $brands]);
     }
 }

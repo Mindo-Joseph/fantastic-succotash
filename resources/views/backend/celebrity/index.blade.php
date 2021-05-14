@@ -60,8 +60,6 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone Number</th>
                                     <th>Address</th>
                                     <th></th>
                                     <th>Action</th>
@@ -78,9 +76,6 @@
 
                                     <td> {{ $celeb->name }} </td>
 
-                                    <td> {{ $celeb->email }} </td>
-
-                                    <td> {{ $celeb->phone_number }} </td>
 
                                     <td> {{ $celeb->address }} </td>
                                    

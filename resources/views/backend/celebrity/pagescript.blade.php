@@ -143,9 +143,7 @@
     //             for( i = 0; i<response.brands.length; i++){
     //                 $("#brands").append("");
     //             }
-    //             for( i = 0; i<response.countries.length; i++){
-    //                 $("#countries").append("<option value="+response.countries[i].id+">"+response.countries[i].title+"</option>");
-    //             }
+               
     //             // $(".primaryKey").html("1 " + response.symbol + " =");
     //             // $("#redeem_points_per_primary_currency").val(response.value);
     //         },
