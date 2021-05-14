@@ -82,7 +82,7 @@
                                         @endif
                                      </td>
                                     <td> 
-                                        <input type="checkbox" bid="{{$ban->id}}" id="cur_{{$ban->id}}" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#039cfd" {{($ban->validity_on == '1') ? 'checked' : ''}} >
+                                        <input type="checkbox" bid="{{$ban->id}}" id="cur_{{$ban->id}}" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1" {{($ban->validity_on == '1') ? 'checked' : ''}} >
                                      </td>
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">

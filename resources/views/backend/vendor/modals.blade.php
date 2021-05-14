@@ -79,7 +79,7 @@
                                     <div class="form-group">
                                         {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
                                         <div>
-                                            <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control validity" data-color="#039cfd" checked='checked'>
+                                            <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control validity" data-color="#43bee1" checked='checked'>
                                         </div>
                                     </div>
                                 </div>
@@ -87,7 +87,7 @@
                                     <div class="form-group">
                                         {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
                                         <div>
-                                            <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control validity" data-color="#039cfd" checked='checked'>
+                                            <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control validity" data-color="#43bee1" checked='checked'>
                                         </div>
                                     </div>
                                 </div>
@@ -95,7 +95,7 @@
                                     <div class="form-group">
                                         {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
                                         <div>
-                                            <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control validity" data-color="#039cfd" checked='checked'>
+                                            <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control validity" data-color="#43bee1" checked='checked'>
                                         </div>
                                     </div>
                                 </div>

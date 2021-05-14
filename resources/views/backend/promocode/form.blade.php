@@ -82,7 +82,7 @@
                 <div class="form-group">
                     {!! Form::label('title', 'Allow Free Delivery',['class' => 'control-label']) !!}
                     <div>
-                        <input type="checkbox" data-plugin="switchery" name="allow_free_delivery" class="form-control switch1{{$action}}" data-color="#039cfd" @if(isset($promo->id) && $promo->id > 0 && $promo->allow_free_delivery == 1) checked @endif>
+                        <input type="checkbox" data-plugin="switchery" name="allow_free_delivery" class="form-control switch1{{$action}}" data-color="#43bee1" @if(isset($promo->id) && $promo->id > 0 && $promo->allow_free_delivery == 1) checked @endif>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
                 <div class="form-group">
                     {!! Form::label('title', 'First Order Only',['class' => 'control-label']) !!}
                     <div>
-                        <input type="checkbox" data-plugin="switchery" name="first_order_only" class="form-control switch2{{$action}}" data-color="#039cfd" @if(isset($promo->id) && $promo->id > 0 && $promo->first_order_only == 1) checked @endif>
+                        <input type="checkbox" data-plugin="switchery" name="first_order_only" class="form-control switch2{{$action}}" data-color="#43bee1" @if(isset($promo->id) && $promo->id > 0 && $promo->first_order_only == 1) checked @endif>
                     </div>
                 </div>
             </div>

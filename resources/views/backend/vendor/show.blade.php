@@ -108,7 +108,7 @@
                                             <div class="col-md-2">
                                                 {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!} 
                                                 <div>
-                                                    <input type="checkbox" data-plugin="switchery" name="add_category" class="form-control can_add_category1" data-color="#039cfd" @if($vendor->add_category == 1) checked @endif >
+                                                    <input type="checkbox" data-plugin="switchery" name="add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif >
                                                 </div>
                                             </div>
                                             <div class="col-md-3">

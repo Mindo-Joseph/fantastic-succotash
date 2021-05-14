@@ -39,7 +39,7 @@
                         <div class="col-12">
                            <div class="form-group mb-0">
                               <label for="is_hyperlocal" class="mr-3">Enable</label>
-                              <input type="checkbox" data-plugin="switchery" name="is_hyperlocal" id="is_hyperlocal" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->is_hyperlocal == '1'))  checked='checked' @endif>
+                              <input type="checkbox" data-plugin="switchery" name="is_hyperlocal" id="is_hyperlocal" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_hyperlocal == '1'))  checked='checked' @endif>
                            </div>
                            <div class="row">
                               <div class="col-12 mt-3 disableHyperLocal" style="{{((isset($preference) && $preference->is_hyperlocal == '1')) ? '' : 'display:none;'}}">
@@ -122,7 +122,7 @@
                      <div class="form-group mb-0">
                         <div class="form-group mb-0 switchery-demo">
                            <label for="need_delivery_service" class="mr-3">Enable</label>
-                           <input type="checkbox" data-plugin="switchery" name="need_delivery_service" id="need_delivery_service" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->need_delivery_service == '1'))  checked='checked' @endif>
+                           <input type="checkbox" data-plugin="switchery" name="need_delivery_service" id="need_delivery_service" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->need_delivery_service == '1'))  checked='checked' @endif>
                         </div>
                      </div>
                      <div class="form-group mt-3 mb-0 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
@@ -166,7 +166,7 @@
                      <div class="form-group mb-0">
                         <div class="form-group mb-0 switchery-demo">
                            <label for="need_dispacher_ride" class="mr-3">Enable</label>
-                           <input type="checkbox" data-plugin="switchery" name="need_dispacher_ride" id="need_dispacher_ride" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->need_dispacher_ride == '1'))  checked='checked' @endif>
+                           <input type="checkbox" data-plugin="switchery" name="need_dispacher_ride" id="need_dispacher_ride" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->need_dispacher_ride == '1'))  checked='checked' @endif>
                         </div>
                      </div>
                      <div class="form-group mt-3 mb-0 dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_ride == '1')) ? '' : 'display:none;'}}">
@@ -211,7 +211,7 @@
                            <button class="btn btn-info btn-block save_btn" type="submit"> Save </button>
                         </label>
                         <label for="" class="mr-3">Enable</label>
-                        <input type="checkbox" data-plugin="switchery" name="fb_login" id="fb_login" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->fb_login == '1'))  checked='checked' @endif>
+                        <input type="checkbox" data-plugin="switchery" name="fb_login" id="fb_login" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->fb_login == '1'))  checked='checked' @endif>
                      </div>
                   </div>
                </div>
@@ -265,7 +265,7 @@
                            <button class="btn btn-info btn-block save_btn" type="submit"> Save </button>
                         </label>
                         <label for="" class="mr-3">Enable</label>
-                        <input type="checkbox" data-plugin="switchery" name="twitter_login" id="twitter_login" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->twitter_login == '1'))  checked='checked' @endif>
+                        <input type="checkbox" data-plugin="switchery" name="twitter_login" id="twitter_login" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->twitter_login == '1'))  checked='checked' @endif>
                      </div>
                   </div>
                </div>
@@ -320,7 +320,7 @@
                            <button class="btn btn-info btn-block save_btn" type="submit"> Save </button>
                         </label>
                         <label for="" class="mr-3">Enable</label>
-                        <input type="checkbox" data-plugin="switchery" name="google_login" id="google_login" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->google_login == '1'))  checked='checked' @endif>
+                        <input type="checkbox" data-plugin="switchery" name="google_login" id="google_login" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->google_login == '1'))  checked='checked' @endif>
                      </div>
                   </div>
                </div>
@@ -374,7 +374,7 @@
                            <button class="btn btn-info btn-block save_btn" type="submit"> Save </button>
                         </label>
                         <label for="" class="mr-3">Enable</label>
-                        <input type="checkbox" data-plugin="switchery" name="apple_login" id="apple_login" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->apple_login == '1'))  checked='checked' @endif>
+                        <input type="checkbox" data-plugin="switchery" name="apple_login" id="apple_login" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->apple_login == '1'))  checked='checked' @endif>
                      </div>
                   </div>
                </div>
@@ -694,13 +694,13 @@
                   <div class="col-md-4">
                      <div class="form-group mb-0 switchery-demo">
                         <label for="verify_email" class="mr-3">Verify Email</label>
-                        <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->verify_email == '1'))  checked='checked' @endif>
+                        <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1'))  checked='checked' @endif>
                      </div>
                   </div>
                   <div class="col-md-4">
                      <div class="form-group mb-0">
                         <label for="verify_phone" class="mr-3">Verify Phone</label>
-                        <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->verify_phone == '1'))  checked='checked' @endif>
+                        <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1'))  checked='checked' @endif>
                      </div>
                   </div>
                   <div class="col-md-4">
@@ -717,7 +717,7 @@
                   <div class="col-md-8">
                      <div class="form-group mb-0">
                         <label for="celebrity_check" class="mr-3">Influencer Mod</label>
-                        <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#039cfd" @if((isset($preference) && $preference->celebrity_check == '1'))  checked='checked' @endif>
+                        <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1'))  checked='checked' @endif>
                      </div>
                   </div>
                   <div class="col-md-4">

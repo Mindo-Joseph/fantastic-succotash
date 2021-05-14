@@ -82,7 +82,7 @@
                                     <td> {{ $ban->minimum_points }} </td>
                                    
                                     <td> 
-                                        <input type="checkbox" bid="{{$ban->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#039cfd" {{($ban->status == '0') ? 'checked' : ''}} >
+                                        <input type="checkbox" bid="{{$ban->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1" {{($ban->status == '0') ? 'checked' : ''}} >
                                      </td>
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">

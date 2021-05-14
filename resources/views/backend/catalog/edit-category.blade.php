@@ -59,9 +59,9 @@
                     {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
                     <div>
                         @if($category->is_visible == '1')
-                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2Edit" data-color="#039cfd" checked='checked'>
+                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2Edit" data-color="#43bee1" checked='checked'>
                         @else
-                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2Edit" data-color="#039cfd">
+                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2Edit" data-color="#43bee1">
                         @endif
                     </div>
                 </div>
@@ -71,9 +71,9 @@
                     {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
                     <div>
                         @if($category->can_add_products == '1')
-                            <input type="checkbox" data-plugin="switchery" class="form-control switch1Edit" data-color="#039cfd" name="can_add_products" checked='checked'>
+                            <input type="checkbox" data-plugin="switchery" class="form-control switch1Edit" data-color="#43bee1" name="can_add_products" checked='checked'>
                         @else
-                            <input type="checkbox" data-plugin="switchery" class="form-control switch1Edit" data-color="#039cfd" name="can_add_products">
+                            <input type="checkbox" data-plugin="switchery" class="form-control switch1Edit" data-color="#43bee1" name="can_add_products">
                         @endif
                     </div>
                 </div>
