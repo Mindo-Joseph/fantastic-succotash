@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="col-4 text-right" style="margin: auto;">
-            <button type="button" class="btn btn-blue waves-effect waves-light text-sm-right saveProduct"> Submit</button>
+            <button type="button" class="btn btn-info waves-effect waves-light text-sm-right saveProduct"> Submit</button>
         </div>
     </div>
     <div class="row mb-2">
@@ -175,7 +175,7 @@
                             <h5 class="text-uppercase mt-0 bg-light p-2">Variant Information</h5>
                         </div>
                         <div class="col-4 p-2 mt-0 text-right" style="margin:auto; ">
-                            <button type="button" class="btn btn-blue makeVariantRow"> Create Variants</button>
+                            <button type="button" class="btn btn-info makeVariantRow"> Create Variants</button>
                         </div>
                     </div>
                     <p>Select or change category to get variants</p>

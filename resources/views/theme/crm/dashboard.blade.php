@@ -126,7 +126,7 @@
 
                     <h4 class="header-title mb-3">Sales Analytics</h4>
                     <div dir="ltr">
-                        <div id="sales-analytics" class="apex-charts" data-colors="#6658dd,#1abc9c"></div>
+                        <div id="sales-analytics" class="apex-charts" data-colors="#43bee1,#1abc9c"></div>
                     </div>
                 </div> <!-- end card-box -->
             </div> <!-- end col-->

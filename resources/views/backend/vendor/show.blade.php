@@ -67,7 +67,7 @@
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h4 class="mb-2 "> <span class="">Configuration</span><span style=" float:right;"><button class="btn btn-blue waves-effect waves-light">Save</button></span></h4>
+                                                <h4 class="mb-2 "> <span class="">Configuration</span><span style=" float:right;"><button class="btn btn-info waves-effect waves-light">Save</button></span></h4>
                                             </div>
                                         </div>
 
@@ -101,7 +101,7 @@
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h4 class="mb-2"> <span class="">Commission</span> (Visible For Admin)<span style=" float:right;"><button class="btn btn-blue waves-effect waves-light">Save</button></span></h4>
+                                                <h4 class="mb-2"> <span class="">Commission</span> (Visible For Admin)<span style=" float:right;"><button class="btn btn-info waves-effect waves-light">Save</button></span></h4>
                                             </div>
                                         </div>
                                         <div class="row mb-2">

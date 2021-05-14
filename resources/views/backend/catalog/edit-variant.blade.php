@@ -122,7 +122,7 @@
                 </table>
             </div>
             <div class="col-md-12">
-                <button type="button" class="btn btn-blue waves-effect waves-light addOptionRow-edit">Add Option</button>
+                <button type="button" class="btn btn-info waves-effect waves-light addOptionRow-edit">Add Option</button>
             </div>
         </div>
     </div>

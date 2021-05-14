@@ -39,7 +39,7 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right openBannerModal"
+                            <button class="btn btn-info waves-effect waves-light text-sm-right openBannerModal"
                              userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </button>
                         </div>
@@ -64,13 +64,15 @@
 
                                 <tr data-row-id="{{$ban->id}}">
                                     <td class="draggableTd"><span class="dragula-handle"></span></td>
-                                    <td> 
-                                        <img src="{{$ban->image['proxy_url'].'400/160'.$ban->image['image_path']}}" alt="{{$ban->id}}" >
+                                    <td class="banner_wrapper"> 
+                                        <div class="banner_box">
+                                            <img src="{{$ban->image['proxy_url'].'400/160'.$ban->image['image_path']}}" alt="{{$ban->id}}" >
+                                        </div>    
                                     </td>
 
                                     <td> {{ $ban->name }} </td>
-                                    <td> {{ $ban->start_date_time }} <br/> to <br/> {{$ban->end_date_time}}</td>
-                                    <td> 
+                                    <td> <span class="text-center d-inline-block"> {{ $ban->start_date_time }} <br/> to <br/> {{$ban->end_date_time}} </span></td>
+                                    <td>                                         
                                         @if($ban->link == 'category')
                                             Category
                                         @elseif($ban->link == 'vendor')
@@ -85,14 +87,16 @@
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
-                                                <a class="action-icon openBannerModal" userId="{{$ban->id}}" href="#"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                                <a class="action-icon openBannerModal" userId="{{$ban->id}}" href="#"> <i class="mdi mdi-square-edit-outline"></i></a> 
                                             </div>
                                             <div class="inner-div">
                                                 <form method="POST" action="{{ route('banner.destroy', $ban->id) }}">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <div class="form-group">
-                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the banner.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
+                                                    <div class="form-group mb-0">
+                                                        <button type="submit" onclick="return confirm('Are you sure? You want to delete the banner.')" class="btn btn-primary-outline action-icon">
+                                                            <i class="mdi mdi-delete"></i>
+                                                        </button> 
 
                                                     </div>
                                                 </form>

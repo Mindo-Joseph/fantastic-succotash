@@ -36,7 +36,7 @@
                     </p>
                     <div class="row">
                         <div class="col-sm-4">
-                            <label for="primary_color">Selcte Theme</label> <br/>
+                            <label for="primary_color">Admin Panel Theme</label> <br/>
                             <div class="radio radio-blue form-check-inline">
                                 <input type="radio" id="light_theme" value="light" name="theme_admin" {{ (isset($preference) && $preference->theme_admin =="light")? "checked" : "" }}>
                                 <label for="light_theme"> Light theme </label>
@@ -68,7 +68,7 @@
                         <div class="col-md-2">
                             <div class="form-group mb-0 text-center">
                                 <input type="hidden" name="send_to" id="send_to" value="customize">
-                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                                <button class="btn btn-info btn-block" type="submit"> Update </button>
                             </div>
                         </div>
                     </div>
@@ -127,7 +127,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group mb-0 text-center">
                                         <input type="hidden" name="send_to" id="send_to" value="customize">
-                                        <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                                        <button class="btn btn-info btn-block" type="submit"> Update </button>
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +183,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group mb-0 text-center">
                                         <input type="hidden" name="send_to" id="send_to" value="customize">
-                                        <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                                        <button class="btn btn-info btn-block" type="submit"> Update </button>
                                     </div>
                                 </div>
                             </div>
@@ -246,7 +246,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group mb-0 text-center">
                                         <input type="hidden" name="send_to" id="send_to" value="customize">
-                                        <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                                        <button class="btn btn-info btn-block" type="submit"> Update </button>
                                     </div>
                                 </div>
                             </div>
@@ -283,7 +283,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group mb-0 text-center">
                                         <input type="hidden" name="send_to" id="send_to" value="customize">
-                                        <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                                        <button class="btn btn-info btn-block" type="submit"> Update </button>
                                     </div>
                                 </div>
                             </div>
@@ -296,6 +296,7 @@
 
     <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
         @csrf
+        
         <div class="row">
             <div class="col-xl-12">
                 <div class="card-box">
@@ -304,7 +305,7 @@
                         Define and update the nomenclature
                     </p>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4 mb-2">
                             <label for="languages">Primary Language</label>
                             <select class="form-control" id="primary_language" name="primary_language">
                                 @foreach($languages as $lang)
@@ -312,7 +313,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-8 mb-2">
                             <label for="languages">Additional Languages</label>
                             <select class="form-control select2-multiple" id="languages" name="languages[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
                                 @foreach($languages as $lang)
@@ -324,7 +325,7 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-md-6">
+                        <div class="col-md-4 mb-2">
                             <label for="primary_currency">Primary Currency</label>
 
                             <select class="form-control" id="primary_currency" name="primary_currency">
@@ -334,7 +335,7 @@
                             </select>
                         </div>
                         
-                        <div class="col-md-6">
+                        <div class="col-md-8 mb-2">
                             <label for="currency">Additional Currency</label>
                             <select class="form-control select2-multiple" id="currency" name="currency_data[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
                                 @foreach($currencies as $currency)
@@ -344,8 +345,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-6"> </div>
-                        <div class="col-6">
+                        <div class="offset-sm-4 col-8 mb-2">
                             <div class="row multiplierData">
                                @if($preference->currency)
                                  @foreach($preference->currency as $ac)
@@ -363,7 +363,7 @@
                         <div class="col-md-2">
                             <div class="form-group mb-0 text-center">
                                 <input type="hidden" name="send_to" id="send_to" value="customize">
-                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                                <button class="btn btn-info btn-block" type="submit"> Update </button>
                             </div>
                         </div>
                     </div>

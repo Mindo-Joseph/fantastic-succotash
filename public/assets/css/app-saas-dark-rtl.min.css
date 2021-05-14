@@ -583,14 +583,14 @@ body[data-sidebar-showuser=true] .user-box {
 }
 
 body[data-sidebar-icon=twotones] #sidebar-menu > ul > li > a i {
-  color: #6658dd;
+  color: #43bee1;
 }
 body[data-sidebar-icon=twotones] #sidebar-menu > ul > li > a svg {
   width: 18px;
   height: 18px;
   margin-left: 3px;
   margin-right: 10px;
-  color: #6658dd;
+  color: #43bee1;
   fill: rgba(102, 88, 221, 0.2);
 }
 
@@ -1689,7 +1689,7 @@ body[data-layout-mode=two-column][data-layout-width=boxed]:not([data-sidebar-siz
 }
 
 .icon-dual-blue {
-  color: #6658dd;
+  color: #43bee1;
   fill: rgba(102, 88, 221, 0.16);
 }
 
@@ -2033,8 +2033,8 @@ body[data-layout-mode=two-column][data-layout-width=boxed]:not([data-sidebar-siz
 }
 
 .checkbox-blue input[type=checkbox]:checked + label::before {
-  background-color: #6658dd;
-  border-color: #6658dd;
+  background-color: #43bee1;
+  border-color: #43bee1;
 }
 .checkbox-blue input[type=checkbox]:checked + label::after {
   border-color: #fff;
@@ -2193,13 +2193,13 @@ body[data-layout-mode=two-column][data-layout-width=boxed]:not([data-sidebar-siz
 }
 
 .radio-blue input[type=radio] + label::after {
-  background-color: #6658dd;
+  background-color: #43bee1;
 }
 .radio-blue input[type=radio]:checked + label::before {
-  border-color: #6658dd;
+  border-color: #43bee1;
 }
 .radio-blue input[type=radio]:checked + label::after {
-  background-color: #6658dd;
+  background-color: #43bee1;
 }
 
 .ribbon-box {
@@ -2299,7 +2299,7 @@ body[data-layout-mode=two-column][data-layout-width=boxed]:not([data-sidebar-siz
   border-color: #f34289 transparent transparent;
 }
 .ribbon-box .ribbon-blue {
-  background: #6658dd;
+  background: #43bee1;
 }
 .ribbon-box .ribbon-blue:before {
   border-color: #3f2ed4 transparent transparent;
@@ -2446,7 +2446,7 @@ body[data-layout-mode=two-column][data-layout-width=boxed]:not([data-sidebar-siz
   border-top: 3px solid #f12a7a;
 }
 .ribbon-box .ribbon-two-blue span {
-  background: #6658dd;
+  background: #43bee1;
 }
 .ribbon-box .ribbon-two-blue span:before {
   border-left: 3px solid #3827c1;
@@ -4914,9 +4914,9 @@ div.dt-button-info h2 {
 }
 
 .jq-icon-blue {
-  background-color: #6658dd;
+  background-color: #43bee1;
   color: #fff;
-  border-color: #6658dd;
+  border-color: #43bee1;
 }
 
 .jq-icon-error {
@@ -5407,7 +5407,7 @@ div.hopscotch-bubble .hopscotch-content {
 .ct-chart .ct-series.ct-series-a .ct-line,
 .ct-chart .ct-series.ct-series-a .ct-point,
 .ct-chart .ct-series.ct-series-a .ct-slice-donut {
-  stroke: #6658dd;
+  stroke: #43bee1;
 }
 .ct-chart .ct-series.ct-series-b .ct-bar,
 .ct-chart .ct-series.ct-series-b .ct-line,
@@ -5448,7 +5448,7 @@ div.hopscotch-bubble .hopscotch-content {
 
 .ct-series-a .ct-area,
 .ct-series-a .ct-slice-pie {
-  fill: #6658dd;
+  fill: #43bee1;
 }
 
 .ct-series-b .ct-area,
@@ -9484,7 +9484,7 @@ a.text-pink:hover, a.text-pink:focus {
 }
 
 .text-blue {
-  color: #6658dd !important;
+  color: #43bee1 !important;
 }
 
 a.text-blue:hover, a.text-blue:focus {

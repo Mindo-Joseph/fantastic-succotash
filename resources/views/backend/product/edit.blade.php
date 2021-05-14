@@ -89,7 +89,7 @@
             </div>
         </div>
         <div class="col-4 text-right" style="margin: auto;">
-            <button type="button" class="btn btn-blue waves-effect waves-light text-sm-right saveProduct"> Submit</button>
+            <button type="button" class="btn btn-info waves-effect waves-light text-sm-right saveProduct"> Submit</button>
         </div>
     </div>
     <div class="row mb-2">
@@ -235,7 +235,7 @@
                         </div>
                         @if(!empty($productVariants))
                         <div class="col-4 p-2 mt-0 text-right" style="margin:auto; ">
-                            <button type="button" class="btn btn-blue makeVariantRow"> Make Variant Sets</button>
+                            <button type="button" class="btn btn-info makeVariantRow"> Make Variant Sets</button>
                         </div>
                         @endif
                     </div>
@@ -502,7 +502,7 @@
             
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-blue waves-effect waves-light selectVaiantImages">Select</button>
+                <button type="button" class="btn btn-info waves-effect waves-light selectVaiantImages">Select</button>
             </div>
         </div>
     </div>

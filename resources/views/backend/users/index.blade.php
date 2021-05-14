@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right addUserModal"
+                            <button class="btn btn-info waves-effect waves-light text-sm-right addUserModal"
                              userId="0" style=""><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </button>
                         </div>

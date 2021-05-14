@@ -14,7 +14,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-blue waves-effect waves-light submitEditForm">Submit</button>
+                    <button type="button" class="btn btn-info waves-effect waves-light submitEditForm">Submit</button>
                 </div>
                 
             </form>

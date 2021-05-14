@@ -52,7 +52,7 @@
                             <div class="row mb-2">
                                 <div class="col-md-4">
                                     <div class="form-group mb-0 text-center">
-                                        <button class="btn btn-blue btn-block" type="submit"> Save </button>
+                                        <button class="btn btn-info btn-block" type="submit"> Save </button>
                                     </div>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@
                             <div class="row mb-2">
                                 <div class="col-md-4">
                                     <div class="form-group mb-0 text-center">
-                                        <button class="btn btn-blue btn-block" type="submit"> Save </button>
+                                        <button class="btn btn-info btn-block" type="submit"> Save </button>
                                     </div>
                                 </div>
                             </div>
