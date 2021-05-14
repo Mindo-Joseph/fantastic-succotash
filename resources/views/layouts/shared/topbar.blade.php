@@ -65,7 +65,7 @@
             @php
                 $urlImg = URL::to('/').'/assets/images/users/user-1.jpg';
                 if(!empty(Auth::user()->logo)){
-                    $urlImg = Auth::user()->logo['proxy_url'].'200/80'.Auth::user()->logo['image_path'];
+                    $urlImg = Auth::user()->logo['image_fit'].'200/80'.Auth::user()->logo['image_path'];
                 }
             @endphp
             <a href="{{route('client.dashboard')}}" class="logo logo-dark text-center">

@@ -1,4 +1,7 @@
 @php
+$clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
+
+$urlImg = $clientData->logo['proxy_url'].'200/80'.$clientData->logo['image_path'];
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
@@ -40,14 +43,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                             @endforeach
                                                         </ul>
                                                         @endif
-
                                                     </div>
-
-                                                    <!-- <div class="col-xl-4">
-                                                    <a href="#" class="mega-menu-banner"><img
-                                                            src="{{asset('front-assets/images/mega-menu/fashion.jpg')}}"
-                                                            alt="" class="img-fluid blur-up lazyload"></a>
-                                                </div> -->
                                                 </li>
                                                 @endforeach
                                             </div>
@@ -61,7 +57,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </div>
                     </div>
                     <div class="brand-logo">
-                        <a href="{{ route('userHome') }}"><img src="{{session('client_config')->logo->proxy_url . '120/100' . session('client_config')->logo->image_path}}" class="img-fluid blur-up lazyload" alt=""></a>
+                        <a href="{{ route('userHome') }}"><img class="img-fluid blur-up lazyload" alt="" src="{{$clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path']}}" ></a>
                     </div>
                 </div>
                 <div class="menu-right pull-right">
@@ -75,7 +71,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <li>
                                     <a href="{{route('userHome')}}">Home</a>
                                 </li>
-
                             </ul>
                         </nav>
                     </div>
@@ -100,7 +95,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                                     <input type="text" class="form-control" id="exampleInputPassword1" name="query" placeholder="Search a Product">
                                                                 </div>
                                                                 <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                                                                
                                                             </form>
                                                         </div>
                                                     </div>
@@ -140,40 +134,14 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function() {
-        cartHeader();
+<script type="text/javascript">
+    var show_cart_url = "{{ route('showCart') }}";
+    var user_checkout_url= "{{ route('user.checkout') }}";
+    var cart_product_url= "{{ route('getCartProducts') }}";
+    var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': jQuery('meta[name="_token"]').attr('content')
+        }
     });
-    function cartHeader() {
-        $(".shopping-cart").html(" ");
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type: "get",
-            url: "{{ route('getCartProducts') }}",
-            data: '',
-            dataType: 'json',
-            success: function(data) {
-                if (data.res == "null") {
-                    $(".shopping-cart").html(data.html);
-                } else {
-                    var products = data.products;
-                    for (i = 0; i < products.length; i++) {
-                        var vendor_products = products[i].vendor_products;
-                        for (j = 0; j < vendor_products.length; j=j+2) {
-                        $(".shopping-cart").append("<li><div class='media'><a href='#'><img alt='' class='mr-3' src='" + vendor_products[j].pvariant.media[0].image.path.proxy_url + '200/200' + vendor_products[j].pvariant.media[0].image.path.image_path + "'></a><div class='media-body'><a href='#'><h4>" + vendor_products[j].product.sku + "</h4></a><h4><span>" + vendor_products[j].quantity + " x $" + products[i].payable_amount + "</span></h4></div></div><div class='close-circle'><a href='#'><i class='fa fa-times' aria-hidden='true'></i></a></div></li>");
-                        }
-                    }
-                    $(".shopping-cart").append("<li><div class='total'><h5>subtotal : <span id='totalCart'>" + data.total_payable_amount + "</span></h5></div></li>");
-                    $(".shopping-cart").append("<li><div class='buttons'><a href='{{ route('showCart') }}' class='view-cart'>viewcart</a> <a class='checkout' href='{{ route('user.checkout') }}' >checkout</a></div></li>");
-                }
-            },
-            error: function(data) {
-                console.log('Error Found : ' + data);
-            }
-        });
-    }
 </script>

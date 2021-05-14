@@ -272,7 +272,9 @@
                                             </div>
                                         </div>
                                         <div class="pagination pagination-rounded justify-content-end mb-0">
-                                            {{ $listData->links() }}
+                                            @if(!empty($listData))
+                                                {{ $listData->links() }}
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

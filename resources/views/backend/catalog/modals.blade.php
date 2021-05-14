@@ -12,7 +12,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-blue waves-effect waves-light addVariantSubmit">Submit</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light addVariantSubmit">Submit</button>
                 </div>
             </form>
         </div>
@@ -33,7 +33,7 @@
                     
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-blue waves-effect waves-light addVariantSubmit">Submit</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light addVariantSubmit">Submit</button>
                 </div>
             </form>
         </div>
@@ -54,7 +54,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-blue waves-effect waves-light addbrandSubmit">Submit</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light addbrandSubmit">Submit</button>
                 </div>
             </form>
         </div>
@@ -75,7 +75,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-blue waves-effect waves-light editbrandSubmit">Submit</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light editbrandSubmit">Submit</button>
                 </div>
             </form>
         </div>

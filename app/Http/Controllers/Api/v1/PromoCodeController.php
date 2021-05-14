@@ -70,6 +70,14 @@ class PromoCodeController extends Controller{
             if(!$cart_detail){
                 return $this->errorResponse('Invalid Promocode Id', 422);
             }
+            $cart_coupon_detail = CartCoupon::where('cart_id', $request->cart_id)->where('vendor_id', $request->vendor_id)->where('coupon_id', $request->coupon_id)->first();
+            if($cart_coupon_detail){
+                return $this->errorResponse('Coupon Code already applied.', 422);
+            }
+            $cart_coupon_detail2 = CartCoupon::where('cart_id', $request->cart_id)->where('coupon_id', $request->coupon_id)->first();
+            if($cart_coupon_detail2){
+                return $this->errorResponse('Coupon Code already applied other vendor.', 422);
+            }
             $cart_coupon = new CartCoupon();
             $cart_coupon->cart_id = $request->cart_id;
             $cart_coupon->vendor_id = $request->vendor_id;

@@ -138,7 +138,7 @@
                         </div>
                     </div>
 
-                    <div id="revenue-chart" class="apex-charts mt-3" data-colors="#6658dd,#1abc9c"></div>
+                    <div id="revenue-chart" class="apex-charts mt-3" data-colors="#43bee1,#1abc9c"></div>
                 </div> <!-- end card-box -->
             </div> <!-- end col-->
 

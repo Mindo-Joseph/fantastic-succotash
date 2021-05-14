@@ -54,6 +54,7 @@
 <script src="{{asset('front-assets/js/jquery.elevatezoom.js')}}"></script>
 <script src="{{asset('front-assets/js/underscore.min.js')}}"></script>
 <script src="{{asset('front-assets/js/script.js')}}"></script>
+<script src="{{asset('js/custom.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 
 <script>

@@ -67,7 +67,7 @@
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h4 class="mb-2 "> <span class="">Configuration</span><span style=" float:right;"><button class="btn btn-blue waves-effect waves-light">Save</button></span></h4>
+                                                <h4 class="mb-2 "> <span class="">Configuration</span><span style=" float:right;"><button class="btn btn-info waves-effect waves-light">Save</button></span></h4>
                                             </div>
                                         </div>
 
@@ -101,14 +101,14 @@
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h4 class="mb-2"> <span class="">Commission</span> (Visible For Admin)<span style=" float:right;"><button class="btn btn-blue waves-effect waves-light">Save</button></span></h4>
+                                                <h4 class="mb-2"> <span class="">Commission</span> (Visible For Admin)<span style=" float:right;"><button class="btn btn-info waves-effect waves-light">Save</button></span></h4>
                                             </div>
                                         </div>
                                         <div class="row mb-2">
                                             <div class="col-md-2">
                                                 {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!} 
                                                 <div>
-                                                    <input type="checkbox" data-plugin="switchery" name="add_category" class="form-control can_add_category1" data-color="#039cfd" @if($vendor->add_category == 1) checked @endif >
+                                                    <input type="checkbox" data-plugin="switchery" name="add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif >
                                                 </div>
                                             </div>
                                             <div class="col-md-3">

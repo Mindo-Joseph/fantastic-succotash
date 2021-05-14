@@ -47,7 +47,7 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right"
+                            <button class="btn btn-info waves-effect waves-light text-sm-right"
                               data-toggle="modal" data-target=".addModal"><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </button>
                         </div>
@@ -85,7 +85,7 @@
                                     <td> {{ $celeb->address }} </td>
                                    
                                     <td> 
-                                        <input type="checkbox" bid="{{$celeb->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#039cfd" {{($celeb->status == '1') ? 'checked' : ''}} >
+                                        <input type="checkbox" bid="{{$celeb->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1" {{($celeb->status == '1') ? 'checked' : ''}} >
                                      </td>
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">

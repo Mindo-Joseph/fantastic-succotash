@@ -79,7 +79,7 @@
                                     <div class="form-group">
                                         {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
                                         <div>
-                                            <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control validity" data-color="#039cfd" checked='checked'>
+                                            <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control validity" data-color="#43bee1" checked='checked'>
                                         </div>
                                     </div>
                                 </div>
@@ -87,7 +87,7 @@
                                     <div class="form-group">
                                         {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
                                         <div>
-                                            <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control validity" data-color="#039cfd" checked='checked'>
+                                            <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control validity" data-color="#43bee1" checked='checked'>
                                         </div>
                                     </div>
                                 </div>
@@ -95,7 +95,7 @@
                                     <div class="form-group">
                                         {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
                                         <div>
-                                            <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control validity" data-color="#039cfd" checked='checked'>
+                                            <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control validity" data-color="#43bee1" checked='checked'>
                                         </div>
                                     </div>
                                 </div>
@@ -111,7 +111,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-blue waves-effect waves-light submitAddForm">Submit</button>
+                    <button type="button" class="btn btn-info waves-effect waves-light submitAddForm">Submit</button>
                 </div>
             </form>
         </div>
@@ -140,8 +140,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-blue waves-effect waves-light selectMapLocation">Ok</button>
-                <!--<button type="Cancel" class="btn btn-blue waves-effect waves-light cancelMapLocation">cancel</button>-->
+                <button type="submit" class="btn btn-info waves-effect waves-light selectMapLocation">Ok</button>
+                <!--<button type="Cancel" class="btn btn-info waves-effect waves-light cancelMapLocation">cancel</button>-->
             </div>
         </div>
     </div>

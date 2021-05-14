@@ -26,14 +26,14 @@
                 <div class="card-box">
                     <h4 class="header-title">Multiple Statistics</h4>
 
-                    <div id="website-stats" style="height: 350px;" class="flot-chart mt-5" data-colors="#4fc6e1,#6658dd"></div>
+                    <div id="website-stats" style="height: 350px;" class="flot-chart mt-5" data-colors="#4fc6e1,#43bee1"></div>
                 </div> <!-- end card-box -->
             </div> <!-- end col -->
             <div class="col-lg-6">
                 <div class="card-box">
                     <h4 class="header-title">Line Chart</h4>
 
-                    <div id="website-stats1" style="height: 350px;" class="flot-chart mt-5" data-colors="#6658dd,#f1556c"></div>
+                    <div id="website-stats1" style="height: 350px;" class="flot-chart mt-5" data-colors="#43bee1,#f1556c"></div>
                 </div>
             </div> <!-- end col -->
         </div>

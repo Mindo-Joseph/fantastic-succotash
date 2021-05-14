@@ -114,7 +114,8 @@
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
-  background-color: #6658dd !important;
+  /* background-color: #43bee1 !important; */
+  color: rgba(0, 0, 0, 0.514);
 }
 
 #add-category-form .modal-lg, #edit-category-form .modal-lg {
@@ -122,10 +123,9 @@
 }
 span.inner-div{
     float: right;
-    display: block;
-    position: absolute;
+    /* position: absolute;
     top: -5px;
-    right: 16px;
+    right: 16px; */
 }
 .table-borderless th, .table-borderless td {
     padding: 8px 10px 8px 0px;
@@ -209,10 +209,15 @@ span.inner-div{
 .card-box {
 
     padding: 1.5rem;
-    box-shadow: 0 0 8px 0 rgba(154, 161, 171, 0.15) !important;
     margin-bottom: 24px !important;
-    border-radius: 0.25rem;
     /* margin-bottom: 10px; */
+
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    box-shadow: none !important;
+}
+#AddbrandBox {
+    padding-bottom: 0;
 }
 .select_all{
     position: relative;
@@ -225,4 +230,95 @@ span.inner-div{
 
 body[data-sidebar-size="condensed"]:not([data-layout="compact"]) {
     min-height: 900px !important;
+}
+
+.card {
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 25px 0 rgb(138 129 124 / 6%);
+}
+
+#addCur-4, #addCur-5, #addCur-7 {
+    margin: 0 0 8px; 
+}
+
+button.btn.btn-info.btn-block.save_btn {
+    width: auto;
+    border-radius: 50px;
+}
+
+body .switchery {
+    height: 20px;
+    width: 40px;
+    box-shadow: none !important;
+}
+
+body .switchery>small {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-info {
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;  
+    min-width: auto;  
+    width: auto;
+}
+
+.card-box .btn-info {
+    min-width: 120px;
+    text-align: center !important;
+}
+
+input#is_hyperlocal {
+    display: none !important;
+}
+
+.sub-header {
+    margin-bottom: 16px;
+}
+
+.banner_wrapper{
+    width: 30%;
+}
+
+.banner_box{
+    width: 400px;
+    height: 160px;
+}
+
+.banner_box img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+button.btn.btn-info.openBannerModal {
+    min-width: auto;
+}
+
+.social_head i{
+    font-size: 16px;
+    color: #43bee1;
+    margin-right: 5px;
+    height: 24px;
+}
+
+.social_head .fab.fa-apple {
+    font-size: 22px;
+}
+
+.card-box.pb-0.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.side-icon {
+    opacity: 0.5;
+    margin-right: 5px;
+    width: 18px;
+}
+
+.pro-user-name {
+    text-transform: capitalize;
 }

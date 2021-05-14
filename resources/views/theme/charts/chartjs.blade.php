@@ -53,7 +53,7 @@
                         <h4 class="header-title">Pie Chart</h4>
 
                         <div class="mt-4 chartjs-chart">
-                            <canvas id="pie-chart-example" height="350" class="mt-4" data-colors="#6658dd,#fa5c7c,#4fc6e1,#ebeff2"></canvas>
+                            <canvas id="pie-chart-example" height="350" class="mt-4" data-colors="#43bee1,#fa5c7c,#4fc6e1,#ebeff2"></canvas>
                         </div>
 
                     </div> <!-- end card-body-->

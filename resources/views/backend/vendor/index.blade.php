@@ -43,7 +43,7 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right openAddModal"
+                            <button class="btn btn-info waves-effect waves-light text-sm-right openAddModal"
                              userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </button>
                         </div>
@@ -75,15 +75,18 @@
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
-                                                <a class="action-icon" userId="{{$ven->id}}" href="{{ route('vendor.show', $ven->id) }}"><h3> <i class="mdi mdi-eye"></i></h3></a> 
+                                                <a class="action-icon" userId="{{$ven->id}}" href="{{ route('vendor.show', $ven->id) }}">
+                                                    <i class="mdi mdi-eye"></i>
+                                                </a> 
                                             </div>
                                             <div class="inner-div">
                                                 <form method="POST" action="{{ route('vendor.destroy', $ven->id) }}">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <div class="form-group">
-                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the vendor.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
-
+                                                    <div class="form-group action-icon mb-0">
+                                                        <button type="submit" onclick="return confirm('Are you sure? You want to delete the vendor.')" class="btn btn-primary-outline action-icon">
+                                                            <i class="mdi mdi-delete"></i>
+                                                        </button> 
                                                     </div>
                                                 </form>
                                             </div>

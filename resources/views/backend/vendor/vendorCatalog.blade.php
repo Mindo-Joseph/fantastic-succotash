@@ -81,7 +81,7 @@
                                             Catalog
                                         </div>
                                         <div class="col-sm-4 text-right">
-                                          <a class="btn btn-blue waves-effect waves-light text-sm-right addProductBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1"></i> Add Product
+                                          <a class="btn btn-info waves-effect waves-light text-sm-right addProductBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1"></i> Add Product
                                           </a>
                                       </div>
                                     </div>
@@ -217,7 +217,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-blue waves-effect waves-light submitProduct">Submit</button>
+                <button type="button" class="btn btn-info waves-effect waves-light submitProduct">Submit</button>
             </div>
         </form>
     </div>

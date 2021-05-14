@@ -44,7 +44,7 @@
                             <h4 class="page-title">Tax Category</h4>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right addTaxCateModal"
+                            <button class="btn btn-info waves-effect waves-light text-sm-right addTaxCateModal"
                              userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </button>
                         </div>
@@ -106,7 +106,7 @@
                             <h4 class="page-title">Tax Rate</h4>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right addTaxRateModal"
+                            <button class="btn btn-info waves-effect waves-light text-sm-right addTaxRateModal"
                              userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </button>
                         </div>

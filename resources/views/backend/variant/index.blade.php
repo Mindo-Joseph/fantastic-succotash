@@ -60,7 +60,7 @@
                         </p>
                     </div>
                     <div class="col-sm-4 text-right">
-                        <button class="btn btn-blue waves-effect waves-light text-sm-right openCategoryModal"
+                        <button class="btn btn-info waves-effect waves-light text-sm-right openCategoryModal"
                          dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                         </button>
                     </div>
@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <div class="col-sm-12 text-right">
-                        <button class="btn btn-blue waves-effect waves-light text-sm-right saveList">Save</button>
+                        <button class="btn btn-info waves-effect waves-light text-sm-right saveList">Save</button>
                     </div>
 
                 </div> <!-- end row -->
@@ -136,7 +136,7 @@
                         </p>
                     </div>
                     <div class="col-sm-4 text-right">
-                        <button class="btn btn-blue waves-effect waves-light text-sm-right addVariantbtn"
+                        <button class="btn btn-info waves-effect waves-light text-sm-right addVariantbtn"
                          dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                         </button>
                     </div>
@@ -154,7 +154,7 @@
                         </div>
                     </div>
                     <div class="col-sm-12 text-right">
-                        <button class="btn btn-blue waves-effect waves-light text-sm-right saveList">Save</button>
+                        <button class="btn btn-info waves-effect waves-light text-sm-right saveList">Save</button>
                     </div>
 
                 </div> <!-- end row -->
@@ -171,7 +171,7 @@
                         </p>
                     </div>
                     <div class="col-sm-4 text-right">
-                        <button class="btn btn-blue waves-effect waves-light text-sm-right openCategoryModal"
+                        <button class="btn btn-info waves-effect waves-light text-sm-right openCategoryModal"
                          dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                         </button>
                     </div>
@@ -188,7 +188,7 @@
                         </div>
                     </div>
                     <div class="col-sm-12 text-right">
-                        <button class="btn btn-blue waves-effect waves-light text-sm-right saveList">Save</button>
+                        <button class="btn btn-info waves-effect waves-light text-sm-right saveList">Save</button>
                     </div>
 
                 </div> <!-- end row -->

@@ -23,8 +23,8 @@ class Celebrity extends Model
       return $values;
     }
 
-    public function products()
+    public function brands()
     {
-        return $this->belongsToMany(Product::class, 'celebrity_product');
+        return $this->belongsToMany(Brand::class, 'celebrity_brands');
     }
 }

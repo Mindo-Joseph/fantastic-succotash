@@ -155,7 +155,7 @@ body {
   text-align: center;
   z-index: 10000;
   border-radius: 3px;
-  background-color: #6658dd;
+  background-color: #43bee1;
   transition: all 0.5s;
 }
 
@@ -223,10 +223,10 @@ body {
   color: rgba(50, 58, 70, 0.8);
 }
 .nav-sticky.navbar-custom .navbar-nav .nav-item .nav-link:hover, .nav-sticky.navbar-custom .navbar-nav .nav-item .nav-link:active {
-  color: #6658dd;
+  color: #43bee1;
 }
 .nav-sticky.navbar-custom .navbar-nav .nav-item.active .nav-link {
-  color: #6658dd;
+  color: #43bee1;
 }
 
 /*******************
@@ -267,7 +267,7 @@ body {
 
 .badge-primary {
   background-color: rgba(102, 88, 221, 0.1);
-  color: #6658dd;
+  color: #43bee1;
   box-shadow: 0 1px 1px rgba(102, 88, 221, 0.25);
   font-size: 14px;
 }
@@ -343,7 +343,7 @@ body {
 }
 .pricing-plan .lable {
   background-color: #f3f7f9;
-  color: #6658dd;
+  color: #43bee1;
   font-size: 12px;
   font-weight: 700;
   right: -26px;
@@ -386,7 +386,7 @@ body {
 .faq-question-q-box {
   height: 30px;
   width: 30px;
-  color: #6658dd;
+  color: #43bee1;
   text-align: center;
   border-radius: 50%;
   float: left;
@@ -545,7 +545,7 @@ body {
     padding: 6px 0px;
   }
   .navbar-custom .navbar-nav .nav-item.active .nav-link {
-    color: #6658dd !important;
+    color: #43bee1 !important;
   }
 
   .navbar-toggler {

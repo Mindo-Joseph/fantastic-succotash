@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-12 card-box">
+    <div class="col-md-12 card-box pb-0 mb-0">
         <div class="row mb-2">
             <div class="col-md-12">              
                 <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="" />

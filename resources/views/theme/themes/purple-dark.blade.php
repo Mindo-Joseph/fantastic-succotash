@@ -31,10 +31,10 @@ data-layout='{"mode": "dark"}'
                                     </div>
                                 </div>
                             </div>
-                            <a href="javascript: void(0);" class="btn btn-blue btn-sm ml-2">
+                            <a href="javascript: void(0);" class="btn btn-info btn-sm ml-2">
                                 <i class="mdi mdi-autorenew"></i>
                             </a>
-                            <a href="javascript: void(0);" class="btn btn-blue btn-sm ml-1">
+                            <a href="javascript: void(0);" class="btn btn-info btn-sm ml-1">
                                 <i class="mdi mdi-filter-variant"></i>
                             </a>
                         </form>

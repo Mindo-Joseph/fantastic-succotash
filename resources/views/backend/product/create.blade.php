@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="col-4 text-right" style="margin: auto;">
-            <button type="button" class="btn btn-blue waves-effect waves-light text-sm-right saveProduct"> Submit</button>
+            <button type="button" class="btn btn-info waves-effect waves-light text-sm-right saveProduct"> Submit</button>
         </div>
     </div>
     <div class="row mb-2">
@@ -151,7 +151,7 @@
                     <div class="row mb-2">
                         {!! Form::label('title', 'Track Inventory',['class' => 'control-label col-sm-4']) !!}
                         <div class="col-sm-4">
-                            <input type="checkbox" bid="" id="has_inventory" data-plugin="switchery" name="has_inventory" class="chk_box" data-color="#039cfd" checked>
+                            <input type="checkbox" bid="" id="has_inventory" data-plugin="switchery" name="has_inventory" class="chk_box" data-color="#43bee1" checked>
                         </div>
                     </div>
                     <div class="row mb-2 check_inventory">
@@ -162,7 +162,7 @@
                         <div class="col-sm-2"></div>
                         <div class="col-sm-4">
                             {!! Form::label('title', 'Sell When Out Of Stock',['class' => 'control-label']) !!} <br/>
-                            <input type="checkbox" bid="" id="sell_stock_out" data-plugin="switchery" name="sell_stock_out" class="chk_box" data-color="#039cfd">
+                            <input type="checkbox" bid="" id="sell_stock_out" data-plugin="switchery" name="sell_stock_out" class="chk_box" data-color="#43bee1">
                         </div>
 
                     </div>
@@ -175,7 +175,7 @@
                             <h5 class="text-uppercase mt-0 bg-light p-2">Variant Information</h5>
                         </div>
                         <div class="col-4 p-2 mt-0 text-right" style="margin:auto; ">
-                            <button type="button" class="btn btn-blue makeVariantRow"> Create Variants</button>
+                            <button type="button" class="btn btn-info makeVariantRow"> Create Variants</button>
                         </div>
                     </div>
                     <p>Select or change category to get variants</p>
@@ -197,11 +197,11 @@
                     <div class="row mb-2">
                         {!! Form::label('title', 'New',['class' => 'control-label col-sm-2']) !!}
                         <div class="col-sm-4">
-                            <input type="checkbox" bid="" id="is_new" data-plugin="switchery" name="is_new" class="chk_box" data-color="#039cfd">
+                            <input type="checkbox" bid="" id="is_new" data-plugin="switchery" name="is_new" class="chk_box" data-color="#43bee1">
                         </div>
                         {!! Form::label('title', 'Featured',['class' => 'control-label col-sm-2']) !!}
                         <div class="col-sm-4">
-                            <input type="checkbox" bid="" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#039cfd">
+                            <input type="checkbox" bid="" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#43bee1">
                         </div>
                     </div>
 
@@ -226,12 +226,12 @@
                     <div class="row mb-2">
                         {!! Form::label('title', 'Physical',['class' => 'control-label col-sm-2']) !!}
                         <div class="col-sm-4">
-                            <input type="checkbox" bid="" id="is_physical" data-plugin="switchery" name="is_physical" class="chk_box" data-color="#039cfd">
+                            <input type="checkbox" bid="" id="is_physical" data-plugin="switchery" name="is_physical" class="chk_box" data-color="#43bee1">
                         </div>
 
                         {!! Form::label('title', 'Required Last Mile',['class' => 'control-label col-sm-2']) !!}
                         <div class="col-sm-4">
-                            <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#039cfd">
+                            <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#43bee1">
                         </div>
                     </div>
                     <div class="row mb-2 physicalDiv" style="display: none;">
@@ -247,7 +247,7 @@
                     <div class="row mb-2 physicalDiv" style="display: none;">
                         {!! Form::label('title', 'Required Shipping',['class' => 'control-label col-sm-2 mb-2']) !!}
                         <div class="col-sm-4 mb-2">
-                            <input type="checkbox" id="requiredShipping" data-plugin="switchery" name="require_ship" class="chk_box" data-color="#039cfd">
+                            <input type="checkbox" id="requiredShipping" data-plugin="switchery" name="require_ship" class="chk_box" data-color="#43bee1">
                         </div>
                         <div class="col-sm-6"></div>
                         <div class="col-sm-6 shippingDiv" style="display: none;">

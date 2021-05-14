@@ -232,7 +232,7 @@
                                 </p>
     
                                 <div class="switchery-demo">
-                                    <input type="checkbox" checked data-plugin="switchery" data-color="#039cfd"/>
+                                    <input type="checkbox" checked data-plugin="switchery" data-color="#43bee1"/>
                                     <input type="checkbox" checked data-plugin="switchery" data-color="#f1b53d"/>
                                     <input type="checkbox" checked data-plugin="switchery" data-color="#1bb99a"/>
                                     <input type="checkbox" checked data-plugin="switchery" data-color="#ff5d48"/>

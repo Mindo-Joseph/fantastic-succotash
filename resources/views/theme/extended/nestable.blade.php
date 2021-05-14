@@ -29,7 +29,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="text-left" id="nestable_list_menu">
-                    <button type="button" class="btn btn-blue btn-sm waves-effect mb-3 waves-light" data-action="expand-all">Expand All</button>
+                    <button type="button" class="btn btn-info btn-sm waves-effect mb-3 waves-light" data-action="expand-all">Expand All</button>
                     <button type="button" class="btn btn-pink btn-sm waves-effect mb-3 waves-light" data-action="collapse-all">Collapse All</button>
                 </div>
             </div> <!-- end col -->
