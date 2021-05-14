@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{LoyaltyCard, Celebrity, Product, Brand};
+use App\Models\{LoyaltyCard, Celebrity, Product, Brand, Country};
 use Dotenv\Loader\Loader;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -18,10 +18,12 @@ class CelebrityController extends BaseController
      */
     public function index()
     {
+        $brands = Brand::all();
+        $countries = Country::all();
         $celebrities = Celebrity::where('status', '!=', '3')->get();
         // dd($celebrities->toArray());
         // $celebrities = LoyaltyCard::where('status', '!=', '2')->get();
-        return view('backend/celebrity/index')->with(['celebrities' => $celebrities]);
+        return view('backend/celebrity/index')->with(['celebrities' => $celebrities, 'brands' => $brands, 'countries' => $countries]);
     }
 
     /**
@@ -193,9 +195,11 @@ class CelebrityController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getProducts($domain = '')
+    public function getBrandList($domain = '')
     {
-        $products = Product::all();
-        return response()->json($products);
+        
+        dd($countries->toArray());
+
+        return response()->json(['brands' => $brands, 'countries' => $countries]);
     }
 }

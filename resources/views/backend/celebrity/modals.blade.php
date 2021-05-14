@@ -28,7 +28,17 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="country_list">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Country',['class' => 'control-label']) !!}
+                            <select class="form-control select2-multiple" id="countries" name="countries[]" data-placeholder="Choose ...">
+                                @foreach($countries as $ck => $cval)
+                                    <option value="{{$cval->id}}"> {{$cval->nicename}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-6">
                         <div class="form-group" id="emailInput">
                             {!! Form::label('title', 'Email *',['class' => 'control-label']) !!}
                             {!! Form::text('email', null, ['class' => 'form-control']) !!}
@@ -46,7 +56,7 @@
                                 <strong></strong>
                             </span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-md-6">
                         <div class="form-group" id="addressInput">
                             {!! Form::label('title', 'Address *',['class' => 'control-label']) !!}
@@ -57,11 +67,13 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6" id="product_list">
+                    <div class="col-md-6" id="brand_list">
                         <div class="form-group">
-                            {!! Form::label('title', 'Products',['class' => 'control-label']) !!}
+                            {!! Form::label('title', 'Brands',['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" id="brands" name="brands[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-
+                                @foreach($brands as $bk => $bval)
+                                    <option value="{{$bval->id}}"> {{$bval->title}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
