@@ -147,13 +147,18 @@
                         <i data-feather="columns"></i>
                         <span> Loyalty Cards </span>
                     </a>
-                </li> 
+                </li>
+                @php 
+                    $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
+                @endphp
+                @if($brity->celebrity_check == 1)
                 <li>   
                     <a href="{{route('celebrity.index')}}" >
                         <i data-feather="columns"></i>
                         <span> Celebrities </span>
                     </a>
-                </li> 
+                </li>
+                @endif
                 <li>   
                     <a href="{{route('wallet.index')}}" >
                         <i data-feather="columns"></i>
