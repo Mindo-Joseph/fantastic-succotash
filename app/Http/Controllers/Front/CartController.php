@@ -240,9 +240,7 @@ class CartController extends FrontController
                 $cartAddOn->save();
             }
         }
-
         return response()->json($user_id);
-        // dd($request->all());
     }
 
     /**
@@ -432,8 +430,7 @@ class CartController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function showCart($domain = '')
-    {
+    public function showCart($domain = ''){
         $cartData = [];
         $user = User::where('status', '!=', '2');
         if (Auth::user() && Auth::user()->id > 0) {
@@ -457,14 +454,10 @@ class CartController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function updateQuantity($domain = '', Request $request)
-    {
+    public function updateQuantity($domain = '', Request $request){
         $cartProduct = CartProduct::find($request->cartproduct_id);
-
         $cartProduct->quantity = $request->quantity;
-
         $cartProduct->save();
-
         return response()->json("Successfully Updated");
     }
 
@@ -473,12 +466,9 @@ class CartController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function deleteCartProduct($domain = '', Request $request)
-    {
-        //    dd($request->cartproduct_id);
-        $update = CartProduct::where('id', '=', $request->cartproduct_id)
-            ->update(['status' => '2']);
-        return response()->json('successfully deleted');
+    public function deleteCartProduct($domain = '', Request $request){
+        // $update = CartProduct::where('id', '=', $request->cartproduct_id)->update(['status' => '2']);
+        return response()->json(['status' => 'Success', 'message' => ' deleted successfully']);
     }
 
     /**
@@ -501,7 +491,6 @@ class CartController extends FrontController
             echo "no user"; die;
         }
         $cartData = $this->getCart($user->id);
-        return response()->json($cartData->toArray());
-
+        return response()->json($cartData);
     }
 }
