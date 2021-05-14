@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
+use App\Models\Order;
 use App\Models\Tax;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +17,7 @@ class OrderController extends BaseController
      */
     public function index()
     {
-        $taxes = array();
+        $orders = Order::all()->toArray();
         return view('backend/order/index');
     }
 
