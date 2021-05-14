@@ -100,10 +100,9 @@ class Client extends Authenticatable
       if(!empty($value)){
         $img = $value;
       }
-      $values['proxy_url2'] = env('IMG_URL1');
-      $values['image_path'] = env('IMG_URL2').'/'.\Storage::disk('s3')->url($img);
-      $values['proxy_url'] = env('FIT_URl');
+      $values['proxy_url'] = env('IMG_URL1');
       $values['image_fit'] = env('FIT_URl');
+      $values['image_path'] = env('IMG_URL2').'/'.\Storage::disk('s3')->url($img);
       $values['original'] = \Storage::disk('s3')->url($img);
       
       return $values;

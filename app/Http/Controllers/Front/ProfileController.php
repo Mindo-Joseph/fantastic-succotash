@@ -153,8 +153,7 @@ class ProfileController extends FrontController
         $user = User::with('country', 'address')->select('name', 'email', 'phone_number', 'type', 'country_id')
                     ->where('id', Auth::user()->id)->first();
 
-        $refferal_code = UserRefferal::where('user_id', Auth::user()->id)->first()->toArray();
-        //dd($user->toArray());
+        $refferal_code = UserRefferal::where('user_id', Auth::user()->id)->first();
         $navCategories = $this->categoryNav($langId);
         return view('forntend/account/profile')->with(['user' => $user, 'navCategories' => $navCategories, 'userRefferal' => $refferal_code]);
     }
