@@ -239,7 +239,7 @@ body[data-sidebar-size="condensed"]:not([data-layout="compact"]) {
 }
 
 #addCur-4, #addCur-5, #addCur-7 {
-    margin: 0 0 8px;
+    margin: 0 0 8px; 
 }
 
 button.btn.btn-info.btn-block.save_btn {
