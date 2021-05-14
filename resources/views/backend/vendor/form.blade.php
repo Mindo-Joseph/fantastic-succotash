@@ -69,7 +69,7 @@
                 <div class="form-group">
                     {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
                     <div>
-                        <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control dine_in" data-color="#039cfd" @if($vendor->dine_in == 1) 'checked' @endif>
+                        <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control dine_in" data-color="#43bee1" @if($vendor->dine_in == 1) 'checked' @endif>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                 <div class="form-group">
                     {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
                     <div>
-                        <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control takeaway" data-color="#039cfd" checked='checked'>
+                        <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control takeaway" data-color="#43bee1" checked='checked'>
                     </div>
                 </div>
             </div>
@@ -85,7 +85,7 @@
                 <div class="form-group">
                     {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
                     <div>
-                        <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control delivery" data-color="#039cfd" checked='checked'>
+                        <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control delivery" data-color="#43bee1" checked='checked'>
                     </div>
                 </div>
             </div>

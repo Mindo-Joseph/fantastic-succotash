@@ -1,4 +1,7 @@
 @php
+$clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
+
+$urlImg = $clientData->logo['proxy_url'].'200/80'.$clientData->logo['image_path'];
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
@@ -54,7 +57,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </div>
                     </div>
                     <div class="brand-logo">
-                        <a href="{{ route('userHome') }}"><img src="{{session('client_config')->logo->proxy_url . '120/100' . session('client_config')->logo->image_path}}" class="img-fluid blur-up lazyload" alt=""></a>
+                        <a href="{{ route('userHome') }}"><img class="img-fluid blur-up lazyload" alt="" src="{{$clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path']}}" ></a>
                     </div>
                 </div>
                 <div class="menu-right pull-right">

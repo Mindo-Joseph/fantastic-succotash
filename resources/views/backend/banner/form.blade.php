@@ -31,9 +31,9 @@
                     <div>
                         <?php $validity = (isset($banner->id) && $banner->id > 0) ? 'validity_edit' : 'validity_add'; ?>
                         @if((isset($banner) && $banner->validity_on == '0'))
-                         <input type="checkbox" data-plugin="switchery" name="validity_on" class="form-control {{$validity}}" data-color="#039cfd">
+                         <input type="checkbox" data-plugin="switchery" name="validity_on" class="form-control {{$validity}}" data-color="#43bee1">
                         @else
-                         <input type="checkbox" data-plugin="switchery" name="validity_on" class="form-control {{$validity}}" data-color="#039cfd" checked='checked'>
+                         <input type="checkbox" data-plugin="switchery" name="validity_on" class="form-control {{$validity}}" data-color="#43bee1" checked='checked'>
                         @endif
                         
                     </div>

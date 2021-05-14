@@ -38,7 +38,7 @@
                                 <button type="button" class="btn btn-warning waves-effect waves-light">Warning</button>
                                 <button type="button" class="btn btn-danger waves-effect waves-light">Danger</button>
                                 <button type="button" class="btn btn-dark waves-effect waves-light">Dark</button>
-                                <button type="button" class="btn btn-blue waves-effect waves-light">Blue</button>
+                                <button type="button" class="btn btn-info waves-effect waves-light">Blue</button>
                                 <button type="button" class="btn btn-pink waves-effect waves-light">Pink</button>
                                 <button type="button" class="btn btn-secondary waves-effect">Secondary</button>
                                 <button type="button" class="btn btn-light waves-effect">Light</button>
@@ -60,7 +60,7 @@
                                 <button type="button" class="btn btn-warning btn-rounded waves-effect waves-light">Warning</button>
                                 <button type="button" class="btn btn-danger btn-rounded waves-effect waves-light">Danger</button>
                                 <button type="button" class="btn btn-dark btn-rounded waves-effect waves-light">Dark</button>
-                                <button type="button" class="btn btn-blue btn-rounded waves-effect waves-light">Blue</button>
+                                <button type="button" class="btn btn-info btn-rounded waves-effect waves-light">Blue</button>
                                 <button type="button" class="btn btn-pink btn-rounded waves-effect waves-light">Pink</button>
                                 <button type="button" class="btn btn-secondary btn-rounded waves-effect">Secondary</button>
                                 <button type="button" class="btn btn-white btn-rounded waves-effect">White</button>
@@ -281,7 +281,7 @@
                             <div class="button-list">
                                 <button type="button" class="btn btn-pink btn-lg waves-effect waves-light">Btn Large</button>
                                 <button type="button" class="btn btn-secondary waves-effect waves-light">Btn Normal</button>
-                                <button type="button" class="btn btn-blue btn-sm waves-effect waves-light">Btn Small</button>
+                                <button type="button" class="btn btn-info btn-sm waves-effect waves-light">Btn Small</button>
                                 <button type="button" class="btn btn-warning btn-xs waves-effect waves-light">Btn Xs</button>
                             </div>
                         </div> <!-- end col -->
@@ -320,7 +320,7 @@
                                 <button type="button" class="btn btn-danger waves-effect waves-light"><i class="mdi mdi-close"></i></button>
                                 <button type="button" class="btn btn-info waves-effect waves-light"><i class="mdi mdi-music"></i></button>
                                 <button type="button" class="btn btn-warning waves-effect waves-light"><i class="mdi mdi-star"></i></button>
-                                <button type="button" class="btn btn-blue waves-effect waves-light"><i class="mdi mdi-cog"></i></button>
+                                <button type="button" class="btn btn-info waves-effect waves-light"><i class="mdi mdi-cog"></i></button>
                             </div>
                             <br/>
                             <div class="button-list">

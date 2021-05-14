@@ -143,7 +143,7 @@
 
                             <!-- Default dropright button -->
                             <div class="btn-group mb-2 dropright">
-                                <button type="button" class="btn btn-blue waves-effect waves-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button type="button" class="btn btn-info waves-effect waves-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Dropright <i class="mdi mdi-chevron-right"></i>
                                 </button>
                                 <div class="dropdown-menu">

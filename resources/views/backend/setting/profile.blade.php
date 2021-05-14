@@ -174,7 +174,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <button type="submit" class="btn btn-blue waves-effect waves-light">Update</button>
+                                <button type="submit" class="btn btn-info waves-effect waves-light">Update</button>
                             </div>
 
                         </div>
@@ -260,7 +260,7 @@
                     <div class="row mb-2">
                         <div class="col-md-2">
                             <div class="form-group mb-0 text-center">
-                                <button class="btn btn-blue btn-block" type="submit"> Update </button>
+                                <button class="btn btn-info btn-block" type="submit"> Update </button>
                             </div>
                         </div>
                     </div>

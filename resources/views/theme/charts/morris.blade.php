@@ -93,14 +93,14 @@
                             <span class="mx-2"><i class="mdi mdi-checkbox-blank-circle text-light"></i> Ethereum</span>
                         </p>
                     </div>
-                    <div id="morris-area-with-dotted" style="height: 350px;" class="morris-chart" data-colors="#e3eaef,#6658dd"></div>
+                    <div id="morris-area-with-dotted" style="height: 350px;" class="morris-chart" data-colors="#e3eaef,#43bee1"></div>
                 </div> <!-- end card-box-->
             </div> <!-- end col-->
 
             <div class="col-lg-6">
                 <div class="card-box" dir="ltr">
                     <h4 class="header-title mb-3">Donut Chart</h4>
-                    <div id="morris-donut-example" style="height: 350px;" class="morris-chart" data-colors="#4fc6e1,#6658dd,#ebeff2"></div>
+                    <div id="morris-donut-example" style="height: 350px;" class="morris-chart" data-colors="#4fc6e1,#43bee1,#ebeff2"></div>
                     <div class="text-center">
                         <p class="text-muted font-15 font-family-secondary mb-0">
                             <span class="mx-2"><i class="mdi mdi-checkbox-blank-circle text-primary"></i> Bitcoin</span>

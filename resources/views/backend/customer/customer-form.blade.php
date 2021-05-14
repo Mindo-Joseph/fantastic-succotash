@@ -90,7 +90,7 @@
 
             <div class="row">
                 <div class="col-md-5">
-                    <button type="submit" class="btn btn-blue waves-effect waves-light ">Submit</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light ">Submit</button>
                 </div>
                 <div class="col-md-7">
                     

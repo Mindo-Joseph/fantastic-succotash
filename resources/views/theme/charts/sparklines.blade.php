@@ -27,7 +27,7 @@
                     <h4 class="header-title">Line Charts</h4>
 
                     <div class="mt-4">
-                        <div id="sparkline1" data-colors="#6658dd,#1abc9c"></div>
+                        <div id="sparkline1" data-colors="#43bee1,#1abc9c"></div>
                     </div>
                 </div> <!-- end card-box -->
             </div> <!-- end col -->
@@ -107,7 +107,7 @@
                     <h4 class="header-title">Box Plot Chart</h4>
 
                     <div class="text-center mt-4" style="min-height: 164px;">
-                        <div id="sparkline9" data-colors="#6658dd,#1abc9c" class="text-center"></div>
+                        <div id="sparkline9" data-colors="#43bee1,#1abc9c" class="text-center"></div>
                     </div>
                 </div> <!-- end card-box -->
             </div> <!-- end col -->

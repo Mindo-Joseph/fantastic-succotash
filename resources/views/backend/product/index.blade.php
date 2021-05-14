@@ -39,7 +39,7 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button class="btn btn-blue waves-effect waves-light text-sm-right openBannerModal"
+                            <button class="btn btn-info waves-effect waves-light text-sm-right openBannerModal"
                              userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </button>
                         </div>
@@ -77,7 +77,7 @@
                                     <td> {{ $ban->start_date_time }} <br/> to <br/> {{$ban->end_date_time}}</td>
                                     <td> {{ $ban->redirect_category_id }} </td>
                                     <td> 
-                                        <input type="checkbox" bid="{{$ban->id}}" id="cur_{{$ban->id}}" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#039cfd" {{($ban->validity_on == '1') ? 'checked' : ''}} >
+                                        <input type="checkbox" bid="{{$ban->id}}" id="cur_{{$ban->id}}" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1" {{($ban->validity_on == '1') ? 'checked' : ''}} >
                                      </td>
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">

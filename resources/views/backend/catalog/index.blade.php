@@ -43,7 +43,7 @@
                         </p>
                     </div>
                     <div class="col-sm-4 text-right">
-                        <button class="btn btn-blue waves-effect waves-light text-sm-right openCategoryModal"
+                        <button class="btn btn-info waves-effect waves-light text-sm-right openCategoryModal"
                          dataid="0" is_vendor="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                         </button>
                     </div>
@@ -61,7 +61,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12 text-right btn_bottom">
-                        <button class="btn btn-blue waves-effect waves-light text-sm-right saveList">Save Order</button>
+                        <button class="btn btn-info waves-effect waves-light text-sm-right saveList">Save Order</button>
                     </div>
                 </div> <!-- end row -->
             </div> <!-- end card-box -->
@@ -77,7 +77,7 @@
                         </p>
                     </div>
                     <div class="col-sm-4 text-right">
-                        <button class="btn btn-blue waves-effect waves-light text-sm-right addVariantbtn"
+                        <button class="btn btn-info waves-effect waves-light text-sm-right addVariantbtn"
                          dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                         </button>
                     </div>
@@ -87,54 +87,56 @@
                     </div>
                     
                 </div>
-                <div class="row variant-row" style="max-width: 100%;overflow: auto;">
+                <div class="row variant-row">
                     <div class="col-md-12">
                         <form name="variant_order" id="variant_order" action="{{route('variant.order')}}" method="post">
                             @csrf
                             <input type="hidden" name="orderData" id="orderVariantData" value="" />
                         </form>
-                        <table class="table table-centered table-nowrap table-striped" id="varient-datatable">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Options</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($variants as $key => $variant)
-                                <tr class="variantList" data-row-id="{{$variant->id}}">
-                                    <td><span class="dragula-handle"></span></td>
-                                    <td>{{$variant->title}}</td>
-                                    <td>{{isset($variant->varcategory->cate->primary->name) ? $variant->varcategory->cate->primary->name : ''}}</td>
-                                    <td>
-                                        @foreach($variant->option as $key => $value)
-                                        <label style="margin-bottom: 3px;">
-                                            @if($variant->type == 2)
-                                            <span style="padding:8px; float: left; border: 1px dotted #ccc; background:{{$value->hexacode}};"> </span>
-                                            @endif
-                                            &nbsp;&nbsp; {{$value->title}}</label> <br/>
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        <a class="action-icon editVariantBtn" dataid="{{$variant->id}}" href="javascript:void(0);" > <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap table-striped" id="varient-datatable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Options</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($variants as $key => $variant)
+                                    <tr class="variantList" data-row-id="{{$variant->id}}">
+                                        <td><span class="dragula-handle"></span></td>
+                                        <td>{{$variant->title}}</td>
+                                        <td>{{isset($variant->varcategory->cate->primary->name) ? $variant->varcategory->cate->primary->name : ''}}</td>
+                                        <td>
+                                            @foreach($variant->option as $key => $value)
+                                            <label style="margin-bottom: 3px;">
+                                                @if($variant->type == 2)
+                                                <span style="padding:8px; float: left; border: 1px dotted #ccc; background:{{$value->hexacode}};"> </span>
+                                                @endif
+                                                &nbsp;&nbsp; {{$value->title}}</label> <br/>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            <a class="action-icon editVariantBtn" dataid="{{$variant->id}}" href="javascript:void(0);" >  <i class="mdi mdi-square-edit-outline"></i> </a>
 
-                                        <a class="action-icon deleteVariant" dataid="{{$variant->id}}" href="javascript:void(0);"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
-                                        <form action="{{route('variant.destroy', $variant->id)}}" method="POST"  style="display: none;" id="varDeleteForm{{$variant->id}}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="action-icon btn btn-primary-outline" dataid="{{$variant->id}}" onclick="return confirm('Are you sure? You want to delete the variant.')" > <h3> <i class="mdi mdi-delete"></i> </h3></button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                            <a class="action-icon deleteVariant" dataid="{{$variant->id}}" href="javascript:void(0);">  <i class="mdi mdi-delete"></i></a>
+                                            <form action="{{route('variant.destroy', $variant->id)}}" method="POST"  style="display: none;" id="varDeleteForm{{$variant->id}}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="action-icon btn btn-primary-outline" dataid="{{$variant->id}}" onclick="return confirm('Are you sure? You want to delete the variant.')" > <h3> <i class="mdi mdi-delete"></i> </h3></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="col-sm-12 text-right btn_bottom">
-                        <button class="btn btn-blue waves-effect waves-light text-sm-right saveVariantOrder">Save Order</button>
+                        <button class="btn btn-info waves-effect waves-light text-sm-right saveVariantOrder">Save Order</button>
                     </div>
                 </div>
             </div>
@@ -150,49 +152,51 @@
                         </p>
                     </div>
                     <div class="col-sm-4 text-right">
-                        <button class="btn btn-blue waves-effect waves-light text-sm-right addBrandbtn"
+                        <button class="btn btn-info waves-effect waves-light text-sm-right addBrandbtn"
                          dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                         </button>
                     </div>
                 </div>
-                <div class="row brand-row" style="max-width: 100%;overflow: auto;">
+                <div class="row brand-row">
                     <div class="col-md-12">
                         <form name="brand_order" id="brand_order" action="{{route('brand.order')}}" method="post">
                             @csrf
                             <input type="hidden" name="orderData" id="orderBrandData" value="" />
                         </form>
-                        <table class="table table-centered table-nowrap table-striped" id="brand-datatable">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($brands as $key => $brand)
-                                <tr class="brandList" data-row-id="{{$brand->id}}">
-                                    <td><span class="dragula-handle"></span></td>
-                                    <td>{{$brand->title}}</td>
-                                    <td>{{isset($brand->bc->cate->primary) ? $brand->bc->cate->primary->name : ''}}</td>
-                                    <td>
-                                        <a class="action-icon editBrandBtn" dataid="{{$brand->id}}" href="javascript:void(0);" > <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap table-striped" id="brand-datatable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($brands as $key => $brand)
+                                    <tr class="brandList" data-row-id="{{$brand->id}}">
+                                        <td><span class="dragula-handle"></span></td>
+                                        <td>{{$brand->title}}</td>
+                                        <td>{{isset($brand->bc->cate->primary) ? $brand->bc->cate->primary->name : ''}}</td>
+                                        <td>
+                                            <a class="action-icon editBrandBtn" dataid="{{$brand->id}}" href="javascript:void(0);" > <i class="mdi mdi-square-edit-outline"></i> </a>
 
-                                        <a class="action-icon deleteBrand" dataid="{{$brand->id}}" href="javascript:void(0);"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
-                                        <form action="{{route('brand.destroy', $brand->id)}}" method="POST" style="display: none;" id="brandDeleteForm{{$brand->id}}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="action-icon btn btn-primary-outline" dataid="{{$brand->id}}"> <h3> <i class="mdi mdi-delete"></i> </h3></button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                            <a class="action-icon deleteBrand" dataid="{{$brand->id}}" href="javascript:void(0);"> <i class="mdi mdi-delete"></i> </a>
+                                            <form action="{{route('brand.destroy', $brand->id)}}" method="POST" style="display: none;" id="brandDeleteForm{{$brand->id}}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="action-icon btn btn-primary-outline" dataid="{{$brand->id}}"> <i class="mdi mdi-delete"></i> </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="col-sm-12 text-right btn_bottom">
-                        <button class="btn btn-blue waves-effect waves-light text-sm-right saveBrandOrder">Save Order</button>
+                        <button class="btn btn-info waves-effect waves-light text-sm-right saveBrandOrder">Save Order</button>
                     </div>
                 </div>
             </div> <!-- end card-box -->
