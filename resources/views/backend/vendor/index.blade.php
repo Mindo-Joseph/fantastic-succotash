@@ -57,8 +57,8 @@
                                     <th>#</th>
                                     <th>Name</th>
                                     <th>Address</th>
-                                    <th>Latitude</th>
-                                    <th>Longitude</th>
+                                    <!-- <th>Latitude</th>
+                                    <th>Longitude</th> -->
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -70,8 +70,8 @@
                                     </td>
                                     <td> {{ $ven->name }} </td>
                                     <td> {{ $ven->address }}</td>
-                                    <td> {{ $ven->latitude }} </td>
-                                    <td> {{ $ven->longitude }}</td>
+                                    <!-- <td> {{ $ven->latitude }} </td>
+                                    <td> {{ $ven->longitude }}</td> -->
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
