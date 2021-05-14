@@ -368,8 +368,7 @@ class CartController extends BaseController
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
 
                 $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
-                $couponProducts = array();
-                $couponData = NULL;
+                $couponData = $couponProducts = array();
                 if(!empty($cart->coupon) && ($cart->coupon->vendor_id == $vendorData->vendor_id)){
 
                     $now = Carbon::now()->toDateTimeString();
@@ -523,9 +522,14 @@ class CartController extends BaseController
                         $vendorData->coupon_not_appiled = 1;
                     }
                 }
+                if(empty($couponData)){
+                    $vendorData->couponData = NULL;
+                }else{
+                    $vendorData->couponData = $couponData;
+                }
                 $vendorData->proSum = $proSum;
                 $vendorData->addonSum = $ttAddon;
-                $vendorData->couponData = $couponData;
+                
                 $vendorData->coupon_apply_on_vendor = $couponApplied;
                 $vendorData->is_coupon_applied = $is_coupon_applied;
 
@@ -534,7 +538,6 @@ class CartController extends BaseController
                 $vendorData->discount_percent = $discount_percent;
                 $vendorData->taxable_amount = $taxable_amount;
                 $vendorData->payable_amount = $payable_amount + $taxable_amount - $discount_amount;
-
 
                 $total_paying = $total_paying + $payable_amount;
                 $total_tax = $total_tax + $taxable_amount;
