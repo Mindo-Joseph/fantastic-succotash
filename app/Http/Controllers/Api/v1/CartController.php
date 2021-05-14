@@ -329,7 +329,7 @@ class CartController extends BaseController
     {
         $langId = Auth::user()->language;
         $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
-        $cart = Cart::with('coupon.promo.details')->select('id', 'is_gift', 'item_count')
+        $cart = Cart::select('id', 'is_gift', 'item_count')
                     ->where('status', '0')
                     ->where('user_id', $user_id)->first();
 
@@ -339,14 +339,16 @@ class CartController extends BaseController
 
         $cartID = $cart->id;
 
-        $cartData = CartProduct::with(['vendor', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
+        $cartData = CartProduct::with(['vendor', 'coupon'=> function($qry) use($cartID){
+                        $qry->where('cart_id', $cartID);
+                    }, 'coupon.promo.details', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
                     'vendorProducts.product.translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $langId);
                     },
                     'vendorProducts'=> function($qry) use($cartID){
                         $qry->where('cart_id', $cartID);
-                    },
+                    },                    
                     'vendorProducts.addon.set' => function($qry) use($langId){
                         $qry->where('language_id', $langId);
                     },
@@ -369,35 +371,35 @@ class CartController extends BaseController
 
                 $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
                 $couponData = $couponProducts = array();
-                if(!empty($cart->coupon) && ($cart->coupon->vendor_id == $vendorData->vendor_id)){
+                if(!empty($vendorData->coupon) && ($vendorData->coupon->vendor_id == $vendorData->vendor_id)){
 
                     $now = Carbon::now()->toDateTimeString();
 
-                    $minimum_spend = $cart->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
+                    $minimum_spend = $vendorData->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
                     
-                    if($cart->coupon->promo->expiry_date < $now){
+                    if($vendorData->coupon->promo->expiry_date < $now){
                         $coupon_removed = 1;
                         $coupon_removed_msg = 'Coupon code is expired.';
                     }else{
-                        $couponData['coupon_id'] =  $cart->coupon->promo->id;
-                        $couponData['name'] =  $cart->coupon->promo->name;
-                        $couponData['disc_type'] = ($cart->coupon->promo->promo_type_id == 1) ? 'Percent' : 'Ammount';
-                        $couponData['expiry_date'] =  $cart->coupon->promo->expiry_date;
-                        $couponData['allow_free_delivery'] =  $cart->coupon->promo->allow_free_delivery;
-                        $couponData['minimum_spend'] =  $cart->coupon->promo->minimum_spend;
-                        $couponData['first_order_only'] = $cart->coupon->promo->first_order_only;
-                        $couponData['restriction_on'] = ($cart->coupon->promo->restriction_on == 1) ? 'Vendor' : 'Product';
+                        $couponData['coupon_id'] =  $vendorData->coupon->promo->id;
+                        $couponData['name'] =  $vendorData->coupon->promo->name;
+                        $couponData['disc_type'] = ($vendorData->coupon->promo->promo_type_id == 1) ? 'Percent' : 'Ammount';
+                        $couponData['expiry_date'] =  $vendorData->coupon->promo->expiry_date;
+                        $couponData['allow_free_delivery'] =  $vendorData->coupon->promo->allow_free_delivery;
+                        $couponData['minimum_spend'] =  $vendorData->coupon->promo->minimum_spend;
+                        $couponData['first_order_only'] = $vendorData->coupon->promo->first_order_only;
+                        $couponData['restriction_on'] = ($vendorData->coupon->promo->restriction_on == 1) ? 'Vendor' : 'Product';
 
                         $is_coupon_applied = 1;
-                        if($cart->coupon->promo->promo_type_id){
+                        if($vendorData->coupon->promo->promo_type_id){
                             $is_percent = 1;
-                            $discount_percent = round($cart->coupon->promo->amount);
+                            $discount_percent = round($vendorData->coupon->promo->amount);
                         }else{
-                            $discount_amount = $cart->coupon->promo->amount * $clientCurrency->doller_compare;
+                            $discount_amount = $vendorData->coupon->promo->amount * $clientCurrency->doller_compare;
                         }
                         
-                        if($cart->coupon->promo->restriction_on == 0){
-                            foreach ($cart->coupon->promo->details as $key => $value) {
+                        if($vendorData->coupon->promo->restriction_on == 0){
+                            foreach ($vendorData->coupon->promo->details as $key => $value) {
                                 $couponProducts[] = $value->refrence_id;
                             }
                         }
@@ -433,7 +435,7 @@ class CartController extends BaseController
                     $variantsData['multiplier']         = $clientCurrency->doller_compare;
                     $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
 
-                    if(!empty($cart->coupon) && ($cart->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
+                    if(!empty($vendorData->coupon) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
                         $pro_disc = $discount_amount;
                         if($minimum_spend < $quantity_price){
                             if($is_percent == 1){
@@ -511,8 +513,8 @@ class CartController extends BaseController
                 }
                 $couponApplied = 0;
 
-                if(!empty($cart->coupon) && ($cart->coupon->promo->restriction_on == 1)){
-                    $minimum_spend = $cart->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
+                if(!empty($vendorData->coupon) && ($vendorData->coupon->promo->restriction_on == 1)){
+                    $minimum_spend = $vendorData->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
                     if($minimum_spend < $proSum){
                         if($is_percent == 1){
                             $discount_amount = ($proSum * $discount_percent)/ 100;
@@ -543,6 +545,9 @@ class CartController extends BaseController
                 $total_tax = $total_tax + $taxable_amount;
                 $total_disc_amount = $total_disc_amount + $discount_amount;
                 $total_discount_percent = $total_discount_percent + $discount_percent;
+                if(!empty($vendorData->coupon)){
+                    unset($vendorData->coupon->promo);
+                }
             }
         }
 
@@ -553,11 +558,6 @@ class CartController extends BaseController
 
         $cart->loyaltyPoints = $this->getLoyaltyPoints($user_id, $clientCurrency->doller_compare);
         $cart->wallet = $this->getWallet($user_id, $clientCurrency->doller_compare, Auth::user()->currency);
-
-        if(!empty($cart->coupon)){
-            unset($cart->coupon->promo);
-        }
-
         $cart->products = $cartData;
         return $cart;
     }
