@@ -389,8 +389,6 @@ class CartController extends BaseController
                         $couponData['first_order_only'] = $cart->coupon->promo->first_order_only;
                         $couponData['restriction_on'] = ($cart->coupon->promo->restriction_on == 1) ? 'Vendor' : 'Product';
 
-                        
-
                         $is_coupon_applied = 1;
                         if($cart->coupon->promo->promo_type_id){
                             $is_percent = 1;
@@ -557,6 +555,8 @@ class CartController extends BaseController
 
         $cart->loyaltyPoints = $loyaltyPoints;
         $cart->wallet = $wallet;
+
+        unset($cart->coupon->promo);
 
         $cart->products = $cartData;
         return $cart;
