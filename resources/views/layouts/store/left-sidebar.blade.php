@@ -56,7 +56,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </div>
                     </div>
                     <div class="brand-logo">
-                        <a href="{{ route('userHome') }}"><img src="{{$urlImg}}" class="img-fluid blur-up lazyload" alt=""></a>
+                        <a href="{{ route('userHome') }}"><img class="img-fluid blur-up lazyload" alt="" src="{{$clientData->logo['proxy_url'].'200/80'.$clientData->logo['image_path']}}" ></a>
                     </div>
                 </div>
                 <div class="menu-right pull-right">
