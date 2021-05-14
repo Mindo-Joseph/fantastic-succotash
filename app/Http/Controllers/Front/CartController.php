@@ -277,17 +277,14 @@ class CartController extends FrontController
      * Get Cart Items
      *
      */
-    public function getCart($user_id)
-    {
+    public function getCart($user_id){
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
         $cart = Cart::with('coupon.promo')->select('id', 'is_gift', 'item_count')
                     ->where('status', '0')
                     ->where('user_id', $user_id)->first();
-
         $cartID = $cart->id;
-
         $cartData = CartProduct::with(['vendor', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
                         'vendorProducts.product.translation' => function($q) use($langId){
                             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
@@ -299,7 +296,7 @@ class CartController extends FrontController
                         'vendorProducts.addon.option' => function($qry) use($langId){
                             $qry->where('language_id', $langId);
                         }, 'vendorProducts.product.taxCategory.taxRate', 
-                    ])->select('vendor_id')->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
+                    ])->select('vendor_id')->where('status', [0,1])->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
 
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if(empty($cartData) || count($cartData) < 1){
@@ -443,6 +440,7 @@ class CartController extends FrontController
         if($user){
             $cartData = $this->getCart($user->id);
         }
+        // pr($cartData->toArray());die;
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         return view('forntend/cart')->with(['navCategories' => $navCategories, 'cartData' => $cartData]);
@@ -467,8 +465,8 @@ class CartController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function deleteCartProduct($domain = '', Request $request){
-        // $update = CartProduct::where('id', '=', $request->cartproduct_id)->update(['status' => '2']);
-        return response()->json(['status' => 'Success', 'message' => ' deleted successfully']);
+        $update = CartProduct::where('id', '=', $request->cartproduct_id)->update(['status' => '2']);
+        return response()->json(['status' => 'success', 'message' => 'Product deleted successfully.']);
     }
 
     /**

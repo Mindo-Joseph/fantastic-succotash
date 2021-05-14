@@ -139,7 +139,6 @@
                             @endforeach
                         </div>
                     </div>
-                    <!-- side-bar single product slider end -->
                 </div>
                 <div class="col-lg-9 col-sm-12 col-xs-12">
                     <div class="container-fluid">
@@ -559,6 +558,8 @@
 
 <script type="text/javascript">
     var ajaxCall = 'ToCancelPrevReq';
+    var add_to_cart_url = "{{ route('addToCart') }}";
+    var product_id = "{{ $product->id }}";
     $('.changeVariant').click(function() {
         var variants = [];
         var options = [];
@@ -569,7 +570,6 @@
                 options.push($(that).attr('optid'));
             }
         });
-
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
@@ -597,7 +597,6 @@
         });
     });
 </script>
-
 <script>
 var addonids = [];
 var addonoptids = [];
@@ -608,61 +607,11 @@ var addonoptids = [];
             if ($(this).is(":checked")) {
                 addonids.push(addonId); 
                 addonoptids.push(addonOptId);
-                console.log(addonoptids);
             } else {
                 addonids.splice(addonids.indexOf(addonId), 1);
                 addonoptids.splice(addonoptids.indexOf(addonOptId), 1);
-                console.log(addonoptids);
             }
         });
     });
-
-    $(document).on('click', '.quantity-right-plus', function() {
-        var quan = parseInt($('.quantity_count').val());
-        var str = $('#instock').html();
-        var res = parseInt(str.substring(10, str.length - 1));
-        if (quan > res) {
-            alert("Quantity is not available in stock");
-            $('.quantity_count').val(res)
-        }
-
-    });
-
-    $(document).on('change', '.quantity_count', function() {
-        var quan = $(this).val();
-        var str = $('#instock').html();
-        var res = parseInt(str.substring(10, str.length - 1));
-        if (quan > res) {
-            alert("Quantity is not available in stock");
-            $('.quantity_count').val(res)
-        }
-    });
-
-    $('.addToCart').click(function() {
-        addToCart();
-    });
-    function addToCart() {
-        $.ajax({
-            type: "post",
-            dataType: "json",
-            url: "{{ route('addToCart') }}",
-            data: {
-                "addonID" : addonids,
-                "addonoptID" : addonoptids,
-                "_token": "{{ csrf_token() }}",
-                "product_id": "{{$product->id}}",
-                "quantity": $('.quantity_count').val(),
-                "variant_id": $('#prod_variant_id').val(),
-            },
-            success: function(response) {
-                cartHeader();
-                toastr.success('Product Added Successfully!');
-            },
-            error: function(data) {
-                console.log(data);
-            },
-        });
-    }
 </script>
-
 @endsection
