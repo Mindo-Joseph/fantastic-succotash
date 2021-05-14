@@ -33,7 +33,7 @@
                             {!! Form::label('title', 'Country',['class' => 'control-label']) !!}
                             <select class="form-control" id="countries" name="countries" data-placeholder="Choose ...">
                                 @foreach($countries as $ck => $cval)
-                                    <option value="{{$cval->id}}"> {{$cval->nicename}}</option>
+                                    <option value="{{$cval->id}}"> {{$cval->name}}</option>
                                 @endforeach
                             </select>
                         </div>

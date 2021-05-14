@@ -25,9 +25,9 @@
             <select class="form-control" id="countries" name="countries" data-placeholder="Choose ...">
                 @foreach($countries as $ck => $cval)
                 @if($cval->id == $lc->country_id)
-                <option value="{{$cval->id}}" selected> {{$cval->nicename}}</option>
+                <option value="{{$cval->id}}" selected> {{$cval->name}}</option>
                 @else
-                <option value="{{$cval->id}}"> {{$cval->nicename}}</option>
+                <option value="{{$cval->id}}"> {{$cval->name}}</option>
                 @endif
                 @endforeach
             </select>
