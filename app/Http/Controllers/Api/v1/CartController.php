@@ -408,16 +408,14 @@ class CartController extends BaseController
                 }
 
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
-                    $price_in_currency = $price_in_doller_compare = $produ_qtys = $quantity_price = 0; 
-                    $taxData = $vendorAddons = array();
+                    $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0; 
+                    $variantsData = $taxData = $vendorAddons = array();
 
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
 
-                    $produ_qtys = $vendorData->vendorProducts{$pkey}->quantity;
-
                     $price_in_currency = round($prod->pvariant->price / $divider);
                     $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
-                    echo $quantity_price = $price_in_doller_compare * $produ_qtys;
+                    $quantity_price = $price_in_doller_compare * $prod->quantity;
 
                     $proSum = $proSum + $quantity_price;
 
@@ -427,32 +425,37 @@ class CartController extends BaseController
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
 
-                    $prod->pvariant->original_quantity_price = $quantity_price;
+                    $variantsData['id']                 = $prod->pvariant->id;
+                    $variantsData['sku']                = $prod->pvariant->sku;
+                    $variantsData['product_id']         = $prod->pvariant->product_id;
+                    $variantsData['title']              = $prod->pvariant->title;
+                    $variantsData['price']              = $price_in_currency;
+                    $variantsData['barcode']            = $prod->pvariant->barcode;
+                    $variantsData['price_in_cart']      = $prod->pvariant->price;
+                    $variantsData['multiplier']         = $clientCurrency->doller_compare;
+                    $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
 
                     if(!empty($cart->coupon) && ($cart->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
-                        $disc = $discount_amount;
+                        $pro_disc = $discount_amount;
                         if($minimum_spend < $quantity_price){
                             if($is_percent == 1){
-                                $disc = ($quantity_price * $discount_percent)/ 100;
+                                $pro_disc = ($quantity_price * $discount_percent)/ 100;
                             }
-                            $quantity_price = $quantity_price - $disc;
-                            $proSumDis = $proSumDis + $disc;
+                            $quantity_price = $quantity_price - $pro_disc;
+                            $proSumDis = $proSumDis + $pro_disc;
                             if($quantity_price < 0){
                                 $quantity_price = 0;
                             }
                             $codeApplied = 1;
-                            $prod->discount_amount = $disc;
+                            
                         }else{
-                            $prod->coupon_msg = "To apply coupon minimum spend should be greater than ".$minimum_spend.'.';
-                            $prod->coupon_not_appiled = 1;
+                            $variantsData['coupon_msg'] = "Spend minimun ".$minimum_spend." to apply this coupon";
+                            $variantsData['coupon_not_appiled'] = 1;
                         }
                     }
-                    $prod->coupon_appiled = $codeApplied;
-                    $prod->pvariant->price_in_cart = $prod->pvariant->price;
-                    $prod->pvariant->price = $price_in_currency;
-                    $prod->pvariant->multiplier = $clientCurrency->doller_compare;
-                    $prod->pvariant->quantity_price = $quantity_price;
-                    $prod->pvariant->qty = $produ_qtys;
+                    $variantsData['discount_amount'] = $pro_disc;
+                    $variantsData['coupon_applied'] = $codeApplied;
+                    $variantsData['quantity_price'] = $quantity_price;
 
                     $payable_amount = $payable_amount + $quantity_price;
 
@@ -498,6 +501,9 @@ class CartController extends BaseController
                     }
                     unset($prod->product->taxCategory);
                     unset($prod->addon);
+                    unset($prod->pvariant);
+
+                    $prod->variants = $variantsData;
 
                     $deliver_charge = 0;
                     $prod->deliver_charge = $deliver_charge;
