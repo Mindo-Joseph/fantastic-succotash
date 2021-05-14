@@ -410,7 +410,8 @@ class CartController extends BaseController
 
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
 
-                    $price_in_currency = round($prod->pvariant->price / $divider);
+                    //$price_in_currency = round($prod->pvariant->price / $divider);
+                    $price_in_currency = $prod->pvariant->price;
                     $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
 
@@ -428,7 +429,7 @@ class CartController extends BaseController
                     $variantsData['title']              = $prod->pvariant->title;
                     $variantsData['price']              = $price_in_currency;
                     $variantsData['barcode']            = $prod->pvariant->barcode;
-                    $variantsData['price_in_cart']      = $prod->pvariant->price;
+                    //$variantsData['price_in_cart']      = $prod->pvariant->price;
                     $variantsData['multiplier']         = $clientCurrency->doller_compare;
                     $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
 
