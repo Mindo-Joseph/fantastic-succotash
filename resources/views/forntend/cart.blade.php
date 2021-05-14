@@ -70,95 +70,99 @@
 </section>
 <section class="cart-section section-b-space">
     <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <table class="table cart-table table-responsive-xs ">
-                    <thead>
-                        <tr class="table-head">
-                            <th scope="col">vendor</th>
-                            <th scope="col">image</th>
-                            <th scope="col">product name</th>
-                            <th scope="col">price</th>
-                            <th scope="col">quantity</th>
-                            <th scope="col">action</th>
-                            <th scope="col">product total</th>
-                            <th scope="col">tax</th>
-                            <th scope="col">payable amount</th>
-                        </tr>
-                    </thead>
-                    <tbody class="shopping-cart1">
-                        @php
-                            $total_cart_amt = 0;
-                        @endphp
-                        @foreach($cartData->products as $product)
-                            @foreach($product['vendor_products'] as $vendor_product)
+        @if($cartData)
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table cart-table table-responsive-xs ">
+                        <thead>
+                            <tr class="table-head">
+                                <th scope="col">vendor</th>
+                                <th scope="col">image</th>
+                                <th scope="col">product name</th>
+                                <th scope="col">price</th>
+                                <th scope="col">quantity</th>
+                                <th scope="col">action</th>
+                                <th scope="col">product total</th>
+                                <th scope="col">tax</th>
+                                <th scope="col">payable amount</th>
+                            </tr>
+                        </thead>
+                        <tbody class="shopping-cart1">
                             @php
-                                $total_cart_amt = $product['payable_amount'];
+                                $total_cart_amt = 0;
                             @endphp
-                            <tr>
-                                <td>
-                                    <h4 class="td-color">{{$product['vendor']['name']}}</h4>
-                                </td>
-                                <td>
-                                    <a href="#"><img src="{{asset('assets/images/products/product-1.png')}}" alt=""></a>
-                                </td>
-                                <td>
-                                    <a href="#">{{$vendor_product['product']['sku']}}</a>
-                                </td>
-                                <td>
-                                    <h2>${{$product['product_total_amount'] / $vendor_product['quantity']}}</h2>
-                                </td>
-                                <td>
-                                    <div class="qty-box">
-                                        <div class="input-group">
-                                            <input type="number" name="quantity" class="form-control input-number" value="{{$vendor_product['quantity']}}">
+                            @foreach($cartData->products as $product)
+                                @foreach($product['vendor_products'] as $vendor_product)
+                                @php
+                                    $total_cart_amt = $product['payable_amount'];
+                                @endphp
+                                <tr id="shopping_cart1_{{$vendor_product['id']}}">
+                                    <td>
+                                        <h4 class="td-color">{{$product['vendor']['name']}}</h4>
+                                    </td>
+                                    <td>
+                                        <a href="#"><img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'200/200'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt=""></a>
+                                    </td>
+                                    <td>
+                                        <a href="#">{{$vendor_product['product']['sku']}}</a>
+                                    </td>
+                                    <td>
+                                        <h2>${{$vendor_product['pvariant']['price']}}</h2>
+                                    </td>
+                                    <td>
+                                        <div class="qty-box">
+                                            <div class="input-group">
+                                                <input type="number" name="quantity" class="form-control input-number" value="{{$vendor_product['quantity']}}">
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
+                                    </td>
+                                    <td>
+                                        <a class="icon remove_product_via_cart" data-product="{{$vendor_product['id']}}">
+                                            <i class="ti-close"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <h2 class="td-color">${{$product['product_total_amount']}}</h2>
+                                    </td>
+                                    <td>
+                                        <h2 class="td-color">${{$product['taxable_amount']}}</h2>
+                                    </td>
+                                    <td>
+                                        <h2 class="td-color">${{$product['payable_amount']}}</h2>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            @endforeach
+                            
+                        </tbody>
+                    </table>
+                    <table class="table cart-table table-responsive-md shopping-cart-footer">
+                        <tfoot>
+                            <tr>
+                                <td>Total :</td>
                                 <td>
-                                    <a href="#" class="icon">
-                                        <i class="ti-close"></i>
-                                    </a>
-                                </td>
-                                <td>
-                                    <h2 class="td-color">${{$product['product_total_amount']}}</h2>
-                                </td>
-                                <td>
-                                    <h2 class="td-color">${{$product['taxable_amount']}}</h2>
-                                </td>
-                                <td>
-                                    <h2 class="td-color">${{$product['payable_amount']}}</h2>
+                                    <h2>${{ $total_cart_amt }}</h2>
                                 </td>
                             </tr>
-                            @endforeach
-                        @endforeach
-                    </tbody>
-                </table>
-                <table class="table cart-table table-responsive-md shopping-cart-footer">
-                    <tfoot>
-                        <tr>
-                            <td>Total :</td>
-                            <td>
-                                <h2>${{ $total_cart_amt }}</h2>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </tfoot>
+                    </table>
+
+                </div>
             </div>
-        </div>
-        <div class="row cart-buttons">
-            <div class="col-6"><a href="{{url('/')}}" class="btn btn-solid">continue shopping</a></div>
-            <div class="col-6"><a class="btn btn-solid checkout" style="color: white;" onMouseOver="this.style.color='black'" onMouseOut="this.style.color='white'" href="{{url('user/checkout')}}">check out</a></div>
-        </div>
+            <div class="row cart-buttons">
+                <div class="col-6"><a href="{{url('/')}}" class="btn btn-solid">continue shopping</a></div>
+                <div class="col-6"><a class="btn btn-solid checkout" style="color: white;" onMouseOver="this.style.color='black'" onMouseOut="this.style.color='white'" href="{{url('user/checkout')}}">check out</a></div>
+            </div>
+        @else
+            <div class="alert alert-info" role="alert">
+              Oops! Your cart is empty
+            </div>
+        @endif
     </div>
 </section>
-
 @endsection
-
 @section('script')
-
 <script>
-
 var total1 = 0;
     $(document).ready(function() {
         $.ajaxSetup({
