@@ -368,11 +368,11 @@ class CartController extends BaseController
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
 
                 $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
-                $couponData = $couponProducts = array();
+                $couponProducts = array();
+                $couponData = NULL;
                 if(!empty($cart->coupon) && ($cart->coupon->vendor_id == $vendorData->vendor_id)){
 
                     $now = Carbon::now()->toDateTimeString();
-                    
 
                     $minimum_spend = $cart->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
                     
