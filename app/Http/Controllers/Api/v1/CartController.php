@@ -543,17 +543,13 @@ class CartController extends BaseController
                 $total_tax = $total_tax + $taxable_amount;
                 $total_disc_amount = $total_disc_amount + $discount_amount;
                 $total_discount_percent = $total_discount_percent + $discount_percent;
-
-                $total_tax = $total_tax + $taxable_amount;
             }
         }
-       
-        $total_paying = $total_paying - $total_disc_amount;
 
-        $cart->gross_amount = ($total_paying + $total_disc_amount);
-        $cart->total_payable_amount = $total_paying;
-        $cart->total_discount_amount = $total_disc_amount;
+        $cart->gross_paybale_amount = $total_paying;
         $cart->total_tax = $total_tax;
+        $cart->total_payable_amount = $total_paying + $total_tax - $total_disc_amount;
+        $cart->total_discount_amount = $total_disc_amount;
 
         $loyaltyPoints = $this->getLoyaltyPoints($user_id, $clientCurrency->doller_compare);
         $wallet = $this->getWallet($user_id, $clientCurrency->doller_compare, Auth::user()->currency);
