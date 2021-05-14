@@ -367,7 +367,7 @@ class CartController extends BaseController
 
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
 
-                $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
+                $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
                 $couponData = $couponProducts = array();
                 if(!empty($cart->coupon) && ($cart->coupon->vendor_id == $vendorData->vendor_id)){
 
@@ -471,14 +471,14 @@ class CartController extends BaseController
                             $taxData[$tckey]['product_tax'] = $product_tax;
                             $taxable_amount = $taxable_amount + $product_tax;
 
-                            $payable_amount = $payable_amount + $product_tax;
+                            //$payable_amount = $payable_amount + $product_tax;
                         }
                     }
                     $prod->taxdata = $taxData;
                     
                     if(!empty($prod->addon)){
                         foreach ($prod->addon as $ck => $addons) {
-
+                            $opt_quantity_price = 0;
                             $opt_price_in_currency = $addons->option->price;
                             $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
                             $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
@@ -494,6 +494,7 @@ class CartController extends BaseController
                             $vendorAddons[$ck]['quantity'] = $prod->quantity;
                             $vendorAddons[$ck]['quantity_price'] = $opt_quantity_price;
 
+                            $ttAddon = $ttAddon + $opt_quantity_price;
                             $payable_amount = $payable_amount + $opt_quantity_price;
                         }
                     }
@@ -516,23 +517,24 @@ class CartController extends BaseController
                         if($is_percent == 1){
                             $discount_amount = ($proSum * $discount_percent)/ 100;
                         }
-                        $payable_amount = $payable_amount - $discount_amount;
                         $couponApplied = 1;
                     }else{
                         $vendorData->coupon_msg = "To apply coupon minimum spend should be greater than ".$minimum_spend.'.';
                         $vendorData->coupon_not_appiled = 1;
                     }
                 }
+                $vendorData->proSum = $proSum;
+                $vendorData->addonSum = $ttAddon;
                 $vendorData->couponData = $couponData;
                 $vendorData->coupon_apply_on_vendor = $couponApplied;
-                $vendorData->payable_amount = $payable_amount;
-                $vendorData->payable_amount = $payable_amount - $discount_amount;
+                $vendorData->is_coupon_applied = $is_coupon_applied;
+
+                $vendorData->vendor_gross_total = $payable_amount;
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
                 $vendorData->taxable_amount = $taxable_amount;
-                $vendorData->is_coupon_applied = $is_coupon_applied;
+                $vendorData->payable_amount = $payable_amount + $taxable_amount - $discount_amount;
 
-                $vendorData->product_total_amount = ($payable_amount - $taxable_amount);
 
                 $total_paying = $total_paying + $payable_amount;
                 $total_tax = $total_tax + $taxable_amount;
@@ -556,7 +558,9 @@ class CartController extends BaseController
         $cart->loyaltyPoints = $loyaltyPoints;
         $cart->wallet = $wallet;
 
-        unset($cart->coupon->promo);
+        if(!empty($cart->coupon)){
+            unset($cart->coupon->promo);
+        }
 
         $cart->products = $cartData;
         return $cart;
