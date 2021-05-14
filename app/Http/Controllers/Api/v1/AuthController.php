@@ -465,7 +465,7 @@ class AuthController extends BaseController
      */
     public function resetPassword(Request $request, $domain = '')
     {
-        $validator = Validator::make($signReq->all(), [
+        $validator = Validator::make($request->all(), [
             'email' => 'required|string',
             'otp' => 'required|string|min:6|max:50',
             'new_password' => 'required|string|min:6|max:50',
