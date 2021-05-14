@@ -262,12 +262,12 @@ body .switchery>small {
     -webkit-border-radius: 50px;
     -moz-border-radius: 50px;
     border-radius: 50px;  
-    min-width: 150px;  
+    min-width: auto;  
     width: auto;
 }
 
 .card-box .btn-info {
-    min-width: 150px;
+    min-width: 120px;
     text-align: center !important;
 }
 
@@ -311,4 +311,14 @@ button.btn.btn-info.openBannerModal {
 
 .card-box.pb-0.mb-0 {
     margin-bottom: 0 !important;
+}
+
+.side-icon {
+    opacity: 0.5;
+    margin-right: 5px;
+    width: 18px;
+}
+
+.pro-user-name {
+    text-transform: capitalize;
 }

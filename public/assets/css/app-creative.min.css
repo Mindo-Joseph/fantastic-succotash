@@ -748,6 +748,7 @@ body[data-sidebar-icon=twotones] #sidebar-menu > ul > li > a svg {
 .navbar-custom .button-menu-mobile {
   border: none;
   color: #000;
+  opacity: 0.5;
   display: inline-block;
   height: 70px;
   line-height: 70px;
