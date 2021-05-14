@@ -32,32 +32,36 @@
         <!--- Sidemenu -->
         <div id="sidebar-menu">
 
-            <ul id="side-menu">
+            <ul id="side-menu" 1>
 
                 <li class="menu-title mt-2">Home</li>
 
                 <li>
                     <a href="{{route('client.dashboard')}}" >
-                        <i data-feather="airplay"></i>
+                        <!-- <i data-feather="airplay"></i> -->
+                        <img src="{{asset('assets/images/dashboard_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Dashboard </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{route('order.index')}}" >
-                         <i data-feather="menu"></i>
+                         <!-- <i data-feather="menu"></i> -->
+                         <img src="{{asset('assets/images/order_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Orders </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{route('vendor.index')}}" >
-                        <i data-feather="user-plus"></i>
+                        <!-- <i data-feather="user-plus"></i> -->
+                        <img src="{{asset('assets/images/vendor_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Vendors </span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{route('customer.index')}}" >
-                        <i data-feather="users"></i>
+                        <!-- <i data-feather="users"></i> -->
+                        <img src="{{asset('assets/images/customer_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Customers </span>
                     </a>
                 </li>
@@ -65,25 +69,29 @@
                 <li class="menu-title mt-2">Setting</li>
                 <li>   
                     <a href="{{route('client.profile')}}" >
-                        <i data-feather="user"></i>
+                        <!-- <i data-feather="user"></i> -->
+                        <img src="{{asset('assets/images/profile_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Profile </span>
                     </a>
                 </li>
                 <li>   
                     <a href="{{route('configure.customize')}}" >
-                        <i data-feather="settings"></i>
+                        <!-- <i data-feather="settings"></i> -->
+                        <img src="{{asset('assets/images/customize_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Customize </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{route('configure.index')}}">
-                        <i data-feather="tool"></i>
+                        <!-- <i data-feather="tool"></i> -->
+                        <img src="{{asset('assets/images/configure_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Configure </span>
                     </a>
                 </li>
                 <li>   
                     <a href="{{route('banner.index')}}" >
-                        <i data-feather="columns"></i>
+                        <!-- <i data-feather="columns"></i> -->
+                        <img src="{{asset('assets/images/banner_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Banner </span>
                     </a>
                 </li> 
@@ -121,48 +129,57 @@
                 </li> -->
                 <li>   
                     <a href="{{route('category.index')}}">
-                        <i data-feather="credit-card"></i>
+                        <!-- <i data-feather="credit-card"></i> -->
+                        <img src="{{asset('assets/images/catalog_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Catalog </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{route('tax.index')}}">
-                        <i data-feather="layers"></i><span> Tax </span>
+                        <!-- <i data-feather="layers"></i> -->
+                        <img src="{{asset('assets/images/tax_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span> Tax </span>
                     </a>
                 </li>
                 <li>   
                     <a href="{{route('payment.index')}}" >
-                        <i data-feather="dollar-sign"></i>
+                        <!-- <i data-feather="dollar-sign"></i> -->
+                        <img src="{{asset('assets/images/payment_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Payments </span>
                     </a>
                 </li>
                 <li>   
                     <a href="{{route('promocode.index')}}" >
-                        <i data-feather="gift"></i>
+                        <!-- <i data-feather="gift"></i> -->
+                        <img src="{{asset('assets/images/promocode_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Promocode </span>
                     </a>
                 </li>
                 <li>   
                     <a href="{{route('loyalty.index')}}" >
-                        <i data-feather="columns"></i>
+                        <!-- <i data-feather="columns"></i> -->
+                        <img src="{{asset('assets/images/loyality_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Loyalty Cards </span>
                     </a>
                 </li> 
                 <li>   
                     <a href="{{route('celebrity.index')}}" >
-                        <i data-feather="columns"></i>
+                        <!-- <i data-feather="columns"></i> -->
+                        <img src="{{asset('assets/images/celebrities_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Celebrities </span>
                     </a>
                 </li> 
                 <li>   
                     <a href="{{route('wallet.index')}}" >
-                        <i data-feather="columns"></i>
+                        <!-- <i data-feather="columns"></i> -->
+                        <img src="{{asset('assets/images/waller_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Wallet </span>
                     </a>
                 </li> 
                 <li>   
                     <a href="{{route('referandearn.index')}}" >
-                        <i data-feather="columns"></i>
+                        <!-- <i data-feather="columns"></i> -->
+                        <img src="{{asset('assets/images/1370259.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Refer and Earn </span>
                     </a>
                 </li> 
