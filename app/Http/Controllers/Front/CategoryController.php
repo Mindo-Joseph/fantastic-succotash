@@ -98,8 +98,8 @@ class CategoryController extends FrontController
 
             return $vendorData;
 
-        }elseif($tpye == 'product' || $tpye == 'Product'){
-
+        //}elseif($tpye == 'product' || $tpye == 'Product'){
+            }else{
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
 
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
@@ -123,10 +123,6 @@ class CategoryController extends FrontController
             }
             $listData = $products;
             return $listData;
-
-        }else{
-            $arr = array();
-            return $arr;
         }
     }
 
