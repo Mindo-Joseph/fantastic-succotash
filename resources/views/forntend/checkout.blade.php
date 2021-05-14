@@ -1,5 +1,4 @@
 @extends('layouts.store', ['title' => 'Checkout'])
-
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -8,11 +7,8 @@
         padding-bottom: 20px;
     }
 </style>
-
 @endsection
-
 @section('content')
-
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -112,9 +108,13 @@
                                     <div class="title-box">
                                         <div>Product <span>Total</span></div>
                                     </div>
-                                    <ul class="qty checkout-products">
-                                        <!-- <li>Pink Slim Shirt × 1 <span>$25.10</span></li>
-                                            <li>SLim Fit Jeans × 1 <span>$555.00</span></li> -->
+                                    <script type="text/template" id="checkout_products_template">
+                                        <% _.each(products, function(product, key){%>
+                                            <li>Pink Slim Shirt × 1 <span>$25.10</span></li>
+                                        <% }); %>
+                                    </script>
+                                    <ul class="qty checkout-products" id="checkout_products_main_div">
+                                        
                                     </ul>
                                     <ul class="sub-total">
                                         <li>Subtotal <span class="count checkout-total"></span></li>
@@ -181,11 +181,9 @@
 @endsection
 
 @section('script')
-
 <script>
     var total1 = 0;
     $(document).ready(function() {
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -201,19 +199,22 @@
                 if (data.res == "null") {
                     $(".checkout-products").html(data.html);
                 } else {
-                    var variants = JSON.parse(data.variants);
-                    // console.log(variants[0].set);
-                    var cp_id = JSON.parse(data.cart_products);
-                    var products = JSON.parse(data.products);
-                    var price = JSON.parse(data.price);
-                    var images = JSON.parse(data.image);
-                    var quantity = JSON.parse(data.quantity);
-
-                    for (i = 0; i < products.length; i++) {
-                        total1 += parseInt(price[i]) * parseInt(quantity[i]);
-                        $(".checkout-products").append("<li>" + products[i] + " × " + quantity[i] + " <span>$" + parseInt(price[i]) * parseInt(quantity[i]) + "</span></li>");
+                    console.log(data.products);
+                    // var price = JSON.parse(data.price);
+                    // var images = JSON.parse(data.image);
+                    // var variants = JSON.parse(data.variants);
+                    var products = data.products;
+                    // var quantity = JSON.parse(data.quantity);
+                    // var cp_id = JSON.parse(data.cart_products);
+                    let checkout_products_template = _.template($('#checkout_products_template').html());
+                    if(products.length > 0){
+                        $("#checkout_products_main_div").html(checkout_products_template({products:products}));
                     }
-                    $(".checkout-total").append("$" + total1);
+                    // for (i = 0; i < products.length; i++) {
+                    //     total1 += parseInt(price[i]) * parseInt(quantity[i]);
+                    //     $(".checkout-products").append("<li>" + products[i] + " × " + quantity[i] + " <span>$" + parseInt(price[i]) * parseInt(quantity[i]) + "</span></li>");
+                    // }
+                    // $(".checkout-total").append("$" + total1);
                 }
             },
             error: function(data) {
@@ -234,15 +235,14 @@
             data: '',
             dataType: 'json',
             success: function(data) {
-                console.log(data.address.id);
                 $("#first_name").val("{{Auth::user()->name}}");
                 $("#phone").val("{{Auth::user()->phone_number}}");
                 $("#email_address").val("{{Auth::user()->email}}");
-                $("#address").val(data.address.address);
-                $("#address_id").val(data.address.id);
-                $("#city").val(data.address.city);
-                $("#state").val(data.address.state);
-                $("#pincode").val(data.address.pincode);
+                // $("#address").val(data.address.address);
+                // $("#address_id").val(data.address != null? data.address.id : 0);
+                // $("#city").val(data.address.city);
+                // $("#state").val(data.address.state);
+                // $("#pincode").val(data.address.pincode);
                 $(".countries").append("<option selected value='"+data.country.id+"'>"+data.country.name+"</option>");
             },
             error: function(data) {

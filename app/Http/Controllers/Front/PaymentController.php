@@ -18,8 +18,7 @@ class PaymentController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $payments = array();
         return view('backend/payment/index')->with(['payments' => $payments]);
     }

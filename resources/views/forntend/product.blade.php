@@ -641,25 +641,22 @@ var addonoptids = [];
     $('.addToCart').click(function() {
         addToCart();
     });
-
     function addToCart() {
-        console.log($('.quantity_count').val());
-        ajaxCall = $.ajax({
+        $.ajax({
             type: "post",
             dataType: "json",
             url: "{{ route('addToCart') }}",
             data: {
-                "_token": "{{ csrf_token() }}",
-                "product_id": "{{$product->id}}",
-                "variant_id": $('#prod_variant_id').val(),
-                "quantity": $('.quantity_count').val(),
                 "addonID" : addonids,
                 "addonoptID" : addonoptids,
+                "_token": "{{ csrf_token() }}",
+                "product_id": "{{$product->id}}",
+                "quantity": $('.quantity_count').val(),
+                "variant_id": $('#prod_variant_id').val(),
             },
             success: function(response) {
-                console.log(response);
                 cartHeader();
-                // $(".otp-section").attr("style", "display:block")
+                toastr.success('Product Added Successfully!');
             },
             error: function(data) {
                 console.log(data);

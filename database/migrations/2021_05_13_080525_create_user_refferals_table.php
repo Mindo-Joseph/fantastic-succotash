@@ -15,8 +15,8 @@ class CreateUserRefferalsTable extends Migration
     {
         Schema::create('user_refferals', function (Blueprint $table) {
             $table->id();
-            $table->decimal('refferal_code')->nullable();
-            $table->decimal('reffered_by')->nullable();
+            $table->string('refferal_code')->nullable();
+            $table->string('reffered_by')->nullable();
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');

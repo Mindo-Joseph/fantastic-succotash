@@ -88,6 +88,9 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/wishlists', 'Front\ProfileController@wishlists')->name('user.wishlists');
     Route::post('wishlist/update', 'Front\ProfileController@updateWishlist')->name('addWishlist');
 
+	Route::get('user/sendRefferal', 'Front\ProfileController@showRefferal')->name('user.sendRefferal');
+    Route::post('user/sendRefferalCode', 'Front\ProfileController@sendRefferalCode')->name('user.sendEmail');
+
     Route::get('user/addressBook', 'Front\ProfileController@addresBook')->name('user.addressBook');
 	Route::get('user/setPrimaryAddress/{id}', 'Front\AddressController@setPrimaryAddress')->name('setPrimaryAddress');
 	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');

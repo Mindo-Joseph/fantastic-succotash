@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{Client, Category, Product, ClientPreference, UserDevice, UserLoyaltyPoint, Wallet};
+use App\Models\{Client, Category, Product, ClientPreference,UserDevice,UserLoyaltyPoint, Wallet};
 use Session;
 use App;
 use Config;
@@ -28,7 +28,6 @@ class FrontController extends Controller
 
     public function buildTree($elements, $parentId = 1) {
         $branch = array();
-
         foreach ($elements as $element) {
             if ($element['parent_id'] == $parentId) {
                 $children = $this->buildTree($elements, $element['id']);
@@ -38,7 +37,6 @@ class FrontController extends Controller
                 $branch[] = $element;
             }
         }
-
         return $branch;
     }
 
@@ -114,8 +112,7 @@ class FrontController extends Controller
     }
 
     /**     * check if cookie already exist     */
-    public function userMetaData($userid, $device_type = 'web', $device_token = 'web')
-    {
+    public function userMetaData($userid, $device_type = 'web', $device_token = 'web'){
         $device = UserDevice::where('user_id', $userid)->first();
         if(!$device){
             $user_device[] = [
@@ -124,27 +121,23 @@ class FrontController extends Controller
                 'device_token' => $device_token,
                 'access_token' => ''
             ];
-
             UserDevice::insert($user_device);
         }
-
         $loyaltyPoints = UserLoyaltyPoint::where('user_id', $userid)->first();
         if(!$loyaltyPoints){
             $loyalty[] = [
                 'user_id' => $userid,
                 'points' => 0
             ];
-
             UserLoyaltyPoint::insert($loyalty);
         }
-
         $wallet = Wallet::where('user_id', $userid)->first();
         if(!$wallet){
             $walletData[] = [
                 'user_id' => $userid,
                 'type' => 1,
                 'balance' => 0,
-                'card_id' => $this->randomData('wallets'),
+                'card_id' => $this->randomData('wallets', 6, 'card_id'),
                 'card_qr_code' => $this->randomBarcode('wallets'),
                 'meta_field' => '',
             ];
@@ -155,12 +148,12 @@ class FrontController extends Controller
     }
 
     /* Create random and unique client code*/
-    public function randomData($table){
-        $random_string = substr(md5(microtime()), 0, 6);
+    public function randomData($table, $digit, $where){
+        $random_string = substr(md5(microtime()), 0, $digit);
         // after creating, check if string is already used
 
-        while(\DB::table($table)->where('card_id', $random_string)->exists()){
-            $random_string = substr(md5(microtime()), 0, 6);
+        while(\DB::table($table)->where($where, $random_string)->exists()){
+            $random_string = substr(md5(microtime()), 0, $digit);
         }
         return $random_string;
     }

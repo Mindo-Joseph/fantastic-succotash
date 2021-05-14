@@ -240,9 +240,7 @@ class CartController extends FrontController
                 $cartAddOn->save();
             }
         }
-
         return response()->json($user_id);
-        // dd($request->all());
     }
 
     /**
@@ -395,13 +393,14 @@ class CartController extends FrontController
 
         $is_percent = 0;
         $amount_value = 0;
-
-        foreach ($cart->coupon as $ck => $code) {
-            if($code->promo->promo_type_id == 1){
-                $is_percent = 1;
-                $total_discount_percent = $total_discount_percent + round($code->promo->amount);
-            }else{
-                $amount_value = $amount_value + $code->promo->amount;
+        if($cart->coupon){
+            foreach ($cart->coupon as $ck => $code) {
+                if($code->promo->promo_type_id == 1){
+                    $is_percent = 1;
+                    $total_discount_percent = $total_discount_percent + round($code->promo->amount);
+                }else{
+                    $amount_value = $amount_value + $code->promo->amount;
+                }
             }
         }
         
@@ -431,12 +430,22 @@ class CartController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function showCart($domain = '')
-    {
-        //   dd("fewge");
+    public function showCart($domain = ''){
+        $cartData = [];
+        $user = User::where('status', '!=', '2');
+        if (Auth::user() && Auth::user()->id > 0) {
+            $user = $user->where('id', Auth::user()->id);
+        }else{
+            $system_user = 'bagiiiisaa';
+            $user = $user->where('system_id', $system_user);
+        }
+        $user = $user->first();
+        if($user){
+            $cartData = $this->getCart($user->id);
+        }
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/cart')->with(['navCategories' => $navCategories]);
+        return view('forntend/cart')->with(['navCategories' => $navCategories, 'cartData' => $cartData]);
     }
 
 
@@ -445,14 +454,10 @@ class CartController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function updateQuantity($domain = '', Request $request)
-    {
+    public function updateQuantity($domain = '', Request $request){
         $cartProduct = CartProduct::find($request->cartproduct_id);
-
         $cartProduct->quantity = $request->quantity;
-
         $cartProduct->save();
-
         return response()->json("Successfully Updated");
     }
 
@@ -461,12 +466,9 @@ class CartController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function deleteCartProduct($domain = '', Request $request)
-    {
-        //    dd($request->cartproduct_id);
-        $update = CartProduct::where('id', '=', $request->cartproduct_id)
-            ->update(['status' => '2']);
-        return response()->json('successfully deleted');
+    public function deleteCartProduct($domain = '', Request $request){
+        // $update = CartProduct::where('id', '=', $request->cartproduct_id)->update(['status' => '2']);
+        return response()->json(['status' => 'Success', 'message' => ' deleted successfully']);
     }
 
     /**
@@ -474,33 +476,21 @@ class CartController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function getCartData($domain = '', Request $request)
-    {
-        $langId = Session::get('customerLanguage');
-        $curId = Session::get('customerCurrency');
-
+    public function getCartData($domain = '', Request $request){
         $user = User::where('status', '!=', '2');
-
+        $curId = Session::get('customerCurrency');
+        $langId = Session::get('customerLanguage');
         if (Auth::user() && Auth::user()->id > 0) {
             $user = $user->where('id', Auth::user()->id);
-
         }else{
-            //$system_user = $_COOKIE["uuid"];
-            // if (!isset($_COOKIE["uuid"])) {
-            //     echo "no system user"; die;
-            // }
             $system_user = 'bagiiiisaa';
             $user = $user->where('system_id', $system_user);
         }
         $user = $user->first();
-
-                if(!$user){
+        if(!$user){
             echo "no user"; die;
         }
-
         $cartData = $this->getCart($user->id);
-
-        return response()->json($cartData->toArray());
-
+        return response()->json($cartData);
     }
 }

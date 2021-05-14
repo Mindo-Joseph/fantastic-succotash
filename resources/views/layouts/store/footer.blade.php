@@ -45,28 +45,26 @@
 </style>
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{$mapKey}}&v=3.exp&libraries=places,drawing"></script>
-<!-- exitintent jquery-->
-
 <script src="{{asset('front-assets/js/popper.min.js')}}"></script>
 <script src="{{asset('front-assets/js/slick.js')}}"></script>
 <script src="{{asset('front-assets/js/menu.js')}}"></script>
 <script src="{{asset('front-assets/js/lazysizes.min.js')}}"></script>
 <script src="{{asset('front-assets/js/bootstrap.js')}}"></script>
 <script src="{{asset('front-assets/js/bootstrap-notify.min.js')}}"></script>
-
 <script src="{{asset('front-assets/js/jquery.elevatezoom.js')}}"></script>
+<script src="{{asset('front-assets/js/underscore.min.js')}}"></script>
 <script src="{{asset('front-assets/js/script.js')}}"></script>
+<script src="{{asset('js/custom.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+
 <script>
     /*$(window).on('load', function () {
         setTimeout(function () {
             $('#exampleModal').modal('show');
         }, 2500);
     });*/
-
     $('.customerLang').click(function(){
         var changLang = $(this).attr('langId');
-        //$('#cliLang').val(changLang);
-        //$('#filterData').submit();
         settingData('language', changLang);
     });
 
@@ -74,8 +72,6 @@
         var changcurrId = $(this).attr('currId');
         var changSymbol = $(this).attr('currSymbol');
         settingData('currency', changcurrId, changSymbol);
-        //$('#cliCur').val(changcurrId);
-        //$('#filterData').submit();
     });
 
     function isNumberKey(evt){
@@ -154,7 +150,6 @@
         document.getElementById("search-overlay").style.display = "none";
     }
     $('document').ready(function(){
-
         var color_picker1 = '{{$webColor}}';
         document.documentElement.style.setProperty('--theme-deafult', color_picker1);
         $('body').addClass("{{$darkMode}}");

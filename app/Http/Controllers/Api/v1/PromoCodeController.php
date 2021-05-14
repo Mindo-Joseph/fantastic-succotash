@@ -58,6 +58,10 @@ class PromoCodeController extends Controller{
             if($validator->fails()){
                 return $this->errorResponse($validator->messages(), 422);
             }
+            $vendor = Vendor::where('id', $request->vendor_id)->first();
+            if(!$vendor){
+                return response()->json(['error' => 'Invalid vendor id.'], 404);
+            }
             $cart_detail = Cart::where('id', $request->cart_id)->first();
             if(!$cart_detail){
                 return $this->errorResponse('Invalid Cart Id', 422);
@@ -66,8 +70,13 @@ class PromoCodeController extends Controller{
             if(!$cart_detail){
                 return $this->errorResponse('Invalid Promocode Id', 422);
             }
+            $cart_coupon_detail = CartCoupon::where('cart_id', $request->cart_id)->where('vendor_id', $request->vendor_id)->where('coupon_id', $request->coupon_id)->first();
+            if($cart_coupon_detail){
+                return $this->errorResponse('Coupin Code already applied.', 422);
+            }
             $cart_coupon = new CartCoupon();
             $cart_coupon->cart_id = $request->cart_id;
+            $cart_coupon->vendor_id = $request->vendor_id;
             $cart_coupon->coupon_id = $request->coupon_id;
             $cart_coupon->save();
             return $this->successResponse($cart_coupon, 'Promotion Code Used Successfully.', 201);
@@ -103,6 +112,7 @@ class PromoCodeController extends Controller{
     public function validatePromoCode(){
         return Validator::make(request()->all(), [
             'cart_id' => 'required',
+            'vendor_id' => 'required',
             'coupon_id' => 'required',
         ]);
     }
