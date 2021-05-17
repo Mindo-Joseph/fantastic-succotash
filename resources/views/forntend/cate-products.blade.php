@@ -269,10 +269,12 @@
                                                     @endforeach
                                                 </div>
                                             </div>
-                                            <div class="pagination pagination-rounded justify-content-end mb-0">
+                                        </div>
+                                        <div class="pagination pagination-rounded justify-content-end mb-0">
+                                            @if(!empty($listData))
                                                 {{ $listData->links() }}
-                                            </div>
-                                        @endif
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{LoyaltyCard, Celebrity, Product};
+use App\Models\{LoyaltyCard, Celebrity, Product, Brand};
 use Dotenv\Loader\Loader;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -45,8 +45,8 @@ class CelebrityController extends BaseController
         // dd($request->all());
         $rules = array(
             'name' => 'required|string|max:150',
-            'email' => 'required|email|max:150|unique:celebrities',
-            'phone_number' => 'required',
+            //'email' => 'required|email|max:150|unique:celebrities',
+            //'phone_number' => 'required',
             'address' => 'required',
         );
 
@@ -100,14 +100,13 @@ class CelebrityController extends BaseController
      */
     public function edit($domain = '', $id)
     {
-        //
-        $celebrity = Celebrity::where('id', $id)->first();
+        $celeb = Celebrity::where('id', $id)->first();
         $pros = array();
-        foreach ($celebrity->products as $repo) {
+        foreach ($celeb->products as $repo) {
             $pros[] = $repo->id;
         }
-        $products = Product::all();
-        $returnHTML = view('backend.celebrity.form')->with(['lc' => $celebrity, 'products' => $products, 'pros' => $pros])->render();
+        $brands = Brand::all();
+        $returnHTML = view('backend.celebrity.form')->with(['lc' => $celeb, 'brands' => $brands, 'pros' => $pros])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
