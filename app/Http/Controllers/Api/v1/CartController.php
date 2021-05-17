@@ -29,7 +29,7 @@ class CartController extends BaseController
             if($cartData && !empty($cartData)){
                 return $this->successResponse($cartData);
             }else{
-                return $this->errorResponse('Empty Cart', 404);
+                return $this->errorResponse(null, 404);
             }
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
