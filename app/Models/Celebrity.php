@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Celebrity extends Model
 {
-  protected $fillable = ['name', 'email', 'avatar', 'phone_number', 'address', 'status', 'country_id'];
+  protected $fillable = ['name', 'email', 'avatar', 'phone_number', 'address', 'status', 'country_id', 'description'];
 
     public function getAvatarAttribute($value)
     {

@@ -55,14 +55,14 @@
 
                     <div class="table-responsive">
                         <form name="saveOrder" id="saveOrder"> @csrf </form>
-                        <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
+                        <table class="table table-centered table-nowrap table-striped" id="celeb-datatable">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th>Address</th>
+                                    <th>Description</th>
                                     <th>Country</th>
-                                    <th>Brands</th>
+                                    <!-- <th>Brands</th> -->
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -76,9 +76,9 @@
                                         <img class="img-fluid rounded-circle img-thumbnail" src="{{$celeb->avatar['proxy_url'].'60/60'.$celeb->avatar['image_path']}}" alt="{{$celeb->id}}" >
                                     </td>
                                     <td> {{ $celeb->name }} </td>
-                                    <td> {{ $celeb->address }} </td>
+                                    <td> {{ $celeb->description }} </td>
                                     <td> {{ (!empty($celeb->country)) ? ucwords(strtolower($celeb->country->name)) : '' }} </td>
-                                    <td> 
+                                    <!-- <td> 
                                         @if(!empty($celeb->brands))
                                             @foreach($celeb->brands as $kb => $brand)
                                                     <span class="badge bg-soft-warning text-warning">{{$brand->title}}</span>
@@ -86,8 +86,7 @@
                                         @else
                                             N/A
                                         @endif
-
-                                    </td>
+                                    </td> -->
                                     <td> 
                                         <input type="checkbox" bid="{{$celeb->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1" {{($celeb->status == '1') ? 'checked' : ''}} >
                                      </td>

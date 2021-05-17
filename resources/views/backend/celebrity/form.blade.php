@@ -53,17 +53,18 @@
             </span>
         </div>
     </div> -->
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="form-group" id="addressInput">
-            {!! Form::label('title', 'Address *',['class' => 'control-label']) !!}
-            {!! Form::text('address', $lc->address, ['class' => 'form-control']) !!}
+            {!! Form::label('title', 'Description',['class' => 'control-label']) !!}
+            <!-- {!! Form::text('desctiption', $lc->desctiption, ['class' => 'form-control']) !!} -->
+            <textarea class='form-control' rows="3" name="description">{{$lc->description}}</textarea>
             <span class="invalid-feedback" role="alert">
                 <strong></strong>
             </span>
         </div>
     </div>
 
-    <div class="col-md-6" id="product_list">
+    <!-- <div class="col-md-6" id="product_list">
         <div class="form-group">
             {!! Form::label('title', 'Brands',['class' => 'control-label']) !!}
             <select class="form-control select2-multiple" id="brands" name="brands[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
@@ -76,6 +77,6 @@
                 @endforeach
             </select>
         </div>
-    </div>
+    </div> -->
 
 </div>

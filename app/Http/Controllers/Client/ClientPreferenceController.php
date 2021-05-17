@@ -37,7 +37,6 @@ class ClientPreferenceController extends BaseController
      */
     public function customize(ClientPreference $clientPreference)
     {
-
         $webTemplates = Template::where('for', '1')->get();
         $appTemplates = Template::where('for', '2')->get();
         
