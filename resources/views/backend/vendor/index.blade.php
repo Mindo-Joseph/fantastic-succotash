@@ -54,9 +54,18 @@
                         <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Icon</th>
                                     <th>Name</th>
                                     <th>Address</th>
+                                    <th>Offers</th>
+                                    <th>Can Add Category</th>
+                                    <th>Commission Percentage</th>
+                                    <th>Commission Fixed per Order</th>
+                                    <th>Commission Monthly</th>
+                                    <!-- <th>Products</th>
+                                    <th>Orders</th>
+                                    <th>Active Orders</th> -->
+                                    <th></th>
                                     <!-- <th>Latitude</th>
                                     <th>Longitude</th> -->
                                     <th>Action</th>
@@ -70,6 +79,23 @@
                                     </td>
                                     <td> {{ $ven->name }} </td>
                                     <td> {{ $ven->address }}</td>
+
+                                    <td>
+                                        @if($ven->dine_in == 1)
+                                            <span class="badge bg-soft-warning text-warning">Dine In </span>
+                                        @endif
+                                        @if($ven->takeaway == 1)
+                                            <span class="badge bg-soft-warning text-warning">Take Away </span>
+                                        @endif
+                                        @if($ven->delivery == 1)
+                                            <span class="badge bg-soft-warning text-warning">Delivery</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ ($ven->add_category == 0) ? 'No' : 'Yes' }}</td>
+                                    <td>{{ $ven->commission_percent }}</td>
+                                    <td>{{ $ven->commission_fixed_per_order}}</td>
+                                    <td>{{ $ven->commission_monthly }}</td>
+                                    <td> </td>
                                     <!-- <td> {{ $ven->latitude }} </td>
                                     <td> {{ $ven->longitude }}</td> -->
                                     <td> 
