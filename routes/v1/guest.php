@@ -18,6 +18,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('cart/list', 'Api\v1\CartController@index');
 
         Route::get('celebrity/{all?}', 'Api\v1\CelebrityController@celebrityList');
+        Route::get('celebrityProducts/{id?}', 'Api\v1\CelebrityController@celebrityProducts');
     });
     Route::group(['middleware' => ['dbCheck', 'systemAuth']], function() {
         //Route::get('cart/list', 'Api\v1\CartController@index');

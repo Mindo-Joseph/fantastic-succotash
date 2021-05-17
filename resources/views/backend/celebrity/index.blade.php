@@ -62,6 +62,7 @@
                                     <th>Name</th>
                                     <th>Address</th>
                                     <th>Country</th>
+                                    <th>Brands</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -77,6 +78,16 @@
                                     <td> {{ $celeb->name }} </td>
                                     <td> {{ $celeb->address }} </td>
                                     <td> {{ (!empty($celeb->country)) ? ucwords(strtolower($celeb->country->name)) : '' }} </td>
+                                    <td> 
+                                        @if(!empty($celeb->brands))
+                                            @foreach($celeb->brands as $kb => $brand)
+                                                    <span class="badge bg-soft-warning text-warning">{{$brand->title}}</span>
+                                            @endforeach
+                                        @else
+                                            N/A
+                                        @endif
+
+                                    </td>
                                     <td> 
                                         <input type="checkbox" bid="{{$celeb->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1" {{($celeb->status == '1') ? 'checked' : ''}} >
                                      </td>

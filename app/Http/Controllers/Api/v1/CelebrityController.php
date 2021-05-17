@@ -45,12 +45,21 @@ class CelebrityController extends BaseController
         }
     }
 
-    /**     *       Get Celebrity     *       */
-    public function celebrityList1(Request $request)
+    /**     *       Get Celebrity Products    *       */
+    public function celebrityProducts(Request $request, $cid = 0)
     {
         try {
-            $celebrity = Celebrity::with('country')->where('status', '!=', 3)
-                            ->select('id', 'name', 'avatar', 'address', 'country_id')->get();
+            $celebrity = Celebrity::with('brands')->where('status', '!=', 3)
+                            ->select('id', 'name', 'avatar', 'address', 'country_id')->where('id', $cid)->get();
+            if(!$celebrity){
+                return $this->errorResponse('Celebrity not found.', 404);
+            }
+
+            
+            $cid
+
+
+
             return $this->successResponse($celebrity);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
