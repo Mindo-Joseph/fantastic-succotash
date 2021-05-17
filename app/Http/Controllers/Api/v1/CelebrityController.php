@@ -23,12 +23,12 @@ class CelebrityController extends BaseController
         try {
             if(empty($keyword) || strtolower($keyword) == 'all'){
                 $celebrity = Celebrity::with('country')->where('status', '!=', 3)
-                            ->select('id', 'name', 'avatar', 'address', 'country_id')->get();
+                            ->select('id', 'name', 'avatar', 'description', 'country_id')->get();
                 return $this->successResponse($celebrity);
             }
             $chars = str_split($keyword);
 
-            $celebrity = Celebrity::with('country')->select('id', 'name', 'avatar', 'address', 'country_id')
+            $celebrity = Celebrity::with('country')->select('id', 'name', 'avatar', 'description', 'country_id')
                             ->where('status', '!=', 3)
                             ->where(function ($q) use ($chars) {
                                 foreach ($chars as $key => $value) {
@@ -50,7 +50,7 @@ class CelebrityController extends BaseController
     {
         try {
             $celebrity = Celebrity::with('brands')->where('status', '!=', 3)
-                            ->select('id', 'name', 'avatar', 'address', 'country_id')->where('id', $cid)->get();
+                            ->select('id', 'name', 'avatar', 'description', 'country_id')->where('id', $cid)->get();
             if(!$celebrity){
                 return $this->errorResponse('Celebrity not found.', 404);
             }
