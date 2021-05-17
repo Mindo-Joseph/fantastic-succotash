@@ -86,7 +86,7 @@
                                     
                                     <td>{{(!empty($user->email_token)) ? $user->email_token : 'N/A'}}</td>
                                     <td>{{(!empty($user->phone_token)) ? $user->phone_token : 'N/A'}}</td>
-                                    <td>{{($user->is_email_verified == 1) ? 'Yes' : 'No'}}</td>
+                                    <td>{{($user->is_email_verified == 1) ? 'Verified' : 'Not Verified'}}</td>
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <!-- <div class="inner-div" style="float: left;">
