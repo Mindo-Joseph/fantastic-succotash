@@ -66,7 +66,7 @@
                                 @foreach($vendors as $ven)
                                 <tr data-row-id="{{$ven->id}}">
                                     <td>
-                                        <img src="{{$ven->logo['proxy_url'].'90/90'.$ven->logo['image_path']}}" alt="{{$ven->id}}">
+                                        <img class="rounded-circle" src="{{$ven->logo['proxy_url'].'90/90'.$ven->logo['image_path']}}" alt="{{$ven->id}}">
                                     </td>
                                     <td> {{ $ven->name }} </td>
                                     <td> {{ $ven->address }}</td>

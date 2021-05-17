@@ -10,7 +10,13 @@
 <link href="{{asset('assets/libs/bootstrap-selectroyoorders/bootstrap-select.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/bootstrap-touchspin/bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
-<style>.error{color: red;}</style>
+<style>.error{color: red;}
+.descript{
+    word-wrap: break-word;
+    width:200px;
+}
+
+</style>
 @endsection
 
 @section('content')
@@ -60,7 +66,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th>Description</th>
+                                    <th class="descript">Description</th>
                                     <th>Country</th>
                                     <!-- <th>Brands</th> -->
                                     <th>Status</th>
@@ -73,7 +79,7 @@
                                 <tr data-row-id="{{$celeb->id}}">
                                     <!-- <td class="draggableTd"><span class="dragula-handle"></span></td> -->
                                     <td> 
-                                        <img class="img-fluid rounded-circle img-thumbnail" src="{{$celeb->avatar['proxy_url'].'60/60'.$celeb->avatar['image_path']}}" alt="{{$celeb->id}}" >
+                                        <img class="rounded-circle" src="{{$celeb->avatar['proxy_url'].'60/60'.$celeb->avatar['image_path']}}" alt="{{$celeb->id}}" >
                                     </td>
                                     <td> {{ $celeb->name }} </td>
                                     <td> {{ $celeb->description }} </td>
