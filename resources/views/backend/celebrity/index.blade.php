@@ -73,7 +73,7 @@
                                 <tr data-row-id="{{$celeb->id}}">
                                     <!-- <td class="draggableTd"><span class="dragula-handle"></span></td> -->
                                     <td> 
-                                        <img src="{{$celeb->avatar['proxy_url'].'100/100'.$celeb->avatar['image_path']}}" alt="{{$celeb->id}}" >
+                                        <img class="img-fluid rounded-circle img-thumbnail" src="{{$celeb->avatar['proxy_url'].'60/60'.$celeb->avatar['image_path']}}" alt="{{$celeb->id}}" >
                                     </td>
                                     <td> {{ $celeb->name }} </td>
                                     <td> {{ $celeb->address }} </td>
