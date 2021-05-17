@@ -76,9 +76,10 @@
                             </thead>
                             <tbody id="post_list">
                                 @foreach($users as $user)
-
                                 <tr data-row-id="{{$user->id}}">
-                                    <td> image </td>
+                                    <td> 
+                                        <img class="rounded-circle" src="{{$user->image['proxy_url'].'60/60'.$user->image['image_path']}}" alt="{{$user->id}}" >
+                                    </td>
                                     <td>{{ $user->name}} ({{($user->is_email_verified == 1) ? 'Yes' : 'No'}})</td>
                                     <td>{{ $user->email }} ({{($user->is_phone_verified == 1) ? 'Yes' : 'No'}})</td>
                                     <td>{{ $user->phone_number }}</td>
