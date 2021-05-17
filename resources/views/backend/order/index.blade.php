@@ -65,7 +65,7 @@
                                             </div>
                                         </th>
                                         <th>Order ID</th>
-                                        <!-- <th>Products</th> -->
+                                        <th>Products</th>
                                         <th>Date</th>
                                         <th>Payment Status</th>
                                         <th>Total</th>

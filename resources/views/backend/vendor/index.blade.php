@@ -82,10 +82,10 @@
 
                                     <td>
                                         @if($ven->dine_in == 1)
-                                            <span class="badge bg-soft-warning text-warning">Dine In </span>
+                                            <span class="badge bg-soft-warning text-warning">Dine In</span>
                                         @endif
                                         @if($ven->takeaway == 1)
-                                            <span class="badge bg-soft-warning text-warning">Take Away </span>
+                                            <span class="badge bg-soft-warning text-warning">Take Away</span>
                                         @endif
                                         @if($ven->delivery == 1)
                                             <span class="badge bg-soft-warning text-warning">Delivery</span>
