@@ -131,22 +131,23 @@
         });
     }
 
-    $(document).ready(function() {
-        $.ajax({
-            url: "{{ route('celebrity.getProducts') }}",
-            type: "POST",
-            data: {
-                "_token": "{{ csrf_token() }}"
-            },
-            success: function(response) {
-                console.log(response[0].id);
-                for( i = 0; i<response.length; i++){
-                    $("#products").append("<option value="+response[i].id+">"+response[i].sku+"</option>");
-                }
-                // $(".primaryKey").html("1 " + response.symbol + " =");
-                // $("#redeem_points_per_primary_currency").val(response.value);
-            },
-        });
-    });
+    // $(document).ready(function() {
+    //     $.ajax({
+    //         url: "{{ route('celebrity.getBrands') }}",
+    //         type: "POST",
+    //         data: {
+    //             "_token": "{{ csrf_token() }}"
+    //         },
+    //         success: function(response) {
+    //             console.log(response.brands[0].id);
+    //             for( i = 0; i<response.brands.length; i++){
+    //                 $("#brands").append("");
+    //             }
+               
+    //             // $(".primaryKey").html("1 " + response.symbol + " =");
+    //             // $("#redeem_points_per_primary_currency").val(response.value);
+    //         },
+    //     });
+    // });
 
 </script>

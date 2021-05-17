@@ -28,7 +28,17 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="country_list">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Country',['class' => 'control-label']) !!}
+                            <select class="form-control" id="countries" name="countries" data-placeholder="Choose ...">
+                                @foreach($countries as $ck => $cval)
+                                    <option value="{{$cval->id}}"> {{$cval->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-6">
                         <div class="form-group" id="emailInput">
                             {!! Form::label('title', 'Email *',['class' => 'control-label']) !!}
                             {!! Form::text('email', null, ['class' => 'form-control']) !!}
@@ -46,25 +56,28 @@
                                 <strong></strong>
                             </span>
                         </div>
-                    </div>
-                    <div class="col-md-6">
+                    </div> -->
+                    <div class="col-md-12">
                         <div class="form-group" id="addressInput">
-                            {!! Form::label('title', 'Address *',['class' => 'control-label']) !!}
-                            {!! Form::text('address', null, ['class' => 'form-control']) !!}
+                            {!! Form::label('title', 'Description',['class' => 'control-label']) !!}
+                            <!-- {!! Form::text('address', null, ['class' => 'form-control']) !!} -->
+                            <textarea class='form-control' rows="3" name="description"></textarea>
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
                             </span>
                         </div>
                     </div>
 
-                    <div class="col-md-6" id="product_list">
+                    <!-- <div class="col-md-6" id="brand_list">
                         <div class="form-group">
-                            {!! Form::label('title', 'Products',['class' => 'control-label']) !!}
-                            <select class="form-control select2-multiple" id="brands" name="brands[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-
+                            {!! Form::label('title', 'Brands',['class' => 'control-label']) !!}
+                            <select class="form-control select2-multiple" id="brands1" name="brands[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                                @foreach($brands as $bk => $bval)
+                                    <option value="{{$bval->id}}"> {{$bval->title}}</option>
+                                @endforeach
                             </select>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
 

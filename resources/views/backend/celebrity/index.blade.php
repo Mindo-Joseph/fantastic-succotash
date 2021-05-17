@@ -10,7 +10,15 @@
 <link href="{{asset('assets/libs/bootstrap-selectroyoorders/bootstrap-select.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/bootstrap-touchspin/bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
-<style>.error{color: red;}</style>
+<style>.error{color: red;}
+.descript {
+    max-width: 200px;
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+</style>
 @endsection
 
 @section('content')
@@ -55,15 +63,15 @@
 
                     <div class="table-responsive">
                         <form name="saveOrder" id="saveOrder"> @csrf </form>
-                        <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
+                        <table class="table table-centered table-nowrap table-striped" id="celeb-datatable">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone Number</th>
-                                    <th>Address</th>
-                                    <th></th>
+                                    <th class="descript">Description</th>
+                                    <th>Country</th>
+                                    <!-- <th>Brands</th> -->
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -73,17 +81,20 @@
                                 <tr data-row-id="{{$celeb->id}}">
                                     <!-- <td class="draggableTd"><span class="dragula-handle"></span></td> -->
                                     <td> 
-                                        <img src="{{$celeb->avatar['proxy_url'].'100/100'.$celeb->avatar['image_path']}}" alt="{{$celeb->id}}" >
+                                        <img class="rounded-circle" src="{{$celeb->avatar['proxy_url'].'60/60'.$celeb->avatar['image_path']}}" alt="{{$celeb->id}}" >
                                     </td>
-
                                     <td> {{ $celeb->name }} </td>
-
-                                    <td> {{ $celeb->email }} </td>
-
-                                    <td> {{ $celeb->phone_number }} </td>
-
-                                    <td> {{ $celeb->address }} </td>
-                                   
+                                    <td class="descript"> <span>{{ $celeb->description }} </span></td>
+                                    <td> {{ (!empty($celeb->country)) ? ucwords(strtolower($celeb->country->name)) : '' }} </td>
+                                    <!-- <td> 
+                                        @if(!empty($celeb->brands))
+                                            @foreach($celeb->brands as $kb => $brand)
+                                                    <span class="badge bg-soft-warning text-warning">{{$brand->title}}</span>
+                                            @endforeach
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td> -->
                                     <td> 
                                         <input type="checkbox" bid="{{$celeb->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1" {{($celeb->status == '1') ? 'checked' : ''}} >
                                      </td>

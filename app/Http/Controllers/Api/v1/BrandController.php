@@ -10,78 +10,81 @@ use Carbon\Carbon;
 use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
 use Validation;
 use DB;
+use App\Http\Traits\ApiResponser;
 
 class BrandController extends BaseController
 {
     private $field_status = 2;
+    use ApiResponser;
     /**
      * Get Company ShortCode
      *
      */
     public function productsByBrand(Request $request, $brandId = 0)
     {
-        if($brandId == 0 || $brandId < 0){
-            return response()->json(['error' => 'No record found.'], 404);
-        }
-        $userid = Auth::user()->id;
-        $langId = Auth::user()->language;
-        $paginate = $request->has('limit') ? $request->limit : 12;
-        $brand = Brand::with(['translation' => function($q) use($langId){
-                        $q->select('title', 'brand_id');
-                        $q->where('language_id', $langId);
-                    }])->select('id', 'image')
-                    ->where('status', '!=', 2)
-                    ->where('id', $brandId)->first();
+        try {
+            if($brandId == 0 || $brandId < 0){
+                return response()->json(['error' => 'No record found.'], 404);
+            }
+            $userid = Auth::user()->id;
+            $langId = Auth::user()->language;
+            $paginate = $request->has('limit') ? $request->limit : 12;
+            $brand = Brand::with(['translation' => function($q) use($langId){
+                            $q->select('title', 'brand_id');
+                            $q->where('language_id', $langId);
+                        }])->select('id', 'image')
+                        ->where('status', '!=', 2)
+                        ->where('id', $brandId)->first();
 
-        if(!$brand){
-            return response()->json(['error' => 'No record found.'], 200);
-        }
+            if(!$brand){
+                return response()->json(['error' => 'No record found.'], 200);
+            }
 
-        $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
-                            $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
-                            $zx->select('variant_options.*', 'vt.title');
-                            $zx->where('vt.language_id', $langId);
-                        }
-                    ])->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id')
-                    ->join('variant_translations as vt','vt.variant_id','vr.id')
-                    ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
-                    ->where('vt.language_id', $langId)
-                    /*->whereIn('product_id', function($qry) use($vid){ 
-                        $qry->select('id')->from('products')
-                            ->where('vendor_id', $vid);
-                        })*/
-                    ->groupBy('product_variant_sets.variant_type_id')->get();
+            $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
+                                $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
+                                $zx->select('variant_options.*', 'vt.title');
+                                $zx->where('vt.language_id', $langId);
+                            }
+                        ])->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id')
+                        ->join('variant_translations as vt','vt.variant_id','vr.id')
+                        ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
+                        ->where('vt.language_id', $langId)
+                        /*->whereIn('product_id', function($qry) use($vid){ 
+                            $qry->select('id')->from('products')
+                                ->where('vendor_id', $vid);
+                            })*/
+                        ->groupBy('product_variant_sets.variant_type_id')->get();
 
-        $products = Product::with(['inwishlist' => function($qry) use($userid){
-                        $qry->where('user_id', $userid);
-                    },
-                    'media.image', 'translation' => function($q) use($langId){
-                    $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
-                    },
-                    'variant' => function($q) use($langId){
-                        $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
-                        $q->groupBy('product_id');
-                    },
-                ])
-                ->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'brand_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating')
-                ->where('brand_id', $brandId)
-                ->where('is_live', 1)->paginate($paginate);
-        
-        $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
-        if(!empty($products)){
-            foreach ($products as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+            $products = Product::with(['inwishlist' => function($qry) use($userid){
+                            $qry->where('user_id', $userid);
+                        },
+                        'media.image', 'translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                        },
+                        'variant' => function($q) use($langId){
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->groupBy('product_id');
+                        },
+                    ])
+                    ->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'brand_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating')
+                    ->where('brand_id', $brandId)
+                    ->where('is_live', 1)->paginate($paginate);
+            
+            $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+            if(!empty($products)){
+                foreach ($products as $key => $value) {
+                    foreach ($value->variant as $k => $v) {
+                        $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                    }
                 }
             }
+            $response['brand'] = $brand;
+            $response['products'] = $products;
+            $response['filterVariant'] = $variantSets;
+            return $this->successResponse($response);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
         }
-        $response['brand'] = $brand;
-        $response['products'] = $products;
-        $response['filterVariant'] = $variantSets;
-
-        return response()->json([
-            'data' => $response,
-        ]);
     }
 
     /**
@@ -90,8 +93,8 @@ class BrandController extends BaseController
      */
     public function brandFilters(Request $request, $brandId = 0)
     {
-        //dd($request->all());
-        if($brandId == 0 || $brandId < 0){
+        try{
+            if($brandId == 0 || $brandId < 0){
             return response()->json(['error' => 'No record found.'], 404);
         }
         $userid = Auth::user()->id;
@@ -213,8 +216,9 @@ class BrandController extends BaseController
                 }
             }
         }
-        return response()->json([
-            'data' => $products,
-        ]);
+            return $this->successResponse($products);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
     }
 }

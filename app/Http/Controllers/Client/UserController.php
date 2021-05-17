@@ -24,7 +24,7 @@ class UserController extends BaseController
     {
         $roles = Role::all();
         $countries = Country::all();
-        $users = User::with('role', 'country')->select('id', 'name', 'email', 'phone_number', 'status', 'role_id', 'system_id', 'email_token', 'phone_token', 'is_email_verified', 'is_phone_verified')
+        $users = User::with('role', 'country')->select('id', 'image', 'name', 'email', 'phone_number', 'status', 'role_id', 'system_id', 'email_token', 'phone_token', 'is_email_verified', 'is_phone_verified')
                     ->where('status', '!=', 3)
                     ->orderBy('id', 'desc')->paginate(20);
         //dd($users->toArray());

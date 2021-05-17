@@ -14,11 +14,11 @@
             <div class="col-12">
                 <div class="page-title-box">
                     <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
+                        <!-- <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
                             <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
                             <li class="breadcrumb-item active">Dashboard</li>
-                        </ol>
+                        </ol> -->
                     </div>
                     <h4 class="page-title">Dashboard</h4>
                 </div>
@@ -37,7 +37,7 @@
                         </div>
                         <div class="col-6">
                             <div class="text-right">
-                                <h3 class="text-dark mt-1">$<span data-plugin="counterup">58,947</span></h3>
+                                <h3 class="text-dark mt-1">$<span data-plugin="counterup">0</span></h3>
                                 <p class="text-muted mb-1 text-truncate">Total Revenue</p>
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                         </div>
                         <div class="col-6">
                             <div class="text-right">
-                                <h3 class="text-dark mt-1"><span data-plugin="counterup">1,845</span></h3>
+                                <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
                                 <p class="text-muted mb-1 text-truncate">Orders</p>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
                         </div>
                         <div class="col-6">
                             <div class="text-right">
-                                <h3 class="text-dark mt-1"><span data-plugin="counterup">825</span></h3>
+                                <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
                                 <p class="text-muted mb-1 text-truncate">Stores</p>
                             </div>
                         </div>
@@ -91,7 +91,7 @@
                         </div>
                         <div class="col-6">
                             <div class="text-right">
-                                <h3 class="text-dark mt-1"><span data-plugin="counterup">2,430</span></h3>
+                                <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
                                 <p class="text-muted mb-1 text-truncate">Sellers</p>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
         <!-- end row -->
 
         <div class="row">
-            <div class="col-xl-8">
+            <div class="col-xl-12">
                 <div class="card-box pb-2">
                     <div class="float-right d-none d-md-inline-block">
                         <div class="btn-group mb-2">
@@ -119,21 +119,21 @@
                             <p class="text-muted mb-0 mt-3">Current Week</p>
                             <h2 class="font-weight-normal mb-3">
                                 <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1"></small>
-                                <span>$58,254</span>
+                                <span>$0</span>
                             </h2>
                         </div>
                         <div class="col-md-4">
                             <p class="text-muted mb-0 mt-3">Previous Week</p>
                             <h2 class="font-weight-normal mb-3">
                                 <small class="mdi mdi-checkbox-blank-circle text-success align-middle mr-1"></small>
-                                <span>$69,524</span>
+                                <span>$0</span>
                             </h2>
                         </div>
                         <div class="col-md-4">
                             <p class="text-muted mb-0 mt-3">Targets</p>
                             <h2 class="font-weight-normal mb-3">
                                 <small class="mdi mdi-checkbox-blank-circle text-success align-middle mr-1"></small>
-                                <span>$95,025</span>
+                                <span>$0</span>
                             </h2>
                         </div>
                     </div>
@@ -142,20 +142,16 @@
                 </div> <!-- end card-box -->
             </div> <!-- end col-->
 
-            <div class="col-xl-4">
+            <!-- <div class="col-xl-4">
                 <div class="card-box">
                     <div class="dropdown float-right">
                         <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
                             <i class="mdi mdi-dots-vertical"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <!-- item-->
                             <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                            <!-- item-->
                             <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                            <!-- item-->
                             <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                            <!-- item-->
                             <a href="javascript:void(0);" class="dropdown-item">Action</a>
                         </div>
                     </div>
@@ -187,8 +183,8 @@
                         </div>
                         
                     </div>
-                </div> <!-- end card-box -->
-            </div> <!-- end col-->
+                </div>
+            </div>  --><!-- end col-->
         </div>
         <!-- end row -->
 
@@ -199,7 +195,8 @@
                     <h4 class="header-title mb-3">Transaction History</h4>
 
                     <div class="table-responsive">
-                        <table class="table table-centered table-hover mb-0">
+                        No Record Found
+                        <!-- <table class="table table-centered table-hover mb-0">
                             <thead>
                                 <tr>
                                     <th class="border-top-0">Name</th>
@@ -277,17 +274,18 @@
                                 </tr>
                             
                             </tbody>
-                        </table>
-                    </div> <!-- end table-responsive -->
+                        </table> -->
+                    </div> 
 
-                </div> <!-- end card-box-->
-            </div> <!-- end col-->
+                </div> 
+            </div>
             <div class="col-xl-6">
                 <div class="card-box">
                     <h4 class="header-title mb-3">Recent Products</h4>
 
                     <div class="table-responsive">
-                        <table class="table table-centered table-hover mb-0">
+                        No Record Found
+                        <!-- <table class="table table-centered table-hover mb-0">
                             <thead>
                                 <tr>
                                     <th class="border-top-0">Product</th>
@@ -360,7 +358,7 @@
                                 </tr>
                             
                             </tbody>
-                        </table>
+                        </table> -->
                     </div> <!-- end table-responsive -->
                 </div> <!-- end card-box-->
             </div> <!-- end col-->

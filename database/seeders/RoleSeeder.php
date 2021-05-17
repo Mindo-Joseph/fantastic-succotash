@@ -26,21 +26,5 @@ class RoleSeeder extends Seeder
             ),
         ); 
         \DB::table('roles')->insert($maps);
-
-        /* Work for product and category */
-        \DB::table('types')->delete();
- 
-        $maps = array(
-            ['id' => 1,
-                'title' => 'Product',
-            ],
-            ['id' => 2,
-                'title' => 'Dispatcher',
-            ],
-            ['id' => 3,
-                'title' => 'Vendor',
-            ],
-        ); 
-        \DB::table('types')->insert($maps);
     }
 }

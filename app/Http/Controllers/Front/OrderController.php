@@ -24,11 +24,11 @@ class OrderController extends FrontController
             $navCategories = $this->categoryNav($langId);
             return view('forntend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone , 'total_amount' => $request->total_amount , 'address_id' => $request->address_id]);
         }
-        dd($request->all());
-        $this->orderSave($request);
+        // dd($request->all());
+        $this->orderSave($request, "1", "2");
     }
 
-    public function orderSave($request)
+    public function orderSave($request, $paymentStatus, $paymentMethod)
     {
         $name = $request->first_name;
         if (!$request->last_name == null) {
@@ -42,7 +42,8 @@ class OrderController extends FrontController
         $order->recipient_name = $name;
         $order->recipient_email = $request->email_address;
         $order->recipient_number = $request->phone;
-        $order->item_count = $cartProduct;
+        $order->payment_status = $paymentStatus;
+        $order->payment_method = $paymentMethod;
         $order->save();
         $cartProducts = CartProduct::where('cart_id', $cart->id)->get()->toArray();
         foreach ($cartProducts as $cartpro) {
@@ -103,7 +104,7 @@ class OrderController extends FrontController
             $payment->type = "card";
             $payment->cart_id = $cart->id;
             $payment->save();
-            $this->orderSave($request);
+            $this->orderSave($request, "2", "1");
         } elseif ($response->isRedirect()) {
             $response->redirect();
         } else {

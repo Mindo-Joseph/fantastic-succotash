@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{LoyaltyCard, Celebrity, Product, Brand};
+use App\Models\{LoyaltyCard, Celebrity, Product, Brand, Country};
 use Dotenv\Loader\Loader;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -18,10 +18,11 @@ class CelebrityController extends BaseController
      */
     public function index()
     {
-        $celebrities = Celebrity::where('status', '!=', '3')->get();
-        // dd($celebrities->toArray());
-        // $celebrities = LoyaltyCard::where('status', '!=', '2')->get();
-        return view('backend/celebrity/index')->with(['celebrities' => $celebrities]);
+        $brands = Brand::all();
+        $countries = Country::all();
+        $celebrities = Celebrity::with('country', 'brands')->where('status', '!=', '3')->get();
+
+        return view('backend/celebrity/index')->with(['celebrities' => $celebrities, 'brands' => $brands, 'countries' => $countries]);
     }
 
     /**
@@ -42,12 +43,9 @@ class CelebrityController extends BaseController
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $rules = array(
             'name' => 'required|string|max:150',
-            //'email' => 'required|email|max:150|unique:celebrities',
-            //'phone_number' => 'required',
-            'address' => 'required',
+            //'address' => 'required',
         );
 
         if ($request->hasFile('image')) {    /* upload logo file */
@@ -57,10 +55,9 @@ class CelebrityController extends BaseController
         $validation  = Validator::make($request->all(), $rules)->validate();
 
         $celebrity = new Celebrity();
-        $celebrity->name = $request->input('name');
-        $celebrity->email = $request->input('email');
-        $celebrity->phone_number = $request->input('phone_number');
-        $celebrity->address = $request->input('address');
+        $celebrity->name = $request->name;
+        $celebrity->country_id = $request->countries;
+        $celebrity->description = $request->description;
         $celebrity->status = '1';
 
         if ($request->hasFile('image')) {
@@ -71,7 +68,7 @@ class CelebrityController extends BaseController
 
         $celebrity->save();
 
-        $celebrity->products()->sync($request->products);
+        //$celebrity->brands()->sync($request->brands);
         if ($celebrity->id > 0) {
             return response()->json([
                 'status' => 'success',
@@ -102,11 +99,12 @@ class CelebrityController extends BaseController
     {
         $celeb = Celebrity::where('id', $id)->first();
         $pros = array();
-        foreach ($celeb->products as $repo) {
+        foreach ($celeb->brands as $repo) {
             $pros[] = $repo->id;
         }
+        $countries = Country::all();
         $brands = Brand::all();
-        $returnHTML = view('backend.celebrity.form')->with(['lc' => $celeb, 'brands' => $brands, 'pros' => $pros])->render();
+        $returnHTML = view('backend.celebrity.form')->with(['lc' => $celeb, 'brands' => $brands, 'pros' => $pros, 'countries' => $countries])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
@@ -119,16 +117,10 @@ class CelebrityController extends BaseController
      */
     public function update($domain = '', Request $request, $id)
     {
-        //
-        //  dd($request->all());
         $rules = array(
             'name' => 'required|string|max:150',
-            'email' => 'required|email|max:150|unique:celebrities,email,' . $id,
-            'phone_number' => 'required',
-            'address' => 'required',
         );
-
-        if ($request->hasFile('image')) {    /* upload logo file */
+        if ($request->hasFile('image')) {
             $rules['image'] =  'image|mimes:jpeg,png,jpg,gif';
         }
 
@@ -136,9 +128,9 @@ class CelebrityController extends BaseController
 
         $celebrity = Celebrity::where('id', $id)->firstOrFail();;
         $celebrity->name = $request->input('name');
-        $celebrity->email = $request->input('email');
-        $celebrity->phone_number = $request->input('phone_number');
-        $celebrity->address = $request->input('address');
+        $celebrity->country_id = $request->input('countries');
+        $celebrity->description = $request->description;
+        //$celebrity->address = $request->input('address');
         $celebrity->status = '1';
 
         if ($request->hasFile('image')) {
@@ -148,18 +140,12 @@ class CelebrityController extends BaseController
         }
 
         $celebrity->save();
-
-        $celebrity->products()->sync($request->products);
-
-
-        if ($celebrity->id > 0) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Celebrity created Successfully!',
-                'data' => $celebrity
-            ]);
-        }
-    }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Celebrity created Successfully!',
+            'data' => $celebrity
+        ]);
+}
 
     /**
      * Remove the specified resource from storage.
@@ -169,7 +155,6 @@ class CelebrityController extends BaseController
      */
     public function destroy($domain = '', $id)
     {
-        //
         Celebrity::where('id', $id)->delete();
         return redirect()->back()->with('success', 'Celebrity deleted successfully!');
     }
@@ -193,9 +178,9 @@ class CelebrityController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getProducts($domain = '')
+    public function getBrandList($domain = '')
     {
-        $products = Product::all();
-        return response()->json($products);
+        $brands = Brand::all();
+        return response()->json(['brands' => $brands]);
     }
 }

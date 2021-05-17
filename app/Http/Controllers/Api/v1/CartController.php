@@ -11,23 +11,29 @@ use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProd
 use Validation;
 use DB;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Traits\ApiResponser;
 
 class CartController extends BaseController
 {
     private $field_status = 2;
+    use ApiResponser;
+
     /**         * Get Cart Items    *            */
     public function index(Request $request)
     {
-        $cartData = $this->getCart(Auth::user()->id);
-        if($cartData && !empty($cartData)){
-            return response()->json([
-                'data' => $cartData,
-            ]);
+        try {
+            $user_id = $this->userCheck();
+            $langId = Auth::user()->language;
+
+            $cartData = $this->getCart($user_id);
+            if($cartData && !empty($cartData)){
+                return $this->successResponse($cartData);
+            }else{
+                return $this->successResponse($cartData);
+            }
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
         }
-        return response()->json([
-            'message' => "No product found in cart",
-            'data' => $cartData,
-        ]);
     }
 
     /**   check auth and system user to add product in cart    */
@@ -73,7 +79,7 @@ class CartController extends BaseController
         }
 
         if($product->sell_when_out_of_stock == 0 && $productVariant->quantity < $request->quantity){
-            return response()->json(['error' => 'You Can not order more than ' . $productVariant->quantity . ' quantity.'], 404);
+            return response()->json(['error' => 'You Can not order more than '.$productVariant->quantity.' quantity.'], 404);
         }
 
         $addonSets = $addon_ids = $addon_options = array();

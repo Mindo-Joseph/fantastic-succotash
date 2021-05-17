@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCelebrityBrandTable extends Migration
+class CreateProductCelebritiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateCelebrityBrandTable extends Migration
      */
     public function up()
     {
-        Schema::create('celebrity_brands', function (Blueprint $table) {
+        Schema::create('product_celebrities', function (Blueprint $table) {
             $table->unsignedBigInteger('celebrity_id')->nullable();
-            $table->unsignedBigInteger('brand_id')->nullable();
+            $table->unsignedBigInteger('product_id')->nullable();
 
             $table->foreign('celebrity_id')->references('id')->on('celebrities')->onDelete('cascade');
-            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -29,6 +30,6 @@ class CreateCelebrityBrandTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('celebrity_product');
+        Schema::dropIfExists('product_celebrities');
     }
 }
