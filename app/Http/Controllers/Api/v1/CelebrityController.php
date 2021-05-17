@@ -56,7 +56,7 @@ class CelebrityController extends BaseController
             }
 
             
-            $cid
+            //$cid
 
 
 
