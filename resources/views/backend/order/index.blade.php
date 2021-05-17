@@ -10,8 +10,8 @@
                 <div class="page-title-box">
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
+                           <!--  <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li> -->
                             <li class="breadcrumb-item active">Orders</li>
                         </ol>
                     </div>
@@ -48,8 +48,8 @@
                             </div>
                             <div class="col-lg-4">
                                 <div class="text-lg-right">
-                                    <button type="button" class="btn btn-danger waves-effect waves-light mb-2 mr-2"><i class="mdi mdi-basket mr-1"></i> Add New Order</button>
-                                    <button type="button" class="btn btn-light waves-effect mb-2">Export</button>
+                                    <!-- <button type="button" class="btn btn-danger waves-effect waves-light mb-2 mr-2"><i class="mdi mdi-basket mr-1"></i> Add New Order</button>
+                                    <button type="button" class="btn btn-light waves-effect mb-2">Export</button> -->
                                 </div>
                             </div><!-- end col-->
                         </div>
