@@ -11,9 +11,11 @@
 <link href="{{asset('assets/libs/bootstrap-touchspin/bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
 <style>.error{color: red;}
-.descript{
-    word-wrap: break-word;
-    width:200px;
+.descript {
+    max-width: 200px;
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 </style>
@@ -82,7 +84,7 @@
                                         <img class="rounded-circle" src="{{$celeb->avatar['proxy_url'].'60/60'.$celeb->avatar['image_path']}}" alt="{{$celeb->id}}" >
                                     </td>
                                     <td> {{ $celeb->name }} </td>
-                                    <td> {{ $celeb->description }} </td>
+                                    <td class="descript"> <span>{{ $celeb->description }} </span></td>
                                     <td> {{ (!empty($celeb->country)) ? ucwords(strtolower($celeb->country->name)) : '' }} </td>
                                     <!-- <td> 
                                         @if(!empty($celeb->brands))
