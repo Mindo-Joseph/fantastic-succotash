@@ -20,8 +20,8 @@ class CelebrityController extends BaseController
     {
         $brands = Brand::all();
         $countries = Country::all();
-        $celebrities = Celebrity::where('status', '!=', '3')->get();
-        // dd($celebrities->toArray());
+        $celebrities = Celebrity::with('country')->where('status', '!=', '3')->get();
+        //dd($celebrities->toArray());
         // $celebrities = LoyaltyCard::where('status', '!=', '2')->get();
         return view('backend/celebrity/index')->with(['celebrities' => $celebrities, 'brands' => $brands, 'countries' => $countries]);
     }

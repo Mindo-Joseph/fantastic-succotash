@@ -15,8 +15,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('vendor/filters/{id?}', 'Api\v1\VendorController@vendorFilters');
         Route::post('search/{type}/{id?}', 'Api\v1\HomeController@globalSearch');
         Route::post('cart/add', 'Api\v1\CartController@add');
-        Route::get('celebrity', 'Api\v1\HomeController@celebrityList');
         Route::get('cart/list', 'Api\v1\CartController@index');
+
+        Route::get('celebrity/{all?}', 'Api\v1\CelebrityController@celebrityList');
     });
     Route::group(['middleware' => ['dbCheck', 'systemAuth']], function() {
         //Route::get('cart/list', 'Api\v1\CartController@index');

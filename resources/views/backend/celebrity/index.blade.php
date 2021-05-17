@@ -61,7 +61,8 @@
                                     <th>#</th>
                                     <th>Name</th>
                                     <th>Address</th>
-                                    <th></th>
+                                    <th>Country</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -73,12 +74,9 @@
                                     <td> 
                                         <img src="{{$celeb->avatar['proxy_url'].'100/100'.$celeb->avatar['image_path']}}" alt="{{$celeb->id}}" >
                                     </td>
-
                                     <td> {{ $celeb->name }} </td>
-
-
                                     <td> {{ $celeb->address }} </td>
-                                   
+                                    <td> {{ (!empty($celeb->country)) ? ucwords(strtolower($celeb->country->name)) : '' }} </td>
                                     <td> 
                                         <input type="checkbox" bid="{{$celeb->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1" {{($celeb->status == '1') ? 'checked' : ''}} >
                                      </td>
