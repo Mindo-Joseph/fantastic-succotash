@@ -68,7 +68,6 @@
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
-                                    <th>Is Verified</th>
                                     <th>Email Token</th>
                                     <th>Phone Token</th>
                                     <th>Status</th>
@@ -84,12 +83,10 @@
                                     <td>{{ $user->name}}</td>
                                     <td>{{ (!empty($user->system_id)) ? 'Guest User' : $user->email }}</td>
                                     <td>{{ $user->phone_number }}</td>
-                                    <td>{{($user->is_email_verified == 1) ? 'Yes' : 'No'}}</td>
+                                    
                                     <td>{{(!empty($user->email_token)) ? $user->email_token : 'N/A'}}</td>
                                     <td>{{(!empty($user->phone_token)) ? $user->phone_token : 'N/A'}}</td>
-                                    <td>
-                                        {{ ($user->status == 2) ? 'Block' : 'Active' }}
-                                    </td>
+                                    <td>{{($user->is_email_verified == 1) ? 'Yes' : 'No'}}</td>
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <!-- <div class="inner-div" style="float: left;">
