@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{Client, Product, Category, ProductTranslation, Type, Vendor, AddonSet, ProductUpSell, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand};
+use App\Models\{Client, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell};
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends BaseController
@@ -163,7 +163,7 @@ class ProductController extends BaseController
      */
     public function edit($domain = '', $id)
     {
-        $product = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related' , 'upSell' , 'crossSell')->where('id', $id)->firstOrFail();
+        $product = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related' , 'upSell' , 'crossSell', 'celebrities')->where('id', $id)->firstOrFail();
         //dd($product->toArray());
         $type = Type::all();
         $countries = Country::all();
@@ -197,7 +197,7 @@ class ProductController extends BaseController
 
         $taxCate = TaxCategory::all();
 
-        $related_ids = $upSell_ids = $crossSell_ids = $existOptions = $addOn_ids = array();
+        $celeb_ids = $related_ids = $upSell_ids = $crossSell_ids = $existOptions = $addOn_ids = array();
 
         foreach ($product->addOn as $key => $value) {
             $addOn_ids[] = $value->addon_id;
@@ -213,17 +213,22 @@ class ProductController extends BaseController
             $crossSell_ids[] = $value->cross_product_id;
         }
 
-        foreach ($product->vatoptions as $key => $value) {
-            if(!in_array($value->variant_option_id, $existOptions)){
-                $existOptions[] = $value->variant_option_id;
+        foreach ($product->crossSell as $key => $value) {
+            $crossSell_ids[] = $value->cross_product_id;
+        }
+
+        foreach ($product->celebrities as $key => $value) {
+            if(!in_array($value->celebrity_id, $celeb_ids)){
+                $celeb_ids[] = $value->celebrity_id;
             }
         }
         $otherProducts = Product::with('primary')->select('id', 'sku')
                         ->where('is_live', 1)->where('id', '!=', $product->id)->get();
 
         //dd($otherProducts->toArray());
-
-        return view('backend/product/edit', ['typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, ]);
+        $configData = ClientPreference::select('celebrity_check')->where('id', '>', 0)->first();
+        $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
+        return view('backend/product/edit', ['typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
     }
 
     /**
@@ -236,7 +241,6 @@ class ProductController extends BaseController
     public function update(Request $request, $domain = '', $id)
     {
         $product = Product::where('id', $id)->firstOrFail();
-
         if($product->is_live == 0){
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
         }
@@ -297,6 +301,7 @@ class ProductController extends BaseController
             $delete = ProductUpSell::where('product_id', $product->id)->delete();
             $delete = ProductCrossSell::where('product_id', $product->id)->delete();
             $delete = ProductRelated::where('product_id', $product->id)->delete();
+            $delete = ProductCelebrity::where('product_id', $product->id)->delete();
 
             if($request->has('addon_sets') && count($request->addon_sets) > 0){
                 foreach ($request->addon_sets as $key => $value) {
@@ -306,6 +311,16 @@ class ProductController extends BaseController
                     ];
                 }
                 ProductAddon::insert($addonsArray);
+            }
+
+            if($request->has('celebrities') && count($request->celebrities) > 0){
+                foreach ($request->celebrities as $key => $value) {
+                    $celebArray[] = [
+                        'celebrity_id' => $value,
+                        'product_id' => $product->id
+                    ];
+                }
+                ProductCelebrity::insert($celebArray);
             }
 
             if($request->has('up_cell') && count($request->up_cell) > 0){

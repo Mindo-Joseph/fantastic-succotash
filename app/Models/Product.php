@@ -29,6 +29,10 @@ class Product extends Model
        return $this->hasMany('App\Models\ProductRelated')->select('product_id', 'related_product_id'); 
     }
 
+    public function celebrities(){
+       return $this->hasMany('App\Models\ProductCelebrity')->select('product_id', 'celebrity_id'); 
+    }
+
     public function upSell(){
        return $this->hasMany('App\Models\ProductUpSell')->select('product_id', 'upsell_product_id'); 
     }

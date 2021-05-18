@@ -82,15 +82,12 @@ class ClientPreferenceController extends BaseController
         $cp = new ClientPreference();
         $preference = ClientPreference::where('client_code', Auth::user()->code)->first();
 
-        //dd($request->all());
-
-        //$fillingData = $cp->filling();
         if(!$preference){
             $preference = new ClientPreference();
             $preference->client_code = $code;
         }
         
-        $keyShouldNot = array('Default_location_name', 'Default_latitude', 'Default_longitude', 'is_hyperlocal', '_token', 'social_login', 'send_to', 'languages', 'hyperlocals', 'currency_data', 'multiply_by', 'cuid', 'primary_language', 'primary_currency', 'currency_data');
+        $keyShouldNot = array('Default_location_name', 'Default_latitude', 'Default_longitude', 'is_hyperlocal', '_token', 'social_login', 'send_to', 'languages', 'hyperlocals', 'currency_data', 'multiply_by', 'cuid', 'primary_language', 'primary_currency', 'currency_data', 'verify_config');
 
         foreach ($request->all() as $key => $value) {
             if(!in_array($key, $keyShouldNot)){
@@ -98,11 +95,10 @@ class ClientPreferenceController extends BaseController
             }
         }
 
+        /* Hyperlocal update */
         if($request->has('hyperlocals') && $request->hyperlocals == '1'){
             $preference->is_hyperlocal = ($request->has('is_hyperlocal') && $request->is_hyperlocal == 'on') ? 1 : 0;
-
             $preference->need_delivery_service = ($request->has('need_delivery_service') && $request->need_delivery_service == 'on') ? 1 : 0;
-
             $preference->need_dispacher_ride = ($request->has('need_dispacher_ride') && $request->need_dispacher_ride == 'on') ? 1 : 0;
 
             if($request->has('is_hyperlocal') && $request->is_hyperlocal == 'on'){
@@ -110,16 +106,15 @@ class ClientPreferenceController extends BaseController
                 $preference->Default_latitude = $request->Default_latitude;
                 $preference->Default_longitude = $request->Default_longitude;
             }
-
             if($request->has('need_delivery_service') && $request->need_delivery_service == 'on'){
                 $preference->delivery_service_key = $request->delivery_service_key;
             }
-
             if($request->has('need_dispacher_ride') && $request->need_dispacher_ride == 'on'){
                 $preference->dispatcher_key = $request->dispatcher_key;
             }
         }
-        
+
+        /* social login update */        
         if($request->has('social_login') && $request->social_login == '1'){
             $preference->fb_login = ($request->has('fb_login') && $request->fb_login == 'on') ? 1 : 0; 
             $preference->twitter_login = ($request->has('twitter_login') && $request->twitter_login == 'on') ? 1 : 0; 
@@ -127,7 +122,7 @@ class ClientPreferenceController extends BaseController
             $preference->apple_login = ($request->has('apple_login') && $request->apple_login == 'on') ? 1 : 0; 
         }
 
-        if($request->has('verify_email')){
+        if($request->has('verify_config') && $request->verify_config == '1'){
             $preference->verify_email = ($request->has('verify_email') && $request->verify_email == 'on') ? 1 : 0;
             $preference->verify_phone = ($request->has('verify_phone') && $request->verify_phone == 'on') ? 1 : 0;
             $preference->celebrity_check = ($request->has('celebrity_check') && $request->celebrity_check == 'on') ? 1 : 0;

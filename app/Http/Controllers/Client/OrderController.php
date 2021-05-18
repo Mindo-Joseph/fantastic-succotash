@@ -18,7 +18,8 @@ class OrderController extends BaseController
     public function index()
     {
         $orders = Order::all()->toArray();
-        return view('backend/order/index');
+        // dd($orders);
+        return view('backend/order/index')->with(['orders' => $orders]);
     }
 
     /**
