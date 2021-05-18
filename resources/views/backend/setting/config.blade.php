@@ -11,6 +11,17 @@
          </div>
       </div>
    </div>
+   <div class="row">
+      <div class="col-12">
+         <div class="text-sm-left">
+            @if (\Session::has('success'))
+            <div class="alert alert-success">
+               <span>{!! \Session::get('success') !!}</span>
+            </div>
+            @endif
+         </div>
+      </div>
+   </div>
    <!-- end page title -->
    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
       @csrf
@@ -24,22 +35,13 @@
                         <button class="btn btn-info d-block" type="submit"> Save </button>
                      </div>
                      <p class="sub-header">Enable location based visibility of Vendors and set the Default Location.</p>
-                     <div class="row">
-                        <div class="col-12">
-                           <div class="text-sm-left">
-                              @if (\Session::has('success'))
-                              <div class="alert alert-success">
-                                 <span>{!! \Session::get('success') !!}</span>
-                              </div>
-                              @endif
-                           </div>
-                        </div>
-                     </div>
+                     <input type="hidden" name="hyperlocals" id="hyperlocals" value="1">
+
                      <div class="row">
                         <div class="col-12">
                            <div class="form-group mb-0">
                               <label for="is_hyperlocal" class="mr-3">Enable</label>
-                              <input type="checkbox" data-plugin="switchery" name="is_hyperlocal" id="is_hyperlocal" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_hyperlocal == '1'))  checked='checked' @endif>
+                              <input type="checkbox" data-plugin="switchery" name="is_hyperlocal" id="is_hyperlocal" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_hyperlocal == '1')) checked @endif>
                            </div>
                            <div class="row">
                               <div class="col-12 mt-3 disableHyperLocal" style="{{((isset($preference) && $preference->is_hyperlocal == '1')) ? '' : 'display:none;'}}">
@@ -84,12 +86,6 @@
                                           @endif
                                        </div>
                                     </div>
-                                    <!-- <div class="col-12">
-                                       <div class="form-group mb-0 text-center">
-                                           <input type="hidden" name="hyperlocals" id="hyperlocals" value="1">
-                                           <button class="btn btn-info d-block mx-0 mt-3" type="submit"> Save </button>
-                                       </div>
-                                       </div> -->
                                  </div>
                               </div>
                            </div>
@@ -106,38 +102,22 @@
                   <button class="btn btn-info d-block" type="submit"> Save </button>
                </div>
                <p class="sub-header">Offer Last Mile Delivery with Royo Dispatcher.</p>
-               <div class="row ">
-                  <div class="col-12">
-                     <div class="text-sm-left">
-                        @if (\Session::has('success'))
-                        <div class="alert alert-success">
-                           <span>{!! \Session::get('success') !!}</span>
-                        </div>
-                        @endif
-                     </div>
-                  </div>
-               </div>
                <div class="row">
                   <div class="col-12">
                      <div class="form-group mb-0">
                         <div class="form-group mb-0 switchery-demo">
                            <label for="need_delivery_service" class="mr-3">Enable</label>
-                           <input type="checkbox" data-plugin="switchery" name="need_delivery_service" id="need_delivery_service" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->need_delivery_service == '1'))  checked='checked' @endif>
+                           <input data-plugin="switchery" name="need_delivery_service" id="need_delivery_service" class="form-control" data-color="#43bee1" type="checkbox" @if((isset($preference) && $preference->need_delivery_service == '1')) checked @endif >
                         </div>
                      </div>
                      <div class="form-group mt-3 mb-0 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
                         <label for="delivery_service_key">Royo Dispatcher API key</label>
-                        <input type="text" name=" delivery_service_key" id=" delivery_service_key" placeholder="" class="form-control"
-                           value="{{ old(' delivery_service_key', $preference-> delivery_service_key ?? '')}}">
-                        @if($errors->has(' delivery_service_key'))
+                        <input type="text" name="delivery_service_key" id="delivery_service_key" placeholder="" class="form-control" value="{{ old('delivery_service_key', $preference->delivery_service_key ?? '')}}">
+                        @if($errors->has('delivery_service_key'))
                         <span class="text-danger" role="alert">
                         <strong>{{ $errors->first(' delivery_service_key') }}</strong>
                         </span>
                         @endif
-                        <!-- <div class="form-group mb-0 text-center">
-                           <input type="hidden" name="hyperlocals" id="hyperlocals" value="1">
-                           <button class="btn btn-info d-block mx-0 mt-3" type="submit"> Save </button>
-                           </div> -->
                      </div>
                   </div>
                </div>
@@ -152,17 +132,6 @@
                <p class="sub-header">Offer Pickup & Delivery with Royo Dispatcher.</p>
                <div class="row">
                   <div class="col-12">
-                     <div class="text-sm-left">
-                        @if (\Session::has('success'))
-                        <div class="alert alert-success">
-                           <span>{!! \Session::get('success') !!}</span>
-                        </div>
-                        @endif
-                     </div>
-                  </div>
-               </div>
-               <div class="row">
-                  <div class="col-12">
                      <div class="form-group mb-0">
                         <div class="form-group mb-0 switchery-demo">
                            <label for="need_dispacher_ride" class="mr-3">Enable</label>
@@ -174,14 +143,10 @@
                         <input type="text" name="dispatcher_key" id="dispatcher_key" placeholder="" class="form-control"
                            value="{{ old('dispatcher_key', $preference->dispatcher_key ?? '')}}">
                         @if($errors->has('dispatcher_key'))
-                        <span class="text-danger" role="alert">
-                        <strong>{{ $errors->first('dispatcher_key') }}</strong>
-                        </span>
+                           <span class="text-danger" role="alert">
+                           <strong>{{ $errors->first('dispatcher_key') }}</strong>
+                           </span>
                         @endif
-                        <!-- <div class="form-group mb-0 text-center">
-                           <input type="hidden" name="hyperlocals" id="hyperlocals" value="1">
-                           <button class="btn btn-info mx-0 mt-3 d-block" type="submit"> Save </button>
-                           </div> -->
                      </div>
                   </div>
                </div>
@@ -199,6 +164,7 @@
    </div>
    <!-- end page title -->
    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+      <input type="hidden" name="social_login" id="social_login" value="1">
       @csrf
       <div class="row">
          <div class="col-lg-3 col-md-6 mb-lg-0 mb-md-3">
@@ -242,7 +208,7 @@
                   </div>
                   <div class="col-12">
                      <div class="form-group mb-2">
-                        <label for="fb_client_url">Facebook Client Url</label>
+                        <label for="fb_client_url">Facebook Redirect Url</label>
                         <input type="text" name="fb_client_url" id="fb_client_url" placeholder=""
                            class="form-control" value="{{ old('fb_client_url', $preference->fb_client_url ?? '')}}">
                         @if($errors->has('fb_client_url'))
@@ -297,7 +263,7 @@
                   </div>
                   <div class="col-12">
                      <div class="form-group mb-2">
-                        <label for="twitter_client_url">Twitter Client Url</label>
+                        <label for="twitter_client_url">Twitter Redirect Url</label>
                         <input type="text" name="twitter_client_url" id="twitter_client_url" placeholder=""
                            class="form-control" value="{{ old('twitter_client_url', $preference->twitter_client_url ?? '')}}">
                         @if($errors->has('twitter_client_url'))
@@ -351,7 +317,7 @@
                   </div>
                   <div class="col-md-12">
                      <div class="form-group mb-2">
-                        <label for="google_client_url">Google Client Url</label>
+                        <label for="google_client_url">Google Redirect Url</label>
                         <input type="text" name="google_client_url" id="google_client_url" placeholder=""
                            class="form-control" value="{{ old('google_client_url', $preference->google_client_url ?? '')}}">
                         @if($errors->has('google_client_url'))
@@ -405,7 +371,7 @@
                   </div>
                   <div class="col-12">
                      <div class="form-group mb-2">
-                        <label for="apple_client_url"> Apple Client Url</label>
+                        <label for="apple_client_url"> Apple Redirect Url</label>
                         <input type="text" name="apple_client_url" id="apple_client_url" placeholder=""
                            class="form-control" value="{{ old('apple_client_url', $preference->apple_client_url ?? '')}}">
                         @if($errors->has('apple_client_url'))
@@ -419,20 +385,6 @@
             </div>
          </div>
       </div>
-      <!-- <div class="row">
-         <div class="col-xl-11 col-md-offset-1">
-            <div class="card-box">
-               <div class="row mb-2">
-                  <div class="col-md-4">
-                     <input type="hidden" name="social_login" id="social_login" value="1">
-                     <div class="form-group mb-0 text-center">
-                        <button class="btn btn-info btn-block" type="submit"> Save </button>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-         </div> -->
    </form>
    <!-- start page title -->
    <div class="row">
@@ -686,6 +638,7 @@
    </div>
    <!-- end page title -->
    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+      <input type="hidden" name="verify_config" id="verify_config" value="1">
       @csrf
       <div class="row">
          <div class="col-md-5">
