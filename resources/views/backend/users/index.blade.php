@@ -66,8 +66,8 @@
                                 <tr>
                                     <th>Image</th>
                                     <th>Name</th>
-                                    <th>Email (Is Verified)</th>
-                                    <th>Phone (Is Verified)</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
                                     <th>Email Token</th>
                                     <th>Phone Token</th>
                                     <th>Status</th>
@@ -76,17 +76,17 @@
                             </thead>
                             <tbody id="post_list">
                                 @foreach($users as $user)
-
                                 <tr data-row-id="{{$user->id}}">
-                                    <td> image </td>
-                                    <td>{{ $user->name}} ({{($user->is_email_verified == 1) ? 'Yes' : 'No'}})</td>
-                                    <td>{{ $user->email }} ({{($user->is_phone_verified == 1) ? 'Yes' : 'No'}})</td>
+                                    <td> 
+                                        <img class="rounded-circle" src="{{$user->image['proxy_url'].'60/60'.$user->image['image_path']}}" alt="{{$user->id}}" >
+                                    </td>
+                                    <td>{{ $user->name}}</td>
+                                    <td>{{ (!empty($user->system_id)) ? 'Guest User' : $user->email }}</td>
                                     <td>{{ $user->phone_number }}</td>
+                                    
                                     <td>{{(!empty($user->email_token)) ? $user->email_token : 'N/A'}}</td>
                                     <td>{{(!empty($user->phone_token)) ? $user->phone_token : 'N/A'}}</td>
-                                    <td>
-                                        {{ ($user->status == 2) ? 'Block' : 'Active' }}
-                                    </td>
+                                    <td>{{($user->is_email_verified == 1) ? 'Verified' : 'Not Verified'}}</td>
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <!-- <div class="inner-div" style="float: left;">

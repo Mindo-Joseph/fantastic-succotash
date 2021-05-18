@@ -182,7 +182,7 @@
                     </a>
                 </li> 
                 <li>   
-                    <a href="{{route('referandearn.index')}}" >
+                    <a href="#" href1="{{route('referandearn.index')}}" >
                         <!-- <i data-feather="columns"></i> -->
                         <img src="{{asset('assets/images/1370259.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
                         <span> Refer and Earn </span>

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Celebrity extends Model
 {
-  protected $fillable = ['name', 'email', 'avatar', 'phone_number', 'address', 'status'];
+  protected $fillable = ['name', 'email', 'avatar', 'phone_number', 'address', 'status', 'country_id', 'description'];
 
     public function getAvatarAttribute($value)
     {
@@ -26,5 +26,10 @@ class Celebrity extends Model
     public function brands()
     {
         return $this->belongsToMany(Brand::class, 'celebrity_brands');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class)->select('id', 'code', 'name', 'nicename');
     }
 }

@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
               CurrencyTableSeeder::class,
               CountryTableSeeder::class,
               RoleSeeder::class,
+              TypeSeeder::class,
               //ClientTableSeeder::class,
               LanguageTableSeeder::class,
               NotificationSeeder::class,
