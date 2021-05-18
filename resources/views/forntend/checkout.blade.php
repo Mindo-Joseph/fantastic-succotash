@@ -22,7 +22,6 @@
         cursor: default;
         border: none !important;
     }
-
     .product-right .color-variant li,
     .productVariants .otherChild {
         height: 35px;
@@ -33,19 +32,16 @@
         border: 1px solid #f7f7f7;
         text-align: center;
     }
-
     .productVariants .otherSize {
         height: auto !important;
         width: auto !important;
         border: none !important;
         border-radius: 0%;
     }
-
     .product-right .size-box ul li.active {
         background-color: inherit;
     }
 </style>
-
 <section class="section-b-space">
     <div class="container">
         <div class="checkout-page">
@@ -56,51 +52,23 @@
                             <div class="checkout-title">
                                 <h3>Billing Details</h3>
                             </div>
-                            <div class="row check-out">
-                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
-                                    <div class="field-label">First Name</div>
-                                    <input type="text" name="first_name" id="first_name" value="" placeholder="">
-                                </div>
-                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
-                                    <div class="field-label">Last Name</div>
-                                    <input type="text" name="last_name" id="last_name" value="" placeholder="">
-                                </div>
-                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
-                                    <div class="field-label">Phone</div>
-                                    <input type="text" name="phone" id="phone" value="" placeholder="">
-                                </div>
-                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
-                                    <div class="field-label">Email Address</div>
-                                    <input type="text" name="email_address" id="email_address" value="" placeholder="">
-                                </div>
-                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                                    <div class="field-label">Country</div>
-                                    <select class="countries">
-                                        
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                                    <div class="field-label">Address</div>
-                                    <input type="hidden" name="address_id" id="address_id" value="" >
-                                    <input type="text" name="address" id="address" value="" placeholder="Street address">
-                                </div>
-                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                                    <div class="field-label">Town/City</div>
-                                    <input type="text" name="city" id="city" value="" placeholder="">
-                                </div>
-                                <div class="form-group col-md-12 col-sm-6 col-xs-12">
-                                    <div class="field-label">State / County</div>
-                                    <input type="text" name="state" id="state" value="" placeholder="">
-                                </div>
-                                <div class="form-group col-md-12 col-sm-6 col-xs-12">
-                                    <div class="field-label">Postal Code</div>
-                                    <input type="text" name="pincode" id="pincode" value="" placeholder="">
-                                </div>
-                                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input type="checkbox" name="shipping-option" id="account-option"> &ensp;
-                                    <label for="account-option">Create An Account?</label>
+                           <div class="typography-box">
+                        <div class="headings">
+                            <h3>Addresses</h3>
+                        </div>
+                        <div class="typo-content input_button">
+                            @forelse($addresses as $address)
+                            <div class="row">
+                                <div>
+                                    <input type="radio" name="gender" id="one" value="male" checked="checked">
+                                    <label for="one">{{$address->address.' '.$address->street.' '.$address->city.' '.$address->state.' '.$address->pincode}}</label>
                                 </div>
                             </div>
+                            @empty
+                            @endforelse
+                            <a href="#" class="btn btn-outline mr-3">+ Add New Address</a>
+                        </div>
+                    </div>
                         </div>
                         <div class="col-lg-6 col-sm-12 col-xs-12">
                             <div class="checkout-details">
@@ -110,7 +78,9 @@
                                     </div>
                                     <script type="text/template" id="checkout_products_template">
                                         <% _.each(products, function(product, key){%>
-                                            <li>Pink Slim Shirt × 1 <span>$25.10</span></li>
+                                        <% _.each(product.vendor_products, function(vendor_product, key){%>
+                                            <li><%= vendor_product.product.sku %> × <%= vendor_product.quantity %> <span>$<%= product.product_total_amount %></span></li>
+                                        <% }); %>
                                         <% }); %>
                                     </script>
                                     <ul class="qty checkout-products" id="checkout_products_main_div">
@@ -132,37 +102,37 @@
                                         </li>
                                     </ul>
                                     <ul class="total">
-                                        <li>Total <span class="count">$620.00</span></li>
-                                        <input type="hidden" name="total_amount"  value="620" placeholder="">
-
+                                        <li>Total <span class="count" id="total_payable_amount"></span></li>
+                                        <input type="hidden" name="total_amount"  value="620" placeholder="" id="total_payable_amount_input">
                                     </ul>
                                 </div>
                                 <div class="payment-box">
                                     <div class="upper-box">
                                         <div class="payment-options">
                                             <ul>
-                                                <li>
+                                                <!-- <li>
                                                     <div class="radio-option">
                                                         <input type="radio" name="payment-group" value="1" id="payment-1" checked="checked">
-                                                        <label for="payment-1">Check Payments<span class="small-text">Please send a check to Store
-                                                                Name, Store Street, Store Town, Store State /
-                                                                County, Store Postcode.</span></label>
+                                                        <label for="payment-1">Check Payments
+                                                            <span class="small-text">Please send a check to Store Name, Store Street, Store Town, Store State /County, Store Postcode.</span>
+                                                        </label>
                                                     </div>
-                                                </li>
+                                                </li> -->
                                                 <li>
                                                     <div class="radio-option">
                                                         <input type="radio" name="payment-group" value="2" id="payment-2">
-                                                        <label for="payment-2">Cash On Delivery<span class="small-text">Please send a check to Store
-                                                                Name, Store Street, Store Town, Store State /
-                                                                County, Store Postcode.</span></label>
+                                                        <label for="payment-2">Cash On Delivery
+                                                            <span class="small-text">Please send a check to Store
+                                                                Name, Store Street, Store Town, Store State / County, Store Postcode.</span>
+                                                        </label>
                                                     </div>
                                                 </li>
-                                                <li>
+                                                <!-- <li>
                                                     <div class="radio-option paypal">
                                                         <input type="radio" name="payment-group" value="3" id="payment-3">
                                                         <label for="payment-3">PayPal<span class="image"><img src="{{asset('front-assets/images/paypal.png')}}" alt=""></span></label>
                                                     </div>
-                                                </li>
+                                                </li> -->
                                             </ul>
                                         </div>
                                     </div>
@@ -176,10 +146,7 @@
         </div>
     </div>
 </section>
-
-
 @endsection
-
 @section('script')
 <script>
     var total1 = 0;
@@ -199,22 +166,13 @@
                 if (data.res == "null") {
                     $(".checkout-products").html(data.html);
                 } else {
-                    console.log(data.products);
-                    // var price = JSON.parse(data.price);
-                    // var images = JSON.parse(data.image);
-                    // var variants = JSON.parse(data.variants);
                     var products = data.products;
-                    // var quantity = JSON.parse(data.quantity);
-                    // var cp_id = JSON.parse(data.cart_products);
                     let checkout_products_template = _.template($('#checkout_products_template').html());
                     if(products.length > 0){
                         $("#checkout_products_main_div").html(checkout_products_template({products:products}));
                     }
-                    // for (i = 0; i < products.length; i++) {
-                    //     total1 += parseInt(price[i]) * parseInt(quantity[i]);
-                    //     $(".checkout-products").append("<li>" + products[i] + " × " + quantity[i] + " <span>$" + parseInt(price[i]) * parseInt(quantity[i]) + "</span></li>");
-                    // }
-                    // $(".checkout-total").append("$" + total1);
+                    $('#total_payable_amount').html('$'+data.total_payable_amount)
+                    $('#total_payable_amount_input').html('$'+data.total_payable_amount)
                 }
             },
             error: function(data) {
@@ -222,7 +180,6 @@
             }
         });
     });
-
     $(document).ready(function() {
         $.ajaxSetup({
             headers: {
@@ -238,11 +195,6 @@
                 $("#first_name").val("{{Auth::user()->name}}");
                 $("#phone").val("{{Auth::user()->phone_number}}");
                 $("#email_address").val("{{Auth::user()->email}}");
-                // $("#address").val(data.address.address);
-                // $("#address_id").val(data.address != null? data.address.id : 0);
-                // $("#city").val(data.address.city);
-                // $("#state").val(data.address.state);
-                // $("#pincode").val(data.address.pincode);
                 $(".countries").append("<option selected value='"+data.country.id+"'>"+data.country.name+"</option>");
             },
             error: function(data) {
@@ -250,7 +202,5 @@
             }
         });
     });
-
 </script>
-
 @endsection

@@ -50,41 +50,41 @@
     }
 </style>
 
-<section class="section-b-space">
-    <div class="collection-wrapper">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-3 collection-filter">
-                    <h2>Cart Products</h2>
+<div class="breadcrumb-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="page-title">
+                    <h2>cart</h2>
                 </div>
-                <div class="col-lg-9 col-sm-12 col-xs-12">
-                    <div class="container-fluid">
-                        <div class="row">
-
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div class="col-sm-6">
+                <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
+                        <li class="breadcrumb-item active">cart</li>
+                    </ol>
+                </nav>
             </div>
         </div>
     </div>
-</section>
+</div>
 <section class="cart-section section-b-space">
     <div class="container">
         @if($cartData)
             <div class="row">
-                <div class="col-sm-12">
-                    <table class="table cart-table table-responsive-xs ">
+                <div class="col-sm-12 table-responsive-xs">
+                    <table class="table cart-table">
                         <thead>
                             <tr class="table-head">
-                                <th scope="col">vendor</th>
-                                <th scope="col">image</th>
-                                <th scope="col">product name</th>
-                                <th scope="col">price</th>
+                                <th scope="col">Vendor</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
                                 <th scope="col">quantity</th>
+                                <!-- <th scope="col">Tax Amt.</th> -->
+                                <th scope="col">Total</th>
                                 <th scope="col">action</th>
-                                <th scope="col">product total</th>
-                                <th scope="col">tax</th>
-                                <th scope="col">payable amount</th>
                             </tr>
                         </thead>
                         <tbody class="shopping-cart1">
@@ -101,7 +101,11 @@
                                         <h4 class="td-color">{{$product['vendor']['name']}}</h4>
                                     </td>
                                     <td>
-                                        <a href="#"><img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'200/200'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt=""></a>
+                                        @if($vendor_product['pvariant']['media'])
+                                        <a href="#">
+                                            <img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'66/90'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt="">
+                                        </a>
+                                        @endif
                                     </td>
                                     <td>
                                         <a href="#">{{$vendor_product['product']['sku']}}</a>
@@ -112,23 +116,22 @@
                                     <td>
                                         <div class="qty-box">
                                             <div class="input-group">
-                                                <input type="number" name="quantity" class="form-control input-number" value="{{$vendor_product['quantity']}}">
+                                                <input type="number" name="quantity" class="form-control input-number" value="{{$vendor_product['quantity']}}" data-id="{{$vendor_product['id']}}" data-base_price="{{$vendor_product['pvariant']['price']}}" data-tax="">
                                             </div>
                                         </div>
+                                    </td>
+                                    <!-- <td>
+                                        @foreach($vendor_product['taxdata'] as $tax)
+                                            <h2 class="td-color" id="product_total_amount_{{$vendor_product['id']}}">${{$tax['product_tax']}}</h2>
+                                        @endforeach
+                                    </td> -->
+                                    <td>
+                                        <h2 class="td-color" id="product_total_amount_{{$vendor_product['id']}}">${{$product['product_total_amount']}}</h2>
                                     </td>
                                     <td>
                                         <a class="icon remove_product_via_cart" data-product="{{$vendor_product['id']}}">
                                             <i class="ti-close"></i>
                                         </a>
-                                    </td>
-                                    <td>
-                                        <h2 class="td-color">${{$product['product_total_amount']}}</h2>
-                                    </td>
-                                    <td>
-                                        <h2 class="td-color">${{$product['taxable_amount']}}</h2>
-                                    </td>
-                                    <td>
-                                        <h2 class="td-color">${{$product['payable_amount']}}</h2>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -136,22 +139,27 @@
                             
                         </tbody>
                     </table>
-                    <table class="table cart-table table-responsive-md shopping-cart-footer">
-                        <tfoot>
-                            <tr>
-                                <td>Total :</td>
-                                <td>
-                                    <h2>${{ $total_cart_amt }}</h2>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-
+                    <div class="table-responsive-md">
+                        <table class="table cart-table">
+                            <tfoot>
+                                <tr>
+                                    <td>Total :</td>
+                                    <td>
+                                        <h2>${{ $total_cart_amt }}</h2>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="row cart-buttons">
-                <div class="col-6"><a href="{{url('/')}}" class="btn btn-solid">continue shopping</a></div>
-                <div class="col-6"><a class="btn btn-solid checkout" style="color: white;" onMouseOver="this.style.color='black'" onMouseOut="this.style.color='white'" href="{{url('user/checkout')}}">check out</a></div>
+                <div class="col-6">
+                    <a href="{{url('/')}}" class="btn btn-solid">continue shopping</a>
+                </div>
+                <div class="col-6">
+                    <a class="btn btn-solid checkout" style="color: white;" onMouseOver="this.style.color='black'" onMouseOut="this.style.color='white'" href="{{url('user/checkout')}}">check out</a>
+                </div>
             </div>
         @else
             <div class="alert alert-info" role="alert">
@@ -163,117 +171,22 @@
 @endsection
 @section('script')
 <script>
-var total1 = 0;
-    $(document).ready(function() {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type: "get",
-            url: "{{ route('getCartProducts') }}",
-            data: '',
-            dataType: 'json',
-            success: function(data) {
-                if (data.res == "null") {
-                    $(".shopping-cart1").html(data.html);
-                } else {
-                    console.log(data);
-                    var products = data.products;
-                    for (i = 0; i < products.length; i++) {
-                        var vendor_products = products[i].vendor_products;
-                        for (j = 0; j < vendor_products.length; j=j+2) {
-                            console.log(products[i].vendor.name);
-                            console.log(vendor_products[j].pvariant.media[0].image.path.proxy_url + '200/200' + vendor_products[j].pvariant.media[0].image.path.image_path);
-                            console.log(vendor_products[j].product.sku);
-                            console.log(vendor_products[j].pvariant.quantity_price);
-                            console.log(vendor_products[j].quantity);
-                            
-                        }
-                    }
-                }
-            },
-            error: function(data) {
-                console.log('Error Found : ' + data);
-            }
-        });
+$(document).ready(function() {
+    $(document).on('change', '.input-number', function() {
+        updateQuantity($(this).attr("data-id"), $(this).val(), $(this).data('base_price'));
     });
-    // $(document).on('change', '.quant', function() {
-    //     updateQuantity($(this).attr("data-id"), $(this).val());
-    // });
-
-
-    // function updateQuantity(cp_id, quantity) {
-    //     ajaxCall = $.ajax({
-    //         type: "post",
-    //         dataType: "json",
-    //         url: "{{ route('updateQuantity') }}",
-    //         data: {
-    //             "_token": "{{ csrf_token() }}",
-    //             "cartproduct_id": cp_id,
-    //             "quantity": quantity,
-    //         },
-    //         success: function(response) {
-    //             console.log(total1);
-    //             cartHeader();
-    //             var latest_price = parseInt($("#price" + cp_id).html().substring(1)) * parseInt(quantity);
-    //             total1 = total1 - parseInt($("#h2" + cp_id).html().substring(1));
-    //             total1 = total1 + latest_price;
-    //             $("#h2" + cp_id).html("$" + latest_price);
-    //             $("#total").html("$" + total1);
-    //             $("#totalCart").html("$" + total1);
-    //         },
-    //         error: function(data) {
-
-    //         },
-    //     });
-    // }
-
-    // $(document).on('click', '.closed', function() {
-    //     var total2 = total1 - parseInt($("#h2" + $(this).attr("data-id")).html().substring(1));
-    //     console.log(total2);
-    //     var idd = $(this).attr("data-id");
-    //     ajaxCall = $.ajax({
-    //         type: "post",
-    //         dataType: "json",
-    //         url: "{{ route('deleteCartProduct') }}",
-    //         data: {
-    //             "_token": "{{ csrf_token() }}",
-    //             "cartproduct_id": $(this).attr("data-id"),
-    //         },
-    //         success: function(response) {
-    //             console.log(response);
-    //             total1 = total2;
-    //             $("#total").html("$" + total1);
-    //             $("#totalCart").html("$" + total1);
-    //             $("#tbody" + idd).remove();
-    //             cartHeader();
-    //         },
-    //         error: function(data) {
-
-    //         },
-    //     });
-
-    // });
-
-    // $(document).on('click', '.checkout', function() {
-    //     console.log("checkout");
-    //     ajaxCall = $.ajax({
-    //         type: "get",
-    //         dataType: "json",
-    //         url: "{{ route('checkUserLogin') }}",
-    //         success: function(response) {
-    //             if(response == 'no'){
-    //                 window.location.href = "{{ route('customer.login') }}";
-    //             }
-    //             else if(response == 'yes'){
-    //                 window.location.href = "{{ route('user.checkout') }}";
-    //             }
-    //         },
-    //         error: function(data) {
-    //         },
-    //     });
-    // });
+    function updateQuantity(cartproduct_id, quantity, base_price) {
+        ajaxCall = $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ route('updateQuantity') }}",
+            data: {"quantity": quantity, "cartproduct_id": cartproduct_id},
+            success: function(response) {
+                var latest_price = parseInt(base_price) * parseInt(quantity);
+                $('#product_total_amount_'+cartproduct_id).html('$'+latest_price);
+            }
+        });
+    }
+});
 </script>
 @endsection
