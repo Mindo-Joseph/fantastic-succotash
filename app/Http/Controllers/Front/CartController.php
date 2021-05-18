@@ -101,21 +101,15 @@ class CartController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function addToCart(Request $request, $domain = '')
-    {
+    public function addToCart(Request $request, $domain = ''){
         $langId = Session::get('customerLanguage');
-
         if ($request->has('addonID') && $request->has('addonoptID')) {
-
             $addon_ids = $request->addonID;
             $addon_options = $request->addonoptID;
-
             $addonSets = array();
-
             foreach ($addon_options as $key => $opt) {
                 $addonSets[$addon_ids[$key]][] = $opt;
             }
-
             foreach ($addonSets as $key => $value) {
                 $addon = AddonSet::join('addon_set_translations as ast', 'ast.addon_id', 'addon_sets.id')
                     ->select('addon_sets.id', 'addon_sets.min_select', 'addon_sets.max_select', 'ast.title')
@@ -144,7 +138,6 @@ class CartController extends FrontController
         $cartInfo = ' ';
         if (Auth::user()) {
             $user_id = Auth::user()->id;
-
             $currency = ClientCurrency::where('is_primary', '=', 1)->first();
             $userFind = Cart::where('user_id', $user_id)->first();
             if (!$userFind) {
@@ -157,7 +150,6 @@ class CartController extends FrontController
                 $cart->item_count = '1';
                 $cart->currency_id = $currency->currency->id;
                 $cart->save();
-
                 $cartInfo = $cart;
             } else {
                 $cartInfo = $userFind;
@@ -169,13 +161,10 @@ class CartController extends FrontController
                 return response()->json($user_id);
             }
         } else {
-
             $val = ' ';
             if (!isset($_COOKIE["uuid"])) {
-
                 $token = $this->randomString();
                 setcookie("uuid", $token, time() + (10 * 365 * 24 * 60 * 60), "/");
-
                 $val = $token;
                 $user = new User;
                 $user->name = "Test";
@@ -183,11 +172,8 @@ class CartController extends FrontController
                 $user->password = "test";
                 $user->system_id = $val;
                 $user->save();
-
                 $user_id = $user->id;
                 $currency = ClientCurrency::where('is_primary', '=', 1)->first();
-
-
                 $cart = new Cart;
                 $cart->unique_identifier = $token;
                 $cart->user_id = $user_id;
@@ -197,15 +183,12 @@ class CartController extends FrontController
                 $cart->item_count = '1';
                 $cart->currency_id = $currency->currency->id;
                 $cart->save();
-
                 $cartInfo = $cart;
             } else {
                 $val = $_COOKIE["uuid"];
                 $userInfo = User::where('system_id', $val)->first();
                 $user_id = $userInfo->id;
-
                 $cartInfo = Cart::where('user_id', $user_id)->first();
-
                 $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cartInfo->id)->first();
                 if ($checkIfExist) {
                     $checkIfExist->quantity = (int)$checkIfExist->quantity + 1;
@@ -227,8 +210,6 @@ class CartController extends FrontController
         $cartProduct->is_tax_applied  = '1';
         $cartProduct->currency_id = $cartInfo->currency_id;
         $cartProduct->save();
-        //$cartInfo->cartProducts()->save($cartProduct);
-
         if ($request->has('addonID') && $request->has('addonID')) {
             foreach ($addon_ids as $key => $value) {
                 $aa = $addon_ids[$key];

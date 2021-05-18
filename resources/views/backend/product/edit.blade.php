@@ -364,8 +364,8 @@
                         </div>
                         <div class="col-sm-12">
                             {!! Form::label('title', 'Brand',['class' => 'control-label']) !!}
-                            <select class="form-control selectizeInput" id="brand_idBox" name="brand_id">
-                                <option value="">Select Brand</option>
+                            <select class="form-control " id="brand_idBox" name="brand_id">
+                                <option value="">Select..</option>
                                 @foreach($brands as $brand)
                                     <option value="{{$brand->id}}" @if(!empty($product->brand) && $product->brand->id == $brand->id) selected @endif>{{$brand->title}}</option>
                                 @endforeach
@@ -373,7 +373,8 @@
                         </div>
                         <div class="col-sm-12">
                             {!! Form::label('title', 'Tax Category',['class' => 'control-label']) !!}
-                            <select class="form-control selectizeInput" id="typeSelectBox" name="tax_category">
+                            <select class="form-control " id="typeSelectBox" name="tax_category">
+                                <option value="">Select..</option>
                                 @foreach($taxCate as $cate)
                                     <option value="{{$cate->id}}" @if($product->variant[0]->tax_category_id == $cate->id) selected @endif>{{$cate->title}}</option>
                                 @endforeach
@@ -449,8 +450,18 @@
 
                 <div class="card-box">
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Relate with other products</h5>
-                    <div class="row mb-2">
-                        <div class="col-12">
+                    <div class="row">
+                        @if($configData->celebrity_check == 1)
+                        <div class="col-12 mb-2">
+                            {!! Form::label('title', 'Select Celebrity',['class' => 'control-label']) !!}
+                            <select class="form-control select2-multiple" name="celebrities[]" data-toggle="select2" multiple="multiple" placeholder="Select celebrity...">
+                                @foreach($celebrities as $cel)
+                                <option value="{{$cel->id}}" @if(in_array($cel->id, $celeb_ids)) selected @endif> {{$cel->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @endif
+                        <div class="col-12 mb-2">
                             {!! Form::label('title', 'Select Addon Set',['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="addon_sets[]" data-toggle="select2" multiple="multiple" placeholder="Select addon...">
                                 @foreach($addons as $set)
@@ -458,9 +469,7 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div> 
-                    <div class="row mb-2">
-                        <div class="col-12">
+                        <div class="col-12 mb-2">
                             {!! Form::label('title', 'Up Cell Products',['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="up_cell[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
                                 @foreach($otherProducts as $otherProduct)
@@ -469,7 +478,7 @@
                             </select>
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-12 mb-2">
                             {!! Form::label('title', 'Cross Cell Products',['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="cross_cell[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
                                 @foreach($otherProducts as $otherProduct)
@@ -477,7 +486,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 mb-2">
                             {!! Form::label('title', 'Related Products',['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="releted_product[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
                                 @foreach($otherProducts as $otherProduct)

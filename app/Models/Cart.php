@@ -16,23 +16,19 @@ class Cart extends Model
             ->select('cart_products.id', 'cart_products.cart_id', 'cart_products.product_id', 'cart_products.quantity', 'cart_products.variant_id', 'cart_products.is_tax_applied', 'cart_products.tax_rate_id', 'cart_products.currency_id', 'cc.doller_compare', 'cart_products.vendor_id')->orderBy('cart_products.created_at', 'asc')->orderBy('cart_products.vendor_id', 'asc');
     }
 
-    public function coupon()
-    {
+    public function coupon(){
       return $this->hasOne('App\Models\CartCoupon')->select("cart_id", "coupon_id", "vendor_id");
     }
 
-    public function product()
-    {
+    public function product(){
       return $this->belongsTo('App\Models\Product');
     }
 
-    public function variant()
-    {
+    public function variant(){
       return $this->belongsTo('App\Models\ProductVariant');
     }
 
-    public function cartvendor()
-    {
+    public function cartvendor(){
       return $this->hasMany('App\Models\CartProduct')->select('cart_id', 'vendor_id');
     }
 }

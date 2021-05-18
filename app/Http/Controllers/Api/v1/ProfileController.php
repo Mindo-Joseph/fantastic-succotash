@@ -14,11 +14,12 @@ use Config;
 use ConvertCurrency;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Traits\ApiResponser;
 
 class ProfileController extends BaseController
 {
     private $field_status = 2;
-    private $curLang = 0;
+    private $curLang = 0; use ApiResponser;
 
     /**
      * Display a listing of the resource.
@@ -401,18 +402,38 @@ class ProfileController extends BaseController
      */
     public function primaryAddress($addressId = 0)
     {
-        $address = UserAddress::where('id', $addressId)->where('user_id', Auth::user()->id)->first();
+        try {
+            $address = UserAddress::where('id', $addressId)->where('user_id', Auth::user()->id)->first();
 
-        if(!$address){
-            return response()->json(['error' => 'Address not found.'], 404);
+            if(!$address){
+                return $this->errorResponse('Address not found.', 404);
+            }
+            $add = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
+            $add = UserAddress::where('user_id', Auth::user()->id)->where('id', $addressId)->update(['is_primary' => 1]);
+
+            return $this->successResponse('', 'Address is set as primary address successfully.');
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
         }
+    }
 
-        $add = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteAddress($addressId = 0)
+    {
+        try {
+            $address = UserAddress::where('id', $addressId)->where('user_id', Auth::user()->id)->first();
 
-        $add = UserAddress::where('user_id', Auth::user()->id)->where('id', $addressId)->update(['is_primary' => 1]);
-
-        return response()->json([
-            'message' => 'Address is set as primary address successfully.',
-        ]);
+            if(!$address){
+                return $this->errorResponse('Address not found.', 404);
+            }
+            $address->delete();
+            return $this->successResponse('', 'Address is set as primary address successfully.');
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
     }
 }

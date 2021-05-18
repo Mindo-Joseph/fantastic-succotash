@@ -13,29 +13,32 @@
         </div>
     </div>
 
-    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
-        @csrf
-        <div class="row">
-            <div class="col-xl-12">
+    <div class="row mb-2">
+        <div class="col-sm-8">
+            <div class="text-sm-left">
+                @if (\Session::has('success'))
+                <div class="alert alert-success">
+                    <span>{!! \Session::get('success') !!}</span>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-4">
+            <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+                @csrf
                 <div class="card-box">
-                    <div class="row mb-2">
-                        <div class="col-sm-8">
-                            <div class="text-sm-left">
-                                @if (\Session::has('success'))
-                                <div class="alert alert-success">
-                                    <span>{!! \Session::get('success') !!}</span>
-                                </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    <h4 class="header-title">Theme</h4>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h4 class="header-title text-uppercase mb-0">Theme</h4>
+                        <input type="hidden" name="send_to" id="send_to" value="customize">
+                        <button class="btn btn-info d-block" type="submit"> Save </button>
+                    </div>                    
                     <p class="sub-header">
                         Choose between light and dark theme, for the platform.
                     </p>
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-12 mb-2">
                             <label for="primary_color">Admin Panel Theme</label> <br/>
                             <div class="radio radio-blue form-check-inline">
                                 <input type="radio" id="light_theme" value="light" name="theme_admin" {{ (isset($preference) && $preference->theme_admin =="light")? "checked" : "" }}>
@@ -51,40 +54,33 @@
                             </span>
                             @endif
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="form-group mb-3">
                                 <label for="primary_color">Primary Color</label>
                                 <input type="text" id="primary_color" name="primary_color" class="form-control" value="{{ old('primary_color', $preference->primary_color ?? 'cccccc')}}" >
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="form-group mb-3">
                                 <label for="secondary_color">Secondary Color</label>
                                 <input type="text" id="secondary_color" name="secondary_color" class="form-control" value="{{ old('secondary_color', $preference->secondary_color ?? 'cccccc')}}" >
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-md-2">
-                            <div class="form-group mb-0 text-center">
-                                <input type="hidden" name="send_to" id="send_to" value="customize">
-                                <button class="btn btn-info btn-block" type="submit"> Update </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
-
-    <div class="row">
-        <div class="col-6">
+        <div class="col-4">
             <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
                 @csrf
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="card-box">
-                            <h4 class="header-title"> Web Template</h4>
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h4 class="header-title text-uppercase mb-0">Web Template</h4>
+                                <input type="hidden" name="send_to" id="send_to" value="customize">
+                                <button class="btn btn-info d-block" type="submit"> Save </button>
+                            </div>
                             <p class="sub-header">
                                 Select web templete
                             </p>
@@ -105,44 +101,23 @@
                                     </div>
                                 </div>
                                 @endforeach
-
-                                <!--<div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label for="webTemplates">Web Template</label>
-                                        <select class="form-control" >
-                                            @foreach($webTemplates as $webt)
-                                            <option value="{{ $webt->id }}" {{ ($preference && $preference->web_template_id == $webt->id)? "selected" : "" }}>{{ $webt->name }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                        @if($errors->has('web_template_id'))
-                                        <span class="text-danger" role="alert">
-                                            <strong>{{ $errors->first('web_template_id') }}</strong>
-                                        </span>
-                                        @endif
-                                    </div>
-                                </div> -->
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col-md-4">
-                                    <div class="form-group mb-0 text-center">
-                                        <input type="hidden" name="send_to" id="send_to" value="customize">
-                                        <button class="btn btn-info btn-block" type="submit"> Update </button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
-        <div class="col-6">
+        <div class="col-4">
             <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
                 @csrf
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="card-box">
-                            <h4 class="header-title">App Template</h4>
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h4 class="header-title text-uppercase mb-0">App Template</h4>
+                                <input type="hidden" name="send_to" id="send_to" value="customize">
+                                <button class="btn btn-info d-block" type="submit"> Save </button>
+                            </div>
                             <p class="sub-header">
                                 Select app templete
                             </p>
@@ -162,30 +137,6 @@
                                     </div>
                                 </div>
                                 @endforeach
-                                <!--<div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label for="appTemplates">App Template</label>
-                                        <select class="form-control" id="appTemplates" name="app_template_id">
-                                            @foreach($appTemplates as $webt)
-                                            <option value="{{ $webt->id }}" {{ ($preference && $preference->app_template_id == $webt->id)? "selected" : "" }}>{{ $webt->name }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                        @if($errors->has('app_template_id'))
-                                        <span class="text-danger" role="alert">
-                                            <strong>{{ $errors->first('app_template_id') }}</strong>
-                                        </span>
-                                        @endif
-                                    </div>
-                                </div>-->
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col-md-4">
-                                    <div class="form-group mb-0 text-center">
-                                        <input type="hidden" name="send_to" id="send_to" value="customize">
-                                        <button class="btn btn-info btn-block" type="submit"> Update </button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -196,19 +147,23 @@
 
     <div class="row">
         <div class="col-6">
-                <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
-                @csrf
-                <div class="row">
-                    <div class="col-xl-12">
+            <div class="row">
+                <div class="col-12">
+                    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+                    @csrf
                         <div class="card-box">
-                            <h4 class="header-title">Date & Time</h4>
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h4 class="header-title text-uppercase mb-0">Date & Time</h4>
+                                <input type="hidden" name="send_to" id="send_to" value="customize">
+                                <button class="btn btn-info d-block" type="submit"> Save </button>
+                            </div>
                             <p class="sub-header">
                                 View and update the date & time format.
                             </p>
                             <div class="row mb-2">
                                 <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label for="date_format">DATE FORMAT</label>
+                                    <div class="form-group mb-2">
+                                        <label for="date_format">Date Format</label>
                                         <select class="form-control" id="date_format" name="date_format">
                                             <option value="DD-MM-YYYY" {{ ($preference && $preference->date_format =="DD-MM-YYYY")? "selected" : "" }}>
                                                 DD-MM-YYYY</option>
@@ -225,8 +180,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label for="time_format">TIME FORMAT</label>
+                                    <div class="form-group mb-2">
+                                        <label for="time_format">Time Format</label>
                                         <select class="form-control" id="time_format" name="time_format">
                                             <option value="12" {{ ($preference && $preference->time_format =="12")? "selected" : "" }}>12 hours
                                             </option>
@@ -241,27 +196,18 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="row mb-2">
-                                <div class="col-md-4">
-                                    <div class="form-group mb-0 text-center">
-                                        <input type="hidden" name="send_to" id="send_to" value="customize">
-                                        <button class="btn btn-info btn-block" type="submit"> Update </button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </form>
-        </div>
-        <div class="col-6">
-            <form method="POST" action="{{route('client.updateDomain', Auth::user()->code)}}">
-                @csrf
-                <div class="row">
-                    <div class="col-xl-12">
+                <div class="col-12">
+                    <form method="POST" action="{{route('client.updateDomain', Auth::user()->code)}}">
+                    @csrf
                         <div class="card-box">
-                            <h4 class="header-title">Custom Domain</h4>
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h4 class="header-title text-uppercase mb-0">Custom Domain</h4>
+                                <input type="hidden" name="send_to" id="send_to" value="customize">
+                                <button class="btn btn-info d-block" type="submit"> Save </button>
+                            </div>
                             <p class="sub-header">
                                 Update custom domain here.
                             </p>
@@ -279,11 +225,77 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-6">
+            <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+            @csrf
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card-box">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h4 class="header-title text-uppercase mb-0">Nomenclature</h4>
+                                <input type="hidden" name="send_to" id="send_to" value="customize">
+                                <button class="btn btn-info d-block" type="submit"> Save </button>
+                            </div>
+                            <p class="sub-header">
+                                Define and update the nomenclature
+                            </p>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label for="languages">Primary Language</label>
+                                    <select class="form-control" id="primary_language" name="primary_language">
+                                        @foreach($languages as $lang)
+                                            <option {{(isset($preference) && ($lang->id == $preference->primarylang->language_id))? "selected" : "" }} value="{{$lang->id}}"> {{$lang->name}} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="primary_currency">Primary Currency</label>
+
+                                    <select class="form-control" id="primary_currency" name="primary_currency">
+                                        @foreach($currencies as $currency)
+                                            <option iso="{{$currency->iso_code.' '.$currency->symbol}}" {{ (isset($preference) && $preference->primary->currency->id == $currency->id) ? "selected" : ""}} value="{{$currency->id}}"> {{$currency->iso_code.' '.$currency->symbol}} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-12 mb-2">
+                                    <label for="languages">Additional Languages</label>
+                                    <select class="form-control select2-multiple" id="languages" name="languages[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                                        @foreach($languages as $lang)
+                                            @if($lang->id != $preference->primarylang->language_id)
+                                                <option value="{{$lang->id}}" {{ (isset($preference) && in_array($lang->id, $cli_langs))? "selected" : "" }}> {{$lang->name}} </option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="row mb-2">
-                                <div class="col-md-4">
-                                    <div class="form-group mb-0 text-center">
-                                        <input type="hidden" name="send_to" id="send_to" value="customize">
-                                        <button class="btn btn-info btn-block" type="submit"> Update </button>
+                                <div class="col-md-12 mb-2">
+                                    <label for="currency">Additional Currency</label>
+                                    <select class="form-control select2-multiple" id="currency" name="currency_data[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                                        @foreach($currencies as $currency)
+                                            @if($preference->primary->currency->id != $currency->id)
+                                                <option value="{{$currency->id}}" iso="{{$currency->iso_code}}" {{ (isset($preference) && in_array($currency->id, $cli_currs))? "selected" : "" }}> {{$currency->iso_code}} {{!empty($currency->symbol) ? $currency->symbol : ''}} </option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <div class="row multiplierData">
+                                       @if($preference->currency)
+                                         @foreach($preference->currency as $ac)
+                                            <div class="col-12" id="addCur-{{$ac->currency->id}}">
+                                                <label class="primaryCurText">1 {{$preference->primary->currency->iso_code}} {{!empty($preference->primary->currency->symbol) ? $preference->primary->currency->symbol : ''}} = </label> 
+                                                <input type="number" value="{{$ac->doller_compare}}" step=".01" name="multiply_by[]" min="0.01"> {{$ac->currency->iso_code}} {{!empty($ac->currency->symbol) ? $ac->currency->symbol : ''}}
+                                                <input type="hidden" name="cuid[]" class="curr_id" value="{{ $ac->currency->id }}">
+                                            </div> 
+                                         @endforeach
+                                       @endif
                                     </div>
                                 </div>
                             </div>
@@ -293,85 +305,7 @@
             </form>
         </div>
     </div>
-
-    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
-        @csrf
-        
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card-box">
-                    <h4 class="header-title">Nomenclature</h4>
-                    <p class="sub-header">
-                        Define and update the nomenclature
-                    </p>
-                    <div class="row">
-                        <div class="col-md-4 mb-2">
-                            <label for="languages">Primary Language</label>
-                            <select class="form-control" id="primary_language" name="primary_language">
-                                @foreach($languages as $lang)
-                                    <option {{(isset($preference) && ($lang->id == $preference->primarylang->language_id))? "selected" : "" }} value="{{$lang->id}}"> {{$lang->name}} </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-8 mb-2">
-                            <label for="languages">Additional Languages</label>
-                            <select class="form-control select2-multiple" id="languages" name="languages[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                                @foreach($languages as $lang)
-                                    @if($lang->id != $preference->primarylang->language_id)
-                                        <option value="{{$lang->id}}" {{ (isset($preference) && in_array($lang->id, $cli_langs))? "selected" : "" }}> {{$lang->name}} </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-4 mb-2">
-                            <label for="primary_currency">Primary Currency</label>
-
-                            <select class="form-control" id="primary_currency" name="primary_currency">
-                                @foreach($currencies as $currency)
-                                    <option iso="{{$currency->iso_code.' '.$currency->symbol}}" {{ (isset($preference) && $preference->primary->currency->id == $currency->id) ? "selected" : ""}} value="{{$currency->id}}"> {{$currency->iso_code.' '.$currency->symbol}} </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        
-                        <div class="col-md-8 mb-2">
-                            <label for="currency">Additional Currency</label>
-                            <select class="form-control select2-multiple" id="currency" name="currency_data[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                                @foreach($currencies as $currency)
-                                    @if($preference->primary->currency->id != $currency->id)
-                                        <option value="{{$currency->id}}" iso="{{$currency->iso_code}}" {{ (isset($preference) && in_array($currency->id, $cli_currs))? "selected" : "" }}> {{$currency->iso_code}} {{!empty($currency->symbol) ? $currency->symbol : ''}} </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="offset-sm-4 col-8 mb-2">
-                            <div class="row multiplierData">
-                               @if($preference->currency)
-                                 @foreach($preference->currency as $ac)
-                                    <div class="col-6" id="addCur-{{$ac->currency->id}}">
-                                        <label class="primaryCurText">1 {{$preference->primary->currency->iso_code}} {{!empty($preference->primary->currency->symbol) ? $preference->primary->currency->symbol : ''}} = </label> 
-                                        <input type="number" value="{{$ac->doller_compare}}" step=".01" name="multiply_by[]" min="0.01"> {{$ac->currency->iso_code}} {{!empty($ac->currency->symbol) ? $ac->currency->symbol : ''}}
-                                        <input type="hidden" name="cuid[]" class="curr_id" value="{{ $ac->currency->id }}">
-                                    </div> 
-                                 @endforeach
-                               @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-2">
-                            <div class="form-group mb-0 text-center">
-                                <input type="hidden" name="send_to" id="send_to" value="customize">
-                                <button class="btn btn-info btn-block" type="submit"> Update </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-      
+ 
 </div> <!-- container -->
 @endsection
 
@@ -445,7 +379,7 @@ $('#currency').change(function(){
     for (i = 0; i < cidText.length; i++) {
 
         if(existCid.indexOf(cidText[i].id) === -1){
-            var text = '<div class="col-6" id="addCur-'+cidText[i].id+'"><label class="primaryCurText">1 '+pri_curr+'  = </label> <input type="number" name="multiply_by[]" min="0.01" value="0" step=".01">'+cidText[i].text+'<input type="hidden" name="cuid[]" class="curr_id" value="'+cidText[i].id+'"></div>';
+            var text = '<div class="col-12" id="addCur-'+cidText[i].id+'"><label class="primaryCurText">1 '+pri_curr+'  = </label> <input type="number" name="multiply_by[]" min="0.01" value="0" step=".01">'+cidText[i].text+'<input type="hidden" name="cuid[]" class="curr_id" value="'+cidText[i].id+'"></div>';
             $('.multiplierData').append(text);
         }
 
