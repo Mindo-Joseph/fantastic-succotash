@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal};
+use App\Models\{Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory};
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
@@ -112,13 +112,7 @@ class CustomerAuthController extends FrontController
     /**     * Display register Form     */
     public function register(SignupRequest $req, $domain = '')
     {
-        $rae = ReferAndEarn::first();
-        if($rae){
-            dd($rae->reffered_by_amount);
-        }
-        else{
-            dd("null");
-        }
+        
         $user = new User();
 
         $county = Country::where('code', strtoupper($req->countryData))->first();
@@ -156,7 +150,27 @@ class CustomerAuthController extends FrontController
 
         if ($user->id > 0) {
             $userCustomData = $this->userMetaData($user->id, 'web', 'web');
+            $rae = ReferAndEarn::first();
+            if($rae){
+                $userReff_by = UserRefferal::where('refferal_code', $req->refferal_code)->first();
+                $wallet_by = Wallet::where('user_id' , $userReff_by->user_id)->first();
+                $wallet_to = Wallet::where('user_id' , $user->id)->first();
 
+                if($rae->reffered_by_amount != null){
+                $wallet_history = new WalletHistory();
+                $wallet_history->user_id = $userReff_by->user_id;
+                $wallet_history->wallet_id = $wallet_by->id;
+                $wallet_history->amount = $rae->reffered_by_amount;
+                $wallet_history->save();
+                }
+                if($rae->reffered_to_amount != null){
+                $wallet_history = new WalletHistory();
+                $wallet_history->user_id = $user->id;
+                $wallet_history->wallet_id = $wallet_to->id;
+                $wallet_history->amount = $rae->reffered_to_amount;
+                $wallet_history->save();
+                }
+            }
             Auth::login($user);
             $this->checkCookies($user->id);
             return redirect()->route('user.verify');
