@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Client, Category, Brand, Cart, Product, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal};
+use App\Models\{Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal};
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
@@ -112,7 +112,13 @@ class CustomerAuthController extends FrontController
     /**     * Display register Form     */
     public function register(SignupRequest $req, $domain = '')
     {
-       
+        $rae = ReferAndEarn::first();
+        if($rae){
+            dd($rae->reffered_by_amount);
+        }
+        else{
+            dd("null");
+        }
         $user = new User();
 
         $county = Country::where('code', strtoupper($req->countryData))->first();

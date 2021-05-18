@@ -40,7 +40,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group mb-3">
                                         <label for="reffered_by_amount">Reffered by earning</label>
-                                        <input type="text" name="reffered_by_amount" id="reffered_by_amount" placeholder="xyz" class="form-control" value="{{ old('reffered_by_amount', $refferandearn['reffered_by_amount'] ?? '')}}">
+                                        <input type="text" name="reffered_by_amount" id="reffered_by_amount" placeholder="xyz" class="form-control" value="{{ old('reffered_by_amount', $reffer_by ?? '')}}">
                                         @if($errors->has('reffered_by_amount'))
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $errors->first('reffered_by_amount') }}</strong>
@@ -76,7 +76,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group mb-3">
                                         <label for="reffered_to_amount">Reffered to earning </label>
-                                        <input type="text" name="reffered_to_amount" id="reffered_to_amount" placeholder="xyz" class="form-control" value="{{ old('reffered_to_amount', $refferandearn['reffered_to_amount'] ?? '')}}">
+                                        <input type="text" name="reffered_to_amount" id="reffered_to_amount" class="form-control" value="{{ old('reffered_to_amount', $reffer_to ?? '')}}">
                                         @if($errors->has('reffered_to_amount'))
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $errors->first('reffered_to_amount') }}</strong>
