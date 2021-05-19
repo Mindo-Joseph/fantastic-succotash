@@ -53,22 +53,81 @@
                                 <h3>Billing Details</h3>
                             </div>
                            <div class="typography-box">
-                        <div class="headings">
-                            <h3>Addresses</h3>
-                        </div>
-                        <div class="typo-content input_button">
-                            @forelse($addresses as $address)
-                            <div class="row">
-                                <div>
-                                    <input type="radio" name="gender" id="one" value="male" checked="checked">
-                                    <label for="one">{{$address->address.' '.$address->street.' '.$address->city.' '.$address->state.' '.$address->pincode}}</label>
+                            <div class="headings">
+                                <h3>Add New Address</h3>
+                            </div>
+                            <script type="text/template" id="address_template">
+                                <div class="row">
+                                    <div>
+                                        <input type="radio" name="gender" id="one" value="<%= address.id %>">
+                                        <label for="one"> <%= address.address %> <%= address.street %> <%= address.city %> <%= address.state %> <%= address.pincode %> </label>
+                                    </div>
+                                </div>
+                            </script>
+                            <div class="typo-content input_button" id="address_template_main_div">
+                                @forelse($addresses as $address)
+                                    <div class="row">
+                                        <div>
+                                            <input type="radio" name="gender" id="one" value="male" checked="checked">
+                                            <label for="one">{{$address->address.' '.$address->street.' '.$address->city.' '.$address->state.' '.$address->pincode}}</label>
+                                        </div>
+                                    </div>
+                                @empty
+                                <h5>You haven't added any address yet.</h5>
+                                @endforelse
+                            </div>
+                            <a class="btn btn-outline mr-3" id="add_new_address">+ Add New Address</a>
+                            <div class="theme-card" id="add_new_address_form" style="display:none;">
+                                <div class="form-row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="address">Address</label>
+                                        <input type="text" class="form-control" id="address" placeholder="Address" value="" required="">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-xs btn-dark waves-effect waves-light showMap" type="button" num="edit"> <i class="mdi mdi-map-marker-radius"></i></button>
+                                        </div>
+                                        <span class="text-danger" id="address_error"></span>
+                                    </div>
+                                </div>
+                                <div class="form-row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="city">City</label>
+                                        <input type="text" class="form-control" id="city" placeholder="City" value="" required="">
+                                        <span class="text-danger" id="city_error"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="state">State</label>
+                                        <input type="text" class="form-control" id="state" placeholder="State" value="" required="">
+                                        <span class="text-danger" id="state_error"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="country">Country</label>
+                                        <select name="country" id="country" class="form-control" required="">
+                                            @foreach($countries as $co)
+                                                <option value="{{$co->id}}" selected>{{$co->name}}</option>
+                                            @endforeach
+                                        </select>
+                                        <span class="text-danger" id="country_error"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="pincode">Pincode</label>
+                                        <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="" required="">
+                                        <span class="text-danger" id="pincode_error"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="type">Address Type</label>
+                                        <select name="type" id="type" class="form-control" required="">
+                                            <option value="1" selected>Home</option>
+                                            <option value="2">Office</option>
+                                        </select>
+                                        <span class="text-danger" id="type_error"></span>
+                                    </div>
+                                    <div class="col-md-6"></div>
+                                    <button type="button" class="btn btn-solid mt-3" id="save_address">Save Address</button>
+                                    <button type="button" class="btn btn-solid black-btn me-3" id="cancel_save_address_btn">black</button>
+
                                 </div>
                             </div>
-                            @empty
-                            @endforelse
-                            <a href="#" class="btn btn-outline mr-3">+ Add New Address</a>
                         </div>
-                    </div>
                         </div>
                         <div class="col-lg-6 col-sm-12 col-xs-12">
                             <div class="checkout-details">
@@ -120,7 +179,7 @@
                                                 </li> -->
                                                 <li>
                                                     <div class="radio-option">
-                                                        <input type="radio" name="payment-group" value="2" id="payment-2">
+                                                        <input type="radio" name="payment-group" value="2" id="payment-2" checked="">
                                                         <label for="payment-2">Cash On Delivery
                                                             <span class="small-text">Please send a check to Store
                                                                 Name, Store Street, Store Town, Store State / County, Store Postcode.</span>
@@ -150,6 +209,7 @@
 @section('script')
 <script>
     var total1 = 0;
+    var user_store_address_url = "{{url('user/store')}}";
     $(document).ready(function() {
         $.ajaxSetup({
             headers: {
@@ -174,28 +234,6 @@
                     $('#total_payable_amount').html('$'+data.total_payable_amount)
                     $('#total_payable_amount_input').html('$'+data.total_payable_amount)
                 }
-            },
-            error: function(data) {
-                console.log('Error Found : ' + data);
-            }
-        });
-    });
-    $(document).ready(function() {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type: "get",
-            url: "{{ route('getUserAddress') }}",
-            data: '',
-            dataType: 'json',
-            success: function(data) {
-                $("#first_name").val("{{Auth::user()->name}}");
-                $("#phone").val("{{Auth::user()->phone_number}}");
-                $("#email_address").val("{{Auth::user()->email}}");
-                $(".countries").append("<option selected value='"+data.country.id+"'>"+data.country.name+"</option>");
             },
             error: function(data) {
                 console.log('Error Found : ' + data);

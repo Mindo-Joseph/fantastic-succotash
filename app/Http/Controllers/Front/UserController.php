@@ -212,10 +212,11 @@ class UserController extends FrontController
      * Display a listing of the resource.
      */
     public function checkout($domain = ''){
+        $countries = Country::get();
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
-        return view('forntend.checkout')->with(['navCategories' => $navCategories, 'addresses' => $addresses]);
+        return view('forntend.checkout')->with(['navCategories' => $navCategories, 'addresses' => $addresses, 'countries' => $countries]);
     }
 
     /**

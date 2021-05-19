@@ -558,8 +558,9 @@
 
 <script type="text/javascript">
     var ajaxCall = 'ToCancelPrevReq';
-    var add_to_cart_url = "{{ route('addToCart') }}";
+    var vendor_id = "{{ $product->vendor_id }}";
     var product_id = "{{ $product->id }}";
+    var add_to_cart_url = "{{ route('addToCart') }}";
     $('.changeVariant').click(function() {
         var variants = [];
         var options = [];

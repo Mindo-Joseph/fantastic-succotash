@@ -32,14 +32,16 @@ class OrderController extends FrontController{
         }
         $cart = Cart::where('user_id', Auth::user()->id)->first();
         $cartProduct = CartProduct::where('cart_id', $cart->id)->count();
+        $latestOrder = Order::orderBy('created_at','DESC')->first();
         $order = new Order;
-        $order->user_id = Auth::user()->id;
         $order->recipient_name = $name;
+        $order->user_id = Auth::user()->id;
         $order->payment_method = $paymentMethod;
         $order->payment_status = $paymentStatus;
         $order->address_id = $request->address_id;
         $order->recipient_number = $request->phone;
         $order->recipient_email = $request->email_address;
+        $order->order_no = str_pad($latest_order->id + 1, 8, "0", STR_PAD_LEFT);
         $order->save();
         $cartProducts = CartProduct::where('cart_id', $cart->id)->get()->toArray();
         foreach ($cartProducts as $cartpro) {

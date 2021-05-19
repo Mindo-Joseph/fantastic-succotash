@@ -5,21 +5,10 @@
         js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js#xfbml=1&version=v2.12&autoLogAppEvents=1';
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
-<!-- Your customer chat code -->
 <div class="fb-customerchat" attribution=setup_tool page_id="2123438804574660" theme_color="#0084ff"
     logged_in_greeting="Hi! Welcome to PixelStrap Themes  How can we help you?"
     logged_out_greeting="Hi! Welcome to PixelStrap Themes  How can we help you?">
 </div>
-<!-- facebook chat section end -->
-
-
-<!-- cart start -->
-<!-- <div class="addcart_btm_popup" id="fixed_cart_icon">
-    <a href="#" class="fixed_cart">
-        <i class="ti-shopping-cart"></i>
-    </a>
-</div> -->
-
 <div class="tap-top top-cls">
     <div>
         <i class="fa fa-angle-double-up"></i>
@@ -37,13 +26,11 @@
         $darkMode = 'dark';
     }
 @endphp
-
 <style type="text/css">
     .dark-light-btn, #setting-icon{
         display: none;
     }
 </style>
-
 <script src="https://maps.googleapis.com/maps/api/js?key={{$mapKey}}&v=3.exp&libraries=places,drawing"></script>
 <script src="{{asset('front-assets/js/popper.min.js')}}"></script>
 <script src="{{asset('front-assets/js/slick.js')}}"></script>
@@ -53,10 +40,9 @@
 <script src="{{asset('front-assets/js/bootstrap-notify.min.js')}}"></script>
 <script src="{{asset('front-assets/js/jquery.elevatezoom.js')}}"></script>
 <script src="{{asset('front-assets/js/underscore.min.js')}}"></script>
+<script src="{{asset('front-assets/js/sweetalert2.min.js')}}"></script>
 <script src="{{asset('front-assets/js/script.js')}}"></script>
 <script src="{{asset('js/custom.js')}}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
-
 <script>
     /*$(window).on('load', function () {
         setTimeout(function () {
@@ -141,11 +127,9 @@
             },
         });
     });
-
     function openSearch() {
         document.getElementById("search-overlay").style.display = "block";
     }
-
     function closeSearch() {
         document.getElementById("search-overlay").style.display = "none";
     }
@@ -153,11 +137,6 @@
         var color_picker1 = '{{$webColor}}';
         document.documentElement.style.setProperty('--theme-deafult', color_picker1);
         $('body').addClass("{{$darkMode}}");
-        
-        /*document.getElementById("ColorPicker1").onchange = function() {
-            color_picker1 = this.value;
-            document.documentElement.style.setProperty('--theme-deafult', color_picker1);
-        };*/
     })
 
 </script>
