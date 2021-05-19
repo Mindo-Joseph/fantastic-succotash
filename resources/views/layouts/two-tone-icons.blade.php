@@ -6,7 +6,6 @@
         @include('layouts.shared/head-css')
         {{-- @include('layouts.shared/head-css', ["demo" => "creative"]) --}}
     </head>
-
     <body data-sidebar-icon="twotones" @yield('body-extra')>
         <!-- Begin page -->
         <div id="wrapper">

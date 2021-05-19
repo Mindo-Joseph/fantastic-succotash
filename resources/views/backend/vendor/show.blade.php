@@ -62,7 +62,7 @@
                         <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} " id="configuration">
 
                             <div class="row">
-                                <div class="col-md-12 card-box">
+                                <div class="col-md-12">
                                     <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
                                         @csrf
                                         <div class="row">
@@ -96,7 +96,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-12 card-box">
+                                <div class="col-md-12">
                                     <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
                                         @csrf
                                         <div class="row">
@@ -137,7 +137,7 @@
                             @if(session('preferences.is_hyperlocal') == 1)
 
                             <div class="row">
-                                <div class="col-md-12 card-box">
+                                <div class="col-md-12">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h4 class="mb-2 "> Service Area <span style=" float:right;"><button class="btn btn-info openServiceModal"> Add Service Area</button></span></h4>

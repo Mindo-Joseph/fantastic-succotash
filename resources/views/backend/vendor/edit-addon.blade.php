@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-12 card-box">
+    <div class="col-md-12">
         <div class="row rowYK">
             <div class="col-md-12">
                 <h5>Addon Title</h5>

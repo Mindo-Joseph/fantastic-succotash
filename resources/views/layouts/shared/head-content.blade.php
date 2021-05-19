@@ -2,7 +2,6 @@
 @php 
 $mapKey = '1234';
 $theme = \App\Models\ClientPreference::where(['id' => 1])->first();
-
 if($theme && !empty($theme->map_key)){
 	$mapKey = $theme->map_key;
 }

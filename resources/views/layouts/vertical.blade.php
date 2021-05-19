@@ -32,8 +32,15 @@
        </style>
 
     </head>
+    @php 
+        $classBody1 = 'light';
+        $theme1 = \App\Models\ClientPreference::where(['id' => 1])->first('theme_admin');
+        if($theme1 && ($theme1->theme_admin == 'dark' || $theme1->theme_admin == 'Dark')){
+            $classBody1 = 'dark';
+        } 
+        @endphp
 
-    <body @yield('body-extra')>
+    <body class="{{$classBody1}}" @yield('body-extra')>
         <!-- Begin page -->
         <div id="wrapper">
             @include('layouts.shared/topbar')
