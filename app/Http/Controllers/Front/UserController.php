@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Client, Category, Brand, Product, ClientLanguage, User, ClientCurrency, ClientPreference, Country, UserAddress, UserVerification};
+use App\Models\{Currency, Banner, Client, Category, Brand, Product, ClientLanguage, User, ClientCurrency, ClientPreference, Country, UserAddress, UserVerification,};
 use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
@@ -211,11 +211,11 @@ class UserController extends FrontController
     /**
      * Display a listing of the resource.
      */
-    public function checkout($domain = '')
-    {
+    public function checkout($domain = ''){
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/checkout')->with(['navCategories' => $navCategories]);
+        $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
+        return view('forntend.checkout')->with(['navCategories' => $navCategories, 'addresses' => $addresses]);
     }
 
     /**

@@ -110,6 +110,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::post('verifTokenProcess', 'Front\UserController@verifyToken')->name('user.verifyToken');
 
 	Route::get('user/checkout', 'Front\UserController@checkout')->name('user.checkout');
+	Route::get('order/success/{order_id}', 'Front\OrderController@getOrderSuccessPage')->name('order.success');
 
 	Route::post('user/placeorder', 'Front\OrderController@placeOrder')->name('user.placeorder');
 
