@@ -16,10 +16,7 @@ class CategoryController extends BaseController
 {
     private $field_status = 2;
     use ApiResponser;
-    /**
-     * Get Company ShortCode
-     *
-     */
+    /**     * Get Company ShortCode     *     */
     public function categoryData(Request $request, $cid = 0)
     {
         try{
@@ -89,7 +86,6 @@ class CategoryController extends BaseController
             }*/
 
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
-
             /*if($preferences->is_hyperlocal == 1){
                 $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
                         $query->select('vendor_id')
@@ -99,7 +95,6 @@ class CategoryController extends BaseController
             }*/
             $vendorData = $vendorData->where('status', '!=', $this->field_status)->paginate($limit);
                             //->whereIn('id', $vendorIds)
-
             return $vendorData;
 
         }elseif($tpye == 'product' || $tpye == 'Product'){

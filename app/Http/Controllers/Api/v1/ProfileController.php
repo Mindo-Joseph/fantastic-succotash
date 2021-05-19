@@ -431,7 +431,7 @@ class ProfileController extends BaseController
                 return $this->errorResponse('Address not found.', 404);
             }
             $address->delete();
-            return $this->successResponse('', 'Address is set as primary address successfully.');
+            return $this->successResponse('', 'Address deleted successfully.');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }

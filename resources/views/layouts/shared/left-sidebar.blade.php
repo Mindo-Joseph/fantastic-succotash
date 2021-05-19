@@ -142,6 +142,13 @@
                     </a>
                 </li>
                 <li>   
+                    <a href="{{route('payoption.index')}}" >
+                        <!-- <i data-feather="dollar-sign"></i> -->
+                        <img src="{{asset('assets/images/payment_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span> Payment Options </span>
+                    </a>
+                </li>
+                <li>   
                     <a href="{{route('payment.index')}}" >
                         <!-- <i data-feather="dollar-sign"></i> -->
                         <img src="{{asset('assets/images/payment_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
@@ -162,10 +169,26 @@
                         <span> Loyalty Cards </span>
                     </a>
                 </li>
+                
+                <li>   
+                    <a href="{{route('wallet.index')}}" >
+                        <!-- <i data-feather="columns"></i> -->
+                        <img src="{{asset('assets/images/waller_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span> Wallet </span>
+                    </a>
+                </li> 
+                <li class="menu-title mt-2">Extra</li>
                 @php 
                     $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
                 @endphp
-                @if($brity->celebrity_check == 1)
+                <li>   
+                    <a href="#" href1="{{route('referandearn.index')}}" >
+                        <!-- <i data-feather="columns"></i> -->
+                        <img src="{{asset('assets/images/1370259.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span> Refer and Earn </span>
+                    </a>
+                </li>
+                @if(!empty($brity) && $brity->celebrity_check == 1)
                 <li>   
                     <a href="{{route('celebrity.index')}}" >
                         <!-- <i data-feather="columns"></i> -->
@@ -174,20 +197,6 @@
                     </a>
                 </li>
                 @endif
-                <li>   
-                    <a href="{{route('wallet.index')}}" >
-                        <!-- <i data-feather="columns"></i> -->
-                        <img src="{{asset('assets/images/waller_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
-                        <span> Wallet </span>
-                    </a>
-                </li> 
-                <li>   
-                    <a href="#" href1="{{route('referandearn.index')}}" >
-                        <!-- <i data-feather="columns"></i> -->
-                        <img src="{{asset('assets/images/1370259.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
-                        <span> Refer and Earn </span>
-                    </a>
-                </li> 
             </ul>
         </div>
         <div id="sidebar-menu" style="display: none;">
