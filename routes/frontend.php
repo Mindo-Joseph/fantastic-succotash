@@ -87,6 +87,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/profile', 'Front\ProfileController@profile')->name('user.profile');
     Route::get('user/wishlists', 'Front\ProfileController@wishlists')->name('user.wishlists');
     Route::post('wishlist/update', 'Front\ProfileController@updateWishlist')->name('addWishlist');
+    Route::get('wishlist/remove/{sku}', 'Front\ProfileController@removeWishlist')->name('removeWishlist');
 
 	Route::get('user/sendRefferal', 'Front\ProfileController@showRefferal')->name('user.sendRefferal');
     Route::post('user/sendRefferalCode', 'Front\ProfileController@sendRefferalCode')->name('user.sendEmail');
@@ -99,7 +100,8 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::post('user/store', 'Front\AddressController@store')->name('address.store');
 	Route::post('user/update/{id}', 'Front\AddressController@update')->name('address.update');
 
-    Route::get('user/orders', 'Front\ProfileController@orders')->name('user.orders');
+	Route::get('user/orders', 'Front\ProfileController@orders')->name('user.orders');
+
     Route::get('user/newsLetter', 'Front\ProfileController@newsLetter')->name('user.newsLetter');
     Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
     Route::get('user/changePassword', 'Front\ProfileController@changePassword')->name('user.changePassword');

@@ -58,6 +58,7 @@
     }
 </style>
 
+    
 <section class="section-b-space">
     <div class="container">
         <div class="row">
@@ -67,10 +68,10 @@
                     <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i> back</span></div>
                     <div class="block-content">
                         <ul>
-                            <li class="active"><a href="{{route('user.profile')}}">Account Info</a></li>
+                            <li><a href="{{route('user.profile')}}">Account Info</a></li>
                             <li><a href="{{route('user.addressBook')}}">Address Book</a></li>
                             <li><a href="{{route('user.orders')}}">My Orders</a></li>
-                            <li><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
+                            <li class="active"><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
                             <li><a href="#">My Account</a></li>
                             <li><a href="#">Change Password</a></li>
                             <li class="last"><a href="#">Log Out</a></li>
@@ -82,65 +83,61 @@
                 <div class="dashboard-right">
                     <div class="dashboard">
                         <div class="page-title">
-                            <h2>My Dashboard</h2>
+                            <h2>Wishlist</h2>
                         </div>
                         <div class="welcome-msg">
-                            <h5>Hello, {{ucwords(Auth::user()->name)}} !</h5>
-
-                            <h3>Your Refferal Code: {{$userRefferal['refferal_code']}}</h3>
-                            <div class="box mb-2">
-                               <a href="{{route('user.sendRefferal')}}">Send Refferal</a>
-                            </div>
-
-                            <p>From your My Account Dashboard you have the ability to view a snapshot of your recent
-                                account activity and update your account information. Select a link below to view or
-                                edit information.</p>
+                            <h5>Here are all your wishlist products !</h5>
                         </div>
                         <div class="box-account box-info">
-                            <div class="box-head">
-                                <h2>Account Information</h2>
-                            </div>
                             <div class="row">
-                                <div class="col-sm-6">
+                            <div class="col-sm-12 table-responsive-xs">
+                    <table class="table cart-table">
+                        <thead>
+                            <tr class="table-head">
+                                <th scope="col">image</th>
+                                <th scope="col">product name</th>
+                                <th scope="col">price</th>
+                                <th scope="col">availability</th>
+                                <th scope="col">action</th>
+                            </tr>
+                        </thead>
+                        @foreach($wishList as $wish)
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a href="#"><img src="{{$wish['product']['media'][0]['image']['path']['proxy_url'].'200/200'.$wish['product']['media'][0]['image']['path']['image_path']}}" alt=""></a>
+                                </td>
+                                <td><a href="#">{{$wish['product']['sku']}}</a>
+                                </td>
+                                <td>
+                                    <h2>${{$wish['product']['variant'][0]['price']}}</h2>
+                                </td>
+                                <td>
+                                @if($wish['product']['variant'][0]['quantity'] > 0)
+                                    <p>In stock</p>
+                                @else
+                                    <p>Not in stock</p>
+                                @endif
+                                </td>
+                                <td><a href="{{ route('removeWishlist', $wish['product']['sku']) }}" class="icon me-3"><i class="ti-close"></i> </a></td>
+                            </tr>
+                        </tbody>
+                        @endforeach
+                    </table>
+                </div>
+                            <!-- @foreach($wishList as $wish)
+                                <div class="col-sm-4">
                                     <div class="box">
                                         <div class="box-title">
-                                            <h3>Contact Information</h3><a href="#">Edit</a>
+                                            <h3>{{$wish['product']['sku']}}</h3><a href="{{ route('removeWishlist', $wish['product']['sku']) }}">Remove</a>
                                         </div>
                                         <div class="box-content">
-                                            <h6>{{ucwords(Auth::user()->name)}}</h6>
-                                            <h6>{{Auth::user()->email}}</h6>
-                                            <h6>{{Auth::user()->phone_number}}</h6>
+                                            <a href="{{route('second', ['ecommerce', 'product-detail'])}}"><img src="{{$wish['product']['media'][0]['image']['path']['proxy_url'].'200/200'.$wish['product']['media'][0]['image']['path']['image_path']}}" alt="product-img" height="100" /></a>
+                                            <h6>Price: {{$wish['product']['variant'][0]['price']}}</h6>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="box">
-                                        <div class="box-title">
-                                            <h3>Newsletters</h3><a href="#">Edit</a>
-                                        </div>
-                                        <div class="box-content">
-                                            <p>You are currently not subscribed to any newsletter.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="box">
-                                    <div class="box-title">
-                                        <h3>Address Book</h3><a href="#">Manage Addresses</a>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <h6>Default Billing Address</h6>
-                                            <address>You have not set a default billing address.<br><a href="#">Edit
-                                                    Address</a></address>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <h6>Default Shipping Address</h6>
-                                            <address>You have not set a default shipping address.<br><a href="#">Edit Address</a></address>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach -->
                             </div>
                         </div>
                     </div>

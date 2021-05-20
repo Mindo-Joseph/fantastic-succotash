@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Models\{UserWishlist, User, Product, UserAddress, UserRefferal, ClientPreference, Client};
+use App\Models\{UserWishlist, User, Product, UserAddress, UserRefferal, ClientPreference, Client, Order};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Front\FrontController;
 use Carbon\Carbon;
@@ -19,7 +19,24 @@ class ProfileController extends FrontController
      */
     public function wishlists()
     {
-        //
+        
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+
+        $wishList = UserWishlist::with(['product.media.image', 'product.translation' => function($q) use($langId){
+            $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+            },
+            'product.variant' => function($q) use($langId){
+                $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                $q->groupBy('product_id');
+            },
+        ])->select( "id", "user_id", "product_id")
+        ->where('user_id', Auth::user()->id)->get();
+        
+        if(!empty($wishList)){
+            $wishList = $wishList->toArray();
+        }
+       return view('forntend/account/wishlist')->with(['navCategories' => $navCategories, 'wishList' => $wishList]);
     }
 
     /**
@@ -109,6 +126,32 @@ class ProfileController extends FrontController
         return response()->json(array('success' => true, 'message' => 'Product has been added in wishlist.'));
     }
 
+     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function removeWishlist($domain = '', Request $request, $sku)
+    {
+        $product = Product::where('sku', $sku)->firstOrFail();
+
+        $exist = UserWishlist::where('user_id', Auth::user()->id)->where('product_id', $product->id)->first();
+
+        if($exist){
+            $exist->delete();
+            return redirect()->route('user.wishlists');
+        }
+        $wishlist = new UserWishlist();
+        $wishlist->user_id = Auth::user()->id;
+        $wishlist->product_id = $product->id;
+        $wishlist->added_on = Carbon::now();
+        $wishlist->save();
+
+        return redirect()->route('user.wishlists');   
+     }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -130,6 +173,9 @@ class ProfileController extends FrontController
      */
     public function orders(Request $request, $domain = '')
     {
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+       return view('forntend/account/orders')->with(['navCategories' => $navCategories]);
     }
 
     /**
