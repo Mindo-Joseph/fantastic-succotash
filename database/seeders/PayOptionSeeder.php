@@ -15,16 +15,19 @@ class PayOptionSeeder extends Seeder
  
         $opt = array(
             array(
+                'id' => '1',
                 'code' => 'COD',
                 'title' => 'Cash On Delivery',
                 'status' => '1'
             ),
             array(
+                'id' => '2',
                 'code' => 'wallet',
                 'title' => 'Wallet',
                 'status' => '1'
             ),
             array(
+                'id' => '3',
                 'code' => 'layalty-points',
                 'title' => 'Layalty Points',
                 'status' => '1'

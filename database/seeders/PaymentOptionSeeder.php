@@ -12,262 +12,138 @@ class PaymentOptionSeeder extends Seeder
     public function run()
     { 
         $opt = array(
-            array(
-                'code' => 'COD',
-                'title' => 'Cash On Delivery',
-                'status' => '1'
-            ),
-            array(
-                'code' => 'wallet',
-                'title' => 'Wallet',
-                'status' => '1'
-            ),
-            array(
-                'code' => 'layalty-points',
-                'title' => 'Layalty Points',
-                'status' => '1'
-            ),
-            array(
-                'code' => '2c2p',
-                'title' => '2c2p',
-                'status' => '1'
-            ),
-            array(
-                'code' => '2checkout',
-                'title' => '2Checkout',
-                'status' => '1'
-            ),
-            array(
-                'code' => 'agms',
-                'title' => 'AGMS',
-                'status' => '1'
-            ),
-            array(
-                'code' => 'global-alipay',
-                'title' => 'Alipay(Global)',
-                'status' => '1'
-            ),
-            array(
-                'code' => 'alipay',
-                'title' => 'Alipay',
-                'status' => '1'
-            ),
-            array(
-                'code' => 'alipay',
-                'title' => 'Alipay',
-                'status' => '1'
-            ),
-            array(
-                'code' => 'alipay',
-                'title' => 'Alipay',
-                'status' => '1'
-            ),
-            array(
-                'code' => '99bill',
-                'title' => '99Bill',
-                'status' => '1'
-            ),
-            array(
-                'code' => 'alliedwallet',
-                'title' => 'Allied Wallet',
-                'status' => '1'
-            ),
-            array(
-                'code' => 'Authorize.Net',
-                'title' => 'authorizenet',
-                'status' => '1'
-            ),
-
-            array(
-                'code' => 'Authorize.Net API',
-                'title' => 'authorizenetapi',
-                'status' => '1'
-            ),
-
-            array(
-                'code' => 'Barclays ePDQ',
-                'title' => 'barclays-epdq',
-                'status' => '1'
-            ),
-            array(
-                'code' => 'Beanstream',
-                'title' => 'beanstream',
-                'status' => '1'
-            ),
-
-            array(
-                'code' => 'BKM Express',
-                'title' => 'bkm',
-                'status' => '1'
-            ),
-
-            array(
-                'code' => 'BlueSnap',
-                'title' => 'bluesnap',
-                'status' => '1'
-            ),
-            array(
-                'code' => 'Braintree',
-                'title' => 'braintree',
-                'status' => '1'
-            ),
-
-            array(
-                'code' => 'Buckaroo',
-                'title' => 'buckaroo',
-                'status' => '1'
-            ),
-
-            array(
-                'code' => 'CardGate',
-                'title' => 'cardgate',
-                'status' => '1'
-            ),
+            array('id' => '8', 'code' => 'tpay', 'title' => 'Tpay', 'status' => '1'),
+            array('id' => '9', 'code' => '2c2p', 'title' => '2c2p', 'status' => '1'),
+            array('id' => '10', 'code' => '2checkout', 'title' => '2Checkout', 'status' => '1'),
+            array('id' => '11', 'code' => 'agms', 'title' => 'AGMS', 'status' => '1'),
+            array('id' => '12', 'code' => 'global-alipay', 'title' => 'Alipay (Global)', 'status' => '1'),
+            array('id' => '13', 'code' => 'alipay', 'title' => 'Alipay', 'status' => '1'),
+            array('id' => '14', 'code' => '99bill', 'title' => '99Bill', 'status' => '1'),
+            array('id' => '15', 'code' => 'alliedwallet', 'title' => 'Allied Wallet', 'status' => '1'),
+            array('id' => '16', 'code' => 'authorizenet', 'title' => 'Authorize.Net', 'status' => '1'),
+            array('id' => '17', 'code' => 'authorizenetapi', 'title' => 'Authorize.Net API', 'status' => '1'),
+            array('id' => '18', 'code' => 'barclays-epdq', 'Title' => 'Barclays ePDQ', 'status' => '1'),
+            array('id' => '19', 'code' => 'beanstream', 'title' => 'Beanstream', 'status' => '1'),
+            array('id' => '20', 'code' => 'bkm', 'title' => 'BKM Express', 'status' => '1'),
+            array('id' => '21', 'code' => 'bluesnap', 'title' => 'BlueSnap', 'status' => '1'),
+            array('id' => '22', 'code' => 'braintree', 'title' => 'Braintree', 'status' => '1'),
+            array('id' => '23', 'code' => 'buckaroo', 'title' => 'Buckaroo', 'status' => '1'),
+            array('id' => '24', 'code' => 'cardgate', 'title' => 'CardGate', 'status' => '1'),
+            array('id' => '25', 'code' => 'cardsave', 'title' => 'CardSave', 'status' => '1'),
+            array('id' => '26', 'code' => 'cashbaba', 'title' => 'CashBaBa', 'status' => '1'),
+            array('id' => '27', 'code' => 'checkoutcom', 'title' => 'Checkout.com', 'status' => '1'),
+            array('id' => '28', 'code' => 'cloudbanking', 'title' => 'CloudBanking', 'status' => '1'),
+            array('id' => '29', 'code' => 'coinbase', 'title' => 'Coinbase', 'status' => '1'),
+            array('id' => '30', 'code' => 'coingate', 'title' => 'CoinGate', 'status' => '1'),
+            array('id' => '31', 'code' => 'creditcall', 'title' => 'Creditcall', 'status' => '1'),
+            array('id' => '32', 'code' => 'cybersource', 'title' => 'Cybersource', 'status' => '1'),
+            array('id' => '33', 'code' => 'cybersource-soap', 'title' => 'Cybersource SOAP', 'status' => '1'),
+            array('id' => '34', 'code' => 'datacash', 'title' => 'DataCash', 'status' => '1'),
+            array('id' => '35', 'code' => 'datatrans', 'title' => 'Datatrans', 'status' => '1'),
+            array('id' => '36', 'code' => 'datatrans', 'title' => 'Datatrans', 'status' => '1'),
+            array('id' => '37', 'code' => 'docdata-payments', 'title' => 'Docdata Payments', 'status' => '1'),
+            array('id' => '38', 'code' => 'dummy', 'title' => 'Dummy', 'status' => '1'),
+            array('id' => '39', 'code' => 'eghl', 'title' => 'eGHL', 'status' => '1'),
+            array('id' => '40', 'code' => 'ecopayz', 'title' => 'ecoPayz', 'status' => '1'),
+            array('id' => '41', 'code' => 'egopaymentru', 'title' => 'EgopayRu', 'status' => '1'),
+            array('id' => '42', 'code' => 'elavon', 'title' => 'Elavon', 'status' => '1'),
+            array('id' => '43', 'code' => 'eway', 'title' => 'eWAY', 'status' => '1'),
+            array('id' => '44', 'code' => 'fasapay', 'title' => 'Fasapay', 'status' => '1'),
+            array('id' => '45', 'code' => 'fatzebra', 'title' => 'Fat Zebra', 'status' => '1'),
+            array('id' => '46', 'code' => 'firstdata', 'title' => 'First Data', 'status' => '1'),
+            array('id' => '47', 'code' => 'zero', 'title' => 'Free / Zero Amount', 'status' => '1'),
+            array('id' => '48', 'code' => 'flo2cash', 'title' => 'Flo2cash', 'status' => '1')
+            array('id' => '49', 'code' => 'girocheckout', 'title' => 'GiroCheckout', 'status' => '1'),
+            array('id' => '50', 'code' => 'globalcloudpay', 'title' => 'Globalcloudpay', 'status' => '1'),
+            array('id' => '51', 'code' => 'gocardless', 'title' => 'GoCardless', 'status' => '1'),
+            array('id' => '52', 'code' => 'govpaynet', 'title' => 'GovPayNet', 'status' => '1'),
+            array('id' => '53', 'code' => 'gvp', 'title' => 'GVP (Garanti)', 'status' => '1'),
+            array('id' => '54', 'code' => 'helcim', 'title' => 'Helcim', 'status' => '1'),
+            array('id' => '55', 'code' => 'idram', 'title' => 'iDram', 'status' => '1'),
+            array('id' => '56', 'code' => 'ipay88', 'title' => 'iPay88', 'status' => '1'),
+            array('id' => '57', 'code' => 'ifthenpay', 'title' => 'IfthenPay', 'status' => '1'),
+            array('id' => '58', 'code' => 'iyzico', 'title' => 'Iyzico ', 'status' => '1'),
+            array('id' => '59', 'code' => 'judopay', 'title' => 'Judo Pay', 'status' => '1'),
+            array('id' => '60', 'code' => 'klarna-checkout', 'title' => 'Klarna Checkout', 'status' => '1'),
+            array('id' => '61', 'code' => 'komerci', 'title' => 'Komerci (Rede, former RedeCard)', 'status' => '1'),
+            array('id' => '62', 'code' => 'komoju', 'title' => 'Komoju', 'status' => '1'),
+            array('id' => '63', 'code' => 'midtrans', 'title' => 'Midtrans', 'status' => '1'),
+            array('id' => '64', 'code' => 'magnius', 'title' => 'Magnius', 'status' => '1'),
+            array('id' => '65', 'code' => 'manual', 'title' => 'Manual', 'status' => '1'),
+            array('id' => '66', 'code' => 'migs', 'title' => 'Migs', 'status' => '1'),
+            array('id' => '67', 'code' => 'mollie', 'title' => 'Mollie', 'status' => '1'),
+            array('id' => '68', 'code' => 'molpay', 'title' => 'MOLPay ', 'status' => '1'),
+            array('id' => '69', 'code' => 'multicards', 'title' => 'MultiCards', 'status' => '1'),
+            array('id' => '70', 'code' => 'multisafepay', 'title' => 'MultiSafepay', 'status' => '1'),
+            array('id' => '71', 'code' => 'mycard', 'title' => 'MyCard', 'status' => '1'),
+            array('id' => '72', 'code' => 'nabtransact', 'title' => 'National Australia Bank (NAB) Transact', 'status' => '1'),
+            array('id' => '73', 'code' => 'nestpay', 'title' => 'NestPay (EST)', 'status' => '1'),
+            array('id' => '74', 'code' => 'netaxept', 'title' => 'Netaxept (BBS)', 'status' => '1'),
+            array('id' => '75', 'code' => 'netbanx', 'title' => 'Netbanx', 'status' => '1'),
+            array('id' => '76', 'code' => 'neteller', 'title' => 'Neteller', 'status' => '1'),
+            array('id' => '77', 'code' => 'netpay', 'title' => 'NetPay', 'status' => '1'),
+            array('id' => '78', 'code' => 'nmi', 'title' => 'Network Merchants Inc. (NMI)', 'status' => '1'),
+            array('id' => '79', 'code' => 'nocks', 'title' => 'Nocks', 'status' => '1'),
+            array('id' => '80', 'code' => 'onepay', 'title' => 'OnePay', 'status' => '1'),
+            array('id' => '81', 'code' => 'oppwa', 'title' => 'Oppwa', 'status' => '1'),
+            array('id' => '82', 'code' => 'payoo', 'title' => 'Payoo', 'status' => '1'),
+            array('id' => '83', 'code' => 'pacnet', 'title' => 'Pacnet', 'status' => '1'),
+            array('id' => '84', 'code' => 'pagarme', 'title' => 'Pagar.me', 'status' => '1'),
+            array('id' => '85', 'code' => 'paratika', 'title' => 'Paratika (Asseco)', 'status' => '1'),
+            array('id' => '86', 'code' => 'payfast', 'title' => 'PayFast', 'status' => '1'),
+            array('id' => '87', 'code' => 'payflow', 'title' => 'Payflow', 'status' => '1'),
+            array('id' => '88', 'code' => 'paymentexpress', 'title' => 'PaymentExpress (DPS)', 'status' => '1'),
+            array('id' => '89', 'code' => 'paymentexpress-a2a', 'title' => 'PaymentExpress / DPS (A2A)', 'status' => '1'),
+            array('id' => '90', 'code' => 'paymentgateru', 'title' => 'PaymentgateRu', 'status' => '1'),
+            array('id' => '91', 'code' => 'paymentsense', 'title' => 'PaymentSense', 'status' => '1'),
+            array('id' => '92', 'code' => 'paymentwall', 'title' => 'PaymentWall', 'status' => '1'),
+            array('id' => '93', 'code' => 'paypal', 'title' => 'PayPal', 'status' => '1'),
+            array('id' => '94', 'code' => 'paypro', 'title' => 'PayPro', 'status' => '1'),
+            array('id' => '95', 'code' => 'payone', 'title' => 'PAYONE', 'status' => '1'),
+            array('id' => '96', 'code' => 'paysafecard', 'title' => 'Paysafecard', 'status' => '1'),
+            array('id' => '97', 'code' => 'paysera', 'title' => 'Paysera', 'status' => '1'),
+            array('id' => '98', 'code' => 'paysimple', 'title' => 'PaySimple', 'status' => '1'),
+            array('id' => '99', 'code' => 'payssion', 'title' => 'PaySsion', 'status' => '1'),
+            array('id' => '100', 'code' => 'paytrace', 'title' => 'PayTrace', 'status' => '1'),
+            array('id' => '101', 'code' => 'payu', 'title' => 'PayU', 'status' => '1'),
+            array('id' => '102', 'code' => 'pelecard', 'title' => 'Pelecard', 'status' => '1'),
+            array('id' => '103', 'code' => 'pin', 'title' => 'Pin Payments', 'status' => '1'),
+            array('id' => '104', 'code' => 'pingpp', 'title' => 'Ping++', 'status' => '1'),
+            array('id' => '105', 'code' => 'poli', 'title' => 'POLi', 'status' => '1'),
+            array('id' => '106', 'code' => 'portmanat', 'title' => 'Portmanat', 'status' => '1'),
+            array('id' => '107', 'code' => 'posnet', 'title' => 'Posnet', 'status' => '1'),
+            array('id' => '108', 'code' => 'postfinance', 'title' => 'Postfinance', 'status' => '1'),
+            array('id' => '109', 'code' => 'quickpay', 'title' => 'Quickpay', 'status' => '1'),
+            array('id' => '110', 'code' => 'realex', 'title' => 'Realex', 'status' => '1'),
+            array('id' => '111', 'code' => 'omnipay', 'title' => 'RedSys', 'status' => '1'),
+            array('id' => '112', 'code' => 'rentmoola', 'title' => 'RentMoola', 'status' => '1'),
+            array('id' => '113', 'code' => 'sagepay', 'title' => 'Sage Pay', 'status' => '1'),
+            array('id' => '114', 'code' => 'sberbank', 'title' => 'Sberbank', 'status' => '1'),
+            array('id' => '115', 'code' => 'secpay', 'title' => 'SecPay', 'status' => '1'),
+            array('id' => '116', 'code' => 'securepay', 'title' => 'SecurePay', 'status' => '1'),
+            array('id' => '117', 'code' => 'secure-trading', 'title' => 'Secure Trading', 'status' => '1'),
+            array('id' => '118', 'code' => 'sisow', 'title' => 'Sisow', 'status' => '1'),
+            array('id' => '119', 'code' => 'skrill', 'title' => 'Skrill', 'status' => '1'),
+            array('id' => '120', 'code' => 'sofort', 'title' => 'Sofort', 'status' => '1'),
+            array('id' => '121', 'code' => 'spreedly', 'title' => 'Spreedly', 'status' => '1'),
+            array('id' => '122', 'code' => 'square', 'title' => 'Square', 'status' => '1'),
+            array('id' => '123', 'code' => 'stripe', 'title' => 'Stripe', 'status' => '1'),
+            array('id' => '124', 'code' => 'targetpay', 'title' => 'TargetPay', 'status' => '1'),
+            array('id' => '125', 'code' => 'unionpay', 'title' => 'UnionPay', 'status' => '1'),
+            array('id' => '126', 'code' => 'vantiv', 'title' => 'Vantiv', 'status' => '1'),
+            array('id' => '127', 'code' => 'veritrans', 'title' => 'Veritrans', 'status' => '1'),
+            array('id' => '128', 'code' => 'vindicia', 'title' => 'Vindicia', 'status' => '1'),
+            array('id' => '129', 'code' => 'vivapayments', 'title' => 'VivaPayments', 'status' => '1'),
+            array('id' => '130', 'code' => 'webmoney', 'title' => 'WebMoney', 'status' => '1'),
+            array('id' => '131', 'code' => 'wechat', 'title' => 'WeChat', 'status' => '1'),
+            array('id' => '132', 'code' => 'wechatpay', 'title' => 'WechatPay', 'status' => '1'),
+            array('id' => '133', 'code' => 'wepay', 'title' => 'WePay', 'status' => '1'),
+            array('id' => '134', 'code' => 'wirecard', 'title' => 'Wirecard', 'status' => '1'),
+            array('id' => '135', 'code' => 'wirecard', 'title' => 'Wirecard', 'status' => '1'),
+            array('id' => '136', 'code' => 'worldpay-xml', 'title' => 'Worldpay XML Direct Corporate Gateway', 'status' => '1'),
+            array('id' => '137', 'code' => 'worldpay-cg-hosted', 'title' => 'Worldpay XML Hosted Corporate Gateway', 'status' => '1'),
+            array('id' => '138', 'code' => 'worldpay', 'title' => 'Worldpay Business Gateway', 'status' => '1'),
         ); 
         \DB::table('payment_options')->insert($opt);
     }
 }
-/*
-array(
-                'code' => 'Braintree',
-                'title' => 'braintree',
-                'status' => '1'
-            ),
-
-            array(
-                'code' => 'Buckaroo',
-                'title' => 'buckaroo',
-                'status' => '1'
-            ),
-
-            array(
-                'code' => 'CardGate',
-                'title' => 'cardgate',
-                'status' => '1'
-            ),
-
-
-
-
-CardSave    ✓   -   omnipay/cardsave    Omnipay
-CashBaBa    ✓   -   omnipay/cashbaba    Recursion Technologies Ltd
-Checkout.com    ✓   -   fotografde/checkoutcom  fotograf.de
-CloudBanking    ✓   -   cloudbanking/omnipay-cloudbanking   Cloudbanking
-Coinbase    ✓   -   omnipay/coinbase    Omnipay
-CoinGate    ✓   -   coingate/omnipay-coingate   CoinGate
-Creditcall  ✓   -   meebio/omnipay-creditcall   John Jablonski
-Cybersource     ✓   -   dioscouri/omnipay-cybersource   Dioscouri Design
-Cybersource SOAP    ✓   -   dabsquared/omnipay-cybersource-soap     DABSquared
-DataCash    ✓   -   digitickets/omnipay-datacash    DigiTickets
-Datatrans   ✓   -   w-vision/datatrans  Dominik Pfaffenbauer
-Datatrans   ✓   ✓   academe/omnipay-datatrans   Jason Judge
-Docdata Payments    ✓   -   uskur/omnipay-docdata-payments  Uskur
-Dummy   ✓   ✓   omnipay/dummy   Del
-eGHL    ✓   ✓   dilab/omnipay-eghl  Xu Ding
-ecoPayz     ✓   -   dercoder/omnipay-ecopayz    Alexander Fedra
-EgopayRu    ✓   -   pinguinjkeke/omnipay-egopaymentru   Alexander Avakov
-Elavon  ✓   -   lemonstand/omnipay-elavon   LemonStand
-eWAY    ✓   ✓   omnipay/eway    Del
-Fasapay     ✓   -   andreas22/omnipay-fasapay   Andreas Christodoulou
-Fat Zebra   ✓   -   delatbabel/omnipay-fatzebra     Del
-First Data  ✓   -   omnipay/firstdata   OmniPay
-Flo2cash    ✓   -   guisea/omnipay-flo2cash     Aaron Guise
-Free / Zero Amount  ✓   -   colinodell/omnipay-zero     Colin O’Dell
-GiroCheckout    ✓   ✓   academe/omnipay-girocheckout    Jason Judge
-Globalcloudpay  ✓   -   dercoder/omnipay-globalcloudpay     Alexander Fedra
-GoCardless  ✓   -   omnipay/gocardless  Del
-GovPayNet   ✓   -   omnipay/omnipay-govpaynet   FlexCoders
-GVP (Garanti)   ✓   -   yasinkuyu/omnipay-gvp   Yasin Kuyu
-Helcim  ✓   -   academe/omnipay-helcim  Jason Judge
-iDram   -   ✓   ptuchik/omnipay-idram   Avik Aghajanyan
-iPay88  ✓   ✓   dilab/omnipay-ipay88    Xu Ding
-IfthenPay   ✓   -   ifthenpay/omnipay-ifthenpay     Rafael Almeida
-Iyzico  ✓   -   yasinkuyu/omnipay-iyzico    Yasin Kuyu
-Judo Pay    ✓   -   transportersio/omnipay-judopay  Transporters.io
-Klarna Checkout     ✓   -   myonlinestore/omnipay-klarna-checkout   MyOnlineStore
-Komerci (Rede, former RedeCard)     ✓   -   byjg/omnipay-komerci    João Gilberto Magalhães
-Komoju  ✓   -   vink/omnipay-komoju     Danny Vink
-Midtrans    ✓   ✓   dilab/omnipay-midtrans  Xu Ding
-Magnius     -   ✓   fruitcake/omnipay-magnius   Fruitcake
-Manual  ✓   -   omnipay/manual  Del
-Migs    ✓   -   omnipay/migs    Omnipay
-Mollie  ✓   ✓   omnipay/mollie  Barry vd. Heuvel
-MOLPay  ✓   -   leesiongchan/molpay     Lee Siong Chan
-MultiCards  ✓   -   incube8/omnipay-multicards  Del
-MultiSafepay    ✓   -   omnipay/multisafepay    Alexander Deruwe
-MyCard  ✓   -   xxtime/omnipay-mycard   Joe Chu
-National Australia Bank (NAB) Transact  ✓   ✓   sudiptpa/omnipay-nabtransact    Sujip Thapa
-NestPay (EST)   ✓   -   yasinkuyu/omnipay-nestpay   Yasin Kuyu
-Netaxept (BBS)  ✓   -   omnipay/netaxept    Omnipay
-Netbanx     ✓   -   omnipay/netbanx     Maks Rafalko
-Neteller    ✓   -   dercoder/omnipay-neteller   Alexander Fedra
-NetPay  ✓   -   netpay/omnipay-netpay   NetPay
-Network Merchants Inc. (NMI)    ✓   -   mfauveau/omnipay-nmi    Matthieu Fauveau
-Nocks   ✓   -   nocksapp/omnipay-nocks  Nocks
-OnePay  ✓   ✓   dilab/omnipay-onepay    Xu Ding
-Oppwa   ✓   ✓   vdbelt/omnipay-oppwa    Martin van de Belt
-Payoo   ✓   ✓   dilab/omnipay-payoo     Xu Ding
-Pacnet  ✓   -   mfauveau/omnipay-pacnet     Matthieu Fauveau
-Pagar.me    ✓   -   descubraomundo/omnipay-pagarme  Descubra o Mundo
-Paratika (Asseco)   ✓   -   yasinkuyu/omnipay-paratika  Yasin Kuyu
-PayFast     ✓   -   omnipay/payfast     Omnipay
-Payflow     ✓   -   omnipay/payflow     Del
-PaymentExpress (DPS)    ✓   -   omnipay/paymentexpress  Del
-PaymentExpress / DPS (A2A)  ✓   -   onlinesid/omnipay-paymentexpress-a2a    Sid
-PaymentgateRu   ✓   ✓   pinguinjkeke/omnipay-paymentgateru  Alexander Avakov
-PaymentSense    ✓   -   digitickets/omnipay-paymentsense    DigiTickets
-PaymentWall     ✓   -   incube8/omnipay-paymentwall     Del
-PayPal  ✓   ✓   omnipay/paypal  Del
-PayPro  ✓   -   paypronl/omnipay-paypro     Fruitcake
-PAYONE  ✓   ✓   academe/omnipay-payone  Jason Judge
-Paysafecard     ✓   -   dercoder/omnipay-paysafecard    Alexander Fedra
-Paysera     ✓   -   povils/omnipay-paysera  Povils
-PaySimple   ✓   -   dranes/omnipay-paysimple    Dranes
-PaySsion    ✓   -   inkedcurtis/omnipay-payssion    Curtis
-PayTrace    ✓   -   softcommerce/omnipay-paytrace   Oleg Ilyushyn
-PayU    ✓   -   omnipay/payu    efesaid
-Pelecard    ✓   -   uskur/omnipay-pelecard  Uskur
-Pin Payments    ✓   -   omnipay/pin     Del
-Ping++  ✓   -   phoenixg/omnipay-pingpp     Huang Feng
-POLi    ✓   -   burnbright/omnipay-poli     Sid
-Portmanat   ✓   -   dercoder/omnipay-portmanat  Alexander Fedra
-Posnet  ✓   -   yasinkuyu/omnipay-posnet    Yasin Kuyu
-Postfinance     ✓   -   bummzack/omnipay-postfinance    Roman Schmid
-Quickpay    ✓   -   nobrainerweb/omnipay-quickpay   Nobrainer Web
-Realex  ✓   -   digitickets/omnipay-realex  DigiTickets
-RedSys  ✓   -   nazka/sermepa-omnipay   Javier Sampedro
-RentMoola   ✓   -   rentmoola/omnipay-rentmoola     Geoff Shaw
-Sage Pay    ✓   ✓   omnipay/sagepay     Jason Judge
-Sberbank    -   ✓   andrewnovikof/omnipay-sberbank  Andrew Novikov
-SecPay  ✓   -   justinbusschau/omnipay-secpay   Justin Busschau
-SecurePay   ✓   ✓   omnipay/securepay   Omnipay
-Secure Trading  ✓   -   meebio/omnipay-secure-trading   John Jablonski
-Sisow   ✓   ✓   fruitcakestudio/omnipay-sisow   Fruitcake
-Skrill  ✓   -   alfaproject/omnipay-skrill  João Dias
-Sofort  ✓   -   aimeoscom/omnipay-sofort    Aimeos GmbH
-Spreedly    ✓   -   gregoriohc/omnipay-spreedly     Gregorio Hernández Caso
-Square  ✓   -   transportersio/omnipay-square   Transporters.io
-Stripe  ✓   ✓   omnipay/stripe  Del
-TargetPay   ✓   -   omnipay/targetpay   Alexander Deruwe
-UnionPay    ✓   ✓   lokielse/omnipay-unionpay   Loki Else
-Vantiv  ✓   -   lemonstand/omnipay-vantiv   LemonStand
-Veritrans   ✓   -   andylibrian/omnipay-veritrans   Andy Librian
-Vindicia    ✓   -   vimeo/omnipay-vindicia  Vimeo
-VivaPayments    ✓   -   delatbabel/omnipay-vivapayments     Del
-WebMoney    ✓   -   dercoder/omnipay-webmoney   Alexander Fedra
-WeChat  ✓   -   labs7in0/omnipay-wechat     7IN0’s Labs
-WechatPay   ✓   ✓   lokielse/omnipay-wechatpay  Loki Else
-WePay   ✓   -   collizo4sky/omnipay-wepay   Agbonghama Collins
-Wirecard    ✓   ✓   igaponov/omnipay-wirecard   Igor Gaponov
-Wirecard    ✓   -   academe/omnipay-wirecard    Jason Judge
-Worldpay XML Direct Corporate Gateway   ✓   -   teaandcode/omnipay-worldpay-xml     Dave Nash
-Worldpay XML Hosted Corporate Gateway   ✓   -   comicrelief/omnipay-worldpay-cg-hosted  Comic Relief
-Worldpay Business Gateway   ✓   ✓   omnipay/worldpay    Omnipay
-Yandex.Money    ✓   -   yandexmoney/omnipay     Roman Ananyev
-Tpay    ✓   -   omnipay/tpay    Tpay.com
-
-
-
-
-
-*/

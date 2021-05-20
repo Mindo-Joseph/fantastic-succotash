@@ -446,11 +446,7 @@
             @csrf
             <div class="card-box h-100">
                <h4 class="header-title text-uppercase">SMS Configuration</h4>
-               <p class="sub-header">
-                  Choose between multiple SMS gateways available for ready use or else configure ROYO dispatcher
-                  SMS
-                  service here
-               </p>
+               <p class="sub-header">View and update your SMS Gateway and it's API keys.</p>
                <div class="row mb-0">
                   <div class="col-12">
                      <div class="form-group mb-3">
@@ -517,8 +513,7 @@
             @csrf
             <div class="card-box h-100">
                <h4 class="header-title text-uppercase">Mail Configuration</h4>
-               <p class="sub-header">
-               </p>
+               <p class="sub-header"> View and update your SMTP credentials.</p>
                <div class="row mb-2">
                   <div class="col-md-6">
                      <div class="form-group mb-3">
