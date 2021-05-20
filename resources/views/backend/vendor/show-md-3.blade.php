@@ -11,20 +11,20 @@
         <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light"> Block </button>
     </div>
     <div class="text-left mt-3">
-        <h4 class="font-13">Description :</h4>
+        <!-- <h4 class="font-13">Description :</h4> -->
         <p class="text-muted font-13 mb-3">
            {{$vendor->desc}}
         </p>
-        <p class="text-muted mb-2 font-13"><strong>Latitude :</strong> <span class="ml-2">{{$vendor->latitude}}</span></p>
+        <!-- <p class="text-muted mb-2 font-13"><strong>Latitude :</strong> <span class="ml-2">{{$vendor->latitude}}</span></p>
 
         <p class="text-muted mb-2 font-13"><strong>Longitude :</strong><span class="ml-2">{{$vendor->longitude}}</span></p>
 
         <p class="text-muted mb-1 font-13"><strong>Status :</strong> <span class="ml-2">
             {{ ($vendor->status == 1) ? 'Active' : (($vendor->status == 2) ? 'Blocked' : 'Pending') }}
-        </span></p>
+        </span></p> -->
     </div>
 
-    <ul class="social-list list-inline mt-3 mb-0">
+    <!-- <ul class="social-list list-inline mt-3 mb-0">
         <li class="list-inline-item">
             <a href="javascript: void(0);" class="social-list-item border-primary text-primary"><i
                     class="mdi mdi-facebook"></i></a>
@@ -41,7 +41,87 @@
             <a href="javascript: void(0);" class="social-list-item border-secondary text-secondary"><i
                     class="mdi mdi-github"></i></a>
         </li>
-    </ul>
+    </ul> -->
+</div>
+<div class="card-box">
+    <div class="row text-left">
+        <div class="col-md-12">
+            <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
+                @csrf
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="mb-2 "> <span class="">Configuration</span></h4>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="form-group" id="order_pre_timeInput">
+                            {!! Form::label('title', 'Order Prepare Time(In minutes)',['class' => 'control-label']) !!}
+                            <input class="form-control" onkeypress="return isNumberKey(event)" name="order_pre_time" type="text" value="{{$vendor->order_pre_time}}">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group" id="auto_reject_timeInput">
+                            {!! Form::label('title', 'Auto Reject Time(In minutes, 0 for no rejection)',['class' => 'control-label']) !!}
+                            <input class="form-control" onkeypress="return isNumberKey(event)" name="auto_reject_time" type="text" value="{{$vendor->auto_reject_time}}">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group" id="order_min_amountInput">
+                            {!! Form::label('title', 'Order Min Amount',['class' => 'control-label']) !!}
+                            <input class="form-control" onkeypress="return isNumberKey(event)" name="order_min_amount" type="text" value="{{$vendor->order_min_amount}}">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-info waves-effect waves-light w-100">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="card-box">
+
+    <div class="row text-left">
+        <div class="col-md-12">
+            <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
+                @csrf
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="mb-2"> <span class="">Commission</span> (Visible For Admin)</h4>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
+                        {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!} 
+                        <input type="checkbox" data-plugin="switchery" name="add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif >
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group" id="commission_percentInput">
+                            {!! Form::label('title', 'Commission Percent',['class' => 'control-label']) !!}
+                            <input class="form-control" name="commission_percent" type="text" value="{{$vendor->commission_percent}}" onkeypress="return isNumberKey(event)">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group" id="commission_fixed_per_orderInput">
+                            {!! Form::label('title', 'Commission Fixed Per Order',['class' => 'control-label']) !!} 
+                            <input class="form-control" name="commission_fixed_per_order" type="text" value="{{$vendor->commission_fixed_per_order}}" onkeypress="return isNumberKey(event)">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group" id="commission_monthlyInput">
+                            {!! Form::label('title', 'Commission Monthly',['class' => 'control-label']) !!}
+                            <input class="form-control" onkeypress="return isNumberKey(event)" name="commission_monthly" type="text" value="{{$vendor->commission_monthly}}">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-info waves-effect waves-light w-100">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div> <!-- end card-box -->
 
 <div class="card-box">

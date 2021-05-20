@@ -2,6 +2,7 @@
 @section('css')
 @endsection
 @section('content')
+
 <div class="container-fluid">
    <!-- start page title -->
    <div class="row">
@@ -207,7 +208,7 @@
                      </div>
                   </div>
                   <div class="col-12">
-                     <div class="form-group mb-2">
+                     <div class="form-group mb-0">
                         <label for="fb_client_url">Facebook Redirect Url</label>
                         <input type="text" name="fb_client_url" id="fb_client_url" placeholder=""
                            class="form-control" value="{{ old('fb_client_url', $preference->fb_client_url ?? '')}}">
@@ -262,7 +263,7 @@
                      </div>
                   </div>
                   <div class="col-12">
-                     <div class="form-group mb-2">
+                     <div class="form-group mb-0">
                         <label for="twitter_client_url">Twitter Redirect Url</label>
                         <input type="text" name="twitter_client_url" id="twitter_client_url" placeholder=""
                            class="form-control" value="{{ old('twitter_client_url', $preference->twitter_client_url ?? '')}}">
@@ -290,7 +291,7 @@
                      </div>
                   </div>
                </div>
-               <div class="row mb-2 google_row" style="{{((isset($preference) && $preference->google_login == '1')) ? '' : 'display:none;'}}">
+               <div class="row google_row" style="{{((isset($preference) && $preference->google_login == '1')) ? '' : 'display:none;'}}">
                   <div class="col-md-12">
                      <div class="form-group mb-2 mt-2">
                         <label for="google_client_id">Google Client Key</label>
@@ -316,7 +317,7 @@
                      </div>
                   </div>
                   <div class="col-md-12">
-                     <div class="form-group mb-2">
+                     <div class="form-group mb-0">
                         <label for="google_client_url">Google Redirect Url</label>
                         <input type="text" name="google_client_url" id="google_client_url" placeholder=""
                            class="form-control" value="{{ old('google_client_url', $preference->google_client_url ?? '')}}">
@@ -370,7 +371,7 @@
                      </div>
                   </div>
                   <div class="col-12">
-                     <div class="form-group mb-2">
+                     <div class="form-group mb-0">
                         <label for="apple_client_url"> Apple Redirect Url</label>
                         <input type="text" name="apple_client_url" id="apple_client_url" placeholder=""
                            class="form-control" value="{{ old('apple_client_url', $preference->apple_client_url ?? '')}}">

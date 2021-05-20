@@ -73,52 +73,63 @@
                             </thead>
                             <tbody id="post_list">
                                 @foreach($vendors as $ven)
+<<<<<<< HEAD
+                                <a userId="{{$ven->id}}" href="{{ route('vendor.show', $ven->id) }}">
+                                    <tr data-row-id="{{$ven->id}}">
+                                        <td>
+                                            <img class="rounded-circle" src="{{$ven->logo['proxy_url'].'90/90'.$ven->logo['image_path']}}" alt="{{$ven->id}}">
+                                        </td>
+                                        <td> {{ $ven->name }} </td>
+                                        <td> {{ $ven->address }}</td>
+=======
                                 <tr data-row-id="{{$ven->id}}">
                                     <td>
                                         <a href="{{ route('vendor.show', $ven->id) }}"><img class="rounded-circle" src="{{$ven->logo['proxy_url'].'90/90'.$ven->logo['image_path']}}" alt="{{$ven->id}}"></a>
                                     </td>
                                     <td><a href="{{ route('vendor.show', $ven->id) }}">{{ $ven->name }}</a> </td>
                                     <td> {{ $ven->address }}</td>
+>>>>>>> 66a591676c5ec23952f05db0b15a492d5e1cd4b1
 
-                                    <td>
-                                        @if($ven->dine_in == 1)
-                                            <span class="badge bg-soft-warning text-warning">Dine In</span>
-                                        @endif
-                                        @if($ven->takeaway == 1)
-                                            <span class="badge bg-soft-warning text-warning">Take Away</span>
-                                        @endif
-                                        @if($ven->delivery == 1)
-                                            <span class="badge bg-soft-warning text-warning">Delivery</span>
-                                        @endif
-                                    </td>
-                                    <td>{{ ($ven->add_category == 0) ? 'No' : 'Yes' }}</td>
-                                    <td>{{ $ven->commission_percent }}</td>
-                                    <td>{{ $ven->commission_fixed_per_order}}</td>
-                                    <td>{{ $ven->commission_monthly }}</td>
-                                    <td> </td>
-                                    <!-- <td> {{ $ven->latitude }} </td>
-                                    <td> {{ $ven->longitude }}</td> -->
-                                    <td> 
-                                        <div class="form-ul" style="width: 60px;">
-                                            <div class="inner-div" style="float: left;">
-                                                <a class="action-icon" userId="{{$ven->id}}" href="{{ route('vendor.show', $ven->id) }}">
-                                                    <i class="mdi mdi-eye"></i>
-                                                </a> 
+                                        <td>
+                                            @if($ven->dine_in == 1)
+                                                <span class="badge bg-soft-warning text-warning">Dine In</span>
+                                            @endif
+                                            @if($ven->takeaway == 1)
+                                                <span class="badge bg-soft-warning text-warning">Take Away</span>
+                                            @endif
+                                            @if($ven->delivery == 1)
+                                                <span class="badge bg-soft-warning text-warning">Delivery</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ ($ven->add_category == 0) ? 'No' : 'Yes' }}</td>
+                                        <td>{{ $ven->commission_percent }}</td>
+                                        <td>{{ $ven->commission_fixed_per_order}}</td>
+                                        <td>{{ $ven->commission_monthly }}</td>
+                                        <td> </td>
+                                        <!-- <td> {{ $ven->latitude }} </td>
+                                        <td> {{ $ven->longitude }}</td> -->
+                                        <td> 
+                                            <div class="form-ul" style="width: 60px;">
+                                                <div class="inner-div" style="float: left;">
+                                                    <a class="action-icon" userId="{{$ven->id}}" href="{{ route('vendor.show', $ven->id) }}">
+                                                        <i class="mdi mdi-eye"></i>
+                                                    </a> 
+                                                </div>
+                                                <div class="inner-div">
+                                                    <form method="POST" action="{{ route('vendor.destroy', $ven->id) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <div class="form-group action-icon mb-0">
+                                                            <button type="submit" onclick="return confirm('Are you sure? You want to delete the vendor.')" class="btn btn-primary-outline action-icon">
+                                                                <i class="mdi mdi-delete"></i>
+                                                            </button> 
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
-                                            <div class="inner-div">
-                                                <form method="POST" action="{{ route('vendor.destroy', $ven->id) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <div class="form-group action-icon mb-0">
-                                                        <button type="submit" onclick="return confirm('Are you sure? You want to delete the vendor.')" class="btn btn-primary-outline action-icon">
-                                                            <i class="mdi mdi-delete"></i>
-                                                        </button> 
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                </a>
                                @endforeach
                             </tbody>
                         </table>
