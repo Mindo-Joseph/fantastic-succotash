@@ -73,22 +73,12 @@
                             </thead>
                             <tbody id="post_list">
                                 @foreach($vendors as $ven)
-<<<<<<< HEAD
-                                <a userId="{{$ven->id}}" href="{{ route('vendor.show', $ven->id) }}">
-                                    <tr data-row-id="{{$ven->id}}">
-                                        <td>
-                                            <img class="rounded-circle" src="{{$ven->logo['proxy_url'].'90/90'.$ven->logo['image_path']}}" alt="{{$ven->id}}">
-                                        </td>
-                                        <td> {{ $ven->name }} </td>
-                                        <td> {{ $ven->address }}</td>
-=======
                                 <tr data-row-id="{{$ven->id}}">
                                     <td>
                                         <a href="{{ route('vendor.show', $ven->id) }}"><img class="rounded-circle" src="{{$ven->logo['proxy_url'].'90/90'.$ven->logo['image_path']}}" alt="{{$ven->id}}"></a>
                                     </td>
                                     <td><a href="{{ route('vendor.show', $ven->id) }}">{{ $ven->name }}</a> </td>
                                     <td> {{ $ven->address }}</td>
->>>>>>> 66a591676c5ec23952f05db0b15a492d5e1cd4b1
 
                                         <td>
                                             @if($ven->dine_in == 1)
@@ -129,7 +119,6 @@
                                             </div>
                                         </td>
                                     </tr>
-                                </a>
                                @endforeach
                             </tbody>
                         </table>
