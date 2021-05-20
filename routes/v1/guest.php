@@ -16,13 +16,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('search/{type}/{id?}', 'Api\v1\HomeController@globalSearch');
         Route::post('cart/add', 'Api\v1\CartController@add');
         Route::get('cart/list', 'Api\v1\CartController@index');
-
         Route::get('celebrity/{all?}', 'Api\v1\CelebrityController@celebrityList');
         Route::get('celebrityProducts/{id?}', 'Api\v1\CelebrityController@celebrityProducts');
         Route::post('celebrity/filters/{id?}', 'Api\v1\CelebrityController@celebrityFilters');
     });
     Route::group(['middleware' => ['dbCheck', 'systemAuth']], function() {
-        //Route::get('cart/list', 'Api\v1\CartController@index');
         Route::get('cart/empty', 'Api\v1\CartController@emptyCart');
         Route::get('coupons/{id?}', 'Api\v1\CouponController@list');
         Route::post('cart/remove', 'Api\v1\CartController@removeItem');

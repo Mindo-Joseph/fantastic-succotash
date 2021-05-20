@@ -13,18 +13,14 @@ use DB;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Traits\ApiResponser;
 
-class CartController extends BaseController
-{
-    private $field_status = 2;
+class CartController extends BaseController{
     use ApiResponser;
 
-    /**         * Get Cart Items    *            */
-    public function index(Request $request)
-    {
+    private $field_status = 2;
+    public function index(Request $request){
         try {
             $user_id = $this->userCheck();
             $langId = Auth::user()->language;
-
             $cartData = $this->getCart($user_id);
             if($cartData && !empty($cartData)){
                 return $this->successResponse($cartData);
@@ -62,8 +58,7 @@ class CartController extends BaseController
     }
 
     /**     * Add product In Cart    *           */
-    public function add(Request $request)
-    {
+    public function add(Request $request){
         $user_id = $this->userCheck();
         $cartInfo = '';
         $langId = Auth::user()->language;
@@ -234,27 +229,24 @@ class CartController extends BaseController
         ]);
     }
 
-    /**         *       update quantity in cart       *          */
-    public function updateQuantity(Request $request)
-    {
+    /**        
+        update quantity in cart       
+    **/
+    public function updateQuantity(Request $request){
         if ($request->quantity < 1) {
             return response()->json(['error' => 'Quantity should not be less than 1'], 422);
         }
-
         $cart = Cart::where('user_id', Auth::user()->id)->where('id', $request->cart_id)->first();
         if(!$cart){
             return response()->json(['error' => 'User cart not exist.'], 404);
         }
-
         $cartProduct = CartProduct::where('cart_id', $cart->id)->where('id', $request->cart_product_id)->first();
         if(!$cartProduct){
             return response()->json(['error' => 'Product not exist in cart.'], 404);
         }
         $cartProduct->quantity = $request->quantity;
         $cartProduct->save();
-
         $totalProducts = CartProduct::where('cart_id', $cart->id)->sum('quantity');
-
         $cart->item_count = $totalProducts;
         $cart->save();
 
@@ -266,8 +258,7 @@ class CartController extends BaseController
     }
 
     /**     *       Get Cart Items            *     */
-    public function getItemCount(Request $request)
-    {
+    public function getItemCount(Request $request){
         $cart = Cart::where('user_id', Auth::user()->id)->where('id', $request->cart_id)->first();
         if(!$cart){
             return response()->json(['error' => 'User cart not exist.'], 404);
@@ -283,8 +274,7 @@ class CartController extends BaseController
     }
 
     /**         *       Remove item from cart       *          */
-    public function removeItem(Request $request)
-    {
+    public function removeItem(Request $request){
         $cart = Cart::where('user_id', Auth::user()->id)->where('id', $request->cart_id)->first();
         if(!$cart){
             return response()->json(['error' => 'User cart not exist.'], 404);
@@ -304,7 +294,6 @@ class CartController extends BaseController
                 'data' => array(),
             ]);
         }
-
         $cart->item_count = $totalProducts;
         $cart->save();
         $cartData = $this->getCart(Auth::user()->id);
@@ -316,23 +305,17 @@ class CartController extends BaseController
     }
 
     /**         *       Empty cart       *          */
-    public function emptyCart($cartId = 0)
-    { //->where('id', $request->cart_id)
+    public function emptyCart($cartId = 0){
         $cart = Cart::where('user_id', Auth::user()->id)->first();
         if(!$cart){
             return response()->json(['error' => 'User cart not exist.'], 404);
         }
-
         $cart->delete();
-
-        return response()->json([
-            "message" => "Empty cart successfully.",
-        ]);
+        return response()->json(['message' => 'Empty cart successfully.']);
     }
 
     /**         *       Empty cart       *          */
-    public function getCart($user_id)
-    {
+    public function getCart($user_id){
         $langId = Auth::user()->language;
         $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
         $cart = Cart::select('id', 'is_gift', 'item_count')
@@ -561,7 +544,6 @@ class CartController extends BaseController
         $cart->total_tax = $total_tax;
         $cart->total_payable_amount = $total_paying + $total_tax - $total_disc_amount;
         $cart->total_discount_amount = $total_disc_amount;
-
         $cart->loyaltyPoints = $this->getLoyaltyPoints($user_id, $clientCurrency->doller_compare);
         $cart->wallet = $this->getWallet($user_id, $clientCurrency->doller_compare, Auth::user()->currency);
         $cart->products = $cartData;

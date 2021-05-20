@@ -68,7 +68,7 @@
                                 @forelse($addresses as $address)
                                     <div class="row">
                                         <div>
-                                            <input type="radio" name="gender" id="one" value="male" checked="checked">
+                                            <input type="radio" name="address_id" id="one" value="male" checked="checked">
                                             <label for="one">{{$address->address.' '.$address->street.' '.$address->city.' '.$address->state.' '.$address->pincode}}</label>
                                         </div>
                                     </div>
@@ -81,7 +81,7 @@
                                 <div class="form-row mb-3">
                                     <div class="col-md-12">
                                         <label for="address">Address</label>
-                                        <input type="text" class="form-control" id="address" placeholder="Address" value="" required="">
+                                        <input type="text" class="form-control" id="address" placeholder="Address" value="">
                                         <div class="input-group-append">
                                             <button class="btn btn-xs btn-dark waves-effect waves-light showMap" type="button" num="edit"> <i class="mdi mdi-map-marker-radius"></i></button>
                                         </div>
@@ -91,12 +91,12 @@
                                 <div class="form-row mb-3">
                                     <div class="col-md-6">
                                         <label for="city">City</label>
-                                        <input type="text" class="form-control" id="city" placeholder="City" value="" required="">
+                                        <input type="text" class="form-control" id="city" placeholder="City" value="">
                                         <span class="text-danger" id="city_error"></span>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="state">State</label>
-                                        <input type="text" class="form-control" id="state" placeholder="State" value="" required="">
+                                        <input type="text" class="form-control" id="state" placeholder="State" value="">
                                         <span class="text-danger" id="state_error"></span>
                                     </div>
                                     <div class="col-md-6">
@@ -110,12 +110,12 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="pincode">Pincode</label>
-                                        <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="" required="">
+                                        <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
                                         <span class="text-danger" id="pincode_error"></span>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="type">Address Type</label>
-                                        <select name="type" id="type" class="form-control" required="">
+                                        <select name="type" id="type" class="form-control">
                                             <option value="1" selected>Home</option>
                                             <option value="2">Office</option>
                                         </select>
@@ -124,7 +124,6 @@
                                     <div class="col-md-6"></div>
                                     <button type="button" class="btn btn-solid mt-3" id="save_address">Save Address</button>
                                     <button type="button" class="btn btn-solid black-btn me-3" id="cancel_save_address_btn">black</button>
-
                                 </div>
                             </div>
                         </div>
@@ -195,7 +194,9 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="text-right"><button type="submit" class="btn-solid btn">Place Order</button></div>
+                                    <div class="text-right">
+                                        <button type="submit" class="btn-solid btn">Place Order</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

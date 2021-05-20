@@ -8,3 +8,12 @@ function pr($var) {
 	print_r($var);
   	echo '</pre>';
 }
+function generateOrderNo($length = 8){
+    $number = '';
+    do {
+        for ($i=$length; $i--; $i>0) {
+            $number .= mt_rand(0,9);
+        }
+    } while (!empty(\DB::table('orders')->where('order_number', $number)->first(['order_number'])) );
+    return $number;
+}
