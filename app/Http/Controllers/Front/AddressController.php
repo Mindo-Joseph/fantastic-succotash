@@ -20,7 +20,6 @@ class AddressController extends FrontController
     {
         $langId = Session::get('customerLanguage');
         $useraddress = UserAddress::where('user_id', Auth::user()->id)->with('country')->get();
-        // dd($useraddress[0]->country->toArray());
         $navCategories = $this->categoryNav($langId);
         return view('forntend/account/addressbook')->with(['useraddress' => $useraddress, 'navCategories' => $navCategories]);
     }
@@ -44,9 +43,17 @@ class AddressController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $domain = '')
-    {
-        // dd($request->all());
+    public function store(Request $request, $domain = ''){
+        $validatedData = $request->validate([
+                'country' => 'required',
+                'type' => 'required',
+                'pincode' => 'required',
+                'city' => 'required',
+                'state' => 'required',
+                'address' => 'required',
+        ], [
+            'type.required' => 'Address Type is required'
+        ]);
         $address = new UserAddress;
         $address->user_id = Auth::user()->id;
         $address->address = $request->address;
@@ -57,8 +64,11 @@ class AddressController extends FrontController
         $address->pincode = $request->pincode;
         $address->type = $request->type;
         $address->save();
-        
-        return redirect()->route('user.addressBook');
+        if($request->ajax()){
+            return response()->json(['status' => 'success', 'message' => 'Address Added Successfully!', 'address' => $address]);
+        }else{
+            return redirect()->route('user.addressBook');
+        }
     }
 
      /**
@@ -66,8 +76,7 @@ class AddressController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function update($domain = '', Request $request, $id)
-    {
+    public function update($domain = '', Request $request, $id){
         $address = UserAddress::find($id);
         $address->address = $request->address;
         $address->street = $request->street;
@@ -77,7 +86,6 @@ class AddressController extends FrontController
         $address->pincode = $request->pincode;
         $address->type = $request->type;
         $address->save();
-        
         return redirect()->route('user.addressBook');
     }
 
@@ -86,8 +94,7 @@ class AddressController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit($domain = '', $id)
-    {
+    public function edit($domain = '', $id){
         $address = UserAddress::findOrFail($id);
         $langId = Session::get('customerLanguage');
         $countries = Country::all();
@@ -104,9 +111,7 @@ class AddressController extends FrontController
     public function setPrimaryAddress($domain = '', $id)
     {
         $address = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
-
         $address = UserAddress::where('user_id', Auth::user()->id)->where('id', $id)->update(['is_primary' => 1]);
-
         return redirect()->route('user.addressBook');
     }
 
@@ -115,8 +120,7 @@ class AddressController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function delete($domain = '', $id)
-    {
+    public function delete($domain = '', $id){
         $address = UserAddress::find($id)->delete();
         return redirect()->route('user.addressBook');
     }

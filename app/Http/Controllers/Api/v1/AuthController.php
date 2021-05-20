@@ -92,16 +92,13 @@ class AuthController extends BaseController
         
         $user->auth_token = $token;
         $user->save();
-
         $checkSystemUser = $this->checkCookies($user->id);
-
         $data['auth_token'] =  $token;
         $data['name'] = $user->name;
         $data['email'] = $user->email;
         $data['phone_number'] = $user->phone_number;
         $data['client_preference'] = $prefer;
         $data['verify_details'] = $verified;
-
         return response()->json([
             'data' => $data,
         ]);

@@ -16,6 +16,7 @@ class CreatePaymentOptionsTable extends Migration
         Schema::create('payment_options', function (Blueprint $table) {
             $table->id();
             $table->string('code');
+            $table->string('path');
             $table->string('title');
             $table->tinyInteger('status')->default(1)->comment('0 inactive, 1 active, 2 delete');
             $table->timestamps();

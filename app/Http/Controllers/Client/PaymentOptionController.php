@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{Client, ClientPreference, Brand, Category, Category_translation, ClientLanguage, BrandCategory, BrandTranslation};
+use App\Models\{Client, ClientPreference, PaymentOption};
 use Illuminate\Support\Facades\Storage;
 
 class PaymentOptionController extends BaseController
@@ -20,7 +20,9 @@ class PaymentOptionController extends BaseController
      */
     public function index()
     {
-        return view('backend/payoption/index');
+        $code = array('COD', 'paypal', 'stripe');
+        $payOption = PaymentOption::whereIn('code', $code)->get();
+        return view('backend/payoption/index')->with(['payOption' => $payOption]);
     }
 
     /**

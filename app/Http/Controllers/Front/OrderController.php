@@ -31,10 +31,10 @@ class OrderController extends FrontController{
             $name = $name . " " . $request->last_name;
         }
         $cart = Cart::where('user_id', Auth::user()->id)->first();
-        $cartProduct = CartProduct::where('cart_id', $cart->id)->count();
         $order = new Order;
-        $order->user_id = Auth::user()->id;
         $order->recipient_name = $name;
+        $order->user_id = Auth::user()->id;
+        $order->order_number = generateOrderNo();
         $order->payment_method = $paymentMethod;
         $order->payment_status = $paymentStatus;
         $order->address_id = $request->address_id;

@@ -63,9 +63,11 @@
 
     $(document).on('click', '.showMap', function(){
         var no = $(this).attr('num');
+        console.log(no);
 
         var lats = document.getElementById(no+'_latitude').value;
         var lngs = document.getElementById(no+'_longitude').value;
+        console.log(lats + '--' + lngs);
 
         document.getElementById('map_for').value = no;
 
