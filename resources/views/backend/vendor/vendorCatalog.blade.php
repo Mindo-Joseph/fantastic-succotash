@@ -161,7 +161,7 @@
             @csrf
             <div class="modal-body" >
                 <div class="row">
-                    <div class="col-md-12 card-box">
+                    <div class="col-md-12">
                       <div class="row">
                         <!--<div class="col-6 mb-2">
                             {!! Form::label('title', 'Product Type',['class' => 'control-label']) !!}

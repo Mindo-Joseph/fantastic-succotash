@@ -189,7 +189,7 @@
                 {!! Form::hidden('vendor_id', $vendor->id) !!}
                 <div class="modal-body" id="AddAddonBox">
                     <div class="row">
-                        <div class="col-md-12 card-box">
+                        <div class="col-md-12">
 
                             <div class="row rowYK">
                                 <div class="col-md-12">

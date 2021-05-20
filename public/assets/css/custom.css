@@ -238,9 +238,6 @@ body[data-sidebar-size="condensed"]:not([data-layout="compact"]) {
     box-shadow: 0 4px 25px 0 rgb(138 129 124 / 6%);
 }
 
-#addCur-4, #addCur-5, #addCur-7 {
-    margin: 0 0 8px; 
-}
 
 button.btn.btn-info.btn-block.save_btn {
     width: auto;
@@ -266,10 +263,6 @@ body .switchery>small {
     width: auto;
 }
 
-.card-box .btn-info {
-    min-width: 120px;
-    text-align: center !important;
-}
 
 input#is_hyperlocal {
     display: none !important;
@@ -321,4 +314,32 @@ button.btn.btn-info.openBannerModal {
 
 .pro-user-name {
     text-transform: capitalize;
+}
+
+h1.control-label {
+    font-size: 54px;
+    font-weight: bold;
+}
+
+.col-spacing{
+    margin: 0 -8px;
+}
+
+.col-spacing > div{
+    padding: 0 8px !important;
+}
+
+.modal-footer .btn {
+    width: 100%;
+}
+
+
+@media(min-width:1365px){
+    .col-md-12 button.btn.btn-info {
+        min-width: 100px;
+    }
+    .card-box .btn-info {
+        min-width: 100px;
+        text-align: center !important;
+    }
 }

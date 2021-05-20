@@ -10,82 +10,6 @@ use Auth;
 
 class CartController extends FrontController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     private function randomString()
     {
         $random_string = substr(md5(microtime()), 0, 32);
@@ -95,7 +19,46 @@ class CartController extends FrontController
         return $random_string;
     }
 
-
+    public function postAddToCart(Request $request, $domain = ''){
+        try {
+            $user = Auth::user();
+            $new_session_token = session()->get('_token');
+            $client_currency = ClientCurrency::where('is_primary', '=', 1)->first();
+            $user_id = $user ? $user->id : '';
+            $cart_detail = [
+                'is_gift' => 1,
+                'status' => '0',
+                'item_count' => 0,
+                'user_id' => $user_id,
+                'created_by' => $user_id,
+                'currency_id' => $client_currency->currency_id,
+                'unique_identifier' => !$user ? $new_session_token : '',
+            ];
+            $cart_detail = Cart::updateOrCreate(['unique_identifier' => $new_session_token], $cart_detail);
+            $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cart_detail->id)->first();
+            if ($checkIfExist) {
+                $checkIfExist->quantity = (int)$checkIfExist->quantity + $request->quantity;
+                $cart_detail->cartProducts()->save($checkIfExist);
+            }else{
+                $productForVendor = Product::where('id', $request->product_id)->first();
+                $cart_product_detail = [
+                    'status'  => '0',
+                    'is_tax_applied'  => '1',
+                    'created_by'  => $user_id,
+                    'cart_id'  => $cart_detail->id,
+                    'quantity'  => $request->quantity,
+                    'vendor_id'  => $request->vendor_id,
+                    'product_id' => $request->product_id,
+                    'variant_id'  => $request->variant_id,
+                    'currency_id' => $client_currency->currency_id,
+                ];
+                CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
+            }
+            return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
+        } catch (Exception $e) {
+            
+        }  
+    }
      /**
      * add product to cart
      *
@@ -133,7 +96,6 @@ class CartController extends FrontController
                 }
             }
         }
-
         $user_id = ' ';
         $cartInfo = ' ';
         if (Auth::user()) {
@@ -142,13 +104,13 @@ class CartController extends FrontController
             $userFind = Cart::where('user_id', $user_id)->first();
             if (!$userFind) {
                 $cart = new Cart;
-                $cart->unique_identifier = Auth::user()->system_id;
-                $cart->user_id = $user_id;
-                $cart->created_by = $user_id;
                 $cart->status = '0';
                 $cart->is_gift = '1';
                 $cart->item_count = '1';
+                $cart->user_id = $user_id;
+                $cart->created_by = $user_id;
                 $cart->currency_id = $currency->currency->id;
+                $cart->unique_identifier = Auth::user()->system_id;
                 $cart->save();
                 $cartInfo = $cart;
             } else {
@@ -158,7 +120,9 @@ class CartController extends FrontController
             if ($checkIfExist) {
                 $checkIfExist->quantity = (int)$checkIfExist->quantity + 1;
                 $cartInfo->cartProducts()->save($checkIfExist);
-                return response()->json($user_id);
+                return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
+            }else{
+
             }
         } else {
             $val = ' ';
@@ -196,32 +160,31 @@ class CartController extends FrontController
                     return response()->json($user_id);
                 }
             }
-        }
-
-        $productForVendor = Product::where('id', $request->product_id)->first();
-        $cartProduct = new CartProduct;
-        $cartProduct->product_id = $request->product_id;
-        $cartProduct->cart_id  = $cartInfo->id;
-        $cartProduct->vendor_id  = $productForVendor->vendor_id;
-        $cartProduct->quantity  = $request->quantity;
-        $cartProduct->created_by  = $user_id;
-        $cartProduct->status  = '0';
-        $cartProduct->variant_id  = $request->variant_id;
-        $cartProduct->is_tax_applied  = '1';
-        $cartProduct->currency_id = $cartInfo->currency_id;
-        $cartProduct->save();
-        if ($request->has('addonID') && $request->has('addonID')) {
-            foreach ($addon_ids as $key => $value) {
-                $aa = $addon_ids[$key];
-                $bb = $addon_options[$key];
-                $cartAddOn = new CartAddon;
-                $cartAddOn->cart_product_id = $cartProduct->id;
-                $cartAddOn->addon_id = $aa;
-                $cartAddOn->option_id = $bb;
-                $cartAddOn->save();
+            $productForVendor = Product::where('id', $request->product_id)->first();
+            $cartProduct = new CartProduct;
+            $cartProduct->status  = '0';
+            $cartProduct->is_tax_applied  = '1';
+            $cartProduct->created_by  = $user_id;
+            $cartProduct->cart_id  = $cartInfo->id;
+            $cartProduct->quantity  = $request->quantity;
+            $cartProduct->product_id = $request->product_id;
+            $cartProduct->vendor_id  = $productForVendor->vendor_id;
+            $cartProduct->variant_id  = $request->variant_id;
+            $cartProduct->currency_id = $cartInfo->currency_id;
+            $cartProduct->save();
+            if ($request->has('addonID') && $request->has('addonID')) {
+                foreach ($addon_ids as $key => $value) {
+                    $aa = $addon_ids[$key];
+                    $bb = $addon_options[$key];
+                    $cartAddOn = new CartAddon;
+                    $cartAddOn->cart_product_id = $cartProduct->id;
+                    $cartAddOn->addon_id = $aa;
+                    $cartAddOn->option_id = $bb;
+                    $cartAddOn->save();
+                }
             }
+            return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
         }
-        return response()->json($user_id);
     }
 
     /**
@@ -446,7 +409,7 @@ class CartController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function deleteCartProduct($domain = '', Request $request){
-        $update = CartProduct::where('id', '=', $request->cartproduct_id)->update(['status' => '2']);
+        CartProduct::where('id', $request->cartproduct_id)->delete();
         return response()->json(['status' => 'success', 'message' => 'Product deleted successfully.']);
     }
 

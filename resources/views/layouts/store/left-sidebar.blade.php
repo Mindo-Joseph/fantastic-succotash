@@ -121,10 +121,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     </div>
                                 </li>
                                 <li class="onhover-div mobile-cart">
-                                    <div><img src="{{asset('front-assets/images/icon/cart.png')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-shopping-cart"></i></div>
-                                    <span class="cart_qty_cls">2</span>
+                                    <div>
+                                        <img src="{{asset('front-assets/images/icon/cart.png')}}" class="img-fluid blur-up lazyload" alt=""> 
+                                        <i class="ti-shopping-cart"></i>
+                                    </div>
+                                    <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span>
                                     <ul class="show-div shopping-cart">
-                                        <!-- Append Cart Products from Javascript -->
+
                                     </ul>
                                 </li>
                             </ul>

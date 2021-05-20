@@ -93,14 +93,13 @@ class CustomerAuthController extends FrontController
     }
 
     /**     * Display login Form     */
-    public function login(LoginRequest $req, $domain = '')
-    {
+    public function login(LoginRequest $req, $domain = ''){
         if (Auth::attempt(['email' => $req->email, 'password' => $req->password])) {
             $userid = Auth::id();
             $this->checkCookies($userid);
+            Cart::where('unique_identifier', session()->get('_token'))->update(['user_id' => $userid, 'created_by' => $userid, 'unique_identifier' => '']);
             return redirect()->route('user.verify');
         }
-
         $checkEmail = User::where('email', $req->email)->first();
         if ($checkEmail) {
             return redirect()->back()->with('err_password', 'Password not matched. Please enter correct password.');
