@@ -92,9 +92,9 @@
                                             <!-- <div class="inner-div" style="float: left;">
                                                 <a class="action-icon openBannerModal" userId="{{$user->id}}" href="#"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
                                             </div> -->
-                                            <div class="inner-div" style="float: left;">
+                                            <!-- <div class="inner-div" style="float: left;">
                                                 <a class="action-icon" userId="{{$user->id}}" href="{{route('customer.show', $user->id)}}"><h3> <i class="mdi mdi-eye"></i></h3></a> 
-                                            </div>
+                                            </div> -->
                                             <?php 
                                                 $status = 2; $icon = 'mdi-lock';
                                                 $title = 'Block user account';

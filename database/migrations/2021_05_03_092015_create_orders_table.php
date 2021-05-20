@@ -25,23 +25,18 @@ class CreateOrdersTable extends Migration
             $table->string('recipient_number')->nullable();
             $table->tinyInteger('paid_via_wallet')->comment('0-No, 1-Yes');
             $table->tinyInteger('paid_via_loyalty')->comment('0-No, 1-Yes');
-            $table->integer('item_count')->nullable();
-            $table->integer('vendor_count')->nullable();
             $table->decimal('total_amount')->unsigned()->nullable();
             $table->decimal('total_discount')->unsigned()->nullable();
             $table->decimal('taxable_amount')->unsigned()->nullable();
             $table->decimal('payable_amount')->unsigned()->nullable();
             $table->unsignedBigInteger('tax_category_id')->nullable();
-            $table->unsignedBigInteger('promocode_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('address_id')->references('id')->on('user_addresses')->onDelete('set null');
             $table->foreign('tax_category_id')->references('id')->on('tax_categories')->onDelete('set null');
             $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('set null');
-            $table->foreign('promocode_id')->references('id')->on('promocodes')->onDelete('set null');
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      *

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-12 card-box">
+    <div class="col-md-12">
         <div class="row mb-2">
             <div class="col-md-6">
                 <div class="form-group" id="titleInputEdit">

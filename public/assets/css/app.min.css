@@ -2084,8 +2084,9 @@ body[data-layout-mode=two-column][data-layout-width=boxed]:not([data-sidebar-siz
   content: "";
   display: inline-block;
   height: 18px;
-  left: 0;
+  left: 0.2px;
   margin-left: -18px;
+  top: 0.4px;
   position: absolute;
   transition: border 0.5s ease-in-out;
   width: 18px;

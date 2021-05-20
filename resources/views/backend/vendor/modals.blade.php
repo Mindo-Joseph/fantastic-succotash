@@ -9,7 +9,7 @@
                 @csrf
                 <div class="modal-body" >
                     <div class="row">
-                        <div class="col-md-12 card-box">
+                        <div class="col-md-12">
                             <h4 class="header-title mb-3"></h4>
 
                             <div class="row mb-2">
@@ -43,7 +43,7 @@
                                         <div class="input-group">
                                             <input type="text" name="address" id="add-address" placeholder="Delhi, India" class="form-control">
                                             <div class="input-group-append">
-                                                <button class="btn btn-xs btn-dark waves-effect waves-light showMap" type="button" num="edit"> <i class="mdi mdi-map-marker-radius"></i></button>
+                                                <button class="btn btn-xs btn-dark waves-effect waves-light showMap" type="button" num="add"> <i class="mdi mdi-map-marker-radius"></i></button>
                                             </div>
                                         </div>
                                         <span class="invalid-feedback" role="alert">

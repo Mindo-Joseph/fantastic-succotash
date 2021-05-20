@@ -2,27 +2,26 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory};
+use Auth;
+use Session;
+use Password;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
-use Session;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Config;
-use Password;
-use Illuminate\Support\Facades\Validator;
-use App\Notifications\PasswordReset;
 use Illuminate\Support\Facades\Mail;
-use Auth;
+use App\Notifications\PasswordReset;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Front\FrontController;
+use App\Models\{Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory,CartProduct};
 
 class CustomerAuthController extends FrontController
 {
     /**     * Display login Form     */
-    public function loginForm($domain = '')
-    {
+    public function loginForm($domain = ''){
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
@@ -72,11 +71,9 @@ class CustomerAuthController extends FrontController
 
 
     /**     * check if cookie already exist     */
-    public function checkCookies($userid)
-    {
+    public function checkCookies($userid){
         if (\Cookie::has('uuid')) {
             $existCookie = \Cookie::get('uuid');
-            
             $userFind = User::where('system_id', $existCookie)->first();
             if($userFind){
                 $cart = Cart::where('user_id', $userFind->id)->first();
@@ -87,20 +84,38 @@ class CustomerAuthController extends FrontController
                 $userFind->delete();
             }
             \Cookie::queue(\Cookie::forget('uuid'));
-
             return redirect()->route('user.checkout');
         }
     }
 
     /**     * Display login Form     */
-    public function login(LoginRequest $req, $domain = '')
-    {
+    public function login(LoginRequest $req, $domain = ''){
         if (Auth::attempt(['email' => $req->email, 'password' => $req->password])) {
             $userid = Auth::id();
             $this->checkCookies($userid);
+            $user_cart = Cart::where('user_id', $userid)->first();
+            if($user_cart){
+                $unique_identifier_cart = Cart::where('unique_identifier', session()->get('_token'))->first();
+                if($unique_identifier_cart){
+                    $unique_identifier_cart_products = CartProduct::where('cart_id', $unique_identifier_cart->id)->get();
+                    foreach ($unique_identifier_cart_products as $unique_identifier_cart_product) {
+                        $user_cart_product_detail = CartProduct::where('cart_id', $user_cart->id)->where('product_id', $unique_identifier_cart_product->product_id)->first();
+                        if($user_cart_product_detail){
+                            $user_cart_product_detail->quantity = ($unique_identifier_cart_product->quantity + $user_cart_product_detail->quantity);
+                            $user_cart_product_detail->save();
+                            $unique_identifier_cart_product->delete();
+                        }else{
+                          $unique_identifier_cart_product->cart_id = $user_cart->id;
+                          $unique_identifier_cart_product->save();
+                        }
+                    }
+                    $unique_identifier_cart->delete();
+                }
+            }else{
+                Cart::where('unique_identifier', session()->get('_token'))->update(['user_id' => $userid, 'created_by' => $userid, 'unique_identifier' => '']);
+            }
             return redirect()->route('user.verify');
         }
-
         $checkEmail = User::where('email', $req->email)->first();
         if ($checkEmail) {
             return redirect()->back()->with('err_password', 'Password not matched. Please enter correct password.');
@@ -110,25 +125,18 @@ class CustomerAuthController extends FrontController
 
      
     /**     * Display register Form     */
-    public function register(SignupRequest $req, $domain = '')
-    {
-        
+    public function register(SignupRequest $req, $domain = ''){   
         $user = new User();
-
         $county = Country::where('code', strtoupper($req->countryData))->first();
-
         $phoneCode = mt_rand(100000, 999999);
         $emailCode = mt_rand(100000, 999999);
         $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
-
         $user->name = $req->name;
         $user->email = $req->email;
         $user->phone_number = $req->full_number;
         $user->type = 1;
         $user->role_id = 1;
         $user->country_id = $county->id;
-
-
         $user->password = Hash::make($req->password);
         $user->is_email_verified = 0;
         $user->is_phone_verified = 0;
@@ -178,8 +186,7 @@ class CustomerAuthController extends FrontController
     }
 
     /**     * Display forgotPassword Form     */
-    public function forgotPassword(Request $request, $domain = '')
-    {
+    public function forgotPassword(Request $request, $domain = ''){
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:50'
         ]);
@@ -198,38 +205,31 @@ class CustomerAuthController extends FrontController
 
         $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
         $data = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
-
         $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
         $otp = mt_rand(100000, 999999);
         $user->email_token = $otp;
         $user->email_token_valid_till = $newDateTime;
         if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
-
             $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
             $client_name = $client->name;
             $mail_from = $data->mail_from;
             $sendto = $user->email;
             try {
-                Mail::send(
-                    'email.verify',
-                    [
+                Mail::send('email.verify',[
                         'customer_name' => ucwords($user->name),
                         'code_text' => 'We have gotton a forget password request from your account. Please enter below otp of verify that it is you.',
                         'code' => $otp,
                         'logo' => $client->logo['original'],
                         'link' => "link"
-                    ],
-                    function ($message) use ($sendto, $client_name, $mail_from) {
+                ],function ($message) use ($sendto, $client_name, $mail_from) {
                         $message->from($mail_from, $client_name);
                         $message->to($sendto)->subject('OTP to verify account');
-                    }
-                );
+                });
                 $notified = 1;
             } catch (\Exception $e) {
                 $user->save();
             }
         }
-
         $user->save();
         if ($notified == 1) {
             return redirect()->route('customer.resetPassword');

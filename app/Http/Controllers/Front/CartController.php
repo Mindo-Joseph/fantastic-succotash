@@ -10,82 +10,6 @@ use Auth;
 
 class CartController extends FrontController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     private function randomString()
     {
         $random_string = substr(md5(microtime()), 0, 32);
@@ -95,7 +19,50 @@ class CartController extends FrontController
         return $random_string;
     }
 
-
+    public function postAddToCart(Request $request, $domain = ''){
+        try {
+            $user = Auth::user();
+            $new_session_token = session()->get('_token');
+            $client_currency = ClientCurrency::where('is_primary', '=', 1)->first();
+            $user_id = $user ? $user->id : '';
+            $cart_detail = [
+                'is_gift' => 1,
+                'status' => '0',
+                'item_count' => 0,
+                'user_id' => $user_id,
+                'created_by' => $user_id,
+                'currency_id' => $client_currency->currency_id,
+                'unique_identifier' => !$user ? $new_session_token : '',
+            ];
+            if($user){
+                $cart_detail = Cart::updateOrCreate(['user_id' => $user->id], $cart_detail);
+            }else{
+                $cart_detail = Cart::updateOrCreate(['unique_identifier' => $new_session_token], $cart_detail);
+            }
+            $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cart_detail->id)->first();
+            if ($checkIfExist) {
+                $checkIfExist->quantity = (int)$checkIfExist->quantity + $request->quantity;
+                $cart_detail->cartProducts()->save($checkIfExist);
+            }else{
+                $productForVendor = Product::where('id', $request->product_id)->first();
+                $cart_product_detail = [
+                    'status'  => '0',
+                    'is_tax_applied'  => '1',
+                    'created_by'  => $user_id,
+                    'cart_id'  => $cart_detail->id,
+                    'quantity'  => $request->quantity,
+                    'vendor_id'  => $request->vendor_id,
+                    'product_id' => $request->product_id,
+                    'variant_id'  => $request->variant_id,
+                    'currency_id' => $client_currency->currency_id,
+                ];
+                CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
+            }
+            return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
+        } catch (Exception $e) {
+            
+        }  
+    }
      /**
      * add product to cart
      *
@@ -133,7 +100,6 @@ class CartController extends FrontController
                 }
             }
         }
-
         $user_id = ' ';
         $cartInfo = ' ';
         if (Auth::user()) {
@@ -142,13 +108,13 @@ class CartController extends FrontController
             $userFind = Cart::where('user_id', $user_id)->first();
             if (!$userFind) {
                 $cart = new Cart;
-                $cart->unique_identifier = Auth::user()->system_id;
-                $cart->user_id = $user_id;
-                $cart->created_by = $user_id;
                 $cart->status = '0';
                 $cart->is_gift = '1';
                 $cart->item_count = '1';
+                $cart->user_id = $user_id;
+                $cart->created_by = $user_id;
                 $cart->currency_id = $currency->currency->id;
+                $cart->unique_identifier = Auth::user()->system_id;
                 $cart->save();
                 $cartInfo = $cart;
             } else {
@@ -158,7 +124,9 @@ class CartController extends FrontController
             if ($checkIfExist) {
                 $checkIfExist->quantity = (int)$checkIfExist->quantity + 1;
                 $cartInfo->cartProducts()->save($checkIfExist);
-                return response()->json($user_id);
+                return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
+            }else{
+
             }
         } else {
             $val = ' ';
@@ -196,32 +164,31 @@ class CartController extends FrontController
                     return response()->json($user_id);
                 }
             }
-        }
-
-        $productForVendor = Product::where('id', $request->product_id)->first();
-        $cartProduct = new CartProduct;
-        $cartProduct->product_id = $request->product_id;
-        $cartProduct->cart_id  = $cartInfo->id;
-        $cartProduct->vendor_id  = $productForVendor->vendor_id;
-        $cartProduct->quantity  = $request->quantity;
-        $cartProduct->created_by  = $user_id;
-        $cartProduct->status  = '0';
-        $cartProduct->variant_id  = $request->variant_id;
-        $cartProduct->is_tax_applied  = '1';
-        $cartProduct->currency_id = $cartInfo->currency_id;
-        $cartProduct->save();
-        if ($request->has('addonID') && $request->has('addonID')) {
-            foreach ($addon_ids as $key => $value) {
-                $aa = $addon_ids[$key];
-                $bb = $addon_options[$key];
-                $cartAddOn = new CartAddon;
-                $cartAddOn->cart_product_id = $cartProduct->id;
-                $cartAddOn->addon_id = $aa;
-                $cartAddOn->option_id = $bb;
-                $cartAddOn->save();
+            $productForVendor = Product::where('id', $request->product_id)->first();
+            $cartProduct = new CartProduct;
+            $cartProduct->status  = '0';
+            $cartProduct->is_tax_applied  = '1';
+            $cartProduct->created_by  = $user_id;
+            $cartProduct->cart_id  = $cartInfo->id;
+            $cartProduct->quantity  = $request->quantity;
+            $cartProduct->product_id = $request->product_id;
+            $cartProduct->vendor_id  = $productForVendor->vendor_id;
+            $cartProduct->variant_id  = $request->variant_id;
+            $cartProduct->currency_id = $cartInfo->currency_id;
+            $cartProduct->save();
+            if ($request->has('addonID') && $request->has('addonID')) {
+                foreach ($addon_ids as $key => $value) {
+                    $aa = $addon_ids[$key];
+                    $bb = $addon_options[$key];
+                    $cartAddOn = new CartAddon;
+                    $cartAddOn->cart_product_id = $cartProduct->id;
+                    $cartAddOn->addon_id = $aa;
+                    $cartAddOn->option_id = $bb;
+                    $cartAddOn->save();
+                }
             }
+            return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
         }
-        return response()->json($user_id);
     }
 
     /**
@@ -258,43 +225,33 @@ class CartController extends FrontController
      * Get Cart Items
      *
      */
-    public function getCart($user_id){
+    public function getCart($cart){
+        $cart_id = $cart->id;
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
-        $cart = Cart::with('coupon.promo')->select('id', 'is_gift', 'item_count')
-                    ->where('status', '0')
-                    ->where('user_id', $user_id)->first();
-        $cartID = $cart->id;
         $cartData = CartProduct::with(['vendor', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
                         'vendorProducts.product.translation' => function($q) use($langId){
                             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                             $q->where('language_id', $langId);
                         },
-                        'vendorProducts'=> function($qry) use($cartID){
-                            $qry->where('cart_id', $cartID);
+                        'vendorProducts'=> function($qry) use($cart_id){
+                            $qry->where('cart_id', $cart_id);
                         },
                         'vendorProducts.addon.option' => function($qry) use($langId){
                             $qry->where('language_id', $langId);
                         }, 'vendorProducts.product.taxCategory.taxRate', 
-                    ])->select('vendor_id')->where('status', [0,1])->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
-
+                    ])->select('vendor_id')->where('status', [0,1])->where('cart_id', $cart_id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if(empty($cartData) || count($cartData) < 1){
             return false;
         }
         if($cartData){
-
             foreach ($cartData as $ven_key => $vendorData) {
-
                 $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0.00;
-
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
-
                     $quantity_price = 0;
-
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
-
                     $price_in_currency = $prod->pvariant->price / $divider;
 
                     $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
@@ -368,7 +325,6 @@ class CartController extends FrontController
                 $total_discount_percent = $total_discount_percent + $discount_percent;
             }
         }
-
         $is_percent = 0;
         $amount_value = 0;
         if($cart->coupon){
@@ -393,14 +349,11 @@ class CartController extends FrontController
             
         }
         $total_payable_amount = $total_payable_amount - $total_discount_amount;
-
         $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount), 2);
         $cart->total_payable_amount = number_format($total_payable_amount, 2);
         $cart->total_discount_amount = number_format($total_discount_amount, 2);
         $cart->total_discount_percent = number_format($total_discount_percent, 2);
-
         $cart->products = $cartData->toArray();
-
         return $cart;
     }
     /**
@@ -410,18 +363,13 @@ class CartController extends FrontController
      */
     public function showCart($domain = ''){
         $cartData = [];
-        $user = User::where('status', '!=', '2');
-        if (Auth::user() && Auth::user()->id > 0) {
-            $user = $user->where('id', Auth::user()->id);
+        $user = Auth::user();
+        if ($user) {
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
         }else{
-            $system_user = 'bagiiiisaa';
-            $user = $user->where('system_id', $system_user);
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
-        $user = $user->first();
-        if($user){
-            $cartData = $this->getCart($user->id);
-        }
-        // pr($cartData->toArray());die;
+        $cartData = $this->getCart($cart);
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         return view('forntend/cart')->with(['navCategories' => $navCategories, 'cartData' => $cartData]);
@@ -446,7 +394,7 @@ class CartController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function deleteCartProduct($domain = '', Request $request){
-        $update = CartProduct::where('id', '=', $request->cartproduct_id)->update(['status' => '2']);
+        CartProduct::where('id', $request->cartproduct_id)->delete();
         return response()->json(['status' => 'success', 'message' => 'Product deleted successfully.']);
     }
 
@@ -456,20 +404,15 @@ class CartController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function getCartData($domain = '', Request $request){
-        $user = User::where('status', '!=', '2');
+        $user = Auth::user();
         $curId = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');
-        if (Auth::user() && Auth::user()->id > 0) {
-            $user = $user->where('id', Auth::user()->id);
+        if ($user) {
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
         }else{
-            $system_user = 'bagiiiisaa';
-            $user = $user->where('system_id', $system_user);
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
-        $user = $user->first();
-        if(!$user){
-            echo "no user"; die;
-        }
-        $cartData = $this->getCart($user->id);
+        $cartData = $this->getCart($cart);
         return response()->json($cartData);
     }
 }
