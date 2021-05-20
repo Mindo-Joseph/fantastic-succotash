@@ -46,8 +46,7 @@ class CelebrityController extends BaseController
     }
 
     /**     *       Get Celebrity Products    *       */
-    public function celebrityProducts(Request $request, $cid = 0)
-    {
+    public function celebrityProducts(Request $request, $cid = 0){
         try {
             $userid = Auth::user()->id;
             $paginate = $request->has('limit') ? $request->limit : 12;

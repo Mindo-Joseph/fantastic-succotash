@@ -2,6 +2,12 @@
 
 @section('css')
 <link href="{{asset('assets/css/calender_main.css')}}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    .fc-v-event{
+        border-color: #43bee1;
+        background-color: #43bee1;
+    }
+</style>
 @endsection
 
 @section('content')

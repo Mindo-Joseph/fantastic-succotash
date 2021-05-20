@@ -230,7 +230,7 @@ class VendorSlotController extends BaseController
                         $showData[$count]['title'] = trim($title);
                         $showData[$count]['start'] = $date[$key].'T'.$v->start_time;
                         $showData[$count]['end'] = $date[$key].'T'.$v->end_time;
-                        //$showData[$count]['color'] = ($v->working_today == 0) ? '#911d1d' : '#3be83b';
+                        $showData[$count]['color'] = ($v->working_today == 0) ? '#43bee1' : '';
                         $showData[$count]['type'] = 'date';
                         $showData[$count]['type_id'] = $v->id;
                         $showData[$count]['slot_id'] = $v->id;
@@ -252,6 +252,7 @@ class VendorSlotController extends BaseController
                         $showData[$count]['start'] = $date[$key].'T'.$v->start_time;
                         $showData[$count]['end'] = $date[$key].'T'.$v->end_time;
                         $showData[$count]['type'] = 'day';
+                        $showData[$count]['color'] = ($v->working_today == 0) ? '#43bee1' : '';
                         $showData[$count]['type_id'] = $v->id;
                         $showData[$count]['slot_id'] = $v->slot_id;
                         $count++;

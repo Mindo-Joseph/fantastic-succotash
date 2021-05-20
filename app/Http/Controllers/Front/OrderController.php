@@ -26,20 +26,13 @@ class OrderController extends FrontController{
     }
 
     public function orderSave($request, $paymentStatus, $paymentMethod){
-        $name = $request->first_name;
-        if (!$request->last_name == null) {
-            $name = $name . " " . $request->last_name;
-        }
         $cart = Cart::where('user_id', Auth::user()->id)->first();
         $order = new Order;
-        $order->recipient_name = $name;
         $order->user_id = Auth::user()->id;
         $order->order_number = generateOrderNo();
         $order->payment_method = $paymentMethod;
         $order->payment_status = $paymentStatus;
         $order->address_id = $request->address_id;
-        $order->recipient_number = $request->phone;
-        $order->recipient_email = $request->email_address;
         $order->save();
         $cartProducts = CartProduct::where('cart_id', $cart->id)->get()->toArray();
         foreach ($cartProducts as $cartpro) {
