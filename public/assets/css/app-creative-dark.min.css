@@ -2080,19 +2080,20 @@ body[data-layout-mode=two-column][data-layout-width=boxed]:not([data-sidebar-siz
 .radio label::before {
   background-color: transparent;
   border-radius: 50%;
-  border: 2px solid #8c98a5;
+  border: 2px solid #98a6ad;
   content: "";
   display: inline-block;
   height: 18px;
-  left: 0;
+  left: 0.2px;
   margin-left: -18px;
+  top: 0.4px;
   position: absolute;
   transition: border 0.5s ease-in-out;
   width: 18px;
   outline: none !important;
 }
 .radio label::after {
-  background-color: #dee2e6;
+  background-color: #6c757d;
   border-radius: 50%;
   content: " ";
   display: inline-block;

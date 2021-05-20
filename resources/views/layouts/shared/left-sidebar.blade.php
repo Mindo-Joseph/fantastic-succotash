@@ -38,30 +38,26 @@
 
                 <li>
                     <a href="{{route('client.dashboard')}}" >
-                        <!-- <i data-feather="airplay"></i> -->
-                        <img src="{{asset('assets/images/dashboard_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-dashboard_icon"></span>
                         <span> Dashboard </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{route('order.index')}}" >
-                         <!-- <i data-feather="menu"></i> -->
-                         <img src="{{asset('assets/images/order_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                         <span class="icon-order_icon"></span>
                         <span> Orders </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{route('vendor.index')}}" >
-                        <!-- <i data-feather="user-plus"></i> -->
-                        <img src="{{asset('assets/images/vendor_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-vendor_icon"></span>
                         <span> Vendors </span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{route('customer.index')}}" >
-                        <!-- <i data-feather="users"></i> -->
-                        <img src="{{asset('assets/images/customer_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-customize_icon"></span>
                         <span> Customers </span>
                     </a>
                 </li>
@@ -69,29 +65,25 @@
                 <li class="menu-title mt-2">Setting</li>
                 <li>   
                     <a href="{{route('client.profile')}}" >
-                        <!-- <i data-feather="user"></i> -->
-                        <img src="{{asset('assets/images/profile_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-profile_icon"></span>
                         <span> Profile </span>
                     </a>
                 </li>
                 <li>   
                     <a href="{{route('configure.customize')}}" >
-                        <!-- <i data-feather="settings"></i> -->
-                        <img src="{{asset('assets/images/customize_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-customize_icon"></span>
                         <span> Customize </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{route('configure.index')}}">
-                        <!-- <i data-feather="tool"></i> -->
-                        <img src="{{asset('assets/images/configure_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-configure_icon"></span>
                         <span> Configure </span>
                     </a>
                 </li>
                 <li>   
                     <a href="{{route('banner.index')}}" >
-                        <!-- <i data-feather="columns"></i> -->
-                        <img src="{{asset('assets/images/banner_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-banner_icon"></span>
                         <span> Banner </span>
                     </a>
                 </li> 
@@ -129,51 +121,44 @@
                 </li> -->
                 <li>   
                     <a href="{{route('category.index')}}">
-                        <!-- <i data-feather="credit-card"></i> -->
-                        <img src="{{asset('assets/images/catalog_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-catalog_icon"></span>
                         <span> Catalog </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{route('tax.index')}}">
-                        <!-- <i data-feather="layers"></i> -->
-                        <img src="{{asset('assets/images/tax_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-tax_icon"></span>
                         <span> Tax </span>
                     </a>
                 </li>
                 <li>   
                     <a href="{{route('payoption.index')}}" >
-                        <!-- <i data-feather="dollar-sign"></i> -->
-                        <img src="{{asset('assets/images/payment_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-payment_options_icon"></span>
                         <span> Payment Options </span>
                     </a>
                 </li>
                 <li>   
                     <a href="{{route('payment.index')}}" >
-                        <!-- <i data-feather="dollar-sign"></i> -->
-                        <img src="{{asset('assets/images/payment_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-payment_icon"></span>
                         <span> Payments </span>
                     </a>
                 </li>
                 <li>   
                     <a href="{{route('promocode.index')}}" >
-                        <!-- <i data-feather="gift"></i> -->
-                        <img src="{{asset('assets/images/promocode_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-promocode_icon"></span>
                         <span> Promocode </span>
                     </a>
                 </li>
                 <li>   
                     <a href="{{route('loyalty.index')}}" >
-                        <!-- <i data-feather="columns"></i> -->
-                        <img src="{{asset('assets/images/loyality_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-loyality_icon"></span>
                         <span> Loyalty Cards </span>
                     </a>
                 </li>
                 
                 <li>   
                     <a href="{{route('wallet.index')}}" >
-                        <!-- <i data-feather="columns"></i> -->
-                        <img src="{{asset('assets/images/waller_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-waller_icon"></span>
                         <span> Wallet </span>
                     </a>
                 </li> 
@@ -183,16 +168,14 @@
                 @endphp
                 <li>   
                     <a href="#" href1="{{route('referandearn.index')}}" >
-                        <!-- <i data-feather="columns"></i> -->
-                        <img src="{{asset('assets/images/1370259.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-1370259"></span>
                         <span> Refer and Earn </span>
                     </a>
                 </li>
                 @if(!empty($brity) && $brity->celebrity_check == 1)
                 <li>   
                     <a href="{{route('celebrity.index')}}" >
-                        <!-- <i data-feather="columns"></i> -->
-                        <img src="{{asset('assets/images/celebrities_icon.svg')}}" alt="user-img" title="Mat Helme" class="side-icon">
+                        <span class="icon-celebrities_icon"></span>
                         <span> Celebrities </span>
                     </a>
                 </li>
