@@ -34,7 +34,11 @@ class CartController extends FrontController
                 'currency_id' => $client_currency->currency_id,
                 'unique_identifier' => !$user ? $new_session_token : '',
             ];
-            $cart_detail = Cart::updateOrCreate(['unique_identifier' => $new_session_token], $cart_detail);
+            if($user){
+                $cart_detail = Cart::updateOrCreate(['user_id' => $user->id], $cart_detail);
+            }else{
+                $cart_detail = Cart::updateOrCreate(['unique_identifier' => $new_session_token], $cart_detail);
+            }
             $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cart_detail->id)->first();
             if ($checkIfExist) {
                 $checkIfExist->quantity = (int)$checkIfExist->quantity + $request->quantity;
@@ -221,43 +225,33 @@ class CartController extends FrontController
      * Get Cart Items
      *
      */
-    public function getCart($user_id){
+    public function getCart($cart){
+        $cart_id = $cart->id;
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
-        $cart = Cart::with('coupon.promo')->select('id', 'is_gift', 'item_count')
-                    ->where('status', '0')
-                    ->where('user_id', $user_id)->first();
-        $cartID = $cart->id;
         $cartData = CartProduct::with(['vendor', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
                         'vendorProducts.product.translation' => function($q) use($langId){
                             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                             $q->where('language_id', $langId);
                         },
-                        'vendorProducts'=> function($qry) use($cartID){
-                            $qry->where('cart_id', $cartID);
+                        'vendorProducts'=> function($qry) use($cart_id){
+                            $qry->where('cart_id', $cart_id);
                         },
                         'vendorProducts.addon.option' => function($qry) use($langId){
                             $qry->where('language_id', $langId);
                         }, 'vendorProducts.product.taxCategory.taxRate', 
-                    ])->select('vendor_id')->where('status', [0,1])->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
-
+                    ])->select('vendor_id')->where('status', [0,1])->where('cart_id', $cart_id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if(empty($cartData) || count($cartData) < 1){
             return false;
         }
         if($cartData){
-
             foreach ($cartData as $ven_key => $vendorData) {
-
                 $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0.00;
-
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
-
                     $quantity_price = 0;
-
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
-
                     $price_in_currency = $prod->pvariant->price / $divider;
 
                     $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
@@ -331,7 +325,6 @@ class CartController extends FrontController
                 $total_discount_percent = $total_discount_percent + $discount_percent;
             }
         }
-
         $is_percent = 0;
         $amount_value = 0;
         if($cart->coupon){
@@ -356,14 +349,11 @@ class CartController extends FrontController
             
         }
         $total_payable_amount = $total_payable_amount - $total_discount_amount;
-
         $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount), 2);
         $cart->total_payable_amount = number_format($total_payable_amount, 2);
         $cart->total_discount_amount = number_format($total_discount_amount, 2);
         $cart->total_discount_percent = number_format($total_discount_percent, 2);
-
         $cart->products = $cartData->toArray();
-
         return $cart;
     }
     /**
@@ -373,18 +363,13 @@ class CartController extends FrontController
      */
     public function showCart($domain = ''){
         $cartData = [];
-        $user = User::where('status', '!=', '2');
-        if (Auth::user() && Auth::user()->id > 0) {
-            $user = $user->where('id', Auth::user()->id);
+        $user = Auth::user();
+        if ($user) {
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
         }else{
-            $system_user = 'bagiiiisaa';
-            $user = $user->where('system_id', $system_user);
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
-        $user = $user->first();
-        if($user){
-            $cartData = $this->getCart($user->id);
-        }
-        // pr($cartData->toArray());die;
+        $cartData = $this->getCart($cart);
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         return view('forntend/cart')->with(['navCategories' => $navCategories, 'cartData' => $cartData]);
@@ -419,20 +404,15 @@ class CartController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function getCartData($domain = '', Request $request){
-        $user = User::where('status', '!=', '2');
+        $user = Auth::user();
         $curId = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');
-        if (Auth::user() && Auth::user()->id > 0) {
-            $user = $user->where('id', Auth::user()->id);
+        if ($user) {
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
         }else{
-            $system_user = 'bagiiiisaa';
-            $user = $user->where('system_id', $system_user);
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
-        $user = $user->first();
-        if(!$user){
-            echo "no user"; die;
-        }
-        $cartData = $this->getCart($user->id);
+        $cartData = $this->getCart($cart);
         return response()->json($cartData);
     }
 }

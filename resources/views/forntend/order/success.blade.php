@@ -64,7 +64,7 @@
                     <div class="col-sm-6">
                         <h4>summery</h4>
                         <ul class="order-detail">
-                            <li>order ID: 5563853658932</li>
+                            <li>order ID: {{$order->order_number}}</li>
                             <li>Order Date: {{ date('F d, Y', strtotime($order->created_at)) }}</li>
                             <li>Order Total: $907.28</li>
                         </ul>
