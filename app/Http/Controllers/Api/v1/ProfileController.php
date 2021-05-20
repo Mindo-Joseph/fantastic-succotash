@@ -104,7 +104,7 @@ class ProfileController extends BaseController
             $address = $address->where('id', $id);
         }
 
-         $address = $address->orderBy('is_primary', 'desc')->orderBy('id', 'desc')->get();
+        $address = $address->orderBy('is_primary', 'desc')->orderBy('id', 'desc')->get();
 
         return response()->json([
             'data' => $address,
