@@ -20,125 +20,9 @@ class PaymentOptionController extends BaseController
      */
     public function index()
     {
-        $code = array('COD', 'paypal', 'stripe');
+        $code = array('COD', 'wallet', 'layalty-points', 'paypal', 'stripe');
         $payOption = PaymentOption::whereIn('code', $code)->get();
         return view('backend/payoption/index')->with(['payOption' => $payOption]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $categories = Category::with('english')
-                        ->select('id', 'slug')
-                        ->where('id', '>', '1')
-                        ->where('status', '!=', '2')
-                        ->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();
-
-        $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
-                    ->where('is_active', 1)
-                    ->orderBy('is_primary', 'desc')->get();
-
-
-        $returnHTML = view('backend.catalog.add-brand')->with(['categories' => $categories,  'languages' => $langs])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $data = $data_cate = array();
-        if($request->has('title')){
-            $brand = new Brand();
-            $brand_pos = Brand::select('id','position')->where('position', \DB::raw("(select max(`position`) from brands)"))->first();
-
-            $brand->title = $request->title[0];
-            $brand->position = 1;
-
-            if($brand_pos){
-                $brand->position = $brand_pos->position + 1;
-            }
-
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-                //$brand->image = $request->file('image')->storeAs('/brand', $file_name, 'public');
-                $brand->image = Storage::disk('s3')->put($this->folderName, $file,'public');
-            }else{
-                $brand->image = 'default/default_image.png';
-            }
-
-            $brand->save();
-
-            if($brand->id > 0){
-
-                $data_cate['brand_id'] = $brand->id;
-                $data_cate['category_id'] = $request->cate_id;
-
-                BrandCategory::insert($data_cate);
-
-                foreach ($request->title as $key => $value) {
-                    $data[] = [
-                        'title' => $value,
-                        'brand_id' => $brand->id,
-                        'language_id' => $request->language_id[$key]
-                    ];
-                }
-
-                BrandTranslation::insert($data);
-            }
-            return redirect()->back()->with('success', 'Brand added successfully!');
-        }else{
-            return redirect()->back()->with('error', 'Something went wrong!');
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Brand  $brand
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Brand $brand)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Brand  $brand
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($domain = '', $id)
-    {
-        $brand = Brand::with('translation', 'bc')->where('id', $id)->firstOrFail();
-        $categories = Category::with('english')
-                        ->select('id', 'slug')
-                        ->where('id', '>', '1')
-                        ->where('status', '!=', '2')
-                        ->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();
-
-        $langs = ClientLanguage::with(['language', 'brand_trans' => function($query) use ($id) {
-                        $query->where('brand_id', $id);
-                    }])
-                    ->select('language_id', 'is_primary', 'is_active')
-                    ->where('is_active', 1)
-                    ->orderBy('is_primary', 'desc')->get();
-        $submitUrl = route('brand.update', $id);
-
-        $returnHTML = view('backend.catalog.edit-brand')->with(['categories' => $categories,  'languages' => $langs, 'brand' => $brand])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML, 'submitUrl' => $submitUrl));
     }
 
     /**
@@ -150,30 +34,17 @@ class PaymentOptionController extends BaseController
      */
     public function update(Request $request, $domain = '', $id)
     {
-        $brand = Brand::where('id', $id)->firstOrFail();
-        $brand->title = $request->title[0];
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            //$brand->image = $request->file('image')->storeAs('/brand', $file_name, 'public');
-            $brand->image = Storage::disk('s3')->put($this->folderName, $file,'public');
+        $status = 0;
+        $msg = $request->method_name .' deactivated successfully!';
+        if($request->has('active') && $request->active == 'on'){
+            $status = 1;
+            $msg = $request->method_name .' activated successfully!';
         }
-        $brand->save();
+        PaymentOption::where('id', $id)->update(['status' => $status]);
 
-        $affected = BrandCategory::where('brand_id', $brand->id)->update(['category_id' => $request->cate_id]);
+        return redirect()->back()->with('success', $msg);
 
-        foreach ($request->title as $key => $value) {
-
-            $bt = BrandTranslation::where('brand_id', $brand->id)->where('language_id', $request->language_id[$key])->first();
-            if(!$bt){
-                $bt = new BrandTranslation();
-                $bt->brand_id = $brand->id;
-                $bt->language_id = $request->language_id[$key];
-            }
-            $bt->title = $value;
-            $bt->save();
-        }
-        return redirect()->back()->with('success', 'Brand updated successfully!');
+        
     }
 
     /**

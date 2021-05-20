@@ -88,8 +88,10 @@
                                                 <h4 class="mb-4 "> Categories</h4>
                                             </div>
                                             <div class="col-sm-4 text-right">
+                                                @if($vendor->add_category == 1)
                                                 <button class="btn btn-info waves-effect waves-light text-sm-right openCategoryModal" dataid="0" is_vendor="1"><i class="mdi mdi-plus-circle mr-1"></i> Add
                                                 </button>
+                                                @endif
                                             </div> 
                                             <div class="col-md-12">
                                                 <div class="row mb-2">
