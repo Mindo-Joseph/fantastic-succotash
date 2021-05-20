@@ -684,6 +684,10 @@ body.dark .input-group-text {
     color: #94a0ad;
 }
 
+.selectize-input{
+    padding: 9px 12px;
+}
+
 .dark .selectize-control.single .selectize-input:after{
     border-color: #94a0ad transparent transparent transparent;
 }
@@ -743,6 +747,35 @@ body[data-sidebar-size=condensed] .left-side-menu #sidebar-menu>ul>li:hover>a sp
     color: #94a0ad;
 }
 
+#dark_theme + label::before {
+    left: 0px;
+    top: 0px;
+}
+
+#light_theme + label::before {
+    left: 0px;
+    top: 0px;
+}
+
+#exist_variant_div input{
+    color: #94a0ad;
+    background-color: #3b4651;
+    background-clip: padding-box;
+    border: 1px solid #424e5a;
+}
+
+label.file-input.uploadImages img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+
+label.file-input.uploadImages {
+    width: 30px;
+    height: 30px;
+    border-radius: 50px;
+    overflow: hidden;
+}
 
 /* Light Theme Css */
 

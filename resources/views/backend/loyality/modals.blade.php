@@ -1,7 +1,7 @@
 <div class="modal fade bd-example-modal-lg addModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content p-3">
-            <div class="modal-header">
+            <div class="modal-header border-0 p-0 mb-3">
                 <h4 class="modal-title">Add Loyalty Card</h4><br>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
@@ -37,10 +37,7 @@
                     </div>
                 </div>
 
-
-                <br>
-                <h5>Earnings</h5>
-                <br>
+                <h5 class="mb-3">Earnings</h5>
 
                 <div class="form-group" id="per_order_pointsInput">
                     {!! Form::label('title', 'Earnings Per Order*',['class' => 'control-label']) !!}
@@ -74,7 +71,7 @@
                 </div>
 
 
-                <div class="modal-footer">
+                <div class="modal-footer border-0">
                     <button type="submit" class="btn btn-info waves-effect waves-light submitAddForm">Submit</button>
                 </div>
             </form>
