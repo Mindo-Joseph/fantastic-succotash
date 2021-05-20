@@ -62,11 +62,10 @@
                                 aria-hidden="true"></i> back</span></div>
                     <div class="block-content">
                         <ul>
-                            <li><a href="#">Account Info</a></li>
+                            <li><a href="{{route('user.profile')}}">Account Info</a></li>
                             <li class="active"><a href="{{route('user.addressBook')}}">Address Book</a></li>
-                            <li><a href="#">My Orders</a></li>
-                            <li><a href="#">My Wishlist</a></li>
-                            <li><a href="#">Newsletter</a></li>
+                            <li><a href="{{route('user.orders')}}">My Orders</a></li>
+                            <li><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
                             <li><a href="#">My Account</a></li>
                             <li><a href="#">Change Password</a></li>
                             <li class="last"><a href="#">Log Out</a></li>
@@ -94,7 +93,14 @@
                                 <div class="col-sm-6">
                                     <div class="box">
                                         <div class="box-title">
-                                            <h3 style="float: left;">Address</h3><span style="float: right;"><a href="{{ route('setPrimaryAddress', $add->id) }}" class="mr-2">Set Primary</a> <a href="{{ route('deleteAddress', $add->id) }}" class="mr-2">Delete</a> <a href="{{ route('editAddress', $add->id) }}" class="mr-2">Edit</a></span>
+                                            <h3 style="float: left;">Address</h3>
+                                            <span style="float: right;">
+                                            @if($add->is_primary == 0)
+                                            <a href="{{ route('setPrimaryAddress', $add->id) }}" class="mr-2">Set Primary</a> 
+                                            @endif
+                                            <a href="{{ route('deleteAddress', $add->id) }}" class="mr-2">Delete</a> 
+                                            <a href="{{ route('editAddress', $add->id) }}" class="mr-2">Edit</a>
+                                            </span>
                                         </div>
                                         <div class="box-content">
                                             <h6>Address: {{$add->address}}</h6>
@@ -108,7 +114,7 @@
                                 </div>
                                 @endforeach
                             </div>
-                            <div>
+                            <!-- <div>
                                 <div class="box">
                                     <div class="box-title">
                                         <h3>Address Book</h3><a href="#">Manage Addresses</a>
@@ -126,7 +132,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
