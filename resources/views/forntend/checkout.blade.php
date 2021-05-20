@@ -122,8 +122,10 @@
                                         <span class="text-danger" id="type_error"></span>
                                     </div>
                                     <div class="col-md-6"></div>
-                                    <button type="button" class="btn btn-solid mt-3" id="save_address">Save Address</button>
-                                    <button type="button" class="btn btn-solid black-btn me-3" id="cancel_save_address_btn">black</button>
+                                    <div class="col-md-12 mt-3">
+                                        <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
+                                        <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
