@@ -195,7 +195,7 @@ class CartController extends FrontController
      * get products from cart
      *
      * @return \Illuminate\Http\Response
-     */
+     */ 
     public function getCartProducts($domain = ''){
         $user = Auth::user();
         $curId = Session::get('customerCurrency');
