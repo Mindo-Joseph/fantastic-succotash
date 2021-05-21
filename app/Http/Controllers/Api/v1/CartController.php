@@ -338,7 +338,7 @@ class CartController extends BaseController{
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         $total_tax = $total_paying = $total_disc_amount = 0.00;
         if($cartData){
-
+            
             foreach ($cartData as $ven_key => $vendorData) {
 
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
