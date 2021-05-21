@@ -563,6 +563,13 @@
                 }
             ],
             "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/composer/package-versions-deprecated/issues",
+                "source": "https://github.com/composer/package-versions-deprecated/tree/1.11.99.1"
+            },
+>>>>>>> 6d9ae4319ed190429b47e6784e531c8dd098aff7
             "funding": [
                 {
                     "url": "https://packagist.com",
@@ -658,6 +665,13 @@
                 "redis",
                 "xcache"
             ],
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/doctrine/cache/issues",
+                "source": "https://github.com/doctrine/cache/tree/1.11.2"
+            },
+>>>>>>> 6d9ae4319ed190429b47e6784e531c8dd098aff7
             "funding": [
                 {
                     "url": "https://www.doctrine-project.org/sponsorship.html",
@@ -762,6 +776,13 @@
                 "sqlserver",
                 "sqlsrv"
             ],
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/doctrine/dbal/issues",
+                "source": "https://github.com/doctrine/dbal/tree/3.1.0"
+            },
+>>>>>>> 6d9ae4319ed190429b47e6784e531c8dd098aff7
             "funding": [
                 {
                     "url": "https://www.doctrine-project.org/sponsorship.html",
@@ -815,6 +836,13 @@
             ],
             "description": "A small layer on top of trigger_error(E_USER_DEPRECATED) or PSR-3 logging with options to disable all deprecations or selectively for packages.",
             "homepage": "https://www.doctrine-project.org/",
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/doctrine/deprecations/issues",
+                "source": "https://github.com/doctrine/deprecations/tree/v0.5.3"
+            },
+>>>>>>> 6d9ae4319ed190429b47e6784e531c8dd098aff7
             "time": "2021-03-21T12:59:47+00:00"
         },
         {
@@ -891,6 +919,13 @@
                 "event system",
                 "events"
             ],
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/doctrine/event-manager/issues",
+                "source": "https://github.com/doctrine/event-manager/tree/1.1.x"
+            },
+>>>>>>> 6d9ae4319ed190429b47e6784e531c8dd098aff7
             "funding": [
                 {
                     "url": "https://www.doctrine-project.org/sponsorship.html",
@@ -2531,6 +2566,13 @@
                 "JWS",
                 "jwt"
             ],
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/lcobucci/jwt/issues",
+                "source": "https://github.com/lcobucci/jwt/tree/4.1.4"
+            },
+>>>>>>> 6d9ae4319ed190429b47e6784e531c8dd098aff7
             "funding": [
                 {
                     "url": "https://github.com/lcobucci",
@@ -3096,6 +3138,13 @@
                 "omnipay",
                 "payment"
             ],
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/thephpleague/omnipay/issues",
+                "source": "https://github.com/thephpleague/omnipay/tree/master"
+            },
+>>>>>>> 6d9ae4319ed190429b47e6784e531c8dd098aff7
             "time": "2020-09-22T14:02:17+00:00"
         },
         {
@@ -3550,6 +3599,13 @@
                 "payment",
                 "purchase"
             ],
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/thephpleague/omnipay-common/issues",
+                "source": "https://github.com/thephpleague/omnipay-common/tree/master"
+            },
+>>>>>>> 6d9ae4319ed190429b47e6784e531c8dd098aff7
             "time": "2020-08-20T18:22:12+00:00"
         },
         {

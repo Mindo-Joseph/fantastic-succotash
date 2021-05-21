@@ -36,13 +36,13 @@
                     <tr>
                         @foreach($languages as $langs)
                             @if($langs->is_primary == 1)
-                                <td style="min-width: 200px;">
+                                <td>
                                     {!! Form::hidden('language_id[]', $langs->language->id) !!}
                                     {!! Form::text('title[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
                                 </td>
 
                             @else
-                                <td style="min-width: 200px;">
+                                <td>
                                     {!! Form::hidden('language_id[]', $langs->language->id) !!}
                                     {!! Form::text('title[]', null, ['class' => 'form-control']) !!}
                                 </td>

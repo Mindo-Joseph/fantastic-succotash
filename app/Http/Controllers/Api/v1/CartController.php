@@ -372,7 +372,7 @@ class CartController extends BaseController{
                     }else{
                         $couponData['coupon_id'] =  $vendorData->coupon->promo->id;
                         $couponData['name'] =  $vendorData->coupon->promo->name;
-                        $couponData['disc_type'] = ($vendorData->coupon->promo->promo_type_id == 1) ? 'Percent' : 'Ammount';
+                        $couponData['disc_type'] = ($vendorData->coupon->promo->promo_type_id == 1) ? 'Percent' : 'Amount';
                         $couponData['expiry_date'] =  $vendorData->coupon->promo->expiry_date;
                         $couponData['allow_free_delivery'] =  $vendorData->coupon->promo->allow_free_delivery;
                         $couponData['minimum_spend'] =  $vendorData->coupon->promo->minimum_spend;

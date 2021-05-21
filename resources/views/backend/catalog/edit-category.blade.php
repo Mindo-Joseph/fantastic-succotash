@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <h4 class="header-title mb-3"></h4>
+        
 
         <div class="row mb-6">
             <div class="col-sm-6">

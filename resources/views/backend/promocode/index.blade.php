@@ -66,7 +66,7 @@
                                 <tr data-row-id="">
                                     <td class="draggableTd"><span class="dragula-handle"></span></td>
                                     <td> 
-                                        <img class="rounded-circle" src="{{$promo->image['proxy_url'].'200/100'.$promo->image['image_path']}}" alt="{{$promo->id}}" >
+                                        <img class="promo_img" src="{{$promo->image['proxy_url'].'200/100'.$promo->image['image_path']}}" alt="{{$promo->id}}" >
                                     </td>
                                     <td>{{$promo->name}}</td>
                                     <td>{{$promo->short_desc}}</td>
@@ -83,7 +83,7 @@
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
                                                 <a class="action-icon openPromoModal" userId="{{$promo->id}}" href="#">
-                                                    <h3> <i class="mdi mdi-square-edit-outline"></i></h3>
+                                                    <i class="mdi mdi-square-edit-outline"></i>
                                                 </a>
                                             </div>
                                             <div class="inner-div">
@@ -92,7 +92,7 @@
                                                     @method('DELETE')
                                                     <div class="form-group">
                                                         <button type="submit" onclick="return confirm('Are you sure? You want to delete the Promocode.')" class="btn btn-primary-outline action-icon">
-                                                            <h3><i class="mdi mdi-delete"></i></h3>
+                                                            <i class="mdi mdi-delete"></i>
                                                         </button>
                                                     </div>
                                                 </form>

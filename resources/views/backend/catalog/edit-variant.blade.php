@@ -55,7 +55,7 @@
                                 @endif
                             @endforeach
 
-                            <td style="min-width: 200px;">
+                            <td>
                                 {!! Form::hidden('language_id[]', $langs->language_id) !!}
                                 <input type="text" name="title[]" class="form-control" value="{{$valueData}}" @if($langs->is_primary == 1) required @endif>
                             </td>
@@ -103,7 +103,7 @@
                                 @endif
                             @endforeach
 
-                            <td style="min-width: 200px;">
+                            <td>
                                 <input type="hidden" name="opt_id[{{$langs->language_id}}][]" class="form-control" value="{{$optDataId}}" @if($langs->is_primary == 1) required @endif>
                                 <input type="text" name="opt_title[{{$langs->language_id}}][]" class="form-control" value="{{$optData}}" @if($langs->is_primary == 1) required @endif>
                             </td>

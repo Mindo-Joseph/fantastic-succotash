@@ -149,7 +149,7 @@ class ProductController extends BaseController
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = $multiplier;
+                    $value->variant[$k]->multiplier = $multiplier;
                 }
             }
         }

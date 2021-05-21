@@ -400,8 +400,8 @@
                         </div>
                     </div>
                     <div class="row mb-2 physicalDiv" style="{{ ($product->is_physical==1) ? '' : 'display:none;' }}">
-                        {!! Form::label('title', 'Required Shipping',['class' => 'control-label col-sm-2 mb-2']) !!}
-                        <div class="col-sm-4 mb-2">
+                        {!! Form::label('title', 'Required Shipping',['class' => 'control-label col-sm-3 mb-2']) !!}
+                        <div class="col-sm-3 mb-2">
                             <input type="checkbox" id="requiredShipping" data-plugin="switchery" name="require_ship" class="chk_box" data-color="#43bee1" @if($product->requires_shipping == 1) checked @endif>
                         </div>
                         <div class="col-sm-6"></div>
