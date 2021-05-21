@@ -67,8 +67,7 @@ class CartController extends BaseController{
     }
 
     /**     * Add product In Cart    *           */
-    public function add(Request $request)
-    {
+    public function add(Request $request){
         try {
             $user = Auth::user();
             $langId = $user->language;
@@ -153,11 +152,11 @@ class CartController extends BaseController{
                     'status'  => '0',
                     'is_tax_applied'  => '1',
                     'created_by'  => $user_id,
+                    'product_id' => $product->id,
                     'cart_id'  => $cart_detail->id,
                     'quantity'  => $request->quantity,
                     'vendor_id'  => $product->vendor_id,
-                    'product_id' => $product->id,
-                    'variant_id'  => $request->variant_id,
+                    'variant_id'  => $request->product_variant_id,
                     'currency_id' => $client_currency->currency_id,
                 ];
                 $cartProduct = CartProduct::where('cart_id', $cart_detail->id)
@@ -390,7 +389,7 @@ class CartController extends BaseController{
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
 
                     //$price_in_currency = round($prod->pvariant->price / $divider);
-                    $price_in_currency = $prod->pvariant->price;
+                    $price_in_currency = $prod->pvariant ? $prod->pvariant->price : 0;
                     $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
 

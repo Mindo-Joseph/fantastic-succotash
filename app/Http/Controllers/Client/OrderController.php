@@ -15,18 +15,20 @@ class OrderController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $orders = Order::paginate();
+        $orders = Order::with('products')->paginate();
         return view('backend/order/index', compact('orders'));
     }
 
     /**
-     * Display the specified resource.
+     * Display the order.
      *
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
 
-    public function show(Order $order){
-        return view('backend.order.view');
+    public function show($domain = '', $id){
+        $order = Order::with('products')->findOrFail($id);
+
+        return view('backend.order.view', compact('order'));
     }
 }
