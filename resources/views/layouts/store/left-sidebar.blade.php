@@ -138,6 +138,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </div>
     </div>
 </div>
+
+
 <script type="text/javascript">
     var show_cart_url = "{{ route('showCart') }}";
     var user_checkout_url= "{{ route('user.checkout') }}";

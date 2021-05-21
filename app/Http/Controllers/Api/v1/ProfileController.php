@@ -96,26 +96,6 @@ class ProfileController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function addressBook($id = '')
-    {
-        $address = UserAddress::where('user_id', Auth::user()->id);
-
-        if($id > 0){
-            $address = $address->where('id', $id);
-        }
-
-        $address = $address->orderBy('is_primary', 'desc')->orderBy('id', 'desc')->get();
-
-        return response()->json([
-            'data' => $address,
-        ]);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function orders(Request $request, $domain = '')
     {
     	
@@ -335,16 +315,36 @@ class ProfileController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    public function addressBook($id = '')
+    {
+        $address = UserAddress::where('user_id', Auth::user()->id);
+
+        if($id > 0){
+            $address = $address->where('id', $id);
+        }
+
+        $address = $address->orderBy('is_primary', 'desc')
+                    ->orderBy('id', 'desc')->get();
+
+        return response()->json([
+            'data' => $address,
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function userAddress(Request $request, $addressId = 0)
     {
         $validator = Validator::make($request->all(), [
             'address' => 'required',
-            'street' => 'required',
-            'city' => 'required',
-            'state' => 'required',
+            'city' => '',
+            'state' => '',
+            'country' => '',
             'latitude' => 'required',
             'longitude' => 'required',
-            'country_id' => 'required',
             'pincode' => 'required|string|between:5,6',
         ]);
 
@@ -359,39 +359,23 @@ class ProfileController extends BaseController
             $add = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
         }
 
-        $message = "Address updated successfully.";
-
         $address = UserAddress::where('id', $addressId)->where('user_id', Auth::user()->id)->first();
+        $message = "Address updated successfully.";
         if(!$address){
             $message = "Address added successfully.";
             $address = new UserAddress();
             $address->user_id = Auth::user()->id;
             $address->is_primary = $request->has('is_primary') ? 1 : 0;
         }
-        $addressType = 3;
-        if($request->has('address_type')){
-            if($request->address_type == 'home' || $request->address_type == 'Home'){
-                $addressType = 1;
-            }elseif($request->address_type == 'office' || $request->address_type == 'Office'){
-                $addressType = 2;
-            }
+        foreach ($request->only('address', 'street', 'city', 'state', 'latitude', 'longitude', 'pincode', 'phonecode', 'country_code', 'country') as $key => $value) {
+            $address[$key] = $value;
         }
-        
-        $address->address = $request->address;
-        $address->street = $request->street;
-        $address->city = $request->city;
-        $address->state = $request->state;
-        $address->latitude = $request->latitude;
-        $address->longitude = $request->longitude;
-        $address->country_id = $request->country_id;
-        $address->pincode = $request->pincode;
-        $address->type = $addressType;
+        $request->type == ($request->has('address_type') && $request->address_type < 3) ? $request->address_type : 3;
         
         $address->save();
 
         return response()->json([
             'message' => $message,
-            'data' => $address,
         ]);
     }
 
