@@ -32,7 +32,8 @@ class CartController extends BaseController{
             }
             $cart = $cart->first();
             if($cart){
-                $cart = $this->getCart($cart, $user->language, $user->currency);
+                $cartData = $this->getCart($cart, $user->language, $user->currency);
+                return $this->successResponse($cartData);
             }
             return $this->successResponse($cart);
         } catch (Exception $e) {
