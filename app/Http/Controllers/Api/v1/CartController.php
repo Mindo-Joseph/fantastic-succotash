@@ -345,7 +345,7 @@ class CartController extends BaseController{
 
                 $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
                 $couponData = $couponProducts = array();
-                if(!empty($vendorData->coupon) && ($vendorData->coupon->vendor_id == $vendorData->vendor_id)){
+                if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->vendor_id == $vendorData->vendor_id)){
 
                     $now = Carbon::now()->toDateTimeString();
 
