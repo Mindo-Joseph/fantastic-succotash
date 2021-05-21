@@ -65,7 +65,7 @@ class FrontController extends Controller
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = Session::get('currencyMultiplier');
+                    $value->variant[$k]->multiplier = Session::get('currencyMultiplier');
                 }
             }
         }

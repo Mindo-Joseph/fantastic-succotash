@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\SearchController;
+use App\Http\Controllers\Front\SearchController;
 
 Route::get('admin/login', function () {
     return view('auth/login');
