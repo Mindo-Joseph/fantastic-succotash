@@ -236,7 +236,7 @@
 
             <form id="geo_form" action="{{ route('vendor.serviceArea', $vendor->id) }}" method="POST">
                 @csrf
-                <div class="modal-body" id="editCardBox">
+                <div class="modal-body mt-0" id="editCardBox">
                     
                         <input type="hidden" name="latlongs" value="" id="latlongs" />
                         <input type="hidden" name="zoom_level" value="13" id="zoom_level" />
@@ -273,15 +273,13 @@
                 </div>
 
                 <div class="modal-footer">
-                    <div class="row mt-1">
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <button type="button"
                                 class="btn btn-block btn-outline-blue waves-effect waves-light">Cancel</button>
+                        </div> -->
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-block btn-blue waves-effect waves-light w-100">Save</button>
                         </div>
-                        <div class="col-md-6">
-                            <button type="submit" class="btn btn-block btn-blue waves-effect waves-light">Save</button>
-                        </div>
-                    </div>
                 </div>
                 
             </form>

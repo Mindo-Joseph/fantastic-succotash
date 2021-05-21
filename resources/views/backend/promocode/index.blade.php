@@ -66,7 +66,7 @@
                                 <tr data-row-id="">
                                     <td class="draggableTd"><span class="dragula-handle"></span></td>
                                     <td> 
-                                        <img src="{{$promo->image['proxy_url'].'200/100'.$promo->image['image_path']}}" alt="{{$promo->id}}" >
+                                        <img class="rounded-circle" src="{{$promo->image['proxy_url'].'200/100'.$promo->image['image_path']}}" alt="{{$promo->id}}" >
                                     </td>
                                     <td>{{$promo->name}}</td>
                                     <td>{{$promo->short_desc}}</td>

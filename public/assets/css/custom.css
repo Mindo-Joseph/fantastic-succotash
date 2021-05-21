@@ -788,8 +788,21 @@ label.file-input.uploadImages {
     color: #43bee1 !important;
 }
 
-#banner-datatable img.rounded-circle {
+#banner-datatable img.rounded-circle{
     width: 90px;
     height: 90px;
 }
 
+#promo-datatable img.rounded-circle{
+    width: 200px;
+    height: 100px;
+}
+
+
+
+
+/* css */
+.btn:focus, .btn.focus {
+    outline: 0;
+    box-shadow: none !important;
+}
