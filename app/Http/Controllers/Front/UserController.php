@@ -110,7 +110,7 @@ class UserController extends FrontController
                                 'customer_name' => ucwords($user->name),
                                 'code_text' => 'Enter below code to verify yoour account',
                             ];
-                    dispatch(new \App\Jobs\SendVerifyEmailJob($data));
+                    dispatch(new \App\Jobs\SendVerifyEmailJob($data))->onQueue('verify_email');;
                     $notified = 1;
                 } catch (\Exception $e) {
                     $user->save();

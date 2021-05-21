@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Front;
-
+use DB;
 use Auth;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
@@ -26,37 +26,44 @@ class OrderController extends FrontController{
     }
 
     public function orderSave($request, $paymentStatus, $paymentMethod){
-        $cart = Cart::where('user_id', Auth::user()->id)->first();
-        $order = new Order;
-        $order->user_id = Auth::user()->id;
-        $order->order_number = generateOrderNo();
-        $order->payment_method = $paymentMethod;
-        $order->payment_status = $paymentStatus;
-        $order->address_id = $request->address_id;
-        $order->save();
-        $cartProducts = CartProduct::where('cart_id', $cart->id)->get()->toArray();
-        foreach ($cartProducts as $cartpro) {
-            $productName = Product::where('id', $cartpro['product_id'])->first()->toArray();
-            $orderProducts = new OrderProduct;
-            $orderProducts->order_id = $order->id;
-            $orderProducts->quantity = $cartpro['quantity'];
-            $orderProducts->vendor_id = $cartpro['vendor_id'];
-            $orderProducts->product_name = $productName['sku'];
-            $orderProducts->product_id = $cartpro['product_id'];
-            $orderProducts->created_by = $cartpro['created_by'];
-            $orderProducts->variant_id = $cartpro['variant_id'];
-            $orderProducts->is_tax_applied = $cartpro['is_tax_applied'];
-            $orderProducts->save();
-            $cartAddon = CartAddon::where('cart_product_id', $cartpro['id'])->get()->toArray();
-            foreach ($cartAddon as $cartadd) {
-                $orderAddon = new OrderProductAddon;
-                $orderAddon->order_product_id = $orderProducts->id;
-                $orderAddon->addon_id = $cartadd['addon_id'];
-                $orderAddon->option_id = $cartadd['option_id'];
-                $orderAddon->save();
+        try {
+           DB::beginTransaction();
+            $cart = Cart::where('user_id', Auth::user()->id)->first();
+            $order = new Order;
+            $order->user_id = Auth::user()->id;
+            $order->order_number = generateOrderNo();
+            $order->payment_method = $paymentMethod;
+            $order->address_id = $request->address_id;
+            $order->save();
+            $cart_products = CartProduct::where('cart_id', $cart->id)->get();
+            foreach ($cart_products as $cart_product) {
+                $product_detail = Product::where('id', $cart_product->product_id)->first();
+                $order_product = new OrderProduct;
+                $order_product->order_id = $order->id;
+                $order_product->quantity = $cart_product->quantity;
+                $order_product->product_name = $product_detail->sku;
+                $order_product->vendor_id = $cart_product->vendor_id;
+                $order_product->product_id = $cart_product->product_id;
+                $order_product->created_by = $cart_product->created_by;
+                $order_product->variant_id = $cart_product->variant_id;
+                $order_product->is_tax_applied = $cart_product->is_tax_applied;
+                $order_product->save();
+                $cart_addons = CartAddon::where('cart_product_id', $cart_product->id)->get();
+                foreach ($cart_addons as $cart_addon) {
+                    $orderAddon = new OrderProductAddon;
+                    $orderAddon->addon_id = $cart_addon->addon_id;
+                    $orderAddon->option_id = $cart_addon->option_id;
+                    $orderAddon->order_product_id = $order_product->id;
+                    $orderAddon->save();
+                }
+                CartAddon::where('cart_product_id', $cart_product->id)->delete();
             }
+            CartProduct::where('cart_id', $cart->id)->delete();
+            DB::commit();
+            return $order; 
+        } catch (Exception $e) {
+            DB::rollback();
         }
-        return $order;
     }
     
     public function makePayment(Request $request){
