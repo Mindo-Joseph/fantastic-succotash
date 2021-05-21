@@ -183,8 +183,10 @@ class VendorController extends BaseController
                     })
                     ->where('status', '!=', '2')
                     ->orderBy('position', 'asc')->get();
+
+        $vendorActiveCategory = VendorCategory::where('vendor_id', $id)->pluck('category_id')->toArray();
         
-        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categorList' => $categorList]);
+        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categorList' => $categorList, 'vendorActiveCategory' => $vendorActiveCategory]);
     }
 
     /**
@@ -237,7 +239,8 @@ class VendorController extends BaseController
                     })
                     ->where('status', '!=', '2')
                     ->orderBy('position', 'asc')->get();
-        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'categorList' => $categorList]);
+        $vendorActiveCategory = VendorCategory::where('vendor_id', $id)->pluck('category_id')->toArray();
+        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'categorList' => $categorList, 'vendorActiveCategory' => $vendorActiveCategory]);
     }
 
     /**
@@ -266,7 +269,9 @@ class VendorController extends BaseController
                     })
                     ->where('status', '!=', '2')
                     ->orderBy('position', 'asc')->get();
-        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'tab' => 'catalog', 'products' => $products, 'typeArray' => $type, 'categories' => $categories, 'categorList' => $categorList]);
+        $vendorActiveCategory = VendorCategory::where('vendor_id', $id)->pluck('category_id')->toArray();
+        
+        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'tab' => 'catalog', 'products' => $products, 'typeArray' => $type, 'categories' => $categories, 'categorList' => $categorList, 'vendorActiveCategory' => $vendorActiveCategory]);
     }
 
     /**
@@ -309,20 +314,17 @@ class VendorController extends BaseController
 
     /** Activate Category for vendor     */
     public function activeCategory(Request $request, $domain = '', $id)
-    {
-        /* "vid" => "6"
-  "cid" => "3"
-  "category" => "on"
-        $data = [
-
-        ];
-
-        dd($request->all());*/
+    {     
         $vendor = Vendor::where('id', $id)->firstOrFail();
         $vc = VendorCategory::where('id', $id)->first();
-        $vendor->status = 2;
-        $vendor->save();
-        return redirect()->back()->with('success', 'Vendor deleted successfully!');
+        if(!$vc){
+            $vc = new VendorCategory();
+            $vc->vendor_id = $request->vid;
+            $vc->category_id = $request->cid;
+        }
+        $vc->status = ($request->has('category') && $request->category == 'on') ? 1 : 0;
+        $vc->save();
+        return redirect()->back()->with('success', 'Category activated successfully!');
     }
 
     
