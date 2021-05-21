@@ -412,7 +412,7 @@ class CartController extends BaseController{
                     $variantsData['multiplier']         = $clientCurrency->doller_compare;
                     $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
 
-                    if(!empty($vendorData->coupon) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
+                    if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
                         $pro_disc = $discount_amount;
                         if($minimum_spend < $quantity_price){
                             if($is_percent == 1){
@@ -490,7 +490,7 @@ class CartController extends BaseController{
                 }
                 $couponApplied = 0;
 
-                if(!empty($vendorData->coupon) && ($vendorData->coupon->promo->restriction_on == 1)){
+                if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 1)){
                     $minimum_spend = $vendorData->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
                     if($minimum_spend < $proSum){
                         if($is_percent == 1){
@@ -522,7 +522,7 @@ class CartController extends BaseController{
                 $total_tax = $total_tax + $taxable_amount;
                 $total_disc_amount = $total_disc_amount + $discount_amount;
                 $total_discount_percent = $total_discount_percent + $discount_percent;
-                if(!empty($vendorData->coupon)){
+                if(!empty($vendorData->coupon->promo)){
                     unset($vendorData->coupon->promo);
                 }
             }
