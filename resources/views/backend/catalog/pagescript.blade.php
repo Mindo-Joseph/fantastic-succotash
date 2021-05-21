@@ -129,7 +129,7 @@
         var $clone = $tr.clone();
         $clone.find(':text').val('');
         $clone.find('.hexa-colorpicker').attr("id", "hexa-colorpicker-"+n);
-        $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>');
+        $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>');
         $('.optionTableAdd').append($clone);
 
         var picker = new jscolor("#hexa-colorpicker-"+n, options);
@@ -143,7 +143,7 @@
         $clone.find(':text').val('');
         $clone.find(':hidden').val('');
         $clone.find('.hexa-colorpicker').attr("id", "hexa-colorpicker-"+n);
-        $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>');
+        $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>');
         $('.optionTableEdit').append($clone);
         $('.hexa-colorpicker').colorpicker();
         var picker = new jscolor("#hexa-colorpicker-"+n, options);

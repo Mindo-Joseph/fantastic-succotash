@@ -326,7 +326,7 @@ $(document).on('click', '.addOptionRow-Add',function (e) {
     console.log('asasd');
     var $clone = $tr.clone();
     $clone.find(':text').val('');
-    $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>');
+    $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>');
     $('.optionTableAdd').append($clone);
 });
 
@@ -335,7 +335,7 @@ $(document).on('click', '.addOptionRow-edit',function (e) {
     var $clone = $tr.clone();
     $clone.find(':text').val('');
     $clone.find(':hidden').val('');
-    $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>');
+    $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>');
     $('.optionTableEdit').append($clone);
 });
 $("#addAddonmodal").on('click', '.deleteCurRow', function () {
