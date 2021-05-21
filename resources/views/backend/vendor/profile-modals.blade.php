@@ -345,11 +345,11 @@
 
                 <div class="modal-footer">
                     <div class="row mt-1">
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <button type="button"
                                 class="btn btn-block btn-outline-blue waves-effect waves-light">Cancel</button>
-                        </div>
-                        <div class="col-md-6">
+                        </div> -->
+                        <div class="col-12">
                             <button type="submit" class="btn btn-block btn-blue waves-effect waves-light">Save</button>
                         </div>
                     </div>
