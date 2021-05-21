@@ -46,7 +46,8 @@
     <div class="container">
         <div class="checkout-page">
             <div class="checkout-form">
-                <form method="post" action="{{route('user.placeorder')}}"> @csrf
+                <form method="post" action="{{route('user.placeorder')}}">
+                    @csrf
                     <div class="row">
                         <div class="col-lg-6 col-sm-12 col-xs-12">
                             <div class="checkout-title">
@@ -163,7 +164,6 @@
                                     </ul>
                                     <ul class="total">
                                         <li>Total <span class="count" id="total_payable_amount"></span></li>
-                                        <input type="hidden" name="total_amount"  value="620" placeholder="" id="total_payable_amount_input">
                                     </ul>
                                 </div>
                                 <div class="payment-box">

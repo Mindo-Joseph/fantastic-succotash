@@ -170,10 +170,7 @@
             </div>
         </div>
     </div>
-
-
     <!-- Card Page Start From Here -->
-
     <div class="row card-box">
         <div class="col-12">
             <div class="table-responsive">

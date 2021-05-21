@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderProduct extends Model{
     use HasFactory;
+
+    protected $table = 'order_vendor_products';
+
     public function getImageAttribute($value){
       $values = array();
       $img = 'default/default_image.png';

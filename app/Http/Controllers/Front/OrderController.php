@@ -51,7 +51,7 @@ class OrderController extends FrontController{
                 $order_product->image = $cart_product->product->pimage ? $cart_product->product->pimage->first()->path : '';
                 $order_product->save();
                 $cart_addons = CartAddon::where('cart_product_id', $cart_product->id)->get();
-                if($cart_addons->count()){
+                if($cart_addons){
                     foreach ($cart_addons as $cart_addon) {
                         $orderAddon = new OrderProductAddon;
                         $orderAddon->addon_id = $cart_addon->addon_id;
