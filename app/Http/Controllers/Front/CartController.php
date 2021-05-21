@@ -196,20 +196,16 @@ class CartController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function getCartProducts($domain = '')
-    {
-        $user_id = '';
-        if (Auth::user()->id && Auth::user()->id > 0) {
-            $user_id = Auth::user()->id;
+    public function getCartProducts($domain = ''){
+        $user = Auth::user();
+        $curId = Session::get('customerCurrency');
+        $langId = Session::get('customerLanguage');
+        if ($user) {
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
         }else{
-            if(empty(Auth::user()->system_user)){
-                return response()->json(['error' => 'System id should not be empty.'], 404);
-            }
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
-
-        $cartData = $this->getCart($user_id);
-
-        
+        $cartData = $this->getCart($cart);
         if($cartData && !empty($cartData)){
             return response()->json([
                 'data' => $cartData,
@@ -372,7 +368,7 @@ class CartController extends FrontController
         $cartData = $this->getCart($cart);
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData]);
+        return view('forntend/cart')->with(['navCategories' => $navCategories, 'cartData' => $cartData]);
     }
 
 

@@ -48,7 +48,9 @@ class OrderController extends FrontController{
                 $order_product->created_by = $cart_product->created_by;
                 $order_product->variant_id = $cart_product->variant_id;
                 $order_product->product_name = $cart_product->product->sku;
-                $order_product->image = $cart_product->product->pimage ? $cart_product->product->pimage->first()->path : '';
+                if($cart_product->product->pimage){
+                    $order_product->image = $cart_product->product->pimage->first() ? $cart_product->product->pimage->first()->path : '';
+                }
                 $order_product->save();
                 $cart_addons = CartAddon::where('cart_product_id', $cart_product->id)->get();
                 if($cart_addons){

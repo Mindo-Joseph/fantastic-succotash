@@ -255,7 +255,7 @@
     background: transparent;
 }
 
-.coupon_box button {
+/*.coupon_box button {
     background: transparent;
     border: 0;
     color: #3CA8FE;
@@ -263,6 +263,16 @@
     font-weight: 600;
     letter-spacing: 0;
     line-height: 11px;
+}*/
+
+.coupon_box button {
+    border-color: #ff4c3b;
+    color: #ff4c3b;
+}
+
+.coupon_box button:hover {
+    border-color: #ff4c3b;
+    background: #ff4c3b;
 }
 
 .items-details h4 {
@@ -378,7 +388,7 @@
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #2B8AFF;
+    background: #ff4c3b;
 }
 
 .delivery_box {
