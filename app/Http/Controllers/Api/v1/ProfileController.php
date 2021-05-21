@@ -340,13 +340,9 @@ class ProfileController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'address' => 'required',
-            'city' => '',
-            'state' => '',
-            'country' => '',
-            'latitude' => 'required',
-            'longitude' => 'required',
-            'pincode' => 'required|string|between:5,6',
+            'country' => 'required',
         ]);
+        $user = Auth::user();
 
         if($validator->fails()){
             foreach($validator->errors()->toArray() as $error_key => $error_value){
@@ -356,15 +352,15 @@ class ProfileController extends BaseController
         }
 
         if($request->has('is_primary') && $request->is_primary == 1){
-            $add = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
+            $add = UserAddress::where('user_id', $user->id)->update(['is_primary' => 0]);
         }
 
-        $address = UserAddress::where('id', $addressId)->where('user_id', Auth::user()->id)->first();
+        $address = UserAddress::where('id', $addressId)->where('user_id', $user->id)->first();
         $message = "Address updated successfully.";
         if(!$address){
             $message = "Address added successfully.";
             $address = new UserAddress();
-            $address->user_id = Auth::user()->id;
+            $address->user_id = $user->id;
             $address->is_primary = $request->has('is_primary') ? 1 : 0;
         }
         foreach ($request->only('address', 'street', 'city', 'state', 'latitude', 'longitude', 'pincode', 'phonecode', 'country_code', 'country') as $key => $value) {
@@ -379,21 +375,18 @@ class ProfileController extends BaseController
         ]);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    /**     Update primary address         */
     public function primaryAddress($addressId = 0)
     {
         try {
-            $address = UserAddress::where('id', $addressId)->where('user_id', Auth::user()->id)->first();
+            $user = Auth::user();
+            $address = UserAddress::where('id', $addressId)->where('user_id', $user->id)->first();
 
             if(!$address){
                 return $this->errorResponse('Address not found.', 404);
             }
-            $add = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
-            $add = UserAddress::where('user_id', Auth::user()->id)->where('id', $addressId)->update(['is_primary' => 1]);
+            $add = UserAddress::where('user_id', $user->id)->update(['is_primary' => 0]);
+            $add = UserAddress::where('user_id', $user->id)->where('id', $addressId)->update(['is_primary' => 1]);
 
             return $this->successResponse('', 'Address is set as primary address successfully.');
         } catch (Exception $e) {
