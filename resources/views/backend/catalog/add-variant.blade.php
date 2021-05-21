@@ -42,13 +42,13 @@
                     <tr>
                         @foreach($languages as $langs)
                             @if($langs->is_primary == 1)
-                                <td style="min-width: 200px;">
+                                <td>
                                     {!! Form::hidden('language_id[]', $langs->language_id) !!}
                                     {!! Form::text('title[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
                                 </td>
 
                             @else
-                                <td style="min-width: 200px;">
+                                <td>
                                     {!! Form::hidden('language_id[]', $langs->language_id) !!}
                                     {!! Form::text('title[]', null, ['class' => 'form-control']) !!}
                                 </td>
@@ -77,7 +77,7 @@
                             <input type="text" name="hexacode[]" class="form-control hexa-colorpicker" value="cccccc" id="hexa-colorpicker-1">
                         </td>
                        @foreach($languages as $key => $langs)
-                        <td style="min-width: 200px;">
+                        <td>
                             <input type="text" name="opt_color[{{$key}}][]" class="form-control" @if($langs->is_primary == 1) required @endif>
                         </td>
                         @endforeach

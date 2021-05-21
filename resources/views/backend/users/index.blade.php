@@ -90,10 +90,10 @@
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <!-- <div class="inner-div" style="float: left;">
-                                                <a class="action-icon openBannerModal" userId="{{$user->id}}" href="#"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                                <a class="action-icon openBannerModal" userId="{{$user->id}}" href="#"><i class="mdi mdi-square-edit-outline"></i></a> 
                                             </div> -->
                                             <!-- <div class="inner-div" style="float: left;">
-                                                <a class="action-icon" userId="{{$user->id}}" href="{{route('customer.show', $user->id)}}"><h3> <i class="mdi mdi-eye"></i></h3></a> 
+                                                <a class="action-icon" userId="{{$user->id}}" href="{{route('customer.show', $user->id)}}"><i class="mdi mdi-eye"></i></a> 
                                             </div> -->
                                             <?php 
                                                 $status = 2; $icon = 'mdi-lock';
@@ -103,10 +103,10 @@
                                                 $title = 'Activate user account';
                                             } ?>
                                             <div class="inner-div" style="float: left;">
-                                                <a class="action-icon" userId="{{$user->id}}" href="{{route('customer.account.action', [$user->id, $status])}}"><h3> <i class="mdi {{$icon}}" title="{{$title}}"></i></h3></a> 
+                                                <a class="action-icon" userId="{{$user->id}}" href="{{route('customer.account.action', [$user->id, $status])}}"><i class="mdi {{$icon}}" title="{{$title}}"></i></a> 
                                             </div>
                                             <div class="inner-div" >
-                                                <a href="{{route('customer.account.action', [$user->id, 3])}}" onclick="return confirm('Are you sure? You want to delete the user.')" class="action-icon"> <h3> <i class="mdi mdi-delete" title="Delete user"></i></h3></a>
+                                                <a href="{{route('customer.account.action', [$user->id, 3])}}" onclick="return confirm('Are you sure? You want to delete the user.')" class="action-icon"> <i class="mdi mdi-delete" title="Delete user"></i></a>
                                             </div>
                                         </div>
                                     </td> 

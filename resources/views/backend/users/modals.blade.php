@@ -20,7 +20,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <h4 class="header-title mb-3"></h4>
+                            
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -76,7 +76,7 @@
                                         <select class="selectize-select form-control" name="country_id">
                                             <option value="">Select</option>
                                             @foreach($countries as $key => $val)
-                                                <option value="{{$val->id}}">{{$val->nicename}}</option>
+                                                <option value="{{$val->id}}">{{$val->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -133,7 +133,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <h4 class="header-title mb-3"></h4>
+                            
 
                             <div class="row">
                                 <div class="col-md-6">

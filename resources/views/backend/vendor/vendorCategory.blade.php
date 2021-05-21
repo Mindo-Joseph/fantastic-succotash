@@ -206,7 +206,7 @@
                                         </tr>
                                         <tr>
                                             @foreach($languages as $langs)
-                                                <td style="min-width: 200px;">
+                                                <td>
                                                     {!! Form::hidden('language_id[]', $langs->language_id) !!}
                                                     <input type="text" name="title[]" value="" class="form-control" @if($langs->is_primary == 1) required @endif>
                                                 </td>

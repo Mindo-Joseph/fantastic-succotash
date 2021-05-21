@@ -182,7 +182,7 @@
                      </div>
                   </div>
                </div>
-               <div class="row mb-2 fb_row" style="{{((isset($preference) && $preference->fb_login == '1')) ? '' : 'display:none;'}}">
+               <div class="row fb_row" style="{{((isset($preference) && $preference->fb_login == '1')) ? '' : 'display:none;'}}">
                   <div class="col-12">
                      <div class="form-group mb-2 mt-2">
                         <label for="fb_client_id">Facebook Client Key</label>
@@ -236,7 +236,7 @@
                      </div>
                   </div>
                </div>
-               <div class="row mb-2 twitter_row" style="{{((isset($preference) && $preference->twitter_login == '1')) ? '' : 'display:none;'}}">
+               <div class="row  twitter_row" style="{{((isset($preference) && $preference->twitter_login == '1')) ? '' : 'display:none;'}}">
                   <div class="col-12">
                      <div class="form-group mb-2 mt-2">
                         <label for="twitter_client_id">Twitter Client Key</label>
@@ -345,7 +345,7 @@
                      </div>
                   </div>
                </div>
-               <div class="row mb-2 apple_row" style="{{((isset($preference) && $preference->apple_login == '1')) ? '' : 'display:none;'}}">
+               <div class="row apple_row" style="{{((isset($preference) && $preference->apple_login == '1')) ? '' : 'display:none;'}}">
                   <div class="col-12">
                      <div class="form-group mb-2 mt-2">
                         <label for="apple_client_id">Apple Client Key</label>
@@ -639,16 +639,16 @@
       <div class="row">
          <div class="col-md-5">
             <div class="card-box">
-               <div class="row">
+               <div class="row align-items-center">
                   <div class="col-md-4">
                      <div class="form-group mb-0 switchery-demo">
-                        <label for="verify_email" class="mr-3">Verify Email</label>
+                        <label for="verify_email" class="mr-3 mb-0">Verify Email</label>
                         <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1'))  checked='checked' @endif>
                      </div>
                   </div>
                   <div class="col-md-4">
                      <div class="form-group mb-0">
-                        <label for="verify_phone" class="mr-3">Verify Phone</label>
+                        <label for="verify_phone" class="mr-3 mb-0">Verify Phone</label>
                         <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1'))  checked='checked' @endif>
                      </div>
                   </div>
@@ -662,10 +662,10 @@
          </div>
          <div class="col-md-7">
             <div class="card-box">
-               <div class="row">
+               <div class="row align-items-center">
                   <div class="col-md-8">
                      <div class="form-group mb-0">
-                        <label for="celebrity_check" class="mr-3">Influencer Mod</label>
+                        <label for="celebrity_check" class="mr-3 mb-0">Influencer Mod</label>
                         <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1'))  checked='checked' @endif>
                      </div>
                   </div>

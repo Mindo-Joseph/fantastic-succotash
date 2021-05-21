@@ -208,10 +208,10 @@ span.inner-div{
     right: 16px; */
 }
 .table-borderless th, .table-borderless td {
-    padding: 8px 10px 8px 0px;
+    padding: 8px 10px 8px 0px !important;
 }
 
-.dd{max-width: 100%;}
+.dd{max-width: 100% !important;}
 
 .variant-row .card-body {
     background: #f3f7f9; padding:12px;
@@ -793,7 +793,7 @@ label.file-input.uploadImages {
     height: 90px;
 }
 
-#promo-datatable img.rounded-circle{
+#promo-datatable .promo_img{
     width: 200px;
     height: 100px;
 }
@@ -805,4 +805,12 @@ label.file-input.uploadImages {
 .btn:focus, .btn.focus {
     outline: 0;
     box-shadow: none !important;
+}
+
+.selectize-input {
+    padding: 9px 12px;
+}
+
+#banner-datatable th, #banner-datatable td,.banner-datatable th,.banner-datatable td,.edit_brand-datatable th,.edit_brand-datatable td  {
+    padding: 10px 5px !important;
 }

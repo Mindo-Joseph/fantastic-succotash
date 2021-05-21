@@ -74,14 +74,14 @@
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
-                                                <a class="action-icon editTaxCateModal" userId="{{$cat->id}}" href="javascript:void(0);"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                                <a class="action-icon editTaxCateModal" userId="{{$cat->id}}" href="javascript:void(0);"><i class="mdi mdi-square-edit-outline"></i></a> 
                                             </div>
                                             <div class="inner-div">
                                                 <form method="POST" action="{{ route('tax.destroy', $cat->id) }}">
                                                     @csrf
                                                     @method('DELETE')
                                                     <div class="form-group">
-                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the tax category.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
+                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the tax category.')" class="btn btn-primary-outline action-icon"><i class="mdi mdi-delete"></i></button> 
 
                                                     </div>
                                                 </form>
@@ -146,14 +146,14 @@
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
-                                                <a class="action-icon editTaxRateModal" userId="{{$rat->id}}" href="javascript:void(0);"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                                <a class="action-icon editTaxRateModal" userId="{{$rat->id}}" href="javascript:void(0);"><i class="mdi mdi-square-edit-outline"></i></a> 
                                             </div>
                                             <div class="inner-div">
                                                 <form method="POST" action="{{ route('taxRate.destroy', $rat->id) }}">
                                                     @csrf
                                                     @method('DELETE')
                                                     <div class="form-group">
-                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the tax rate.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
+                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the tax rate.')" class="btn btn-primary-outline action-icon"><i class="mdi mdi-delete"></i></button> 
                                                     </div>
                                                 </form>
                                             </div>
