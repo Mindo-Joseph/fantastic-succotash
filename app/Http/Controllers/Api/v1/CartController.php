@@ -155,7 +155,7 @@ class CartController extends BaseController{
                     'created_by'  => $user_id,
                     'cart_id'  => $cart_detail->id,
                     'quantity'  => $request->quantity,
-                    'vendor_id'  => $request->vendor_id,
+                    'vendor_id'  => $product->vendor_id,
                     'product_id' => $product->id,
                     'variant_id'  => $request->variant_id,
                     'currency_id' => $client_currency->currency_id,
@@ -317,7 +317,6 @@ class CartController extends BaseController{
             return false;
         }
         $cartID = $cart->id;
-
         $cartData = CartProduct::with(['vendor', 'coupon'=> function($qry) use($cartID){
                         $qry->where('cart_id', $cartID);
                     }, 'coupon.promo.details', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
