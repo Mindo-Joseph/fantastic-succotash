@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="row">
-            <div class="offset-md-3 col-md-6" id="imageInput">
+            <div class="col-sm-6" id="imageInput">
                 @if(isset($banner->id))
                     <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$banner->image['proxy_url'].'600/400'.$banner->image['image_path']}}" />
                 @else

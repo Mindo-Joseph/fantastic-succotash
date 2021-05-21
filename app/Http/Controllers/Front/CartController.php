@@ -56,7 +56,7 @@ class CartController extends FrontController
                     'variant_id'  => $request->variant_id,
                     'currency_id' => $client_currency->currency_id,
                 ];
-                CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
+                CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id, 'product_id' => $request->product_id], $cart_product_detail);
             }
             return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
         } catch (Exception $e) {
@@ -372,7 +372,7 @@ class CartController extends FrontController
         $cartData = $this->getCart($cart);
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/cart')->with(['navCategories' => $navCategories, 'cartData' => $cartData]);
+        return view('forntend/cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData]);
     }
 
 

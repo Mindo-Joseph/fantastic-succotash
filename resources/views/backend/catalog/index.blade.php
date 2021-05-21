@@ -126,7 +126,7 @@
                                             <form action="{{route('variant.destroy', $variant->id)}}" method="POST"  style="display: none;" id="varDeleteForm{{$variant->id}}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="action-icon btn btn-primary-outline" dataid="{{$variant->id}}" onclick="return confirm('Are you sure? You want to delete the variant.')" > <h3> <i class="mdi mdi-delete"></i> </h3></button>
+                                                <button type="submit" class="action-icon btn btn-primary-outline" dataid="{{$variant->id}}" onclick="return confirm('Are you sure? You want to delete the variant.')" > <i class="mdi mdi-delete"></i></button>
                                             </form>
                                         </td>
                                     </tr>

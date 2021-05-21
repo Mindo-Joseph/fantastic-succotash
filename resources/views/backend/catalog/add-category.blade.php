@@ -2,13 +2,17 @@
     <div class="col-md-12">
 
         <div class="row mb-2">
-            <div class="col-sm-6">
-                <input type="file" accept="image/*" data-plugins="dropify" name="icon" class="dropify" data-default-file="" />
+            <div class="col-md-2 col-sm-4 mb-sm-0 mb-3">
+                <div class="round_img">
+                    <input type="file" accept="image/*" data-plugins="dropify" name="icon" class="dropify" data-default-file="" />
+                </div>
                 <p class="text-muted text-center mt-2 mb-0">Upload Category Icon</p>
             </div> 
             
-            <div class="col-sm-6"> <!--  Storage::disk('s3')->url($client->logo)  -->                 
-                <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="" />
+            <div class="col-md-10 col-sm-8"> <!--  Storage::disk('s3')->url($client->logo)  -->                 
+                <div class="upload_box">
+                    <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="" />
+                </div>
                 <p class="text-muted text-center mt-2 mb-0">Upload Category image</p>
             </div>
         </div>

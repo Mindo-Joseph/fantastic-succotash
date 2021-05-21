@@ -881,12 +881,22 @@
                 @endif
             </ul>
         </div>
+        
         <!-- End Sidebar -->
 
         <div class="clearfix"></div>
 
     </div>
     <!-- Sidebar -left -->
-
+    <a href="{{route('client.dashboard')}}" class="logo text-center">
+        <span class="logo-sm">
+            <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
+            <!-- <span class="logo-lg-text-light">UBold</span> -->
+        </span>
+        <span class="logo-lg">
+            <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="20">
+            <!-- <span class="logo-lg-text-light">U</span> -->
+        </span>
+    </a>
 </div>
 <!-- Left Sidebar End -->
