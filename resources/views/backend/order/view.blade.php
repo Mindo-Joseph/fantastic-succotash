@@ -25,7 +25,7 @@
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <h5 class="mt-0">Order ID:</h5>
-                                    <p>#VL2537</p>
+                                    <p>#{{$order->order_number}}</p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -65,7 +65,7 @@
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="header-title mb-3">Items from Order #VL2537</h4>
+                        <h4 class="header-title mb-3">Items from Order #{{$order->order_number}}</h4>
                         <div class="table-responsive">
                             <table class="table table-bordered table-centered mb-0">
                                 <thead class="table-light">
@@ -78,13 +78,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach($order->products as $product)
                                     <tr>
-                                        <th scope="row">Polo Navy blue T-shirt</th>
-                                        <td><img src="../assets/images/products/product-1.png" alt="product-img" height="32"></td>
-                                        <td>1</td>
+                                        <th scope="row">{{$product->product_name}}</th>
+                                        <td>
+                                            <img src="{{$product->image['proxy_url'].'32/32'.$product->image['image_path']}}" alt="product-img" height="32">
+                                        </td>
+                                        <td>{{ $product->quantity }}</td>
                                         <td>$39</td>
                                         <td>$39</td>
                                     </tr>
+                                    @endforeach
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Sub Total :</th>
                                         <td><div class="fw-bold">$177</div></td>

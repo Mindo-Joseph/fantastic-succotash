@@ -37,11 +37,11 @@
                 <div class="card-box">
                     <div class="d-flex align-items-center justify-content-between mb-2">
                         <h4 class="header-title text-uppercase mb-0">{{$opt->title}}</h4>
-                        @if($opt->code != 'wallet' && $opt->code != 'layalty-points')
+                        
                         <span class="d-block">
                             <input type="checkbox" data-id="{{$opt->id}}" data-plugin="switchery" name="active" class="chk_box all_select" data-color="#43bee1" @if($opt->status == 1) checked @endif>
                         </span>
-                        @endif
+                       
                     </div>
                     
                     <!-- <div class="d-flex align-items-center justify-content-between mb-2">

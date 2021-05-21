@@ -19,14 +19,23 @@ class CartController extends BaseController{
     private $field_status = 2;
     public function index(Request $request){
         try {
-            $user_id = $this->userCheck();
-            $langId = Auth::user()->language;
-            $cartData = $this->getCart($user_id);
-            if($cartData && !empty($cartData)){
-                return $this->successResponse($cartData);
+            $user = Auth::user();
+            $user_id = $user->id;
+            $cart = Cart::where('id', '>', 0);
+            if (!empty($user_id) || $user->id < 1) {
+                $cart = $cart->where('user_id', $user->id);
             }else{
+                if(empty($user->system_user)){
+                    return $this->errorResponse('System id should not be empty.', 404);
+                }
+                $cart = $cart->where('unique_identifier', $user->system_user);
+            }
+            $cart = $cart->first();
+            if($cart){
+                $cartData = $this->getCart($cart, $user->language, $user->currency);
                 return $this->successResponse($cartData);
             }
+            return $this->successResponse($cart);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }
@@ -35,11 +44,11 @@ class CartController extends BaseController{
     /**   check auth and system user to add product in cart    */
     public function userCheck()
     {
-        $user_id = '';
-        if (Auth::user()->id && Auth::user()->id > 0) {
-            $user_id = Auth::user()->id;
+        $user = Auth::user();
+        if ($user->id && $user->id > 0) {
+            $user_id = $user->id;
         }else{
-            if(empty(Auth::user()->system_user)){
+            if(empty($user->system_user)){
                 return response()->json(['error' => 'System id should not be empty.'], 404);
             }
             $user = User::where('system_id', Auth::user()->system_user)->first();
@@ -59,184 +68,168 @@ class CartController extends BaseController{
 
     /**     * Add product In Cart    *           */
     public function add(Request $request){
-        $user_id = $this->userCheck();
-        $cartInfo = '';
-        $langId = Auth::user()->language;
-
-        $product = Product::where('sku', $request->sku)->first();
-        if(!$product){
-            return response()->json(['error' => 'Invalid product.'], 404);
-        }
-
-        $productVariant = ProductVariant::where('product_id', $product->id)->where('id', $request->product_variant_id)->first();
-        if(!$productVariant){
-            return response()->json(['error' => 'Invalid product variant.'], 404);
-        }
-
-        if($product->sell_when_out_of_stock == 0 && $productVariant->quantity < $request->quantity){
-            return response()->json(['error' => 'You Can not order more than '.$productVariant->quantity.' quantity.'], 404);
-        }
-
-        $addonSets = $addon_ids = $addon_options = array();
-
-        if($request->has('addon_ids')){
-            $addon_ids = $request->addon_ids;
-        }
-        if($request->has('addon_options')){
-            $addon_options = $request->addon_options;
-        }
-
-        foreach($addon_options as $key => $opt){
-            $addonSets[$addon_ids[$key]][] = $opt;
-        }
-
-        foreach($addonSets as $key => $value){
-            $addon = AddonSet::join('addon_set_translations as ast', 'ast.addon_id', 'addon_sets.id')
-                        ->select('addon_sets.id', 'addon_sets.min_select', 'addon_sets.max_select', 'ast.title')
-                        ->where('ast.language_id', $langId)
-                        ->where('addon_sets.status', '!=', '2')
-                        ->where('addon_sets.id', $key)->first();
-            if(!$addon){
-                return response()->json(['error' => 'Invalid addon or delete by admin. Try again with remove some.'], 404);
+        try {
+            $user = Auth::user();
+            $langId = $user->language;
+            $user_id = $user->id;
+            $unique_identifier = '';
+            if (empty($user_id) || $user->id < 1) {
+                if(empty($user->system_user)){
+                    return $this->errorResponse('System id should not be empty.', 404);
+                }
+                $unique_identifier = $user->system_user;
             }
-            if($addon->min_select > count($value)){
-                return response()->json([
-                    'error' => 'Select minimum ' . $addon->min_select .' options of ' .$addon->title,
-                    'data' => $addon
-                ], 404);
+            $product = Product::where('sku', $request->sku)->first();
+            if(!$product){
+                return $this->errorResponse('Invalid product.', 404);
             }
-            if($addon->max_select < count($value)){
-                return response()->json([
-                    'error' => 'You can select maximum ' . $addon->min_select .' options of ' .$addon->title,
-                    'data' => $addon
-                ], 404);
+
+            $productVariant = ProductVariant::where('product_id',$product->id)->where('id',$request->product_variant_id)->first();
+            if(!$productVariant){
+                return $this->errorResponse('Invalid product variant.', 404);
             }
-        }
 
-        $cart = Cart::where('user_id', $user_id)->first();
-        if (!$cart) {
-            $cart = new Cart;
-            $cart->unique_identifier = Auth::user()->system_user;
-            $cart->user_id = $user_id;
-            $cart->created_by = $user_id;
-            $cart->is_gift = '0';
-            $cart->status = '0';
-            $cart->item_count = $request->quantity;
-            $cart->currency_id = Auth::user()->currency;
-        }else{
-            $cart->item_count = $cart->item_count + $request->quantity;
-        }
-        $cart->save();
+            if($product->sell_when_out_of_stock == 0 && $productVariant->quantity < $request->quantity){
+                return $this->errorResponse('You Can not order more than '.$productVariant->quantity.' quantity.', 404);
+            }
 
-        if($cart->id > 0){
+            $addonSets = $addon_ids = $addon_options = array();
 
-            $oldquantity = $isnew = 0;
+            if($request->has('addon_ids')){
+                $addon_ids = $request->addon_ids;
+            }
+            if($request->has('addon_options')){
+                $addon_options = $request->addon_options;
+            }
 
-            $cartProduct = CartProduct::where('cart_id', $cart->id)
+            foreach($addon_options as $key => $opt){
+                $addonSets[$addon_ids[$key]][] = $opt;
+            }
+
+            foreach($addonSets as $key => $value){
+                $addon = AddonSet::join('addon_set_translations as ast', 'ast.addon_id', 'addon_sets.id')
+                            ->select('addon_sets.id', 'addon_sets.min_select', 'addon_sets.max_select', 'ast.title')
+                            ->where('ast.language_id', $langId)
+                            ->where('addon_sets.status', '!=', '2')
+                            ->where('addon_sets.id', $key)->first();
+                if(!$addon){
+                    return $this->errorResponse('Invalid addon or delete by admin. Try again with remove some.', 404);
+                }
+                if($addon->min_select > count($value)){
+                    return response()->json([
+                        "status" => "Error",
+                        'message' => 'Select minimum ' . $addon->min_select .' options of ' .$addon->title,
+                        'data' => $addon
+                    ], 404);
+                }
+                if($addon->max_select < count($value)){
+                    return response()->json([
+                        "status" => "Error",
+                        'message' => 'You can select maximum ' . $addon->min_select .' options of ' .$addon->title,
+                        'data' => $addon
+                    ], 404);
+                }
+            }
+            $client_currency = ClientCurrency::where('is_primary', '=', 1)->first();
+            $cart_detail = [
+                'is_gift' => 0,
+                'status' => '1',
+                'item_count' => 0,
+                'user_id' => $user_id,
+                'created_by' => $user_id,
+                'currency_id' => $client_currency->currency_id,
+                'unique_identifier' => $unique_identifier,
+            ];
+            if(!empty($user_id)){
+                $cart_detail = Cart::updateOrCreate(['user_id' => $user->id], $cart_detail);
+            }else{
+                $cart_detail = Cart::updateOrCreate(['unique_identifier' => $unique_identifier], $cart_detail);
+            }
+
+            if($cart_detail->id > 0){
+                $oldquantity = $isnew = 0;
+                $cart_product_detail = [
+                    'status'  => '0',
+                    'is_tax_applied'  => '1',
+                    'created_by'  => $user_id,
+                    'product_id' => $product->id,
+                    'cart_id'  => $cart_detail->id,
+                    'quantity'  => $request->quantity,
+                    'vendor_id'  => $product->vendor_id,
+                    'variant_id'  => $request->product_variant_id,
+                    'currency_id' => $client_currency->currency_id,
+                ];
+                $cartProduct = CartProduct::where('cart_id', $cart_detail->id)
                             ->where('product_id', $product->id)
                             ->where('variant_id', $productVariant->id)->first();
 
-            if(!$cartProduct){
-                $isnew = 1;
+                if(!$cartProduct){
+                    $isnew = 1;
+                    $cartProduct = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
+                }else{
+                    $checkaddonCount = CartAddon::where('cart_product_id', $cartProduct->id)->count();
 
-                $cartProduct = new CartProduct;
-                $cartProduct->cart_id = $cart->id;
-                $cartProduct->product_id = $product->id;
-                $cartProduct->vendor_id = $product->vendor_id;
-                $cartProduct->created_by  = $user_id;
-                $cartProduct->status  = '0';
-                $cartProduct->variant_id  = $productVariant->id;
-                $cartProduct->is_tax_applied  = '1';
-                $cartProduct->tax_category_id  = $product->tax_category_id;
-                $cartProduct->quantity = $request->quantity;
-                $cartProduct->currency_id = Auth::user()->currency;
-                $cartProduct->save();
+                    if(count($addon_ids) == $checkaddonCount){
 
-            }else{
+                        foreach ($addon_options as $key => $opts) {
 
-                $checkaddonCount = CartAddon::where('cart_product_id', $cartProduct->id)->count();
+                            $cart_addon = CartAddon::where('cart_product_id', $cartProduct->id)
+                                        ->where('addon_id', $addon_ids[$key])
+                                        ->where('option_id', $opts)->first();
 
-                if(count($addon_ids) == $checkaddonCount){
+                            if(!$cart_addon){
+                                $isnew = 1;
+                            }
+                        }
+                        if($isnew == 1){
+                            $cartProduct = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
+                        }else{
+                            $cartProduct->quantity = $cartProduct->quantity + $request->quantity;
+                            $cartProduct->save();
+                        }
+                    }else{
+                        $cartProduct = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
+                    }
+                }
+                if($isnew == 1){
 
-                    foreach ($addon_options as $key => $opts) {
+                    if(!empty($addon_ids) && !empty($addon_options)){
 
-                        $cart_addon = CartAddon::where('cart_product_id', $cartProduct->id)
-                                    ->where('addon_id', $addon_ids[$key])
-                                    ->where('option_id', $opts)->first();
-
-                        if(!$cart_addon){
-                            $isnew = 1;
+                        $saveAddons = array();
+                        foreach ($addon_options as $key => $opts) {
+                            $saveAddons[] = [
+                                'cart_product_id' => $cartProduct->id,
+                                'addon_id' => $addon_ids[$key],
+                                'option_id' => $opts
+                            ];
+                        }
+                        if(!empty($saveAddons)){
+                            CartAddon::insert($saveAddons);
                         }
                     }
-                    if($isnew == 1){
-
-                        $cartProduct = new CartProduct;
-                        $cartProduct->cart_id = $cart->id;
-                        $cartProduct->product_id = $product->id;
-                        $cartProduct->vendor_id = $product->vendor_id;
-                        $cartProduct->created_by  = $user_id;
-                        $cartProduct->status  = '0';
-                        $cartProduct->variant_id  = $productVariant->id;
-                        $cartProduct->is_tax_applied  = '1';
-                        $cartProduct->tax_category_id  = $product->tax_category_id;
-                        $cartProduct->quantity = $request->quantity;
-                        $cartProduct->currency_id = Auth::user()->currency;
-                        $cartProduct->save();
-
-                    }else{
-                        $cartProduct->quantity = $cartProduct->quantity + $request->quantity;
-                        $cartProduct->save();
-                    }
-
-                }else{
-                    $isnew = 1;
-                    $cartProduct = new CartProduct;
-                    $cartProduct->cart_id = $cart->id;
-                    $cartProduct->product_id = $product->id;
-                    $cartProduct->vendor_id = $product->vendor_id;
-                    $cartProduct->created_by  = $user_id;
-                    $cartProduct->status  = '0';
-                    $cartProduct->variant_id  = $productVariant->id;
-                    $cartProduct->is_tax_applied  = '1';
-                    $cartProduct->tax_category_id  = $product->tax_category_id;
-                    $cartProduct->quantity = $request->quantity;
-                    $cartProduct->currency_id = Auth::user()->currency;
-                    $cartProduct->save();
-
                 }
             }
-            if($isnew == 1){
-                if(!empty($addon_ids) && !empty($addon_options)){
-
-                    $saveAddons = array();
-                    foreach ($addon_options as $key => $opts) {
-                        $saveAddons[] = [
-                            'cart_product_id' => $cartProduct->id,
-                            'addon_id' => $addon_ids[$key],
-                            'option_id' => $opts
-                        ];
-                    }
-                    if(!empty($saveAddons)){
-                        CartAddon::insert($saveAddons);
-                    }
-                }
+            $cartData = $this->getCart($cart_detail, $user->language, $user->currency);
+            if($cartData && !empty($cartData)){
+                return $this->successResponse($cartData);
+            }else{
+                return $this->successResponse($cartData);
             }
+        }catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
         }
-        $cart = $this->getCart($user_id);
-
-        return response()->json([
-            'data' => $cart,
-        ]);
     }
 
     /**        
         update quantity in cart       
     **/
     public function updateQuantity(Request $request){
+        $user = Auth::user();
+
         if ($request->quantity < 1) {
             return response()->json(['error' => 'Quantity should not be less than 1'], 422);
         }
-        $cart = Cart::where('user_id', Auth::user()->id)->where('id', $request->cart_id)->first();
+        $cart = Cart::where('user_id', $user->id)->where('id', $request->cart_id)->first();
         if(!$cart){
             return response()->json(['error' => 'User cart not exist.'], 404);
         }
@@ -250,7 +243,7 @@ class CartController extends BaseController{
         $cart->item_count = $totalProducts;
         $cart->save();
 
-        $cartData = $this->getCart(Auth::user()->id);
+        $cartData = $this->getCart($cart, $user->language, $user->currency);
 
         return response()->json([
             'data' => $cartData,
@@ -275,7 +268,8 @@ class CartController extends BaseController{
 
     /**         *       Remove item from cart       *          */
     public function removeItem(Request $request){
-        $cart = Cart::where('user_id', Auth::user()->id)->where('id', $request->cart_id)->first();
+        $user = Auth::user();
+        $cart = Cart::where('user_id', $user->id)->where('id', $request->cart_id)->first();
         if(!$cart){
             return response()->json(['error' => 'User cart not exist.'], 404);
         }
@@ -296,7 +290,7 @@ class CartController extends BaseController{
         }
         $cart->item_count = $totalProducts;
         $cart->save();
-        $cartData = $this->getCart(Auth::user()->id);
+        $cartData = $this->getCart($cart, $user->language, $user->currency);
         return response()->json([
             "message" => "Product removed from cart successfully.",
             'data' => $cartData,
@@ -315,19 +309,13 @@ class CartController extends BaseController{
     }
 
     /**         *       Empty cart       *          */
-    public function getCart($user_id){
-        $langId = Auth::user()->language;
-        $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
-        $cart = Cart::select('id', 'is_gift', 'item_count')
-                    ->where('status', '0')
-                    ->where('user_id', $user_id)->first();
-
+    public function getCart($cart, $langId = '1', $currency = '1'){
+        
+        $clientCurrency = ClientCurrency::where('currency_id', $currency)->first();
         if(!$cart){
             return false;
         }
-
         $cartID = $cart->id;
-
         $cartData = CartProduct::with(['vendor', 'coupon'=> function($qry) use($cartID){
                         $qry->where('cart_id', $cartID);
                     }, 'coupon.promo.details', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
@@ -347,25 +335,24 @@ class CartController extends BaseController{
                 ])->select('vendor_id')->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
 
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
-        if(empty($cartData) || count($cartData) < 1){
-            return false;
-        }
-
+        $total_tax = $total_paying = $total_disc_amount = 0.00;
         if($cartData){
-            $total_tax = $total_paying = $total_disc_amount = 0.00;
-
+            
             foreach ($cartData as $ven_key => $vendorData) {
 
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
 
                 $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
                 $couponData = $couponProducts = array();
-                if(!empty($vendorData->coupon) && ($vendorData->coupon->vendor_id == $vendorData->vendor_id)){
+                if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->vendor_id == $vendorData->vendor_id)){
 
                     $now = Carbon::now()->toDateTimeString();
 
-                    $minimum_spend = $vendorData->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
-                    
+                    $minimum_spend = 0;
+                    if(isset($vendorData->coupon->promo->minimum_spend)){
+                        $minimum_spend = $vendorData->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
+                    }
+
                     if($vendorData->coupon->promo->expiry_date < $now){
                         $coupon_removed = 1;
                         $coupon_removed_msg = 'Coupon code is expired.';
@@ -402,7 +389,7 @@ class CartController extends BaseController{
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
 
                     //$price_in_currency = round($prod->pvariant->price / $divider);
-                    $price_in_currency = $prod->pvariant->price;
+                    $price_in_currency = $prod->pvariant ? $prod->pvariant->price : 0;
                     $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
 
@@ -424,7 +411,7 @@ class CartController extends BaseController{
                     $variantsData['multiplier']         = $clientCurrency->doller_compare;
                     $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
 
-                    if(!empty($vendorData->coupon) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
+                    if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
                         $pro_disc = $discount_amount;
                         if($minimum_spend < $quantity_price){
                             if($is_percent == 1){
@@ -502,7 +489,7 @@ class CartController extends BaseController{
                 }
                 $couponApplied = 0;
 
-                if(!empty($vendorData->coupon) && ($vendorData->coupon->promo->restriction_on == 1)){
+                if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 1)){
                     $minimum_spend = $vendorData->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
                     if($minimum_spend < $proSum){
                         if($is_percent == 1){
@@ -534,7 +521,7 @@ class CartController extends BaseController{
                 $total_tax = $total_tax + $taxable_amount;
                 $total_disc_amount = $total_disc_amount + $discount_amount;
                 $total_discount_percent = $total_discount_percent + $discount_percent;
-                if(!empty($vendorData->coupon)){
+                if(!empty($vendorData->coupon->promo)){
                     unset($vendorData->coupon->promo);
                 }
             }
@@ -544,8 +531,11 @@ class CartController extends BaseController{
         $cart->total_tax = $total_tax;
         $cart->total_payable_amount = $total_paying + $total_tax - $total_disc_amount;
         $cart->total_discount_amount = $total_disc_amount;
-        $cart->loyaltyPoints = $this->getLoyaltyPoints($user_id, $clientCurrency->doller_compare);
-        $cart->wallet = $this->getWallet($user_id, $clientCurrency->doller_compare, Auth::user()->currency);
+        if($cart->user_id > 0){
+            $cart->loyaltyPoints = $this->getLoyaltyPoints($cart->user_id, $clientCurrency->doller_compare);
+            $cart->wallet = $this->getWallet($cart->user_id, $clientCurrency->doller_compare, $currency);
+        }
+        
         $cart->products = $cartData;
         return $cart;
     }
