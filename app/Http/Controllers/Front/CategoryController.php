@@ -117,7 +117,7 @@ class CategoryController extends FrontController
             if(!empty($products)){
                 foreach ($products as $key => $value) {
                     foreach ($value->variant as $k => $v) {
-                        $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                        $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                     }
                 }
             }
@@ -253,7 +253,7 @@ class CategoryController extends FrontController
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }

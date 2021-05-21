@@ -19,23 +19,16 @@ class VendorController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function vendorProducts(Request $request, $domain = '', $vid = 0)
-    {
+    public function vendorProducts(Request $request, $domain = '', $vid = 0){
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
-
         $vendor = Vendor::select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery')
                 ->where('id', $vid)->firstOrFail();
-
-        /*'media' => function($q){
-            $q->groupBy('product_id');
-        },*/
         $brands = Product::with(['brand.translation'=> function($q) use($langId){
                     $q->select('title', 'brand_id')->where('brand_translations.language_id', $langId);
                 }])->select('brand_id')->where('vendor_id', $vid)
                 ->where('brand_id', '>', 1)->groupBy('brand_id')->get();
-
         $listData = Product::with(['media.image',
                         'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
@@ -50,11 +43,10 @@ class VendorController extends FrontController
         if(!empty($listData)){
             foreach ($listData as $key => $value) {
                 foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }
-
         $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
                             $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
                             $zx->select('variant_options.*', 'vt.title');
@@ -67,8 +59,7 @@ class VendorController extends FrontController
                     ->whereIn('product_id', function($qry) use($vid){ 
                         $qry->select('id')->from('products')
                             ->where('vendor_id', $vid);
-                        })
-                    ->groupBy('product_variant_sets.variant_type_id')->get();
+                    })->groupBy('product_variant_sets.variant_type_id')->get();
 
         $navCategories = Session::get('navCategories');
 
@@ -76,8 +67,6 @@ class VendorController extends FrontController
             $navCategories = $this->categoryNav($langId);
         }
         $vendorIds[] = $vid;
-        //dd($brands->toArray());
-
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
 
@@ -182,7 +171,7 @@ class VendorController extends FrontController
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }
