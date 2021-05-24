@@ -17,17 +17,19 @@ Route::group(['prefix' => 'v1/auth'], function () {
 });
 
 Route::group(['prefix' => 'v1'], function () {
+    Route::post('place/order', 'Api\v1\OrderController@postPlaceOrder');
     Route::group(['middleware' => 'dbCheck'], function() {
         Route::post('social/info', 'Api\v1\SocialController@getKeys');
         Route::post('social/login/{driver}', 'Api\v1\SocialController@login');
     });
     Route::group(['middleware' => ['dbCheck', 'AppAuth']], function() {
-        Route::get('orders', 'Api\v1\ProfileController@orders');
+        Route::get('orders', 'Api\v1\OrderController@getOrdersList');
+        Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::get('profile', 'Api\v1\ProfileController@profile');
         Route::get('account', 'Api\v1\ProfileController@account');
         Route::get('wishlists', 'Api\v1\ProfileController@wishlists');
         Route::get('newsLetter', 'Api\v1\ProfileController@newsLetter');
-        Route::post('place/order', 'Api\v1\OrderController@postPlaceOrder');
+        
         Route::post('update/image', 'Api\v1\ProfileController@updateAvatar');
         Route::post('user/getAddress', 'Api\v1\ProfileController@getAddress');
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');

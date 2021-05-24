@@ -18,9 +18,12 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory,CartProduct};
 
-class CustomerAuthController extends FrontController
-{
-    /**     * Display login Form     */
+class CustomerAuthController extends FrontController{
+
+    public function getTestHtmlPage(){
+        return view('test');
+    }
+
     public function loginForm($domain = ''){
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');

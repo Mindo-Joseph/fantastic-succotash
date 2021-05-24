@@ -20,10 +20,8 @@ class OrderStoreRequest extends FormRequest{
      */
     public function rules(){
         return [
-           return [
-                'address_id' => 'required',
-                'payment_option_id' => 'required',
-            ];
+            'address_id' => 'required',
+            'payment_option_id' => 'required',
         ];
     }
     public function messages(){
