@@ -69,8 +69,8 @@
                                 @forelse($addresses as $address)
                                     <div class="row">
                                         <div>
-                                            <input type="radio" name="address_id" id="one" value="{{$address->id}}" checked="checked">
-                                            <label for="one">{{$address->address.' '.$address->street.' '.$address->city.' '.$address->state.' '.$address->pincode}}</label>
+                                            <input type="radio" name="address_id" id="address" value="{{$address->id}}" checked="checked" required="">
+                                            <label for="address">{{$address->address.' '.$address->street.' '.$address->city.' '.$address->state.' '.$address->pincode}}</label>
                                         </div>
                                     </div>
                                 @empty

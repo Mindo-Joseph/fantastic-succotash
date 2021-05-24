@@ -7,13 +7,15 @@ use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, UserAddress, OrderVendor,Vendor};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, UserAddress, OrderVendor,Vendor};
 use GuzzleHttp\Client;
 class OrderController extends FrontController{
     
     public function getOrderSuccessPage(Request $request){
-        $order = Order::with('products')->findOrfail($request->order_id);
-        return view('forntend.order.success', compact('order'));
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+        $order = Order::with(['products', 'address'])->findOrfail($request->order_id);
+        return view('forntend.order.success', compact('order','navCategories'));
     }
     public function placeOrder(Request $request, $domain = ''){
         if ($request->input("payment-group") == '1') {
@@ -29,41 +31,72 @@ class OrderController extends FrontController{
         try {
            DB::beginTransaction();
             $user = Auth::user();
+            $currency_id = Session::get('customerCurrency');
+            $language_id = Session::get('customerLanguage');
             $cart = Cart::where('user_id', $user->id)->first();
+            $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
             $order = new Order;
             $order->user_id = $user->id;
             $order->order_number = generateOrderNo();
             $order->payment_method = $paymentMethod;
             $order->address_id = $request->address_id;
             $order->save();
-            $cart_products = CartProduct::with('product.pimage', 'product.variants')->where('cart_id', $cart->id)->get();
-            foreach ($cart_products as $cart_product) {
-                $variant = $cart_product->product->variants->where('id', $cart_product->variant_id)->first();
-                $order_product = new OrderProduct;
-                $order_product->order_id = $order->id;
-                $order_product->price = $variant->price;
-                $order_product->quantity = $cart_product->quantity;
-                $order_product->vendor_id = $cart_product->vendor_id;
-                $order_product->product_id = $cart_product->product_id;
-                $order_product->created_by = $cart_product->created_by;
-                $order_product->variant_id = $cart_product->variant_id;
-                $order_product->product_name = $cart_product->product->sku;
-                if($cart_product->product->pimage){
-                    $order_product->image = $cart_product->product->pimage->first() ? $cart_product->product->pimage->first()->path : '';
-                }
-                $order_product->save();
-                $cart_addons = CartAddon::where('cart_product_id', $cart_product->id)->get();
-                if($cart_addons){
-                    foreach ($cart_addons as $cart_addon) {
-                        $orderAddon = new OrderProductAddon;
-                        $orderAddon->addon_id = $cart_addon->addon_id;
-                        $orderAddon->option_id = $cart_addon->option_id;
-                        $orderAddon->order_product_id = $order_product->id;
-                        $orderAddon->save();
+            $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
+            $total_amount = 0;
+            $total_discount = 0;
+            $taxable_amount = 0;
+            $payable_amount = 0;
+            foreach ($cart_products->groupBy('vendor_id') as $vendor_cart_products) {
+                foreach ($vendor_cart_products as $vendor_cart_product) {
+                    $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
+                    $quantity_price = 0;
+                    $divider = (empty($vendor_cart_product->doller_compare) || $vendor_cart_product->doller_compare < 0) ? 1 : $vendor_cart_product->doller_compare;
+                    $price_in_currency = $variant->price / $divider;
+                    $price_in_dollar_compare = $price_in_currency * $clientCurrency->doller_compare;
+                    $quantity_price = $price_in_dollar_compare * $vendor_cart_product->quantity;
+                    $payable_amount = $payable_amount + $quantity_price;
+                    $product_taxable_amount = 0;
+                    $product_payable_amount = 0;
+                    foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
+                        $rate = round($tax_rate_detail->tax_rate);
+                        $tax_amount = ($price_in_dollar_compare * $rate) / 100;
+                        $product_tax = $quantity_price * $rate / 100;
+                        $product_taxable_amount += $taxable_amount + $product_tax;
+                        $payable_amount = $payable_amount + $product_tax;
                     }
-                    CartAddon::where('cart_product_id', $cart_product->id)->delete();
+                    $total_amount += $variant->price;
+                    $taxable_amount += $product_taxable_amount;
+                    $order_product = new OrderProduct;
+                    $order_product->order_id = $order->id;
+                    $order_product->price = $variant->price;
+                    $order_product->quantity = $vendor_cart_product->quantity;
+                    $order_product->vendor_id = $vendor_cart_product->vendor_id;
+                    $order_product->product_id = $vendor_cart_product->product_id;
+                    $order_product->created_by = $vendor_cart_product->created_by;
+                    $order_product->variant_id = $vendor_cart_product->variant_id;
+                    $order_product->product_name = $vendor_cart_product->product->sku;
+                    if($vendor_cart_product->product->pimage){
+                        $order_product->image = $vendor_cart_product->product->pimage->first() ? $vendor_cart_product->product->pimage->first()->path : '';
+                    }
+                    $order_product->save();
+                    $cart_addons = CartAddon::where('cart_product_id', $vendor_cart_product->id)->get();
+                    if($cart_addons){
+                        foreach ($cart_addons as $cart_addon) {
+                            $orderAddon = new OrderProductAddon;
+                            $orderAddon->addon_id = $cart_addon->addon_id;
+                            $orderAddon->option_id = $cart_addon->option_id;
+                            $orderAddon->order_product_id = $order_product->id;
+                            $orderAddon->save();
+                        }
+                        CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
+                    }
                 }
             }
+            $order->total_amount = $total_amount;
+            $order->total_discount = $total_discount;
+            $order->taxable_amount = $taxable_amount;
+            $order->payable_amount = $payable_amount;
+            $order->save();
             CartProduct::where('cart_id', $cart->id)->delete();
           
             
@@ -152,8 +185,7 @@ class OrderController extends FrontController{
                                 'barcode' => '',
                                 );
                
-                $postdata =  
-                                ['customer_name' => $customer->name ?? 'Dummy Customer',
+                $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
                                 'customer_phone_number' => $customer->phone_number ?? '+919041969648',
                                 'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
                                 'recipient_phone' => $customer->phone_number ?? '+919041969648',
@@ -167,38 +199,18 @@ class OrderController extends FrontController{
                                 ];
 
                 $client = new Client([
-                                    'headers' => ['client' => 'userclient',
+                                    'headers' => ['client' => 'newclient1',
                                     'content-type' => ' multipart/form-data']
                                 ]);
                         
-                $res = $client->post('http://local.dispatcher.com/api/public/task/create',
+                $res = $client->post('https://royodispatch.com/api/public/task/create',
                             ['form_params' => ($postdata
                             )]
                         );                      
-                // $client = new Client();
-                // $res = $client->request('POST', 'http://local.dispatcher.com/api/public/task/create', 
-                //  [
-                //                         'form_params' => [
-                //                         'customer_name' => $customer->name ?? 'Dummy Customer',
-                //                         'customer_phone_number' => $customer->phone_number ?? '+919041969648',
-                //                         'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
-                //                         'recipient_phone' => $customer->phone_number ?? '+919041969648',
-                //                         'recipient_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
-                //                         'task_description' => 'Order from:'.$vendor_details->name??Null,
-                //                         'allocation_type' => 'a',
-                //                         'task_type' => 'now',
-                //                         'cash_to_be_collected' => $cash_to_be_collected,
-                //                         'barcode' => '',
-                //                         'task' => $tasks
-                //                     ]
-                //                 ]);   
-                dd(json_decode($res->getBody()->getContents()));                            
+              
+                                       
            }
 
-           dd('ok');
-
-          
-           
            
         //    if ($res->getStatusCode() == 200) { 
         //     $response_data = json_decode($res->getBody()->getContents());
@@ -215,7 +227,7 @@ class OrderController extends FrontController{
         }
         catch(\Exception $e)
         {
-            dd($e->getMessage());
+           // dd($e->getMessage());
            
         }
 

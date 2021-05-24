@@ -183,9 +183,9 @@ class VendorController extends BaseController
                     ->where('status', '!=', '2')
                     ->orderBy('position', 'asc')->get();
 
-        $vendorActiveCategory = VendorCategory::where('vendor_id', $id)->pluck('category_id')->toArray();
+        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
         
-        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categorList' => $categorList, 'vendorActiveCategory' => $vendorActiveCategory]);
+        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categorList' => $categorList, 'blockedCategory' => $blockedCategory]);
     }
 
     /**
@@ -197,6 +197,7 @@ class VendorController extends BaseController
     public function vendorCategory($domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
+        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
 
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
                         ->where('id', '>', '1')
@@ -204,9 +205,11 @@ class VendorController extends BaseController
                               $q->whereNull('vendor_id')
                                 ->orWhere('vendor_id', $id);
                         })
-                        ->where('status', '!=', '2')
-                        ->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();
+                        ->whereNotIn('id', $blockedCategory)
+                        ->whereNotIn('parent_id', $blockedCategory)
+                        ->orderBy('position', 'asc')
+                        ->orderBy('id', 'asc')
+                        ->orderBy('parent_id', 'asc')->get();
 
         /*$categories = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
                         ->select('ct.name', 'categories.id', 'ct.category_id', 'categories.icon', 'categories.slug', 'categories.type_id', 'categories.parent_id', 'categories.vendor_id', 'categories.is_core')
@@ -238,8 +241,8 @@ class VendorController extends BaseController
                     })
                     ->where('status', '!=', '2')
                     ->orderBy('position', 'asc')->get();
-        $vendorActiveCategory = VendorCategory::where('vendor_id', $id)->pluck('category_id')->toArray();
-        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'categorList' => $categorList, 'vendorActiveCategory' => $vendorActiveCategory]);
+        
+        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'categorList' => $categorList, 'blockedCategory' => $blockedCategory]);
     }
 
     /**
@@ -268,9 +271,9 @@ class VendorController extends BaseController
                     })
                     ->where('status', '!=', '2')
                     ->orderBy('position', 'asc')->get();
-        $vendorActiveCategory = VendorCategory::where('vendor_id', $id)->pluck('category_id')->toArray();
+        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
         
-        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'tab' => 'catalog', 'products' => $products, 'typeArray' => $type, 'categories' => $categories, 'categorList' => $categorList, 'vendorActiveCategory' => $vendorActiveCategory]);
+        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'blockedCategory' => $blockedCategory, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categorList' => $categorList]);
     }
 
     /**
@@ -323,8 +326,9 @@ class VendorController extends BaseController
             $vc->category_id = $request->cid;
         }
         $vc->status = ($request->has('category') && $request->category == 'on') ? 1 : 0;
+        $msg = ($request->has('category') && $request->category == 'on') ? 'activated' : 'deactivated';
         $vc->save();
-        return redirect()->back()->with('success', 'Category activated successfully!');
+        return redirect()->back()->with('success', 'Category '.$msg.' successfully!');
     }
 
     

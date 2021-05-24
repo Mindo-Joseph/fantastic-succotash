@@ -1,5 +1,9 @@
 @extends('layouts.store', ['title' => 'Checkout'])
 @section('content')
+<header>
+    <div class="mobile-fix-option"></div>
+    @include('layouts.store.left-sidebar')
+</header>
 <section class="section-b-space light-layout">
     <div class="container">
         <div class="row">
@@ -25,7 +29,7 @@
                     @foreach($order->products as $product)
 	                    <div class="row product-order-detail">
 	                        <div class="col-3">
-	                        	<img src="../assets/images/pro3/1.jpg" alt="" class="img-fluid blur-up lazyloaded">
+	                        	<img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path']}}" alt="" class="img-fluid blur-up lazyloaded">
 	                        </div>
 	                        <div class="col-3 order_detail">
 	                            <div>
@@ -42,20 +46,20 @@
 	                        <div class="col-3 order_detail">
 	                            <div>
 	                                <h4>price</h4>
-	                                <h5>$555.00</h5>
+	                                <h5>${{$product->price}}</h5>
 	                            </div>
 	                        </div>
 	                    </div>
                     @endforeach
                     <div class="total-sec">
                         <ul>
-                            <li>subtotal <span>$55.00</span></li>
-                            <li>shipping <span>$12.00</span></li>
-                            <li>tax(GST) <span>$10.00</span></li>
+                            <li>subtotal <span>${{$order->total_amount}}</span></li>
+                            <!-- <li>shipping <span>$12.00</span></li> -->
+                            <li>tax(GST) <span>${{$order->taxable_amount}}</span></li>
                         </ul>
                     </div>
                     <div class="final-total">
-                        <h3>total <span>$77.00</span></h3>
+                        <h3>total <span>${{$order->payable_amount}}</span></h3>
                     </div>
                 </div>
             </div>
@@ -66,28 +70,25 @@
                         <ul class="order-detail">
                             <li>order ID: {{$order->order_number}}</li>
                             <li>Order Date: {{ date('F d, Y', strtotime($order->created_at)) }}</li>
-                            <li>Order Total: $907.28</li>
+                            <li>Order Total: ${{$order->payable_amount}}</li>
                         </ul>
                     </div>
                     <div class="col-sm-6">
                         <h4>shipping address</h4>
                         <ul class="order-detail">
-                            <li>gerg harvell</li>
-                            <li>568, suite ave.</li>
-                            <li>Austrlia, 235153</li>
-                            <li>Contact No. 987456321</li>
+                            <li>{{$order->address ? $order->address->address : ''}}</li>
                         </ul>
                     </div>
                     <div class="col-sm-12 payment-mode">
                         <h4>payment method</h4>
                         <p>Pay on Delivery (Cash/Card). Cash on delivery (COD) available. Card/Net banking acceptance subject to device availability.</p>
                     </div>
-                    <div class="col-md-12">
+                    <!-- <div class="col-md-12">
                         <div class="delivery-sec">
                             <h3>expected date of delivery</h3>
                             <h2>october 22, 2018</h2>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
