@@ -7,8 +7,8 @@ use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment};
-
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, UserAddress, OrderVendor};
+use GuzzleHttp\Client;
 class OrderController extends FrontController{
     
     public function getOrderSuccessPage(Request $request){
@@ -59,7 +59,12 @@ class OrderController extends FrontController{
                 CartAddon::where('cart_product_id', $cart_product->id)->delete();
             }
             CartProduct::where('cart_id', $cart->id)->delete();
-            DB::commit();
+          
+            
+
+            $order_dispatch = $this->placeRequestToDispatch($order,$cart_products);
+          
+           DB::commit();
             return $order; 
         } catch (Exception $e) {
             DB::rollback();
@@ -101,4 +106,78 @@ class OrderController extends FrontController{
             exit($response->getMessage());
         }
     }
+
+
+
+
+    public function placeRequestToDispatch($order,$cart_products){
+        try
+        {
+           $customer = User::find($order->user_id);
+           $cus_address = UserAddress::find($order->address_id);
+           $vendor_ids = array_column($cart_products->toArray(),'vendor_id');
+           
+           $tasks = array();
+           dd($vendor_ids);
+           foreach($vendors as $key => $vendor){
+               $vendor_details = Vendor::find($vendor->id);
+               $tasks = array();
+
+               $tasks[] = array('task_type_id' => 1,
+                                'latitude' => $vendor_details->latitude??Null,
+                                'longitude' => $vendor_details->longitude??Null,
+                                'short_name' => Null,
+                                'address' => $vendor_details->address??Null,
+                                'post_code' => Null,
+                                );
+                
+                $tasks[] = array('task_type_id' => 2,
+                                'latitude' => $cus_address->latitude??Null,
+                                'longitude' => $cus_address->longitude??Null,
+                                'short_name' => Null,
+                                'address' => $cus_address->address??Null,
+                                'post_code' => $cus_address->pincode??Null,
+                                );
+
+           }
+
+           dd($tasks);
+
+           $client = new Client();
+           $res = $client->request('POST', 'http://local.dispatcher.com/api/public/task/create', [
+               'form_params' => [
+                   'customer_name' => $customer->name ?? 'Dummy Customer',
+                   'customer_phone_number' => $customer->phone_number ?? '+919041969648',
+                   'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
+               ],
+               'headers' => [ 'client' => 'userclient' ]
+           ]);
+           
+           
+           if ($res->getStatusCode() == 200) { // 200 OK
+            $response_data = json_decode($res->getBody()->getContents());
+            if($response_data->status == 200)
+            {
+                dd('success');
+            }
+            else{
+                dd($response_data->message);
+            }
+            
+        }
+        
+        }
+        catch(\Exception $e)
+        {
+            dd($e->getMessage());
+           
+        }
+
+
+       
+
+
+
+    }    
+      
 }
