@@ -42,7 +42,7 @@ class UserhomeController extends FrontController
             $vends[] = $value->id;
         }
 
-        $banners = Banner::where('status', 1)
+        $banners = Banner::where('status', 1)->where('validity_on', 1)
                     ->where(function($q){
                         $q->whereNull('start_date_time')->orWhere(function($q2){
                             $q2->whereDate('start_date_time', '<=', Carbon::now())
