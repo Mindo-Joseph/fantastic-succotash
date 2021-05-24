@@ -7,7 +7,7 @@ use App\Model\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
+use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand, VendorCategory};
 use Validation;
 use DB;
 use App\Http\Traits\ApiResponser;
@@ -84,7 +84,7 @@ class CategoryController extends BaseController
                     $vendorIds[] = $value->vendor_id;
                 }
             }*/
-
+            $blockedVendor = VendorCategory::where('category_id', $cid)->where('status', 0)->pluck('vendor_id')->toArray();
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
             /*if($preferences->is_hyperlocal == 1){
                 $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
@@ -93,7 +93,9 @@ class CategoryController extends BaseController
                         ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
                 });
             }*/
-            $vendorData = $vendorData->where('status', '!=', $this->field_status)->paginate($limit);
+
+            $vendorData = $vendorData->where('status', '!=', $this->field_status)
+                    ->whereNotIn('id', $blockedVendor)->paginate($limit);
                             //->whereIn('id', $vendorIds)
             return $vendorData;
 
