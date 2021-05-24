@@ -65,7 +65,6 @@ class UserhomeController extends FrontController
         $np = $this->productList($vends, $langId, $curId, 'is_new');
         
         $onSP = $this->productList($vends, $langId, 'USD');
-        //dd($banners->toArray());
         $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
