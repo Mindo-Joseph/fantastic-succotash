@@ -27,7 +27,7 @@ class ProductVariantSet extends Model
 	    return $this->hasMany('App\Models\ProductVariantSet', 'variant_type_id', 'variant_type_id')
     		->join('variant_options as pvs', 'product_variant_sets.variant_option_id', 'pvs.id')
     		->join('variant_option_translations as vt','vt.variant_option_id','pvs.id')
-    		->select('pvs.hexacode', 'vt.title', 'product_variant_sets.product_id', 'product_variant_sets.variant_type_id', 'product_variant_sets.variant_option_id')
+    		->select('pvs.hexacode', 'vt.title', 'product_variant_sets.product_id', 'product_variant_sets.variant_type_id', 'product_variant_sets.variant_option_id', 'product_variant_sets.product_variant_id')
     		->groupBy('product_variant_sets.variant_option_id');
 	}
 }

@@ -174,7 +174,11 @@
                                     <input type="hidden" name="variant_id" id="prod_variant_id" value="{{$product->variant[0]->id}}">
                                     <!--<h4><del>$459.00</del><span>55% off</span></h4> -->
                                     <h3 id="productPriceValue">{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</h3>
+                                    
                                     @if(!empty($product->variantSet))
+                                    @php 
+                                        $selectedVariant = isset($product->variant[0]) ? $product->variant[0]->id : 0;
+                                    @endphp
 
                                     @foreach($product->variantSet as $key => $variant)
                                     @if($variant->type == 1 || $variant->type == 2)
@@ -183,12 +187,11 @@
                                         <ul class="productVariants">
                                             <li class="firstChild">{{$variant->title}}</li>
                                             <li class="otherSize">
-
                                                 @foreach($variant->option2 as $k => $optn)
 
                                                 <?php $var_id = $variant->variant_type_id;
                                                 $opt_id = $optn->variant_option_id;
-                                                $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';
+                                                $checked = ($selectedVariant == $optn->product_variant_id) ? 'checked' : '';
                                                 ?>
                                                 <label class="radio d-inline-block txt-14">{{$optn->title}}
                                                     <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="changeVariant dataVar{{$var_id}}">
