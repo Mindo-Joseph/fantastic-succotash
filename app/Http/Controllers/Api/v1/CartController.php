@@ -172,7 +172,6 @@ class CartController extends BaseController{
                         $isnew = 1;
                     }else{
                         foreach ($addon_options as $key => $opts) {
-
                             $cart_addon = CartAddon::where('cart_product_id', $cartProduct->id)
                                         ->where('addon_id', $addon_ids[$key])
                                         ->where('option_id', $opts)->first();
@@ -187,7 +186,6 @@ class CartController extends BaseController{
                     $cartProduct = CartProduct::create($cart_product_detail);
 
                     if(!empty($addon_ids) && !empty($addon_options)){
-
                         $saveAddons = array();
                         foreach ($addon_options as $key => $opts) {
                             $saveAddons[] = [
