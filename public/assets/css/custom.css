@@ -922,3 +922,7 @@ label.file-input.uploadImages {
     height: 100%;
     object-fit: cover;
 }
+
+.simplebar-content-wrapper{ 
+    padding-bottom: 50px;
+}
