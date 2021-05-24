@@ -179,14 +179,27 @@
                                     @foreach($product->variantSet as $key => $variant)
                                     @if($variant->type == 1 || $variant->type == 2)
 
-                                    <div style="display:none;">{{ print_r($variant->option2->toArray())}} </div>
-
-                                   <!--  <div class="size-box">
+                                    <div class="size-box">
                                         <ul class="productVariants">
                                             <li class="firstChild">{{$variant->title}}</li>
-                                           
+                                            <li class="otherSize">
+                                                @foreach($variant->option2 as $k => $optn)
+                                                @if(is_array($optn) && !empty($optn))
+
+                                                <?php $var_id = $optn->variant_type_id;
+                                                $opt_id = $optn->variant_option_id;
+                                                $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';
+                                                ?>
+                                                <label class="radio d-inline-block txt-14">{{$optn->title}}
+                                                    <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="changeVariant dataVar{{$var_id}}">
+                                                    <span class="checkround"></span>
+                                                </label>
+                                                @endif
+
+                                                @endforeach
+                                            </li>
                                         </ul>
-                                    </div> -->
+                                    </div>
 
                                     @else
                                     <!-- <div class="size-box">
