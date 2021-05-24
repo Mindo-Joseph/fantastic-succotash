@@ -16,6 +16,7 @@ class FrontController extends Controller
         $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
                         ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')
                         ->where('categories.id', '>', '1')
+                        ->where('categories.is_visible', 1)
                         ->where('categories.status', '!=', $this->field_status)
                         ->where('cts.language_id', $lang_id)
                         ->orderBy('categories.position', 'asc')
