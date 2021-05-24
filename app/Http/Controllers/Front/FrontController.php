@@ -18,8 +18,9 @@ class FrontController extends Controller
                         ->where('categories.id', '>', '1')
                         ->where('categories.status', '!=', $this->field_status)
                         ->where('cts.language_id', $lang_id)
-                        ->orderBy('categories.parent_id', 'asc')
-                        ->orderBy('categories.position', 'asc')->get();
+                        ->orderBy('categories.position', 'asc')
+                        ->orderBy('categories.id', 'asc')
+                        ->orderBy('categories.parent_id', 'asc')->get();
         if($categories){
             $categories = $this->buildTree($categories->toArray());
         }

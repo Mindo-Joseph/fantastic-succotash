@@ -135,18 +135,18 @@
             </div>
             
             @foreach($categorList as $key => $list)
-            <div class="row mb-2">
                 <form name="config-form" id="categorForm_{{$list->id}}" action="{{route('vendor.category.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
                     @csrf
                     <input type="hidden" name="vid" value="{{$vendor->id}}">
                     <input type="hidden" name="cid" value="{{$list->id}}">
-                    <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
-                        {!! Form::label('title', $list->slug, ['class' => 'control-label']) !!} 
-                        
-                        <input type="checkbox" data-plugin="switchery" data-id="{{$list->id}}" name="category" class="form-control activeCategory" data-color="#43bee1" @if(in_array($list->id, $vendorActiveCategory)) checked @endif>
+                    <div class="row mb-2">
+                        <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
+                            {!! Form::label('title', $list->slug, ['class' => 'control-label']) !!} 
+                            <input type="checkbox" data-plugin="switchery" data-id="{{$list->id}}" name="category" class="form-control activeCategory" data-color="#43bee1" @if(in_array($list->id, $vendorActiveCategory)) checked @endif>
+                        </div>
                     </div>
                 </form>
-            </div>
+            
             @endforeach
         </div>
     </div>
