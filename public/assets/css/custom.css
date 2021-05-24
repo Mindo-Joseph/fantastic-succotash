@@ -1099,3 +1099,7 @@ label.file-input.uploadImages {
 .order_detail:hover{
     color: #53c3e3;
 }
+
+.status_box li img {
+    opacity: 0.5;
+}
