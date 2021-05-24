@@ -53,8 +53,6 @@ class OrderController extends Controller{
 	    		$cart = Cart::where('user_id', $user->id)->first();
 		        $order = new Order;
 		        $order->user_id = $user->id;
-		        $order->payment_method = $paymentMethod;
-		        $order->payment_status = $paymentStatus;
 		        $order->order_number = generateOrderNo();
 		        $order->address_id = $request->address_id;
 		        $order->payment_option_id = $request->payment_option_id;
