@@ -8,13 +8,36 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderStoreRequest;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference};
 class OrderController extends Controller{
+
     use ApiResponser;
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function getOrdersList(Request $request){
+    	$user = Auth::user();
+    	$orders = Order::with('products')->where('user_id', $user->id)->paginate(10);
+    	return $this->successResponse($orders, 'Order placed successfully.', 201);
+    }
+
+    public function postOrderDetail(Request $request){
+    	try {
+    		$order_id = $request->order_id;
+	    	$order = Order::with('products')->findOrFail($order_id);
+	    	return $this->successResponse($order, null, 201);
+    	} catch (Exception $e) {
+    		return $this->errorResponse($e->getMessage(), $e->getCode());
+    	}
+    }
 
     public function postPlaceOrder(OrderStoreRequest $request){
     	try {
     		$user = Auth::user();
-    		DB::beginTransaction();
     		if($user){
+    			DB::beginTransaction();
     			$client_preference = ClientPreference::first();
     			if($client_preference->verify_email == 1){
 	    			if($user->is_email_verified == 0){
@@ -68,7 +91,9 @@ class OrderController extends Controller{
 		        return $this->successResponse($order, 'Order placed successfully.', 201);
     		}
     	} catch (Exception $e) {
+    		DB::rollback();
             return $this->errorResponse($e->getMessage(), $e->getCode());
     	}
     }
+
 }

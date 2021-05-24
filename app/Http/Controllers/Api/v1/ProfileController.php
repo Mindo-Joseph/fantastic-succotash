@@ -96,16 +96,6 @@ class ProfileController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function orders(Request $request, $domain = '')
-    {
-    	
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function newsLetter(Request $request, $domain = '')
     {
     }
