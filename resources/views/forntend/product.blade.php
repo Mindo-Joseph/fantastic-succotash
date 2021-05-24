@@ -179,6 +179,8 @@
                                     @foreach($product->variantSet as $key => $variant)
                                     @if($variant->type == 1 || $variant->type == 2)
 
+                                    <div style="display:none;">{{ print_r($variant->option2->toArray())}} </div>
+
                                     <div class="size-box">
                                         <ul class="productVariants">
                                             <li class="firstChild">{{$variant->title}}</li>
