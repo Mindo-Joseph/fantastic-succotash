@@ -73,12 +73,16 @@ class OrderController extends Controller{
 	                    $payable_amount = $payable_amount + $quantity_price;
 	                    $product_taxable_amount = 0;
 	                    $product_payable_amount = 0;
-	                    foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
-	                        $rate = round($tax_rate_detail->tax_rate);
-	                        $tax_amount = ($price_in_dollar_compare * $rate) / 100;
-	                        $product_tax = $quantity_price * $rate / 100;
-	                        $product_taxable_amount += $taxable_amount + $product_tax;
-	                        $payable_amount = $payable_amount + $product_tax;
+	                    if(isset(var)($vendor_cart_product->product['taxCategory'])){
+	                    	if(isset($vendor_cart_product->product['taxCategory']['taxRate'])){
+			                    foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
+			                        $rate = round($tax_rate_detail->tax_rate);
+			                        $tax_amount = ($price_in_dollar_compare * $rate) / 100;
+			                        $product_tax = $quantity_price * $rate / 100;
+			                        $product_taxable_amount += $taxable_amount + $product_tax;
+			                        $payable_amount = $payable_amount + $product_tax;
+			                    }
+	                    	}	
 	                    }
 	                    $total_amount += $variant->price;
 	                    $taxable_amount += $product_taxable_amount;
