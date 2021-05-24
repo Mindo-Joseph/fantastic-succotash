@@ -166,14 +166,12 @@ class CartController extends BaseController{
 
                 if(!$cartProduct){
                     $isnew = 1;
-                    $cartProduct = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
                 }else{
                     $checkaddonCount = CartAddon::where('cart_product_id', $cartProduct->id)->count();
-
-                    if(count($addon_ids) == $checkaddonCount){
-
+                    if(count($addon_ids) != $checkaddonCount){
+                        $isnew = 1;
+                    }else{
                         foreach ($addon_options as $key => $opts) {
-
                             $cart_addon = CartAddon::where('cart_product_id', $cartProduct->id)
                                         ->where('addon_id', $addon_ids[$key])
                                         ->where('option_id', $opts)->first();
@@ -182,20 +180,12 @@ class CartController extends BaseController{
                                 $isnew = 1;
                             }
                         }
-                        if($isnew == 1){
-                            $cartProduct = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
-                        }else{
-                            $cartProduct->quantity = $cartProduct->quantity + $request->quantity;
-                            $cartProduct->save();
-                        }
-                    }else{
-                        $cartProduct = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
                     }
                 }
                 if($isnew == 1){
+                    $cartProduct = CartProduct::create($cart_product_detail);
 
                     if(!empty($addon_ids) && !empty($addon_options)){
-
                         $saveAddons = array();
                         foreach ($addon_options as $key => $opts) {
                             $saveAddons[] = [
@@ -208,6 +198,9 @@ class CartController extends BaseController{
                             CartAddon::insert($saveAddons);
                         }
                     }
+                }else{
+                    $cartProduct->quantity = $cartProduct->quantity + $request->quantity;
+                    $cartProduct->save();
                 }
             }
             $cartData = $this->getCart($cart_detail, $user->language, $user->currency);

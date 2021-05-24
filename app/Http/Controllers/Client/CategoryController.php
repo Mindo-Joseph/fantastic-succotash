@@ -25,7 +25,7 @@ class CategoryController extends BaseController
 
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
                         ->where('categories.id', '>', '1')
-                        ->where('categories.status', '!=', '2')
+                        //->where('categories.status', '!=', '2')
                         ->where('categories.is_core', 1)
                         ->orderBy('categories.parent_id', 'asc')
                         ->orderBy('categories.position', 'asc')->get();
@@ -337,16 +337,18 @@ class CategoryController extends BaseController
     public function destroy($domain = '', $id)
     {
         $category = Category::where('id', $id)->first();
-        $category->status = 2;
+        $category->status = ($category->status == 2) ? 1 : 2;
         $category->save();
+
+        $action = ($category->status == 2) ? 'blocked' : 'unblocked';
 
         $hs = new CategoryHistory();
         $hs->category_id = $category->id;
-        $hs->action = 'Block';
+        $hs->action = $action;
         $hs->updater_role = 'Admin';
         $hs->update_id = Auth::user()->id;
         $hs->client_code = Auth::user()->code;
         $hs->save();
-        return redirect()->back()->with('success', 'Category deleted successfully!');
+        return redirect()->back()->with('success', 'Category '.$action.' successfully!');
     }
 }

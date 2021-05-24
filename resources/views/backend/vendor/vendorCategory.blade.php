@@ -32,6 +32,22 @@
                 </div>
             </div>
         </div>
+        <div class="row mb-1">
+            <div class="col-sm-12">
+                <div class="text-sm-left">
+                    @if (\Session::has('success'))
+                    <div class="alert alert-success">
+                        <span>{!! \Session::get('success') !!}</span>
+                    </div>
+                    @endif
+                    @if (\Session::has('error_delete'))
+                    <div class="alert alert-danger">
+                        <span>{!! \Session::get('error_delete') !!}</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
         <!--<div class="row mb-1">
             <div class="col-sm-12">
                 <div class="text-sm-left">
@@ -150,7 +166,7 @@
                                                                     <a class="action-icon editAddonBtn" dataid="{{$set->id}}" href="javascript:void(0);" > <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
 
                                                                     <a class="action-icon deleteAddon" dataid="{{$set->id}}" href="javascript:void(0);"> <i class="mdi mdi-delete"></i></a>
-                                                                    <form action="{{route('addon.destroy', $set->id)}}" method="POST"  style="display: none;" id="addonDeleteForm{{$set->id}}">
+                                                                    <form action="{{route('addon.destroy', $set->id)}}" method="POST" style="display: none;" id="addonDeleteForm{{$set->id}}">
                                                                         @csrf
                                                                         @method('DELETE')
                                                                         
