@@ -36,8 +36,11 @@ class CartProduct extends Model{
       return $this->hasOne('App\Models\CartCoupon', 'vendor_id', 'vendor_id')->select("cart_id", "coupon_id", 'vendor_id');
     }
 
+    public function currency(){
+      return $this->hasOne('App\Models\Currency', 'vendor_id', 'vendor_id');
+    }
+
     public function vendorProducts(){
-      return $this->hasMany(CartProduct::class, 'vendor_id', 'vendor_id')->leftjoin('client_currencies as cc', 'cc.currency_id', 'cart_products.currency_id')
-            ->select('cart_products.id', 'cart_products.cart_id', 'cart_products.product_id', 'cart_products.quantity', 'cart_products.variant_id', 'cart_products.is_tax_applied', 'cart_products.tax_category_id', 'cart_products.currency_id', 'cc.doller_compare', 'cart_products.vendor_id')->orderBy('cart_products.created_at', 'asc')->orderBy('cart_products.vendor_id', 'asc');
+      return $this->hasMany(CartProduct::class, 'vendor_id', 'vendor_id')->leftjoin('client_currencies as cc', 'cc.currency_id', 'cart_products.currency_id')->select('cart_products.id', 'cart_products.cart_id', 'cart_products.product_id', 'cart_products.quantity', 'cart_products.variant_id', 'cart_products.is_tax_applied', 'cart_products.tax_category_id', 'cart_products.currency_id', 'cc.doller_compare', 'cart_products.vendor_id')->orderBy('cart_products.created_at', 'asc')->orderBy('cart_products.vendor_id', 'asc');
     }
 }

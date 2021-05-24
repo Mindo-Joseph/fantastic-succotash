@@ -366,9 +366,10 @@ class CartController extends FrontController
             $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
         $cartData = $this->getCart($cart);
+        // pr($cartData->toArray());die;
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/cart')->with(['navCategories' => $navCategories, 'cartData' => $cartData]);
+        return view('forntend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData]);
     }
 
 
