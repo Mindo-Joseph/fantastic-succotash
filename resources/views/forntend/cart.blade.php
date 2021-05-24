@@ -94,7 +94,7 @@
                             @foreach($cartData->products as $product)
                                 @foreach($product['vendor_products'] as $vendor_product)
                                 @php
-                                    $total_cart_amt = $product['payable_amount'];
+                                    $total_cart_amt += $product['payable_amount'];
                                 @endphp
                                 <tr id="shopping_cart1_{{$vendor_product['id']}}">
                                     <td>

@@ -20,13 +20,25 @@ class OrderController extends Controller{
     public function getOrdersList(Request $request){
     	$user = Auth::user();
     	$orders = Order::with('products')->where('user_id', $user->id)->paginate(10);
+    	foreach ($orders as $order) {
+    		$order_item_count = 0;
+    		foreach ($order->products as $product) {
+    			$order_item_count += $product->quantity;
+    		}
+    		$order->order_item_count = $order_item_count;
+    	}
     	return $this->successResponse($orders, 'Order placed successfully.', 201);
     }
 
     public function postOrderDetail(Request $request){
     	try {
     		$order_id = $request->order_id;
-	    	$order = Order::with('products')->findOrFail($order_id);
+	    	$order = Order::with(['products','address'])->where('user_id', $user->id)->findOrFail($order_id);
+    		$order_item_count = 0;
+    		foreach ($order->products as $product) {
+    			$order_item_count += $product->quantity;
+    		}
+    		$order->order_item_count = $order_item_count;
 	    	return $this->successResponse($order, null, 201);
     	} catch (Exception $e) {
     		return $this->errorResponse($e->getMessage(), $e->getCode());
