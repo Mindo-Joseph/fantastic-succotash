@@ -170,9 +170,7 @@
             </div>
         </div>
     </div>
-  
 </div>
-
 @include('backend.tax.modals')
 @endsection
 

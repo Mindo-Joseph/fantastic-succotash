@@ -1,6 +1,6 @@
 <?php
 Route::group(['prefix' => 'v1'], function () {
-    Route::group(['middleware' => ['dbCheck', 'checkAuth']], function() {
+    Route::group(['middleware' => ['dbCheck', 'checkAuth', 'apilogger']], function() {
         Route::post('cart/add', 'Api\v1\CartController@add');
         Route::get('cart/list', 'Api\v1\CartController@index');
         Route::post('homepage', 'Api\v1\HomeController@homepage');
@@ -19,7 +19,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('celebrity/filters/{id?}', 'Api\v1\CelebrityController@celebrityFilters');
         Route::post('productByVariant/{id}','Api\v1\ProductController@getVariantData')->name('productVariant');
     });
-    Route::group(['middleware' => ['dbCheck', 'systemAuth']], function() {
+    Route::group(['middleware' => ['dbCheck','systemAuth', 'apilogger']], function() {
         Route::get('cart/empty', 'Api\v1\CartController@emptyCart');
         Route::get('coupons/{id?}', 'Api\v1\CouponController@list');
         Route::post('cart/remove', 'Api\v1\CartController@removeItem');

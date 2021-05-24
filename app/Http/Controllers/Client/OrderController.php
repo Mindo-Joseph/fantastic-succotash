@@ -28,7 +28,6 @@ class OrderController extends BaseController{
 
     public function show($domain = '', $id){
         $order = Order::with('products')->findOrFail($id);
-
         return view('backend.order.view', compact('order'));
     }
 }

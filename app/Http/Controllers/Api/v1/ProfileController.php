@@ -51,7 +51,6 @@ class ProfileController extends BaseController
 		    	}
 	        }
     	}
-
     	return response()->json([
         	'data' => $wishList
         ]);
@@ -89,16 +88,6 @@ class ProfileController extends BaseController
         	'data' => $product->id,
             'message' => 'Product has been added in wishlist.',
         ]);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function orders(Request $request, $domain = '')
-    {
-    	
     }
 
     /**

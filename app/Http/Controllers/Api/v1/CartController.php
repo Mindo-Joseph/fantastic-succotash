@@ -166,14 +166,12 @@ class CartController extends BaseController{
 
                 if(!$cartProduct){
                     $isnew = 1;
-                    $cartProduct = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
                 }else{
                     $checkaddonCount = CartAddon::where('cart_product_id', $cartProduct->id)->count();
-
-                    if(count($addon_ids) == $checkaddonCount){
-
+                    if(count($addon_ids) != $checkaddonCount){
+                        $isnew = 1;
+                    }else{
                         foreach ($addon_options as $key => $opts) {
-
                             $cart_addon = CartAddon::where('cart_product_id', $cartProduct->id)
                                         ->where('addon_id', $addon_ids[$key])
                                         ->where('option_id', $opts)->first();
@@ -182,20 +180,12 @@ class CartController extends BaseController{
                                 $isnew = 1;
                             }
                         }
-                        if($isnew == 1){
-                            $cartProduct = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
-                        }else{
-                            $cartProduct->quantity = $cartProduct->quantity + $request->quantity;
-                            $cartProduct->save();
-                        }
-                    }else{
-                        $cartProduct = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
                     }
                 }
                 if($isnew == 1){
+                    $cartProduct = CartProduct::create($cart_product_detail);
 
                     if(!empty($addon_ids) && !empty($addon_options)){
-
                         $saveAddons = array();
                         foreach ($addon_options as $key => $opts) {
                             $saveAddons[] = [
@@ -208,6 +198,9 @@ class CartController extends BaseController{
                             CartAddon::insert($saveAddons);
                         }
                     }
+                }else{
+                    $cartProduct->quantity = $cartProduct->quantity + $request->quantity;
+                    $cartProduct->save();
                 }
             }
             $cartData = $this->getCart($cart_detail, $user->language, $user->currency);
@@ -241,8 +234,8 @@ class CartController extends BaseController{
         $cartProduct->quantity = $request->quantity;
         $cartProduct->save();
         $totalProducts = CartProduct::where('cart_id', $cart->id)->sum('quantity');
-        $cart->item_count = $totalProducts;
-        $cart->save();
+        //$cart->item_count = $totalProducts;
+        //$cart->save();
 
         $cartData = $this->getCart($cart, $user->language, $user->currency);
 
@@ -356,7 +349,7 @@ class CartController extends BaseController{
                 ])->select('vendor_id')->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
 
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
-        $total_tax = $total_paying = $total_disc_amount = 0.00;
+        $total_tax = $total_paying = $total_disc_amount = 0.00; $item_count = 0;
         if($cartData){
             
             foreach ($cartData as $ven_key => $vendorData) {
@@ -413,6 +406,8 @@ class CartController extends BaseController{
                     $price_in_currency = $prod->pvariant ? $prod->pvariant->price : 0;
                     $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
+
+                    $item_count = $item_count + $prod->quantity;
 
                     $proSum = $proSum + $quantity_price;
 
@@ -558,6 +553,7 @@ class CartController extends BaseController{
         }
         
         $cart->products = $cartData;
+        $cart->item_count = $item_count;
         return $cart;
     }
 }

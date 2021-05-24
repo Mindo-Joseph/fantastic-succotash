@@ -414,3 +414,29 @@
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .iti__flag {background-image: url("../images/flags@2x.png");}
 }
+
+
+
+  .number  span {cursor:pointer; }
+        .minus, .plus{
+            width:20px;
+            height:20px;
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+        }
+        .number input{
+            height:34px;
+      width: 50px;
+      text-align: center;
+            border:1px solid #ddd;
+            border-radius:4px;
+      display: inline-block;
+      vertical-align: middle;
+            }
+            .left_box .checkround {
+    top: 4px;
+}
+.action-icon.d-block.mb-3 {
+    margin-bottom: 11px !important;
+}
