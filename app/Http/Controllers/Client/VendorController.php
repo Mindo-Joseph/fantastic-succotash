@@ -94,7 +94,6 @@ class VendorController extends BaseController
 
         $vendor->save();
         return $vendor->id;
-
     }
 
     /**
@@ -314,9 +313,10 @@ class VendorController extends BaseController
 
     /** Activate Category for vendor     */
     public function activeCategory(Request $request, $domain = '', $id)
-    {     
+    {
+        //dd($request->all());
         $vendor = Vendor::where('id', $id)->firstOrFail();
-        $vc = VendorCategory::where('id', $id)->first();
+        $vc = VendorCategory::where('vendor_id', $request->vid)->where('category_id', $request->cid)->first();
         if(!$vc){
             $vc = new VendorCategory();
             $vc->vendor_id = $request->vid;

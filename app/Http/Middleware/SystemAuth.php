@@ -23,14 +23,12 @@ class SystemAuth
     public function handle($request, Closure $next)
     {
         $header = $request->header();
-        
         $user = new User();
         $systemUser = '';
 
         if (isset($header['authorization']) && Token::check($header['authorization'][0], 'royoorders-jwt'))
         {
             $token = $header['authorization'][0];
-
             $tokenBlock = BlockedToken::where('token', $token)->first();
 
             if($tokenBlock)
@@ -40,10 +38,9 @@ class SystemAuth
             }
 
             $user = User::where('auth_token', $token)->first();
-
             if(!$user)
             {
-                return response()->json(['error' => 'Invalid Session', 'message' => 'Invalid Token or session has been expired.'], 401);
+                return response()->json(['error' => 'Invalid Session', 'message' => 'Session has been expired.'], 401);
                 abort(404);
             }
         }else if(!isset($header['systemuser'])){
@@ -80,7 +77,6 @@ class SystemAuth
                 $currency_id = $checkCur->currency_id;
             }
         }
-
         $user->language = $language_id;
         $user->currency = $currency_id;
 

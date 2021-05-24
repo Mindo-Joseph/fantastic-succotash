@@ -51,7 +51,6 @@ class ProfileController extends BaseController
 		    	}
 	        }
     	}
-
     	return response()->json([
         	'data' => $wishList
         ]);
