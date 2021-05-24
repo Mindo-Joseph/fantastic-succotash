@@ -5,6 +5,7 @@ use DB;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference};
 class OrderController extends Controller{
@@ -52,8 +53,6 @@ class OrderController extends Controller{
 	    		$cart = Cart::where('user_id', $user->id)->first();
 		        $order = new Order;
 		        $order->user_id = $user->id;
-		        $order->payment_method = $paymentMethod;
-		        $order->payment_status = $paymentStatus;
 		        $order->order_number = generateOrderNo();
 		        $order->address_id = $request->address_id;
 		        $order->payment_option_id = $request->payment_option_id;
