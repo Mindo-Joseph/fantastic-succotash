@@ -2,14 +2,14 @@
 @section('content')
 <div class="container">
 <div class="row card-box">
-    <div class="col-3">
+    <div class="col-4 left_box">
         <div class="row">
         <div class="col-12 mb-2">
             <h4 class="page-title">Delivery Address</h4>
         </div>
     </div>
     <div class="row mb-4">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="delivery_box">
                 <label class="radio m-0">1663  Railroad Street, Marquette, Michigan, CA  PIN: 49855 
                     <input type="radio" checked="checked" name="is_company">
@@ -17,7 +17,7 @@
                 </label>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="delivery_box">
                 <label class="radio m-0">Rosewood Court, Luverne, Marquette, Michigan, CA  PIN: 49855
                     <input type="radio" name="is_company">
@@ -25,12 +25,14 @@
                 </label>
             </div>
         </div>
-        <div class="col-12 mt-4">
-            <a class="btn btn-solid" href="#">
+        <div class="col-12 mt-4 text-center">
+            <a class="btn btn-solid w-75 m-auto" href="#">
                 <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address</a>
         </div>
-        <div class="col-md-6 mt-4">
-            <div class="theme-card w-100" id="add_new_address_form" style="display: none;">
+       
+    </div>
+     <div class="col-md-12 mt-4">
+            <div class="theme-card w-100" id="add_new_address_form">
                 <div class="form-row">
                     <div class="col-md-12 mb-3">
                         <label for="address">Address</label>
@@ -84,8 +86,9 @@
             </div>
         </div> 
     </div>
-    </div>
-    <div class="col-9">
+
+
+    <div class="col-8">
         <div class="table-responsive">
             <table class="table table-centered table-nowrap table-striped" id="order_table">
                 <tbody>
@@ -311,6 +314,7 @@
         </div>
     </div>
 </div>
+
 
     <div class="row mb-4">
         <div class="col-lg-3 col-md-4">

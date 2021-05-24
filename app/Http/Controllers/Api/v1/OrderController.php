@@ -32,6 +32,7 @@ class OrderController extends Controller{
 
     public function postOrderDetail(Request $request){
     	try {
+    		$user = Auth::user();
     		$order_id = $request->order_id;
 	    	$order = Order::with(['products','address'])->where('user_id', $user->id)->findOrFail($order_id);
     		$order_item_count = 0;
