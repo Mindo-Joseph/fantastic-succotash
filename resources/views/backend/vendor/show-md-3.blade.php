@@ -142,7 +142,7 @@
                     <div class="row mb-2">
                         <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
                             {!! Form::label('title', $list->slug, ['class' => 'control-label']) !!} 
-                            <input type="checkbox" data-plugin="switchery" data-id="{{$list->id}}" name="category" class="form-control activeCategory" data-color="#43bee1" @if(in_array($list->id, $vendorActiveCategory)) checked @endif>
+                            <input type="checkbox" data-plugin="switchery" data-id="{{$list->id}}" name="category" class="form-control activeCategory" data-color="#43bee1" @if(!in_array($list->id, $blockedCategory)) checked @endif>
                         </div>
                     </div>
                 </form>
