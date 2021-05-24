@@ -2,7 +2,93 @@
 @section('content')
 <div class="container">
 <div class="row card-box">
-    <div class="col-12">
+    <div class="col-4 left_box">
+        <div class="row">
+        <div class="col-12 mb-2">
+            <h4 class="page-title">Delivery Address</h4>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="delivery_box">
+                <label class="radio m-0">1663  Railroad Street, Marquette, Michigan, CA  PIN: 49855 
+                    <input type="radio" checked="checked" name="is_company">
+                    <span class="checkround"></span>
+                </label>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="delivery_box">
+                <label class="radio m-0">Rosewood Court, Luverne, Marquette, Michigan, CA  PIN: 49855
+                    <input type="radio" name="is_company">
+                    <span class="checkround"></span>
+                </label>
+            </div>
+        </div>
+        <div class="col-12 mt-4 text-center">
+            <a class="btn btn-solid w-75 m-auto" href="#">
+                <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address</a>
+        </div>
+       
+    </div>
+     <div class="col-md-12 mt-4">
+            <div class="theme-card w-100" id="add_new_address_form">
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label for="address">Address</label>
+                        <div class="input-group">
+                          <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's username" aria-describedby="button-addon2">
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <span class="text-danger" id="address_error"></span>
+                    </div>
+                </div>
+                <div class="form-row mb-3">
+                    <div class="col-md-6 mb-3">
+                        <label for="city">City</label>
+                        <input type="text" class="form-control" id="city" placeholder="City" value="">
+                        <span class="text-danger" id="city_error"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="state">State</label>
+                        <input type="text" class="form-control" id="state" placeholder="State" value="">
+                        <span class="text-danger" id="state_error"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="country">Country</label>
+                        <select name="country" id="country" class="form-control" required="">
+                        </select>
+                        <span class="text-danger" id="country_error"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="pincode">Pincode</label>
+                        <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
+                        <span class="text-danger" id="pincode_error"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="type">Address Type</label>
+                        <select name="type" id="type" class="form-control">
+                            <option value="1" selected>Home</option>
+                            <option value="2">Office</option>
+                        </select>
+                        <span class="text-danger" id="type_error"></span>
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-12 mt-3">
+                        <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
+                        <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+
+
+    <div class="col-8">
         <div class="table-responsive">
             <table class="table table-centered table-nowrap table-striped" id="order_table">
                 <tbody>
@@ -228,87 +314,8 @@
         </div>
     </div>
 </div>
-<div class="row">
-        <div class="col-12 mb-2">
-            <h4 class="page-title">Delivery Address</h4>
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="delivery_box">
-                <label class="radio m-0">1663  Railroad Street, Marquette, Michigan, CA  PIN: 49855 
-                    <input type="radio" checked="checked" name="is_company">
-                    <span class="checkround"></span>
-                </label>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="delivery_box">
-                <label class="radio m-0">Rosewood Court, Luverne, Marquette, Michigan, CA  PIN: 49855
-                    <input type="radio" name="is_company">
-                    <span class="checkround"></span>
-                </label>
-            </div>
-        </div>
-        <div class="col-12 mt-4">
-            <a class="btn btn-solid" href="#">
-                <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address</a>
-        </div>
-        <div class="col-md-6 mt-4">
-            <div class="theme-card w-100" id="add_new_address_form" style="display: none;">
-                <div class="form-row">
-                    <div class="col-md-12 mb-3">
-                        <label for="address">Address</label>
-                        <div class="input-group">
-                          <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's username" aria-describedby="button-addon2">
-                          <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                            </button>
-                          </div>
-                        </div>
-                        <span class="text-danger" id="address_error"></span>
-                    </div>
-                </div>
-                <div class="form-row mb-3">
-                    <div class="col-md-6 mb-3">
-                        <label for="city">City</label>
-                        <input type="text" class="form-control" id="city" placeholder="City" value="">
-                        <span class="text-danger" id="city_error"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="state">State</label>
-                        <input type="text" class="form-control" id="state" placeholder="State" value="">
-                        <span class="text-danger" id="state_error"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="country">Country</label>
-                        <select name="country" id="country" class="form-control" required="">
-                        </select>
-                        <span class="text-danger" id="country_error"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="pincode">Pincode</label>
-                        <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
-                        <span class="text-danger" id="pincode_error"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="type">Address Type</label>
-                        <select name="type" id="type" class="form-control">
-                            <option value="1" selected>Home</option>
-                            <option value="2">Office</option>
-                        </select>
-                        <span class="text-danger" id="type_error"></span>
-                    </div>
-                    <div class="col-md-6"></div>
-                    <div class="col-md-12 mt-3">
-                        <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
-                        <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div> 
-    </div>
+
+
     <div class="row mb-4">
         <div class="col-lg-3 col-md-4">
             <a class="btn btn-solid" href="#">Continue Shopping</a>
