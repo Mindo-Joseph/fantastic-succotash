@@ -73,7 +73,7 @@ class OrderController extends Controller{
 	                    $payable_amount = $payable_amount + $quantity_price;
 	                    $product_taxable_amount = 0;
 	                    $product_payable_amount = 0;
-	                    if(isset(var)($vendor_cart_product->product['taxCategory'])){
+	                    if(isset($vendor_cart_product->product['taxCategory'])){
 	                    	if(isset($vendor_cart_product->product['taxCategory']['taxRate'])){
 			                    foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
 			                        $rate = round($tax_rate_detail->tax_rate);
