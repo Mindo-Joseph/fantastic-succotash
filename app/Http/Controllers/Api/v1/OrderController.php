@@ -7,7 +7,7 @@ use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency};
 class OrderController extends Controller{
     use ApiResponser;
 
@@ -32,7 +32,7 @@ class OrderController extends Controller{
     		return $this->errorResponse($e->getMessage(), $e->getCode());
     	}
     }
-    
+
     public function postPlaceOrder(OrderStoreRequest $request){
     	try {
     		$user = Auth::user();
@@ -49,6 +49,7 @@ class OrderController extends Controller{
 	    				return response()->json(['error' => 'Your phone is not verified.'], 404);
 	    			}
     			}
+    			$clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
 	    		$cart = Cart::where('user_id', $user->id)->first();
 		        $order = new Order;
 		        $order->user_id = $user->id;

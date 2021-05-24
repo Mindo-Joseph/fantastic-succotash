@@ -1,5 +1,9 @@
 @extends('layouts.store', ['title' => 'Checkout'])
 @section('content')
+<header>
+    <div class="mobile-fix-option"></div>
+    @include('layouts.store.left-sidebar')
+</header>
 <section class="section-b-space light-layout">
     <div class="container">
         <div class="row">

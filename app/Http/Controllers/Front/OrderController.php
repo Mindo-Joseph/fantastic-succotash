@@ -12,8 +12,10 @@ use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product
 class OrderController extends FrontController{
     
     public function getOrderSuccessPage(Request $request){
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
         $order = Order::with(['products', 'address'])->findOrfail($request->order_id);
-        return view('forntend.order.success', compact('order'));
+        return view('forntend.order.success', compact('order','navCategories'));
     }
     public function placeOrder(Request $request, $domain = ''){
         if ($request->input("payment-group") == '1') {
