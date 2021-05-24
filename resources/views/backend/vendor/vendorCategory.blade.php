@@ -149,7 +149,7 @@
                                                                 <td>
                                                                     <a class="action-icon editAddonBtn" dataid="{{$set->id}}" href="javascript:void(0);" > <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
 
-                                                                    <a class="action-icon deleteAddon" dataid="{{$set->id}}" href="javascript:void(0);"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
+                                                                    <a class="action-icon deleteAddon" dataid="{{$set->id}}" href="javascript:void(0);"> <i class="mdi mdi-delete"></i></a>
                                                                     <form action="{{route('addon.destroy', $set->id)}}" method="POST"  style="display: none;" id="addonDeleteForm{{$set->id}}">
                                                                         @csrf
                                                                         @method('DELETE')

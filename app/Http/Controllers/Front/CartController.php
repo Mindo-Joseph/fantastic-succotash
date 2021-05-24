@@ -56,7 +56,7 @@ class CartController extends FrontController
                     'variant_id'  => $request->variant_id,
                     'currency_id' => $client_currency->currency_id,
                 ];
-                CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id], $cart_product_detail);
+                CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id, 'product_id' => $request->product_id], $cart_product_detail);
             }
             return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
         } catch (Exception $e) {
@@ -195,21 +195,17 @@ class CartController extends FrontController
      * get products from cart
      *
      * @return \Illuminate\Http\Response
-     */
-    public function getCartProducts($domain = '')
-    {
-        $user_id = '';
-        if (Auth::user()->id && Auth::user()->id > 0) {
-            $user_id = Auth::user()->id;
+     */ 
+    public function getCartProducts($domain = ''){
+        $user = Auth::user();
+        $curId = Session::get('customerCurrency');
+        $langId = Session::get('customerLanguage');
+        if ($user) {
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
         }else{
-            if(empty(Auth::user()->system_user)){
-                return response()->json(['error' => 'System id should not be empty.'], 404);
-            }
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
-
-        $cartData = $this->getCart($user_id);
-
-        
+        $cartData = $this->getCart($cart);
         if($cartData && !empty($cartData)){
             return response()->json([
                 'data' => $cartData,

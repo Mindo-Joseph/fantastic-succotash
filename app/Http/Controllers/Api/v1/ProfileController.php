@@ -51,7 +51,6 @@ class ProfileController extends BaseController
 		    	}
 	        }
     	}
-
     	return response()->json([
         	'data' => $wishList
         ]);
@@ -89,16 +88,6 @@ class ProfileController extends BaseController
         	'data' => $product->id,
             'message' => 'Product has been added in wishlist.',
         ]);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function orders(Request $request, $domain = '')
-    {
-    	
     }
 
     /**
@@ -338,41 +327,43 @@ class ProfileController extends BaseController
      */
     public function userAddress(Request $request, $addressId = 0)
     {
-        $validator = Validator::make($request->all(), [
-            'address' => 'required',
-            'country' => 'required',
-        ]);
-        $user = Auth::user();
+        try {
+            $validator = Validator::make($request->all(), [
+                'address' => 'required',
+                'country' => 'required',
+            ]);
+            $user = Auth::user();
 
-        if($validator->fails()){
-            foreach($validator->errors()->toArray() as $error_key => $error_value){
-                $errors['error'] = $error_value[0];
-                return response()->json($errors, 422);
+            if($validator->fails()){
+                foreach($validator->errors()->toArray() as $error_key => $error_value){
+                    $errors['error'] = $error_value[0];
+                    return response()->json($errors, 422);
+                }
             }
-        }
 
-        if($request->has('is_primary') && $request->is_primary == 1){
-            $add = UserAddress::where('user_id', $user->id)->update(['is_primary' => 0]);
-        }
+            if($request->has('is_primary') && $request->is_primary == 1){
+                $add = UserAddress::where('user_id', $user->id)->update(['is_primary' => 0]);
+            }
 
-        $address = UserAddress::where('id', $addressId)->where('user_id', $user->id)->first();
-        $message = "Address updated successfully.";
-        if(!$address){
-            $message = "Address added successfully.";
-            $address = new UserAddress();
-            $address->user_id = $user->id;
-            $address->is_primary = $request->has('is_primary') ? 1 : 0;
-        }
-        foreach ($request->only('address', 'street', 'city', 'state', 'latitude', 'longitude', 'pincode', 'phonecode', 'country_code', 'country') as $key => $value) {
-            $address[$key] = $value;
-        }
-        $request->type == ($request->has('address_type') && $request->address_type < 3) ? $request->address_type : 3;
-        
-        $address->save();
+            $address = UserAddress::where('id', $addressId)->where('user_id', $user->id)->first();
+            $message = "Address updated successfully.";
+            if(!$address){
+                $message = "Address added successfully.";
+                $address = new UserAddress();
+                $address->user_id = $user->id;
+                $address->is_primary = $request->has('is_primary') ? 1 : 0;
+            }
+            foreach ($request->only('address', 'street', 'city', 'state', 'latitude', 'longitude', 'pincode', 'phonecode', 'country_code', 'country') as $key => $value) {
+                $address[$key] = $value;
+            }
+            $request->type == ($request->has('address_type') && $request->address_type < 3) ? $request->address_type : 3;
+            
+            $address->save();
 
-        return response()->json([
-            'message' => $message,
-        ]);
+            return $this->successResponse($address, $message);
+        }catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
     }
 
     /**     Update primary address         */

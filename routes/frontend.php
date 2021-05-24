@@ -4,9 +4,12 @@ Route::domain('{subdomain}.myorder.com')->middleware(['subdomain', 'domain'])->g
     Route::get('/','Front\UserhomeController@index')->name('userHome');
     Route::get('/productDetail/{id}','Front\ProductPageController@index')->name('productDetail');
 });*/
-
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::group(['middleware' => ['domain']], function () {
-
+	Route::get('demo', [
+		'as' => 'customer.login',
+		'uses' => 'Front\CustomerAuthController@getTestHtmlPage'
+	]);
 	Route::get('user/login', [
 		'as' => 'customer.login',
 		'uses' => 'Front\CustomerAuthController@loginForm'
@@ -25,7 +28,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('user/resetPassword', [
 		'as' => 'customer.resetPassword',
 		'uses' => 'Front\CustomerAuthController@resetPasswordForm'
-	]);
+	])   ;
 
 	//Route::post('user/facebook/callback','Front\CustomerAuthController@fblogin');
 

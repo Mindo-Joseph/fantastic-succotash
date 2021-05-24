@@ -18,7 +18,7 @@
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-lg-12">
-                                <form class="form-inline">
+                                <div class="form-inline">
                                     <div class="form-group mb-2">
                                         <label for="inputPassword2" class="sr-only">Search</label>
                                         <input type="search" class="form-control" id="inputPassword2" placeholder="Search...">
@@ -35,10 +35,9 @@
                                             <option value="6">Unfulfilled</option>
                                         </select>
                                     </div>
-                                </form>                            
+                                </div>                            
                             </div>
                         </div>
-
                         <div class="table-responsive">
                             <table class="table table-centered table-nowrap mb-0">
                                 <thead class="thead-light">
@@ -68,8 +67,16 @@
                                                 <label class="custom-control-label" for="customCheck2">&nbsp;</label>
                                             </div>
                                         </td>
-                                        <td><a href="{{route('second', ['ecommerce', 'order-detail'])}}" class="text-body font-weight-bold">#{{$order->order_number}}</a> </td>
-                                        <td><a href="ecommerce-product-detail.html"><img src="../assets/images/products/product-1.png" alt="product-img" height="32"></a></td>
+                                        <td>
+                                            <a href="{{route('second', ['ecommerce', 'order-detail'])}}" class="text-body font-weight-bold">#{{$order->order_number}}</a>
+                                        </td>
+                                        <td>
+                                            @foreach($order->products as $product)
+                                                <a href="ecommerce-product-detail.html">
+                                                    <img src="{{$product->image['proxy_url'].'32/32'.$product->image['image_path']}}" alt="product-img" height="32">
+                                                </a>
+                                            @endforeach
+                                        </td>
                                         <td>{{$order->created_at}}</td>
                                         <td>
                                             <h5><span class="badge bg-soft-success text-success"><i class="mdi mdi-coin"></i> Paid</span></h5>
@@ -98,7 +105,9 @@
                                         @endif
                                         </td>
                                         <td>
-                                            <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-eye"></i></a>
+                                            <a href="{{route('order.show', $order->id)}}" class="action-icon">
+                                                <i class="mdi mdi-eye"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach 

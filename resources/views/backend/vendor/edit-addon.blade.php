@@ -76,7 +76,7 @@
 
                         <td class="lasttd">
                             @if($first > 0)
-                            <a href="javascript:void(0);" class="action-icon deleteCurRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
+                            <a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>
                             @endif
                         </td>
                     </tr>

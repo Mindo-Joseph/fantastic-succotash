@@ -2,12 +2,12 @@
 
 Route::group(['prefix' => 'v1/auth'], function () {
     Route::get('country-list', 'Api\v1\AuthController@countries');
-    Route::group(['middleware' => ['dbCheck', 'AppAuth']], function() {
+    Route::group(['middleware' => ['dbCheck', 'AppAuth', 'apilogger']], function() {
         Route::get('logout', 'Api\v1\AuthController@logout');
         Route::post('sendToken', 'Api\v1\AuthController@sendToken');
         Route::post('verifyAccount', 'Api\v1\AuthController@verifyToken');
     });
-    Route::group(['middleware' => 'dbCheck'], function() {
+    Route::group(['middleware' => ['dbCheck', 'apilogger']], function() {
         Route::post('login', 'Api\v1\AuthController@login');
         Route::post('register', 'Api\v1\AuthController@signup');
         Route::post('register', 'Api\v1\AuthController@signup');
@@ -17,12 +17,13 @@ Route::group(['prefix' => 'v1/auth'], function () {
 });
 
 Route::group(['prefix' => 'v1'], function () {
-    Route::group(['middleware' => 'dbCheck'], function() {
+    Route::group(['middleware' => ['dbCheck', 'apilogger']], function() {
         Route::post('social/info', 'Api\v1\SocialController@getKeys');
         Route::post('social/login/{driver}', 'Api\v1\SocialController@login');
     });
-    Route::group(['middleware' => ['dbCheck', 'AppAuth']], function() {
-        Route::get('orders', 'Api\v1\ProfileController@orders');
+    Route::group(['middleware' => ['dbCheck', 'AppAuth', 'apilogger']], function() {
+        Route::get('orders', 'Api\v1\OrderController@getOrdersList');
+        Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::get('profile', 'Api\v1\ProfileController@profile');
         Route::get('account', 'Api\v1\ProfileController@account');
         Route::get('wishlists', 'Api\v1\ProfileController@wishlists');

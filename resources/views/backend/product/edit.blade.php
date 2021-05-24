@@ -313,7 +313,7 @@
                                                 <input type="text" style="width: 70px;" name="variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
                                             </td>
                                             <td>
-                                                <a href="javascript:void(0);" varId="{{$varnt->id}}" class="action-icon deleteExistRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
+                                                <a href="javascript:void(0);" varId="{{$varnt->id}}" class="action-icon deleteExistRow"> <i class="mdi mdi-delete"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach

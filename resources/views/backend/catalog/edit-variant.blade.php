@@ -17,7 +17,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
+                    {!! Form::label('title', 'Select List',['class' => 'control-label']) !!}
                     <select class="form-control selectize-select dropDownType" name="type" dataFor="edit">
                         <option value="1" @if($variant->type == 1) selected @endif>DropDown</option>
                         <option value="2" @if($variant->type == 2) selected @endif>Color</option>
@@ -112,7 +112,7 @@
 
                         <td class="lasttd">
                             @if($first > 0)
-                            <a href="#" class="action-icon deleteCurRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
+                            <a href="#" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>
                             @endif
                         </td>
                     </tr>

@@ -112,10 +112,10 @@ class CelebrityController extends BaseController
     public function celebrityFilters(Request $request, $cid = 0)
     {
         try{
-            $langId = Auth::user()->language;
-            $curId = Auth::user()->currency;
+            $user = Auth::user();
+            $langId = $user->language;
             $setArray = $optionArray = array();
-            $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
+            $clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
 
             if($request->has('variants') && !empty($request->variants)){
                 $setArray = array_unique($request->variants);
@@ -162,6 +162,8 @@ class CelebrityController extends BaseController
                 }
             }
             $order_type = $request->has('order_type') ? $request->order_type : '';
+
+            //$productVariant = ProductVariant
 
             $products = Product::join('product_celebrities as pc', 'pc.product_id', 'products.id')
                     ->with(['variant.vimage.pimage.image', 'media.image', 'translation' => function($q) use($langId){

@@ -22,17 +22,19 @@ class CartController extends BaseController{
             $user = Auth::user();
             $user_id = $user->id;
             $cart = Cart::where('id', '>', 0);
-            if (!empty($user_id) || $user->id < 1) {
-                $cart = $cart->where('user_id', $user->id);
-            }else{
+            if (!$user_id || $user_id < 1) {
                 if(empty($user->system_user)){
                     return $this->errorResponse('System id should not be empty.', 404);
                 }
                 $cart = $cart->where('unique_identifier', $user->system_user);
+                
+            }else{
+                $cart = $cart->where('user_id', $user->id);
             }
             $cart = $cart->first();
             if($cart){
-                $cart = $this->getCart($cart, $user->language, $user->currency);
+                $cartData = $this->getCart($cart, $user->language, $user->currency);
+                return $this->successResponse($cartData);
             }
             return $this->successResponse($cart);
         } catch (Exception $e) {
@@ -66,14 +68,13 @@ class CartController extends BaseController{
     }
 
     /**     * Add product In Cart    *           */
-    public function add(Request $request)
-    {
+    public function add(Request $request){
         try {
             $user = Auth::user();
             $langId = $user->language;
             $user_id = $user->id;
             $unique_identifier = '';
-            if (empty($user_id) || $user->id < 1) {
+            if (!$user_id) {
                 if(empty($user->system_user)){
                     return $this->errorResponse('System id should not be empty.', 404);
                 }
@@ -152,11 +153,11 @@ class CartController extends BaseController{
                     'status'  => '0',
                     'is_tax_applied'  => '1',
                     'created_by'  => $user_id,
+                    'product_id' => $product->id,
                     'cart_id'  => $cart_detail->id,
                     'quantity'  => $request->quantity,
-                    'vendor_id'  => $request->vendor_id,
-                    'product_id' => $product->id,
-                    'variant_id'  => $request->variant_id,
+                    'vendor_id'  => $product->vendor_id,
+                    'variant_id'  => $request->product_variant_id,
                     'currency_id' => $client_currency->currency_id,
                 ];
                 $cartProduct = CartProduct::where('cart_id', $cart_detail->id)
@@ -269,9 +270,20 @@ class CartController extends BaseController{
     /**         *       Remove item from cart       *          */
     public function removeItem(Request $request){
         $user = Auth::user();
-        $cart = Cart::where('user_id', $user->id)->where('id', $request->cart_id)->first();
+        $user_id = $user->id;
+        $cart = Cart::where('id', $request->cart_id);
+        if (!$user_id || $user_id < 1) {
+            if(empty($user->system_user)){
+                return $this->errorResponse('System id should not be empty.', 404);
+            }
+            $cart = $cart->where('unique_identifier', $user->system_user);
+            
+        }else{
+            $cart = $cart->where('user_id', $user->id);
+        }
+        $cart = $cart->first();
         if(!$cart){
-            return response()->json(['error' => 'User cart not exist.'], 404);
+            return response()->json(['error' => 'Cart not exist'], 404);
         }
 
         $cartProduct = CartProduct::where('cart_id', $cart->id)->where('id', $request->cart_product_id)->first();
@@ -288,8 +300,8 @@ class CartController extends BaseController{
                 'data' => array(),
             ]);
         }
-        $cart->item_count = $totalProducts;
-        $cart->save();
+        //$cart->item_count = $totalProducts;
+        //$cart->save();
         $cartData = $this->getCart($cart, $user->language, $user->currency);
         return response()->json([
             "message" => "Product removed from cart successfully.",
@@ -300,11 +312,20 @@ class CartController extends BaseController{
 
     /**         *       Empty cart       *          */
     public function emptyCart($cartId = 0){
-        $cart = Cart::where('user_id', Auth::user()->id)->first();
-        if(!$cart){
-            return response()->json(['error' => 'User cart not exist.'], 404);
+        $user = Auth::user();
+        $user_id = $user->id;
+        $cart = Cart::where('id', '>', 0);
+        if (!$user_id || $user_id < 1) {
+            if(empty($user->system_user)){
+                return $this->errorResponse('System id should not be empty.', 404);
+            }
+            $cart = $cart->where('unique_identifier', $user->system_user);
+            
+        }else{
+            $cart = $cart->where('user_id', $user->id);
         }
-        $cart->delete();
+        $cart = $cart->delete();
+        
         return response()->json(['message' => 'Empty cart successfully.']);
     }
 
@@ -316,7 +337,6 @@ class CartController extends BaseController{
             return false;
         }
         $cartID = $cart->id;
-
         $cartData = CartProduct::with(['vendor', 'coupon'=> function($qry) use($cartID){
                         $qry->where('cart_id', $cartID);
                     }, 'coupon.promo.details', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
@@ -338,7 +358,7 @@ class CartController extends BaseController{
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         $total_tax = $total_paying = $total_disc_amount = 0.00;
         if($cartData){
-
+            
             foreach ($cartData as $ven_key => $vendorData) {
 
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
@@ -390,7 +410,7 @@ class CartController extends BaseController{
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
 
                     //$price_in_currency = round($prod->pvariant->price / $divider);
-                    $price_in_currency = $prod->pvariant->price;
+                    $price_in_currency = $prod->pvariant ? $prod->pvariant->price : 0;
                     $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
 
@@ -412,7 +432,7 @@ class CartController extends BaseController{
                     $variantsData['multiplier']         = $clientCurrency->doller_compare;
                     $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
 
-                    if(!empty($vendorData->coupon) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
+                    if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
                         $pro_disc = $discount_amount;
                         if($minimum_spend < $quantity_price){
                             if($is_percent == 1){
@@ -490,7 +510,7 @@ class CartController extends BaseController{
                 }
                 $couponApplied = 0;
 
-                if(!empty($vendorData->coupon) && ($vendorData->coupon->promo->restriction_on == 1)){
+                if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 1)){
                     $minimum_spend = $vendorData->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
                     if($minimum_spend < $proSum){
                         if($is_percent == 1){
@@ -522,7 +542,7 @@ class CartController extends BaseController{
                 $total_tax = $total_tax + $taxable_amount;
                 $total_disc_amount = $total_disc_amount + $discount_amount;
                 $total_discount_percent = $total_discount_percent + $discount_percent;
-                if(!empty($vendorData->coupon)){
+                if(!empty($vendorData->coupon->promo)){
                     unset($vendorData->coupon->promo);
                 }
             }

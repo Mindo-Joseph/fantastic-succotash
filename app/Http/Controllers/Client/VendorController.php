@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{VendorSlotDate, Vendor, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Product, Type};
+use App\Models\{VendorSlotDate, Vendor, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Product, Type, VendorCategory};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -94,7 +94,6 @@ class VendorController extends BaseController
 
         $vendor->save();
         return $vendor->id;
-
     }
 
     /**
@@ -176,9 +175,17 @@ class VendorController extends BaseController
             ];
          }
 
-        //dd($area1->toArray());
+        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '1')
+                    ->where(function($q) use($id){
+                          $q->whereNull('vendor_id')
+                            ->orWhere('vendor_id', $id);
+                    })
+                    ->where('status', '!=', '2')
+                    ->orderBy('position', 'asc')->get();
+
+        $vendorActiveCategory = VendorCategory::where('vendor_id', $id)->pluck('category_id')->toArray();
         
-        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas]);
+        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categorList' => $categorList, 'vendorActiveCategory' => $vendorActiveCategory]);
     }
 
     /**
@@ -224,8 +231,15 @@ class VendorController extends BaseController
                     ->where('is_active', 1)
                     ->orderBy('is_primary', 'desc')->get();
 
-
-        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons]);
+        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '1')
+                    ->where(function($q) use($id){
+                          $q->whereNull('vendor_id')
+                            ->orWhere('vendor_id', $id);
+                    })
+                    ->where('status', '!=', '2')
+                    ->orderBy('position', 'asc')->get();
+        $vendorActiveCategory = VendorCategory::where('vendor_id', $id)->pluck('category_id')->toArray();
+        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'categorList' => $categorList, 'vendorActiveCategory' => $vendorActiveCategory]);
     }
 
     /**
@@ -247,8 +261,16 @@ class VendorController extends BaseController
 
         $products = Product::with('variant', 'primary', 'category.cat', 'variantSet')->where('vendor_id', $id)->where('is_live', '!=', 2)->get();
 
-        //dd($categories->toArray());
-        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'tab' => 'catalog', 'products' => $products, 'typeArray' => $type, 'categories' => $categories]);
+        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '1')
+                    ->where(function($q) use($id){
+                          $q->whereNull('vendor_id')
+                            ->orWhere('vendor_id', $id);
+                    })
+                    ->where('status', '!=', '2')
+                    ->orderBy('position', 'asc')->get();
+        $vendorActiveCategory = VendorCategory::where('vendor_id', $id)->pluck('category_id')->toArray();
+        
+        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'tab' => 'catalog', 'products' => $products, 'typeArray' => $type, 'categories' => $categories, 'categorList' => $categorList, 'vendorActiveCategory' => $vendorActiveCategory]);
     }
 
     /**
@@ -288,4 +310,22 @@ class VendorController extends BaseController
         return redirect()->back()->with('success', $msg.' updated successfully!');
         
     }
+
+    /** Activate Category for vendor     */
+    public function activeCategory(Request $request, $domain = '', $id)
+    {
+        //dd($request->all());
+        $vendor = Vendor::where('id', $id)->firstOrFail();
+        $vc = VendorCategory::where('vendor_id', $request->vid)->where('category_id', $request->cid)->first();
+        if(!$vc){
+            $vc = new VendorCategory();
+            $vc->vendor_id = $request->vid;
+            $vc->category_id = $request->cid;
+        }
+        $vc->status = ($request->has('category') && $request->category == 'on') ? 1 : 0;
+        $vc->save();
+        return redirect()->back()->with('success', 'Category activated successfully!');
+    }
+
+    
 }
