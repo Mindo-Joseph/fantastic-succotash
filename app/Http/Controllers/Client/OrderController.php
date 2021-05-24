@@ -15,8 +15,8 @@ class OrderController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $orders = Order::with('products')->paginate();
-        return view('backend/order/index', compact('orders'));
+        $orders = Order::with(['products', 'address','user'])->orderBy('id', 'DESC')->paginate();
+        return view('backend.order.index', compact('orders'));
     }
 
     /**

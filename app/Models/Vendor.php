@@ -41,11 +41,8 @@ class Vendor extends Model
       $values['image_fit'] = env('FIT_URl');
       return $values;
     }
-
-    // public function toSearchableArray()
-    // {
-    //   $array = $this->toArray();
-         
-    //   return array('id' => $array['id'], 'name' => $array['name']);
-    // }
+    public static function getNameById($vendor_id){
+      $result = Vendor::where('id', $vendor_id)->first();
+      return $result->name;
+    }
 }
