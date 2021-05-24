@@ -6,7 +6,10 @@ Route::domain('{subdomain}.myorder.com')->middleware(['subdomain', 'domain'])->g
 });*/
 
 Route::group(['middleware' => ['domain']], function () {
-
+	Route::get('demo', [
+		'as' => 'customer.login',
+		'uses' => 'Front\CustomerAuthController@getTestHtmlPage'
+	]);
 	Route::get('user/login', [
 		'as' => 'customer.login',
 		'uses' => 'Front\CustomerAuthController@loginForm'
@@ -25,7 +28,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('user/resetPassword', [
 		'as' => 'customer.resetPassword',
 		'uses' => 'Front\CustomerAuthController@resetPasswordForm'
-	]);
+	])   ;
 
 	//Route::post('user/facebook/callback','Front\CustomerAuthController@fblogin');
 
