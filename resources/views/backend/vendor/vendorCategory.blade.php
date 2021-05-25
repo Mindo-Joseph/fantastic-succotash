@@ -100,10 +100,10 @@
                                 <div class="col-4">
                                     <div class="card-box" style="">
                                         <div class="row" style="max-height: 600px; overflow-x: auto">
-                                            <div class="col-sm-8">
-                                                <h4 class="mb-4 "> Categories</h4>
+                                            <div class="col-sm-6">
+                                                <h4 class="mb-4"> Categories</h4>
                                             </div>
-                                            <div class="col-sm-4 text-right">
+                                            <div class="col-sm-6 text-right">
                                                 @if($vendor->add_category == 1)
                                                 <button class="btn btn-info waves-effect waves-light text-sm-right openCategoryModal" dataid="0" is_vendor="1"><i class="mdi mdi-plus-circle mr-1"></i> Add
                                                 </button>
@@ -262,6 +262,12 @@
                             </div>
 
                             <div class="row">
+                                <!-- <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="formControlRange">Example Range input</label>
+                                        <input type="range" class="form-control-range" id="formControlRange">
+                                    </div>
+                                </div> -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {!! Form::label('title', 'Min Select',['class' => 'control-label']) !!}

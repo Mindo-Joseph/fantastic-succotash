@@ -27,58 +27,58 @@
         </div>
     </div>
     <div class="col-md-12 mt-4" id="add_new_address_form" style="display:none;">
-            <div class="theme-card w-100" id="add_new_address_form">
-                <div class="form-row">
-                    <div class="col-md-12 mb-3">
-                        <label for="address">Address</label>
-                        <div class="input-group">
-                          <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's username" aria-describedby="button-addon2">
-                          <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                            </button>
-                          </div>
+        <div class="theme-card w-100" id="add_new_address_form">
+            <div class="form-row">
+                <div class="col-md-12 mb-3">
+                    <label for="address">Address</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                        </button>
                         </div>
-                        <span class="text-danger" id="address_error"></span>
                     </div>
-                </div>
-                <div class="form-row mb-3">
-                    <div class="col-md-6 mb-3">
-                        <label for="city">City</label>
-                        <input type="text" class="form-control" id="city" placeholder="City" value="">
-                        <span class="text-danger" id="city_error"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="state">State</label>
-                        <input type="text" class="form-control" id="state" placeholder="State" value="">
-                        <span class="text-danger" id="state_error"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="country">Country</label>
-                        <select name="country" id="country" class="form-control" required="">
-                        </select>
-                        <span class="text-danger" id="country_error"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="pincode">Pincode</label>
-                        <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
-                        <span class="text-danger" id="pincode_error"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="type">Address Type</label>
-                        <select name="type" id="type" class="form-control">
-                            <option value="1" selected>Home</option>
-                            <option value="2">Office</option>
-                        </select>
-                        <span class="text-danger" id="type_error"></span>
-                    </div>
-                    <div class="col-md-6"></div>
-                    <div class="col-md-12 mt-3">
-                        <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
-                        <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
-                    </div>
+                    <span class="text-danger" id="address_error"></span>
                 </div>
             </div>
+            <div class="form-row mb-3">
+                <div class="col-md-6 mb-3">
+                    <label for="city">City</label>
+                    <input type="text" class="form-control" id="city" placeholder="City" value="">
+                    <span class="text-danger" id="city_error"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="state">State</label>
+                    <input type="text" class="form-control" id="state" placeholder="State" value="">
+                    <span class="text-danger" id="state_error"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="country">Country</label>
+                    <select name="country" id="country" class="form-control" required="">
+                    </select>
+                    <span class="text-danger" id="country_error"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="pincode">Pincode</label>
+                    <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
+                    <span class="text-danger" id="pincode_error"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="type">Address Type</label>
+                    <select name="type" id="type" class="form-control">
+                        <option value="1" selected>Home</option>
+                        <option value="2">Office</option>
+                    </select>
+                    <span class="text-danger" id="type_error"></span>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-12 mt-3">
+                    <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
+                    <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
+                </div>
+            </div>
+        </div>
     </div> 
     </div>
     <div class="col-8">
@@ -92,8 +92,8 @@
                         </td>
                     </tr>
                     @foreach($product['vendor_products'] as $vendor_product)
-                    <tr>
-                        <td style="width:100px">
+                    <tr class="padding-bottom">
+                        <td style="width:100px" rowspan="2">
                             <div class="product-img">
                                 <img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'100/70'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt="">
                             </div>
@@ -122,27 +122,111 @@
                             <div class="items-price mb-3">${{$vendor_product['pvariant']['quantity_price']}}</div>
                         </td>
                     </tr>
-                    @endforeach
-                    <tr class="border_0">
-                        <td></td>
-                        <td class="items-details text-left">
-                            <h6>Add Ons</h6>
-                            <p>Spicy Dip</p>
-                        </td>
-                        <td>
-                            <div class="extra-items-price">$5.00</div>
-                        </td>
-                        <td>
-                        </td>
-                        <td class="text-center">
-                            <a href="#" class="action-icon d-block">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </a>
-                        </td>
-                        <td class="text-right">
-                            <div class="extra-items-price">$5.00</div>
+                    <tr>
+                        <td colspan="5" class="border_0 p-0 border-0">
+                            <table class="add_on_items w-100">
+                                <thead>
+                                    <tr>
+                                        <h6 class="m-0 pl-3"><b>Add Ons</b></h6>
+                                    </tr>
+                                </thead>    
+                                <tbody>
+                                    <tr class="border_0 padding-top">
+                                        <td class="items-details text-left">
+                                            <p class="m-0">Spicy Dip</p>
+                                        </td>
+                                        <td>
+                                            <div class="extra-items-price">$5.00</div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#" class="action-icon d-block">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="extra-items-price">$5.00</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="border_0 padding-top">
+                                        <td class="items-details text-left">
+                                            <p class="m-0">Spicy Dip</p>
+                                        </td>
+                                        <td>
+                                            <div class="extra-items-price">$5.00</div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#" class="action-icon d-block">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="extra-items-price">$5.00</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="border_0 padding-top">
+                                        <td class="items-details text-left">
+                                            <p class="m-0">Spicy Dip</p>
+                                        </td>
+                                        <td>
+                                            <div class="extra-items-price">$5.00</div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#" class="action-icon d-block">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="extra-items-price">$5.00</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="border_0 padding-top">
+                                        <td class="items-details text-left">
+                                            <p class="m-0">Spicy Dip</p>
+                                        </td>
+                                        <td>
+                                            <div class="extra-items-price">$5.00</div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#" class="action-icon d-block">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="extra-items-price">$5.00</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="border_0 padding-top">
+                                        <td class="items-details text-left">
+                                            <p class="m-0">Spicy Dip</p>
+                                        </td>
+                                        <td>
+                                            <div class="extra-items-price">$5.00</div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#" class="action-icon d-block">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="extra-items-price">$5.00</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </td>
                     </tr>
+                    @endforeach
+                   
                     <tr>
                         <td colspan="2">
                             <div class="coupon_box d-flex align-items-center">
@@ -210,7 +294,7 @@
         <div class="col-lg-3 col-md-4">
             <a class="btn btn-solid" href="#">Continue Shopping</a>
         </div>
-        <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4">
+        <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4 text-md-right">
             <a class="btn btn-solid" href="#">Place Order</a>
         </div>
     </div>

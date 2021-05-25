@@ -440,3 +440,29 @@
 .action-icon.d-block.mb-3 {
     margin-bottom: 11px !important;
 }
+
+
+.padding-bottom td {
+    vertical-align: top !important;
+    padding-bottom: 0;
+}
+
+.padding-top td {
+    padding-top: 0;
+}
+
+.add_on_items td {
+    padding: 0 15px;
+}
+
+.add_on_items td:first-child {
+    width: 198px;
+}
+
+.add_on_items td:last-child {
+    width: 112px;
+}
+
+.add_on_items tr:last-child td{
+    padding-bottom: 15px;
+}
