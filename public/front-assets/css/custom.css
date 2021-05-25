@@ -464,3 +464,21 @@
 .add_on_items tr:last-child td{
     padding-bottom: 15px;
 }
+
+
+.cart_img_outer{
+    width: 300px;
+    max-width: 100%;
+    height: 300px;
+    margin: auto;
+}
+
+.cart_img_outer img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.main-menu .brand-logo {
+    padding: 0;
+}

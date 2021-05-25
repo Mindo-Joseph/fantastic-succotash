@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor};
+
 class OrderController extends Controller{
     use ApiResponser;
 
@@ -19,10 +20,10 @@ class OrderController extends Controller{
 
     public function getOrdersList(Request $request){
     	$user = Auth::user();
-    	$orders = Order::with('order_products')->where('user_id', $user->id)->orderBy('id', 'DESC')->paginate(10);
+    	$orders = Order::with('products')->where('user_id', $user->id)->orderBy('id', 'DESC')->paginate(10);
     	foreach ($orders as $order) {
     		$order_item_count = 0;
-    		foreach ($order->order_products as $product) {
+    		foreach ($order->products as $product) {
     			$order_item_count += $product->quantity;
     		}
     		$order->order_item_count = $order_item_count;
