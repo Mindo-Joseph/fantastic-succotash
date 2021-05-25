@@ -271,10 +271,10 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="slide-6 no-arrow">
-                        @foreach($brands as $bnd)
+                        @foreach($brands as $brand)
                         <div>
                             <div class="logo-block">
-                                <a href="{{route('brandDetail', $bnd->id)}}"><img src="{{$bnd->image['proxy_url'] . '120/120' . $bnd->image['image_path']}}" alt=""></a>
+                                <a href="{{route('brandDetail', $brand->id)}}"><img src="{{$brand->image['image_fit'] . '120/120' . $brand->image['image_path']}}" alt=""></a>
                             </div>
                         </div>
                         @endforeach
