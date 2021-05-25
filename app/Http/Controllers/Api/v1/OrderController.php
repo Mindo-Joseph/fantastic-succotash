@@ -34,11 +34,11 @@ class OrderController extends Controller{
     	try {
     		$user = Auth::user();
     		$order_id = $request->order_id;
-	    	$order = Order::with(['products','address'])->where('user_id', $user->id)->findOrFail($order_id);
+	    	$order = Order::with(['vendors.vendor','vendors.products','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
     		$order_item_count = 0;
-    		foreach ($order->products as $product) {
-    			$order_item_count += $product->quantity;
-    		}
+    		// foreach ($order->products as $product) {
+    		// 	$order_item_count += $product->quantity;
+    		// }
     		$order->order_item_count = $order_item_count;
 	    	return $this->successResponse($order, null, 201);
     	} catch (Exception $e) {

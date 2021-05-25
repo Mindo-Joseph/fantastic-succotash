@@ -7,7 +7,7 @@ use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor};
 
 class OrderController extends FrontController{
     
@@ -46,7 +46,12 @@ class OrderController extends FrontController{
             $total_discount = 0;
             $taxable_amount = 0;
             $payable_amount = 0;
-            foreach ($cart_products->groupBy('vendor_id') as $vendor_cart_products) {
+            foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
+                $OrderVendor = new OrderVendor();
+                $OrderVendor->status = 0;
+                $OrderVendor->order_id= $order_id;
+                $OrderVendor->vendor_id= $vendor_id;
+                $OrderVendor->save();
                 foreach ($vendor_cart_products as $vendor_cart_product) {
                     $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
                     $quantity_price = 0;

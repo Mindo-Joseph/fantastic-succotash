@@ -9,8 +9,9 @@ class Order extends Model
 {
     use HasFactory;
 
-    public function products(){
-	    return $this->hasMany('App\Models\OrderProduct' , 'order_id', 'id'); 
+    
+	public function vendors(){
+	    return $this->hasMany('App\Models\OrderVendor' , 'order_id', 'id'); 
 	}
 	public function user(){
 	    return $this->hasOne('App\Models\User' , 'id', 'user_id'); 

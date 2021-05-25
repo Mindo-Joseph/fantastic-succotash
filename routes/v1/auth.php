@@ -21,15 +21,15 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('social/info', 'Api\v1\SocialController@getKeys');
         Route::post('social/login/{driver}', 'Api\v1\SocialController@login');
     });
-        Route::get('orders', 'Api\v1\OrderController@getOrdersList');
     Route::group(['middleware' => ['dbCheck', 'AppAuth', 'apilogger']], function() {
-        Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
+        Route::get('orders', 'Api\v1\OrderController@getOrdersList');
         Route::get('profile', 'Api\v1\ProfileController@profile');
         Route::get('account', 'Api\v1\ProfileController@account');
         Route::get('wishlists', 'Api\v1\ProfileController@wishlists');
         Route::get('newsLetter', 'Api\v1\ProfileController@newsLetter');
         Route::post('place/order', 'Api\v1\OrderController@postPlaceOrder');
         Route::post('update/image', 'Api\v1\ProfileController@updateAvatar');
+        Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::post('user/getAddress', 'Api\v1\ProfileController@getAddress');
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');
         Route::get('addressBook/{id?}', 'Api\v1\ProfileController@addressBook');
