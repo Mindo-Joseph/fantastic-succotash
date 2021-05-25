@@ -96,8 +96,8 @@
                                 </td>
                             </tr>
                             @foreach($product['vendor_products'] as $vendor_product)
-                            <tr>
-                                <td style="width:100px">
+                            <tr class="padding-bottom">
+                                <td style="width:100px" rowspan="2">
                                     <div class="product-img">
                                         <img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'100/70'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt="">
                                     </div>
@@ -112,41 +112,54 @@
                                 <td>
                                     <div class="number">
                                         <span class="minus"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                        <input style="text-align:center;width:50px;margin:auto;" placeholder="1" type="text" value="{{$vendor_product['quantity']}}">
+                                        <input style="text-align:center;width: 40px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="{{$vendor_product['quantity']}}">
                                         <span class="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                                     </div>
-                                    
                                 </td>
                                 <td class="text-center">
+                                    <div class="items-price mb-3">${{$vendor_product['pvariant']['quantity_price']}}</div>
+                                </td>
+                                <td class="text-right">
                                     <a href="#" class="action-icon d-block mb-3">
                                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                                     </a>
                                 </td>
-                                <td class="text-right">
-                                    <div class="items-price mb-3">${{$vendor_product['pvariant']['quantity_price']}}</div>
-                                </td>
                             </tr>
+                            @if($vendor_product['addon'])
+                                <tr>
+                                    <td colspan="5" class="border_0 p-0 border-0">
+                                        <table class="add_on_items w-100">
+                                            <thead>
+                                                <tr>
+                                                    <h6 class="m-0 pl-3"><b>Add Ons</b></h6>
+                                                </tr>
+                                            </thead>    
+                                            <tbody>
+                                                <tr class="border_0 padding-top">
+                                                    <td class="items-details text-left">
+                                                        <p class="m-0">Spicy Dip</p>
+                                                    </td>
+                                                    <td>
+                                                        <div class="extra-items-price">$5.00</div>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    
+                                                    <td class="text-center">
+                                                        <div class="extra-items-price">$5.00</div>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <a href="#" class="action-icon d-block">
+                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            @endif
                             @endforeach
-                            <tr class="border_0">
-                                <td></td>
-                                <td class="items-details text-left">
-                                    <h6>Add Ons</h6>
-                                    <p>Spicy Dip</p>
-                                </td>
-                                <td>
-                                    <div class="extra-items-price">$5.00</div>
-                                </td>
-                                <td>
-                                </td>
-                                <td class="text-center">
-                                    <a href="#" class="action-icon d-block">
-                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                    </a>
-                                </td>
-                                <td class="text-right">
-                                    <div class="extra-items-price">$5.00</div>
-                                </td>
-                            </tr>
                             <tr>
                                 <td colspan="2">
                                     <div class="coupon_box d-flex align-items-center">
@@ -155,12 +168,12 @@
                                         <button class="btn btn-outline-info">Apply</button>
                                     </div>
                                 </td> 
-                                <td>
+                                <!-- <td>
                                     <label class="d-block txt-13">Delivery Fee</label>
                                     <p class="total_amt m-0">Amount</p>
-                                </td>
+                                </td> -->
                                 <td colspan="3" class="text-right">
-                                    <label class="d-block  txt-13">$5.00</label>
+                                    <!-- <label class="d-block  txt-13">$5.00</label> -->
                                     <p class="total_amt m-0">$90.00</p>
                                 </td>
                             </tr>
