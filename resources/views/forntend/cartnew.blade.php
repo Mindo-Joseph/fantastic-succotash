@@ -95,23 +95,20 @@
                     <tr>
                         <td style="width:100px">
                             <div class="product-img">
-                                <img src="http://local.myorder.com/assets/images/burger.jpg" alt="">
+                                <img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'100/70'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt="">
                             </div>
                         </td>
                         <td class="items-details text-left">
-                            <h4>Ultimate Saving Bucket</h4>
+                            <h4>{{$vendor_product['product']['sku']}}</h4>
                             <label><span>Size:</span> Regular</label>
-                            <h6>Add Ons</h6>
-                            <p>Spicy Dip</p>
                         </td>
                         <td>
-                            <div class="items-price mb-3">$40.00</div>
-                            <div class="extra-items-price">$5.00</div>
+                            <div class="items-price mb-3">${{$vendor_product['pvariant']['price']}}</div>
                         </td>
                         <td>
                             <div class="number">
                                 <span class="minus"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                <input style="text-align:center;width:50px;margin:auto;" placeholder="1" type="text">
+                                <input style="text-align:center;width:50px;margin:auto;" placeholder="1" type="text" value="{{$vendor_product['quantity']}}">
                                 <span class="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                             </div>
                             
@@ -120,16 +117,32 @@
                             <a href="#" class="action-icon d-block mb-3">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </a>
+                        </td>
+                        <td class="text-right">
+                            <div class="items-price mb-3">${{$vendor_product['pvariant']['quantity_price']}}</div>
+                        </td>
+                    </tr>
+                    @endforeach
+                    <tr class="border_0">
+                        <td></td>
+                        <td class="items-details text-left">
+                            <h6>Add Ons</h6>
+                            <p>Spicy Dip</p>
+                        </td>
+                        <td>
+                            <div class="extra-items-price">$5.00</div>
+                        </td>
+                        <td>
+                        </td>
+                        <td class="text-center">
                             <a href="#" class="action-icon d-block">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </a>
                         </td>
                         <td class="text-right">
-                            <div class="items-price mb-3">$40.00</div>
                             <div class="extra-items-price">$5.00</div>
                         </td>
                     </tr>
-                    @endforeach
                     <tr>
                         <td colspan="2">
                             <div class="coupon_box d-flex align-items-center">

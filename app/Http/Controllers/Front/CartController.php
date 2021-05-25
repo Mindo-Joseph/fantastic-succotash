@@ -32,7 +32,7 @@ class CartController extends FrontController
         $countries = Country::get();
         $cartData = $this->getCart($cart);
         $navCategories = $this->categoryNav($langId);
-        return view('forntend.cart')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries]);
+        return view('forntend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries]);
     }
     public function postAddToCart(Request $request, $domain = ''){
         try {

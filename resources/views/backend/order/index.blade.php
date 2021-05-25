@@ -1,12 +1,11 @@
 @extends('layouts.vertical', ['title' => 'Orders'])
 @section('content')    
 <style type="text/css">
-    
-.ellipsis{
-    white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+    .ellipsis{
+        white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 </style>
     <div class="container-fluid">
         <div class="row">
