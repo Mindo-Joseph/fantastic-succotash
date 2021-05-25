@@ -74,14 +74,14 @@
             <div class="row">
                 <div class="col">
                     <div class="product-4 product-m no-arrow">
-                        @foreach($vendors as $vend)
+                        @foreach($vendors as $vendor)
                         <div class="product-box">
                             <div class="img-wrapper">
                                 <div class="front">
-                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->logo['proxy_url'] . '300/300' . $vend->logo['image_path']}}"></a>
+                                    <a href="{{route('vendorDetail', $vendor->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vendor->logo['proxy_url'] . '300/300' . $vendor->logo['image_path']}}"></a>
                                 </div>
                                 <div class="back">
-                                    <a href="{{route('vendorDetail', $vend->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vend->logo['proxy_url'] . '300/300' . $vend->logo['image_path']}}"></a>
+                                    <a href="{{route('vendorDetail', $vendor->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vendor->logo['proxy_url'] . '300/300' . $vendor->logo['image_path']}}"></a>
                                 </div>
                                 <!-- <div class="cart-info cart-wrap">
                                     <button data-toggle="modal" data-target="#addtocart" title="Add to cart">
@@ -103,9 +103,9 @@
                                 <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
                                 </div>
                                 <a href="#">
-                                    <h6>{{$vend->name}}</h6>
+                                    <h6>{{$vendor->name}}</h6>
                                 </a>
-                                <!-- <h4>{{$vend->name}}</h4>
+                                <!-- <h4>{{$vendor->name}}</h4>
                                 <ul class="color-variant">
                                     <li class="bg-light0"></li>
                                     <li class="bg-light1"></li>
@@ -122,7 +122,6 @@
     </section>
     <!-- Product slider end -->
 
-
     <section class="section-b-space">
         <div class="container">
             <div class="row multiple-slider">
@@ -130,27 +129,27 @@
                     <div class="theme-card">
                         <h5 class="title-border">New Products</h5>
                         <div class="offer-slider slide-1">
-                            @foreach($newProducts as $newProds)
+                            @foreach($newProducts as $newProduct)
                                 <div>
-                                @foreach($newProds as $new)
+                                @foreach($newProduct as $product)
                                     <?php $imagePath = '';
-                                    foreach ($new['media'] as $k => $v) {
+                                    foreach ($product['media'] as $k => $v) {
                                         $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                                     } ?>
                                     <div class="media">
-                                        <a href="{{route('productDetail', $new['sku'])}}"><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
+                                        <a href="{{route('productDetail', $product['sku'])}}"><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                         <div class="media-body align-self-center">
                                             <div class="rating">
                                                 @for($i = 1; $i < 6; $i++)
                                                     <i class="fa fa-star"></i>
                                                 @endfor
                                             </div>
-                                            <a href="{{route('productDetail', $new['sku'])}}">
-                                                <h6>{{ !empty($new['translation']) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
+                                            <a href="{{route('productDetail', $product['sku'])}}">
+                                                <h6>{{ !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku']}}</h6>
                                             </a>
                                             <h4>
-                                                <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                                {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
+                                                <?php $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier']; ?>
+                                                {{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}} </h4>
                                         </div>
                                     </div>
                                 @endforeach
@@ -163,27 +162,27 @@
                     <div class="theme-card">
                         <h5 class="title-border">feature product</h5>
                         <div class="offer-slider slide-1">
-                            @foreach($featuredProducts as $featured)
+                            @foreach($featuredProducts as $featuredProduct)
                                 <div>
-                                @foreach($featured as $new)
+                                @foreach($featuredProduct as $product)
                                     <?php $imagePath = '';
-                                    foreach ($new['media'] as $k => $v) {
+                                    foreach ($product['media'] as $k => $v) {
                                         $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                                     } ?>
                                     <div class="media">
-                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
+                                        <a href="{{route('productDetail', $product['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                         <div class="media-body align-self-center">
                                             <div class="rating">
                                                 @for($i = 1; $i < 6; $i++)
                                                     <i class="fa fa-star"></i>
                                                 @endfor
                                             </div>
-                                            <a href="{{route('productDetail', $new['sku'])}}">
-                                                <h6>{{ !empty($new['translation']) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
+                                            <a href="{{route('productDetail', $product['sku'])}}">
+                                                <h6>{{ !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku']}}</h6>
                                             </a>
                                             <h4>
-                                                <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                                {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
+                                                <?php $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier']; ?>
+                                                {{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}} </h4>
                                         </div>
                                     </div>
                                 @endforeach
@@ -196,27 +195,27 @@
                     <div class="theme-card">
                         <h5 class="title-border">best seller</h5>
                         <div class="offer-slider slide-1">
-                            @foreach($newProducts as $newProds)
+                            @foreach($newProducts as $newProduct)
                                 <div>
-                                @foreach($newProds as $new)
+                                @foreach($newProduct as $product)
                                     <?php $imagePath = '';
-                                    foreach ($new['media'] as $k => $v) {
+                                    foreach ($product['media'] as $k => $v) {
                                         $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                                     } ?>
                                     <div class="media">
-                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
+                                        <a href="{{route('productDetail', $product['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                         <div class="media-body align-self-center">
                                             <div class="rating">
                                                 @for($i = 1; $i < 6; $i++)
                                                     <i class="fa fa-star"></i>
                                                 @endfor
                                             </div>
-                                            <a href="{{route('productDetail', $new['sku'])}}">
-                                                <h6>{{ !empty($new['translation']) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
+                                            <a href="{{route('productDetail', $product['sku'])}}">
+                                                <h6>{{ !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku']}}</h6>
                                             </a>
                                             <h4>
-                                                <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                                {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
+                                                <?php $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier']; ?>
+                                                {{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}} </h4>
                                         </div>
                                     </div>
                                 @endforeach
@@ -229,27 +228,27 @@
                     <div class="theme-card">
                         <h5 class="title-border">on sale</h5>
                         <div class="offer-slider slide-1">
-                            @foreach($onSaleProducts as $SaleProds)
+                            @foreach($onSaleProducts as $onSaleProduct)
                                 <div>
-                                @foreach($SaleProds as $new)
+                                @foreach($onSaleProduct as $product)
                                     <?php $imagePath = '';
-                                    foreach ($new['media'] as $k => $v) {
+                                    foreach ($product['media'] as $k => $v) {
                                         $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                                     } ?>
                                     <div class="media">
-                                        <a href="{{route('productDetail', $new['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
+                                        <a href="{{route('productDetail', $product['sku'])}} "><img style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                         <div class="media-body align-self-center">
                                             <div class="rating">
                                                 @for($i = 1; $i < 6; $i++)
                                                     <i class="fa fa-star"></i>
                                                 @endfor
                                             </div>
-                                            <a href="{{route('productDetail', $new['sku'])}}">
-                                                <h6>{{ !empty($new['translation']) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
+                                            <a href="{{route('productDetail', $product['sku'])}}">
+                                                <h6>{{ !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku']}}</h6>
                                             </a>
                                             <h4>
-                                                <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                                {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
+                                                <?php $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier']; ?>
+                                                {{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}} </h4>
                                         </div>
                                     </div>
                                 @endforeach

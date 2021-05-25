@@ -62,7 +62,6 @@ class BaseController extends Controller
     }*/
 
     public function printTree($tree, $from = 'category', $html = '') {
-        
         if(!is_null($tree) && count($tree) > 0) {
             $this->htmlData .='<ol class="dd-list">';
             foreach($tree as $node) {
@@ -71,16 +70,17 @@ class BaseController extends Controller
                 if($from == 'category'){
                     $this->htmlData .='<div class="dd-handle dd3-handle"></div>';
                 }
-                $this->htmlData .='<div class="dd3-content">'.$node["slug"].'<span class="inner-div text-right">';
+                $icon = $node['icon']['proxy_url'].'30/30'.$node['icon']['image_path'];
+                $this->htmlData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node["slug"].'<span class="inner-div text-right">';
 
-                $status = 2; $icon = 'mdi-lock-open-variant';
-                $title = 'Block';
-                $askMessage = "return confirm('Are you sure? You want to block category.')";
-                if($node["status"] == 2){
+                $status = 2; //$icon = 'mdi-lock-open-variant';
+                $title = 'Delete'; $icon = 'mdi-delete';
+                $askMessage = "return confirm('Are you sure? You want to delete category.')";
+                /*if($node["status"] == 2){
                     $askMessage = "return confirm('Are you sure? You want to unblock category.')";
                     $status = 1; $icon = 'mdi-lock'; 
                     $title = 'Unblock';
-                }
+                }*/
 
                 if($from == 'category'){
                     if($node["is_core"] == 1){
