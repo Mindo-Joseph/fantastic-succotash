@@ -16,10 +16,12 @@ class FrontController extends Controller
         $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
                         ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')
                         ->where('categories.id', '>', '1')
+                        ->where('categories.is_visible', 1)
                         ->where('categories.status', '!=', $this->field_status)
                         ->where('cts.language_id', $lang_id)
-                        ->orderBy('categories.parent_id', 'asc')
-                        ->orderBy('categories.position', 'asc')->get();
+                        ->orderBy('categories.position', 'asc')
+                        ->orderBy('categories.id', 'asc')
+                        ->orderBy('categories.parent_id', 'asc')->get();
         if($categories){
             $categories = $this->buildTree($categories->toArray());
         }
@@ -65,7 +67,7 @@ class FrontController extends Controller
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = Session::get('currencyMultiplier');
+                    $value->variant[$k]->multiplier = Session::get('currencyMultiplier');
                 }
             }
         }

@@ -46,7 +46,8 @@
     <div class="container">
         <div class="checkout-page">
             <div class="checkout-form">
-                <form method="post" action="{{route('user.placeorder')}}"> @csrf
+                <form method="post" action="{{route('user.placeorder')}}">
+                    @csrf
                     <div class="row">
                         <div class="col-lg-6 col-sm-12 col-xs-12">
                             <div class="checkout-title">
@@ -68,8 +69,8 @@
                                 @forelse($addresses as $address)
                                     <div class="row">
                                         <div>
-                                            <input type="radio" name="address_id" id="one" value="male" checked="checked">
-                                            <label for="one">{{$address->address.' '.$address->street.' '.$address->city.' '.$address->state.' '.$address->pincode}}</label>
+                                            <input type="radio" name="address_id" id="address" value="{{$address->id}}" checked="checked" required="">
+                                            <label for="address">{{$address->address.' '.$address->street.' '.$address->city.' '.$address->state.' '.$address->pincode}}</label>
                                         </div>
                                     </div>
                                 @empty
@@ -122,8 +123,10 @@
                                         <span class="text-danger" id="type_error"></span>
                                     </div>
                                     <div class="col-md-6"></div>
-                                    <button type="button" class="btn btn-solid mt-3" id="save_address">Save Address</button>
-                                    <button type="button" class="btn btn-solid black-btn me-3" id="cancel_save_address_btn">black</button>
+                                    <div class="col-md-12 mt-3">
+                                        <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
+                                        <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -161,7 +164,6 @@
                                     </ul>
                                     <ul class="total">
                                         <li>Total <span class="count" id="total_payable_amount"></span></li>
-                                        <input type="hidden" name="total_amount"  value="620" placeholder="" id="total_payable_amount_input">
                                     </ul>
                                 </div>
                                 <div class="payment-box">

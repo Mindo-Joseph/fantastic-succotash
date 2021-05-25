@@ -22,7 +22,6 @@ class CreateUserAddressesTable extends Migration
             $table->string('state', 60)->nullable();
             $table->decimal('latitude', 15, 12)->nullable();
             $table->decimal('longitude', 16, 12)->nullable();
-            $table->bigInteger('country_id')->unsigned()->nullable();
             $table->string('pincode', 60)->nullable();
             $table->tinyInteger('is_primary')->default('0')->comment('1 for yes, 0 for no');
             $table->tinyInteger('type')->default('1')->comment('1 - home', '2 - office', '3 - other');
@@ -30,7 +29,6 @@ class CreateUserAddressesTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
         });
     }
 

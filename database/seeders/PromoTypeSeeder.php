@@ -21,7 +21,7 @@ class PromoTypeSeeder extends Seeder
             ),
             array(
                 'id' => 2,
-                'title' => 'Fixed Ammount',
+                'title' => 'Fixed Amount',
                 'status' => '1'
             ),
         ); 

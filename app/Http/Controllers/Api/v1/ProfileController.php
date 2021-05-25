@@ -51,7 +51,6 @@ class ProfileController extends BaseController
 		    	}
 	        }
     	}
-
     	return response()->json([
         	'data' => $wishList
         ]);
@@ -89,36 +88,6 @@ class ProfileController extends BaseController
         	'data' => $product->id,
             'message' => 'Product has been added in wishlist.',
         ]);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function addressBook($id = '')
-    {
-        $address = UserAddress::where('user_id', Auth::user()->id);
-
-        if($id > 0){
-            $address = $address->where('id', $id);
-        }
-
-        $address = $address->orderBy('is_primary', 'desc')->orderBy('id', 'desc')->get();
-
-        return response()->json([
-            'data' => $address,
-        ]);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function orders(Request $request, $domain = '')
-    {
-    	
     }
 
     /**
@@ -335,62 +304,18 @@ class ProfileController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function userAddress(Request $request, $addressId = 0)
+    public function addressBook($id = '')
     {
-        $validator = Validator::make($request->all(), [
-            'address' => 'required',
-            'street' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'latitude' => 'required',
-            'longitude' => 'required',
-            'country_id' => 'required',
-            'pincode' => 'required|string|between:5,6',
-        ]);
+        $address = UserAddress::where('user_id', Auth::user()->id);
 
-        if($validator->fails()){
-            foreach($validator->errors()->toArray() as $error_key => $error_value){
-                $errors['error'] = $error_value[0];
-                return response()->json($errors, 422);
-            }
+        if($id > 0){
+            $address = $address->where('id', $id);
         }
 
-        if($request->has('is_primary') && $request->is_primary == 1){
-            $add = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
-        }
-
-        $message = "Address updated successfully.";
-
-        $address = UserAddress::where('id', $addressId)->where('user_id', Auth::user()->id)->first();
-        if(!$address){
-            $message = "Address added successfully.";
-            $address = new UserAddress();
-            $address->user_id = Auth::user()->id;
-            $address->is_primary = $request->has('is_primary') ? 1 : 0;
-        }
-        $addressType = 3;
-        if($request->has('address_type')){
-            if($request->address_type == 'home' || $request->address_type == 'Home'){
-                $addressType = 1;
-            }elseif($request->address_type == 'office' || $request->address_type == 'Office'){
-                $addressType = 2;
-            }
-        }
-        
-        $address->address = $request->address;
-        $address->street = $request->street;
-        $address->city = $request->city;
-        $address->state = $request->state;
-        $address->latitude = $request->latitude;
-        $address->longitude = $request->longitude;
-        $address->country_id = $request->country_id;
-        $address->pincode = $request->pincode;
-        $address->type = $addressType;
-        
-        $address->save();
+        $address = $address->orderBy('is_primary', 'desc')
+                    ->orderBy('id', 'desc')->get();
 
         return response()->json([
-            'message' => $message,
             'data' => $address,
         ]);
     }
@@ -400,16 +325,59 @@ class ProfileController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    public function userAddress(Request $request, $addressId = 0)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'address' => 'required',
+                'country' => 'required',
+            ]);
+            $user = Auth::user();
+
+            if($validator->fails()){
+                foreach($validator->errors()->toArray() as $error_key => $error_value){
+                    $errors['error'] = $error_value[0];
+                    return response()->json($errors, 422);
+                }
+            }
+
+            if($request->has('is_primary') && $request->is_primary == 1){
+                $add = UserAddress::where('user_id', $user->id)->update(['is_primary' => 0]);
+            }
+
+            $address = UserAddress::where('id', $addressId)->where('user_id', $user->id)->first();
+            $message = "Address updated successfully.";
+            if(!$address){
+                $message = "Address added successfully.";
+                $address = new UserAddress();
+                $address->user_id = $user->id;
+                $address->is_primary = $request->has('is_primary') ? 1 : 0;
+            }
+            foreach ($request->only('address', 'street', 'city', 'state', 'latitude', 'longitude', 'pincode', 'phonecode', 'country_code', 'country') as $key => $value) {
+                $address[$key] = $value;
+            }
+            $request->type == ($request->has('address_type') && $request->address_type < 3) ? $request->address_type : 3;
+            
+            $address->save();
+
+            return $this->successResponse($address, $message);
+        }catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**     Update primary address         */
     public function primaryAddress($addressId = 0)
     {
         try {
-            $address = UserAddress::where('id', $addressId)->where('user_id', Auth::user()->id)->first();
+            $user = Auth::user();
+            $address = UserAddress::where('id', $addressId)->where('user_id', $user->id)->first();
 
             if(!$address){
                 return $this->errorResponse('Address not found.', 404);
             }
-            $add = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
-            $add = UserAddress::where('user_id', Auth::user()->id)->where('id', $addressId)->update(['is_primary' => 1]);
+            $add = UserAddress::where('user_id', $user->id)->update(['is_primary' => 0]);
+            $add = UserAddress::where('user_id', $user->id)->where('id', $addressId)->update(['is_primary' => 1]);
 
             return $this->successResponse('', 'Address is set as primary address successfully.');
         } catch (Exception $e) {

@@ -1,6 +1,5 @@
 <div class="row">
     <div class="col-md-12">
-        <h4 class="header-title mb-3"></h4>
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6" id="imageInput">
@@ -34,7 +33,6 @@
                 <div class="form-group">
                     {!! Form::label('title', 'Promo Type',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control promoTypeField" name="promo_type_id">
-                        <option selected>select..</option>
                         @foreach($promoTypes as $key => $types)
                         <option value="{{$types->id}}" @if(isset($promo->id) && $promo->id > 0 && $types->id == $promo->promo_type_id) selected @endif >{{$types->title}}</option>
                         @endforeach
@@ -156,7 +154,7 @@
                 <div class="form-group">
                     {!! Form::label('title', 'Apply Restriction On',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control inlineRadioOptions" name="restriction_on" for="{{(isset($promo->id) && $promo->id > 0) ? 'edit' : 'add'}}">
-                        <option value=''>select..</option>
+                        <option value=''>select</option>
                         <option value='0' @if($promo->restriction_on == 0) selected @endif>Products</option>
                         <option value='1' @if($promo->restriction_on == 1) selected @endif>Vendors</option>
                     </select>

@@ -10,11 +10,8 @@
                 <div class="modal-body" >
                     <div class="row">
                         <div class="col-md-12">
-                            <h4 class="header-title mb-3"></h4>
-
                             <div class="row mb-2">
-                                <div class="col-md-1"></div>
-                                <div class="col-md-3">
+                                <div class="offset-md-1 col-md-3">
                                     <input type="file" accept="image/*" data-plugins="dropify" name="logo" class="dropify" data-default-file="" />
                                     <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
                                 </div> 

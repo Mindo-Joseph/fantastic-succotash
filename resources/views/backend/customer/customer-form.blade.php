@@ -2,7 +2,7 @@
 
     <div class="col-md-6">
         <div class="card-box">
-            <h4 class="header-title mb-3"></h4>
+            
             @csrf
 
             <div class="row">

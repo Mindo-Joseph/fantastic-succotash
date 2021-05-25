@@ -14,14 +14,28 @@ class AlterOrdersTableOrderNo extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('item_count');
-            $table->dropColumn('tax_rate_id');
-            $table->dropColumn('vendor_count');
-            $table->dropColumn('promocode_id');
-            $table->dropColumn('payment_status');
-            $table->dropColumn('recipient_name');
-            $table->dropColumn('recipient_email');
-            $table->dropColumn('recipient_number');
+            if (Schema::hasColumn('orders', 'item_count')) {
+                $table->dropColumn('item_count');
+            }
+            if (Schema::hasColumn('orders', 'tax_rate_id')) {
+                $table->dropColumn('tax_rate_id');
+            }
+            if (Schema::hasColumn('orders', 'vendor_count')) {
+                $table->dropColumn('vendor_count');
+            }
+            if (Schema::hasColumn('orders', 'promocode_id')) {
+                $table->dropColumn('promocode_id');
+            }
+            if (Schema::hasColumn('orders', 'payment_status')) {
+                $table->dropColumn('payment_status');
+            }
+            if (Schema::hasColumn('orders', 'recipient_name')) {
+                $table->dropColumn('recipient_name');
+            }if (Schema::hasColumn('orders', 'recipient_email')) {
+                $table->dropColumn('recipient_email');
+            }if (Schema::hasColumn('orders', 'recipient_number')) {
+                $table->dropColumn('recipient_number');
+            }
         });
         Schema::table('orders', function (Blueprint $table) {
             $table->string('created_by')->after('id')->nullable();
@@ -35,8 +49,7 @@ class AlterOrdersTableOrderNo extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down(){
         Schema::table('orders', function (Blueprint $table) {
             $table->dropColumn('order_number')->nullable();
         });

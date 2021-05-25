@@ -133,14 +133,14 @@ $(document).ready(function() {
             },
             success: function(response) {
                 cartHeader();
-                Swal.fire({
-                  timer: 1500,
-                  icon: 'success',
-                  position: 'center',
-                  allowOutsideClick:false,
-                  showConfirmButton: true,
-                  title: response.message,
-                });
+                // Swal.fire({
+                //   timer: 1500,
+                //   icon: 'success',
+                //   position: 'center',
+                //   allowOutsideClick:false,
+                //   showConfirmButton: true,
+                //   title: response.message,
+                // });
             },
             error: function(data) {
                 console.log(data);

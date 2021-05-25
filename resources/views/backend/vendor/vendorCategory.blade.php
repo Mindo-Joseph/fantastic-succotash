@@ -32,6 +32,22 @@
                 </div>
             </div>
         </div>
+        <div class="row mb-1">
+            <div class="col-sm-12">
+                <div class="text-sm-left">
+                    @if (\Session::has('success'))
+                    <div class="alert alert-success">
+                        <span>{!! \Session::get('success') !!}</span>
+                    </div>
+                    @endif
+                    @if (\Session::has('error_delete'))
+                    <div class="alert alert-danger">
+                        <span>{!! \Session::get('error_delete') !!}</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
         <!--<div class="row mb-1">
             <div class="col-sm-12">
                 <div class="text-sm-left">
@@ -88,8 +104,10 @@
                                                 <h4 class="mb-4 "> Categories</h4>
                                             </div>
                                             <div class="col-sm-4 text-right">
+                                                @if($vendor->add_category == 1)
                                                 <button class="btn btn-info waves-effect waves-light text-sm-right openCategoryModal" dataid="0" is_vendor="1"><i class="mdi mdi-plus-circle mr-1"></i> Add
                                                 </button>
+                                                @endif
                                             </div> 
                                             <div class="col-md-12">
                                                 <div class="row mb-2">
@@ -147,8 +165,8 @@
                                                                 <td>
                                                                     <a class="action-icon editAddonBtn" dataid="{{$set->id}}" href="javascript:void(0);" > <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
 
-                                                                    <a class="action-icon deleteAddon" dataid="{{$set->id}}" href="javascript:void(0);"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
-                                                                    <form action="{{route('addon.destroy', $set->id)}}" method="POST"  style="display: none;" id="addonDeleteForm{{$set->id}}">
+                                                                    <a class="action-icon deleteAddon" dataid="{{$set->id}}" href="javascript:void(0);"> <i class="mdi mdi-delete"></i></a>
+                                                                    <form action="{{route('addon.destroy', $set->id)}}" method="POST" style="display: none;" id="addonDeleteForm{{$set->id}}">
                                                                         @csrf
                                                                         @method('DELETE')
                                                                         
@@ -204,7 +222,7 @@
                                         </tr>
                                         <tr>
                                             @foreach($languages as $langs)
-                                                <td style="min-width: 200px;">
+                                                <td>
                                                     {!! Form::hidden('language_id[]', $langs->language_id) !!}
                                                     <input type="text" name="title[]" value="" class="form-control" @if($langs->is_primary == 1) required @endif>
                                                 </td>

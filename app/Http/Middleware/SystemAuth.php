@@ -23,14 +23,12 @@ class SystemAuth
     public function handle($request, Closure $next)
     {
         $header = $request->header();
-        
         $user = new User();
         $systemUser = '';
 
         if (isset($header['authorization']) && Token::check($header['authorization'][0], 'royoorders-jwt'))
         {
             $token = $header['authorization'][0];
-
             $tokenBlock = BlockedToken::where('token', $token)->first();
 
             if($tokenBlock)
@@ -40,10 +38,9 @@ class SystemAuth
             }
 
             $user = User::where('auth_token', $token)->first();
-
             if(!$user)
             {
-                return response()->json(['error' => 'Invalid Session', 'message' => 'Invalid Token or session has been expired.'], 401);
+                return response()->json(['error' => 'Invalid Session', 'message' => 'Session has been expired.'], 401);
                 abort(404);
             }
         }else if(!isset($header['systemuser'])){
@@ -55,10 +52,11 @@ class SystemAuth
             if(empty($systemUser)){
                 return response()->json(['error' => 'System id should not be empty.'], 404);
             }
-            $user = $user->where('system_id', $systemUser)->first();
-            if(!$user){
-                return response()->json(['error' => 'System user not found.'], 404);
-            }
+            $user->system_user = $systemUser;
+            // $user = $user->where('system_id', $systemUser)->first();
+            // if(!$user){
+            //     return response()->json(['error' => 'System user not found.'], 404);
+            // }
         }
         $languages = ClientLanguage::where('is_primary', 1)->first();
         $primary_cur = ClientCurrency::where('is_primary', 1)->first();
@@ -79,7 +77,6 @@ class SystemAuth
                 $currency_id = $checkCur->currency_id;
             }
         }
-
         $user->language = $language_id;
         $user->currency = $currency_id;
 

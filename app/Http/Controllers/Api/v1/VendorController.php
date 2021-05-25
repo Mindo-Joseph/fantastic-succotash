@@ -59,15 +59,19 @@ class VendorController extends BaseController
                         $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                         $q->groupBy('product_id');
                     },
-                ])
-                ->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating')
-                ->where('vendor_id', $vid)
-                ->where('is_live', 1)->paginate($paginate);
+                ])->join('product_categories as pc', 'pc.product_id', 'products.id')
+                ->whereNotIn('pc.category_id', function($qr) use($vid){ 
+                            $qr->select('category_id')->from('vendor_categories')
+                                ->where('vendor_id', $vid)->where('status', 0);
+                })
+                ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id')
+                ->where('products.vendor_id', $vid)
+                ->where('products.is_live', 1)->paginate($paginate);
         
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }
@@ -180,7 +184,7 @@ class VendorController extends BaseController
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }

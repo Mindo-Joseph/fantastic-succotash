@@ -1,7 +1,7 @@
 <div class="modal fade bd-example-modal-lg addModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content p-3">
-            <div class="modal-header">
+            <div class="modal-header p-0 mb-3 border-0">
                 <h4 class="modal-title">Add Celebrity</h4><br>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
@@ -81,7 +81,7 @@
 
                 </div>
 
-                <div class="modal-footer">
+                <div class="modal-footer border-0">
                     <button type="submit" class="btn btn-info waves-effect waves-light submitAddForm">Submit</button>
                 </div>
             </form>

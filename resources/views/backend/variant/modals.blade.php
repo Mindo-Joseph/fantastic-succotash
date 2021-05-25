@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
+                                        {!! Form::label('title', 'Select List',['class' => 'control-label']) !!}
                                         <select class="form-control" name="type">
                                             <option value="1">DropDown</option>
                                             <option value="2">Color</option>
@@ -95,7 +95,7 @@
                                         </tr>
                                         <tr>
                                            @foreach($languages as $langs)
-                                            <td style="min-width: 200px;">
+                                            <td>
                                                 {!! Form::hidden('language_id[]', $langs->langId) !!}
                                                 {!! Form::text('title[]', null, ['class' => 'form-control']) !!}
                                             </td>
@@ -122,7 +122,7 @@
                                                 {!! Form::text('hexacode[]', null, ['class' => 'form-control', 'placeholder' => '#cccccc']) !!}
                                             </td>
                                            @foreach($languages as $langs)
-                                            <td style="min-width: 200px;">
+                                            <td>
                                                 <input type="text" name="opt_color_{{$langs->langId}}" class="form-control">
                                             </td>
                                             @endforeach 

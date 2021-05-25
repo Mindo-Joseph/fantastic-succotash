@@ -58,7 +58,7 @@ class AddonSetController extends BaseController
 
             foreach ($request->language_id as $lk => $lang) {
                 $setTrans[] = [
-                    'title' => $request->title{$lk},
+                    'title' => $request->title[$lk],
                     'addon_id' => $addOn->id,
                     'language_id' => $lang,
                 ];

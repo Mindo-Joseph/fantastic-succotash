@@ -1,19 +1,21 @@
 <?php
 
 namespace App\Http\Controllers\Front;
-
+use DB;
 use Auth;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency};
 
 class OrderController extends FrontController{
     
     public function getOrderSuccessPage(Request $request){
-        $order = Order::with('products')->findOrfail($request->order_id);
-        return view('forntend.order.success', compact('order'));
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+        $order = Order::with(['products', 'address'])->findOrfail($request->order_id);
+        return view('forntend.order.success', compact('order','navCategories'));
     }
     public function placeOrder(Request $request, $domain = ''){
         if ($request->input("payment-group") == '1') {
@@ -26,44 +28,81 @@ class OrderController extends FrontController{
     }
 
     public function orderSave($request, $paymentStatus, $paymentMethod){
-        $name = $request->first_name;
-        if (!$request->last_name == null) {
-            $name = $name . " " . $request->last_name;
-        }
-        $cart = Cart::where('user_id', Auth::user()->id)->first();
-        $order = new Order;
-        $order->recipient_name = $name;
-        $order->user_id = Auth::user()->id;
-        $order->order_number = generateOrderNo();
-        $order->payment_method = $paymentMethod;
-        $order->payment_status = $paymentStatus;
-        $order->address_id = $request->address_id;
-        $order->recipient_number = $request->phone;
-        $order->recipient_email = $request->email_address;
-        $order->save();
-        $cartProducts = CartProduct::where('cart_id', $cart->id)->get()->toArray();
-        foreach ($cartProducts as $cartpro) {
-            $productName = Product::where('id', $cartpro['product_id'])->first()->toArray();
-            $orderProducts = new OrderProduct;
-            $orderProducts->order_id = $order->id;
-            $orderProducts->quantity = $cartpro['quantity'];
-            $orderProducts->vendor_id = $cartpro['vendor_id'];
-            $orderProducts->product_name = $productName['sku'];
-            $orderProducts->product_id = $cartpro['product_id'];
-            $orderProducts->created_by = $cartpro['created_by'];
-            $orderProducts->variant_id = $cartpro['variant_id'];
-            $orderProducts->is_tax_applied = $cartpro['is_tax_applied'];
-            $orderProducts->save();
-            $cartAddon = CartAddon::where('cart_product_id', $cartpro['id'])->get()->toArray();
-            foreach ($cartAddon as $cartadd) {
-                $orderAddon = new OrderProductAddon;
-                $orderAddon->order_product_id = $orderProducts->id;
-                $orderAddon->addon_id = $cartadd['addon_id'];
-                $orderAddon->option_id = $cartadd['option_id'];
-                $orderAddon->save();
+        try {
+           DB::beginTransaction();
+            $user = Auth::user();
+            $currency_id = Session::get('customerCurrency');
+            $language_id = Session::get('customerLanguage');
+            $cart = Cart::where('user_id', $user->id)->first();
+            $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
+            $order = new Order;
+            $order->user_id = $user->id;
+            $order->order_number = generateOrderNo();
+            $order->payment_method = $paymentMethod;
+            $order->address_id = $request->address_id;
+            $order->save();
+            $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
+            $total_amount = 0;
+            $total_discount = 0;
+            $taxable_amount = 0;
+            $payable_amount = 0;
+            foreach ($cart_products->groupBy('vendor_id') as $vendor_cart_products) {
+                foreach ($vendor_cart_products as $vendor_cart_product) {
+                    $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
+                    $quantity_price = 0;
+                    $divider = (empty($vendor_cart_product->doller_compare) || $vendor_cart_product->doller_compare < 0) ? 1 : $vendor_cart_product->doller_compare;
+                    $price_in_currency = $variant->price / $divider;
+                    $price_in_dollar_compare = $price_in_currency * $clientCurrency->doller_compare;
+                    $quantity_price = $price_in_dollar_compare * $vendor_cart_product->quantity;
+                    $payable_amount = $payable_amount + $quantity_price;
+                    $product_taxable_amount = 0;
+                    $product_payable_amount = 0;
+                    foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
+                        $rate = round($tax_rate_detail->tax_rate);
+                        $tax_amount = ($price_in_dollar_compare * $rate) / 100;
+                        $product_tax = $quantity_price * $rate / 100;
+                        $product_taxable_amount += $taxable_amount + $product_tax;
+                        $payable_amount = $payable_amount + $product_tax;
+                    }
+                    $total_amount += $variant->price;
+                    $taxable_amount += $product_taxable_amount;
+                    $order_product = new OrderProduct;
+                    $order_product->order_id = $order->id;
+                    $order_product->price = $variant->price;
+                    $order_product->quantity = $vendor_cart_product->quantity;
+                    $order_product->vendor_id = $vendor_cart_product->vendor_id;
+                    $order_product->product_id = $vendor_cart_product->product_id;
+                    $order_product->created_by = $vendor_cart_product->created_by;
+                    $order_product->variant_id = $vendor_cart_product->variant_id;
+                    $order_product->product_name = $vendor_cart_product->product->sku;
+                    if($vendor_cart_product->product->pimage){
+                        $order_product->image = $vendor_cart_product->product->pimage->first() ? $vendor_cart_product->product->pimage->first()->path : '';
+                    }
+                    $order_product->save();
+                    $cart_addons = CartAddon::where('cart_product_id', $vendor_cart_product->id)->get();
+                    if($cart_addons){
+                        foreach ($cart_addons as $cart_addon) {
+                            $orderAddon = new OrderProductAddon;
+                            $orderAddon->addon_id = $cart_addon->addon_id;
+                            $orderAddon->option_id = $cart_addon->option_id;
+                            $orderAddon->order_product_id = $order_product->id;
+                            $orderAddon->save();
+                        }
+                        CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
+                    }
+                }
             }
+            $order->total_amount = $total_amount;
+            $order->total_discount = $total_discount;
+            $order->taxable_amount = $taxable_amount;
+            $order->payable_amount = $payable_amount;
+            $order->save();
+            CartProduct::where('cart_id', $cart->id)->delete();
+            DB::commit();
+            return $order; 
+        } catch (Exception $e) {
+            DB::rollback();
         }
-        return $order;
     }
     
     public function makePayment(Request $request){

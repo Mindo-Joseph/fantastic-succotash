@@ -89,13 +89,13 @@ class VariantController extends BaseController
                 foreach($request->language_id as $k => $v) {
 
                     /*$varOptTrans = new VariantOptionTranslation();
-                    $varOptTrans->title = $request->opt_color{$k}[$key];
+                    $varOptTrans->title = $request->opt_color[$k][$key];
                     $varOptTrans->variant_option_id = $varOpt->id;
                     $varOptTrans->language_id = $v;
                     $varOptTrans->save();*/
 
                     $data[] = [
-                        'title' => $request->opt_color{$k}[$key],
+                        'title' => $request->opt_color[$k][$key],
                         'variant_option_id' => $varOpt->id,
                         'language_id' => $v
                     ];

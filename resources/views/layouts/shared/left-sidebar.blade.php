@@ -156,22 +156,22 @@
                     </a>
                 </li>
                 
-                <li>   
+                <!-- <li>   
                     <a href="{{route('wallet.index')}}" >
                         <span class="icon-waller_icon"></span>
                         <span> Wallet </span>
                     </a>
-                </li> 
+                </li>  -->
                 <li class="menu-title mt-2">Extra</li>
                 @php 
                     $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
                 @endphp
-                <li>   
+                <!-- <li>   
                     <a href="#" href1="{{route('referandearn.index')}}" >
                         <span class="icon-1370259"></span>
                         <span> Refer and Earn </span>
                     </a>
-                </li>
+                </li> -->
                 @if(!empty($brity) && $brity->celebrity_check == 1)
                 <li>   
                     <a href="{{route('celebrity.index')}}" >
@@ -881,12 +881,21 @@
                 @endif
             </ul>
         </div>
+        
         <!-- End Sidebar -->
 
         <div class="clearfix"></div>
 
     </div>
     <!-- Sidebar -left -->
-
+    <!-- <a href="{{route('client.dashboard')}}" class="logo text-center">
+        <span class="logo-sm">
+            <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
+            <span class="logo-lg-text-light">UBold</span>
+        </span>
+        <span class="logo-lg">
+            <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="20">
+        </span>
+    </a> -->
 </div>
 <!-- Left Sidebar End -->

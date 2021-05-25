@@ -61,31 +61,26 @@ class UserController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendToken(Request $request, $domain = '', $uid = 0)
-    {
+    public function sendToken(Request $request, $domain = '', $uid = 0){
         $user = User::where('id', Auth::user()->id)->first();
         if (!$user) {
             return redirect()->back()->with('err_user', 'User not found.');
         }
-
         if ($user->is_email_verified == 1 && $user->is_phone_verified == 1) {
             return redirect()->back()->with('err_user', 'Account already verified.');
         }
-
         $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
         $data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from', 'mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
         $notified = 0;
         $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
         if ($request->type == "phone") {
             if ($user->is_phone_verified == 0) {
-
                 $otp = mt_rand(100000, 999999);
                 $user->phone_token = $otp;
                 $user->phone_token_valid_till = $newDateTime;
                 $provider = $data->sms_provider;
                 $to = $user->phone_number;
                 $body = "Dear " . ucwords($user->name) . ", Please enter OTP " . $otp . " to verify your account.";
-
                 if (!empty($data->sms_key) && !empty($data->sms_secret) && !empty($data->sms_from)) {
                     $send = $this->sendSms($provider, $data->sms_key, $data->sms_secret, $data->sms_from, $to, $body);
                     if ($send) {
@@ -96,32 +91,26 @@ class UserController extends FrontController
         }
 
         if ($user->is_email_verified == 0) {
-
             $otp = mt_rand(100000, 999999);
             $user->email_token = $otp;
             $user->email_token_valid_till = $newDateTime;
             if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
-
                 $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
-
                 $client_name = $client->name;
                 $mail_from = $data->mail_from;
                 $sendto = $user->email;
                 try {
-                    Mail::send(
-                        'email.verify',
-                        [
-                            'customer_name' => ucwords($user->name),
-                            'code_text' => 'Enter below code to verify yoour account',
-                            'code' => $otp,
-                            'logo' => $client->logo['original'],
-                            'link' => "link"
-                        ],
-                        function ($message) use ($sendto, $client_name, $mail_from) {
-                            $message->from($mail_from, $client_name);
-                            $message->to($sendto)->subject('OTP to verify account');
-                        }
-                    );
+                    $data = [
+                                'code' => $otp,
+                                'link' => "link",
+                                'email' => $sendto,
+                                'mail_from' => $mail_from,
+                                'client_name' => $client_name,
+                                'logo' => $client->logo['original'],
+                                'customer_name' => ucwords($user->name),
+                                'code_text' => 'Enter below code to verify yoour account',
+                            ];
+                    dispatch(new \App\Jobs\SendVerifyEmailJob($data))->onQueue('verify_email');;
                     $notified = 1;
                 } catch (\Exception $e) {
                     $user->save();
@@ -135,11 +124,9 @@ class UserController extends FrontController
                 'message' => 'OTP has been sent.Please check.',
 
             ]);
-            // dd("dgroeiuger");
             return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 200);
         } else {
             return redirect()->back()->with('err_user', 'Provider service is not configured. Please contact administration.');
-            // return response()->json(['success' => 'Provider service is not configured. Please contact administration.'], 404); 
         }
     }
 

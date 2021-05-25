@@ -65,7 +65,6 @@ class BaseController extends Controller
         
         if(!is_null($tree) && count($tree) > 0) {
             $this->htmlData .='<ol class="dd-list">';
-            $askMessage = "return confirm('Are you sure? You want to delete category.')";
             foreach($tree as $node) {
                 $this->htmlData .='<li class="dd-item dd3-item" data-id="'.$node["id"].'">';
 
@@ -74,15 +73,23 @@ class BaseController extends Controller
                 }
                 $this->htmlData .='<div class="dd3-content">'.$node["slug"].'<span class="inner-div text-right">';
 
+                $status = 2; $icon = 'mdi-lock-open-variant';
+                $title = 'Block';
+                $askMessage = "return confirm('Are you sure? You want to block category.')";
+                if($node["status"] == 2){
+                    $askMessage = "return confirm('Are you sure? You want to unblock category.')";
+                    $status = 1; $icon = 'mdi-lock'; 
+                    $title = 'Unblock';
+                }
+
                 if($from == 'category'){
                     if($node["is_core"] == 1){
-                        $this->htmlData .='<a class="action-icon openCategoryModal" dataid="'.$node["id"].'" is_vendor="0" href="#"> <i class="mdi mdi-square-edit-outline"></i></a>
-                        <a class="action-icon" dataid="'.$node["id"].'" onclick="'.$askMessage.'" href="'.url("client/category/delete/".$node["id"]).'"> <i class="mdi mdi-delete"></i></a>';
+                        $this->htmlData .='<a class="action-icon openCategoryModal" dataid="'.$node["id"].'" is_vendor="0" href="#"> <i class="mdi mdi-square-edit-outline"></i></a><a class="action-icon" dataid="'.$node["id"].'" title="'.$title.'" onclick="'.$askMessage.'" href="'.url("client/category/delete/".$node["id"]).'"> <i class="mdi '.$icon.'"></i></a>';
                     }
 
                 }elseif($from == 'vendor' && $node["is_core"] == 0){
                     $this->htmlData .='<a class="action-icon openCategoryModal" dataid="'.$node["id"].'" is_vendor="1" href="#"> <i class="mdi mdi-square-edit-outline"></i></a>
-                        <a class="action-icon" dataid="'.$node["id"].'" onclick="'.$askMessage.'" href="'.url("client/category/delete/".$node["id"]).'"> <i class="mdi mdi-delete"></i></a>';
+                        <a class="action-icon" dataid="'.$node["id"].'" onclick="'.$askMessage.'" href="'.url("client/category/delete/".$node["id"]).'" title="'.$title.'"> <i class="mdi '.$icon.'"></i></a>';
                 }
                 $this->htmlData .='</span> </div>';
 

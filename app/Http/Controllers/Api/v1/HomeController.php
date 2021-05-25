@@ -39,7 +39,7 @@ class HomeController extends BaseController
                                     ->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 
             $banners = Banner::select("id", "name", "description", "image", "link", 'redirect_category_id', 'redirect_vendor_id')
-                        ->where('status', 1)
+                        ->where('status', 1)->where('validity_on', 1)
                         ->where(function($q){
                             $q->whereNull('start_date_time')->orWhere(function($q2){
                                 $q2->whereDate('start_date_time', '<=', Carbon::now())
@@ -184,7 +184,7 @@ class HomeController extends BaseController
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }
@@ -313,7 +313,7 @@ class HomeController extends BaseController
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }

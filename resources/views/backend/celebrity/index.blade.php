@@ -101,14 +101,14 @@
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
-                                                <a class="action-icon openEditModal" loyaltyID="{{$celeb->id}}" href="#"><h3> <i class="mdi mdi-square-edit-outline"></i></h3></a> 
+                                                <a class="action-icon openEditModal" loyaltyID="{{$celeb->id}}" href="#"><i class="mdi mdi-square-edit-outline"></i></a> 
                                             </div>
                                             <div class="inner-div">
                                                 <form method="POST" action="{{ route('celebrity.destroy', $celeb->id) }}">
                                                     @csrf
                                                     @method('DELETE')
                                                     <div class="form-group">
-                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the loyalty card.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
+                                                       <button type="submit" onclick="return confirm('Are you sure? You want to delete the loyalty card.')" class="btn btn-primary-outline action-icon"><i class="mdi mdi-delete"></i></button> 
 
                                                     </div>
                                                 </form>

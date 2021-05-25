@@ -46,8 +46,7 @@ class CelebrityController extends BaseController
     }
 
     /**     *       Get Celebrity Products    *       */
-    public function celebrityProducts(Request $request, $cid = 0)
-    {
+    public function celebrityProducts(Request $request, $cid = 0){
         try {
             $userid = Auth::user()->id;
             $paginate = $request->has('limit') ? $request->limit : 12;
@@ -92,7 +91,7 @@ class CelebrityController extends BaseController
             if(!empty($products)){
                 foreach ($products as $key => $value) {
                     foreach ($value->variant as $k => $v) {
-                        $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                        $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                     }
                 }
             }
@@ -113,10 +112,10 @@ class CelebrityController extends BaseController
     public function celebrityFilters(Request $request, $cid = 0)
     {
         try{
-            $langId = Auth::user()->language;
-            $curId = Auth::user()->currency;
+            $user = Auth::user();
+            $langId = $user->language;
             $setArray = $optionArray = array();
-            $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
+            $clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
 
             if($request->has('variants') && !empty($request->variants)){
                 $setArray = array_unique($request->variants);
@@ -164,6 +163,8 @@ class CelebrityController extends BaseController
             }
             $order_type = $request->has('order_type') ? $request->order_type : '';
 
+            //$productVariant = ProductVariant
+
             $products = Product::join('product_celebrities as pc', 'pc.product_id', 'products.id')
                     ->with(['variant.vimage.pimage.image', 'media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
@@ -203,7 +204,7 @@ class CelebrityController extends BaseController
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
-                    $value->variant{$k}->multiplier = $clientCurrency->doller_compare;
+                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }

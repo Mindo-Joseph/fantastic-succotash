@@ -144,9 +144,12 @@
                 
                             <div class="row card-box">
                                 <div class="col-md-12">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-12">
-                                            <h4 class="mb-2 "> Service Area <span style=" float:right;"><button class="btn btn-info openServiceModal"> Add Service Area</button></span></h4>
+                                    <div class="row align-items-center mb-3">
+                                        <div class="col-sm-6">
+                                            <h4 class="mb-2 "><span> Service Area </span></h4>
+                                        </div>
+                                        <div class="col-sm-6 text-center text-sm-right">
+                                            <button class="btn btn-info openServiceModal"> Add Service Area</button>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -167,12 +170,12 @@
                                                             </td>
 
                                                             <td>
-                                                                <button type="button" class="btn btn-primary-outline action-icon editAreaBtn" area_id="{{$geo->id}}"><h3><i class="mdi mdi-square-edit-outline"></i></h3></button> 
+                                                                <button type="button" class="btn btn-primary-outline action-icon editAreaBtn" area_id="{{$geo->id}}"><i class="mdi mdi-square-edit-outline"></i></button> 
                                                                
                                                                 <form action="{{route('vendor.serviceArea.delete', $vendor->id)}}" method="POST" class="action-icon">
                                                                     @csrf
                                                                     <input type="hidden" value="{{$geo->id}}" name="area_id">
-                                                                    <button type="submit" onclick="return confirm('Are you sure? You want to delete the banner.')" class="btn btn-primary-outline action-icon"><h3><i class="mdi mdi-delete"></i></h3></button> 
+                                                                    <button type="submit" onclick="return confirm('Are you sure? You want to delete the banner.')" class="btn btn-primary-outline action-icon"><i class="mdi mdi-delete"></i></button> 
 
                                                                 </form>
                                                             </td>
@@ -236,7 +239,7 @@
 
             <form id="geo_form" action="{{ route('vendor.serviceArea', $vendor->id) }}" method="POST">
                 @csrf
-                <div class="modal-body" id="editCardBox">
+                <div class="modal-body mt-0" id="editCardBox">
                     
                         <input type="hidden" name="latlongs" value="" id="latlongs" />
                         <input type="hidden" name="zoom_level" value="13" id="zoom_level" />
@@ -273,15 +276,13 @@
                 </div>
 
                 <div class="modal-footer">
-                    <div class="row mt-1">
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <button type="button"
                                 class="btn btn-block btn-outline-blue waves-effect waves-light">Cancel</button>
+                        </div> -->
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-block btn-blue waves-effect waves-light w-100">Save</button>
                         </div>
-                        <div class="col-md-6">
-                            <button type="submit" class="btn btn-block btn-blue waves-effect waves-light">Save</button>
-                        </div>
-                    </div>
                 </div>
                 
             </form>

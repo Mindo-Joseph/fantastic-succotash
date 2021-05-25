@@ -44,7 +44,7 @@
     </section>
     <!-- Home slider end -->
 <!-- category -->
-    <section class="section-b-space border-section border-top-0">
+    <!-- <section class="section-b-space border-section border-top-0">
         <div class="row">
             <div class="col">
                 <div class="slide-6 no-arrow">
@@ -63,7 +63,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- Paragraph-->
     <div class="title1 section-t-space">
@@ -274,7 +274,7 @@
                         @foreach($brands as $bnd)
                         <div>
                             <div class="logo-block">
-                                <a href="#"><img src="{{$bnd->image['proxy_url'] . '120/120' . $bnd->image['image_path']}}" alt=""></a>
+                                <a href="{{route('brandDetail', $bnd->id)}}"><img src="{{$bnd->image['proxy_url'] . '120/120' . $bnd->image['image_path']}}" alt=""></a>
                             </div>
                         </div>
                         @endforeach

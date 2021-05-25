@@ -17,20 +17,31 @@
                 <h4 class="page-title">Payment</h4>
             </div>
         </div>
-    </div>
-    
+      <div class="col-12">
+         <div class="text-sm-left">
+            @if (\Session::has('success'))
+            <div class="alert alert-success">
+               <span>{!! \Session::get('success') !!}</span>
+            </div>
+            @endif
+         </div>
+      </div>
+   </div>
     <div class="row">
         @foreach($payOption as $key => $opt)
         <div class="col-md-4">
-            <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
-                <input type="hidden" name="verify_config" id="verify_config" value="1">
+            <form method="POST" id="form_{{$opt->id}}" action="{{route('payoption.update', $opt->id)}}">
+                <input type="hidden" name="method_name" id="{{$opt->title}}" value="{{$opt->title}}">
                 @csrf
+                @method('PUT')
                 <div class="card-box">
                     <div class="d-flex align-items-center justify-content-between mb-2">
                         <h4 class="header-title text-uppercase mb-0">{{$opt->title}}</h4>
+                        
                         <span class="d-block">
-                            <input type="checkbox" id="all_select" data-plugin="switchery" name="all" class="chk_box all_select " data-color="#43bee1" @if($opt->status == 1) checked @endif>
+                            <input type="checkbox" data-id="{{$opt->id}}" data-plugin="switchery" name="active" class="chk_box all_select" data-color="#43bee1" @if($opt->status == 1) checked @endif>
                         </span>
+                       
                     </div>
                     
                     <!-- <div class="d-flex align-items-center justify-content-between mb-2">
@@ -55,9 +66,11 @@
         });
 
         $('.all_select').change(function(){
-            //var that = $(this);
+            var id = $(this).data('id');
+            console.log(id);
+            $('#form_'+id).submit();
 
-            $('.vendorRow').toggle();
+            //$('.vendorRow').toggle();
         });
     </script>
 @endsection

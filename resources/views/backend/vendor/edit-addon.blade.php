@@ -25,7 +25,7 @@
                                 @endif
                             @endforeach
 
-                            <td style="min-width: 200px;">
+                            <td>
                                 {!! Form::hidden('language_id[]', $langs->language_id) !!}
                                 <input type="text" name="title[]" class="form-control" value="{{$valueData}}" @if($langs->is_primary == 1) required @endif>
                             </td>
@@ -68,7 +68,7 @@
                                 @endif
                             @endforeach
 
-                            <td style="min-width: 200px;">
+                            <td>
                             <input type="hidden" name="opt_id[{{$langs->language_id}}][]" class="form-control" value="{{$optDataId}}">
                                 <input type="text" name="opt_value[{{$langs->language_id}}][]" class="form-control" value="{{$optData}}" @if($langs->is_primary == 1) required @endif>
                             </td>
@@ -76,7 +76,7 @@
 
                         <td class="lasttd">
                             @if($first > 0)
-                            <a href="javascript:void(0);" class="action-icon deleteCurRow"> <h3> <i class="mdi mdi-delete"></i> </h3></a>
+                            <a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>
                             @endif
                         </td>
                     </tr>

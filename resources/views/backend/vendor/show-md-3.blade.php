@@ -82,7 +82,6 @@
     </div>
 </div>
 <div class="card-box">
-
     <div class="row text-left">
         <div class="col-md-12">
             <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
@@ -123,6 +122,35 @@
         </div>
     </div>
 </div> <!-- end card-box -->
+
+
+
+<div class="card-box">
+    <div class="row text-left">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="mb-2"> <span class="">Active Main Category</h4>
+                </div>
+            </div>
+            
+            @foreach($categorList as $key => $list)
+                <form name="config-form" id="categorForm_{{$list->id}}" action="{{route('vendor.category.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
+                    @csrf
+                    <input type="hidden" name="vid" value="{{$vendor->id}}">
+                    <input type="hidden" name="cid" value="{{$list->id}}">
+                    <div class="row mb-2">
+                        <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
+                            {!! Form::label('title', $list->slug, ['class' => 'control-label']) !!} 
+                            <input type="checkbox" data-plugin="switchery" data-id="{{$list->id}}" name="category" class="form-control activeCategory" data-color="#43bee1" @if(!in_array($list->id, $blockedCategory)) checked @endif>
+                        </div>
+                    </div>
+                </form>
+            
+            @endforeach
+        </div>
+    </div>
+</div>
 
 <div class="card-box">
     <h4 class="header-title mb-3">Users</h4>
@@ -189,3 +217,12 @@
     </div> <!-- end inbox-widget -->
 
 </div>
+<script type="text/javascript">
+    $('.activeCategory').change(function(){
+        var id = $(this).data('id');
+        console.log(id);
+        $('#categorForm_'+id).submit();
+
+        //$('.vendorRow').toggle();
+    });
+</script>

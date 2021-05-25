@@ -69,12 +69,12 @@
                                     <td> {{$client->code}} </td>
                                     <td>
 
-                                        <a href="{{route('client.edit', $client->id)}}" class="btn btn-primary-outlineaction-icon"> <h3><i class="mdi mdi-square-edit-outline"></i></h3></a>
+                                        <a href="{{route('client.edit', $client->id)}}" class="btn btn-primary-outlineaction-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
                                         
                                         <!-- <button class="btn btn-primary-outline blockClient action-icon" cli_id="{{$client->id}}" status="{{$client->status}}"> <h3><i class="mdi {{ ($client->status == 2) ? 'mdi-lock-open-variant-outline' : 'mdi-lock-outline'}}"></i></h3></button> 
-                                        <button class="btn btn-primary-outline deleteClient action-icon" cli_id="{{$client->id}}"> <h3><i class="mdi mdi-delete"></i></h3></button>-->
+                                        <button class="btn btn-primary-outline deleteClient action-icon" cli_id="{{$client->id}}"> <i class="mdi mdi-delete"></i></button>-->
 
-                                        <a href="{{URL::to('godpanel/delete/client/'.$client->id)}}" class="btn btn-primary-outlineaction-icon"> <h3><i class="mdi mdi-delete"></i></h3></a>
+                                        <a href="{{URL::to('godpanel/delete/client/'.$client->id)}}" class="btn btn-primary-outlineaction-icon"> <i class="mdi mdi-delete"></i></a>
                                         </div>
                                     </td>
                                 </tr>
