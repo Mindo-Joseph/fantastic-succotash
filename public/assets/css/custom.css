@@ -939,7 +939,7 @@ label.file-input.uploadImages {
     border: 1px solid #43bee1e8;
     position: absolute;
     height: calc(100% - 15px);
-    left: -21px;
+    left: 0;
     top: 15px;
 }
 
@@ -1052,7 +1052,6 @@ label.file-input.uploadImages {
 .grand_total {
     border-top: 1px solid #e5e8eb !important;
     padding-top: 5px;
-    margin-top: 50px !important;
 }
 
 .grand_total label,
@@ -1071,7 +1070,7 @@ label.file-input.uploadImages {
     cursor: pointer;
     box-shadow: 0 0 0 rgb(67 190 225 / 50%);
     position: absolute;
-    left: -124px;
+    left: -104px;
     top: -97px;
     animation: pulse-animation 2s infinite;
 }

@@ -9,29 +9,24 @@
         </div>
     </div>
     <div class="row mb-4">
+        @forelse($addresses as $address)
         <div class="col-md-12">
             <div class="delivery_box">
-                <label class="radio m-0">1663  Railroad Street, Marquette, Michigan, CA  PIN: 49855 
+                <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}} 
                     <input type="radio" checked="checked" name="is_company">
                     <span class="checkround"></span>
                 </label>
             </div>
         </div>
-        <div class="col-md-12">
-            <div class="delivery_box">
-                <label class="radio m-0">Rosewood Court, Luverne, Marquette, Michigan, CA  PIN: 49855
-                    <input type="radio" name="is_company">
-                    <span class="checkround"></span>
-                </label>
-            </div>
-        </div>
+        @empty
+
+        @endforelse
         <div class="col-12 mt-4 text-center">
             <a class="btn btn-solid w-75 m-auto" href="#">
                 <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address</a>
         </div>
-       
     </div>
-     <div class="col-md-12 mt-4">
+    <div class="col-md-12 mt-4" id="add_new_address_form" style="display:none;">
             <div class="theme-card w-100" id="add_new_address_form">
                 <div class="form-row">
                     <div class="col-md-12 mb-3">
@@ -84,39 +79,36 @@
                     </div>
                 </div>
             </div>
-        </div> 
+    </div> 
     </div>
-
-
     <div class="col-8">
         <div class="table-responsive">
             <table class="table table-centered table-nowrap table-striped" id="order_table">
+                @foreach($cartData->products as $product)
                 <tbody>
-                     <tr>
+                    <tr>
                         <td colspan="6">
-                            McDonalds
+                            {{$product['vendor']['name']}}
                         </td>
                     </tr>
+                    @foreach($product['vendor_products'] as $vendor_product)
                     <tr>
                         <td style="width:100px">
                             <div class="product-img">
-                                <img src="http://local.myorder.com/assets/images/burger.jpg" alt="">
+                                <img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'100/70'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt="">
                             </div>
                         </td>
                         <td class="items-details text-left">
-                            <h4>Ultimate Saving Bucket</h4>
+                            <h4>{{$vendor_product['product']['sku']}}</h4>
                             <label><span>Size:</span> Regular</label>
-                            <h6>Add Ons</h6>
-                            <p>Spicy Dip</p>
                         </td>
                         <td>
-                            <div class="items-price mb-3">$40.00</div>
-                            <div class="extra-items-price">$5.00</div>
+                            <div class="items-price mb-3">${{$vendor_product['pvariant']['price']}}</div>
                         </td>
                         <td>
                             <div class="number">
                                 <span class="minus"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                <input style="text-align:center;width:50px;margin:auto;" placeholder="1" type="text">
+                                <input style="text-align:center;width:50px;margin:auto;" placeholder="1" type="text" value="{{$vendor_product['quantity']}}">
                                 <span class="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                             </div>
                             
@@ -125,44 +117,29 @@
                             <a href="#" class="action-icon d-block mb-3">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </a>
-                            <a href="#" class="action-icon d-block">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </a>
                         </td>
                         <td class="text-right">
-                            <div class="items-price mb-3">$40.00</div>
-                            <div class="extra-items-price">$5.00</div>
+                            <div class="items-price mb-3">${{$vendor_product['pvariant']['quantity_price']}}</div>
                         </td>
                     </tr>
-                    <tr>
-                        <td style="width:100px">
-                            <div class="product-img">
-                                <img src="http://local.myorder.com/assets/images/burger.jpg" alt="">
-                            </div>
-                        </td>
+                    @endforeach
+                    <tr class="border_0">
+                        <td></td>
                         <td class="items-details text-left">
-                            <h4>Ultimate Saving Bucket</h4>
-                            <label><span>Size:</span> Regular</label>
                             <h6>Add Ons</h6>
                             <p>Spicy Dip</p>
                         </td>
                         <td>
-                            <div class="items-price mb-3">$40.00</div>
                             <div class="extra-items-price">$5.00</div>
                         </td>
                         <td>
-                            <input style="text-align:center;width:50px;margin:auto;" placeholder="1" type="text">
                         </td>
                         <td class="text-center">
-                            <a href="#" class="action-icon d-block mb-3">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </a>
                             <a href="#" class="action-icon d-block">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </a>
                         </td>
                         <td class="text-right">
-                            <div class="items-price mb-3">$40.00</div>
                             <div class="extra-items-price">$5.00</div>
                         </td>
                     </tr>
@@ -184,94 +161,7 @@
                         </td>
                     </tr>
                 </tbody>
-                <tbody>
-                     <tr>
-                        <td colspan="6">
-                            McDonalds
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width:100px">
-                            <div class="product-img">
-                                <img src="http://local.myorder.com/assets/images/burger.jpg" alt="">
-                            </div>
-                        </td>
-                        <td class="items-details text-left">
-                            <h4>Ultimate Saving Bucket</h4>
-                            <label><span>Size:</span> Regular</label>
-                            <h6>Add Ons</h6>
-                            <p>Spicy Dip</p>
-                        </td>
-                        <td>
-                            <div class="items-price mb-3">$40.00</div>
-                            <div class="extra-items-price">$5.00</div>
-                        </td>
-                        <td>
-                            <input style="text-align:center;width:50px;margin:auto;" placeholder="1" type="text">
-                        </td>
-                        <td class="text-center">
-                            <a href="#" class="action-icon d-block mb-3">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </a>
-                            <a href="#" class="action-icon d-block">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </a>
-                        </td>
-                        <td class="text-right">
-                            <div class="items-price mb-3">$40.00</div>
-                            <div class="extra-items-price">$5.00</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width:100px">
-                            <div class="product-img">
-                                <img src="http://local.myorder.com/assets/images/burger.jpg" alt="">
-                            </div>
-                        </td>
-                        <td class="items-details text-left">
-                            <h4>Ultimate Saving Bucket</h4>
-                            <label><span>Size:</span> Regular</label>
-                            <h6>Add Ons</h6>
-                            <p>Spicy Dip</p>
-                        </td>
-                        <td>
-                            <div class="items-price mb-3">$40.00</div>
-                            <div class="extra-items-price">$5.00</div>
-                        </td>
-                        <td>
-                            <input style="text-align:center;width:50px;margin:auto;" placeholder="1" type="text">
-                        </td>
-                        <td class="text-center">
-                            <a href="#" class="action-icon d-block mb-3">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </a>
-                            <a href="#" class="action-icon d-block">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            </a>
-                        </td>
-                        <td class="text-right">
-                            <div class="items-price mb-3">$40.00</div>
-                            <div class="extra-items-price">$5.00</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <div class="coupon_box d-flex align-items-center">
-                                <img src="http://local.myorder.com/assets/images/discount_icon.svg" alt="">
-                                <input class="form-control" type="text">
-                                <button class="btn btn-outline-info">Apply</button>
-                            </div>
-                        </td> 
-                        <td>
-                            <label class="d-block txt-13">Delivery Fee</label>
-                            <p class="total_amt m-0">Amount</p>
-                        </td>
-                        <td colspan="3" class="text-right">
-                            <label class="d-block  txt-13">$5.00</label>
-                            <p class="total_amt m-0">$90.00</p>
-                        </td>
-                    </tr>
-                </tbody>
+                @endforeach
                 <tfoot>
                     <tr>
                         <td colspan="2"></td>

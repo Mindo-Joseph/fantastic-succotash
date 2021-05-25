@@ -21,8 +21,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('social/info', 'Api\v1\SocialController@getKeys');
         Route::post('social/login/{driver}', 'Api\v1\SocialController@login');
     });
-    Route::group(['middleware' => ['dbCheck', 'AppAuth', 'apilogger']], function() {
         Route::get('orders', 'Api\v1\OrderController@getOrdersList');
+    Route::group(['middleware' => ['dbCheck', 'AppAuth', 'apilogger']], function() {
         Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::get('profile', 'Api\v1\ProfileController@profile');
         Route::get('account', 'Api\v1\ProfileController@account');

@@ -67,8 +67,8 @@
                             <li><a href="{{route('user.orders')}}">My Orders</a></li>
                             <li><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
                             <li><a href="#">My Account</a></li>
-                            <li><a href="#">Change Password</a></li>
-                            <li class="last"><a href="#">Log Out</a></li>
+                            <li><a href="{{route('user.changePassword')}}">Change Password</a></li>
+                            <li class="last"><a href="{{route('user.logout')}}" >Log Out</a></li>
                         </ul>
                     </div>
                 </div>

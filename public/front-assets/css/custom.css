@@ -236,9 +236,9 @@
     background-color: transparent;
 }
 
-#order_table td {
+/*#order_table td {
     vertical-align: top !important;
-}
+}*/
 
 #order_table tr:last-child td {
     vertical-align: middle !important;

@@ -31,7 +31,6 @@ class CartController extends FrontController
         }
         $countries = Country::get();
         $cartData = $this->getCart($cart);
-        
         $navCategories = $this->categoryNav($langId);
         return view('forntend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries]);
     }

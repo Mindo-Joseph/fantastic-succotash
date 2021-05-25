@@ -19,7 +19,7 @@ class OrderController extends Controller{
 
     public function getOrdersList(Request $request){
     	$user = Auth::user();
-    	$orders = Order::with('products')->where('user_id', $user->id)->orderBy('id', 'DESC')->paginate(10);
+    	$orders = Order::with('products')->orderBy('id', 'DESC')->get();
     	foreach ($orders as $order) {
     		$order_item_count = 0;
     		foreach ($order->products as $product) {
