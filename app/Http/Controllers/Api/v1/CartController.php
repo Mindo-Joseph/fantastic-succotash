@@ -426,7 +426,6 @@ class CartController extends BaseController{
                     //$variantsData['price_in_cart']      = $prod->pvariant->price;
                     $variantsData['multiplier']         = $clientCurrency->doller_compare;
                     $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
-
                     if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
                         $pro_disc = $discount_amount;
                         if($minimum_spend < $quantity_price){

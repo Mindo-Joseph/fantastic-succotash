@@ -81,7 +81,7 @@ class OrderController extends Controller{
 		        $order->address_id = $request->address_id;
 		        $order->payment_option_id = $request->payment_option_id;
 		        $order->save();
-		        $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
+		        $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
 		        $total_amount = 0;
 	            $total_discount = 0;
 	            $taxable_amount = 0;

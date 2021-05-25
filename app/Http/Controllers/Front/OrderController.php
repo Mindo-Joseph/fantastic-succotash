@@ -41,17 +41,14 @@ class OrderController extends FrontController{
             $order->payment_method = $paymentMethod;
             $order->address_id = $request->address_id;
             $order->save();
-            $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
+            $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon.promo')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
             $total_amount = 0;
             $total_discount = 0;
             $taxable_amount = 0;
             $payable_amount = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
-                $OrderVendor = new OrderVendor();
-                $OrderVendor->status = 0;
-                $OrderVendor->order_id= $order->id;
-                $OrderVendor->vendor_id= $vendor_id;
-                $OrderVendor->save();
+                $vendor_discount_amount = 0;
+                $vendor_payable_amount = 0;
                 foreach ($vendor_cart_products as $vendor_cart_product) {
                     $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
                     $quantity_price = 0;
@@ -60,6 +57,7 @@ class OrderController extends FrontController{
                     $price_in_dollar_compare = $price_in_currency * $clientCurrency->doller_compare;
                     $quantity_price = $price_in_dollar_compare * $vendor_cart_product->quantity;
                     $payable_amount = $payable_amount + $quantity_price;
+                    $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
                     $product_taxable_amount = 0;
                     $product_payable_amount = 0;
                     foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
@@ -68,6 +66,7 @@ class OrderController extends FrontController{
                         $product_tax = $quantity_price * $rate / 100;
                         $product_taxable_amount += $taxable_amount + $product_tax;
                         $payable_amount = $payable_amount + $product_tax;
+                        $vendor_payable_amount = $vendor_payable_amount + $product_tax;
                     }
                     $total_amount += $variant->price;
                     $taxable_amount += $product_taxable_amount;
@@ -96,6 +95,13 @@ class OrderController extends FrontController{
                         CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                     }
                 }
+                $OrderVendor = new OrderVendor();
+                $OrderVendor->status = 0;
+                $OrderVendor->order_id= $order->id;
+                $OrderVendor->vendor_id= $vendor_id;
+                $OrderVendor->payable_amount= $vendor_payable_amount;
+                $OrderVendor->discount_amount= $vendor_discount_amount;
+                $OrderVendor->save();
             }
             $order->total_amount = $total_amount;
             $order->total_discount = $total_discount;
