@@ -46,12 +46,12 @@ class Vendor extends Model
       return $result->name;
     }
 
-     public function orders(){
-       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('count(id)', 'vendor_id'); 
+    public function orders(){
+       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id'); 
     }
 
     public function activeOrders(){
-       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('count(id)', 'vendor_id')
+       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id')
               ->where('status', '!=', 3); 
     }
 }
