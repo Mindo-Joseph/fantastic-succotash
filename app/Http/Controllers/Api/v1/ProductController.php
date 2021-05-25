@@ -211,7 +211,7 @@ class ProductController extends BaseController
                 }else{
                     $value->stock_check = 0;
                 }
-                if($value->media){
+                if($value->media && count($value->media) > 0){
                     foreach ($value->media as $media_key => $media_value) {
                         $data_image[$media_key]['product_variant_id'] = $media_value->product_variant_id;
                         $data_image[$media_key]['media_id'] = $media_value->product_image_id;
@@ -241,10 +241,10 @@ class ProductController extends BaseController
             $response['crossProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'cross', $product->crossSell);
             /* group by in query return data only for key - 0 so using 0 */
             if(isset($product->variant[0]->media) && !empty($product->variant[0]->media)){
-                //unset($product->variant[0]->media);
+                unset($product->variant[0]->media);
             }
             unset($product->related);
-            //unset($product->media);
+            unset($product->media);
             //unset($product->addOn);
             unset($product->upSell);
             unset($product->crossSell);
@@ -369,7 +369,7 @@ class ProductController extends BaseController
                 $variantData->stock_check = 0;
             }
             $data_image = array();
-            if($variantData->media){
+            if($variantData->media && count($variantData->media) > 0){
                 foreach ($variantData->media as $media_key => $media_value) {
                     $data_image[$media_key]['product_variant_id'] = $media_value->product_variant_id;
                     $data_image[$media_key]['media_id'] = $media_value->product_image_id;
