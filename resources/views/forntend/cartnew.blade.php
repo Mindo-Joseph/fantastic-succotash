@@ -29,7 +29,7 @@
                 @endforelse
             </div>
             <div class="col-12 mt-4 text-center">
-                <a class="btn btn-solid w-75 m-auto" id="add_new_address_btn">
+                <a class="btn btn-solid w-100 m-auto" id="add_new_address_btn">
                     <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address
                 </a>
             </div>
@@ -112,7 +112,7 @@
                             @foreach($product['vendor_products'] as $vendor_product)
                             <tr class="padding-bottom">
                                 <td style="width:100px" {{count($vendor_product['addon']) > 0 ? 'rowspan=2' : 0  }}>
-                                    <div class="product-img">
+                                    <div class="product-img pb-2">
                                         <img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'100/70'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt="">
                                     </div>
                                 </td>

@@ -13,4 +13,7 @@ class OrderVendor extends Model{
     public function products(){
 	    return $this->hasMany('App\Models\OrderProduct' , 'vendor_id', 'id'); 
 	}
+	public function coupon(){
+	    return $this->hasOne('App\Models\Promocode' , 'id', 'coupon_id'); 
+	}
 }

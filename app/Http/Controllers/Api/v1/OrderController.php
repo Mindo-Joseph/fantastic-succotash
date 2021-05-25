@@ -33,12 +33,23 @@ class OrderController extends Controller{
     public function postOrderDetail(Request $request){
     	try {
     		$user = Auth::user();
-    		$order_id = $request->order_id;
-	    	$order = Order::with(['vendors.vendor','vendors.products','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
     		$order_item_count = 0;
-    		// foreach ($order->products as $product) {
-    		// 	$order_item_count += $product->quantity;
-    		// }
+    		$order_id = $request->order_id;
+	    	$order = Order::with(['vendors.vendor','vendors.products','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+	    	foreach ($order->vendors as $key => $vendor) {
+				$couponData = [];
+				$delivery_fee = 0;
+				$payable_amount = 0;
+    			$discount_amount = 0;
+				$product_addons = [];
+    			foreach ($vendor->products as  $product) {
+	    			$order_item_count += $product->quantity;
+    			}
+    			$vendor->delivery_fee = $delivery_fee;
+    			$vendor->payable_amount = $payable_amount;
+    			$vendor->product_addons = $product_addons;
+    			$vendor->discount_amount = $discount_amount;
+    		}
     		$order->order_item_count = $order_item_count;
 	    	return $this->successResponse($order, null, 201);
     	} catch (Exception $e) {
