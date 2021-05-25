@@ -20,8 +20,13 @@ class VendorController extends BaseController
      */
     public function index()
     {
-        $vendors = Vendor::with('orderCount', 'productCount', , 'activeOrderCount')->where('status', '!=', '2')->orderBy('id', 'desc')->get();
+        $vendors = Vendor::where('status', '!=', '2')->orderBy('id', 'desc')->get();
         //dd($vendors->toArray());
+        /*
+        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])
+                  ->where('status', '!=', '2')->orderBy('id', 'desc')->get();
+        dd($vendors->toArray());
+        */
         return view('backend/vendor/index')->with(['vendors' => $vendors]);
     }
 

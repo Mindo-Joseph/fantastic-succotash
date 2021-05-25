@@ -16,10 +16,6 @@ class Vendor extends Model
        return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
     }
 
-    public function orderCount(){
-       return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
-    }
-
     public function getLogoAttribute($value)
     {
       $values = array();
@@ -48,5 +44,14 @@ class Vendor extends Model
     public static function getNameById($vendor_id){
       $result = Vendor::where('id', $vendor_id)->first();
       return $result->name;
+    }
+
+    public function orders(){
+       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id'); 
+    }
+
+    public function activeOrders(){
+       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id')
+              ->where('status', '!=', 3); 
     }
 }
