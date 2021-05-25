@@ -10,7 +10,7 @@ class Order extends Model{
     use HasFactory;
     protected $casts = ['total_amount' => 'float'];
 
-    public function order_products(){
+    public function products(){
 	    return $this->hasMany('App\Models\OrderProduct' , 'order_id', 'id'); 
 	}
 	public function vendors(){
