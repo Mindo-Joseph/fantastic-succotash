@@ -9,7 +9,8 @@ class OrderProduct extends Model{
     use HasFactory;
 
     protected $table = 'order_vendor_products';
-
+    protected $casts = ['price' => 'double'];
+    
     public function getImageAttribute($value){
       $values = array();
       $img = 'default/default_image.png';

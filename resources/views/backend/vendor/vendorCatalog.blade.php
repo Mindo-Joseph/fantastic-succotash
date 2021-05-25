@@ -89,41 +89,46 @@
                                     <div class="table-responsive">
                                       <table class="table table-centered table-nowrap table-striped" id="">
                                           <thead>
-                                              <tr>
-                                                  <th>SKU</th>
-                                                  <th>Name</th>
-                                                  <th>New</th>
-                                                  <th>Featured</th>
-                                                  <th>Is live</th>
-                                                  <th>Physical</th>
-                                                  <th>Required Shipping</th>
-                                                  <th>Has Inventory</th>
-                                                  <th>Has Variant</th>
-                                                  <th>Action</th>
-                                              </tr>
+                                            <tr>
+                                              <th>#</th>
+                                              <th>Name</th>
+                                              <th>Category</th>
+                                              <th>Brand</th>
+                                              <th>Quantity</th>
+                                              <th>Price</th>
+                                              <th>Status</th>
+                                              <th>New</th>
+                                              <th>Featured</th>
+                                              <th>Requires Last Mile Delivery</th>
+                                              <th>Action</th>
+                                            </tr>
                                           </thead>
                                           <tbody id="post_list">
-                                              @foreach($products as $prod)
-                                              <tr data-row-id="{{$prod->id}}">
+                                              @foreach($products as $product)
+                                              <tr data-row-id="{{$product->id}}">
                                                   <td> 
-                                                     <!-- <img src="{{ url('storage/'.$prod->logo)}}" alt="{{$prod->id}}" width="50" height="50"> -->
-                                                     {{ $prod->sku }}
+                                                    @if($product->media[0])
+                                                        <img alt="{{$product->id}}" class="rounded-circle" src="{{$product->media[0]->image->path['proxy_url'].'30/30'.$product->media[0]->image->path['image_path']}}">
+                                                    @else
+                                                        {{ $product->sku }}
+                                                    @endif
                                                   </td>
-                                                  <td> {{ (isset($prod->primary->title) && !empty($prod->primary->title)) ? $prod->primary->title : '' }} </td>
-                                                  <td> {{ ($prod->is_new == 0) ? 'No' : 'Yes' }}</td>
-                                                  <td> {{ ($prod->is_featured == 0) ? 'No' : 'Yes' }}</td>
-                                                  <td> {{ ($prod->is_live == 0) ? 'No' : 'Yes' }}</td>
-                                                  <td> {{ ($prod->is_physical == 0) ? 'No' : 'Yes' }}</td>
-                                                  <td> {{ ($prod->requires_shipping == 0) ? 'No' : 'Yes' }}</td>
-                                                  <td> {{ ($prod->has_inventory == 0) ? 'No' : 'Yes' }}</td>
-                                                  <td> {{ (!empty($prod->variantSet) && count($prod->variantSet) > 0) ? 'Yes' : 'No' }}</td>
+                                                  <td> {{ (isset($product->primary->title) && !empty($product->primary->title)) ? $product->primary->title : '' }} </td>
+                                                  <td> {{ $product->category->cat->slug }}</td>
+                                                  <td> {{ !empty($product->brand) ? $product->brand->title : 'N/A'  }}</td>
+                                                  <td> {{ $product->variant[0]->quantity }}</td>
+                                                  <td> {{ $product->variant[0]->price }}</td>
+                                                  <td> {{ ($product->is_live == 0) ? 'Draft' : 'Published' }}</td>
+                                                  <td> {{ ($product->is_new == 0) ? 'No' : 'Yes' }}</td>
+                                                  <td> {{ ($product->is_featured == 0) ? 'No' : 'Yes' }}</td>
+                                                  <td> {{ ($product->Requires_last_mile == 0) ? 'No' : 'Yes' }}</td>
                                                   <td> 
                                                     <div class="form-ul" style="width: 60px;">
                                                       <div class="inner-div" style="float: left;">
-                                                        <a class="action-icon" href="{{ route('product.edit', $prod->id) }}" userId="{{$prod->id}}"><i class="mdi mdi-square-edit-outline"></i></a> 
+                                                        <a class="action-icon" href="{{ route('product.edit', $product->id) }}" userId="{{$product->id}}"><i class="mdi mdi-square-edit-outline"></i></a> 
                                                       </div>
                                                       <div class="inner-div">
-                                                          <form method="POST" action="{{ route('product.destroy', $prod->id) }}">
+                                                          <form method="POST" action="{{ route('product.destroy', $product->id) }}">
                                                               @csrf
                                                               @method('DELETE')
                                                               <div class="form-group">

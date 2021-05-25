@@ -64,9 +64,10 @@ $(document).ready(function() {
     cartHeader();
     $(document).on("click","#cancel_save_address_btn",function() {
         $('#add_new_address').show();
+        $('#add_new_address_btn').show();
         $('#add_new_address_form').hide();
     });
-    $(document).on("click","#add_new_address",function() {
+    $(document).on("click","#add_new_address_btn",function() {
         $(this).hide();
         $('#add_new_address_form').show();
     });
@@ -133,21 +134,13 @@ $(document).ready(function() {
             },
             success: function(response) {
                 cartHeader();
-                // Swal.fire({
-                //   timer: 1500,
-                //   icon: 'success',
-                //   position: 'center',
-                //   allowOutsideClick:false,
-                //   showConfirmButton: true,
-                //   title: response.message,
-                // });
             },
             error: function(data) {
                 console.log(data);
             },
         });
     }
-    $(document).on("click",".remove-product , .remove_product_via_cart",function() {
+    $(document).on("click",".remove_product_via_cart",function() {
         let cartproduct_id = $(this).data('product');
         $.ajax({
             type: "POST",
@@ -164,11 +157,13 @@ $(document).ready(function() {
                       showConfirmButton: true,
                       timer: 1500
                     });
-                    $('#cart_product_'+cartproduct_id).remove();
+                    $('#tr_vendor_products_'+cartproduct_id).remove();
                     $('#shopping_cart1_'+cartproduct_id).remove();
                     cartTotalProductCount();
-                    if($("[id^=cart_product_]").length == 0){
-                        $('.shopping-cart').html('');
+                    if($("[id^=tr_vendor_products_]").length == 0){
+                        $("#cart_main_page").html('');
+                        let empty_cart_template = _.template($('#empty_cart_template').html());
+                        $("#cart_main_page").append(empty_cart_template());
                     }
                 }
             }

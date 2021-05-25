@@ -9,15 +9,13 @@ use Carbon\Carbon;
 use Auth;
 use Session;
 
-class AddressController extends FrontController
-{
+class AddressController extends FrontController{
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $domain = '')
-    {
+    public function index(Request $request, $domain = ''){
         $langId = Session::get('customerLanguage');
         $useraddress = UserAddress::where('user_id', Auth::user()->id)->with('country')->get();
         $navCategories = $this->categoryNav($langId);
@@ -29,8 +27,7 @@ class AddressController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function add(Request $request, $domain = '')
-    {
+    public function add(Request $request, $domain = ''){
         $address = new UserAddress();
         $langId = Session::get('customerLanguage');
         $countries = Country::all();
@@ -60,7 +57,6 @@ class AddressController extends FrontController
         $address->street = $request->street;
         $address->city = $request->city;
         $address->state = $request->state;
-        $address->country_id = $request->country;
         $address->pincode = $request->pincode;
         $address->type = $request->type;
         $address->save();

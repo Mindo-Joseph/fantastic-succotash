@@ -7,7 +7,8 @@ use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor};
+
 class OrderController extends Controller{
     use ApiResponser;
 
@@ -19,7 +20,7 @@ class OrderController extends Controller{
 
     public function getOrdersList(Request $request){
     	$user = Auth::user();
-    	$orders = Order::with('products')->orderBy('id', 'DESC')->get();
+    	$orders = Order::with('products')->where('user_id', $user->id)->orderBy('id', 'DESC')->paginate(10);
     	foreach ($orders as $order) {
     		$order_item_count = 0;
     		foreach ($order->products as $product) {
@@ -33,11 +34,24 @@ class OrderController extends Controller{
     public function postOrderDetail(Request $request){
     	try {
     		$user = Auth::user();
-    		$order_id = $request->order_id;
-	    	$order = Order::with(['products','address'])->where('user_id', $user->id)->findOrFail($order_id);
     		$order_item_count = 0;
-    		foreach ($order->products as $product) {
-    			$order_item_count += $product->quantity;
+    		$order_id = $request->order_id;
+	    	$order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){
+                            $q->where('order_id', $order_id);
+                },'vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+	    	foreach ($order->vendors as $key => $vendor) {
+				$couponData = [];
+				$delivery_fee = 0;
+				$payable_amount = 0;
+    			$discount_amount = 0;
+				$product_addons = [];
+    			foreach ($vendor->products as  $product) {
+	    			$order_item_count += $product->quantity;
+    			}
+    			$vendor->delivery_fee = $delivery_fee;
+    			$vendor->payable_amount = $payable_amount;
+    			$vendor->product_addons = $product_addons;
+    			$vendor->discount_amount = $discount_amount;
     		}
     		$order->order_item_count = $order_item_count;
 	    	return $this->successResponse($order, null, 201);
@@ -70,12 +84,17 @@ class OrderController extends Controller{
 		        $order->address_id = $request->address_id;
 		        $order->payment_option_id = $request->payment_option_id;
 		        $order->save();
-		        $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
+		        $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
 		        $total_amount = 0;
 	            $total_discount = 0;
 	            $taxable_amount = 0;
 	            $payable_amount = 0;
-	            foreach ($cart_products->groupBy('vendor_id') as $vendor_cart_products) {
+	            foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
+	            	$OrderVendor = new OrderVendor();
+	                $OrderVendor->status = 0;
+	                $OrderVendor->order_id= $order->id;
+	                $OrderVendor->vendor_id= $vendor_id;
+	                $OrderVendor->save();
 	                foreach ($vendor_cart_products as $vendor_cart_product) {
 	                    $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
 	                    $quantity_price = 0;

@@ -1101,18 +1101,18 @@ button {
 
 .btn-solid {
   padding: 13px 29px;
-  color: #ffffff;
+  color: #ffffff !important;
   letter-spacing: 0.05em;
   border: 2px solid var(--theme-deafult);
   background-image: linear-gradient(30deg, var(--theme-deafult) 50%, transparent 50%);
-  background-size: 850px;
+  background-size: 900px;
   background-repeat: no-repeat;
   background-position: 0;
   -webkit-transition: background 300ms ease-in-out;
   transition: background 300ms ease-in-out; }
   .btn-solid:hover {
     background-position: 100%;
-    color: #000000;
+    color: #000000 !important;
     background-color: #ffffff; }
   .btn-solid.black-btn {
     background-image: linear-gradient(30deg, #222222 50%, transparent 50%);
