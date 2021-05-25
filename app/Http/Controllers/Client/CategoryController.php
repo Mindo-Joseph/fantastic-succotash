@@ -21,22 +21,12 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        //$categories = Category::with('childs')->select('id', 'slug', 'parent_id')->wherenull('parent_id')->get();
-
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
                         ->where('categories.id', '>', '1')
-                        //->where('categories.status', '!=', '2')
+                        ->where('categories.status', '!=', '2')
                         ->where('categories.is_core', 1)
                         ->orderBy('categories.parent_id', 'asc')
                         ->orderBy('categories.position', 'asc')->get();
-
-        /*$categories = Category::leftJoin('category_translations as cts', 'categories.id', 'cts.category_id', 'type')
-                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.type_id', 'categories.is_visible', 'categories.status', 'categories.is_core', 'categories.can_add_products', 'categories.parent_id', 'categories.vendor_id', 'cts.name')
-                        
-
-        if($cl){
-            $categories = $categories->where('cts.language_id', $cl->language_id);
-        }*/
 
         $variants = Variant::with('option', 'varcategory.cate.primary')
                         ->where('status', '!=', 2)->orderBy('position', 'asc')->get();
@@ -337,10 +327,12 @@ class CategoryController extends BaseController
     public function destroy($domain = '', $id)
     {
         $category = Category::where('id', $id)->first();
-        $category->status = ($category->status == 2) ? 1 : 2;
+        /*  block and unblock */
+        //$category->status = ($category->status == 2) ? 1 : 2;
+        $category->status = 2;
         $category->save();
-
-        $action = ($category->status == 2) ? 'blocked' : 'unblocked';
+        $action = 'deleted';
+        //$action = ($category->status == 2) ? 'blocked' : 'unblocked';
 
         $hs = new CategoryHistory();
         $hs->category_id = $category->id;
