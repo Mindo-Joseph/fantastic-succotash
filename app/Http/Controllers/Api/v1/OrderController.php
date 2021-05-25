@@ -37,8 +37,8 @@ class OrderController extends Controller{
     		$order_id = $request->order_id;
 	    	$order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){
                             $q->where('order_id', $order_id);
-                        },
-	    		'vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+                },'vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+	    	pr($order);die;
 	    	foreach ($order->vendors as $key => $vendor) {
 				$couponData = [];
 				$delivery_fee = 0;
