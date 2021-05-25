@@ -75,10 +75,10 @@ class OrderController extends Controller{
 	            $total_discount = 0;
 	            $taxable_amount = 0;
 	            $payable_amount = 0;
-	            foreach ($cart_products->groupBy('vendor_id') as $order_id => $vendor_cart_products) {
+	            foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
 	            	$OrderVendor = new OrderVendor();
 	                $OrderVendor->status = 0;
-	                $OrderVendor->order_id= $order_id;
+	                $OrderVendor->order_id= $order->id;
 	                $OrderVendor->vendor_id= $vendor_id;
 	                $OrderVendor->save();
 	                foreach ($vendor_cart_products as $vendor_cart_product) {
