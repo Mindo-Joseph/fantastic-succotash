@@ -67,7 +67,6 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('auth/{driver}', 'Front\FacebookController@redirectToSocial');
 	Route::get('auth/callback/{driver}', 'Front\FacebookController@handleSocialCallback');
 
-
 	Route::get('UserCheck', 'Front\UserController@checkUserLogin')->name('checkUserLogin');
 
 	Route::get('stripe/showForm/{token}', 'Front\PaymentController@showFormApp')->name('stripe.formApp');
@@ -78,7 +77,7 @@ Route::group(['middleware' => ['domain']], function () {
 
 	//Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
 
-	Route::get('user/cart/ding/dong/ping/pong', 'Front\CartController@getCartData')->name('user.dingPong');
+	Route::get('/search','Front\SearchController@search');
 
 });
 

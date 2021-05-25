@@ -96,12 +96,10 @@ class BaseController extends Controller
                 if(isset($node['children']) && count($node['children']) > 0){
                     $ss = $this->printTree($node['children'], $from);
                 }
-                
                 $this->htmlData .='</li>';
             }
             $this->htmlData .='</ol>';
         }
-        
         return $this->htmlData;
     }
 
