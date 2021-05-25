@@ -105,6 +105,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/newsLetter', 'Front\ProfileController@newsLetter')->name('user.newsLetter');
     Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
     Route::get('user/changePassword', 'Front\ProfileController@changePassword')->name('user.changePassword');
+	Route::post('user/submitPassword','Front\ProfileController@submitChangePassword')->name('user.submitChangePassword');
     Route::get('user/logout', 'Front\CustomerAuthController@logout')->name('user.logout');
     Route::get('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
 

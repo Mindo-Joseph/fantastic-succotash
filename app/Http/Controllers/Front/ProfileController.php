@@ -8,7 +8,9 @@ use App\Http\Controllers\Front\FrontController;
 use Carbon\Carbon;
 use Auth;
 use Session;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail; 
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends FrontController
 {
@@ -211,7 +213,38 @@ class ProfileController extends FrontController
      */
     public function changePassword(Request $request, $domain = '')
     {
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+       return view('forntend/account/changePassword')->with(['navCategories' => $navCategories]);
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function submitChangePassword(Request $request, $domain = '')
+    {
+        $validator = Validator::make($request->all(), [
+            'new_password' => 'required|string|min:6|max:50',
+            'confirm_password' => 'required|same:new_password',
+        ]);
+
+        if ($validator->fails()) {
+            foreach ($validator->errors()->toArray() as $error_key => $error_value) {
+                $errors['error'] = $error_value[0];
+                return redirect()->back()->with($errors);
+            }
+        }
+        
+        $user = User::where('id', Auth::user()->id)->first();
+        if ($user) {
+        $user->password = Hash::make($request['new_password']);
+        $user->save();
+        }
+        return redirect()->route('user.profile');
+    }
+
 
     /**
      * Display a listing of the resource.
