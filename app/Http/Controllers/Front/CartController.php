@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,Country,UserAddress};
 use Illuminate\Http\Request;
 use Session;
 use Auth;
@@ -18,7 +18,22 @@ class CartController extends FrontController
         }
         return $random_string;
     }
-
+    public function showCart($domain = ''){
+        $cartData = [];
+        $user = Auth::user();
+        $langId = Session::get('customerLanguage');
+        if ($user) {
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
+            $addresses = UserAddress::where('user_id', $user->id)->get();
+        }else{
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
+            $addresses = [];
+        }
+        $countries = Country::get();
+        $cartData = $this->getCart($cart);
+        $navCategories = $this->categoryNav($langId);
+        return view('forntend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries]);
+    }
     public function postAddToCart(Request $request, $domain = ''){
         try {
             $user = Auth::user();
@@ -357,19 +372,7 @@ class CartController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function showCart($domain = ''){
-        $cartData = [];
-        $user = Auth::user();
-        if ($user) {
-            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
-        }else{
-            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
-        }
-        $cartData = $this->getCart($cart);
-        $langId = Session::get('customerLanguage');
-        $navCategories = $this->categoryNav($langId);
-        return view('forntend/cart')->with(['navCategories' => $navCategories, 'cartData' => $cartData]);
-    }
+    
 
 
     /**

@@ -34,10 +34,10 @@
                     </div>
                     <div class="footer-contant">
                          @php
-                            $logo = session('client_config')->logo->proxy_url . '200/200' . session('client_config')->logo->image_path;
+                            $logo = session('client_config')->logo->image_fit . '200/80' . session('client_config')->logo->image_path;
                         
                         @endphp
-                        <div class="footer-logo"><img src="{{$logo}}" alt="" width="120"></div>
+                        <div class="footer-logo"><img src="{{$logo}}" alt=""></div>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
                             ut labore et dolore magna aliqua. Ut enim ad minim veniam,</p>
                         <div class="footer-social">

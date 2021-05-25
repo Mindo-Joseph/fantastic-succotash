@@ -64,19 +64,43 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </div>
                     </div>
                     <div class="menu-right pull-right">
-                        <!-- <div>
+                        <div>
                             <nav id="main-nav">
                                 <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
-                                <ul id="main-menu" class="sm pixelstrap sm-horizontal">
+                                <!-- 
                                     <li>
                                         <div class="mobile-back text-right">Back<i class="fa fa-angle-right pl-2" aria-hidden="true"></i></div>
                                     </li>
                                     <li>
                                         <a href="{{route('userHome')}}">Home</a>
                                     </li>
+                                </ul> -->
+                                <ul id="main-menu" class="sm pixelstrap sm-horizontal">
+                                @foreach($navCategories as $cate)
+                                    <li>
+                                        <a href="{{route('categoryDetail', $cate['id'])}}">{{$cate['name']}}</a>
+                                        @if(!empty($cate['children']))
+                                            
+                                            <ul>
+                                                @foreach($cate['children'] as $childs)
+                                                <li>
+                                                    <a href="{{route('categoryDetail', $childs['id'])}}"><span class="new-tag">{{$childs['name']}}</span></a>
+                                                    @if(!empty($childs['children']))
+                                                    <ul>
+                                                      @foreach($childs['children'] as $chld)
+                                                        <li><a href="{{route('categoryDetail', $chld['id'])}}">{{$chld['name']}}</a></li>
+                                                      @endforeach
+                                                    </ul>
+                                                    @endif
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </li>
+                                @endforeach
                                 </ul>
                             </nav>
-                        </div> -->
+                        </div>
                         <div>
                             <div class="icon-nav">
                                 <form name="filterData" id="filterData" action="{{route('changePrimaryData')}}">
@@ -143,7 +167,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     </div>
     
     @if($navCategories && !empty($navCategories))
-    <div class="container">
+    <!-- <div class="container">
         <div class="row ">
             <div class="col-lg-12">
                 <div class="main-nav-center">
@@ -151,60 +175,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <div class="toggle-nav">
                             <i class="fa fa-bars sidebar-bar"></i>
                         </div>
-                        <!-- Sample menu definition -->
-
-                       <!--  <div class="navbar">
-                            <a href="javascript:void(0)" onclick="openNav()">
-                                <div class="bar-style"><i class="fa fa-bars sidebar-bar" aria-hidden="true"></i>
-                                </div>
-                            </a>
-                            <div id="mySidenav" class="sidenav">
-                                <a href="javascript:void(0)" class="sidebar-overlay" onclick="closeNav()"></a>
-                                <nav>
-                                    <div onclick="closeNav()">
-                                        <div class="sidebar-back text-left"><i class="fa fa-angle-left pr-2" aria-hidden="true"></i> Back</div>
-                                    </div>
-                                    @if($navCategories && !empty($navCategories))
-                                    <ul id="sub-menu" class="sm pixelstrap sm-vertical">
-                                        @foreach($navCategories as $cate)
-                                        <li> <a href="{{route('categoryDetail', $cate['id'])}}">{{$cate['name']}}</a>
-
-                                            @if(!empty($cate['children']))
-                                            <ul class="mega-menu clothing-menu">
-                                                <div class="row m-0">
-                                                    @foreach($cate['children'] as $childs)
-                                                    <li class="col-xl-4">
-
-                                                        <div class="link-section">
-                                                            <a href="{{route('categoryDetail', $childs['id'])}}">
-                                                                <h5>{{$childs['name']}}</h5>
-                                                            </a>
-                                                            @if(!empty($childs['children']))
-                                                            <ul>
-                                                                @foreach($childs['children'] as $chld)
-                                                                <li><a href="{{route('categoryDetail', $chld['id'])}}">{{$chld['name']}}</a></li>
-                                                                @endforeach
-                                                            </ul>
-                                                            @endif
-                                                        </div>
-                                                    </li>
-                                                    @endforeach
-                                                </div>
-                                            </ul>
-                                            @endif
-                                        </li>
-                                        @endforeach
-                                    </ul>
-                                    @endif
-                                </nav>
-                            </div>
-                        </div>
- -->
-
-
-
-
-
                         <ul id="main-menu" class="sm pixelstrap sm-horizontal">
                             <li>
                                 <div class="mobile-back text-right">Back<i class="fa fa-angle-right pl-2" aria-hidden="true"></i></div>
@@ -226,41 +196,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             </ul>
                                             @endif
                                         </li>
-                                       <!--  <li>
-                                            <a href="#">clothing</a>
-                                            <ul>
-                                                <li><a target="_blank" href="index.html">fashion 1</a></li>
-                                                <li><a target="_blank" href="fashion-2.html">fashion 2</a></li>
-                                                <li><a target="_blank" href="fashion-3.html">fashion 3</a></li>
-                                                <li><a target="_blank" href="kids.html">kids</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a target="_blank" href="watch.html">watch</a></li>
-                                        <li><a target="_blank" href="shoes.html">shoes</a></li>
-                                        <li>
-                                            <a href="#">electronics</a>
-                                            <ul>
-                                                <li><a target="_blank" href="electronic-1.html">electronic 1</a></li>
-                                                <li><a target="_blank" href="electronic-2.html">electronic 2</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a target="_blank" href="bags.html">bags</a></li>
-                                        <li><a target="_blank" href="nursery.html">nursery</a></li>
-                                        <li><a target="_blank" href="vegetables.html">vegetable</a></li>
-                                        <li><a target="_blank" href="beauty.html">beauty</a></li>
-                                        <li><a target="_blank" href="light.html">light</a></li>
-                                        <li><a target="_blank" href="furniture.html">furniture</a></li>
-                                        <li><a target="_blank" href="goggles.html">googles</a></li>
-                                        <li>
-                                            <a href="#">basics</a>
-                                            <ul>
-                                                <li><a target="_blank" href="lookbook-demo.html">lookbook</a></li>
-                                                <li><a target="_blank" href="instagram-shop.html">instagram</a></li>
-                                                <li><a target="_blank" href="video.html">video</a></li>
-                                                <li><a target="_blank" href="parallax.html">parallax</a></li>
-                                                <li><a target="_blank" href="full-page.html">full page</a></li>
-                                            </ul>
-                                        </li> -->
                                         @endforeach
                                     </ul>
                                 @endif
@@ -270,7 +205,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     @endif
 </header>
 <script type="text/javascript">

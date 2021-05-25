@@ -19,14 +19,27 @@ class OrderController extends Controller{
 
     public function getOrdersList(Request $request){
     	$user = Auth::user();
-    	$orders = Order::with('products')->where('user_id', $user->id)->paginate(10);
+    	$orders = Order::with('products')->orderBy('id', 'DESC')->get();
+    	foreach ($orders as $order) {
+    		$order_item_count = 0;
+    		foreach ($order->products as $product) {
+    			$order_item_count += $product->quantity;
+    		}
+    		$order->order_item_count = $order_item_count;
+    	}
     	return $this->successResponse($orders, 'Order placed successfully.', 201);
     }
 
     public function postOrderDetail(Request $request){
     	try {
+    		$user = Auth::user();
     		$order_id = $request->order_id;
-	    	$order = Order::with('products')->findOrFail($order_id);
+	    	$order = Order::with(['products','address'])->where('user_id', $user->id)->findOrFail($order_id);
+    		$order_item_count = 0;
+    		foreach ($order->products as $product) {
+    			$order_item_count += $product->quantity;
+    		}
+    		$order->order_item_count = $order_item_count;
 	    	return $this->successResponse($order, null, 201);
     	} catch (Exception $e) {
     		return $this->errorResponse($e->getMessage(), $e->getCode());
@@ -73,12 +86,16 @@ class OrderController extends Controller{
 	                    $payable_amount = $payable_amount + $quantity_price;
 	                    $product_taxable_amount = 0;
 	                    $product_payable_amount = 0;
-	                    foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
-	                        $rate = round($tax_rate_detail->tax_rate);
-	                        $tax_amount = ($price_in_dollar_compare * $rate) / 100;
-	                        $product_tax = $quantity_price * $rate / 100;
-	                        $product_taxable_amount += $taxable_amount + $product_tax;
-	                        $payable_amount = $payable_amount + $product_tax;
+	                    if(isset($vendor_cart_product->product['taxCategory'])){
+	                    	if(isset($vendor_cart_product->product['taxCategory']['taxRate'])){
+			                    foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
+			                        $rate = round($tax_rate_detail->tax_rate);
+			                        $tax_amount = ($price_in_dollar_compare * $rate) / 100;
+			                        $product_tax = $quantity_price * $rate / 100;
+			                        $product_taxable_amount += $taxable_amount + $product_tax;
+			                        $payable_amount = $payable_amount + $product_tax;
+			                    }
+	                    	}	
 	                    }
 	                    $total_amount += $variant->price;
 	                    $taxable_amount += $product_taxable_amount;

@@ -42,4 +42,8 @@ class ProductVariant extends Model
     {
         return $this->belongsTo('App\Models\TaxCategory', 'tax_category_id', 'id')->select('id', 'title', 'code');
     }
+    public function product()
+    {
+        return $this->belongsTo('App\Models\Product', 'product_id', 'id')->select('id', 'sku');
+    }
 }
