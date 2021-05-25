@@ -152,7 +152,7 @@ class ProductController extends BaseController
                             $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id')
                             ->select('variant_options.*', 'vt.title', 'pvs.product_variant_id', 'pvs.variant_type_id')
                             ->where('pvs.product_id', $pid)
-                            ->where('vt.language_id', $langId);
+                            ->where('vt.language_id', $langId); //->whereIn('pvs.product_variant_id', $pvIds)
                         }, 
                         'translation' => function($q) use($langId){
                             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
@@ -241,10 +241,10 @@ class ProductController extends BaseController
             $response['crossProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'cross', $product->crossSell);
             /* group by in query return data only for key - 0 so using 0 */
             if(isset($product->variant[0]->media) && !empty($product->variant[0]->media)){
-                unset($product->variant[0]->media);
+                //unset($product->variant[0]->media);
             }
             unset($product->related);
-            unset($product->media);
+            //unset($product->media);
             //unset($product->addOn);
             unset($product->upSell);
             unset($product->crossSell);
