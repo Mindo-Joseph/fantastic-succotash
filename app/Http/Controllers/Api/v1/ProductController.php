@@ -18,7 +18,7 @@ class ProductController extends BaseController
      * Get Company ShortCode
      *
      */
-    public function productById(Request $request, $pid)
+    public function productById_old(Request $request, $pid)
     {
         //$pid = $request->product_id;
         $langId = Auth::user()->language;
@@ -112,7 +112,7 @@ class ProductController extends BaseController
         ]);
     }
 
-    public function productByIdNew(Request $request, $pid)
+    public function productById(Request $request, $pid)
     {
         //$pid = $request->product_id;
         $langId = Auth::user()->language;
@@ -128,14 +128,14 @@ class ProductController extends BaseController
             }
         }
 
-        $products = Product::with(['inwishlist' => function($qry) use($userid){
+        $product = Product::with(['inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
                     },
                     'variant' => function($v){
                         $v->select('id', 'sku', 'product_id', 'title', 'quantity','price','barcode','tax_category_id')
-                        ->groupBy('product_id');
-                    }, 'variant.vset',
-                    'variant.vimage.pimage.image', 'vendor', 'media.image', 'related', 'upSell', 'crossSell',
+                        ->groupBy('product_id'); // return first variant
+                    },
+                    'variant.media.pimage.image', 'vendor', 'media.image', 'related', 'upSell', 'crossSell',
                     'addOn' => function($q1) use($langId){
                         $q1->join('addon_sets as set', 'set.id', 'product_addons.addon_id');
                         $q1->join('addon_set_translations as ast', 'ast.addon_id', 'set.id');
@@ -168,17 +168,16 @@ class ProductController extends BaseController
                     ->where('id', $pid)
                     ->first();
 
-        dd($products->toArray());
-        if(!$products){
+        if(!$product){
             return response()->json(['error' => 'No record found.'], 404);
         }
 
         $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
-        foreach ($products->variant as $key => $value) {
-            $products->variant[$key]->multiplier = $clientCurrency->doller_compare;
+        foreach ($product->variant as $key => $value) {
+            $product->variant[$key]->multiplier = $clientCurrency->doller_compare;
         }
         $addonList = array();
-        foreach ($products->addOn as $key => $value) {
+        /*foreach ($products->addOn as $key => $value) {
             //$addonList
             foreach ($value->setoptions as $k => $v) {
                 if($v->price == 10){
@@ -189,33 +188,67 @@ class ProductController extends BaseController
                 }
             }
         }
-        $products->addonList = $addonList;
+        $products->addonList = $addonList; */
+        foreach ($product->addOn as $key => $value) {
+            foreach ($value->setoptions as $k => $v) {
+                if($v->price == 0){
+                    $v->is_free = true;
+                }else{
+                    $v->is_free = false;
+                }
+                $v->multiplier = $clientCurrency->doller_compare;
+            }
+        }
         $data_image = array();
-
-        foreach ($products->variant as $key => $value) {
-            if($products->sell_when_out_of_stock == 1){
+        /*  if variant has image return variant images else product images  */
+        $variant_id = 0;
+        foreach ($product->variant as $key => $value) {
+            $variant_id = $value->id;
+            if($product->sell_when_out_of_stock == 1){
                 $value->stock_check = '1';
             }elseif($value->quantity > 0){
                 $value->stock_check = '1';
             }else{
                 $value->stock_check = 0;
             }
-            if($value->vimage->pimage && !empty($products->variant)){
-
+            if($value->media){
+                foreach ($value->media as $media_key => $media_value) {
+                    $data_image[$media_key]['product_variant_id'] = $media_value->product_variant_id;
+                    $data_image[$media_key]['media_id'] = $media_value->product_image_id;
+                    $data_image[$media_key]['is_default'] = 0;
+                    $data_image[$media_key]['image'] = $media_value->pimage->image;
+                }
+            }else{
+                foreach ($product->media as $media_key => $media_value) {
+                    $data_image[$media_key]['product_id'] = $media_value->product_id;
+                    $data_image[$media_key]['media_id'] = $media_value->media_id;
+                    $data_image[$media_key]['is_default'] = $media_value->is_default;
+                    $data_image[$media_key]['image'] = $media_value->image;
+                }
             }
         }
-
-        $response['products'] = $products;
-        $response['relatedProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'relate', $products->related);
-        $response['upSellProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'upSell', $products->upSell);
-        $response['crossProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'cross', $products->crossSell);
-
-        unset($products->related);
-        unset($products->addOn);
-        unset($products->upSell);
-        unset($products->crossSell);
-        $response['products'] = $products;
-
+        if($product->variantSet){
+            foreach ($product->variantSet as $set_key => $set_value) {
+                foreach ($set_value->options as $opt_key => $opt_value) {
+                    $opt_value->value = $opt_value->product_variant_id == $variant_id ? true : false;
+                }
+            }
+        }
+        $product->product_media = $data_image;
+        $response['products'] = $product;
+        $response['relatedProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'relate', $product->related);
+        $response['upSellProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'upSell', $product->upSell);
+        $response['crossProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'cross', $product->crossSell);
+        /* group by in query return data only for key - 0 so using 0 */
+        if(isset($product->variant[0]->media) && !empty($product->variant[0]->media)){
+            unset($product->variant[0]->media);
+        }
+        unset($product->related);
+        unset($product->media);
+        //unset($product->addOn);
+        unset($product->upSell);
+        unset($product->crossSell);
+        $response['products'] = $product;
         return response()->json([
             'data' => $response,
         ]);
@@ -314,7 +347,7 @@ class ProductController extends BaseController
         }
 
         $variantData = ProductVariant::join('products as pro', 'product_variants.product_id', 'pro.id')
-                    ->with(['media.image', 'translation' => function($q) use($langId){
+                    ->with(['product.media.image', 'media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $langId);
                     }])
@@ -328,11 +361,30 @@ class ProductController extends BaseController
         }else{
             $variantData->stock_check = 0;
         }
+        $data_image = array();
+        if($variantData->media){
+            foreach ($variantData->media as $media_key => $media_value) {
+                $data_image[$media_key]['product_variant_id'] = $media_value->product_variant_id;
+                $data_image[$media_key]['media_id'] = $media_value->product_image_id;
+                //$data_image[$media_key]['is_default'] = 1;
+                $data_image[$media_key]['image'] = $media_value->image;
+            }
+        }else{
+            foreach ($variantData->product->media as $media_key => $media_value) {
+                $data_image[$media_key]['product_id'] = $media_value->product_id;
+                $data_image[$media_key]['media_id'] = $media_value->media_id;
+                //$data_image[$media_key]['is_default'] = 1;
+                $data_image[$media_key]['image'] = $media_value->image;
+            }
+        }
+        $variantData->product_media = $data_image;
 
         if ($variantData) {
             $variantData->multiplier = $clientCurrency->doller_compare;
             $variantData->productPrice = $variantData->price * $clientCurrency->doller_compare;
         }
+        unset($variantData->media);
+        unset($variantData->product->media);
         return response()->json([
             'data' => $variantData,
         ]);
