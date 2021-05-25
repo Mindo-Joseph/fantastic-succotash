@@ -64,9 +64,10 @@ $(document).ready(function() {
     cartHeader();
     $(document).on("click","#cancel_save_address_btn",function() {
         $('#add_new_address').show();
+        $('#add_new_address_btn').show();
         $('#add_new_address_form').hide();
     });
-    $(document).on("click","#add_new_address",function() {
+    $(document).on("click","#add_new_address_btn",function() {
         $(this).hide();
         $('#add_new_address_form').show();
     });

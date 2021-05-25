@@ -1,5 +1,9 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
+<header>
+    <div class="mobile-fix-option"></div>
+    @include('layouts.store/left-sidebar')
+</header>
 <div class="container">
     <form method="post" action="{{route('user.placeorder')}}">
     @csrf
@@ -10,7 +14,7 @@
                     <h4 class="page-title">Delivery Address</h4>
                 </div>
             </div>
-            <div class="row mb-4">
+            <div class="row mb-4" id="address_template_main_div">
                 @forelse($addresses as $address)
                     <div class="col-md-12">
                         <div class="delivery_box">
@@ -23,19 +27,29 @@
                 @empty
 
                 @endforelse
-                <div class="col-12 mt-4 text-center">
-                    <a class="btn btn-solid w-75 m-auto" id="add_new_address">
-                        <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address
-                    </a>
-                </div>
             </div>
+            <div class="col-12 mt-4 text-center">
+                <a class="btn btn-solid w-100 m-auto" id="add_new_address_btn">
+                    <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address
+                </a>
+            </div>
+            <script type="text/template" id="address_template">
+                <div class="col-md-12">
+                    <div class="delivery_box">
+                        <label class="radio m-0"><%= address.address %> <%= address.city %> <%= address.state %> <%= address.pincode %>
+                            <input type="radio" checked="checked" name="is_company" value="<%= address.id %>">
+                            <span class="checkround"></span>
+                        </label>
+                    </div>
+                </div>
+            </script>
             <div class="col-md-12 mt-4" id="add_new_address_form" style="display:none;">
                 <div class="theme-card w-100">
                     <div class="form-row">
                         <div class="col-md-12 mb-3">
                             <label for="address">Address</label>
                             <div class="input-group">
-                              <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's username" aria-describedby="button-addon2">
+                              <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2">
                               <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="button-addon2">
                                     <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -96,9 +110,9 @@
                                 </td>
                             </tr>
                             @foreach($product['vendor_products'] as $vendor_product)
-                            <tr>
-                                <td style="width:100px">
-                                    <div class="product-img">
+                            <tr class="padding-bottom">
+                                <td style="width:100px" {{count($vendor_product['addon']) > 0 ? 'rowspan=2' : 0  }}>
+                                    <div class="product-img pb-2">
                                         <img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'100/70'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt="">
                                     </div>
                                 </td>
@@ -112,41 +126,54 @@
                                 <td>
                                     <div class="number">
                                         <span class="minus"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                        <input style="text-align:center;width:50px;margin:auto;" placeholder="1" type="text" value="{{$vendor_product['quantity']}}">
+                                        <input style="text-align:center;width: 40px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="{{$vendor_product['quantity']}}">
                                         <span class="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                                     </div>
-                                    
                                 </td>
                                 <td class="text-center">
+                                    <div class="items-price mb-3">${{$vendor_product['pvariant']['quantity_price']}}</div>
+                                </td>
+                                <td class="text-right">
                                     <a href="#" class="action-icon d-block mb-3">
                                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                                     </a>
                                 </td>
-                                <td class="text-right">
-                                    <div class="items-price mb-3">${{$vendor_product['pvariant']['quantity_price']}}</div>
-                                </td>
                             </tr>
+                            @if($vendor_product['addon'])
+                                <tr>
+                                    <td colspan="5" class="border_0 p-0 border-0">
+                                        <table class="add_on_items w-100">
+                                            <thead>
+                                                <tr>
+                                                    <h6 class="m-0 pl-3"><b>Add Ons</b></h6>
+                                                </tr>
+                                            </thead>    
+                                            <tbody>
+                                                <tr class="border_0 padding-top">
+                                                    <td class="items-details text-left">
+                                                        <p class="m-0">Spicy Dip</p>
+                                                    </td>
+                                                    <td>
+                                                        <div class="extra-items-price">$5.00</div>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    
+                                                    <td class="text-center">
+                                                        <div class="extra-items-price">$5.00</div>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <a href="#" class="action-icon d-block">
+                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            @endif
                             @endforeach
-                            <tr class="border_0">
-                                <td></td>
-                                <td class="items-details text-left">
-                                    <h6>Add Ons</h6>
-                                    <p>Spicy Dip</p>
-                                </td>
-                                <td>
-                                    <div class="extra-items-price">$5.00</div>
-                                </td>
-                                <td>
-                                </td>
-                                <td class="text-center">
-                                    <a href="#" class="action-icon d-block">
-                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                    </a>
-                                </td>
-                                <td class="text-right">
-                                    <div class="extra-items-price">$5.00</div>
-                                </td>
-                            </tr>
                             <tr>
                                 <td colspan="2">
                                     <div class="coupon_box d-flex align-items-center">
@@ -155,20 +182,21 @@
                                         <button class="btn btn-outline-info">Apply</button>
                                     </div>
                                 </td> 
-                                <td>
+                                <!-- <td>
                                     <label class="d-block txt-13">Delivery Fee</label>
                                     <p class="total_amt m-0">Amount</p>
-                                </td>
+                                </td> -->
                                 <td colspan="3" class="text-right">
-                                    <label class="d-block  txt-13">$5.00</label>
-                                    <p class="total_amt m-0">$90.00</p>
+                                    <!-- <label class="d-block  txt-13">$5.00</label> -->
+                                    <p class="total_amt m-0">${{ $product['payable_amount'] }}</p>
                                 </td>
+                                <td></td>
                             </tr>
                         </tbody>
                         @endforeach
                         <tfoot>
                             <tr>
-                                <td colspan="2"></td>
+                                <td colspan="3"></td>
                                 <td class="pr-0">
                                    <p class="mb-1"></p> Sub Total  
                                    <p class="mb-1"></p> Wallet 
@@ -219,4 +247,7 @@
         </div>
     </form>
 </div>
+<script type="text/javascript">
+    var user_store_address_url = "{{url('user/store')}}";
+</script>
 @endsection
