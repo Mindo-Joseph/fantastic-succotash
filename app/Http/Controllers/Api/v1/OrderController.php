@@ -19,7 +19,7 @@ class OrderController extends Controller{
 
     public function getOrdersList(Request $request){
     	$user = Auth::user();
-    	$orders = Order::with('products')->orderBy('id', 'DESC')->get();
+    	$orders = Order::with('products')->orderBy('id', 'DESC')->paginate(10);
     	foreach ($orders as $order) {
     		$order_item_count = 0;
     		foreach ($order->products as $product) {
@@ -36,9 +36,9 @@ class OrderController extends Controller{
     		$order_id = $request->order_id;
 	    	$order = Order::with(['vendors.vendor','vendors.products','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
     		$order_item_count = 0;
-    		// foreach ($order->products as $product) {
-    		// 	$order_item_count += $product->quantity;
-    		// }
+    		foreach ($order->products as $product) {
+    			$order_item_count += $product->quantity;
+    		}
     		$order->order_item_count = $order_item_count;
 	    	return $this->successResponse($order, null, 201);
     	} catch (Exception $e) {
