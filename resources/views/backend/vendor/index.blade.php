@@ -91,16 +91,13 @@
                                                 <span class="badge bg-soft-warning text-warning">Delivery</span>
                                             @endif
                                         </td>
-                                        <td>{{ ($vendor->add_category == 0) ? 'No' : 'Yes' }}</td>
-                                        <td>{{ $vendor->commission_percent }}</td>
-                                        <td>{{ $vendor->commission_fixed_per_order}}</td>
-                                        <td>{{ $vendor->commission_monthly }}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <!-- <td>{{$vendor->products}}</td>
-                                        <td>{{$vendor->orders}}</td>
-                                        <td>{{$vendor->activeOrders}}</td> -->
+                                        <td>{{($vendor->add_category == 0) ? 'No' : 'Yes' }}</td>
+                                        <td>{{$vendor->commission_percent }}</td>
+                                        <td>{{$vendor->commission_fixed_per_order}}</td>
+                                        <td>{{$vendor->commission_monthly }}</td>
+                                        <td>{{$vendor->products_count}}</td>
+                                        <td>{{$vendor->orders_count}}</td>
+                                        <td>{{$vendor->active_orders_count}}</td>
                                         <td> </td>
                                         <!-- <td> {{ $vendor->latitude }} </td>
                                         <td> {{ $vendor->longitude }}</td> -->
