@@ -19,10 +19,10 @@ class OrderController extends Controller{
 
     public function getOrdersList(Request $request){
     	$user = Auth::user();
-    	$orders = Order::with('products')->where('user_id', $user->id)->orderBy('id', 'DESC')->paginate(10);
+    	$orders = Order::with('order_products')->where('user_id', $user->id)->orderBy('id', 'DESC')->paginate(10);
     	foreach ($orders as $order) {
     		$order_item_count = 0;
-    		foreach ($order->products as $product) {
+    		foreach ($order->order_products as $product) {
     			$order_item_count += $product->quantity;
     		}
     		$order->order_item_count = $order_item_count;
@@ -35,7 +35,9 @@ class OrderController extends Controller{
     		$user = Auth::user();
     		$order_item_count = 0;
     		$order_id = $request->order_id;
-	    	$order = Order::with(['vendors.vendor','vendors.products','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+	    	$order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){
+                            $q->where('order_id', $order_id);
+                },'vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
 	    	foreach ($order->vendors as $key => $vendor) {
 				$couponData = [];
 				$delivery_fee = 0;
