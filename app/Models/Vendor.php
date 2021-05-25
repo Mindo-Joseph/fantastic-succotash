@@ -16,6 +16,10 @@ class Vendor extends Model
        return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
     }
 
+    public function orderCount(){
+       return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
+    }
+
     public function getLogoAttribute($value)
     {
       $values = array();
