@@ -576,7 +576,7 @@ ul.social-links li a {
     line-height: 19px;
 }
 
-.wrapper-main .btn, form .form-control, form .btn {
+.wrapper-main .btn, .wrapper-main .form-control, form .btn {
     height: 45px;
     padding: 5px 25px;
     line-height: 30px;
@@ -639,6 +639,7 @@ ul.social-links li a {
 
 .wrapper-main .form-control::-webkit-input-placeholder,.wrapper-main .form-control::placeholder {
     opacity: 0.6;
+    font-weight: 300;
 }
 
 
