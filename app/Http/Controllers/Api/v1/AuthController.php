@@ -36,25 +36,19 @@ class AuthController extends BaseController
      * Login user and create token
      *
      */
-    public function login(LoginRequest $loginReq)
-    {
+    public function login(LoginRequest $loginReq){
         $errors = array();
         $user = User::where('email', $loginReq->email)->first();
-
         if(!$user){
             $errors['error'] = 'Invalid email';
             return response()->json($errors, 422);
         }
-
         if(!Auth::attempt(['email' => $loginReq->email, 'password' => $loginReq->password])){
             $errors['error'] = 'Invalid password';
             return response()->json($errors, 422);
         }
-
         $user = Auth::user();
-
         $prefer = ClientPreference::select('theme_admin', 'distance_unit', 'map_provider', 'date_format','time_format', 'map_key','sms_provider','verify_email','verify_phone', 'app_template_id', 'web_template_id')->first();
-
         if(($prefer->verify_email == 1) || ($prefer->verify_phone == 1)){
             /*if(!$verified || ($verified->is_verified  != 1)){
                 $errors['errors']['email'] = 'Email or password not verified';
@@ -63,9 +57,7 @@ class AuthController extends BaseController
         }
         $verified['is_email_verified'] = $user->is_email_verified;
         $verified['is_phone_verified'] = $user->is_phone_verified;
-
         $token1 = new Token;
-
         $token = $token1->make([
             'key' => 'royoorders-jwt',
             'issuer' => 'royoorders.com',
@@ -74,13 +66,11 @@ class AuthController extends BaseController
             'algorithm' => 'HS256',
         ])->get();
         $token1->setClaim('user_id', $user->id);
-
         try {
             Token::validate($token, 'secret');
         } catch (\Exception $e) {
 
         }
-
         $device = UserDevice::where('user_id', $user->id)->first();
         if(!$device){
             $device = new UserDevice();
@@ -89,7 +79,6 @@ class AuthController extends BaseController
         $device->device_type = $loginReq->device_type;
         $device->device_token = $loginReq->device_token;
         $device->save();
-        
         $user->auth_token = $token;
         $user->save();
         $checkSystemUser = $this->checkCookies($user->id);
@@ -335,11 +324,9 @@ class AuthController extends BaseController
         }
 
         if($request->type == 'phone'){
-
             if($user->phone_token != $request->otp){
                 return response()->json(['error' => 'OTP is not valid'], 404);
             }
-
             if($currentTime > $user->phone_token_valid_till){
                 return response()->json(['error' => 'OTP has been expired.'], 404);
             }
@@ -347,7 +334,6 @@ class AuthController extends BaseController
             $user->phone_token_valid_till = NULL;
             $user->is_phone_verified = 1;
         }
-
         if($request->type == 'email'){
 
             if($user->email_token != $request->otp){
@@ -460,15 +446,13 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function resetPassword(Request $request, $domain = '')
-    {
+    public function resetPassword(Request $request, $domain = ''){
         $validator = Validator::make($request->all(), [
             'email' => 'required|string',
             'otp' => 'required|string|min:6|max:50',
             'new_password' => 'required|string|min:6|max:50',
             'confirm_password' => 'required|same:new_password',
         ]);
- 
         if($validator->fails()){
             foreach($validator->errors()->toArray() as $error_key => $error_value){
                 $errors['error'] = $error_value[0];
@@ -476,8 +460,7 @@ class AuthController extends BaseController
             }
         }
         $user = User::where('email', $request->email)->first();
-        if(!$user)
-        {
+        if(!$user){
             return response()->json(['error' => 'User not found.'], 404);
         }
         if($user->email_token != $request->otp){
@@ -487,7 +470,6 @@ class AuthController extends BaseController
         if($currentTime > $user->phone_token_valid_till){
             return response()->json(['error' => 'OTP has been expired.'], 404);
         }
-        
         $user->password = Hash::make($request['new_password']);
         $user->save(); 
         return response()->json([
@@ -500,10 +482,7 @@ class AuthController extends BaseController
      *
      * @return [string] message
      */
-    public function sacialData(Request $request)
-    {
-        
-
+    public function sacialData(Request $request){
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
