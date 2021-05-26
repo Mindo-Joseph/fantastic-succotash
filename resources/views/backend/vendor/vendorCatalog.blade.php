@@ -107,7 +107,7 @@
                                               @foreach($products as $product)
                                               <tr data-row-id="{{$product->id}}">
                                                   <td> 
-                                                    @if($product->media[0])
+                                                    @if(isset($product->media[0]))
                                                         <img alt="{{$product->id}}" class="rounded-circle" src="{{$product->media[0]->image->path['proxy_url'].'30/30'.$product->media[0]->image->path['image_path']}}">
                                                     @else
                                                         {{ $product->sku }}
