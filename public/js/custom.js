@@ -1,4 +1,52 @@
 $(document).ready(function() {
+    function productRemove(cartproduct_id, vendor_id){
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: delete_cart_product_url,
+            data: {cartproduct_id:cartproduct_id},
+            success: function(data) {
+                if(data.status == 'success'){
+                    $('#cart_product_'+cartproduct_id).remove();
+                    $('#shopping_cart1_'+cartproduct_id).remove();
+                    $('#tr_vendor_products_'+cartproduct_id).remove();
+                    cartTotalProductCount();
+                    if($("#tbody_" + vendor_id + " > tr.vendor_products_tr").length == 0){
+                        $('#tbody_'+vendor_id).remove();
+                    }
+                    if($("[id^=tr_vendor_products_]").length == 0){
+                        if($("#cart_main_page").length){
+                            $("#cart_main_page").html('');
+                            $('#tbody_'+vendor_id).remove()
+                            let empty_cart_template = _.template($('#empty_cart_template').html());
+                            $("#cart_main_page").append(empty_cart_template());
+                        }
+                    }
+                    if($("[id^=cart_product_]").length == 0){
+                        $(".shopping-cart").html('');
+                    }
+                }
+            }
+        });
+    }
+    $(document).on("click",".remove-product",function() {
+        let vendor_id = $(this).data('vendor_id');
+        let cartproduct_id = $(this).data('product');
+        productRemove(cartproduct_id, vendor_id);
+    });
+    $(document).on("click",".remove_product_via_cart",function() {
+        $('#remove_item_modal').modal('show');
+        let vendor_id = $(this).data('vendor_id');
+        let cartproduct_id = $(this).data('product');
+        $('#remove_item_modal #vendor_id').val(vendor_id);
+        $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
+    });
+    $(document).on("click","#remove_product_button",function() {
+        let vendor_id = $('#remove_item_modal #vendor_id').val();
+        let cartproduct_id = $('#remove_item_modal #cartproduct_id').val();
+        $('#remove_item_modal').modal('hide');
+        productRemove(cartproduct_id, vendor_id);
+    });
     function initialize() {
       var input = document.getElementById('address');
       var autocomplete = new google.maps.places.Autocomplete(input);
@@ -132,50 +180,7 @@ $(document).ready(function() {
             },
         });
     }
-    $(document).on("click",".remove_product_via_cart, .remove-product",function() {
-        let vendor_id = $(this).data('vendor_id');
-        let cartproduct_id = $(this).data('product');
-        Swal.fire({
-          title: 'Are you sure you want to remove this item?',
-          showCancelButton: true,
-          cancelButtonColor: '#d33',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Yes, delete it!',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            $.ajax({
-                type: "POST",
-                dataType: 'json',
-                url: delete_cart_product_url,
-                data: {cartproduct_id:cartproduct_id},
-                success: function(data) {
-                    if(data.status == 'success'){
-                        $('#cart_product_'+cartproduct_id).remove();
-                        $('#shopping_cart1_'+cartproduct_id).remove();
-                        $('#tr_vendor_products_'+cartproduct_id).remove();
-                        cartTotalProductCount();
-                        if($("#tbody_" + vendor_id + " > tr.vendor_products_tr").length == 0){
-                            $('#tbody_'+vendor_id).remove();
-                        }
-                        if($("[id^=tr_vendor_products_]").length == 0){
-                            if($("#cart_main_page").length){
-                                $("#cart_main_page").html('');
-                                $('#tbody_'+vendor_id).remove()
-                                let empty_cart_template = _.template($('#empty_cart_template').html());
-                                $("#cart_main_page").append(empty_cart_template());
-                            }
-                        }
-                        if($("[id^=cart_product_]").length == 0){
-                            $(".shopping-cart").html('');
-                        }
-                    }
-                }
-            });
-          }
-        })
-        
-        
-    });
+    
     $(document).on('click', '.quantity-right-plus', function() {
         var quan = parseInt($('.quantity_count').val());
         var str = $('#instock').html();

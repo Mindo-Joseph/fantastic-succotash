@@ -79,8 +79,7 @@ class HomeController extends BaseController
     /**
      * update driver availability status if 0 than 1 if 1 than 0
     */
-    public function homepage(Request $request)
-    {
+    public function homepage(Request $request){
         try{
             $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
             $lats = $request->latitude;
@@ -123,19 +122,6 @@ class HomeController extends BaseController
         }
         
     }
-
-    /*public function inServiceArea($user_geo, $area, $count = 0)
-    {
-        //echo '<pre>';print_r($area->toArray()); die;
-        foreach ($area as $geokey => $geovalue) {
-            $availables = $this->contains($user_geo, $geovalue->geo_coordinates);
-            if($availables){
-                return 1;
-            }
-            $count++;
-        }
-        return 0;
-    }*/
 
     public function productList($venderIds, $langId = 1, $currency = 147, $where = ''){
         $clientCurrency = ClientCurrency::where('currency_id', $currency)->first();

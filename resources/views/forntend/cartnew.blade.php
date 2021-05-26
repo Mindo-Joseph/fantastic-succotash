@@ -180,7 +180,7 @@
                                         <div class="items-price mb-3">${{$vendor_product['pvariant']['quantity_price']}}</div>
                                     </td>
                                     <td class="text-right">
-                                        <a  class="action-icon d-block mb-3 remove_product_via_cart" data-toggle="modal" data-target="#remove_item" data-product="{{$vendor_product['id']}}" data-vendor_id="{{ $vendor_product['vendor_id'] }}">
+                                        <a  class="action-icon d-block mb-3 remove_product_via_cart" data-product="{{$vendor_product['id']}}" data-vendor_id="{{ $vendor_product['vendor_id'] }}">
                                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                                         </a>
                                     </td>
@@ -304,11 +304,7 @@
         </div>
     @endif
 </div>
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="remove_item" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_itemLabel" aria-hidden="true">
+<div class="modal fade" id="remove_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_itemLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header pb-0">
@@ -318,11 +314,13 @@
         </button>
       </div>
       <div class="modal-body">
+        <input type="text" id="vendor_id" value="">
+        <input type="text" id="cartproduct_id" value="">
         <h6 class="m-0">Are you sure you want to remove this item?</h6>
       </div>
       <div class="modal-footer flex-nowrap justify-content-center align-items-center">
         <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-solid">Remove</button>
+        <button type="button" class="btn btn-solid" id="remove_product_button">Remove</button>
       </div>
     </div>
   </div>
