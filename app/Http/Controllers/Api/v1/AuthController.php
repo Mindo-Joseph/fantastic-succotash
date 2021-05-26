@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Api\v1\BaseController;
-use Illuminate\Http\Request;
-use App\Http\Requests\{LoginRequest, SignupRequest};
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use App\Models\{User, Client, ClientPreference, BlockedToken, Otp, Country, UserDevice, UserVerification, ClientLanguage};
-use Validation;
 use DB;
-use JWT\Token;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Config;
 use Password;
+use JWT\Token;
+use Validation;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Notifications\PasswordReset;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Api\v1\BaseController;
+use App\Http\Requests\{LoginRequest, SignupRequest};
+use App\Models\{User, Client, ClientPreference, BlockedToken, Otp, Country, UserDevice, UserVerification, ClientLanguage, CartProduct, Cart};
 
-class AuthController extends BaseController
-{
+class AuthController extends BaseController{
     /**
      * Get Country List
      * * @return country array
@@ -81,6 +80,27 @@ class AuthController extends BaseController
         $device->save();
         $user->auth_token = $token;
         $user->save();
+        $user_cart = Cart::where('user_id', $user->id)->first();
+        if($user_cart){
+            $unique_identifier_cart = Cart::where('unique_identifier', $loginReq->device_token)->first();
+            if($unique_identifier_cart){
+                $unique_identifier_cart_products = CartProduct::where('cart_id', $unique_identifier_cart->id)->get();
+                foreach ($unique_identifier_cart_products as $unique_identifier_cart_product) {
+                    $user_cart_product_detail = CartProduct::where('cart_id', $user_cart->id)->where('product_id', $unique_identifier_cart_product->product_id)->first();
+                    if($user_cart_product_detail){
+                        $user_cart_product_detail->quantity = ($unique_identifier_cart_product->quantity + $user_cart_product_detail->quantity);
+                        $user_cart_product_detail->save();
+                        $unique_identifier_cart_product->delete();
+                    }else{
+                      $unique_identifier_cart_product->cart_id = $user_cart->id;
+                      $unique_identifier_cart_product->save();
+                    }
+                }
+                $unique_identifier_cart->delete();
+            }
+        }else{
+            Cart::where('unique_identifier', $request->loginReq)->update(['user_id' => $customer->id,  'unique_identifier' => '']);
+        }
         $checkSystemUser = $this->checkCookies($user->id);
         $data['auth_token'] =  $token;
         $data['name'] = $user->name;
@@ -107,7 +127,6 @@ class AuthController extends BaseController
             'device_type'   => 'required|string',
             'device_token'  => 'required|string'
         ]);
- 
         if($validator->fails()){
             foreach($validator->errors()->toArray() as $error_key => $error_value){
                 $errors['error'] = $error_value[0];
