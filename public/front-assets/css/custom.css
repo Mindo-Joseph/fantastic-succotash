@@ -687,6 +687,13 @@ ul.social-links li a {
     border-color: #ced4da;
 }
 
+.action-icon{
+    cursor: pointer;
+}
+
+.theme-card .offer-slider a {
+    width: 170px;
+}
 
 
 
