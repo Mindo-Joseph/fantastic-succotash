@@ -116,8 +116,8 @@
                                                   <td> {{ (isset($product->primary->title) && !empty($product->primary->title)) ? $product->primary->title : '' }} </td>
                                                   <td> {{ $product->category->cat->slug }}</td>
                                                   <td> {{ !empty($product->brand) ? $product->brand->title : 'N/A'  }}</td>
-                                                  <td> {{ $product->variant[0]->quantity }}</td>
-                                                  <td> {{ $product->variant[0]->price }}</td>
+                                                  <td> {{ $product->variant->first() ? $product->variant->first()->quantity : 0 }}</td>
+                                                  <td> {{ $product->variant->first() ? $product->variant->first()->price : 0 }}</td>
                                                   <td> {{ ($product->is_live == 0) ? 'Draft' : 'Published' }}</td>
                                                   <td> {{ ($product->is_new == 0) ? 'No' : 'Yes' }}</td>
                                                   <td> {{ ($product->is_featured == 0) ? 'No' : 'Yes' }}</td>
@@ -168,23 +168,11 @@
                 <div class="row">
                     <div class="col-md-12">
                       <div class="row">
-                        <!--<div class="col-6 mb-2">
-                            {!! Form::label('title', 'Product Type',['class' => 'control-label']) !!}
-                            <select class="form-control selectizeInput" id="typeSelectBox" name="type_id">
-                                @foreach($typeArray as $type)
-                                    <option value="{{$type->id}}">{{$type->title}}</option>
-                                @endforeach
-                            </select>
-
-                            
-                        </div> -->
-
                         <div class="col-12 mb-2">
                           <div class="form-group" id="skuInput">
                             {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
                             {!! Form::text('sku', null, ['class'=>'form-control','id' => 'sku', 'onkeypress' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
-
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
                             </span>
@@ -229,61 +217,6 @@
   </div>
 </div>
 <script type="text/javascript">
-   
-       /*$('#submitButton').on('click', function(e){
-           // We don't want this to act as a link so cancel the link action
-           e.preventDefault();
-           doSubmit();
-       });*/
-       
-       /*$('#deleteButton').on('click', function(e){
-           // We don't want this to act as a link so cancel the link action
-           e.preventDefault();
-           doDelete();
-       });*/
-       
-       /*function doDelete(){
-           $("#calendarModal").modal('hide');
-           var eventID = $('#eventID').val();
-           $.ajax({
-               url: 'index.php',
-               data: 'action=delete&id='+eventID,
-               type: "POST",
-               success: function(json) {
-                   if(json == 1)
-                        $("#calendar").fullCalendar('removeEvents',eventID);
-                   else
-                        return false;
-                    
-                   
-               }
-           });
-       }*/
-       /*function doSubmit(){
-           $("#createEventModal").modal('hide');
-           var title = $('#title').val();
-           var startTime = $('#startTime').val();
-           var endTime = $('#endTime').val();
-           
-           $.ajax({
-               url: 'index.php',
-               data: 'action=add&title='+title+'&start='+startTime+'&end='+endTime,
-               type: "POST",
-               success: function(json) {
-                   $("#calendar").fullCalendar('renderEvent',
-                   {
-                       id: json.id,
-                       title: title,
-                       start: startTime,
-                       end: endTime,
-                   },
-                   true);
-               }
-           });
-           
-       }
-    });*/
-
     $('.addProductBtn').click(function(){
       $('#add-product').modal({
             keyboard: false
@@ -350,13 +283,8 @@
     });
 
 </script>
-
-
 @include('backend.vendor.modals')
 @endsection
-
 @section('script')
-
 @include('backend.vendor.pagescript')
-
 @endsection

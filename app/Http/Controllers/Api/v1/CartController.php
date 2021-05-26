@@ -344,7 +344,6 @@ class CartController extends BaseController{
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         $total_tax = $total_paying = $total_disc_amount = 0.00; $item_count = 0;
         if($cartData){
-            
             foreach ($cartData as $ven_key => $vendorData) {
 
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
@@ -380,7 +379,6 @@ class CartController extends BaseController{
                         }else{
                             $discount_amount = $vendorData->coupon->promo->amount * $clientCurrency->doller_compare;
                         }
-                        
                         if($vendorData->coupon->promo->restriction_on == 0){
                             foreach ($vendorData->coupon->promo->details as $key => $value) {
                                 $couponProducts[] = $value->refrence_id;
