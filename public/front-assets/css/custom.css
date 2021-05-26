@@ -658,9 +658,9 @@ ul.social-links li a {
     width: 100%;
 }
 
-#remove_item .modal-dialog {max-width: 300px;}
+.remove-item-modal .modal-dialog {max-width: 300px;}
 
-#remove_item .close {
+.remove-item-modal .close {
     position: absolute;
     right: -25px;
     top: -20px;
@@ -668,14 +668,14 @@ ul.social-links li a {
     opacity: 4;
 }
 
-#remove_item .btn {
+.remove-item-modal .btn {
     width: 50%;
     height: 45px;
     padding: 10px;
     line-height: 35px;
 }
 
-#remove_item .btn {
+.remove-item-modal .btn {
     width: 50%;
     height: 35px;
     padding: 10px;

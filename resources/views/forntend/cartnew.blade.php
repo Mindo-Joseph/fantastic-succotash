@@ -304,7 +304,7 @@
         </div>
     @endif
 </div>
-<div class="modal fade" id="remove_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_itemLabel" aria-hidden="true">
+<div class="modal fade remove-item-modal" id="remove_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_itemLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header pb-0">
@@ -316,7 +316,7 @@
       <div class="modal-body">
         <input type="hidden" id="vendor_id" value="">
         <input type="hidden" id="cartproduct_id" value="">
-        <h6 class="m-0">Are you sure you want to remove this item?</h6>
+        <h6 class="m-0">Are you sure you want to remove this item ?</h6>
       </div>
       <div class="modal-footer flex-nowrap justify-content-center align-items-center">
         <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
