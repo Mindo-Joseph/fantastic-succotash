@@ -193,7 +193,7 @@
                                                 $opt_id = $optn->variant_option_id;
                                                 $checked = ($selectedVariant == $optn->product_variant_id) ? 'checked' : '';
                                                 ?>
-                                                <label class="radio d-inline-block txt-14">{{$optn->title}}
+                                                <label class="radio d-inline-block txt-14 mr-2">{{$optn->title}}
                                                     <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="changeVariant dataVar{{$var_id}}">
                                                     <span class="checkround"></span>
                                                 </label>
