@@ -483,3 +483,8 @@
 .main-menu .brand-logo {
     padding: 0;
 }
+
+.slide-6 .slick-track {
+    display: flex;
+    align-items: center;
+}
