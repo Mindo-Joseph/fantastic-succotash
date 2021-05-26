@@ -1,5 +1,13 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
+<style type="text/css">
+.swal2-title {
+  margin: 0px;
+  font-size: 26px;
+  font-weight: 400;
+  margin-bottom: 28px;
+}
+</style>
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -139,17 +147,19 @@
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-striped" id="order_table">
                             @foreach($cartData->products as $product)
-                            <tbody>
+                            <tbody id="tbody_{{$product['vendor']['id']}}">
                                 <tr>
                                     <td colspan="6">
                                         {{$product['vendor']['name']}}
                                     </td>
                                 </tr>
                                 @foreach($product['vendor_products'] as $vendor_product)
-                                <tr class="padding-bottom" id="tr_vendor_products_{{$vendor_product['id']}}">
+                                <tr class="padding-bottom vendor_products_tr" id="tr_vendor_products_{{$vendor_product['id']}}">
                                     <td style="width:100px" {{count($vendor_product['addon']) > 0 ? 'rowspan=2' : 0  }}>
                                         <div class="product-img pb-2">
-                                            <img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'100/70'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt="">
+                                            @if(isset($vendor_product['pvariant']['media'][0]['image']))
+                                                <img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'100/70'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt="">
+                                            @endif
                                         </div>
                                     </td>
                                     <td class="items-details text-left">
@@ -170,7 +180,7 @@
                                         <div class="items-price mb-3">${{$vendor_product['pvariant']['quantity_price']}}</div>
                                     </td>
                                     <td class="text-right">
-                                        <a  class="action-icon d-block mb-3 remove_product_via_cart" data-product="{{$vendor_product['id']}}">
+                                        <a  class="action-icon d-block mb-3 remove_product_via_cart" data-product="{{$vendor_product['id']}}" data-vendor_id="{{ $vendor_product['vendor_id'] }}">
                                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                                         </a>
                                     </td>
@@ -289,7 +299,7 @@
                 </div>
                 <h3>Your cart is empty!</h3>
                 <p>Add items to it now.</p>
-                <a class="btn btn-solid" href="#">Shop Now</a>
+                <a class="btn btn-solid" href="{{url('/')}}">Shop Now</a>
             </div>
         </div>
     @endif

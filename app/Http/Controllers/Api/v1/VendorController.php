@@ -16,10 +16,20 @@ class VendorController extends BaseController{
     use ApiResponser;
     private $field_status = 2;
 
-    public function postVendorCategoryList(Request $request,){
+    public function postVendorCategoryList(Request $request){
         try {
+            $category_details = [];
             $vendor_id = $request->vendor_id;
-            $vendor_products = Product::with('category')->where('vendor_id', $vendor_id)->get();
+            $vendor_products = Product::with('category.categoryDetail')->where('vendor_id', $vendor_id)->groupBy('vendor_id')->get(['id']);
+            foreach ($vendor_products as $vendor_product) {
+                $category_details[] = array(
+                    'id' => $vendor_product->category->categoryDetail->id,
+                    'slug' => $vendor_product->category->categoryDetail->slug,
+                    'icon' => $vendor_product->category->categoryDetail->icon,
+                    'image' => $vendor_product->category->categoryDetail->image
+                );
+            }
+            return $this->successResponse($category_details, '', 200);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }
