@@ -48,24 +48,14 @@ class TaskController extends BaseController
         } else {
             $Order  = Order::where('id', $orderId)->update(['status' => $request->task_status, 'note' => $note]);
         }
-
         $task = Task::where('id', $request->task_id)->update(['task_status' => $request->task_status]);
         $newDetails = Task::where('id', $request->task_id)->with(['location','tasktype','pricing','order.customer'])->first();
-
-        // $newDetails = Task::where('id', $request->task_id)->with('location', 'tasktype', 'pricing')
-        //                 ->select('tasks.*', 'orders.recipient_phone', 'orders.Recipient_email', 'orders.task_description', 'customers.phone_number  as customer_mobile', 'customers.email  as customer_email', 'customers.name as customer_name')
-        //                 ->join('orders', 'orders.id' , 'tasks.order_id')
-        //                 ->join('customers', 'customers.id' , 'orders.customer_id')->get();
-                       
-
         return response()->json([
             'data' => $newDetails,
         ]);
     }
 
-    public function TaskUpdateReject(Request $request)
-    {
-        //die($request->order_id);
+    public function TaskUpdateReject(Request $request){
         $check = Order::where('id', $request->order_id)->first();
         if (!isset($check)) {
             return response()->json([
@@ -78,14 +68,12 @@ class TaskController extends BaseController
             ], 404);
         }
         if ($request->status == 1) {
-
             Order::where('id', $request->order_id)->update(['driver_id' => $request->driver_id, 'status' => 'assigned']);
             Task::where('order_id',$request->order_id)->update(['task_status' => 1]);
             return response()->json([
                 'data' => 'Task Accecpted Successfully',
             ], 200);
         } else {
-
             $data = [
                 'order_id'          => $request->order_id,
                 'driver_id'         => $request->driver_id,
@@ -94,7 +82,6 @@ class TaskController extends BaseController
                 'updated_at'        => Carbon::now()->toDateTimeString(),
             ];
             TaskReject::create($data);
-
             return response()->json([
                 'data' => 'Task Rejected Successfully',
             ], 200);
@@ -103,13 +90,7 @@ class TaskController extends BaseController
 
     public function CreateTask(Request $request)
     {
-        // $orders = Order::where('id',200)->with('task')->first();
-        // return response()->json([
-        //     'data' => $orders,
-        // ],200);
-
         $loc_id = $cus_id = $send_loc_id = 0;
-
         $images = [];
         $last = '';
         $customer = [];
@@ -341,12 +322,6 @@ class TaskController extends BaseController
 
     public function finalRoster($geo, $notification_time, $agent_id, $orders_id, $customer, $finalLocation, $taskcount, $header, $allocation)
     {
-        //dd($customer);
-        // print($geo);
-        // print($notification_time);
-        // print($agent_id);
-        // print($orders_id);
-        // die;
         $allcation_type = 'N';
         $date = \Carbon\Carbon::today();
         $auth = Client::where('database_name', $header['client'][0])->with('getAllocation')->first();
@@ -403,7 +378,6 @@ class TaskController extends BaseController
             foreach ($orders as $ids) {
                 array_push($allreadytaken, $ids->driver_id);
             }
-            //print_r($allreadytaken);
             $counter = 0;
             $data = [];
             for ($i = 1; $i <= $try; $i++) {
@@ -492,18 +466,9 @@ class TaskController extends BaseController
             return Roster::create($dummyentry);
         }
     }
-    public function checkTimeDiffrence($notification_time, $beforetime)
-    {
-        // print($now);
-        // print($notification_time);
-
-        // echo $notification_time;
-        // die;
-
+    public function checkTimeDiffrence($notification_time, $beforetime){
         $to   = Carbon::createFromFormat('Y-m-d H:s:i', Carbon::now()->toDateTimeString());
-
         $from = Carbon::createFromFormat('Y-m-d H:s:i', Carbon::parse($notification_time)->format('Y-m-d H:i:s'));
-
         $diff_in_minutes = $to->diffInMinutes($from);
         if ($diff_in_minutes < $beforetime) {
             return  Carbon::now()->toDateTimeString();
@@ -512,23 +477,21 @@ class TaskController extends BaseController
         }
     }
 
-    public function SendToAll($geo, $notification_time, $agent_id, $orders_id, $customer, $finalLocation, $taskcount, $header, $allocation)
-    {
+    public function SendToAll($geo, $notification_time, $agent_id, $orders_id, $customer, $finalLocation, $taskcount, $header, $allocation){
         $allcation_type = 'N';
         $date       = \Carbon\Carbon::today();
         $auth       = Client::where('database_name', $header['client'][0])->with(['getAllocation', 'getPreference'])->first();
-        $expriedate = (int)$auth->getAllocation->request_expiry;
-        $beforetime = (int)$auth->getAllocation->start_before_task_time;
-        $maxsize    = (int)$auth->getAllocation->maximum_batch_size;
-        $type       = $auth->getPreference->acknowledgement_type;
         $try        = $auth->getAllocation->number_of_retries;
+        $expriedate = (int)$auth->getAllocation->request_expiry;
+        $type       = $auth->getPreference->acknowledgement_type;
+        $maxsize    = (int)$auth->getAllocation->maximum_batch_size;
+        $beforetime = (int)$auth->getAllocation->start_before_task_time;
         $time       = $this->checkTimeDiffrence($notification_time, $beforetime);
         $randem     = rand(11111111, 99999999);
         $data = [];
         if ($type == 'acceptreject') {
             $allcation_type = 'AR';
         }
-
         $extraData = [
             'customer_name'            => $customer->name,
             'customer_phone_number'    => $customer->phone_number,
@@ -541,7 +504,6 @@ class TaskController extends BaseController
             'created_at'               => Carbon::now()->toDateTimeString(),
             'updated_at'               => Carbon::now()->toDateTimeString(),
         ];
-
         if (!isset($geo)) {
             $oneagent = Agent::where('id', $agent_id)->first();
             $data = [
@@ -559,13 +521,10 @@ class TaskController extends BaseController
             $this->dispatchNow(new RosterCreate($data, $extraData));
             return $task = Roster::create($data);
         } else {
-           
             $getgeo = DriverGeo::where('geo_id', $geo)->with('agent')->get('driver_id');
-
             if(count($getgeo) >0){
                 for ($i = 1; $i <= $try; $i++) {
                     foreach ($getgeo as $key =>  $geoitem) {
-    
                         $datas = [
                             'order_id'            => $orders_id,
                             'driver_id'           => $geoitem->driver_id,
@@ -581,13 +540,11 @@ class TaskController extends BaseController
                         ];
                         array_push($data, $datas);
                         if ($allcation_type == 'N') {
-    
                             break;
                         }
                     }
     
                     if ($allcation_type == 'N') {
-    
                         break;
                     }
                 }
@@ -598,14 +555,11 @@ class TaskController extends BaseController
             }else{
                 return;
             }
-            
         }
     }
 
-    public function currentstatus(Request $request)
-    {
+    public function currentstatus(Request $request){
         $status = Order::where('id', $request->task_id)->first();
-
         return response()->json([
             'task_id' => $status->id,
             'status'  => $status->status,

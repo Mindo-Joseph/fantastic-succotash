@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Api\v1\BaseController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use App\Models\{User, Product, Cart, ClientCurrency, Brand, CartAddon, UserDevice, ClientPreference, CartProduct};
-use Validation;
 use DB;
-use JWT\Token;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Config;
 use Password;
+use JWT\Token;
+use Validation;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Notifications\PasswordReset;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Api\v1\BaseController;
+use App\Models\{User, Product, Cart, ClientCurrency, Brand, CartAddon, UserDevice, ClientPreference, CartProduct};
 
-class SocialController extends BaseController
-{
+class SocialController extends BaseController{
 	/**
      * Social Keys
      */
