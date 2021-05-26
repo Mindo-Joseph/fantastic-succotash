@@ -663,6 +663,8 @@ ul.social-links li a {
     position: absolute;
     right: -25px;
     top: -20px;
+    color: #fff;
+    opacity: 4;
 }
 
 #remove_item .btn {
