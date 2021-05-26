@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Api\v1\BaseController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use App\Models\{User, Product, Cart, CartProduct, CartCoupon, Promocode, PromocodeRestriction};
-use Validation;
 use DB;
+use Validation;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Api\v1\BaseController;
+use App\Models\{User, Product, Cart, CartProduct, CartCoupon, Promocode, PromocodeRestriction};
 
 class CouponController extends BaseController
 {
     private $field_status = 2;
-    /**         list Promocode        */
-    public function list(Request $request, $cartId = 0)
-    {
+
+    public function list(Request $request, $cartId = 0){
         $user = User::where('status', '!=', '2');
         if (Auth::user() && Auth::user()->id > 0) {
             $user = $user->where('id', Auth::user()->id);
@@ -30,25 +29,18 @@ class CouponController extends BaseController
         if(!$user){
             return response()->json(['error' => 'User not found'], 404);
         }
-
         $cart = Cart::with('cartvendor')->select('id', 'is_gift', 'item_count')
                     ->where('status', '0')
                     ->where('user_id', $user->id)->first();
-
-        dd($cart->toArray());
-
-
         $promocode = Promocode::with('type', 'restriction')->where('is_deleted', '0')->whereDate('expiry_date', '>=', Carbon::now())->get();
         
     }
 
-    /** apply promocode      */
-    public function apply(Request $request)
-    {
+    public function apply(Request $request){
+        
     }
 
-    /** remove promoce      */
-    public function remove(Request $request)
-    {
+    public function remove(Request $request){
+
     }
 }

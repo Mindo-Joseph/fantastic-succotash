@@ -20,22 +20,16 @@ class ProductController extends BaseController
      * Get Company ShortCode
      *
      */
-    public function productById_old(Request $request, $pid)
-    {
-        //$pid = $request->product_id;
-        $langId = Auth::user()->language;
-        /*if(!$request->has('product_sku')){
-            return response()->json(['error' => 'No record found.'], 404);
-        }*/
-        $userid = Auth::user()->id;
+    public function productById_old(Request $request, $pid){
         $pvIds = array();
+        $userid = Auth::user()->id;
+        $langId = Auth::user()->language;
         $proVariants = ProductVariant::select('id', 'product_id')->where('product_id', $pid)->get();
         if($proVariants){
             foreach ($proVariants as $key => $value) {
                 $pvIds[] = $value->id;
             }
         }
-
         $products = Product::with(['inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
                     },
@@ -71,7 +65,6 @@ class ProductController extends BaseController
                         $q2->where('apt.language_id', $langId);
                     },
                     ])->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'is_new', 'is_featured', 'is_physical', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating')
-                   // ->where('sku', $request->product_sku)
                     ->where('id', $pid)
                     ->first();
         if(!$products){
@@ -88,7 +81,6 @@ class ProductController extends BaseController
                 $v->multiplier = $clientCurrency->doller_compare;
             }
         }
-
         foreach ($products->variant as $key => $value) {
             if($products->sell_when_out_of_stock == 1){
                 $value->stock_check = '1';
@@ -103,12 +95,10 @@ class ProductController extends BaseController
         $response['relatedProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'relate', $products->related);
         $response['upSellProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'upSell', $products->upSell);
         $response['crossProducts'] = $this->metaProduct($langId, $clientCurrency->doller_compare, 'cross', $products->crossSell);
-
         unset($products->related);
         unset($products->upSell);
         unset($products->crossSell);
         $response['products'] = $products;
-
         return response()->json([
             'data' => $response,
         ]);
@@ -117,17 +107,10 @@ class ProductController extends BaseController
     public function productById(Request $request, $pid)
     {
         try{
+            $pvIds = array();
             $user = Auth::user();
             $langId = $user->language;
             $userid = $user->id;
-            $pvIds = array();
-            /*$proVariants = ProductVariant::select('id', 'product_id')->where('product_id', $pid)->get();
-            if($proVariants){
-                foreach ($proVariants as $key => $value) {
-                    $pvIds[] = $value->id;
-                }
-            }*/
-
             $product = Product::with(['inwishlist' => function($qry) use($userid){
                             $qry->where('user_id', $userid);
                         },
@@ -152,7 +135,7 @@ class ProductController extends BaseController
                             $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id')
                             ->select('variant_options.*', 'vt.title', 'pvs.product_variant_id', 'pvs.variant_type_id')
                             ->where('pvs.product_id', $pid)
-                            ->where('vt.language_id', $langId); //->whereIn('pvs.product_variant_id', $pvIds)
+                            ->where('vt.language_id', $langId);
                         }, 
                         'translation' => function($q) use($langId){
                             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
@@ -164,7 +147,6 @@ class ProductController extends BaseController
                             $q2->where('apt.language_id', $langId);
                         },
                         ])->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'is_new', 'is_featured', 'is_physical', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating')
-                       // ->where('sku', $request->product_sku)
                         ->where('id', $pid)
                         ->first();
 
@@ -177,18 +159,6 @@ class ProductController extends BaseController
                 $product->variant[$key]->multiplier = $clientCurrency->doller_compare;
             }
             $addonList = array();
-            /*foreach ($products->addOn as $key => $value) {
-                //$addonList
-                foreach ($value->setoptions as $k => $v) {
-                    if($v->price == 10){
-                        $addonList['free'][] = $value;
-                    }else{
-                        $v->multiplier = $clientCurrency->doller_compare;
-                        $addonList['paid'][] = $value;
-                    }
-                }
-            }
-            $products->addonList = $addonList; */
             foreach ($product->addOn as $key => $value) {
                 foreach ($value->setoptions as $k => $v) {
                     if($v->price == 0){
@@ -245,7 +215,6 @@ class ProductController extends BaseController
             }
             unset($product->related);
             unset($product->media);
-            //unset($product->addOn);
             unset($product->upSell);
             unset($product->crossSell);
             $response['products'] = $product;
@@ -278,7 +247,6 @@ class ProductController extends BaseController
                 $productIds[] = $value->cross_product_id;
             }
         }
-
         $products = Product::with(['media' => function($q){
                             $q->groupBy('product_id');
                         }, 'media.image',
@@ -293,7 +261,6 @@ class ProductController extends BaseController
                     ->whereIn('id', $productIds);
 
         $products = $products->get();
-
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
@@ -373,14 +340,12 @@ class ProductController extends BaseController
                 foreach ($variantData->media as $media_key => $media_value) {
                     $data_image[$media_key]['product_variant_id'] = $media_value->product_variant_id;
                     $data_image[$media_key]['media_id'] = $media_value->product_image_id;
-                    //$data_image[$media_key]['is_default'] = 1;
                     $data_image[$media_key]['image'] = $media_value->image;
                 }
             }else{
                 foreach ($variantData->product->media as $media_key => $media_value) {
                     $data_image[$media_key]['product_id'] = $media_value->product_id;
                     $data_image[$media_key]['media_id'] = $media_value->media_id;
-                    //$data_image[$media_key]['is_default'] = 1;
                     $data_image[$media_key]['image'] = $media_value->image;
                 }
             }

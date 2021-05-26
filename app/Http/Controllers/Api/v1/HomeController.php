@@ -87,11 +87,8 @@ class HomeController extends BaseController
             $longs = $request->longitude;
             $user_geo[] = $lats;
             $user_geo[] = $longs;
-
             $vends = array();
-
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
-
             if($preferences->is_hyperlocal == 1){
                 $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
                         $query->select('vendor_id')
@@ -106,38 +103,20 @@ class HomeController extends BaseController
             }
             $isVendorArea = 0;
             $langId = Auth::user()->language;
-
             $homeData = array();
-            /*$categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
-                            ->leftjoin('types', 'types.id', 'categories.type_id')
-                            ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name', 'types.title as redirect_to')
-                            ->where('categories.id', '>', '1')
-                            ->where('categories.status', '!=', $this->field_status)
-                            ->where('cts.language_id', Auth::user()->language)
-                            ->orderBy('categories.parent_id', 'asc')
-                            ->orderBy('categories.position', 'asc')->get();
-            if($categories){
-                $categories = $this->buildTree($categories->toArray());
-            }*/
-
             $categories = $this->categoryNav($langId);
-            //print_r($categories->toArray());
             $homeData['reqData'] = $request->all();
             $homeData['categories'] = $categories;
             $homeData['vendors'] = $vendorData;
-
             $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
                             $q->select('brand_id', 'title')->where('language_id', $langId);
                             }])
                         ->select('id', 'image')
                         ->where('status', '!=', $this->field_status)
                         ->orderBy('position', 'asc')->get();
-
             $homeData['featuredProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_featured');
             $homeData['newProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_new');
-            
             $homeData['onSale'] = $this->productList($vends, $langId, Auth::user()->currency);
-
             return $this->successResponse($homeData);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
@@ -158,8 +137,7 @@ class HomeController extends BaseController
         return 0;
     }*/
 
-    public function productList($venderIds, $langId = 1, $currency = 147, $where = '')
-    {
+    public function productList($venderIds, $langId = 1, $currency = 147, $where = ''){
         $clientCurrency = ClientCurrency::where('currency_id', $currency)->first();
         $products = Product::with(['media' => function($q){
                             $q->groupBy('product_id');
@@ -180,7 +158,6 @@ class HomeController extends BaseController
             $products = $products->whereIn('vendor_id', $venderIds);
         }
         $products = $products->get();
-
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
@@ -191,8 +168,7 @@ class HomeController extends BaseController
         return $products;
     }
 
-    public function searchDataOld(Request $request, $for = 'all', $dataId = 0)
-    {
+    public function searchDataOld(Request $request, $for = 'all', $dataId = 0){
         $langId = Auth::user()->language;
         $curId = Auth::user()->language;
         if($for != 'all' && $for != 'category' && $for != 'vendor'  && $for != 'brand'){
@@ -341,9 +317,6 @@ class HomeController extends BaseController
                             $q->where('ct.name', ' LIKE', '%' . $keyword . '%')
                             ->orWhere('categories.slug', 'LIKE', '%' . $keyword . '%')
                                 ->orWhere('ct.trans-slug', 'LIKE', '%' . $keyword . '%');
-                                // ->orWhere('ct.meta_title', 'LIKE', '%' . $keyword . '%')
-                                // ->orWhere('ct.meta_description', 'LIKE', '%' . $keyword . '%')
-                                // ->orWhere('ct.meta_keywords', 'LIKE', '%' . $keyword . '%');
                         })->where('categories.status', '!=', '2')->get();
                 
                 foreach ($categories as $key => $value) {
@@ -359,22 +332,17 @@ class HomeController extends BaseController
                         ->where('bt.language_id', $langId)
                         ->orderBy('brands.position', 'asc')->get();
 
-                foreach ($brands as $key => $value) {
-                    $value->response_type = 'brand';
-
-                    $response[] = $value;
+                foreach ($brands as $brand) {
+                    $brand->response_type = 'brand';
+                    $response[] = $brand;
                 }
-
                 $vendors  = Vendor::select('id', 'name  as dataname', 'address')->where(function ($q) use ($keyword) {
                         $q->where('name', ' LIKE', '%' . $keyword . '%')->orWhere('address', 'LIKE', '%' . $keyword . '%');
                     })->where('vendors.status', '!=', '2')->get();
-
-                foreach ($vendors as $key => $value) {
-                    $value->response_type = 'vendor';
-
-                    $response[] = $value;
+                foreach ($vendors as $vendor) {
+                    $vendor->response_type = 'vendor';
+                    $response[] = $vendor;
                 }
-
                 $products = Product::join('product_translations as pt', 'pt.product_id', 'products.id')
                             ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
                             ->where('pt.language_id', $langId)
@@ -382,16 +350,11 @@ class HomeController extends BaseController
                                     $q->where('products.sku', ' LIKE', '%' . $keyword . '%')
                                     ->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')
                                      ->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
-                                    // ->orWhere('pt.body_html', 'LIKE', '%' . $keyword . '%')
-                                    // ->orWhere('pt.meta_title', 'LIKE', '%' . $keyword . '%')
-                                    // ->orWhere('pt.meta_keyword', 'LIKE', '%' . $keyword . '%')
-                                    // ->orWhere('pt.meta_description', 'LIKE', '%' . $keyword . '%');
                         })->where('products.is_live', 1)->get();
               
-                foreach ($products as $key => $value) {
-                    $value->response_type = 'product';
-
-                    $response[] = $value;
+                foreach ($products as $product) {
+                    $product->response_type = 'product';
+                    $response[] = $product;
                 }
                 return $this->successResponse($response);
             }else{
@@ -410,14 +373,12 @@ class HomeController extends BaseController
 
                 if($for == 'category'){
                     $prodIds = array();
-
                     $productCategory = ProductCategory::select('product_id')->where('category_id', $dataId)->get();
                     if($productCategory){
                         foreach ($productCategory as $key => $value) {
                             $prodIds[] = $value->product_id;
                         }
                     }
-
                     $products = $products->whereIn('products.id', $prodIds);
                 }
 
@@ -428,13 +389,10 @@ class HomeController extends BaseController
                 if($for == 'brand'){
                     $products = $products->where('products.brand_id', $dataId);
                 }
-
                 $products = $products->where('products.is_live', 1)->get();
-
-                foreach ($products as $key => $value) {
-                    $value->response_type = 'product';
-
-                    $response[] = $value;
+                foreach ($products as $product) {
+                    $product->response_type = 'product';
+                    $response[] = $product;
                 }
             }
             return $this->successResponse($response);

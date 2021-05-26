@@ -73,36 +73,13 @@ class CategoryController extends BaseController
     public function listData($langId, $cid, $tpye = '', $limit = 12, $userid){
         
         if($tpye == 'vendor' || $tpye == 'Vendor'){
-
-            /*$vendorIds = array();
-
-            $vendorWithCategory = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
-                        ->select('products.id', 'products.vendor_id')
-                        ->where('pc.category_id', $cid)->groupBy('products.vendor_id')->get();
-            if($vendorWithCategory){
-                foreach ($vendorWithCategory as $key => $value) {
-                    $vendorIds[] = $value->vendor_id;
-                }
-            }*/
             $blockedVendor = VendorCategory::where('category_id', $cid)->where('status', 0)->pluck('vendor_id')->toArray();
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
-            /*if($preferences->is_hyperlocal == 1){
-                $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
-                        $query->select('vendor_id')
-                        ->from(with(new ServiceArea)->getTable())
-                        ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
-                });
-            }*/
-
             $vendorData = $vendorData->where('status', '!=', $this->field_status)
                     ->whereNotIn('id', $blockedVendor)->paginate($limit);
-                            //->whereIn('id', $vendorIds)
             return $vendorData;
-
         }elseif($tpye == 'product' || $tpye == 'Product'){
-
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
-
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
                     ->with(['inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
@@ -116,7 +93,6 @@ class CategoryController extends BaseController
                         },
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
                     ->where('pc.category_id', $cid)->where('products.is_live', 1)->paginate($limit);
-
             if(!empty($products)){
                 foreach ($products as $key => $value) {
                     foreach ($value->variant as $k => $v) {
@@ -126,7 +102,6 @@ class CategoryController extends BaseController
             }
             $listData = $products;
             return $listData;
-
         }else{
             $arr = array();
             return $arr;
@@ -137,8 +112,7 @@ class CategoryController extends BaseController
      * Product filters on category Page
      * @return \Illuminate\Http\Response
      */
-    public function categoryFilters(Request $request, $cid = 0)
-    {
+    public function categoryFilters(Request $request, $cid = 0){
         try {
             if($cid == 0 || $cid < 0){
                 return response()->json(['error' => 'No record found.'], 404);
@@ -147,11 +121,9 @@ class CategoryController extends BaseController
             $curId = Auth::user()->currency;
             $setArray = $optionArray = array();
             $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
-
             if($request->has('variants') && !empty($request->variants)){
                 $setArray = array_unique($request->variants);
             }
-
             $startRange = 0; $endRange = 20000;
             if($request->has('range') && !empty($request->range)){
                 $range = explode(';', $request->range);
@@ -159,16 +131,13 @@ class CategoryController extends BaseController
                 $startRange = $range[0] * $clientCurrency->doller_compare;
                 $endRange = $range[1] * $clientCurrency->doller_compare;
             }
-
             $multiArray = array();
             if($request->has('options') && !empty($request->options)){
                 foreach ($request->options as $key => $value) {
                     $multiArray[$request->variants[$key]][] = $value;
                 }
             }
-
             $variantIds = $productIds = array();
-
             if(!empty($multiArray)){
                 foreach ($multiArray as $key => $value) {
                     $new_pIds = $new_vIds = array();
@@ -192,7 +161,6 @@ class CategoryController extends BaseController
                 }
             }
             $order_type = $request->has('order_type') ? $request->order_type : '';
-
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
                         ->with(['media.image',
                             'translation' => function($q) use($langId){
@@ -241,7 +209,6 @@ class CategoryController extends BaseController
                     }
                 }
             }
-
             return $this->successResponse($products);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
