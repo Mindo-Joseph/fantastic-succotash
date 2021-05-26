@@ -41,8 +41,8 @@
 
                     @endforelse
                 </div>
-                <div class="col-12 mt-4 text-center">
-                    <a class="btn btn-solid w-100 m-auto" id="add_new_address_btn">
+                <div class="col-12 mt-4 text-center" id="add_new_address_btn">
+                    <a class="btn btn-solid w-100 m-auto" >
                         <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address
                     </a>
                 </div>
@@ -56,8 +56,37 @@
                         </div>
                     </div>
                 </script>
-                <div class="col-md-12 mt-4" id="add_new_address_form" style="display:none;">
+                <div class="col-md-12" id="add_new_address_form" style="display:none;">
                     <div class="theme-card w-100">
+                        <div class="form-row no-gutters">
+                            <div class="col-12">
+                                <label for="type">Address Type</label>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="delivery_box pt-0 pl-0  pb-3">
+                                    <label class="radio m-0">Home 
+                                        <input type="radio" checked="checked" name="address_type" value="1">
+                                        <span class="checkround"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            <div class="delivery_box pt-0 pl-0  pb-3">
+                                <label class="radio m-0">Office 
+                                    <input type="radio" name="address_type" value="2">
+                                    <span class="checkround"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="delivery_box pt-0 pl-0  pb-3">
+                                <label class="radio m-0">Others
+                                    <input type="radio" name="address_type" value="3">
+                                    <span class="checkround"></span>
+                                </label>
+                            </div>
+                        </div>
+                        </div>
                         <div class="form-row">
                             <div class="col-md-12 mb-3">
                                 <label for="address">Address</label>
@@ -97,15 +126,6 @@
                                 <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
                                 <span class="text-danger" id="pincode_error"></span>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="type">Address Type</label>
-                                <select name="type" id="type" class="form-control">
-                                    <option value="1" selected>Home</option>
-                                    <option value="2">Office</option>
-                                </select>
-                                <span class="text-danger" id="type_error"></span>
-                            </div>
-                            <div class="col-md-6"></div>
                             <div class="col-md-12 mt-3">
                                 <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
                                 <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
@@ -224,19 +244,19 @@
                                        <p class="mb-1"></p> -$60.00
                                        <p class="mb-1"></p> -$10.00
                                        <hr class="my-2">
-                                       <p class="total_amt m-0">$100.00</p>
+                                       <p class="total_amt m-0">${{$cartData['gross_amount']}}</p>
                                     </td>
                                 </tr>
                                 <tr class="border_0">
                                     <td colspan="3"></td>
                                     <td>Tax</td>
                                     <td class="text-right" colspan="2">
-                                        <p class="m-0"><label class="m-0">CGST 7.5%</label><span class="pl-4">$10.00</span></p>
+                                        <p class="m-1"><label class="m-0">CGST 7.5%</label><span class="pl-4">$10.00</span></p>
                                         <p class="m-0"><label class="m-0">CGST 7.5%</label><span class="pl-4">$10.00</span></p>
                                     </td>
                                 </tr>
                                 <tr class="border_0">
-                                    <td colspan="2"></td>
+                                    <td colspan="3"></td>
                                     <td colspan="2" class="pt-0 pr-0">
                                         <hr class="mt-0 mb-2">
                                         <p class="total_amt m-0">Amount Payable</p>
@@ -255,7 +275,7 @@
                 <div class="col-lg-3 col-md-4">
                     <a class="btn btn-solid" href="{{url('/')}}">Continue Shopping</a>
                 </div>
-                <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4">
+                <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4 text-md-right">
                     <button class="btn btn-solid" type="submit">Place Order</button>
                 </div>
             </div>

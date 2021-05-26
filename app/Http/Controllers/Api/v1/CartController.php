@@ -318,13 +318,11 @@ class CartController extends BaseController{
             $cart = $cart->where('user_id', $user->id);
         }
         $cart = $cart->delete();
-        
         return response()->json(['message' => 'Empty cart successfully.']);
     }
 
     /**         *       Empty cart       *          */
     public function getCart($cart, $langId = '1', $currency = '1'){
-        
         $clientCurrency = ClientCurrency::where('currency_id', $currency)->first();
         if(!$cart){
             return false;
