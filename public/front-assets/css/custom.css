@@ -576,7 +576,7 @@ ul.social-links li a {
     line-height: 19px;
 }
 
-.wrapper-main .btn, .wrapper-main .form-control, form .btn {
+.wrapper-main .btn, .wrapper-main .form-control, .wrapper-main .btn {
     height: 45px;
     padding: 5px 25px;
     line-height: 30px;
@@ -682,7 +682,10 @@ ul.social-links li a {
     line-height: 10px;
 }
 
-
+.btn-outline-secondary {
+    color: #6c757d;
+    border-color: #ced4da;
+}
 
 
 
