@@ -24,7 +24,7 @@ class VendorController extends BaseController{
             $vendor_products = Product::with('category.categoryDetail')->where('vendor_id', $vendor_id)->get(['id']);
             foreach ($vendor_products as $vendor_product) {
                 if(!in_array($vendor_product->category->categoryDetail->id, $vendor_ids)){
-                    $vendor_ids = [$vendor_product->category->categoryDetail->id];
+                    $vendor_ids[] = $vendor_product->category->categoryDetail->id;
                     $category_details[] = array(
                         'id' => $vendor_product->category->categoryDetail->id,
                         'name' => $vendor_product->category->categoryDetail->slug,
