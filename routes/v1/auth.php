@@ -22,9 +22,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('social/login/{driver}', 'Api\v1\SocialController@login');
     });
     Route::group(['middleware' => ['dbCheck', 'AppAuth', 'apilogger']], function() {
-        Route::get('orders', 'Api\v1\OrderController@getOrdersList');
         Route::get('profile', 'Api\v1\ProfileController@profile');
         Route::get('account', 'Api\v1\ProfileController@account');
+        Route::get('orders', 'Api\v1\OrderController@getOrdersList');
         Route::get('wishlists', 'Api\v1\ProfileController@wishlists');
         Route::get('newsLetter', 'Api\v1\ProfileController@newsLetter');
         Route::post('place/order', 'Api\v1\OrderController@postPlaceOrder');

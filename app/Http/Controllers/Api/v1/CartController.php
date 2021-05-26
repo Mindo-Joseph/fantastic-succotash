@@ -22,7 +22,8 @@ class CartController extends BaseController{
             $user = Auth::user();
             $cart = Cart::where('id', '>', 0);
             if (!$user) {
-                $cart = $cart->where('unique_identifier', $user->system_user);
+                $header = $request->header();
+                $cart = $cart->where('unique_identifier', $header['systemuser']);
             }else{
                 $cart = $cart->where('user_id', $user->id);
             }
