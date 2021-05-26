@@ -321,7 +321,7 @@
         <h6 class="m-0">Are you sure you want to remove this item?</h6>
       </div>
       <div class="modal-footer flex-nowrap justify-content-center align-items-center">
-        <button type="button" class="btn btn-solid" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-solid">Remove</button>
       </div>
     </div>
