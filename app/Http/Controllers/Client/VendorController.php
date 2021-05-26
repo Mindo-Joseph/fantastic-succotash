@@ -20,13 +20,9 @@ class VendorController extends BaseController
      */
     public function index()
     {
-        $vendors = Vendor::where('status', '!=', '2')->orderBy('id', 'desc')->get();
-        //dd($vendors->toArray());
-        /*
+        //$vendors = Vendor::where('status', '!=', '2')->orderBy('id', 'desc')->get();
         $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])
                   ->where('status', '!=', '2')->orderBy('id', 'desc')->get();
-        dd($vendors->toArray());
-        */
         return view('backend/vendor/index')->with(['vendors' => $vendors]);
     }
 
@@ -250,24 +246,22 @@ class VendorController extends BaseController
         return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'categorList' => $categorList, 'blockedCategory' => $blockedCategory]);
     }
 
-    /**
-     * Display the specified resource.
-     * 
-     * @param  \App\Vendor  $vendor
-     * @return \Illuminate\Http\Response
-     */
+    /**   vendor product catalog     */
     public function vendorCatalog($domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
-
-        //$ve = Vendor::with('products')->where('id', $id)->first();
         $type = Type::all();
         $categories = Category::with('primary')->select('id', 'slug')
                         ->where('id', '>', '1')->where('status', '!=', '2')
                         ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
                         ->orderBy('position', 'asc')->get();
 
-        $products = Product::with('variant', 'primary', 'category.cat', 'variantSet')->where('vendor_id', $id)->where('is_live', '!=', 2)->get();
+        $products = Product::with(['media.image', 'primary', 'category.cat', 'brand',
+                        'variant' => function($v){
+                            $v->select('id','product_id', 'quantity', 'price')->groupBy('product_id');
+                        }])
+                    ->select('id', 'sku','vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
+                    ->where('vendor_id', $id)->get();
 
         $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '1')
                     ->where(function($q) use($id){

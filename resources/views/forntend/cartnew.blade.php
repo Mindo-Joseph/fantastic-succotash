@@ -26,6 +26,7 @@
                     <div class="col-12 mb-2">
                         <h4 class="page-title">Delivery Address</h4>
                     </div>
+                    <span class="text-danger" id="address_error"></span>
                 </div>
                 <div class="row mb-4" id="address_template_main_div">
                     @forelse($addresses as $address)
