@@ -18,16 +18,20 @@ class VendorController extends BaseController{
 
     public function postVendorCategoryList(Request $request){
         try {
+            $vendor_ids = [];
             $category_details = [];
             $vendor_id = $request->vendor_id;
-            $vendor_products = Product::with('category.categoryDetail')->where('vendor_id', $vendor_id)->groupBy('vendor_id')->get(['id']);
+            $vendor_products = Product::with('category.categoryDetail')->where('vendor_id', $vendor_id)->get(['id']);
             foreach ($vendor_products as $vendor_product) {
-                $category_details[] = array(
-                    'id' => $vendor_product->category->categoryDetail->id,
-                    'slug' => $vendor_product->category->categoryDetail->slug,
-                    'icon' => $vendor_product->category->categoryDetail->icon,
-                    'image' => $vendor_product->category->categoryDetail->image
-                );
+                if(!in_array($vendor_product->category->categoryDetail->id, $vendor_ids)){
+                    $vendor_ids = [$vendor_product->category->categoryDetail->id];
+                    $category_details[] = array(
+                        'id' => $vendor_product->category->categoryDetail->id,
+                        'name' => $vendor_product->category->categoryDetail->slug,
+                        'icon' => $vendor_product->category->categoryDetail->icon,
+                        'image' => $vendor_product->category->categoryDetail->image
+                    );
+                }
             }
             return $this->successResponse($category_details, '', 200);
         } catch (Exception $e) {
