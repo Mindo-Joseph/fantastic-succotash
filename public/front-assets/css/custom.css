@@ -605,7 +605,7 @@ ul.social-links li a {
     height: 58.44px;
     width: 58.44px;
     border-radius: 11.95px;
-    background-color: #D8E2EA;
+    background-color: #fff;
     text-align: center;
     opacity: 0.63;
     color: #000000;
@@ -642,11 +642,44 @@ ul.social-links li a {
 }
 
 
+/* 26-05-2021 New Login Screens Css Done */
 
+.collection-filter .theme-card .offer-slider a {
+    width: 150px;
+    height: 150px;
+}
 
+.theme-card .offer-slider img {
+    height: 100%;
+    max-width: 100% !important;
+    object-fit: cover;
+    padding: 15px;
+    width: 100%;
+}
 
+#remove_item .modal-dialog {max-width: 300px;}
 
+#remove_item .close {
+    position: absolute;
+    right: -25px;
+    top: -20px;
+    color: #fff;
+    opacity: 4;
+}
 
+#remove_item .btn {
+    width: 50%;
+    height: 45px;
+    padding: 10px;
+    line-height: 35px;
+}
+
+#remove_item .btn {
+    width: 50%;
+    height: 35px;
+    padding: 10px;
+    line-height: 10px;
+}
 
 
 
@@ -669,3 +702,5 @@ ul.social-links li a {
         border: 0 !important;
     }
 }
+
+
