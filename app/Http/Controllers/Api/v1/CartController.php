@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Api\v1\BaseController;
+use DB;
+use Validation;
+use Carbon\Carbon;
 use App\Model\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet};
-use Validation;
-use DB;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Traits\ApiResponser;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Api\v1\BaseController;
+use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet};
 
 class CartController extends BaseController{
     use ApiResponser;
@@ -20,14 +20,9 @@ class CartController extends BaseController{
     public function index(Request $request){
         try {
             $user = Auth::user();
-            $user_id = $user->id;
             $cart = Cart::where('id', '>', 0);
-            if (!$user_id || $user_id < 1) {
-                if(empty($user->system_user)){
-                    return $this->errorResponse('System id should not be empty.', 404);
-                }
+            if (!$user) {
                 $cart = $cart->where('unique_identifier', $user->system_user);
-                
             }else{
                 $cart = $cart->where('user_id', $user->id);
             }
@@ -318,13 +313,11 @@ class CartController extends BaseController{
             $cart = $cart->where('user_id', $user->id);
         }
         $cart = $cart->delete();
-        
         return response()->json(['message' => 'Empty cart successfully.']);
     }
 
     /**         *       Empty cart       *          */
     public function getCart($cart, $langId = '1', $currency = '1'){
-        
         $clientCurrency = ClientCurrency::where('currency_id', $currency)->first();
         if(!$cart){
             return false;
@@ -351,7 +344,6 @@ class CartController extends BaseController{
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         $total_tax = $total_paying = $total_disc_amount = 0.00; $item_count = 0;
         if($cartData){
-            
             foreach ($cartData as $ven_key => $vendorData) {
 
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
@@ -387,7 +379,6 @@ class CartController extends BaseController{
                         }else{
                             $discount_amount = $vendorData->coupon->promo->amount * $clientCurrency->doller_compare;
                         }
-                        
                         if($vendorData->coupon->promo->restriction_on == 0){
                             foreach ($vendorData->coupon->promo->details as $key => $value) {
                                 $couponProducts[] = $value->refrence_id;

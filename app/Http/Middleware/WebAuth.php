@@ -25,15 +25,13 @@ class WebAuth
     public function handle($request, Closure $next)
     {
         if(auth()->check()) {
-
             if(Auth::user()->status == 2){
                 Auth::logout();
                 return redirect('login')->with(['account_blocked' => 'Your account has been blocked by admin. Please contact administration.']);
             }
-
             return $next($request);
         }
-        return redirect('login');
+        return redirect('user/login');
         
     }
 }
