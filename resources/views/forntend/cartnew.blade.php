@@ -314,8 +314,8 @@
         </button>
       </div>
       <div class="modal-body">
-        <input type="text" id="vendor_id" value="">
-        <input type="text" id="cartproduct_id" value="">
+        <input type="hidden" id="vendor_id" value="">
+        <input type="hidden" id="cartproduct_id" value="">
         <h6 class="m-0">Are you sure you want to remove this item?</h6>
       </div>
       <div class="modal-footer flex-nowrap justify-content-center align-items-center">
