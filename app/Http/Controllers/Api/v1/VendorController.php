@@ -7,17 +7,24 @@ use Validation;
 use Carbon\Carbon;
 use App\Model\Client;
 use Illuminate\Http\Request;
+use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
 
-class VendorController extends BaseController
-{
+class VendorController extends BaseController{
+    use ApiResponser;
     private $field_status = 2;
-    /**
-     * Get Company ShortCode
-     *
-     */
+
+    public function postVendorCategoryList(Request $request,){
+        try {
+            $vendor_id = $request->vendor_id;
+            $vendor_products = Product::with('category')->where('vendor_id', $vendor_id)->get();
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
+    }
+
     public function productsByVendor(Request $request, $vid = 0){
         if($vid == 0){
             return response()->json(['error' => 'No record found.'], 404);
@@ -63,7 +70,6 @@ class VendorController extends BaseController
                 ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id')
                 ->where('products.vendor_id', $vid)
                 ->where('products.is_live', 1)->paginate($paginate);
-        
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {

@@ -62,7 +62,6 @@ class ProductController extends BaseController
      */
     public function validateData(Request $request)
     {
-        //dd($request->all());
         $rules = array(
             'sku' => 'required|unique:products',
             'category.*' => 'required',

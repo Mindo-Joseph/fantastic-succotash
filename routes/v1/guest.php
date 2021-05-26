@@ -28,5 +28,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('promo-code/list', 'Api\v1\PromoCodeController@postPromoCodeList');
         Route::post('promo-code/verify', 'Api\v1\PromoCodeController@postVerifyPromoCode');
         Route::post('promo-code/remove', 'Api\v1\PromoCodeController@postRemovePromoCode');
+        Route::post('vendor/category/list', 'Api\v1\VendorController@postVendorCategoryList');
     });
 });
