@@ -119,9 +119,9 @@ class CartController extends FrontController
         }
         $user_id = ' ';
         $cartInfo = ' ';
+        $currency = ClientCurrency::where('is_primary', '=', 1)->first();
         if (Auth::user()) {
             $user_id = Auth::user()->id;
-            $currency = ClientCurrency::where('is_primary', '=', 1)->first();
             $userFind = Cart::where('user_id', $user_id)->first();
             if (!$userFind) {
                 $cart = new Cart;
@@ -146,52 +146,27 @@ class CartController extends FrontController
 
             }
         } else {
-            $val = ' ';
-            if (!isset($_COOKIE["uuid"])) {
-                $token = $this->randomString();
-                setcookie("uuid", $token, time() + (10 * 365 * 24 * 60 * 60), "/");
-                $val = $token;
-                $user = new User;
-                $user->name = "Test";
-                $user->email = $val . "@email.com";
-                $user->password = "test";
-                $user->system_id = $val;
-                $user->save();
-                $user_id = $user->id;
-                $currency = ClientCurrency::where('is_primary', '=', 1)->first();
+            $cart_detail = Cart::where('unique_identifier', session()->get('_token'))->first();
+            if(!$cart_detail){
                 $cart = new Cart;
-                $cart->unique_identifier = $token;
-                $cart->user_id = $user_id;
-                $cart->created_by = $user_id;
                 $cart->status = '0';
                 $cart->is_gift = '1';
                 $cart->item_count = '1';
                 $cart->currency_id = $currency->currency->id;
+                $cart->unique_identifier = session()->get('_token');
                 $cart->save();
-                $cartInfo = $cart;
-            } else {
-                $val = $_COOKIE["uuid"];
-                $userInfo = User::where('system_id', $val)->first();
-                $user_id = $userInfo->id;
-                $cartInfo = Cart::where('user_id', $user_id)->first();
-                $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cartInfo->id)->first();
-                if ($checkIfExist) {
-                    $checkIfExist->quantity = (int)$checkIfExist->quantity + 1;
-                    $cartInfo->cartProducts()->save($checkIfExist);
-                    return response()->json($user_id);
-                }
             }
             $productForVendor = Product::where('id', $request->product_id)->first();
             $cartProduct = new CartProduct;
             $cartProduct->status  = '0';
             $cartProduct->is_tax_applied  = '1';
             $cartProduct->created_by  = $user_id;
-            $cartProduct->cart_id  = $cartInfo->id;
+            $cartProduct->cart_id  = $cart_detail->id;
             $cartProduct->quantity  = $request->quantity;
             $cartProduct->product_id = $request->product_id;
-            $cartProduct->vendor_id  = $productForVendor->vendor_id;
             $cartProduct->variant_id  = $request->variant_id;
-            $cartProduct->currency_id = $cartInfo->currency_id;
+            $cartProduct->currency_id = $cart_detail->currency_id;
+            $cartProduct->vendor_id  = $productForVendor->vendor_id;
             $cartProduct->save();
             if ($request->has('addonID') && $request->has('addonID')) {
                 foreach ($addon_ids as $key => $value) {
