@@ -20,11 +20,10 @@ class CartController extends BaseController{
     public function index(Request $request){
         try {
             $user = Auth::user();
-            $cart = Cart::where('id', '>', 0);
             if (!$user->id) {
-                $cart = $cart->where('unique_identifier', $user->system_user);
+                $cart = Cart::where('unique_identifier', $user->system_user);
             }else{
-                $cart = $cart->where('user_id', $user->id);
+                $cart = Cart::where('user_id', $user->id);
             }
             $cart = $cart->first();
             if($cart){

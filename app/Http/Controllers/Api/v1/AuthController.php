@@ -98,7 +98,7 @@ class AuthController extends BaseController{
                 $unique_identifier_cart->delete();
             }
         }else{
-            Cart::where('unique_identifier', $loginReq->loginReq)->update(['user_id' => $user->id,  'unique_identifier' => '']);
+            Cart::where('unique_identifier', $loginReq->device_token)->update(['user_id' => $user->id,  'unique_identifier' => '']);
         }
         $checkSystemUser = $this->checkCookies($user->id);
         $data['auth_token'] =  $token;
