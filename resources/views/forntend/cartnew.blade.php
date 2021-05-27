@@ -1,5 +1,13 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
+<style type="text/css">
+.swal2-title {
+  margin: 0px;
+  font-size: 26px;
+  font-weight: 400;
+  margin-bottom: 28px;
+}
+</style>
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -42,8 +50,8 @@
 
                     @endforelse
                 </div>
-                <div class="col-12 mt-4 text-center">
-                    <a class="btn btn-solid w-100 m-auto" id="add_new_address_btn">
+                <div class="col-12 mt-4 text-center" id="add_new_address_btn">
+                    <a class="btn btn-solid w-100 m-auto" >
                         <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address
                     </a>
                 </div>
@@ -57,8 +65,37 @@
                         </div>
                     </div>
                 </script>
-                <div class="col-md-12 mt-4" id="add_new_address_form" style="display:none;">
+                <div class="col-md-12" id="add_new_address_form" style="display:none;">
                     <div class="theme-card w-100">
+                        <div class="form-row no-gutters">
+                            <div class="col-12">
+                                <label for="type">Address Type</label>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="delivery_box pt-0 pl-0  pb-3">
+                                    <label class="radio m-0">Home 
+                                        <input type="radio" checked="checked" name="address_type" value="1">
+                                        <span class="checkround"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            <div class="delivery_box pt-0 pl-0  pb-3">
+                                <label class="radio m-0">Office 
+                                    <input type="radio" name="address_type" value="2">
+                                    <span class="checkround"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="delivery_box pt-0 pl-0  pb-3">
+                                <label class="radio m-0">Others
+                                    <input type="radio" name="address_type" value="3">
+                                    <span class="checkround"></span>
+                                </label>
+                            </div>
+                        </div>
+                        </div>
                         <div class="form-row">
                             <div class="col-md-12 mb-3">
                                 <label for="address">Address</label>
@@ -98,15 +135,6 @@
                                 <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
                                 <span class="text-danger" id="pincode_error"></span>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="type">Address Type</label>
-                                <select name="type" id="type" class="form-control">
-                                    <option value="1" selected>Home</option>
-                                    <option value="2">Office</option>
-                                </select>
-                                <span class="text-danger" id="type_error"></span>
-                            </div>
-                            <div class="col-md-6"></div>
                             <div class="col-md-12 mt-3">
                                 <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
                                 <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
@@ -119,17 +147,19 @@
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-striped" id="order_table">
                             @foreach($cartData->products as $product)
-                            <tbody>
+                            <tbody id="tbody_{{$product['vendor']['id']}}">
                                 <tr>
                                     <td colspan="6">
                                         {{$product['vendor']['name']}}
                                     </td>
                                 </tr>
                                 @foreach($product['vendor_products'] as $vendor_product)
-                                <tr class="padding-bottom" id="tr_vendor_products_{{$vendor_product['id']}}">
+                                <tr class="padding-bottom vendor_products_tr" id="tr_vendor_products_{{$vendor_product['id']}}">
                                     <td style="width:100px" {{count($vendor_product['addon']) > 0 ? 'rowspan=2' : 0  }}>
                                         <div class="product-img pb-2">
-                                            <img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'100/70'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt="">
+                                            @if(isset($vendor_product['pvariant']['media'][0]['image']))
+                                                <img src="{{$vendor_product['pvariant']['media'][0]['image']['path']['proxy_url'].'100/70'.$vendor_product['pvariant']['media'][0]['image']['path']['image_path']}}" alt="">
+                                            @endif
                                         </div>
                                     </td>
                                     <td class="items-details text-left">
@@ -150,7 +180,7 @@
                                         <div class="items-price mb-3">${{$vendor_product['pvariant']['quantity_price']}}</div>
                                     </td>
                                     <td class="text-right">
-                                        <a  class="action-icon d-block mb-3 remove_product_via_cart" data-product="{{$vendor_product['id']}}">
+                                        <a  class="action-icon d-block mb-3 remove_product_via_cart" data-product="{{$vendor_product['id']}}" data-vendor_id="{{ $vendor_product['vendor_id'] }}">
                                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                                         </a>
                                     </td>
@@ -225,19 +255,19 @@
                                        <p class="mb-1"></p> -$60.00
                                        <p class="mb-1"></p> -$10.00
                                        <hr class="my-2">
-                                       <p class="total_amt m-0">$100.00</p>
+                                       <p class="total_amt m-0">${{$cartData['gross_amount']}}</p>
                                     </td>
                                 </tr>
                                 <tr class="border_0">
                                     <td colspan="3"></td>
                                     <td>Tax</td>
                                     <td class="text-right" colspan="2">
-                                        <p class="m-0"><label class="m-0">CGST 7.5%</label><span class="pl-4">$10.00</span></p>
+                                        <p class="m-1"><label class="m-0">CGST 7.5%</label><span class="pl-4">$10.00</span></p>
                                         <p class="m-0"><label class="m-0">CGST 7.5%</label><span class="pl-4">$10.00</span></p>
                                     </td>
                                 </tr>
                                 <tr class="border_0">
-                                    <td colspan="2"></td>
+                                    <td colspan="3"></td>
                                     <td colspan="2" class="pt-0 pr-0">
                                         <hr class="mt-0 mb-2">
                                         <p class="total_amt m-0">Amount Payable</p>
@@ -256,7 +286,7 @@
                 <div class="col-lg-3 col-md-4">
                     <a class="btn btn-solid" href="{{url('/')}}">Continue Shopping</a>
                 </div>
-                <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4">
+                <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4 text-md-right">
                     <button class="btn btn-solid" type="submit">Place Order</button>
                 </div>
             </div>
@@ -269,10 +299,31 @@
                 </div>
                 <h3>Your cart is empty!</h3>
                 <p>Add items to it now.</p>
-                <a class="btn btn-solid" href="#">Shop Now</a>
+                <a class="btn btn-solid" href="{{url('/')}}">Shop Now</a>
             </div>
         </div>
     @endif
+</div>
+<div class="modal fade remove-item-modal" id="remove_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_itemLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="remove_itemLabel">Remove Item</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="vendor_id" value="">
+        <input type="hidden" id="cartproduct_id" value="">
+        <h6 class="m-0">Are you sure you want to remove this item ?</h6>
+      </div>
+      <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-solid" id="remove_product_button">Remove</button>
+      </div>
+    </div>
+  </div>
 </div>
 <script type="text/javascript">
     var user_store_address_url = "{{url('user/store')}}";

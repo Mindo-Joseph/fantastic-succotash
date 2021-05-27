@@ -483,3 +483,235 @@
 .main-menu .brand-logo {
     padding: 0;
 }
+
+.slide-6 .slick-track {
+    display: flex;
+    align-items: center;
+}
+
+/* Login Page Css */
+ul.social-links {
+    width: max-content;
+}
+
+ul.social-links li {
+    padding: 0 10px;
+}
+
+ul.social-links li a {
+    width: 55px;
+    height: 55px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 4px 7px 0 rgba(0,0,0,0.05);
+    display: block;
+    line-height: 55px;
+    font-size: 26px;
+}
+
+.divider_line{
+    height: 1.2px;
+    width: 353px;
+    border: 1.2px solid #979797;
+    opacity: 0.24;
+    background-color: #979797;
+}
+
+.divider_line span {
+    height: 25.15px;
+    width: 25.15px;
+    line-height: 21.15px;
+    border: 1.2px solid #DFE2E6;
+    box-shadow: 0 0 4px 0 rgb(0 0 0 / 5%);
+    color: #000000;
+    font-size: 9.56px;
+    font-weight: bold;
+    border-radius: 50%;
+    text-align: center;
+    display: block;
+    margin: -13px auto;
+    background: #fff;
+}
+
+.wrapper-main h3{
+    color: #000000;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 27px;
+}
+
+.wrapper-main p{
+    opacity: 0.4;
+    color: #000000;
+    font-size: 13.28px;
+    font-weight: 600;
+    line-height: 15px;
+}
+
+.create_box{
+    width: 365px;
+    max-width: 100%;
+    margin: auto;
+}
+
+.create_box h6{
+    color: #000000;
+    font-size: 15.94px;
+    font-weight: 700;
+    line-height: 19px;
+}
+
+.create_box p{
+    opacity: 0.6;
+    color: #000000;
+    font-size: 16px;
+    line-height: 19.92px;
+}
+
+.forgot_btn{
+    color: #000000;
+    font-size: 15.94px;
+    font-weight: 400;
+    line-height: 19px;
+}
+
+.wrapper-main .btn, .wrapper-main .form-control, .wrapper-main .btn {
+    height: 45px;
+    padding: 5px 25px;
+    line-height: 30px;
+}
+
+.verify_id .form-control,.verify_id .input-group-text {
+    border-radius: 50px;
+}
+
+.verify_id .form-control {
+    opacity: 0.6;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 19px 20px;
+}
+
+.verify_id .input-group-text {
+    color: #2B8AFF;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 22.58px;
+}
+
+.otp_inputs .form-control {
+    height: 58.44px;
+    width: 58.44px;
+    border-radius: 11.95px;
+    background-color: #fff;
+    text-align: center;
+    opacity: 0.63;
+    color: #000000;
+    font-size: 23.91px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 27px;
+    padding: 0 20px;
+}
+
+.resend_txt p{
+    opacity: 0.6;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.resend_txt a{
+    color: #2B8AFF;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
+}
+
+.wrapper-main .form-control {
+    font-weight: 600;
+    color: #000;
+    opacity: 1;
+}
+
+.wrapper-main .form-control::-webkit-input-placeholder,.wrapper-main .form-control::placeholder {
+    opacity: 0.6;
+    font-weight: 300;
+}
+
+
+/* 26-05-2021 New Login Screens Css Done */
+
+.collection-filter .theme-card .offer-slider a {
+    width: 150px;
+    height: 150px;
+}
+
+.theme-card .offer-slider img {
+    height: 100%;
+    max-width: 100% !important;
+    object-fit: cover;
+    padding: 15px;
+    width: 100%;
+}
+
+.remove-item-modal .modal-dialog {max-width: 300px;}
+
+.remove-item-modal .close {
+    position: absolute;
+    right: -25px;
+    top: -20px;
+    color: #fff;
+    opacity: 4;
+}
+
+.remove-item-modal .btn {
+    width: 50%;
+    height: 45px;
+    padding: 10px;
+    line-height: 35px;
+}
+
+.remove-item-modal .btn {
+    width: 50%;
+    height: 35px;
+    padding: 10px;
+    line-height: 10px;
+}
+
+.btn-outline-secondary {
+    color: #6c757d;
+    border-color: #ced4da;
+}
+
+.action-icon{
+    cursor: pointer;
+}
+
+.theme-card .offer-slider a {
+    width: 170px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Responsiveness Css Start From Here */
+@media(max-width:991px){
+    .wrapper-main .border-right,.wrapper-main .border-left{
+        border: 0 !important;
+    }
+}
+
+

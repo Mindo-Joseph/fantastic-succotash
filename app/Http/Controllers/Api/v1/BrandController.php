@@ -14,14 +14,13 @@ use App\Http\Traits\ApiResponser;
 
 class BrandController extends BaseController
 {
-    private $field_status = 2;
     use ApiResponser;
+    private $field_status = 2;
     /**
      * Get Company ShortCode
      *
      */
-    public function productsByBrand(Request $request, $brandId = 0)
-    {
+    public function productsByBrand(Request $request, $brandId = 0){
         try {
             if($brandId == 0 || $brandId < 0){
                 return response()->json(['error' => 'No record found.'], 404);
@@ -49,12 +48,7 @@ class BrandController extends BaseController
                         ->join('variant_translations as vt','vt.variant_id','vr.id')
                         ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
                         ->where('vt.language_id', $langId)
-                        /*->whereIn('product_id', function($qry) use($vid){ 
-                            $qry->select('id')->from('products')
-                                ->where('vendor_id', $vid);
-                            })*/
                         ->groupBy('product_variant_sets.variant_type_id')->get();
-
             $products = Product::with(['inwishlist' => function($qry) use($userid){
                             $qry->where('user_id', $userid);
                         },
@@ -91,8 +85,7 @@ class BrandController extends BaseController
      * Product filters on category Page
      * @return \Illuminate\Http\Response
      */
-    public function brandFilters(Request $request, $brandId = 0)
-    {
+    public function brandFilters(Request $request, $brandId = 0){
         try{
             if($brandId == 0 || $brandId < 0){
             return response()->json(['error' => 'No record found.'], 404);
@@ -171,9 +164,7 @@ class BrandController extends BaseController
                 $productIds = $new_pIds;
             }
         }
-
         $order_type = $request->has('order_type') ? $request->order_type : '';
-
         $products = Product::with(['media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
@@ -206,9 +197,7 @@ class BrandController extends BaseController
         if(!empty($order_type) && $request->order_type == 'rating'){
             $products = $products->orderBy('averageRating', 'desc');
         }
-
         $products = $products->paginate($paginate);
-
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {

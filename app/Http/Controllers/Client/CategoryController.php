@@ -10,32 +10,27 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag};
 
-class CategoryController extends BaseController
-{
-    private $folderName = 'category/icon';
+class CategoryController extends BaseController{
     private $blocking = '2';
+    private $folderName = 'category/icon';
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
                         ->where('categories.id', '>', '1')
                         ->where('categories.status', '!=', '2')
                         ->where('categories.is_core', 1)
                         ->orderBy('categories.parent_id', 'asc')
                         ->orderBy('categories.position', 'asc')->get();
-
         $variants = Variant::with('option', 'varcategory.cate.primary')
                         ->where('status', '!=', 2)->orderBy('position', 'asc')->get();
         $brands = Brand::with( 'bc.cate.primary')
                         ->where('status', '!=', 2)->orderBy('position', 'asc')->get();
-
         if($categories){
             $build = $this->buildTree($categories->toArray());
-            //dd($build);
             $tree = $this->printTree($build);
         }
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
@@ -43,7 +38,6 @@ class CategoryController extends BaseController
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
-        //dd($langs->toArray());
         return view('backend/catalog/index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs, 'variants' => $variants, 'brands' => $brands]);
     }
 
@@ -52,22 +46,17 @@ class CategoryController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
-    {
+    public function create(Request $request){
         $is_vendor = ($request->has('is_vendor')) ? $request->is_vendor : 0;
         $vendors = array();
         $type = Type::all();
         $category = new Category();
-        /*$parCategory = Category::join('category_translations', 'categories.id', 'category_translations.category_id')
-                        ->select('categories.id', 'categories.slug', 'category_translations.name')->get();*/
         $parCategory = Category::select('id', 'slug')->where('status', '!=', $this->blocking)->get();
-
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
-
         $returnHTML = view('backend.catalog.add-category')->with(['category' => $category, 'is_vendor' => $is_vendor, 'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
@@ -78,18 +67,15 @@ class CategoryController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $rules = array(
             'slug' => 'required|string|max:30|unique:categories',
             'name.0' => 'required|string|max:60',
         );
         $validation  = Validator::make($request->all(), $rules)->validate();
-
         $cate = new Category();
         $save = $this->save($request, $cate, 'false');
         if($save > 0){
-
             foreach ($request->language_id as $key => $value) {
                 $trans = new Category_translation();
                 $trans->name = $request->name[$key];
@@ -100,7 +86,6 @@ class CategoryController extends BaseController
                 $trans->language_id = $request->language_id[$key];
                 $trans->save();
             }
-
             $hs = new CategoryHistory();
             $hs->category_id = $save;
             $hs->action = 'Add';
@@ -108,7 +93,6 @@ class CategoryController extends BaseController
             $hs->update_id = Auth::user()->id;
             $hs->client_code = Auth::user()->code;
             $hs->save();
-
             return response()->json([
                 'status'=>'success',
                 'message' => 'Category created Successfully!',
@@ -123,20 +107,17 @@ class CategoryController extends BaseController
      * @param  \App\Category_translation  $category_translation
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $domain = '', $id)
-    {
+    public function edit(Request $request, $domain = '', $id){
         $is_vendor = ($request->has('is_vendor')) ? $request->is_vendor : 0;
         $vendors = array();
         $type = Type::all();
         $tagList = array();
-
         $category = Category::with('translation', 'tags')->where('id', $id)->first();
         if(!empty($category->tags)){
             foreach ($category->tags as $key => $value) {
                 $tagList[] = $value->tag;
             }
         }
-
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
                     ->where('client_languages.client_code', Auth::user()->code)
@@ -150,12 +131,7 @@ class CategoryController extends BaseController
         foreach ($category->translation as $key => $value) {
             $existlangs[] = $value->language_id;
         }
-
         $parCategory = Category::select('id', 'slug')->where('categories.id', '!=', $id)->where('status', '!=', $this->blocking)->get();
-
-        /*$parCategory = Category::join('category_translations', 'categories.id', 'category_translations.category_id')
-                        ->select('categories.id', 'categories.slug', 'category_translations.name')->where('categories.id', '!=', $id)->groupBy('category_translations.category_id')->get();*/
-        
         $returnHTML = view('backend.catalog.edit-category')->with(['typeArray' => $type, 'category' => $category,  'languages' => $langs, 'is_vendor' => $is_vendor, 'parCategory' => $parCategory, 'langIds' => $langIds, 'existlangs' => $existlangs, 'tagList' => $tagList])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML, 'tagList' => $tagList));
     }
@@ -167,18 +143,15 @@ class CategoryController extends BaseController
      * @param  \App\Category_translation  $category_translation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $domain = '', $id)
-    {
+    public function update(Request $request, $domain = '', $id){
         $rules = array(
             'slug' => 'required|string|max:30|unique:categories,slug,'.$id,
             'name.0' => 'required|string|max:60',
         );
         $validation  = Validator::make($request->all(), $rules)->validate();
-
         $category = Category::where('id', $id)->first();
         $save = $this->save($request, $category, 'true');
         if($save > 0){
-
             if($request->has('language_id')){
                 foreach ($request->language_id as $key => $value) {
                     $trans = Category_translation::where('category_id', $save)->where('language_id', $value)->first();
@@ -194,18 +167,6 @@ class CategoryController extends BaseController
                     $trans->save();
                 }
             }
-
-            /*if($request->has('trans_id')){
-                foreach ($request->trans_id as $key => $value) {
-                    $trans = Category_translation::where('id', $request->trans_id[$key])->first();
-                    $trans->name = $request->name[$key];
-                    $trans->meta_title = $request->meta_title[$key];
-                    $trans->meta_description = $request->meta_description[$key];
-                    $trans->meta_keywords = $request->meta_keywords[$key];
-                    $trans->save();
-                }
-            }*/
-
             $hs = new CategoryHistory();
             $hs->category_id = $save;
             $hs->action = 'Update';
@@ -213,7 +174,6 @@ class CategoryController extends BaseController
             $hs->update_id = Auth::user()->id;
             $hs->client_code = Auth::user()->code;
             $hs->save();
-
             return response()->json([
                 'status'=>'success',
                 'message' => 'Category created Successfully!',
@@ -251,14 +211,6 @@ class CategoryController extends BaseController
             }else{
                 $cate->is_core = 1;
             }
-
-            /*if($request->login_user_type != 'client'){
-                $cate->is_core = 0;
-                $cate->vendor_id = Auth::user()->id;
-            }else{
-                $cate->is_core = 1;
-            }*/
-
             $cate->status = 1;
             $cate->position = 1;
             
@@ -309,8 +261,7 @@ class CategoryController extends BaseController
      * @param  \App\Category_translation  $category_translation
      * @return \Illuminate\Http\Response
      */
-    public function updateOrder(Request $request)
-    {
+    public function updateOrder(Request $request){
         $data = json_decode($request->orderDta);
         $arr = $this->buildArray($data);
         if($arr > 0){
@@ -324,16 +275,11 @@ class CategoryController extends BaseController
      * @param  \App\Category_translation  $category_translation
      * @return \Illuminate\Http\Response
      */
-    public function destroy($domain = '', $id)
-    {
+    public function destroy($domain = '', $id){
         $category = Category::where('id', $id)->first();
-        /*  block and unblock */
-        //$category->status = ($category->status == 2) ? 1 : 2;
         $category->status = 2;
         $category->save();
         $action = 'deleted';
-        //$action = ($category->status == 2) ? 'blocked' : 'unblocked';
-
         $hs = new CategoryHistory();
         $hs->category_id = $category->id;
         $hs->action = $action;

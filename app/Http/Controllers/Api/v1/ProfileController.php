@@ -106,17 +106,11 @@ class ProfileController extends BaseController
      */
     public function profile(Request $request)
     {
-        $user = User::with('country', 'address')->select('name', 'email', 'phone_number', 'type', 'country_id')
-                    ->where('id', Auth::user()->id)->first();
-
+        $user = User::with('country', 'address')->select('name', 'email', 'phone_number', 'type', 'country_id')->where('id', Auth::user()->id)->first();
         if(!$user){
             return response()->json(['error' => 'No record found.'], 404);
         }
-
-        return response()->json([
-        	'data' => $user,
-        ]);
-        //return view('forntend/account/profile')->with(['user' => $user, 'navCategories' => $navCategories]);
+        return response()->json(['data' => $user]);
     }
 
     /**
@@ -124,14 +118,12 @@ class ProfileController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function changePassword(Request $request, $domain = '')
-    {
+    public function changePassword(Request $request, $domain = ''){
         $validator = Validator::make($request->all(), [
             'current_password' => 'required|string',
             'new_password' => 'required|string|min:6|max:50',
             'confirm_password' => 'required|same:new_password',
         ]);
- 
         if($validator->fails()){
             foreach($validator->errors()->toArray() as $error_key => $error_value){
                 $errors['error'] = $error_value[0];
@@ -167,8 +159,7 @@ class ProfileController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function updateAvatar(Request $request)
-    {
+    public function updateAvatar(Request $request){
         $validator = Validator::make($request->all(), [
             'avatar' => 'required|string'
         ]); 
@@ -178,20 +169,14 @@ class ProfileController extends BaseController
                 return response()->json($errors, 422);
             }
         }
-
         $img = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->avatar));
-
         $user = User::where('id', Auth::user()->id)->first();
-
         if(!empty($user->image)){
             Storage::disk('s3')->delete($user->image); 
         }
-
         $imgType = ($request->has('type')) ? $request->type : 'jpg';
         $imageName = 'profile/'.$user->id.substr(md5(microtime()), 0, 15).'.'.$imgType;
-
         $save = Storage::disk('s3')->put($imageName, $img, 'public');
-
         $user->image = $imageName;
         $user->save();
         return response()->json([
@@ -214,24 +199,19 @@ class ProfileController extends BaseController
             'email'         => 'required|email|max:50||unique:users,email,'.$usr,
             'phone_number'  => 'required|string|min:10|max:15|unique:users,phone_number,'.$usr,
         ]);
-
         if($validator->fails()){
             foreach($validator->errors()->toArray() as $error_key => $error_value){
                 $errors['error'] = $error_value[0];
                 return response()->json($errors, 422);
             }
         }
-
         $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
                         'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
-
         $user = User::where('id', $usr)->first();
 
         $user->name = $request->name;
         $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
-
         if($user->phone_number != trim($request->phone_number)){
-
             $phoneCode = mt_rand(100000, 999999);
             $user->phone_number = $request->phone_number;
             $user->is_phone_verified = 0;
@@ -284,15 +264,12 @@ class ProfileController extends BaseController
                 }
             }
         }
-        
         $user->save();
-
         $data['name'] = $user->name;
         $data['email'] = $user->email;
         $data['phone_number'] = $user->phone_number;
         $data['is_phone_verified'] = $user->is_phone_verified;
         $data['is_email_verified'] = $user->is_email_verified;
-
         return response()->json([
             'message' => 'Profile updated successfully.',
             'data' => $data
@@ -307,14 +284,11 @@ class ProfileController extends BaseController
     public function addressBook($id = '')
     {
         $address = UserAddress::where('user_id', Auth::user()->id);
-
         if($id > 0){
             $address = $address->where('id', $id);
         }
-
         $address = $address->orderBy('is_primary', 'desc')
                     ->orderBy('id', 'desc')->get();
-
         return response()->json([
             'data' => $address,
         ]);
@@ -367,18 +341,15 @@ class ProfileController extends BaseController
     }
 
     /**     Update primary address         */
-    public function primaryAddress($addressId = 0)
-    {
+    public function primaryAddress($addressId = 0){
         try {
             $user = Auth::user();
             $address = UserAddress::where('id', $addressId)->where('user_id', $user->id)->first();
-
             if(!$address){
                 return $this->errorResponse('Address not found.', 404);
             }
             $add = UserAddress::where('user_id', $user->id)->update(['is_primary' => 0]);
             $add = UserAddress::where('user_id', $user->id)->where('id', $addressId)->update(['is_primary' => 1]);
-
             return $this->successResponse('', 'Address is set as primary address successfully.');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
@@ -390,8 +361,7 @@ class ProfileController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function deleteAddress($addressId = 0)
-    {
+    public function deleteAddress($addressId = 0){
         try {
             $address = UserAddress::where('id', $addressId)->where('user_id', Auth::user()->id)->first();
 
