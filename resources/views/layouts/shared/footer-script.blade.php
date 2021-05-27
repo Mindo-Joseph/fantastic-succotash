@@ -3,7 +3,6 @@
 <?php 
     if(Session::has('toaster')){
     $toast = Session::get('toaster');
-    print_r($toast);
         echo '<script>
             $(document).ready(function(){
                 $.NotificationApp.send("'.$toast["title"].'", "'.$toast["body"].'", "top-right", "'.$toast["color"].'", "'.$toast["type"].'");

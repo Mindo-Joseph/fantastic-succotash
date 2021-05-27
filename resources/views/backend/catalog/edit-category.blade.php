@@ -39,7 +39,7 @@
                     </span>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group">
                     {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control type-select" for="edit" id="typeSelectBox" name="type_id">
@@ -54,14 +54,26 @@
                     <input type="hidden" id="cateId" url="{{route('category.update', $category->id)}}">
                 </div>
             </div>
-            <div class="col-md-3 text-center">
+            <div class="col-md-2 text-center">
                 <div class="form-group">
                     {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
                     <div>
                         @if($category->is_visible == '1')
-                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2Edit" data-color="#43bee1" checked='checked'>
+                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control edit-switch_menu" data-color="#43bee1" checked='checked'>
                         @else
-                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2Edit" data-color="#43bee1">
+                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control edit-switch_menu" data-color="#43bee1">
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 text-center">
+                <div class="form-group">
+                    {!! Form::label('title', 'Show Wishlist',['class' => 'control-label']) !!} 
+                    <div>
+                        @if($category->show_wishlist == '1')
+                            <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control edit-wishlist_switch" data-color="#43bee1" checked='checked'>
+                        @else
+                            <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control edit-wishlist_switch" data-color="#43bee1">
                         @endif
                     </div>
                 </div>
@@ -71,9 +83,9 @@
                     {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
                     <div>
                         @if($category->can_add_products == '1')
-                            <input type="checkbox" data-plugin="switchery" class="form-control switch1Edit" data-color="#43bee1" name="can_add_products" checked='checked'>
+                            <input type="checkbox" data-plugin="switchery" class="form-control edit-add_product_switch" data-color="#43bee1" name="can_add_products" checked='checked'>
                         @else
-                            <input type="checkbox" data-plugin="switchery" class="form-control switch1Edit" data-color="#43bee1" name="can_add_products">
+                            <input type="checkbox" data-plugin="switchery" class="form-control edit-add_product_switch" data-color="#43bee1" name="can_add_products">
                         @endif
                     </div>
                 </div>

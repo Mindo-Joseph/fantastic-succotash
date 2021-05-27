@@ -176,13 +176,10 @@ class VendorController extends BaseController
             ];
          }
 
-        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '1')
+        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '>', 0)
                     ->where(function($q) use($id){
-                          $q->whereNull('vendor_id')
-                            ->orWhere('vendor_id', $id);
-                    })
-                    ->where('status', '!=', '2')
-                    ->orderBy('position', 'asc')->get();
+                      $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
+                    })->where('status', '!=', '2')->orderBy('position', 'asc')->orderBy('parent_id', 'asc')->get();
 
         $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
         
@@ -211,16 +208,7 @@ class VendorController extends BaseController
                         ->orderBy('position', 'asc')
                         ->orderBy('id', 'asc')
                         ->orderBy('parent_id', 'asc')->get();
-
-        /*$categories = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
-                        ->select('ct.name', 'categories.id', 'ct.category_id', 'categories.icon', 'categories.slug', 'categories.type_id', 'categories.parent_id', 'categories.vendor_id', 'categories.is_core')
-
-                        
-                        ->where('categories.id', '>', '1')
-                        ->where('ct.language_id', '=', '1')
-                        ->where('categories.status', '!=', '2')
-                        ->orderBy('categories.parent_id', 'asc')
-                        ->orderBy('categories.position', 'asc')->get();*/
+        
         if($categories){
             $build = $this->buildTree($categories->toArray());
             $tree = $this->printTree($build, 'vendor');
@@ -235,13 +223,10 @@ class VendorController extends BaseController
                     ->where('is_active', 1)
                     ->orderBy('is_primary', 'desc')->get();
 
-        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '1')
+        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '>', 0)
                     ->where(function($q) use($id){
-                          $q->whereNull('vendor_id')
-                            ->orWhere('vendor_id', $id);
-                    })
-                    ->where('status', '!=', '2')
-                    ->orderBy('position', 'asc')->get();
+                      $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
+                    })->where('status', '!=', '2')->orderBy('position', 'asc')->orderBy('parent_id', 'asc')->get();
         
         return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'categorList' => $categorList, 'blockedCategory' => $blockedCategory]);
     }
@@ -258,10 +243,11 @@ class VendorController extends BaseController
                             $v->select('id','product_id', 'quantity', 'price')->groupBy('product_id');
                     }])->select('id', 'sku','vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
                     ->where('vendor_id', $id)->get();
-        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '1')
+
+        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '>', 0)
                     ->where(function($q) use($id){
                       $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
-                    })->where('status', '!=', '2')->orderBy('position', 'asc')->get();
+                    })->where('status', '!=', '2')->orderBy('position', 'asc')->orderBy('parent_id', 'asc')->get();
         $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
         return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'blockedCategory' => $blockedCategory, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categorList' => $categorList]);
     }
