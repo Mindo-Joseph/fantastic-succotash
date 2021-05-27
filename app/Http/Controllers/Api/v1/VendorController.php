@@ -66,7 +66,7 @@ class VendorController extends BaseController{
                             ->where('vendor_id', $vid);
                         })
                     ->groupBy('product_variant_sets.variant_type_id')->get();
-        $products = Product::with(['inwishlist' => function($qry) use($userid){
+        $products = Product::with('category.categoryDetail',['inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
                     },
                     'media.image', 'translation' => function($q) use($langId){
@@ -85,9 +85,10 @@ class VendorController extends BaseController{
                 ->where('products.vendor_id', $vid)
                 ->where('products.is_live', 1)->paginate($paginate);
         if(!empty($products)){
-            foreach ($products as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+            foreach ($products as $key => $product) {
+                $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+                foreach ($product->variant as $k => $v) {
+                    $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }
