@@ -15,7 +15,7 @@ class PaymentOptionSeeder extends Seeder
  
       $opt = array(
         array('id' => '1','code' => 'wallet','path' => '','title' => 'Wallet','status' => '1'),
-        array('id' => '2','code' => 'layalty-points','path' => '','title' => 'Layalty Points','status' => '1'),
+        array('id' => '2','code' => 'loyalty-points','path' => '','title' => 'loyalty Points','status' => '1'),
         array('id' => '3','code' => 'COD','path' => '','title' => 'Cash On Delivery','status' => '1'),
         array('id' => '8', 'path' => 'omnipay/tpay', 'code' => 'tpay', 'title' => 'Tpay', 'status' => '0'),
         array('id' => '9','path' =>'dilab/omnipay-2c2p', 'code' => '2c2p', 'title' => '2c2p', 'status' => '0'),
