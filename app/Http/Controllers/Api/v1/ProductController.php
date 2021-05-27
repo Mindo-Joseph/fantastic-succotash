@@ -153,7 +153,7 @@ class ProductController extends BaseController
             if(!$product){
                 return response()->json(['error' => 'No record found.'], 404);
             }
-
+            $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
             $clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
             foreach ($product->variant as $key => $value) {
                 $product->variant[$key]->multiplier = $clientCurrency->doller_compare;
@@ -286,11 +286,11 @@ class ProductController extends BaseController
                 return $this->errorResponse('Options should not be empty.', 422);
             }
 
-            $product = Product::select('id')->where('sku', $sku)->first();
+            $product = Product::select('id')->with('category.categoryDetail')->where('sku', $sku)->first();
             if(!$product){
                 return $this->errorResponse('No record found.', 404);
             }
-
+            $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
             $langId = Auth::user()->language;
             $userid = Auth::user()->id;
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
