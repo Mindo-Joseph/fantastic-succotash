@@ -107,7 +107,7 @@
                                             <h6>Street: {{$add->street}}</h6>
                                             <h6>City: {{$add->city}}</h6>
                                             <h6>State: {{$add->state}}</h6>
-                                            <h6>Country: {{$add->country->name}}</h6>
+                                            <h6>Country: {{$add->country  ? $add->country->name : ''}}</h6>
                                             <h6>Pincode: {{$add->pincode}}</h6>
                                         </div>
                                     </div>
