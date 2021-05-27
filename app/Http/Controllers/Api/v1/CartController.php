@@ -325,7 +325,7 @@ class CartController extends BaseController{
         $cartID = $cart->id;
         $cartData = CartProduct::with(['vendor', 'coupon'=> function($qry) use($cartID){
                         $qry->where('cart_id', $cartID);
-                    }, 'coupon.promo.details', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
+                    }, 'coupon.promo.details', 'vendorProducts.pvariant.media.image', 'vendorProducts.pvariant.vset', 'vendorProducts.product.media.image',
                     'vendorProducts.product.translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $langId);
@@ -340,7 +340,6 @@ class CartController extends BaseController{
                         $qry->where('language_id', $langId);
                     }, 'vendorProducts.product.taxCategory.taxRate', 
                 ])->select('vendor_id')->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
-
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         $total_tax = $total_paying = $total_disc_amount = 0.00; $item_count = 0;
         if($cartData){
