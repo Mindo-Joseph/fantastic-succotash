@@ -326,6 +326,9 @@ class CartController extends BaseController{
         $cartData = CartProduct::with(['vendor', 'coupon'=> function($qry) use($cartID){
                         $qry->where('cart_id', $cartID);
                     }, 'coupon.promo.details', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image', 
+                    'vendorProducts.pvariant.vset.variantDetail.trans' => function($qry) use($langId){
+                        $qry->where('language_id', $langId);
+                    },
                     'vendorProducts.pvariant.vset.optionData.trans' => function($qry) use($langId){
                         $qry->where('language_id', $langId);
                     },
@@ -491,8 +494,8 @@ class CartController extends BaseController{
                     if($prod->pvariant){
                         foreach ($prod->pvariant->vset as $variant_set_option) {
                             $variant_options [] = array(
-                                'title' => $variant_set_option->optionData->trans->title,
-                                'variant_option_id' => $variant_set_option->optionData->trans->variant_option_id
+                                'option' => $variant_set_option->optionData->trans->title,
+                                'title' => $variant_set_option->variantDetail->trans->title,
                             );
                         }
                     }
