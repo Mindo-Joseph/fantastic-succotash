@@ -17,8 +17,7 @@ class CategoryController extends BaseController
     private $field_status = 2;
     use ApiResponser;
     /**     * Get Company ShortCode     *     */
-    public function categoryData(Request $request, $cid = 0)
-    {
+    public function categoryData(Request $request, $cid = 0){
         try{
             $paginate = $request->has('limit') ? $request->limit : 12;
             if($cid == 0){
@@ -62,7 +61,6 @@ class CategoryController extends BaseController
             $response['category'] = $category;
             $response['filterData'] = $variantSets;
             $response['listData'] = $this->listData($langId, $cid, $category->type->redirect_to, $paginate, $userid);
-
             return $this->successResponse($response);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
@@ -71,7 +69,6 @@ class CategoryController extends BaseController
     }
 
     public function listData($langId, $cid, $tpye = '', $limit = 12, $userid){
-        
         if($tpye == 'vendor' || $tpye == 'Vendor'){
             $blockedVendor = VendorCategory::where('category_id', $cid)->where('status', 0)->pluck('vendor_id')->toArray();
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
@@ -81,7 +78,7 @@ class CategoryController extends BaseController
         }elseif($tpye == 'product' || $tpye == 'Product'){
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
-                    ->with(['inwishlist' => function($qry) use($userid){
+                    ->with(['category.categoryDetail','inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
                     },
                     'media.image', 'translation' => function($q) use($langId){
@@ -94,8 +91,9 @@ class CategoryController extends BaseController
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
                     ->where('pc.category_id', $cid)->where('products.is_live', 1)->paginate($limit);
             if(!empty($products)){
-                foreach ($products as $key => $value) {
-                    foreach ($value->variant as $k => $v) {
+                foreach ($products as $key => $product) {
+                    $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+                    foreach ($product->variant as $k => $v) {
                         $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                     }
                 }
