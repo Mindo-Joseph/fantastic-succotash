@@ -91,7 +91,7 @@ $(document).ready(function() {
                 if (response.status == "success") {
                     $("#cart_table").html('');
                     var cart_details = response.cart_details;
-                    if(response.cart_details){
+                    if(response.cart_details.length != 0){
                         if(response.cart_details.products.length != 0){
                             let header_cart_template = _.template($('#header_cart_template').html());
                             $("#header_cart_main_ul").append(header_cart_template({cart_details:cart_details, show_cart_url:show_cart_url}));
