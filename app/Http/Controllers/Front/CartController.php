@@ -214,6 +214,7 @@ class CartController extends FrontController
      * @return \Illuminate\Http\Response
      */ 
     public function getCartProducts($domain = ''){
+        $cart_details = [];
         $user = Auth::user();
         $curId = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');
@@ -222,10 +223,12 @@ class CartController extends FrontController
         }else{
             $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
-        $cartData = $this->getCart($cart);
+        if($cart){
+            $cart_details = $this->getCart($cart);
+        }
         if($cartData && !empty($cartData)){
             return response()->json([
-                'data' => $cartData,
+                'data' => $cart_details,
             ]);
         }
         return response()->json([
