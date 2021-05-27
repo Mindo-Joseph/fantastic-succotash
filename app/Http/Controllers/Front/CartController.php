@@ -119,9 +119,9 @@ class CartController extends FrontController
         }
         $user_id = ' ';
         $cartInfo = ' ';
+        $currency = ClientCurrency::where('is_primary', '=', 1)->first();
         if (Auth::user()) {
             $user_id = Auth::user()->id;
-            $currency = ClientCurrency::where('is_primary', '=', 1)->first();
             $userFind = Cart::where('user_id', $user_id)->first();
             if (!$userFind) {
                 $cart = new Cart;
@@ -146,52 +146,27 @@ class CartController extends FrontController
 
             }
         } else {
-            $val = ' ';
-            if (!isset($_COOKIE["uuid"])) {
-                $token = $this->randomString();
-                setcookie("uuid", $token, time() + (10 * 365 * 24 * 60 * 60), "/");
-                $val = $token;
-                $user = new User;
-                $user->name = "Test";
-                $user->email = $val . "@email.com";
-                $user->password = "test";
-                $user->system_id = $val;
-                $user->save();
-                $user_id = $user->id;
-                $currency = ClientCurrency::where('is_primary', '=', 1)->first();
+            $cart_detail = Cart::where('unique_identifier', session()->get('_token'))->first();
+            if(!$cart_detail){
                 $cart = new Cart;
-                $cart->unique_identifier = $token;
-                $cart->user_id = $user_id;
-                $cart->created_by = $user_id;
                 $cart->status = '0';
                 $cart->is_gift = '1';
                 $cart->item_count = '1';
                 $cart->currency_id = $currency->currency->id;
+                $cart->unique_identifier = session()->get('_token');
                 $cart->save();
-                $cartInfo = $cart;
-            } else {
-                $val = $_COOKIE["uuid"];
-                $userInfo = User::where('system_id', $val)->first();
-                $user_id = $userInfo->id;
-                $cartInfo = Cart::where('user_id', $user_id)->first();
-                $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cartInfo->id)->first();
-                if ($checkIfExist) {
-                    $checkIfExist->quantity = (int)$checkIfExist->quantity + 1;
-                    $cartInfo->cartProducts()->save($checkIfExist);
-                    return response()->json($user_id);
-                }
             }
             $productForVendor = Product::where('id', $request->product_id)->first();
             $cartProduct = new CartProduct;
             $cartProduct->status  = '0';
             $cartProduct->is_tax_applied  = '1';
             $cartProduct->created_by  = $user_id;
-            $cartProduct->cart_id  = $cartInfo->id;
+            $cartProduct->cart_id  = $cart_detail->id;
             $cartProduct->quantity  = $request->quantity;
             $cartProduct->product_id = $request->product_id;
-            $cartProduct->vendor_id  = $productForVendor->vendor_id;
             $cartProduct->variant_id  = $request->variant_id;
-            $cartProduct->currency_id = $cartInfo->currency_id;
+            $cartProduct->currency_id = $cart_detail->currency_id;
+            $cartProduct->vendor_id  = $productForVendor->vendor_id;
             $cartProduct->save();
             if ($request->has('addonID') && $request->has('addonID')) {
                 foreach ($addon_ids as $key => $value) {
@@ -214,6 +189,7 @@ class CartController extends FrontController
      * @return \Illuminate\Http\Response
      */ 
     public function getCartProducts($domain = ''){
+        $cart_details = [];
         $user = Auth::user();
         $curId = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');
@@ -222,10 +198,12 @@ class CartController extends FrontController
         }else{
             $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
-        $cartData = $this->getCart($cart);
+        if($cart){
+            $cart_details = $this->getCart($cart);
+        }
         if($cartData && !empty($cartData)){
             return response()->json([
-                'data' => $cartData,
+                'data' => $cart_details,
             ]);
         }
         return response()->json([
@@ -256,9 +234,6 @@ class CartController extends FrontController
                         }, 'vendorProducts.product.taxCategory.taxRate', 
                     ])->select('vendor_id')->where('status', [0,1])->where('cart_id', $cart_id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
-        if(empty($cartData) || count($cartData) < 1){
-            return false;
-        }
         if($cartData){
             foreach ($cartData as $ven_key => $vendorData) {
                 $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0.00;
@@ -266,34 +241,25 @@ class CartController extends FrontController
                     $quantity_price = 0;
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
                     $price_in_currency = $prod->pvariant->price / $divider;
-
                     $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
-
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
-
                     $prod->pvariant->price_in_cart = $prod->pvariant->price;
                     $prod->pvariant->price = $price_in_currency;
+                    $prod->pvariant->media_one = $prod->pvariant->media->first();
                     $prod->pvariant->multiplier = $clientCurrency->doller_compare;
                     $prod->pvariant->quantity_price = number_format($quantity_price, 2);
-
                     $payable_amount = $payable_amount + $quantity_price;
                     $taxData = array();
-
-
                     if(!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0){
-
                         foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
-
                             $rate = round($tax_value->tax_rate);
                             $tax_amount = ($price_in_doller_compare * $rate) / 100;
                             $product_tax = $quantity_price * $rate / 100;
-
                             $taxData[$tckey]['identifier'] = $tax_value->identifier;
                             $taxData[$tckey]['rate'] = $rate;
                             $taxData[$tckey]['tax_amount'] = number_format($tax_amount, 2);
                             $taxData[$tckey]['product_tax'] = number_format($product_tax, 2);
                             $taxable_amount = $taxable_amount + $product_tax;
-
                             $payable_amount = $payable_amount + $product_tax;
                         }
                     }
@@ -302,17 +268,13 @@ class CartController extends FrontController
                     unset($prod->product->taxCategory);
 
                     foreach ($prod->addon as $ck => $addons) {
-
                         $opt_price_in_currency = $addons->option->price / $divider;
                         $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
-
                         $opt_quantity_price = number_format($opt_price_in_doller_compare * $prod->quantity, 2);
-
                         $addons->option->price_in_cart = $addons->option->price;
                         $addons->option->price = $opt_price_in_currency;
                         $addons->option->multiplier = $clientCurrency->doller_compare;
                         $addons->option->quantity_price = $opt_quantity_price;
-
                         $payable_amount = $payable_amount + $opt_quantity_price;
                     }
 
@@ -337,34 +299,35 @@ class CartController extends FrontController
                 $total_discount_amount = $total_discount_amount + $discount_amount;
                 $total_discount_percent = $total_discount_percent + $discount_percent;
             }
-        }
-        $is_percent = 0;
-        $amount_value = 0;
-        if($cart->coupon){
-            foreach ($cart->coupon as $ck => $code) {
-                if($code->promo->promo_type_id == 1){
-                    $is_percent = 1;
-                    $total_discount_percent = $total_discount_percent + round($code->promo->amount);
-                }else{
-                    $amount_value = $amount_value + $code->promo->amount;
+            $is_percent = 0;
+            $amount_value = 0;
+            if($cart->coupon){
+                foreach ($cart->coupon as $ck => $code) {
+                    if($code->promo->promo_type_id == 1){
+                        $is_percent = 1;
+                        $total_discount_percent = $total_discount_percent + round($code->promo->amount);
+                    }else{
+                        $amount_value = $amount_value + $code->promo->amount;
+                    }
                 }
             }
+            if($is_percent == 1){
+                $total_discount_percent = ($total_discount_percent > 100) ? 100 : $total_discount_percent;
+                $total_discount_amount = ($total_payable_amount * $total_discount_percent) / 100;
+            }
+            if($amount_value > 0){
+                $amount_value = $amount_value * $clientCurrency->doller_compare;
+                $total_discount_amount = $total_discount_amount + $amount_value;
+                
+            }
+            $total_payable_amount = $total_payable_amount - $total_discount_amount;
+            $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount - $total_taxable_amount), 2);
+            $cart->new_gross_amount = number_format(($total_payable_amount + $total_discount_amount), 2);
+            $cart->total_payable_amount = number_format($total_payable_amount, 2);
+            $cart->total_discount_amount = number_format($total_discount_amount, 2);
+            $cart->total_taxable_amount = number_format($total_taxable_amount, 2);
+            $cart->products = $cartData->toArray();
         }
-        if($is_percent == 1){
-            $total_discount_percent = ($total_discount_percent > 100) ? 100 : $total_discount_percent;
-            $total_discount_amount = ($total_payable_amount * $total_discount_percent) / 100;
-        }
-        if($amount_value > 0){
-            $amount_value = $amount_value * $clientCurrency->doller_compare;
-            $total_discount_amount = $total_discount_amount + $amount_value;
-            
-        }
-        $total_payable_amount = $total_payable_amount - $total_discount_amount;
-        $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount), 2);
-        $cart->total_payable_amount = number_format($total_payable_amount, 2);
-        $cart->total_discount_amount = number_format($total_discount_amount, 2);
-        $cart->total_discount_percent = number_format($total_discount_percent, 2);
-        $cart->products = $cartData->toArray();
         return $cart;
     }
     /**
@@ -403,6 +366,7 @@ class CartController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function getCartData($domain = '', Request $request){
+        $cart_details = [];
         $user = Auth::user();
         $curId = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');
@@ -411,7 +375,9 @@ class CartController extends FrontController
         }else{
             $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
-        $cartData = $this->getCart($cart);
-        return response()->json($cartData);
+        if($cart){
+            $cart_details = $this->getCart($cart);
+        }
+        return response()->json(['status' => 'success', 'cart_details' => $cart_details]);
     }
 }
