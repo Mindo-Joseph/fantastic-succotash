@@ -285,8 +285,7 @@ class ProductController extends BaseController
             if(!$request->has('options')){
                 return $this->errorResponse('Options should not be empty.', 422);
             }
-
-            $product = Product::select('id','category_id')->with('category.categoryDetail')->where('sku', $sku)->first();
+            $product = Product::with('category.categoryDetail')->where('sku', $sku)->first();
             if(!$product){
                 return $this->errorResponse('No record found.', 404);
             }
