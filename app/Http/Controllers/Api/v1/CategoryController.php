@@ -94,7 +94,7 @@ class CategoryController extends BaseController
                 foreach ($products as $key => $product) {
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
                     foreach ($product->variant as $k => $v) {
-                        $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                        $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
                     }
                 }
             }
