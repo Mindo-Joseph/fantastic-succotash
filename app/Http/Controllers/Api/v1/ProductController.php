@@ -289,7 +289,7 @@ class ProductController extends BaseController
             if(!$product){
                 return $this->errorResponse('No record found.', 404);
             }
-            $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+            
             $langId = Auth::user()->language;
             $userid = Auth::user()->id;
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
@@ -335,6 +335,7 @@ class ProductController extends BaseController
                 $variantData->stock_check = 0;
             }
             $data_image = array();
+            $variantData->is_wishlist = $product->category->categoryDetail->show_wishlist;
             if($variantData->media && count($variantData->media) > 0){
                 foreach ($variantData->media as $media_key => $media_value) {
                     $data_image[$media_key]['product_variant_id'] = $media_value->product_variant_id;
