@@ -48,9 +48,6 @@ class ProductController extends BaseController
                         ->where('client_languages.client_code', Auth::user()->code)->get();
 
         $taxCate = TaxCategory::all();
-
-
-        // dd($categories->toArray());
         return view('backend/product/create', ['typeArray' => $type, 'categories' => $categories, 'vendor_id' => $vendor->id, 'addons' => $addons, 'languages' => $langs, 'taxCate' => $taxCate, 'countries' => $countries]);
     }
 
@@ -406,72 +403,12 @@ class ProductController extends BaseController
                 }
             }*/
         }
-
-            /*if($request->has('variant_skus') && !empty($request->variant_skus)){
-
-                $varOpts = explode(';', $request->all_variant_set);
-                foreach ($varOpts as $varOpt) {
-                    $ops = explode('=>', $varOpt);
-                    $varOptArray[$ops[0]] = explode(',' ,$ops[1]);
-                }
-
-                foreach ($request->variant_skus as $key => $value) {
-                    $proVariant = new ProductVariant();
-                    $proVariant->sku = $value.'-'.$product->id;
-                    $proVariant->product_id = $product->id;
-                    $proVariant->title = $request->variant_titles[$key];
-                    $proVariant->quantity = $request->variant_quantity[$key];
-                    $proVariant->price = $request->variant_price[$key];
-                    $proVariant->position = 1;
-                    $proVariant->compare_at_price = $request->variant_compare_price[$key];
-                    $proVariant->barcode = $this->generateBarcodeNumber();
-                    $proVariant->cost_price = $request->variant_cost_price[$key];
-                    $proVariant->currency_id = 1;
-                    $proVariant->tax_category_id = $request->tax_category;
-                    $proVariant->inventory_policy = '';
-                    $proVariant->fulfillment_service = '';
-                    $proVariant->inventory_management = '';
-                    $proVariant->save();
-
-                    $img = ''; $fname = 'variantImage-'.$key;
-                    if($request->has($fname) && !empty($request->{$fname})){
-                        $image = new ProductImage();
-                        $image->media_type = 1;
-                        $file = $request->file($fname);
-                        $image->product_id = $product->id;
-                        $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-                        //$s3filePath = '/assets/Clientlogo/' . $file_name;
-                        //$path = Storage::disk('s3')->put($s3filePath, $file,'public');
-                        $image->path = $request->file($fname)->storeAs('/product', $file_name, 'public');
-                        $image->save();
-                        $img = $image->id;
-
-                    }
-                    foreach ($request->variant[$key] as $k => $v) {
-
-                        $prodVarSet[$i] = [
-                            'product_id' => $product->id,
-                            'product_variant_id' => $proVariant->id,
-                            'variant_option_id' => $v,
-                        ];
-
-                        foreach ($varOptArray as $key => $value) {
-
-                            if(in_array($v, $value)){
-                                $prodVarSet[$i]['variant_type_id'] = $key;
-                            }
-                        }
-                        
-                        if(!empty($img)){
-                            $prodVarSet[$i]['media_id'] = $img;
-                        }
-                        $i++;
-                    }
-                }
-                ProductVariantSet::insert($prodVarSet);
-            }*/
-        
-        return redirect()->back()->with('success', 'Product updated successfully!');
+        /*  success - #5ba035, error - #bf441d, warning - #da8609  */
+        $toaster['type'] = 'Success';
+        $toaster['title'] = 'Product updated successfully.';
+        $toaster['body'] = '';
+        $toaster['color'] = '#5ba035';
+        return redirect()->back()->with('toaster', $toaster);
 
     }
 

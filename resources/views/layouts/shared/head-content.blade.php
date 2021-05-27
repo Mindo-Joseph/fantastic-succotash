@@ -134,3 +134,4 @@ if($theme && !empty($theme->map_key)){
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/css/jquery-ui.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/libs/jquery-toast-plugin/jquery-toast-plugin.min.css')}}" rel="stylesheet" type="text/css" />
