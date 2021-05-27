@@ -325,7 +325,7 @@ class CartController extends BaseController{
         $cartID = $cart->id;
         $cartData = CartProduct::with(['vendor', 'coupon'=> function($qry) use($cartID){
                         $qry->where('cart_id', $cartID);
-                    }, 'coupon.promo.details', 'vendorProducts.pvariant.media.image', 'vendorProducts.pvariant.vset', 'vendorProducts.product.media.image',
+                    }, 'coupon.promo.details', 'vendorProducts.pvariant.media.image', 'vendorProducts.pvariant.vset.option2', 'vendorProducts.product.media.image',
                     'vendorProducts.product.translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $langId);
