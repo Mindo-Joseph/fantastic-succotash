@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterPromocodeImageFieldTable extends Migration
+class AddWishlistFieldInCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AlterPromocodeImageFieldTable extends Migration
      */
     public function up()
     {
-        Schema::table('promocodes', function (Blueprint $table) {
-            $table->string('image')->after('created_by')->nullable();
+        Schema::table('categories', function (Blueprint $table) {
+            $table->tinyInteger('show_wishlist')->default(1)->comment('1 for yes, 0 for no');
         });
     }
 
@@ -25,8 +25,8 @@ class AlterPromocodeImageFieldTable extends Migration
      */
     public function down()
     {
-        Schema::table('promocodes', function (Blueprint $table) {
-            $table->dropColumn('image');
+        Schema::table('categories', function (Blueprint $table) {
+            $table->dropColumn('show_wishlist');
         });
     }
 }

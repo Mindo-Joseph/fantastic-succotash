@@ -9,10 +9,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{Client, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell};
 use Illuminate\Support\Facades\Storage;
+use App\Http\Traits\ToasterResponser;
 
 class ProductController extends BaseController
 {
     private $folderName = 'prods';
+    use ToasterResponser;
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +22,6 @@ class ProductController extends BaseController
      */
     public function index()
     {
-        
     }
 
     /**
@@ -402,11 +403,7 @@ class ProductController extends BaseController
                 }
             }*/
         }
-        /*  success - #5ba035, error - #bf441d, warning - #da8609  */
-        $toaster['type'] = 'Success';
-        $toaster['title'] = 'Product updated successfully.';
-        $toaster['body'] = '';
-        $toaster['color'] = '#5ba035';
+        $toaster = $this->successToaster('Success', 'Product updated successfully.');
         return redirect()->back()->with('toaster', $toaster);
 
     }
