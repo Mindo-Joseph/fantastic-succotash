@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
+use App\Models\{Type, User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
 
 class VendorController extends BaseController{
     use ApiResponser;
@@ -21,16 +21,19 @@ class VendorController extends BaseController{
             $vendor_ids = [];
             $category_details = [];
             $vendor_id = $request->vendor_id;
+            $type = Type::where('type' ,'Vendor')->first();
             $vendor_products = Product::with('category.categoryDetail')->where('vendor_id', $vendor_id)->get(['id']);
             foreach ($vendor_products as $vendor_product) {
                 if(!in_array($vendor_product->category->categoryDetail->id, $vendor_ids)){
-                    $vendor_ids[] = $vendor_product->category->categoryDetail->id;
-                    $category_details[] = array(
-                        'id' => $vendor_product->category->categoryDetail->id,
-                        'name' => $vendor_product->category->categoryDetail->slug,
-                        'icon' => $vendor_product->category->categoryDetail->icon,
-                        'image' => $vendor_product->category->categoryDetail->image
-                    );
+                    if($vendor_product->category != $type->id){
+                        $vendor_ids[] = $vendor_product->category->categoryDetail->id;
+                        $category_details[] = array(
+                            'id' => $vendor_product->category->categoryDetail->id,
+                            'name' => $vendor_product->category->categoryDetail->slug,
+                            'icon' => $vendor_product->category->categoryDetail->icon,
+                            'image' => $vendor_product->category->categoryDetail->image
+                        );
+                    }
                 }
             }
             return $this->successResponse($category_details, '', 200);
