@@ -325,7 +325,10 @@ class CartController extends BaseController{
         $cartID = $cart->id;
         $cartData = CartProduct::with(['vendor', 'coupon'=> function($qry) use($cartID){
                         $qry->where('cart_id', $cartID);
-                    }, 'coupon.promo.details', 'vendorProducts.pvariant.media.image', 'vendorProducts.pvariant.vset.option2', 'vendorProducts.product.media.image',
+                    }, 'coupon.promo.details', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image', 
+                    'vendorProducts.pvariant.vset.optionData.trans' => function($qry) use($langId){
+                        $qry->where('language_id', $langId);
+                    },
                     'vendorProducts.product.translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $langId);
@@ -385,7 +388,6 @@ class CartController extends BaseController{
                         }
                     }
                 }
-
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
                     $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0; 
                     $variantsData = $taxData = $vendorAddons = array();
@@ -484,7 +486,14 @@ class CartController extends BaseController{
                     unset($prod->product->taxCategory);
                     unset($prod->addon);
                     unset($prod->pvariant);
-
+                    $variant_options = [];
+                    foreach ($prod->pvariant->vset as $variant_set_option) {
+                        $variant_options [] = array(
+                            'title' => $variant_set_option->optionData->trans->title,
+                            'variant_option_id' => $variant_set_option->optionData->trans->variant_option_id
+                        );
+                    }
+                    $prod->variant_options = $variant_options;
                     $prod->variants = $variantsData;
 
                     $deliver_charge = 0;

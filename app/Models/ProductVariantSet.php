@@ -30,4 +30,8 @@ class ProductVariantSet extends Model
     		->select('pvs.hexacode', 'vt.title', 'product_variant_sets.product_id', 'product_variant_sets.variant_type_id', 'product_variant_sets.variant_option_id', 'product_variant_sets.product_variant_id')
     		->groupBy('product_variant_sets.variant_option_id');
 	}
+
+	public function optionData() {
+	    return $this->belongsTo('App\Models\VariantOption', 'variant_option_id', 'id');
+	}
 }
