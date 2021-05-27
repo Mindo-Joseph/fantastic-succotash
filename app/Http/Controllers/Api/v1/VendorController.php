@@ -58,10 +58,10 @@ class VendorController extends BaseController{
                             $zx->select('variant_options.*', 'vt.title');
                             $zx->where('vt.language_id', $langId);
                         }])->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id')
-                    ->join('variant_translations as vt','vt.variant_id','vr.id')
-                    ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
-                    ->where('vt.language_id', $langId)
-                    ->whereIn('product_id', function($qry) use($vid){ 
+                        ->join('variant_translations as vt','vt.variant_id','vr.id')
+                        ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
+                        ->where('vt.language_id', $langId)
+                        ->whereIn('product_id', function($qry) use($vid){ 
                         $qry->select('id')->from('products')
                             ->where('vendor_id', $vid);
                         })
@@ -135,7 +135,6 @@ class VendorController extends BaseController{
                 $vResult = ProductVariantSet::join('product_categories as pc', 'product_variant_sets.product_id', 'pc.product_id')->select('product_variant_sets.product_variant_id', 'product_variant_sets.product_id')
                     ->where('product_variant_sets.variant_type_id', $key)
                     ->whereIn('product_variant_sets.variant_option_id', $value);
-
                 if(!empty($variantIds)){
                     $vResult  = $vResult->whereIn('product_variant_sets.product_variant_id', $variantIds);
                 }
@@ -151,7 +150,7 @@ class VendorController extends BaseController{
             }
         }
         $order_type = $request->has('order_type') ? $request->order_type : '';
-        $products = Product::with(['media.image', 'translation' => function($q) use($langId){
+        $products = Product::with(['category.categoryDetail', 'media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },'variant' => function($q) use($langId, $variantIds){
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
@@ -184,9 +183,10 @@ class VendorController extends BaseController{
         $paginate = $request->has('limit') ? $request->limit : 12;
         $products = $products->paginate($paginate);
         if(!empty($products)){
-            foreach ($products as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+            foreach ($products as $key => $product) {
+                $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+                foreach ($product->variant as $k => $v) {
+                    $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }

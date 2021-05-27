@@ -160,7 +160,7 @@ class CategoryController extends BaseController
             }
             $order_type = $request->has('order_type') ? $request->order_type : '';
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
-                        ->with(['media.image',
+                        ->with(['category.categoryDetail','media.image',
                             'translation' => function($q) use($langId){
                             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                             },
@@ -201,9 +201,10 @@ class CategoryController extends BaseController
             $products = $products->paginate($paginate);
 
             if(!empty($products)){
-                foreach ($products as $key => $value) {
-                    foreach ($value->variant as $k => $v) {
-                        $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                foreach ($products as $key => $product) {
+                    $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+                    foreach ($product->variant as $k => $v) {
+                        $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
                     }
                 }
             }

@@ -49,7 +49,7 @@ class BrandController extends BaseController
                         ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
                         ->where('vt.language_id', $langId)
                         ->groupBy('product_variant_sets.variant_type_id')->get();
-            $products = Product::with(['inwishlist' => function($qry) use($userid){
+            $products = Product::with(['category.categoryDetail', 'inwishlist' => function($qry) use($userid){
                             $qry->where('user_id', $userid);
                         },
                         'media.image', 'translation' => function($q) use($langId){
@@ -66,9 +66,10 @@ class BrandController extends BaseController
             
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
             if(!empty($products)){
-                foreach ($products as $key => $value) {
-                    foreach ($value->variant as $k => $v) {
-                        $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                foreach ($products as $product) {
+                    $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+                    foreach ($product->variant as $k => $v) {
+                        $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
                     }
                 }
             }
@@ -165,10 +166,9 @@ class BrandController extends BaseController
             }
         }
         $order_type = $request->has('order_type') ? $request->order_type : '';
-        $products = Product::with(['media.image', 'translation' => function($q) use($langId){
+        $products = Product::with(['category.categoryDetail','media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
-                        },
-                        'variant' => function($q) use($langId, $variantIds, $order_type){
+                        },'variant' => function($q) use($langId, $variantIds, $order_type){
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             if(!empty($variantIds)){
                                 $q->whereIn('id', $variantIds);
@@ -177,7 +177,6 @@ class BrandController extends BaseController
                             if(!empty($order_type) && $order_type == 'low_to_high'){
                                 $q->orderBy('price', 'asc');
                             }
-
                             if(!empty($order_type) && $order_type == 'high_to_low'){
                                 $q->orderBy('price', 'desc');
                             }
@@ -199,9 +198,10 @@ class BrandController extends BaseController
         }
         $products = $products->paginate($paginate);
         if(!empty($products)){
-            foreach ($products as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+            foreach ($products as $product) {
+                $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+                foreach ($product->variant as $k => $v) {
+                    $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }
