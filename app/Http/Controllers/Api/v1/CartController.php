@@ -408,90 +408,93 @@ class CartController extends BaseController{
                     }else{
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
+                    if($prod->pvariant){
 
-                    $variantsData['id']                 = $prod->pvariant->id;
-                    $variantsData['sku']                = $prod->pvariant->sku;
-                    $variantsData['product_id']         = $prod->pvariant->product_id;
-                    $variantsData['title']              = $prod->pvariant->title;
-                    $variantsData['price']              = $price_in_currency;
-                    $variantsData['barcode']            = $prod->pvariant->barcode;
-                    //$variantsData['price_in_cart']      = $prod->pvariant->price;
-                    $variantsData['multiplier']         = $clientCurrency->doller_compare;
-                    $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
-                    if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
-                        $pro_disc = $discount_amount;
-                        if($minimum_spend < $quantity_price){
-                            if($is_percent == 1){
-                                $pro_disc = ($quantity_price * $discount_percent)/ 100;
+                        $variantsData['price']              = $price_in_currency;
+                        $variantsData['id']                 = $prod->pvariant->id;
+                        $variantsData['sku']                = $prod->pvariant->sku;
+                        $variantsData['title']              = $prod->pvariant->title;
+                        $variantsData['barcode']            = $prod->pvariant->barcode;
+                        $variantsData['product_id']         = $prod->pvariant->product_id;
+                        $variantsData['multiplier']         = $clientCurrency->doller_compare;
+                        $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
+                        if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
+                            $pro_disc = $discount_amount;
+                            if($minimum_spend < $quantity_price){
+                                if($is_percent == 1){
+                                    $pro_disc = ($quantity_price * $discount_percent)/ 100;
+                                }
+                                $quantity_price = $quantity_price - $pro_disc;
+                                $proSumDis = $proSumDis + $pro_disc;
+                                if($quantity_price < 0){
+                                    $quantity_price = 0;
+                                }
+                                $codeApplied = 1;
+                                
+                            }else{
+                                $variantsData['coupon_msg'] = "Spend minimun ".$minimum_spend." to apply this coupon";
+                                $variantsData['coupon_not_appiled'] = 1;
                             }
-                            $quantity_price = $quantity_price - $pro_disc;
-                            $proSumDis = $proSumDis + $pro_disc;
-                            if($quantity_price < 0){
-                                $quantity_price = 0;
+                        }
+                        $variantsData['discount_amount'] = $pro_disc;
+                        $variantsData['coupon_applied'] = $codeApplied;
+                        $variantsData['quantity_price'] = $quantity_price;
+
+                        $payable_amount = $payable_amount + $quantity_price;
+
+                        if(!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0){
+
+                            foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
+
+                                $rate = round($tax_value->tax_rate);
+                                $tax_amount = ($price_in_doller_compare * $rate) / 100;
+                                $product_tax = $quantity_price * $rate / 100;
+
+                                $taxData[$tckey]['identifier'] = $tax_value->identifier;
+                                $taxData[$tckey]['rate'] = $rate;
+                                $taxData[$tckey]['tax_amount'] = $tax_amount;
+                                $taxData[$tckey]['product_tax'] = $product_tax;
+                                $taxable_amount = $taxable_amount + $product_tax;
+
+                                //$payable_amount = $payable_amount + $product_tax;
                             }
-                            $codeApplied = 1;
-                            
-                        }else{
-                            $variantsData['coupon_msg'] = "Spend minimun ".$minimum_spend." to apply this coupon";
-                            $variantsData['coupon_not_appiled'] = 1;
                         }
-                    }
-                    $variantsData['discount_amount'] = $pro_disc;
-                    $variantsData['coupon_applied'] = $codeApplied;
-                    $variantsData['quantity_price'] = $quantity_price;
+                        $prod->taxdata = $taxData;
+                        
+                        if(!empty($prod->addon)){
+                            foreach ($prod->addon as $ck => $addons) {
+                                $opt_quantity_price = 0;
+                                $opt_price_in_currency = $addons->option->price;
+                                $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
+                                $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
 
-                    $payable_amount = $payable_amount + $quantity_price;
+                                $vendorAddons[$ck]['cart_product_id'] = $addons->cart_product_id;
+                                $vendorAddons[$ck]['addon_id'] = $addons->addon_id;
+                                $vendorAddons[$ck]['addon_title'] = $addons->set->title;
+                                $vendorAddons[$ck]['option_id'] = $addons->option_id;
+                                $vendorAddons[$ck]['option_title'] = $addons->option->title;
+                                $vendorAddons[$ck]['price_in_cart'] = $addons->option->price;
+                                $vendorAddons[$ck]['price'] = $opt_price_in_currency;
+                                $vendorAddons[$ck]['multiplier'] = $clientCurrency->doller_compare;
+                                $vendorAddons[$ck]['quantity'] = $prod->quantity;
+                                $vendorAddons[$ck]['quantity_price'] = $opt_quantity_price;
 
-                    if(!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0){
-
-                        foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
-
-                            $rate = round($tax_value->tax_rate);
-                            $tax_amount = ($price_in_doller_compare * $rate) / 100;
-                            $product_tax = $quantity_price * $rate / 100;
-
-                            $taxData[$tckey]['identifier'] = $tax_value->identifier;
-                            $taxData[$tckey]['rate'] = $rate;
-                            $taxData[$tckey]['tax_amount'] = $tax_amount;
-                            $taxData[$tckey]['product_tax'] = $product_tax;
-                            $taxable_amount = $taxable_amount + $product_tax;
-
-                            //$payable_amount = $payable_amount + $product_tax;
+                                $ttAddon = $ttAddon + $opt_quantity_price;
+                                $payable_amount = $payable_amount + $opt_quantity_price;
+                            }
                         }
+                        unset($prod->product->taxCategory);
+                        unset($prod->addon);
+                        unset($prod->pvariant);
                     }
-                    $prod->taxdata = $taxData;
-                    
-                    if(!empty($prod->addon)){
-                        foreach ($prod->addon as $ck => $addons) {
-                            $opt_quantity_price = 0;
-                            $opt_price_in_currency = $addons->option->price;
-                            $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
-                            $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
-
-                            $vendorAddons[$ck]['cart_product_id'] = $addons->cart_product_id;
-                            $vendorAddons[$ck]['addon_id'] = $addons->addon_id;
-                            $vendorAddons[$ck]['addon_title'] = $addons->set->title;
-                            $vendorAddons[$ck]['option_id'] = $addons->option_id;
-                            $vendorAddons[$ck]['option_title'] = $addons->option->title;
-                            $vendorAddons[$ck]['price_in_cart'] = $addons->option->price;
-                            $vendorAddons[$ck]['price'] = $opt_price_in_currency;
-                            $vendorAddons[$ck]['multiplier'] = $clientCurrency->doller_compare;
-                            $vendorAddons[$ck]['quantity'] = $prod->quantity;
-                            $vendorAddons[$ck]['quantity_price'] = $opt_quantity_price;
-
-                            $ttAddon = $ttAddon + $opt_quantity_price;
-                            $payable_amount = $payable_amount + $opt_quantity_price;
-                        }
-                    }
-                    unset($prod->product->taxCategory);
-                    unset($prod->addon);
-                    unset($prod->pvariant);
                     $variant_options = [];
-                    foreach ($prod->pvariant->vset as $variant_set_option) {
-                        $variant_options [] = array(
-                            'title' => $variant_set_option->optionData->trans->title,
-                            'variant_option_id' => $variant_set_option->optionData->trans->variant_option_id
-                        );
+                    if($prod->pvariant){
+                        foreach ($prod->pvariant->vset as $variant_set_option) {
+                            $variant_options [] = array(
+                                'title' => $variant_set_option->optionData->trans->title,
+                                'variant_option_id' => $variant_set_option->optionData->trans->variant_option_id
+                            );
+                        }
                     }
                     $prod->variant_options = $variant_options;
                     $prod->variants = $variantsData;
