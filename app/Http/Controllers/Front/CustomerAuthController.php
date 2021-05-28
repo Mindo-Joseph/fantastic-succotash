@@ -39,32 +39,26 @@ class CustomerAuthController extends FrontController{
     }
 
     /**     * Display forgotPassword Form     */
-    public function forgotPasswordForm($domain = '')
-    {
-        $langId = Session::get('customerLanguage');
+    public function forgotPasswordForm($domain = ''){
         $curId = Session::get('customerCurrency');
+        $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-
         return view('forntend/account/forgotPassword')->with(['navCategories' => $navCategories]);
     }
 
     /**     * Display resetPassword Form     */
-    public function resetPasswordForm($domain = '')
-    {
+    public function resetPasswordForm($domain = ''){
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-
         return view('forntend/account/resetPassword')->with(['navCategories' => $navCategories]);
     }
 
     /**     * Display resetPassword Form     */
-    public function resetSuccess($domain = '')
-    {
+    public function resetSuccess($domain = ''){
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-
         return view('forntend/account/resetSuccess')->with(['navCategories' => $navCategories]);
     }
 
@@ -125,7 +119,7 @@ class CustomerAuthController extends FrontController{
 
      
     /**     * Display register Form     */
-    public function register(SignupRequest $req, $domain = ''){ 
+    public function register(SignupRequest $req, $domain = ''){
         try {
             $user = new User();
             $county = Country::where('code', strtoupper($req->countryData))->first();
@@ -181,16 +175,14 @@ class CustomerAuthController extends FrontController{
                 return redirect()->route('user.verify');
             }
         } catch (Exception $e) {
-
+            die();
         }  
     }
 
-    /**     * Display forgotPassword Form     */
     public function forgotPassword(Request $request, $domain = ''){
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:50'
         ]);
-
         if ($validator->fails()) {
             foreach ($validator->errors()->toArray() as $error_key => $error_value) {
                 $errors['error'] = $error_value[0];
@@ -237,15 +229,13 @@ class CustomerAuthController extends FrontController{
     }
 
     /**     * Display resetPassword Form     */
-    public function resetPassword(Request $request, $domain = '')
-    {
+    public function resetPassword(Request $request, $domain = ''){
         $validator = Validator::make($request->all(), [
             'email' => 'required|string',
             'otp' => 'required|string|min:6|max:50',
             'new_password' => 'required|string|min:6|max:50',
             'confirm_password' => 'required|same:new_password',
         ]);
-
         if ($validator->fails()) {
             foreach ($validator->errors()->toArray() as $error_key => $error_value) {
                 $errors['error'] = $error_value[0];
@@ -263,25 +253,12 @@ class CustomerAuthController extends FrontController{
         if ($currentTime > $user->email_token_valid_till) {
             return redirect()->back()->with('err_otp', 'OTP has been expired.');
         }
-
         $user->password = Hash::make($request['new_password']);
         $user->save();
         return redirect()->route('customer.resetSuccess');
     }
 
-    /**     * Validate existing email     */
-    public function validateEmail(Request $request, $domain = '')
-    {
-    }
-
-    /**     * Validate existing email     */
-    public function fblogin(Request $request, $domain = '')
-    {
-        dd($request->all());
-    }
-
-    public function logout()
-    {
+    public function logout(){
         Auth::logout();
         return redirect()->route('customer.login');
     }

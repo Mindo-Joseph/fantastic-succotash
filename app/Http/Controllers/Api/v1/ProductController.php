@@ -320,7 +320,7 @@ class ProductController extends BaseController
             }
 
             $variantData = ProductVariant::join('products as pro', 'product_variants.product_id', 'pro.id')
-                        ->with(['product.media.image', 'media.image', 'translation' => function($q) use($langId){
+                        ->with(['wishlist', 'product.media.image', 'media.image', 'translation' => function($q) use($langId){
                             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                             $q->where('language_id', $langId);
                         }])
