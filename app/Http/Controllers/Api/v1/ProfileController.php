@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Api\v1\BaseController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use App\Models\{User, Category, Brand, Client, ClientPreference, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency, UserWishlist, UserAddress};
-use Validation;
 use DB;
-use Illuminate\Support\Facades\Storage;
 use Config;
+use Validation;
+use Carbon\Carbon;
 use ConvertCurrency;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Api\v1\BaseController;
+use App\Models\{User, Category, Brand, Client, ClientPreference, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency, UserWishlist, UserAddress};
 
 class ProfileController extends BaseController
 {
@@ -26,34 +26,31 @@ class ProfileController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function wishlists(Request $request)
-    {
-        $langId = Auth::user()->language;
+    public function wishlists(Request $request){
+        $user = Auth::user();
+        $language_id = $user->language;
         $paginate = $request->has('limit') ? $request->limit : 12;
-		$clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
-
-        $wishList = UserWishlist::with(['product.media.image', 'product.translation' => function($q) use($langId){
-                    $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
-                    },
-                    'product.variant' => function($q) use($langId){
+		$clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
+        $user_wish_details = UserWishlist::with(['product.category.categoryDetail','product.media.image', 'product.translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $language_id);
+                    },'product.variant' => function($q) use($langId){
                         $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                         $q->groupBy('product_id');
                     },
-                ])->select( "id", "user_id", "product_id")
-        		->where('user_id', Auth::user()->id)->paginate($paginate);
-
-    	if(!empty($wishList)){
-    		foreach ($wishList as $key => $prod) {
-    			if(!empty($prod->product->variant)){
-		    		foreach ($prod->product->variant as $k => $vari) {
-			            $vari->multiplier = $clientCurrency->doller_compare;
+                    ])->select( "id", "user_id", "product_id")->where('user_id', $user->id)->paginate($paginate);
+    	if($user_wish_details){
+    		foreach ($user_wish_details as $key => $prod) {
+                foreach ($prod->product as $product) {
+                    $product->is_wishlist = $product->category->categoryDetail->show_wishlist
+                }
+    			if($prod->product->variant)){
+		    		foreach ($prod->product->variant as $variant) {
+			            $variant->multiplier = $clientCurrency->doller_compare;
 			        }
 		    	}
 	        }
     	}
-    	return response()->json([
-        	'data' => $wishList
-        ]);
+    	return response()->json(['data' => $user_wish_details]);
     }
 
     /**

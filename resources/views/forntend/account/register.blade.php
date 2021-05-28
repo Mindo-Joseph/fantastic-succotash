@@ -126,8 +126,6 @@
                             <div class="col-md-6">
                                 <label for="review">Phone Number</label>
                                 <input type="tel" class="form-control phone" id="phone" placeholder="Phone Number" required="" name="phone_number" value="{{ old('phone_number')}}">
-
-                                <input type="hidden" id="phoneHidden" name="phoneHidden">
                                 @if($errors->first('phone_number'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('phone_number') }}</strong>

@@ -25,8 +25,7 @@ class CategoryController extends BaseController
             }
             $userid = Auth::user()->id;
             $langId = Auth::user()->language;
-            $category = Category::with(['tags',
-                        'type'  => function($q){
+            $category = Category::with(['tags','type'  => function($q){
                             $q->select('id', 'title as redirect_to');
                         },
                         'childs.translation'  => function($q) use($langId){
@@ -60,7 +59,7 @@ class CategoryController extends BaseController
             }
             $response['category'] = $category;
             $response['filterData'] = $variantSets;
-            $response['listData'] = $this->listData($langId, $cid, $category->type->redirect_to, $paginate, $userid);
+            $response['listData'] = [];
             return $this->successResponse($response);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
