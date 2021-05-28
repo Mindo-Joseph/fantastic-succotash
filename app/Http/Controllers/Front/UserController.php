@@ -64,6 +64,7 @@ class UserController extends FrontController
         $notified = 0;
         $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
         if ($request->type == "phone") {
+            $message = "An otp has been sent to your phone. Please check";
             if ($user->is_phone_verified == 0) {
                 $otp = mt_rand(100000, 999999);
                 $user->phone_token = $otp;
@@ -81,6 +82,7 @@ class UserController extends FrontController
         }
 
         if ($user->is_email_verified == 0) {
+            $message = "An otp has been sent to your email. Please check";
             $otp = mt_rand(100000, 999999);
             $user->email_token = $otp;
             $user->email_token_valid_till = $newDateTime;
@@ -111,10 +113,8 @@ class UserController extends FrontController
         if ($notified == 1) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'OTP has been sent.Please check.',
-
+                'message' => $message,
             ]);
-            return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 200);
         } else {
             return redirect()->back()->with('err_user', 'Provider service is not configured. Please contact administration.');
         }

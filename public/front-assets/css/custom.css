@@ -602,8 +602,8 @@ ul.social-links li a {
 }
 
 .otp_inputs .form-control {
-    height: 58.44px;
-    width: 58.44px;
+    height: 44px;
+    width: 44px;
     border-radius: 11.95px;
     background-color: #fff;
     text-align: center;
@@ -613,7 +613,7 @@ ul.social-links li a {
     font-weight: 600;
     letter-spacing: 0;
     line-height: 27px;
-    padding: 0 20px;
+    padding: 0 5px;
 }
 
 .resend_txt p{

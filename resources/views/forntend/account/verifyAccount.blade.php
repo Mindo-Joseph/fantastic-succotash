@@ -57,7 +57,6 @@
         display: block;
     }
 </style>
-
 <section class="login-page section-b-space">
     <div class="container">
         <div class="row">
@@ -91,9 +90,9 @@
                                                 <p>{{Auth::user()->email}}</p>
                                             </div>
                                             @if(\Session::has('err_user'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{!! \Session::get('err_user') !!}</strong>
-                                            </span>
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{!! \Session::get('err_user') !!}</strong>
+                                                </span>
                                             @endif
                                         </div>
                                     </div>
