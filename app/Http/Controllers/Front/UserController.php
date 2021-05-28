@@ -29,31 +29,21 @@ class UserController extends FrontController
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $preference = ClientPreference::select('verify_email', 'verify_phone')->where('id', '>', 0)->first();
-
-        //$verify = User::select('is_email_verified', 'is_phone_verified')
-        //->where('user_id', Auth::user()->id)->first();
-
         if ($preference->verify_email == 0 && $preference->verify_phone == 0) {
-
             return redirect()->route('userHome');
         } elseif (Auth::user()->is_email_verified == 1 && Auth::user()->is_phone_verified == 1) {
-
             return redirect()->route('userHome');
         } elseif ($preference->verify_email == 1 && $preference->verify_phone == 0) {
-
             if (Auth::user()->is_email_verified == 1) {
                 return redirect()->route('userHome');
             }
         } elseif ($preference->verify_email == 0 && $preference->verify_phone == 1) {
-
             if (Auth::user()->is_phone_verified == 1) {
                 return redirect()->route('userHome');
             }
         }
         $navCategories = $this->categoryNav($langId);
-
-        /**     * Display resetPassword Form     */
-        return view('forntend/account/verifyAccount')->with(['preference' => $preference, 'navCategories' => $navCategories]);
+        return view('forntend/account/verifyaccountnew')->with(['preference' => $preference, 'navCategories' => $navCategories]);
     }
 
     /**

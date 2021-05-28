@@ -75,47 +75,47 @@
                             </div>
                             <div class="row">
                                 @if($preference->verify_email == 1)
-                                <div class="col-sm-6">
-                                    <div class="box">
-                                        <div class="box-title">
-                                            <h3>Email
-                                                @if(Auth::user()->is_email_verified == 1)
-                                                <a href="javascript:void" class="btn btn-sm"> <i class="fa fa-check"></i></a>
-                                                @else
-                                                <a href="javascript:void" class="btn btn-sm"> <i class="fa fa-times"></i></a>
-                                                @endif
-                                            </h3>
-                                            <a class="verifyEmail">Verify Now</a>
+                                    <div class="col-sm-6">
+                                        <div class="box">
+                                            <div class="box-title">
+                                                <h3>Email
+                                                    @if(Auth::user()->is_email_verified == 1)
+                                                    <a href="javascript:void" class="btn btn-sm"> <i class="fa fa-check"></i></a>
+                                                    @else
+                                                    <a href="javascript:void" class="btn btn-sm"> <i class="fa fa-times"></i></a>
+                                                    @endif
+                                                </h3>
+                                                <a class="verifyEmail">Verify Now</a>
+                                            </div>
+                                            <div class="box-content">
+                                                <p>{{Auth::user()->email}}</p>
+                                            </div>
+                                            @if(\Session::has('err_user'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{!! \Session::get('err_user') !!}</strong>
+                                            </span>
+                                            @endif
                                         </div>
-                                        <div class="box-content">
-                                            <p>{{Auth::user()->email}}</p>
-                                        </div>
-                                        @if(\Session::has('err_user'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{!! \Session::get('err_user') !!}</strong>
-                                        </span>
-                                        @endif
                                     </div>
-                                </div>
                                 @endif
                                 @if($preference->verify_phone == 1)
-                                <div class="col-sm-6">
-                                    <div class="box">
-                                        <div class="box-title">
-                                            <h3>Phone Number
-                                                @if(Auth::user()->is_phone_verified == 1)
-                                                <a href="javascript:void" class="btn btn-sm"> <i class="fa fa-check"></i></a>
-                                                @else
-                                                <a href="javascript:void" class="btn btn-sm"> <i class="fa fa-times"></i></a>
-                                                @endif
-                                            </h3>
-                                            <a href="javascript:void" class="verifyPhone">Verify Now</a>
-                                        </div>
-                                        <div class="box-content">
-                                            <p>{{Auth::user()->phone_number}}</p>
+                                    <div class="col-sm-6">
+                                        <div class="box">
+                                            <div class="box-title">
+                                                <h3>Phone Number
+                                                    @if(Auth::user()->is_phone_verified == 1)
+                                                    <a href="javascript:void" class="btn btn-sm"> <i class="fa fa-check"></i></a>
+                                                    @else
+                                                    <a href="javascript:void" class="btn btn-sm"> <i class="fa fa-times"></i></a>
+                                                    @endif
+                                                </h3>
+                                                <a href="javascript:void" class="verifyPhone">Verify Now</a>
+                                            </div>
+                                            <div class="box-content">
+                                                <p>{{Auth::user()->phone_number}}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 @endif
                             </div>
                         </div>
@@ -125,7 +125,6 @@
         </div>
     </div>
 </section>
-
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -137,42 +136,28 @@
                 </button>
             </div>
             <form id="verifyToken" class="theme-form"> @csrf
-
                 <div class="modal-body">
                     <div class="form-row mb-3">
                         <div class="col-md-6">
                             <label for="otp">OTP</label>
                             <input type="hidden" class="form-control" id="name" value="email" required="" name="type">
                             <input type="text" class="form-control" id="otp" placeholder="OTP" required="" name="otp">
-                            
                             <span class="invalid-feedback" role="alert">
                                 <strong class="invalid-feedback2" ></strong>
                             </span>
-                            
-                            <!-- @if(\Session::has('err_otp'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong class="invalid-feedback2" >{!! \Session::get('err_otp') !!}</strong>
-                            </span>
-                            @endif -->
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
-
             </form>
-
         </div>
     </div>
 </div>
-
 @endsection
-
 @section('script')
-
 <script type="text/javascript">
     var ajaxCall = 'ToCancelPrevReq';
     $('.verifyEmail').click(function() {

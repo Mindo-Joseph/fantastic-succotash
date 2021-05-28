@@ -279,6 +279,7 @@ class ProductController extends BaseController
     public function getVariantData(Request $request, $sku)
     {
         try{
+            $user = Auth::user();
             if(!$request->has('variants')){
                 return $this->errorResponse('Variants should not be empty.', 422);
             }
@@ -334,7 +335,11 @@ class ProductController extends BaseController
                 $variantData->stock_check = 0;
             }
             $data_image = array();
-            $variantData->inwishlist = $variantData->wishlist;
+            if($user->id == $variantData->wishlist->user_id){
+                $variantData->inwishlist = $variantData->wishlist;
+            }else{
+                $variantData->inwishlist = null;
+            }
             $variantData->is_wishlist = $product->category->categoryDetail->show_wishlist;
             if($variantData->media && count($variantData->media) > 0){
                 foreach ($variantData->media as $media_key => $media_value) {

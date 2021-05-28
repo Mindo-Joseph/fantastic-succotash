@@ -47,6 +47,6 @@ class ProductVariant extends Model
         return $this->belongsTo('App\Models\Product', 'product_id', 'id')->select('id', 'sku');
     }
     public function wishlist(){
-       return $this->hasOne('App\Models\UserWishlist', 'product_id', 'product_id')->select('product_id'); 
+       return $this->hasOne('App\Models\UserWishlist', 'product_id', 'product_id')->select('product_id', 'user_id'); 
     }
 }
