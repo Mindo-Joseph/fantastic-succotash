@@ -31,15 +31,15 @@ class ProfileController extends BaseController
         $language_id = $user->language;
         $paginate = $request->has('limit') ? $request->limit : 12;
 		$clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
-        $user_wish_details = UserWishlist::with(['product.category.categoryDetail','product.media.image', 'product.translation' => function($q) use($langId){
+        $user_wish_details = UserWishlist::with(['product.category.categoryDetail','product.media.image', 'product.translation' => function($q) use($language_id){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $language_id);
-                    },'product.variant' => function($q) use($langId){
+                    },'product.variant' => function($q) use($language_id){
                         $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                         $q->groupBy('product_id');
                     },
                     ])->select( "id", "user_id", "product_id")->where('user_id', $user->id)->paginate($paginate);
     	if($user_wish_details){
-    		foreach ($user_wish_details as $key => $prod) {
+    		foreach ($user_wish_details as $prod) {
                 foreach ($prod->product as $product) {
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
                 }
