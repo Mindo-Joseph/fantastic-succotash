@@ -291,8 +291,8 @@ class ProductController extends BaseController
                 return $this->errorResponse('No record found.', 404);
             }
             
-            $langId = Auth::user()->language;
             $userid = Auth::user()->id;
+            $langId = Auth::user()->language;
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
 
             $pv_ids = array();
@@ -319,13 +319,15 @@ class ProductController extends BaseController
             if(empty($pv_ids)){
                 return $this->errorResponse('Invalid product sets or product has been removed.', 404);
             }
-
             $variantData = ProductVariant::join('products as pro', 'product_variants.product_id', 'pro.id')
-                        ->with(['wishlist', 'product.media.image', 'media.image', 'translation' => function($q) use($langId){
+                        ->with(['product.media.image', 'media.image', 'translation' => function($q) use($langId){
                             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                             $q->where('language_id', $langId);
-                        }])
-                        ->select('product_variants.id','product_variants.sku', 'product_variants.quantity', 'product_variants.price',  'product_variants.barcode', 'product_variants.product_id', 'pro.sku', 'pro.url_slug', 'pro.weight', 'pro.weight_unit', 'pro.vendor_id', 'pro.is_new', 'pro.is_featured', 'pro.is_physical', 'pro.has_inventory', 'pro.has_variant', 'pro.sell_when_out_of_stock', 'pro.requires_shipping', 'pro.Requires_last_mile', 'pro.averageRating')
+                        },
+                        'wishlist' =>  function($q) use($user){
+                            $q->where('user_id', $user->id);
+                        },
+                    ])->select('product_variants.id','product_variants.sku', 'product_variants.quantity', 'product_variants.price',  'product_variants.barcode', 'product_variants.product_id', 'pro.sku', 'pro.url_slug', 'pro.weight', 'pro.weight_unit', 'pro.vendor_id', 'pro.is_new', 'pro.is_featured', 'pro.is_physical', 'pro.has_inventory', 'pro.has_variant', 'pro.sell_when_out_of_stock', 'pro.requires_shipping', 'pro.Requires_last_mile', 'pro.averageRating')
                         ->where('product_variants.id', $pv_ids[0])->first();
             if($variantData->sell_when_out_of_stock == 1){
                 $variantData->stock_check = '1';
@@ -335,12 +337,8 @@ class ProductController extends BaseController
                 $variantData->stock_check = 0;
             }
             $data_image = array();
-            if($user->id == $variantData->wishlist->user_id){
-                $variantData->inwishlist = $variantData->wishlist;
-            }else{
-                $variantData->inwishlist = null;
-            }
-            $variantData->is_wishlist = $product->category->categoryDetail->show_wishlist;
+            $variantData->inwishlist = $variantData->wishlist;
+            $variantData->inwishlist = null;
             if($variantData->media && count($variantData->media) > 0){
                 foreach ($variantData->media as $media_key => $media_value) {
                     $data_image[$media_key]['product_variant_id'] = $media_value->product_variant_id;
