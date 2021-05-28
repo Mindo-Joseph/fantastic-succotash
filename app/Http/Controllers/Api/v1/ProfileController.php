@@ -42,7 +42,7 @@ class ProfileController extends BaseController
     		foreach ($user_wish_details as $user_wish_detail) {
                 $user_wish_detail->is_wishlist = $user_wish_detail->product->category->categoryDetail->show_wishlist;
     			if($user_wish_detail->product->variant){
-		    		foreach ($product->product->variant as $variant) {
+		    		foreach ($user_wish_detail->product->variant as $variant) {
 			            $variant->multiplier = $clientCurrency->doller_compare;
 			        }
 		    	}
