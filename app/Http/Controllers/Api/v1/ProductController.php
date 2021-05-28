@@ -279,7 +279,6 @@ class ProductController extends BaseController
     public function getVariantData(Request $request, $sku)
     {
         try{
-            $user = Auth::user();
             if(!$request->has('variants')){
                 return $this->errorResponse('Variants should not be empty.', 422);
             }
@@ -291,8 +290,8 @@ class ProductController extends BaseController
                 return $this->errorResponse('No record found.', 404);
             }
             
-            $userid = Auth::user()->id;
             $langId = Auth::user()->language;
+            $userid = Auth::user()->id;
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
 
             $pv_ids = array();
@@ -319,16 +318,14 @@ class ProductController extends BaseController
             if(empty($pv_ids)){
                 return $this->errorResponse('Invalid product sets or product has been removed.', 404);
             }
+
             $variantData = ProductVariant::join('products as pro', 'product_variants.product_id', 'pro.id')
-                        ->with(['product.media.image', 'media.image', 'translation' => function($q) use($langId){
+                        ->with(['wishlist', 'product.media.image', 'media.image', 'translation' => function($q) use($langId){
                             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                             $q->where('language_id', $langId);
-                        },
-                        'wishlist' =>  function($q) use($user){
-                            $q->where('user_id', $user->id);
-                        },
-                    ])->select('product_variants.id','product_variants.sku', 'product_variants.quantity', 'product_variants.price',  'product_variants.barcode', 'product_variants.product_id', 'pro.sku', 'pro.url_slug', 'pro.weight', 'pro.weight_unit', 'pro.vendor_id', 'pro.is_new', 'pro.is_featured', 'pro.is_physical', 'pro.has_inventory', 'pro.has_variant', 'pro.sell_when_out_of_stock', 'pro.requires_shipping', 'pro.Requires_last_mile', 'pro.averageRating')
-                        ->where('product_variants.id', $pv_ids[0])->first();
+                        },'wishlist' =>  function($q) use($userid){
+                            $q->where('user_id', $userid);
+                        }])->select('product_variants.id','product_variants.sku', 'product_variants.quantity', 'product_variants.price',  'product_variants.barcode', 'product_variants.product_id', 'pro.sku', 'pro.url_slug', 'pro.weight', 'pro.weight_unit', 'pro.vendor_id', 'pro.is_new', 'pro.is_featured', 'pro.is_physical', 'pro.has_inventory', 'pro.has_variant', 'pro.sell_when_out_of_stock', 'pro.requires_shipping', 'pro.Requires_last_mile', 'pro.averageRating')->where('product_variants.id', $pv_ids[0])->first();
             if($variantData->sell_when_out_of_stock == 1){
                 $variantData->stock_check = '1';
             }elseif($variantData->quantity > 0){
@@ -338,7 +335,7 @@ class ProductController extends BaseController
             }
             $data_image = array();
             $variantData->inwishlist = $variantData->wishlist;
-            $variantData->inwishlist = null;
+            $variantData->is_wishlist = $product->category->categoryDetail->show_wishlist;
             if($variantData->media && count($variantData->media) > 0){
                 foreach ($variantData->media as $media_key => $media_value) {
                     $data_image[$media_key]['product_variant_id'] = $media_value->product_variant_id;
