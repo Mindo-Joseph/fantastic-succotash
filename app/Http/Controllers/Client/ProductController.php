@@ -608,7 +608,9 @@ class ProductController extends BaseController
     }
 
     public function deleteVariant(Request $request){
-        //$pv = ProductVariant::where('id', $request->prod_var_id)->where('product_id', $request->prod_id)->delete();
+        $pv = ProductVariant::where('id', $request->prod_var_id)->where('product_id', $request->prod_id)->first();
+        $pv->status = 0;
+        $pv->save();
         //$pv = ProductVariantSet::where('product_variant_id', $request->prod_var_id)->delete();
 
         return response()->json(array('success' => true, 'msg' => 'Product variant deleted successfully.'));
@@ -758,7 +760,5 @@ class ProductController extends BaseController
 
         $img->delete();
         return redirect()->back()->with('success', 'Product image deleted successfully!');
-        
     }
-  
 }

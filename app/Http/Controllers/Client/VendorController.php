@@ -236,8 +236,9 @@ class VendorController extends BaseController
         $type = Type::all();
         $vendor = Vendor::findOrFail($id);
         $categories = Category::with('primary')->select('id', 'slug')
-                        ->where('id', '>', '1')->where('status', '!=', '2')
-                        ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
+                        ->where('type_id', 1)->where('status', '!=', '2')->where('type_id', 1)
+                        ->where('can_add_products', 1)
+                        ->orderBy('parent_id', 'asc')
                         ->orderBy('position', 'asc')->get();
         $products = Product::with(['media.image', 'primary', 'category.cat', 'brand','variant' => function($v){
                             $v->select('id','product_id', 'quantity', 'price')->groupBy('product_id');

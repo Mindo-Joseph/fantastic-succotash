@@ -84,10 +84,16 @@ class HomeController extends BaseController
             $user_geo[] = $longs;
             $vends = array();
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
+            // if($preferences->is_hyperlocal == 1){
+            //     $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
+            //             $query->select('vendor_id')
+            //             ->from(with(new ServiceArea)->getTable())
+            //             ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$lats." ".$longs.")'))");
+            //     });
+            // }
             if($preferences->is_hyperlocal == 1){
-                $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
+                $vendorData = $vendorData->whereHas('serviceArea', function($query) use($lats, $longs){
                         $query->select('vendor_id')
-                        ->from(with(new ServiceArea)->getTable())
                         ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$lats." ".$longs.")'))");
                 });
             }

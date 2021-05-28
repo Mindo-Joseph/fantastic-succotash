@@ -196,7 +196,7 @@ class CategoryController extends BaseController{
         $cate->display_mode = $request->display_mode;
         $cate->is_visible = ($request->has('is_visible') && $request->is_visible == 'on') ? 1 : 0;
         $cate->show_wishlist = ($request->has('show_wishlist') && $request->show_wishlist == 'on') ? 1 : 0;
-        $cate->can_add_products = ($request->has('can_add_products') && $request->can_add_products == 'on') ? 1 : 0;
+        $cate->can_add_products = ($request->has('can_add_products') && $request->can_add_products == 'on' && $request->type_id == 1) ? 1 : 0;
 
         if($request->has('parent_cate') && $request->parent_cate > 0){
             $cate->parent_id = $request->parent_cate;
@@ -205,7 +205,6 @@ class CategoryController extends BaseController{
         }
 
         if($update == 'false'){
-
             if($request->has('vendor_id')){
                 $cate->is_core = 0;
                 $cate->vendor_id = $request->vendor_id;
