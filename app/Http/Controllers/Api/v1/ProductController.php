@@ -326,7 +326,6 @@ class ProductController extends BaseController
                         }])
                         ->select('product_variants.id','product_variants.sku', 'product_variants.quantity', 'product_variants.price',  'product_variants.barcode', 'product_variants.product_id', 'pro.sku', 'pro.url_slug', 'pro.weight', 'pro.weight_unit', 'pro.vendor_id', 'pro.is_new', 'pro.is_featured', 'pro.is_physical', 'pro.has_inventory', 'pro.has_variant', 'pro.sell_when_out_of_stock', 'pro.requires_shipping', 'pro.Requires_last_mile', 'pro.averageRating')
                         ->where('product_variants.id', $pv_ids[0])->first();
-
             if($variantData->sell_when_out_of_stock == 1){
                 $variantData->stock_check = '1';
             }elseif($variantData->quantity > 0){
@@ -336,6 +335,7 @@ class ProductController extends BaseController
             }
             $data_image = array();
             $variantData->is_wishlist = $product->category->categoryDetail->show_wishlist;
+            $variantData->in_wishlist = $variantData->wishlist->count() > 0 ? true : false;
             if($variantData->media && count($variantData->media) > 0){
                 foreach ($variantData->media as $media_key => $media_value) {
                     $data_image[$media_key]['product_variant_id'] = $media_value->product_variant_id;
