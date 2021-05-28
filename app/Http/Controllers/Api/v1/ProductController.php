@@ -334,8 +334,8 @@ class ProductController extends BaseController
                 $variantData->stock_check = 0;
             }
             $data_image = array();
+            $variantData->inwishlist = $variantData->wishlist;
             $variantData->is_wishlist = $product->category->categoryDetail->show_wishlist;
-            $variantData->in_wishlist = $variantData->wishlist->count() > 0 ? true : false;
             if($variantData->media && count($variantData->media) > 0){
                 foreach ($variantData->media as $media_key => $media_value) {
                     $data_image[$media_key]['product_variant_id'] = $media_value->product_variant_id;
