@@ -41,7 +41,7 @@ class ProfileController extends BaseController
     	if($user_wish_details){
     		foreach ($user_wish_details as $key => $prod) {
                 foreach ($prod->product as $product) {
-                    $product->is_wishlist = $product->category->categoryDetail->show_wishlist
+                    $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
                 }
     			if($prod->product->variant)){
 		    		foreach ($prod->product->variant as $variant) {
