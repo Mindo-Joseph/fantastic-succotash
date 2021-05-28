@@ -40,7 +40,7 @@ class ProfileController extends BaseController
                     ])->select( "id", "user_id", "product_id")->where('user_id', $user->id)->paginate($paginate);
     	if($user_wish_details){
     		foreach ($user_wish_details as $user_wish_detail) {
-                $user_wish_detail->is_wishlist = $user_wish_detail->product->category->categoryDetail->show_wishlist;
+                $user_wish_detail->product->is_wishlist = $user_wish_detail->product->category->categoryDetail->show_wishlist;
     			if($user_wish_detail->product->variant){
 		    		foreach ($user_wish_detail->product->variant as $variant) {
 			            $variant->multiplier = $clientCurrency->doller_compare;
