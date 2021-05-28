@@ -98,7 +98,7 @@ class AuthController extends BaseController{
                 $unique_identifier_cart->delete();
             }
         }else{
-            Cart::where('unique_identifier', $loginReq->loginReq)->update(['user_id' => $user->id,  'unique_identifier' => '']);
+            Cart::where('unique_identifier', $loginReq->device_token)->update(['user_id' => $user->id,  'unique_identifier' => '']);
         }
         $checkSystemUser = $this->checkCookies($user->id);
         $data['auth_token'] =  $token;
@@ -149,6 +149,27 @@ class AuthController extends BaseController{
         $user->phone_token_valid_till = $sendTime;
         $user->email_token_valid_till = $sendTime;
         $user->save();
+        $user_cart = Cart::where('user_id', $user->id)->first();
+        if($user_cart){
+            $unique_identifier_cart = Cart::where('unique_identifier', $signReq->device_token)->first();
+            if($unique_identifier_cart){
+                $unique_identifier_cart_products = CartProduct::where('cart_id', $unique_identifier_cart->id)->get();
+                foreach ($unique_identifier_cart_products as $unique_identifier_cart_product) {
+                    $user_cart_product_detail = CartProduct::where('cart_id', $user_cart->id)->where('product_id', $unique_identifier_cart_product->product_id)->first();
+                    if($user_cart_product_detail){
+                        $user_cart_product_detail->quantity = ($unique_identifier_cart_product->quantity + $user_cart_product_detail->quantity);
+                        $user_cart_product_detail->save();
+                        $unique_identifier_cart_product->delete();
+                    }else{
+                      $unique_identifier_cart_product->cart_id = $user_cart->id;
+                      $unique_identifier_cart_product->save();
+                    }
+                }
+                $unique_identifier_cart->delete();
+            }
+        }else{
+            Cart::where('unique_identifier', $signReq->device_token)->update(['user_id' => $user->id,  'unique_identifier' => '']);
+        }
         $token1 = new Token;
         $token = $token1->make([
             'key' => 'royoorders-jwt',

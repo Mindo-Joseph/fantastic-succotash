@@ -72,7 +72,7 @@ class CelebrityController extends BaseController
                         ->groupBy('product_variant_sets.variant_type_id')->get();
 
             $products = Product::join('product_celebrities as pc', 'pc.product_id', 'products.id')
-                        ->with(['inwishlist' => function($qry) use($userid){
+                        ->with(['category.categoryDetail','inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
                     },
                     'media.image', 'translation' => function($q) use($langId){
@@ -88,9 +88,10 @@ class CelebrityController extends BaseController
                 ->paginate($paginate);
         
             if(!empty($products)){
-                foreach ($products as $key => $value) {
-                    foreach ($value->variant as $k => $v) {
-                        $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                foreach ($products as $key => $product) {
+                    $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+                    foreach ($product->variant as $k => $v) {
+                        $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
                     }
                 }
             }
@@ -162,7 +163,7 @@ class CelebrityController extends BaseController
             }
             $order_type = $request->has('order_type') ? $request->order_type : '';
             $products = Product::join('product_celebrities as pc', 'pc.product_id', 'products.id')
-                    ->with(['variant.vimage.pimage.image', 'media.image', 'translation' => function($q) use($langId){
+                    ->with(['category.categoryDetail','variant.vimage.pimage.image', 'media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
                         'variant' => function($q) use($langId, $variantIds, $order_type){
@@ -196,9 +197,10 @@ class CelebrityController extends BaseController
             }
             $products = $products->paginate($paginate);
             if(!empty($products)){
-                foreach ($products as $key => $value) {
-                    foreach ($value->variant as $k => $v) {
-                        $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                foreach ($products as $key => $product) {
+                    $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+                    foreach ($product->variant as $k => $v) {
+                        $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
                     }
                 }
             }

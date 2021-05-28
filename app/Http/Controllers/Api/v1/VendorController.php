@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
+use App\Models\{Type, User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
 
 class VendorController extends BaseController{
     use ApiResponser;
@@ -21,16 +21,19 @@ class VendorController extends BaseController{
             $vendor_ids = [];
             $category_details = [];
             $vendor_id = $request->vendor_id;
+            $type = Type::where('title' ,'Vendor')->first();
             $vendor_products = Product::with('category.categoryDetail')->where('vendor_id', $vendor_id)->get(['id']);
             foreach ($vendor_products as $vendor_product) {
                 if(!in_array($vendor_product->category->categoryDetail->id, $vendor_ids)){
-                    $vendor_ids[] = $vendor_product->category->categoryDetail->id;
-                    $category_details[] = array(
-                        'id' => $vendor_product->category->categoryDetail->id,
-                        'name' => $vendor_product->category->categoryDetail->slug,
-                        'icon' => $vendor_product->category->categoryDetail->icon,
-                        'image' => $vendor_product->category->categoryDetail->image
-                    );
+                    if($vendor_product->category->categoryDetail->id != $type->id){
+                        $vendor_ids[] = $vendor_product->category->categoryDetail->id;
+                        $category_details[] = array(
+                            'id' => $vendor_product->category->categoryDetail->id,
+                            'name' => $vendor_product->category->categoryDetail->slug,
+                            'icon' => $vendor_product->category->categoryDetail->icon,
+                            'image' => $vendor_product->category->categoryDetail->image
+                        );
+                    }
                 }
             }
             return $this->successResponse($category_details, '', 200);
@@ -58,15 +61,15 @@ class VendorController extends BaseController{
                             $zx->select('variant_options.*', 'vt.title');
                             $zx->where('vt.language_id', $langId);
                         }])->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id')
-                    ->join('variant_translations as vt','vt.variant_id','vr.id')
-                    ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
-                    ->where('vt.language_id', $langId)
-                    ->whereIn('product_id', function($qry) use($vid){ 
+                        ->join('variant_translations as vt','vt.variant_id','vr.id')
+                        ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
+                        ->where('vt.language_id', $langId)
+                        ->whereIn('product_id', function($qry) use($vid){ 
                         $qry->select('id')->from('products')
                             ->where('vendor_id', $vid);
                         })
                     ->groupBy('product_variant_sets.variant_type_id')->get();
-        $products = Product::with(['inwishlist' => function($qry) use($userid){
+        $products = Product::with('category.categoryDetail',['inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
                     },
                     'media.image', 'translation' => function($q) use($langId){
@@ -85,9 +88,10 @@ class VendorController extends BaseController{
                 ->where('products.vendor_id', $vid)
                 ->where('products.is_live', 1)->paginate($paginate);
         if(!empty($products)){
-            foreach ($products as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+            foreach ($products as $key => $product) {
+                $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+                foreach ($product->variant as $k => $v) {
+                    $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }
@@ -134,7 +138,6 @@ class VendorController extends BaseController{
                 $vResult = ProductVariantSet::join('product_categories as pc', 'product_variant_sets.product_id', 'pc.product_id')->select('product_variant_sets.product_variant_id', 'product_variant_sets.product_id')
                     ->where('product_variant_sets.variant_type_id', $key)
                     ->whereIn('product_variant_sets.variant_option_id', $value);
-
                 if(!empty($variantIds)){
                     $vResult  = $vResult->whereIn('product_variant_sets.product_variant_id', $variantIds);
                 }
@@ -150,7 +153,7 @@ class VendorController extends BaseController{
             }
         }
         $order_type = $request->has('order_type') ? $request->order_type : '';
-        $products = Product::with(['media.image', 'translation' => function($q) use($langId){
+        $products = Product::with(['category.categoryDetail', 'media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },'variant' => function($q) use($langId, $variantIds){
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
@@ -183,9 +186,10 @@ class VendorController extends BaseController{
         $paginate = $request->has('limit') ? $request->limit : 12;
         $products = $products->paginate($paginate);
         if(!empty($products)){
-            foreach ($products as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+            foreach ($products as $key => $product) {
+                $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+                foreach ($product->variant as $k => $v) {
+                    $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 }
             }
         }
