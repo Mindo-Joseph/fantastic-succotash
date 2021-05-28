@@ -59,7 +59,7 @@ class CategoryController extends BaseController
             }
             $response['category'] = $category;
             $response['filterData'] = $variantSets;
-            $response['listData'] = [];
+            $response['listData'] = $this->listData($langId, $cid, $category->type->redirect_to, $paginate, $userid);
             return $this->successResponse($response);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
