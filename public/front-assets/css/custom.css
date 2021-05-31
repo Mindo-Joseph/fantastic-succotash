@@ -582,8 +582,13 @@ ul.social-links li a {
     line-height: 30px;
 }
 
-.verify_id .form-control,.verify_id .input-group-text {
+.verify_id .form-control{
     border-radius: 50px;
+}
+
+.verify_id .input-group-text {
+    border-top-right-radius: 50% !important;
+    border-bottom-right-radius: 50% !important;
 }
 
 .verify_id .form-control {

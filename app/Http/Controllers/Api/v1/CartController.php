@@ -17,6 +17,7 @@ class CartController extends BaseController{
     use ApiResponser;
 
     private $field_status = 2;
+    
     public function index(Request $request){
         try {
             $user = Auth::user();
