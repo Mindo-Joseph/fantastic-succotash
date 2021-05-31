@@ -77,12 +77,9 @@ class VendorController extends BaseController
         foreach ($request->only('name', 'address', 'latitude', 'longitude', 'desc') as $key => $value) {
             $vendor->{$key} = $value;
         }
-
         $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0; 
         $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0; 
         $vendor->delivery = ($request->has('delivery') && $request->delivery == 'on') ? 1 : 0;
-        $vendor->is_show_category = ($request->has('is_show_category') && $request->is_show_category == 'on') ? 1 : 0;
-        
 
         if($update == 'false'){
             $vendor->logo = 'default/default_logo.png';
@@ -142,12 +139,7 @@ class VendorController extends BaseController
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Vendor  $vendor
-     * @return \Illuminate\Http\Response
-     */
+    /*  /**   show vendor page - config tab      */
     public function show($domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
@@ -202,21 +194,12 @@ class VendorController extends BaseController
             $build = $this->buildTree($categories->toArray());
             $categoryToggle = $this->printTreeToggle($build, $blocked);
         }
+        $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
 
-        /*$categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '>', 0)
-                    ->where(function($q) use($id){
-                      $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
-                    })->where('status', '!=', '2')->orderBy('position', 'asc')->orderBy('parent_id', 'asc')->get();*/
-
-        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'blockedCategory' => $blockedCategory]);
+        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'blockedCategory' => $blockedCategory, 'templetes' => $templetes]);
     }
 
-    /**
-     * Display the specified resource.
-     * 
-     * @param  \App\Vendor  $vendor
-     * @return \Illuminate\Http\Response
-     */
+    /**   show vendor page - category tab      */
     public function vendorCategory($domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
@@ -254,16 +237,12 @@ class VendorController extends BaseController
         $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
                     ->where('is_active', 1)
                     ->orderBy('is_primary', 'desc')->get();
-
-        /*$categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '>', 0)
-                    ->where(function($q) use($id){
-                      $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
-                    })->where('status', '!=', '2')->orderBy('position', 'asc')->orderBy('parent_id', 'asc')->get();*/
+        $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
         
-        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'blockedCategory' => $blockedCategory, 'categoryToggle' => $categoryToggle]);
+        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'blockedCategory' => $blockedCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes]);
     }
 
-    /**   vendor product catalog     */
+    /**   show vendor page - catalog tab      */
     public function vendorCatalog($domain = '', $id){
         $type = Type::all();
         $vendor = Vendor::findOrFail($id);
@@ -297,8 +276,8 @@ class VendorController extends BaseController
             $build = $this->buildTree($categories->toArray());
             $categoryToggle = $this->printTreeToggle($build, $blocked);
         }
-        
-        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'blockedCategory' => $blockedCategory, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle]);
+        $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
+        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'blockedCategory' => $blockedCategory, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes]);
     }
 
     /**       delete vendor       */
@@ -326,8 +305,8 @@ class VendorController extends BaseController
             $vendor->commission_percent         = $request->commission_percent;
             $vendor->commission_fixed_per_order = $request->commission_fixed_per_order;
             $vendor->commission_monthly         = $request->commission_monthly;
-            $vendor->add_category = ($request->has('add_category') && $request->add_category == 'on') ? 1 : 0;
-
+            //$vendor->add_category = ($request->has('add_category') && $request->add_category == 'on') ? 1 : 0;
+            $vendor->show_slot         = ($request->has('show_slot') && $request->show_slot == 'on') ? 1 : 0;
             $msg = 'commission configuration';
         }
         $vendor->save();
@@ -337,8 +316,25 @@ class VendorController extends BaseController
     /**     Activate Category for vendor     */
     public function activeCategory(Request $request, $domain = '', $id)
     {
+
+      //dd($request->all());
         $vendor = Vendor::where('id', $id)->firstOrFail();
-        $vc = VendorCategory::where('vendor_id', $request->id)->where('category_id', $request->category_id)->first();
+        $activeCategory = array();
+        $data = VendorCategory::where('vendor_id', $id)->delete();
+        $enableCategory = array();
+        if($request->has('category')){
+          foreach($request->category as $key => $value){
+            $enableCategory[] = [
+              'vendor_id' => $id,
+              'category_id' => $key,
+              'status' => 1
+            ];
+          }
+        }
+        VendorCategory::insert($enableCategory);
+
+        
+       /* $vc = VendorCategory::where('vendor_id', $id)->where('category_id', $request->category_id)->first();
         $msg = 'deactivated';
         if(!$vc){
             $vc = new VendorCategory();
@@ -347,8 +343,8 @@ class VendorController extends BaseController
         }
         $vc->status = $request->status;
         $msg = ($request->status == 1) ? 'activated' : 'deactivated';
-        $vc->save();
-        $toaster = $this->successToaster('Success', 'Category '.$msg.' successfully.');
+        $vc->save();*/
+        $toaster = $this->successToaster('Success', 'Category setting saved successfully.');
         return redirect()->back()->with('toaster', $toaster);
     }
 

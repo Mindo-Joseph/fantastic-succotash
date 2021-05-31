@@ -41,7 +41,6 @@
                     </span>
                 </div>
             </div>
-        
             <div class="col-md-4">
                 <div class="form-group mb-3" id="latitudeInput">
                     {!! Form::label('title', 'latitude',['class' => 'control-label']) !!} 
@@ -65,7 +64,7 @@
                 </div>
             </div>
          
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
                     {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
                     <div>
@@ -73,7 +72,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
                     {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
                     <div>
@@ -81,7 +80,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
                     {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
                     <div>
@@ -89,15 +88,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <!-- <div class="col-md-3">
                 <div class="form-group">
                     {!! Form::label('title', 'Show Category',['class' => 'control-label']) !!} 
                     <div>
                         <input type="checkbox" data-plugin="switchery" name="is_show_category" class="form-control categoryShow" data-color="#43bee1" @if($vendor->is_show_category == 1) checked @endif>
                     </div>
                 </div>
-            </div>
-
+            </div> -->
             <div class="col-md-12">
                 <div class="form-group" id="descInput">
                     {!! Form::label('title', 'Description',['class' => 'control-label']) !!} 
