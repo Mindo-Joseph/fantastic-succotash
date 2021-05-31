@@ -203,9 +203,9 @@ class CustomerAuthController extends FrontController{
         $user->email_token_valid_till = $newDateTime;
         if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
             $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+            $sendto = $user->email;
             $client_name = $client->name;
             $mail_from = $data->mail_from;
-            $sendto = $user->email;
             try {
                 Mail::send('email.verify',[
                         'customer_name' => ucwords($user->name),
@@ -217,6 +217,10 @@ class CustomerAuthController extends FrontController{
                         $message->from($mail_from, $client_name);
                         $message->to($sendto)->subject('OTP to verify account');
                 });
+                if (Mail::failures()) {
+                    pr(Mail::failures());die;
+                    return new Error(Mail::failures()); 
+                }
                 $notified = 1;
             } catch (\Exception $e) {
                 $user->save();
