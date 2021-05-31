@@ -95,8 +95,8 @@
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
-                        {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!} 
-                        <input type="checkbox" data-plugin="switchery" name="add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif >
+                        {!! Form::label('title', '24*7 Availability',['class' => 'control-label']) !!} 
+                        <input type="checkbox" data-plugin="switchery" name="show_slot" class="form-control" data-color="#43bee1" @if($vendor->show_slot == 1) checked @endif >
                     </div>
                     <div class="col-md-12">
                         <div class="form-group" id="commission_percentInput">
@@ -124,26 +124,49 @@
         </div>
     </div>
 </div> <!-- end card-box -->
+<style type="text/css">
+    #nestable_list_2 ol, #nestable_list_2 ul{
+        list-style-type: none;
 
-
-
+    }
+</style>
 <div class="card-box">
     <div class="row text-left">
         <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-12">
-                    <h4 class="mb-2"> <span class="">Active Main Category</h4>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="custom-dd-empty dd" id="nestable_list_2">
-                <?php print_r($categoryToggle); ?>
-                </div>
-            </div>
-            <form name="config-form" id="categoryToggleForm" action="{{route('vendor.category.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
+            <form name="config-form" action="{{route('vendor.category.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
                 @csrf
-                <input type="hidden" name="category_id" id="toggleCategoryId">
-                <input type="hidden" name="status" id="toggleStatusField">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="mb-2"> <span class="">Category Setup</span> (Visible For Admin)</h4>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
+                        {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!} 
+                        <input type="checkbox" data-plugin="switchery" name="add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif >
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6 mb-3">
+                        {!! Form::label('title', 'Vendor Detail To Show',['class' => 'control-label ']) !!}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <select class="selectize-select form-control assignToSelect" name="assignTo">
+                            @foreach($templetes as $templete)
+                                <option value="{{$templete->id}}">{{$templete->title}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        {!! Form::label('title', 'Vendor Category',['class' => 'control-label']) !!}
+                        <div class="custom-dd dd" id="nestable_list_1">
+                        <?php print_r($categoryToggle); ?>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-info waves-effect waves-light w-100">Save</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

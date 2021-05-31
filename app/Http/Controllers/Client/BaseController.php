@@ -81,24 +81,26 @@ class BaseController extends Controller
         if(!is_null($tree) && count($tree) > 0) {
             $this->toggleData .='<ol class="dd-list">';
             foreach($tree as $node) {
-                $this->toggleData .='<li class="dd-item dd3-item" data-id="'.$node["id"].'">';
+                if($node['type_id'] == 1){ // type_id 1 means product in type table
+                    $this->toggleData .='<li class="dd-item dd3-item" data-id="'.$node["id"].'">';
 
-                $icon = $node['icon']['proxy_url'].'30/30'.$node['icon']['image_path'];
-                $this->toggleData .='<div class="dd3-content">'.$node["slug"].'<span class="inner-div text-right">';
+                    $icon = $node['icon']['proxy_url'].'30/30'.$node['icon']['image_path'];
+                    $this->toggleData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node["slug"].'<span class="inner-div text-right">';
+                    $name = 'category['.$node["id"].']';
+                    $this->toggleData .='<a class="action-icon" data-id="'.$node["id"].'" href="javascript:void(0)">';
+                    if(!in_array($node["id"], $blockedCategory) && !in_array($node["parent_id"], $blockedCategory)){
+                        $this->toggleData .='<input type="checkbox" data-id="'.$node["id"].'" name="'.$name.'" class="form-control activeCategory" data-color="#43bee1" data-plugin="switchery" checked>';
+                    }else{
+                        $this->toggleData .='<input type="checkbox" data-id="'.$node["id"].'" name="'.$name.'" data-color="#43bee1" class="form-control activeCategory"  data-plugin="switchery">';
+                    }
+                    $this->toggleData .='<input type="hidden" name="category_id[]" value="'.$node["id"].'">';
+                    $this->toggleData .='</a></span> </div>';
 
-                $this->toggleData .='<a class="action-icon" data-id="'.$node["id"].'" is_vendor="0" href="javascript:void(0)">';
-                if(!in_array($node["id"], $blockedCategory) && !in_array($node["parent_id"], $blockedCategory)){
-                    $this->toggleData .='<input type="checkbox" data-plugin="switchery" data-id="'.$node["id"].'" name="category" class="form-control activeCategory" data-color="#43bee1" checked>';
-                }else{
-                    //$categoryDisable = $parentDisable = 0;
-                    $this->toggleData .='<input type="checkbox" data-plugin="switchery" data-id="'.$node["id"].'" name="category" class="form-control activeCategory" data-color="#43bee1">';
+                    if(isset($node['children']) && count($node['children']) > 0){
+                        $ss = $this->printTreeToggle($node['children'], $blockedCategory);
+                    }
+                    $this->toggleData .='</li>';
                 }
-                $this->toggleData .='</a></span> </div>';
-
-                if(isset($node['children']) && count($node['children']) > 0){
-                    $ss = $this->printTreeToggle($node['children'], $blockedCategory);
-                }
-                $this->toggleData .='</li>';
             }
             $this->toggleData .='</ol>';
         }
