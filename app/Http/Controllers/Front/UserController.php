@@ -24,10 +24,10 @@ class UserController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function verifyAccount(Request $request, $domain = '')
-    {
+    public function verifyAccount(Request $request, $domain = ''){
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
+        $user = User::where('id', Auth::user()->id)->first();
         $preference = ClientPreference::select('verify_email', 'verify_phone')->where('id', '>', 0)->first();
         if ($preference->verify_email == 0 && $preference->verify_phone == 0) {
             return redirect()->route('userHome');
@@ -43,7 +43,7 @@ class UserController extends FrontController
             }
         }
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/verifyaccountnew')->with(['preference' => $preference, 'navCategories' => $navCategories]);
+        return view('forntend/account/verifyaccountnew')->with(['preference' => $preference, 'navCategories' => $navCategories, 'user' => $user]);
     }
 
     /**
@@ -130,14 +130,16 @@ class UserController extends FrontController
         if (!$user || !$request->has('type')) {
             return response()->json(['error' => 'User not found!'], 404);
         }
+        if(!$request->verifyToken){
+            return response()->json(['error' => 'OTP required!'], 404);
+        }
         $currentTime = \Carbon\Carbon::now()->toDateTimeString();
         $message = 'Account verified successfully.';
         if ($request->has('is_forget_password') && $request->is_forget_password == 1) {
             $message = 'OTP matched successfully.';
         }
         if ($request->type == 'phone') {
-            pr($user->phone_token.''.$request->otp)
-            if ($user->phone_token != $request->otp) {
+            if ($user->phone_token != $request->verifyToken) {
                 return response()->json(['error' => 'OTP is not valid'], 404);
             }
             if ($currentTime > $user->phone_token_valid_till) {
@@ -148,7 +150,8 @@ class UserController extends FrontController
             $user->is_phone_verified = 1;
         }
         if ($request->type == 'email') {
-            if ($user->email_token != $request->otp) {
+            if ($user->email_token != $request->verifyToken) {
+                die();
                 return response()->json(['error' => 'OTP is not valid'], 404);
             }
             if ($currentTime > $user->email_token_valid_till) {

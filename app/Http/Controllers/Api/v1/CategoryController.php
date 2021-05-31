@@ -72,9 +72,6 @@ class CategoryController extends BaseController
             $blockedVendor = VendorCategory::where('category_id', $cid)->where('status', 0)->pluck('vendor_id')->toArray();
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
             $vendorData = $vendorData->where('status', '!=', $this->field_status)->whereNotIn('id', $blockedVendor)->paginate($limit);
-            foreach ($vendorData as $vendor) {
-                $vendor->is_show_category = 0;
-            }
             return $vendorData;
         }elseif($tpye == 'product' || $tpye == 'Product'){
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
