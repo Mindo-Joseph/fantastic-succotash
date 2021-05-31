@@ -6,9 +6,19 @@
 </header>
 <section class="wrapper-main mb-5 py-lg-5">
     <div class="container">
+        <script type="text/template" id="email_verified_template">
+                <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
+                <h3 class="mb-2">Email Address Verified!</h3>
+                <p>You have successfully verified the <br> email account.</p>
+        </script>
+        <script type="text/template" id="phone_verified_template">
+                <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
+                <h3 class="mb-2">Phone Verified!</h3>
+                <p>You have successfully verified the <br> Phone.</p>
+        </script>
         <div class="row">
             @if($preference->verify_email == 1)
-            <div class="col-lg-6 mb-lg-0 mb-3 text-center border-right pb-4">
+            <div class="col-lg-6 mb-lg-0 mb-3 text-center border-right pb-4" id="verify_email_main_div">
                 <img src="{{asset('front-assets/images/email_icon.svg')}}" alt="">
                 <h3 class="mb-2">Verify Email Address</h3>
                 <p>Enter the code we just sent you on your email address</p>
@@ -20,7 +30,7 @@
                                 <span class="input-group-text" id="edit_email">Edit</span>
                             </div>
                             <span class="valid-feedback d-block" role="alert">
-                                <strong class="invalid-feedback2"></strong>
+                                <strong class="invalid-feedback edit_email_error"></strong>
                             </span>
                         </div>
                         <div method="get" class="digit-group otp_inputs d-flex justify-content-between" data-group-name="digits" data-autosubmit="false" autocomplete="off">
@@ -31,13 +41,14 @@
                             <input class="form-control" type="text" id="digit-5" name="digit-5" data-next="digit-6" data-previous="digit-4" />
                             <input class="form-control" type="text" id="digit-6" name="digit-6" data-next="digit-7" data-previous="digit-5" />
                         </div>
+                        <strong class="invalid-feedback2 invalid_email_otp_error"></strong>
                         <div class="row text-center mt-2">
                             <div class="col-12 resend_txt">
                                 <p class="mb-1">If you didn’t receive a code?</p>
                                 <a class="verifyEmail"><u>RESEND</u></a>
                             </div>
                             <div class="col-md-12 mt-3">
-                                <button type="submit" class="btn btn-solid submitLogin">Verify</button>
+                                <button type="button" class="btn btn-solid" id="verify_email_token">Verify</button>
                             </div>
                         </div>
                     </div>
@@ -45,8 +56,8 @@
             </div>
             @endif
             @if($preference->verify_phone == 1)
-            <div class="col-lg-6 text-center">
-                <img src="{{asset('front-assets/images/phone-otp.svg')}}" alt="">
+            <div class="col-lg-6 text-center" id="verify_phone_main_div">
+                <img src="{{asset('front-assets/images/phone-otp.svg')}}">
                 <h3 class="mb-2">Verify Phone</h3>
                 <p>Enter the code we just sent you on your email address</p>
                 <div class="row mt-3">
@@ -65,13 +76,14 @@
                             <input class="form-control" type="text" id="digit-5" name="digit-5" data-next="digit-5" data-previous="digit-4" />
                             <input class="form-control" type="text" id="digit-6" name="digit-6" data-next="digit-6" data-previous="digit-5" />
                         </div>
+                        <strong class="invalid-feedback2 invalid_phone_otp_error"></strong>
                         <div class="row text-center mt-2">
                             <div class="col-12 resend_txt">
                                 <p class="mb-1">If you didn’t receive a code?</p>
                                 <a class="verifyPhone"><u>RESEND</u></a>
                             </div>
                             <div class="col-md-12 mt-3">
-                                <button type="submit" class="btn btn-solid submitLogin">Verify</button>
+                                <button type="button" class="btn btn-solid" id="verify_phone_token">Verify</button>
                             </div>
                         </div>
                     </div>
@@ -124,7 +136,6 @@
                 }
             } else if((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode === 39) {
                 var next = parent.find('input#' + $(this).data('next'));
-                
                 if(next.length) {
                     $(next).select();
                 } else {
@@ -135,24 +146,47 @@
             }
         });
     });
-    $("#verifyToken").submit(function(event) {
-        event.preventDefault();  
-        var formData = new FormData(form);
-        var form = document.getElementById('verifyToken');
+    $("#verify_phone_token").click(function(event) {
+        var verifyToken = '';
+        $('.digit-group').find('input').each(function() {
+            if($(this).val()){
+               verifyToken +=  $(this).val();
+            }
+        });
         $.ajax({
-            type: "post",
-            data: formData,
+            type: "POST",
             dataType: "json",
-            contentType: false,
-            processData: false,
             url: "{{ route('user.verifyToken') }}",
+            data: {'verifyToken':verifyToken, 'type': 'phone'},
             success: function(response) {
-                console.log(response);
-                window.location.href = "{{route('user.verify')}}";
+                $("#verify_phone_main_div").html('');
+                let phone_verified_template = _.template($('#phone_verified_template').html());
+                $("#verify_phone_main_div").append(phone_verified_template());
             },
             error: function(data) {
-                $(".invalid-feedback2").html(data.responseJSON.error);
-                console.log(data.responseJSON.error);
+                $(".invalid_phone_otp_error").html(data.responseJSON.error);
+            },
+        });
+    });
+    $("#verify_email_token").click(function(event) {
+        var verifyToken = '';
+        $('.digit-group').find('input').each(function() {
+            if($(this).val()){
+               verifyToken +=  $(this).val();
+            }
+        });
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('user.verifyToken') }}",
+            data: {'verifyToken':verifyToken, 'type': 'phone'},
+            success: function(response) {
+                $("#verify_email_main_div").html('');
+                let email_verified_template = _.template($('#email_verified_template').html());
+                $("#verify_email_main_div").append(email_verified_template());
+            },
+            error: function(data) {
+                $(".invalid_email_otp_error").html(data.responseJSON.error);
             },
         });
     });

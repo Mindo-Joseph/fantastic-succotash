@@ -79,33 +79,33 @@ class UserController extends FrontController
                     }
                 }
             }
-        }
-
-        if ($user->is_email_verified == 0) {
-            $message = "An otp has been sent to your email. Please check";
-            $otp = mt_rand(100000, 999999);
-            $user->email_token = $otp;
-            $user->email_token_valid_till = $newDateTime;
-            if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
-                $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
-                $client_name = $client->name;
-                $mail_from = $data->mail_from;
-                $sendto = $user->email;
-                try {
-                    $data = [
-                                'code' => $otp,
-                                'link' => "link",
-                                'email' => $sendto,
-                                'mail_from' => $mail_from,
-                                'client_name' => $client_name,
-                                'logo' => $client->logo['original'],
-                                'customer_name' => ucwords($user->name),
-                                'code_text' => 'Enter below code to verify yoour account',
-                            ];
-                    dispatch(new \App\Jobs\SendVerifyEmailJob($data))->onQueue('verify_email');;
-                    $notified = 1;
-                } catch (\Exception $e) {
-                    $user->save();
+        }else{
+            if ($user->is_email_verified == 0) {
+                $message = "An otp has been sent to your email. Please check";
+                $otp = mt_rand(100000, 999999);
+                $user->email_token = $otp;
+                $user->email_token_valid_till = $newDateTime;
+                if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
+                    $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+                    $client_name = $client->name;
+                    $mail_from = $data->mail_from;
+                    $sendto = $user->email;
+                    try {
+                        $data = [
+                                    'code' => $otp,
+                                    'link' => "link",
+                                    'email' => $sendto,
+                                    'mail_from' => $mail_from,
+                                    'client_name' => $client_name,
+                                    'logo' => $client->logo['original'],
+                                    'customer_name' => ucwords($user->name),
+                                    'code_text' => 'Enter below code to verify yoour account',
+                                ];
+                        dispatch(new \App\Jobs\SendVerifyEmailJob($data))->onQueue('verify_email');;
+                        $notified = 1;
+                    } catch (\Exception $e) {
+                        $user->save();
+                    }
                 }
             }
         }
@@ -125,26 +125,21 @@ class UserController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function verifyToken(Request $request, $domain = '')
-    {
-
+    public function verifyToken(Request $request, $domain = ''){
         $user = User::where('id', Auth::user()->id)->first();
         if (!$user || !$request->has('type')) {
             return response()->json(['error' => 'User not found!'], 404);
         }
         $currentTime = \Carbon\Carbon::now()->toDateTimeString();
-
         $message = 'Account verified successfully.';
         if ($request->has('is_forget_password') && $request->is_forget_password == 1) {
             $message = 'OTP matched successfully.';
         }
-
         if ($request->type == 'phone') {
-
+            pr($user->phone_token.''.$request->otp)
             if ($user->phone_token != $request->otp) {
                 return response()->json(['error' => 'OTP is not valid'], 404);
             }
-
             if ($currentTime > $user->phone_token_valid_till) {
                 return response()->json(['error' => 'OTP has been expired.'], 404);
             }
@@ -152,13 +147,10 @@ class UserController extends FrontController
             $user->phone_token_valid_till = NULL;
             $user->is_phone_verified = 1;
         }
-
         if ($request->type == 'email') {
-
             if ($user->email_token != $request->otp) {
                 return response()->json(['error' => 'OTP is not valid'], 404);
             }
-
             if ($currentTime > $user->email_token_valid_till) {
                 return response()->json(['error' => 'OTP has been expired.'], 404);
             }
