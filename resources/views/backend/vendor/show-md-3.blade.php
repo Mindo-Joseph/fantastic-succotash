@@ -125,9 +125,8 @@
     </div>
 </div> <!-- end card-box -->
 <style type="text/css">
-    #nestable_list_2 ol, #nestable_list_2 ul{
+    #nestable_list_1 ol, #nestable_list_1 ul{
         list-style-type: none;
-
     }
 </style>
 <div class="card-box">
@@ -159,7 +158,7 @@
                     </div>
                     <div class="col-md-12 mb-3">
                         {!! Form::label('title', 'Vendor Category',['class' => 'control-label']) !!}
-                        <div class="custom-dd dd" id="nestable_list_1">
+                        <div class="custom-dd dd nestable_list_1" id="nestable_list_1" >
                         <?php print_r($categoryToggle); ?>
                         </div>
                     </div>

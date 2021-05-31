@@ -184,16 +184,21 @@ class VendorController extends BaseController
                         ->orderBy('parent_id', 'asc')->get();
         $categoryToggle = array();
         $active = array();
-
+        /* get active category list also with parent */
         foreach ($categories as $category) {
-          if(in_array($category->id, $VendorCategory)){
+          if(in_array($category->id, $VendorCategory) && $category->parent_id == 1){
+            $active[] = $category->id;
+          }
+          if(in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)){
             $active[] = $category->id;
           }
         }
+
         if($categories){
             $build = $this->buildTree($categories->toArray());
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
+
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
 
         return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes]);
@@ -203,7 +208,7 @@ class VendorController extends BaseController
     public function vendorCategory($domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
-        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
+        $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
 
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
                         ->where('id', '>', '1')
@@ -211,42 +216,45 @@ class VendorController extends BaseController
                               $q->whereNull('vendor_id')
                                 ->orWhere('vendor_id', $id);
                         })
-                        // ->whereNotIn('id', $blockedCategory)
-                        // ->whereNotIn('parent_id', $blockedCategory)
-                        ->orderBy('position', 'asc')
-                        ->orderBy('id', 'asc')
+                        ->orderBy('position', 'asc')->orderBy('id', 'asc')
                         ->orderBy('parent_id', 'asc')->get();
         $categoryToggle = array();
-        $blocked = array();
+        $active = array();
+        /* get active category list also with parent */
         foreach ($categories as $category) {
-          if(in_array($category->id, $blockedCategory) || in_array($category->parent_id, $blockedCategory) || in_array($category->id, $blocked) || in_array($category->parent_id, $blocked)){
-            $blocked[] = $category->id;
+          if(in_array($category->id, $VendorCategory) && $category->parent_id == 1){
+            $active[] = $category->id;
+          }
+          if(in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)){
+            $active[] = $category->id;
           }
         }
+
         if($categories){
             $build = $this->buildTree($categories->toArray());
-            $tree = $this->printTree($build, 'vendor', $blocked);
-            $categoryToggle = $this->printTreeToggle($build, $blocked);
+            $tree = $this->printTree($build, 'vendor');
+            $categoryToggle = $this->printTreeToggle($build, $active);
         }
 
         $addons = AddonSet::with('option')->select('id', 'title', 'min_select', 'max_select', 'position')
                     ->where('status', '!=', 2)
                     ->where('vendor_id', $id)
                     ->orderBy('position', 'asc')->get();
-        //echo '<pre>';print_r($categoryToggle);die;
+
         $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
                     ->where('is_active', 1)
                     ->orderBy('is_primary', 'desc')->get();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
         
-        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'blockedCategory' => $blockedCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes]);
+        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes]);
     }
 
     /**   show vendor page - catalog tab      */
     public function vendorCatalog($domain = '', $id){
         $type = Type::all();
         $vendor = Vendor::findOrFail($id);
-        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
+        $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
+
         $categories = Category::with('primary')->select('id', 'slug')
                         ->where('id', '>', '1')->where('status', '!=', '2')->where('type_id', '1')
                         ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
@@ -266,18 +274,22 @@ class VendorController extends BaseController
                         ->orderBy('id', 'asc')
                         ->orderBy('parent_id', 'asc')->get();
         $categoryToggle = array();
-        $blocked = array();
+        $active = array();
+        /*    get active category list also with parent     */
         foreach ($categories as $category) {
-          if(in_array($category->id, $blockedCategory) || in_array($category->parent_id, $blockedCategory) || in_array($category->id, $blocked) || in_array($category->parent_id, $blocked)){
-            $blocked[] = $category->id;
+          if(in_array($category->id, $VendorCategory) && $category->parent_id == 1){
+            $active[] = $category->id;
+          }
+          if(in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)){
+            $active[] = $category->id;
           }
         }
         if($categories){
             $build = $this->buildTree($categories->toArray());
-            $categoryToggle = $this->printTreeToggle($build, $blocked);
+            $categoryToggle = $this->printTreeToggle($build, $active);
         }
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'blockedCategory' => $blockedCategory, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes]);
+        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'VendorCategory' => $VendorCategory, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes]);
     }
 
     /**       delete vendor       */

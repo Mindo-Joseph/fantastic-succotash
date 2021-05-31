@@ -64,7 +64,8 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
 
     Route::resource('order', 'Client\OrderController');
     Route::resource('customer', 'Client\UserController');
-    Route::get('customer/account/{user}/{action}', 'Client\UserController@changeStatus')->name('customer.account.action');
+    Route::get('customer/account/{user}/{action}', 'Client\UserController@deleteCustomer')->name('customer.account.action');
+    Route::post('customer/change/status', 'Client\UserController@changeStatus')->name('customer.changeStatus');
 
     Route::resource('product', 'Client\ProductController');
     Route::post('product/validate', 'Client\ProductController@validateData')->name('product.validate');

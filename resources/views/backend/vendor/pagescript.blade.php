@@ -166,8 +166,8 @@
 
                 delivery = document.getElementsByClassName('delivery');
                 var switchery = new Switchery(delivery[0]);
-                categoryShow = document.getElementsByClassName('categoryShow');
-                var switchery = new Switchery(categoryShow[0]);
+                // categoryShow = document.getElementsByClassName('categoryShow');
+                // var switchery = new Switchery(categoryShow[0]);
                 
                 autocompletesWraps.push('edit');
                 loadMap(autocompletesWraps);              

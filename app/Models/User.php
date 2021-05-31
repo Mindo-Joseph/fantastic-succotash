@@ -96,4 +96,13 @@ class User extends Authenticatable
         }*/
         return $rules;
     }
+
+    public function orders(){
+       return $this->hasMany('App\Models\Order', 'user_id', 'id')->select('id', 'user_id'); 
+    }
+
+    public function activeOrders(){
+       return $this->hasMany('App\Models\Order', 'user_id', 'id')->select('id', 'user_id')
+              ->where('is_deleted', '!=', 1); 
+    }
 }

@@ -106,7 +106,7 @@
                                 ?>
                                 <tr data-row-id="{{$user->id}}">
                                     <td> 
-                                        <img src="{{$user->image['proxy_url'].'60/60'.$user->image['image_path']}}" class="rounded-circle" alt="{{$user->id}}" >
+                                        <img src="{{$user->image['proxy_url'].'40/40'.$user->image['image_path']}}" class="rounded-circle" alt="{{$user->id}}" >
                                     </td>
                                     <td>{{$user->name}}</td>
                                     <td>{{$loginType}}</td>
@@ -123,27 +123,13 @@
                                         {{ $user->phone_number }} 
                                     </td>
                                     
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td></td>
+                                    <td>{{$user->orders_count}}</td>
+                                    <td>{{$user->active_orders_count}}</td>
+                                    <td>
+                                        <input type="checkbox" data-id="{{$user->id}}" id="cur_{{$user->id}}" data-plugin="switchery" name="userAccount" class="chk_box" data-color="#43bee1" {{($user->status == 1) ? 'checked' : ''}} >
+                                    </td>
                                     <td> 
                                         <div class="form-ul" style="width: 60px;">
-                                            <!-- <div class="inner-div" style="float: left;">
-                                                <a class="action-icon openBannerModal" userId="{{$user->id}}" href="#"><i class="mdi mdi-square-edit-outline"></i></a> 
-                                            </div> -->
-                                            <!-- <div class="inner-div" style="float: left;">
-                                                <a class="action-icon" userId="{{$user->id}}" href="{{route('customer.show', $user->id)}}"><i class="mdi mdi-eye"></i></a> 
-                                            </div> -->
-                                            <?php 
-                                                $status = 2; $icon = 'mdi-lock';
-                                                $title = 'Block user account';
-                                            if($user->status == 2){
-                                                $status = 1; $icon = 'mdi-lock-open-variant'; 
-                                                $title = 'Activate user account';
-                                            } ?>
-                                            <div class="inner-div" style="float: left;">
-                                                <a class="action-icon" userId="{{$user->id}}" href="{{route('customer.account.action', [$user->id, $status])}}"><i class="mdi {{$icon}}" title="{{$title}}"></i></a> 
-                                            </div>
                                             <div class="inner-div" >
                                                 <a href="{{route('customer.account.action', [$user->id, 3])}}" onclick="return confirm('Are you sure? You want to delete the user.')" class="action-icon"> <i class="mdi mdi-delete" title="Delete user"></i></a>
                                             </div>

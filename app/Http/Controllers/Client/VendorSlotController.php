@@ -223,9 +223,9 @@ class VendorSlotController extends BaseController
 
                     if($date[$key] == $v->specific_date){
                         $exist = 1;
-                        $title .= ($v->dine_in == 1) ? ' Dine' : '';
-                        $title .= ($v->takeaway == 1) ? ' Takeaway' : '';
-                        $title .= ($v->delivery == 1) ? ' Delivery' : '';
+                        $title .= ($v->dine_in == 1 && $vendor->dine_in == 1) ? ' Dine' : '';
+                        $title .= ($v->takeaway == 1 && $vendor->takeaway == 1) ? ' Takeaway' : '';
+                        $title .= ($v->delivery == 1 && $vendor->delivery == 1) ? ' Delivery' : '';
 
                         $showData[$count]['title'] = trim($title);
                         $showData[$count]['start'] = $date[$key].'T'.$v->start_time;
@@ -244,9 +244,9 @@ class VendorSlotController extends BaseController
                 foreach ($slot as $k => $v) {
                     if($value == $v->day){
 
-                        $title .= ($v->dine_in == 1) ? ' Dine' : '';
-                        $title .= ($v->takeaway == 1) ? ' Takeaway' : '';
-                        $title .= ($v->delivery == 1) ? ' Delivery' : '';
+                        $title .= ($v->dine_in == 1 && $vendor->dine_in == 1) ? ' Dine' : '';
+                        $title .= ($v->takeaway == 1 && $vendor->takeaway == 1) ? ' Takeaway' : '';
+                        $title .= ($v->delivery == 1 && $vendor->delivery == 1) ? ' Delivery' : '';
 
                         $showData[$count]['title'] = trim($title);
                         $showData[$count]['start'] = $date[$key].'T'.$v->start_time;

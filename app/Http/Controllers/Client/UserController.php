@@ -12,9 +12,11 @@ use Illuminate\Support\Facades\Hash;
 use Password;
 use App\Notifications\PasswordReset;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Traits\ToasterResponser;
 
 class UserController extends BaseController
 {
+    use ToasterResponser;
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +26,7 @@ class UserController extends BaseController
     {
         $roles = Role::all();
         $countries = Country::all();
-        $users = User::with('role', 'country')->where('status', '!=', 3)->orderBy('id', 'desc')->paginate(20);
+        $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->orderBy('id', 'desc')->paginate(20);
         //dd($users->toArray());
         return view('backend/users/index')->with(['users' => $users, 'roles' => $roles, 'countries' => $countries]);
     }
@@ -34,10 +36,11 @@ class UserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function changeStatus($domain = '', $uid, $action)
+    public function deleteCustomer($domain = '', $uid, $action)
     {
+        dd($request->all());
         $user = User::where('id', $uid)->firstOrFail();
-        $user->status = $action;
+        //$user->status = $action;
         $user->save();
         $msg = 'activated';
         if($action == 2){
@@ -47,6 +50,24 @@ class UserController extends BaseController
             $msg = 'deleted';
         }
         return redirect()->back()->with('success', 'Customer account ' . $msg . ' successfully!');
+    }
+
+    /*      block - activate customer account*/
+    public function changeStatus(Request $request, $domain = '')
+    {
+        $user = User::where('id', $request->userId)->firstOrFail();
+        $user->status = ($request->value == 1) ? 1 : 2; // 1 for active 2 for block
+        $user->save();
+        $msg = 'activated';
+        if($request->value == 0){
+            $msg = 'blocked';
+        }
+        return response()->json([
+            'status'=>'success',
+            'message' => 'Customer account ' . $msg . ' successfully!',
+        ]);
+        // $toaster = $this->successToaster('Success', 'Customer account ' . $msg . ' successfully!');
+        // return redirect()->back()->with('toaster', $toaster);
     }
 
     /**              Add customer             */

@@ -16,6 +16,7 @@
         -moz-transform: translateY(-50%);
         transform: translateY(-50%);
     }
+    
 </style>
 @endsection
 
@@ -205,17 +206,18 @@
                                 </div>
                             </div>
                             @endif
-
-                            <div class="row card-box">
-                                <h4 class="mb-4 "> Weekly Slot</h4>
-                                <div class="col-md-12">
-                                    <div class="row mb-2">
-                                        <div class="col-md-12">
-                                            <div id='calendar'></div>
+                            @if($vendor->show_slot == 1)
+                                <div class="row card-box">
+                                    <h4 class="mb-4 "> Weekly Slot</h4>
+                                    <div class="col-md-12">
+                                        <div class="row mb-2">
+                                            <div class="col-md-12">
+                                                <div id='calendar'></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
 
                         </div> <!-- end tab-pane -->
                         <!-- end about me section content -->
