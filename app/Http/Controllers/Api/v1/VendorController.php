@@ -77,7 +77,7 @@ class VendorController extends BaseController{
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
                         'variant' => function($q) use($langId){
-                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->select('id','sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                         },
                     ])->join('product_categories as pc', 'pc.product_id', 'products.id')
