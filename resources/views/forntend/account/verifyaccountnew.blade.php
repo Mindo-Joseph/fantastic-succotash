@@ -31,16 +31,16 @@
                                     <span class="input-group-text" id="edit_email">Edit</span>
                                 </div>
                                 <span class="valid-feedback d-block" role="alert">
-                                    <strong class="invalid-feedback edit_email_feedback"></strong>
+                                    <strong class="edit_email_feedback"></strong>
                                 </span>
                             </div>
                             <div method="get" class="digit-group otp_inputs d-flex justify-content-between" data-group-name="digits" data-autosubmit="false" autocomplete="off">
-                                <input class="form-control" type="text" id="digit-1" name="digit-1" data-next="digit-2" />
-                                <input class="form-control" type="text" id="digit-2" name="digit-2" data-next="digit-3" data-previous="digit-1" />
-                                <input class="form-control" type="text" id="digit-3" name="digit-3" data-next="digit-4" data-previous="digit-2" />
-                                <input class="form-control" type="text" id="digit-4" name="digit-4" data-next="digit-5" data-previous="digit-3" />
-                                <input class="form-control" type="text" id="digit-5" name="digit-5" data-next="digit-6" data-previous="digit-4" />
-                                <input class="form-control" type="text" id="digit-6" name="digit-6" data-next="digit-7" data-previous="digit-5" />
+                                <input class="form-control" type="text" id="digit-1" name="digit-1" data-next="digit-2" onkeypress="return isNumberKey(event)"/>
+                                <input class="form-control" type="text" id="digit-2" name="digit-2" data-next="digit-3" data-previous="digit-1" onkeypress="return isNumberKey(event)"/>
+                                <input class="form-control" type="text" id="digit-3" name="digit-3" data-next="digit-4" data-previous="digit-2" onkeypress="return isNumberKey(event)"/>
+                                <input class="form-control" type="text" id="digit-4" name="digit-4" data-next="digit-5" data-previous="digit-3" onkeypress="return isNumberKey(event)"/>
+                                <input class="form-control" type="text" id="digit-5" name="digit-5" data-next="digit-6" data-previous="digit-4" onkeypress="return isNumberKey(event)"/>
+                                <input class="form-control" type="text" id="digit-6" name="digit-6" data-next="digit-7" data-previous="digit-5" onkeypress="return isNumberKey(event)"/>
                             </div>
                             <strong class="invalid-feedback2 invalid_email_otp_error"></strong>
                             <div class="row text-center mt-2">
@@ -61,7 +61,7 @@
                 @endif
             </div>
             @endif
-            @if($preference->verify_phone == 1)
+            <!-- @if($preference->verify_phone == 1)
             <div class="col-lg-6 text-center" id="verify_phone_main_div">
                 @if($user->is_phone_verified == 0)
                 <img src="{{asset('front-assets/images/phone-otp.svg')}}">
@@ -74,6 +74,9 @@
                             <div class="input-group-append">
                                 <span class="input-group-text" id="edit_phone">Edit</span>
                             </div>
+                            <span class="valid-feedback d-block" role="alert">
+                                <strong class="edit_phone_feedback"></strong>
+                            </span>
                         </div>
                         <div method="get" class="digit-group otp_inputs d-flex justify-content-between" data-group-name="digits" data-autosubmit="false" autocomplete="off">
                             <input class="form-control" type="text" id="digit-1" name="digit-1" data-next="digit-1" onkeypress="return isNumberKey(event)"/>
@@ -101,7 +104,7 @@
                 <p>You have successfully verified the <br> Phone.</p>
                 @endif
             </div>
-            @endif
+            @endif -->
         </div>
     </div>
 </section> 
@@ -139,10 +142,10 @@
             url: "{{ route('email.send', Auth::user()->id) }}",
             data: {"_token": "{{ csrf_token() }}",type: $type,},
             success: function(response) {
-                if(type == 'email'){
-                $('.edit_email_feedback').html(response.message);
+                if($type == 'email'){
+                 $('.edit_email_feedback').html(response.message);
                 }else{
-
+                 $('.edit_phone_feedback').html(response.message);
                 }
             }
         });
