@@ -16,7 +16,7 @@
     <div class="col-md-12">
         <div class="delivery_box">
             <label class="radio m-0"><%= address.address %> <%= address.city %> <%= address.state %> <%= address.pincode %>
-                <input type="radio" checked="checked" name="is_company" value="<%= address.id %>">
+                <input type="radio" checked="checked" name="address_id" value="<%= address.id %>">
                 <span class="checkround"></span>
             </label>
         </div>
@@ -44,7 +44,7 @@
                 <tr class="padding-bottom vendor_products_tr" id="tr_vendor_products_<%= vendor_product.id %>">
                     <td style="width:100px" <%= vendor_product.length > 0 ? 'rowspan=2' : '' %>>
                         <div class="product-img pb-2">
-                           <% if(vendor_product.pvariant.media) { %>
+                           <% if(vendor_product.pvariant.media_one) { %>
                                 <img src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>100/70<%= vendor_product.pvariant.media_one.image.path.image_path %>" alt="">
                             <% } %>
                         </div>
@@ -76,7 +76,7 @@
                         </a>
                     </td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td colspan="5" class="border_0 p-0 border-0">
                         <table class="add_on_items w-100">
                             <thead>
@@ -107,7 +107,7 @@
                             </tbody>
                         </table>
                     </td>
-                </tr>
+                </tr> -->
             <% }); %>
             <tr>
                 <td colspan="2">
@@ -187,7 +187,7 @@
                         <div class="col-md-12">
                             <div class="delivery_box">
                                 <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}} 
-                                    <input type="radio" checked="checked" name="is_company">
+                                    <input type="radio" checked="checked" name="address_id" value="{{$address->id}}">
                                     <span class="checkround"></span>
                                 </label>
                             </div>

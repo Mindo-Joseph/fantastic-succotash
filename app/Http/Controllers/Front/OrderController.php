@@ -47,8 +47,10 @@ class OrderController extends FrontController{
             $taxable_amount = 0;
             $payable_amount = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
-                $vendor_discount_amount = 0;
                 $vendor_payable_amount = 0;
+                $vendor_discount_amount = 0;
+                $product_taxable_amount = 0;
+                $product_payable_amount = 0;
                 foreach ($vendor_cart_products as $vendor_cart_product) {
                     $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
                     $quantity_price = 0;
@@ -58,8 +60,7 @@ class OrderController extends FrontController{
                     $quantity_price = $price_in_dollar_compare * $vendor_cart_product->quantity;
                     $payable_amount = $payable_amount + $quantity_price;
                     $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
-                    $product_taxable_amount = 0;
-                    $product_payable_amount = 0;
+                    
                     foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
                         $rate = round($tax_rate_detail->tax_rate);
                         $tax_amount = ($price_in_dollar_compare * $rate) / 100;
@@ -69,10 +70,11 @@ class OrderController extends FrontController{
                         $vendor_payable_amount = $vendor_payable_amount + $product_tax;
                     }
                     $total_amount += $variant->price;
-                    $taxable_amount += $product_taxable_amount;
                     $order_product = new OrderProduct;
                     $order_product->order_id = $order->id;
                     $order_product->price = $variant->price;
+                    $taxable_amount += $product_taxable_amount;
+                    $order_product->taxable_amount = $product_taxable_amount;
                     $order_product->quantity = $vendor_cart_product->quantity;
                     $order_product->vendor_id = $vendor_cart_product->vendor_id;
                     $order_product->product_id = $vendor_cart_product->product_id;

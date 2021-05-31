@@ -159,7 +159,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                 <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
                                                     <div class='media'>
                                                         <a href='#'>
-                                                            <img class='mr-3' src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.image.path.image_path %>">
+                                                            <% if(vendor_product.pvariant.media_one) { %>
+                                                                <img class='mr-3' src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.image.path.image_path %>">
+                                                            <% } %>
                                                         </a>
                                                         <div class='media-body'>
                                                             <a href='#'>
