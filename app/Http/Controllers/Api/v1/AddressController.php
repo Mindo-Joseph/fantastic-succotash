@@ -11,9 +11,10 @@ use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Api\v1\BaseController;
 use App\Models\{User, Client, UserAddress};
 
-class AddressController extends Controller{
+class AddressController extends BaseController{
 	use ApiResponser;
 	
     public function getAddressList($id = ''){
