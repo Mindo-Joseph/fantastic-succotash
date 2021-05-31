@@ -24,9 +24,7 @@ class UserController extends BaseController
     {
         $roles = Role::all();
         $countries = Country::all();
-        $users = User::with('role', 'country')->select('id', 'image', 'name', 'email', 'phone_number', 'status', 'role_id', 'system_id', 'email_token', 'phone_token', 'is_email_verified', 'is_phone_verified')
-                    ->where('status', '!=', 3)
-                    ->orderBy('id', 'desc')->paginate(20);
+        $users = User::with('role', 'country')->where('status', '!=', 3)->orderBy('id', 'desc')->paginate(20);
         //dd($users->toArray());
         return view('backend/users/index')->with(['users' => $users, 'roles' => $roles, 'countries' => $countries]);
     }
@@ -48,7 +46,6 @@ class UserController extends BaseController
         if($action == 3){
             $msg = 'deleted';
         }
-
         return redirect()->back()->with('success', 'Customer account ' . $msg . ' successfully!');
     }
 
@@ -56,7 +53,8 @@ class UserController extends BaseController
     public function show($domain = '', $uid)
     {
         $user = User::where('id', $uid)->firstOrFail();
-        dd($user->toArray());
+        return redirect()->back();
+        //dd($user->toArray());
     }
 
     /**

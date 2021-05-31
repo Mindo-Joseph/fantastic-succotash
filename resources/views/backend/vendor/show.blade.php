@@ -7,6 +7,15 @@
         border-color: #43bee1;
         background-color: #43bee1;
     }
+    .dd-list .dd3-content{
+        position: relative;
+    }
+    span.inner-div {
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
 </style>
 @endsection
 
@@ -679,19 +688,12 @@
             success: function(data) {
 
                 document.getElementById("edit-area-form").action = "{{url('client/vendor/updateArea')}}" + '/' + aid;
-
                 $('#edit-area-form #editAreaBox').html(data.html);
-
                 initialize_edit(data.zoomLevel, data.coordinate);
                 $('#edit-area-modal').modal({
                     backdrop: 'static',
                     keyboard: false
                 });
-               // load_area_map(data.zoomLevel, data.coordinate);
-
-               //google.maps.event.addDomListener(document.getElementById('refresh'), 'click', initialize_edit);
-
-            //
             }
         });
     });

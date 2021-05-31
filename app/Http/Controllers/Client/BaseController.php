@@ -11,6 +11,7 @@ use Session;
 class BaseController extends Controller
 {
 	private $htmlData = '';
+    private $toggleData = '';
 	private $successCount = 0;
 	private $makeArray = array();
 
@@ -30,38 +31,8 @@ class BaseController extends Controller
         return $branch;
     }
 
-    /*public function printTreeOld($tree, $html = '') {
-        
-        if(!is_null($tree) && count($tree) > 0) {
-            $this->htmlData .='<ol class="dd-list">';
-            $askMessage = "return confirm('Are you sure? You want to delete category.')";
-            foreach($tree as $node) {
-                $this->htmlData .='<li class="dd-item dd3-item" data-id="'.$node["id"].'">
-                                    <div class="dd-handle dd3-handle"></div>
-                                    <div class="dd3-content">
-                                        '.$node["slug"].' 
-                                        <span class="inner-div text-right">
-                                                <a class="action-icon openCategoryModal" dataid="'.$node["id"].'" href="#"> <i class="mdi mdi-square-edit-outline"></i> </a>
-
-                                                <a class="action-icon" dataid="'.$node["id"].'" onclick="'.$askMessage.'" href="'.url("client/category/delete/".$node["id"]).'"> <i class="mdi mdi-delete"></i> </a>
-
-                                               
-                                        </span>
-                                    </div>';
-
-                if(isset($node['children']) && count($node['children']) > 0){
-                    $ss = $this->printTree($node['children']);
-                }
-                
-                $this->htmlData .='</li>';
-            }
-            $this->htmlData .='</ol>';
-        }
-        
-        return $this->htmlData;
-    }*/
-
-    public function printTree($tree, $from = 'category', $html = '') {
+    /*      Category tree on vendor col-3 and category  page    */
+    public function printTree($tree, $from = 'category', $blockedCategory = [], $html = '') {
         if(!is_null($tree) && count($tree) > 0) {
             $this->htmlData .='<ol class="dd-list">';
             foreach($tree as $node) {
@@ -73,34 +44,65 @@ class BaseController extends Controller
                 $icon = $node['icon']['proxy_url'].'30/30'.$node['icon']['image_path'];
                 $this->htmlData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node["slug"].'<span class="inner-div text-right">';
 
-                $status = 2; //$icon = 'mdi-lock-open-variant';
-                $title = 'Delete'; $icon = 'mdi-delete';
-                $askMessage = "return confirm('Are you sure? You want to delete category.')";
-                /*if($node["status"] == 2){
-                    $askMessage = "return confirm('Are you sure? You want to unblock category.')";
-                    $status = 1; $icon = 'mdi-lock'; 
-                    $title = 'Unblock';
-                }*/
-
-                if($from == 'category'){
+                if(!in_array($node["id"], $blockedCategory)){
+                    /*if($node["status"] == 2){
+                        $askMessage = "return confirm('Are you sure? You want to unblock category.')";
+                        $status = 1; $icon = 'mdi-lock'; 
+                        $title = 'Unblock';
+                    }*/
+                    $status = 2; //$icon = 'mdi-lock-open-variant';
+                    $title = 'Delete'; $icon = 'mdi-delete';
+                    $askMessage = "return confirm('Are you sure? You want to delete category.')";
+                    if($from == 'category'){
                     if($node["is_core"] == 1){
                         $this->htmlData .='<a class="action-icon openCategoryModal" dataid="'.$node["id"].'" is_vendor="0" href="#"> <i class="mdi mdi-square-edit-outline"></i></a><a class="action-icon" dataid="'.$node["id"].'" title="'.$title.'" onclick="'.$askMessage.'" href="'.url("client/category/delete/".$node["id"]).'"> <i class="mdi '.$icon.'"></i></a>';
                     }
 
-                }elseif($from == 'vendor' && $node["is_core"] == 0){
-                    $this->htmlData .='<a class="action-icon openCategoryModal" dataid="'.$node["id"].'" is_vendor="1" href="#"> <i class="mdi mdi-square-edit-outline"></i></a>
-                        <a class="action-icon" dataid="'.$node["id"].'" onclick="'.$askMessage.'" href="'.url("client/category/delete/".$node["id"]).'" title="'.$title.'"> <i class="mdi '.$icon.'"></i></a>';
+                    }elseif($from == 'vendor' && $node["is_core"] == 0){
+                        $this->htmlData .='<a class="action-icon openCategoryModal" dataid="'.$node["id"].'" is_vendor="1" href="#"> <i class="mdi mdi-square-edit-outline"></i></a>
+                            <a class="action-icon" dataid="'.$node["id"].'" onclick="'.$askMessage.'" href="'.url("client/category/delete/".$node["id"]).'" title="'.$title.'"> <i class="mdi '.$icon.'"></i></a>';
+                    }
                 }
+                
                 $this->htmlData .='</span> </div>';
 
                 if(isset($node['children']) && count($node['children']) > 0){
-                    $ss = $this->printTree($node['children'], $from);
+                    $ss = $this->printTree($node['children'], $from, $blockedCategory);
                 }
                 $this->htmlData .='</li>';
             }
             $this->htmlData .='</ol>';
         }
         return $this->htmlData;
+    }
+
+    /*      Category tree for vendor to enable & disable category      */
+    public function printTreeToggle($tree, $blockedCategory = []) {
+        if(!is_null($tree) && count($tree) > 0) {
+            $this->toggleData .='<ol class="dd-list">';
+            foreach($tree as $node) {
+                $this->toggleData .='<li class="dd-item dd3-item" data-id="'.$node["id"].'">';
+
+                $icon = $node['icon']['proxy_url'].'30/30'.$node['icon']['image_path'];
+                $this->toggleData .='<div class="dd3-content">'.$node["slug"].'<span class="inner-div text-right">';
+
+                $this->toggleData .='<a class="action-icon" data-id="'.$node["id"].'" is_vendor="0" href="javascript:void(0)">';
+                if(!in_array($node["id"], $blockedCategory) && !in_array($node["parent_id"], $blockedCategory)){
+                    $this->toggleData .='<input type="checkbox" data-plugin="switchery" data-id="'.$node["id"].'" name="category" class="form-control activeCategory" data-color="#43bee1" checked>';
+                }else{
+                    //$categoryDisable = $parentDisable = 0;
+                    $this->toggleData .='<input type="checkbox" data-plugin="switchery" data-id="'.$node["id"].'" name="category" class="form-control activeCategory" data-color="#43bee1">';
+                }
+                $this->toggleData .='</a></span> </div>';
+
+                if(isset($node['children']) && count($node['children']) > 0){
+                    $ss = $this->printTreeToggle($node['children'], $blockedCategory);
+                }
+                $this->toggleData .='</li>';
+            }
+            $this->toggleData .='</ol>';
+        }
+        return $this->toggleData;
     }
 
     function buildArray($elements, $parentId = 1, $count = 0) {
