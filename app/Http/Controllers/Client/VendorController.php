@@ -10,9 +10,13 @@ use Illuminate\Support\Facades\Validator;
 use Phumbor;
 use Image;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Traits\ToasterResponser;
+use App\Http\Traits\ApiResponser;
 
 class VendorController extends BaseController
 {
+  use ToasterResponser;
+  use ApiResponser;
     /**
      * Display a listing of the resource.
      *
@@ -147,6 +151,7 @@ class VendorController extends BaseController
         $vendor = Vendor::findOrFail($id);
         $co_ordinates = $all_coordinates = array();
         $areas = ServiceArea::where('vendor_id', $id)->orderBy('created_at', 'DESC')->get();
+        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
         $zz = 1;
         foreach ($areas as $k => $v) {
             $all_coordinates[] = [
@@ -175,15 +180,33 @@ class VendorController extends BaseController
                 'lng' => -111.9267386
             ];
          }
+         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
+                        ->where('id', '>', '1')
+                        ->where(function($q) use($id){
+                              $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
+                        })
+                        ->orderBy('position', 'asc')
+                        ->orderBy('id', 'asc')
+                        ->orderBy('parent_id', 'asc')->get();
+        $categoryToggle = array();
+        $blocked = array();
 
-        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '>', 0)
+        foreach ($categories as $category) {
+          if(in_array($category->id, $blockedCategory) || in_array($category->parent_id, $blockedCategory) || in_array($category->id, $blocked) || in_array($category->parent_id, $blocked)){
+            $blocked[] = $category->id;
+          }
+        }
+        if($categories){
+            $build = $this->buildTree($categories->toArray());
+            $categoryToggle = $this->printTreeToggle($build, $blocked);
+        }
+
+        /*$categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '>', 0)
                     ->where(function($q) use($id){
                       $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
-                    })->where('status', '!=', '2')->orderBy('position', 'asc')->orderBy('parent_id', 'asc')->get();
+                    })->where('status', '!=', '2')->orderBy('position', 'asc')->orderBy('parent_id', 'asc')->get();*/
 
-        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
-        
-        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categorList' => $categorList, 'blockedCategory' => $blockedCategory]);
+        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'blockedCategory' => $blockedCategory]);
     }
 
     /**
@@ -203,62 +226,80 @@ class VendorController extends BaseController
                               $q->whereNull('vendor_id')
                                 ->orWhere('vendor_id', $id);
                         })
-                        ->whereNotIn('id', $blockedCategory)
-                        ->whereNotIn('parent_id', $blockedCategory)
+                        // ->whereNotIn('id', $blockedCategory)
+                        // ->whereNotIn('parent_id', $blockedCategory)
                         ->orderBy('position', 'asc')
                         ->orderBy('id', 'asc')
                         ->orderBy('parent_id', 'asc')->get();
-        
+        $categoryToggle = array();
+        $blocked = array();
+        foreach ($categories as $category) {
+          if(in_array($category->id, $blockedCategory) || in_array($category->parent_id, $blockedCategory) || in_array($category->id, $blocked) || in_array($category->parent_id, $blocked)){
+            $blocked[] = $category->id;
+          }
+        }
         if($categories){
             $build = $this->buildTree($categories->toArray());
-            $tree = $this->printTree($build, 'vendor');
+            $tree = $this->printTree($build, 'vendor', $blocked);
+            $categoryToggle = $this->printTreeToggle($build, $blocked);
         }
 
         $addons = AddonSet::with('option')->select('id', 'title', 'min_select', 'max_select', 'position')
                     ->where('status', '!=', 2)
                     ->where('vendor_id', $id)
                     ->orderBy('position', 'asc')->get();
-
+        //echo '<pre>';print_r($categoryToggle);die;
         $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
                     ->where('is_active', 1)
                     ->orderBy('is_primary', 'desc')->get();
 
-        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '>', 0)
+        /*$categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '>', 0)
                     ->where(function($q) use($id){
                       $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
-                    })->where('status', '!=', '2')->orderBy('position', 'asc')->orderBy('parent_id', 'asc')->get();
+                    })->where('status', '!=', '2')->orderBy('position', 'asc')->orderBy('parent_id', 'asc')->get();*/
         
-        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'categorList' => $categorList, 'blockedCategory' => $blockedCategory]);
+        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'blockedCategory' => $blockedCategory, 'categoryToggle' => $categoryToggle]);
     }
 
     /**   vendor product catalog     */
     public function vendorCatalog($domain = '', $id){
         $type = Type::all();
         $vendor = Vendor::findOrFail($id);
+        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
         $categories = Category::with('primary')->select('id', 'slug')
-                        ->where('type_id', 1)->where('status', '!=', '2')->where('type_id', 1)
-                        ->where('can_add_products', 1)
-                        ->orderBy('parent_id', 'asc')
+                        ->where('id', '>', '1')->where('status', '!=', '2')->where('type_id', '1')
+                        ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
                         ->orderBy('position', 'asc')->get();
         $products = Product::with(['media.image', 'primary', 'category.cat', 'brand','variant' => function($v){
                             $v->select('id','product_id', 'quantity', 'price')->groupBy('product_id');
                     }])->select('id', 'sku','vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
                     ->where('vendor_id', $id)->get();
 
-        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '>', 0)
-                    ->where(function($q) use($id){
-                      $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
-                    })->where('status', '!=', '2')->orderBy('position', 'asc')->orderBy('parent_id', 'asc')->get();
-        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
-        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'blockedCategory' => $blockedCategory, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categorList' => $categorList]);
+        $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
+                        ->where('id', '>', '1')
+                        ->where(function($q) use($id){
+                              $q->whereNull('vendor_id')
+                                ->orWhere('vendor_id', $id);
+                        })
+                        ->orderBy('position', 'asc')
+                        ->orderBy('id', 'asc')
+                        ->orderBy('parent_id', 'asc')->get();
+        $categoryToggle = array();
+        $blocked = array();
+        foreach ($categories as $category) {
+          if(in_array($category->id, $blockedCategory) || in_array($category->parent_id, $blockedCategory) || in_array($category->id, $blocked) || in_array($category->parent_id, $blocked)){
+            $blocked[] = $category->id;
+          }
+        }
+        if($categories){
+            $build = $this->buildTree($categories->toArray());
+            $categoryToggle = $this->printTreeToggle($build, $blocked);
+        }
+        
+        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'blockedCategory' => $blockedCategory, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Vendor  $vendor
-     * @return \Illuminate\Http\Response
-     */
+    /**       delete vendor       */
     public function destroy($domain = '', $id)
     {
         $vendor = Vendor::where('id', $id)->first();
@@ -267,6 +308,7 @@ class VendorController extends BaseController
         return redirect()->back()->with('success', 'Vendor deleted successfully!');
     }
 
+    /**     update vendor configuration data     */
     public function updateConfig(Request $request, $domain = '',  $id)
     {
         $vendor = Vendor::where('id', $id)->first();
@@ -288,25 +330,56 @@ class VendorController extends BaseController
         }
         $vendor->save();
         return redirect()->back()->with('success', $msg.' updated successfully!');
-        
     }
 
-    /** Activate Category for vendor     */
+    /**     Activate Category for vendor     */
     public function activeCategory(Request $request, $domain = '', $id)
     {
-        //dd($request->all());
         $vendor = Vendor::where('id', $id)->firstOrFail();
-        $vc = VendorCategory::where('vendor_id', $request->vid)->where('category_id', $request->cid)->first();
+        $vc = VendorCategory::where('vendor_id', $request->id)->where('category_id', $request->category_id)->first();
+        $msg = 'deactivated';
         if(!$vc){
             $vc = new VendorCategory();
-            $vc->vendor_id = $request->vid;
-            $vc->category_id = $request->cid;
+            $vc->vendor_id = $id;
+            $vc->category_id = $request->category_id;
         }
-        $vc->status = ($request->has('category') && $request->category == 'on') ? 1 : 0;
-        $msg = ($request->has('category') && $request->category == 'on') ? 'activated' : 'deactivated';
+        $vc->status = $request->status;
+        $msg = ($request->status == 1) ? 'activated' : 'deactivated';
         $vc->save();
-        return redirect()->back()->with('success', 'Category '.$msg.' successfully!');
+        $toaster = $this->successToaster('Success', 'Category '.$msg.' successfully.');
+        return redirect()->back()->with('toaster', $toaster);
     }
 
-    
+    /**     Check parent category enable status - true if all parent, false if any parent disable     */
+    public function checkParentStatus(Request $request, $domain = '', $id)
+    {
+        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
+        //dd($request->all());
+        $is_parent_disabled = $exit = 0;
+        $category = Category::where('id', $request->category_id)->select('id', 'parent_id')->first();
+        $parent_id = $category->parent_id;
+
+        while($exit == 0){
+          if($parent_id == 1){
+            $exit = 1;
+            break;
+          }elseif(in_array($parent_id, $blockedCategory)){
+            $is_parent_disabled = 1;
+            $exit = 1;
+          }else{
+            $category = Category::where('id', $parent_id)->select('id', 'parent_id')->first();
+            $parent_id = $category->parent_id;
+          }
+        }
+
+        if($is_parent_disabled == 1){
+          return $this->errorResponse('Parent category is disabled. First enable parent category to enable this category.', 422);
+        }else{
+          return $this->successResponse(null, 'Parent is enabled.');
+        }
+
+        // $toaster = $this->successToaster('Success', 'Category '.$msg.' successfully.');
+        // return redirect()->back()->with('toaster', $toaster);
+          //}
+    }
 }

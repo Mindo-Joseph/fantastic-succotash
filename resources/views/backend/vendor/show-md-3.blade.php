@@ -135,21 +135,16 @@
                     <h4 class="mb-2"> <span class="">Active Main Category</h4>
                 </div>
             </div>
-            
-            @foreach($categorList as $key => $list)
-                <form name="config-form" id="categorForm_{{$list->id}}" action="{{route('vendor.category.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
-                    @csrf
-                    <input type="hidden" name="vid" value="{{$vendor->id}}">
-                    <input type="hidden" name="cid" value="{{$list->id}}">
-                    <div class="row mb-2">
-                        <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
-                            {!! Form::label('title', $list->slug, ['class' => 'control-label']) !!} 
-                            <input type="checkbox" data-plugin="switchery" data-id="{{$list->id}}" name="category" class="form-control activeCategory" data-color="#43bee1" @if(!in_array($list->id, $blockedCategory)) checked @endif>
-                        </div>
-                    </div>
-                </form>
-            
-            @endforeach
+            <div class="col-md-12">
+                <div class="custom-dd-empty dd" id="nestable_list_2">
+                <?php print_r($categoryToggle); ?>
+                </div>
+            </div>
+            <form name="config-form" id="categoryToggleForm" action="{{route('vendor.category.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
+                @csrf
+                <input type="hidden" name="category_id" id="toggleCategoryId">
+                <input type="hidden" name="status" id="toggleStatusField">
+            </form>
         </div>
     </div>
 </div>
@@ -220,11 +215,44 @@
 
 </div>
 <script type="text/javascript">
-    $('.activeCategory').change(function(){
-        var id = $(this).data('id');
-        console.log(id);
-        $('#categorForm_'+id).submit();
-
-        //$('.vendorRow').toggle();
+    var CSRF_TOKEN = $("input[name=_token]").val();
+    $(document).on('change', '.activeCategory', function(){
+        var  that = $(this);
+        var value = 0;
+        var category_id = $(this).data('id');
+        if(this.checked){
+            value = 1;
+        }
+        document.getElementById('toggleStatusField').value = value;
+        document.getElementById('toggleCategoryId').value = category_id;
+        if(value == 0){
+            $('#categoryToggleForm').submit();
+        }else{
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "{{ route('category.parent.status', $vendor->id) }}",
+                data: {
+                    _token: CSRF_TOKEN,
+                    value: value,
+                    category_id: category_id
+                },
+                success: function(response) {
+                    console.log(response);
+                    if (response.status == 'Success') {
+                        $('#categoryToggleForm').submit();
+                    }
+                   
+                    /*if(response.status == 'Error'){
+                        alert(response.message);
+                    }*/
+                },
+                error: function (response) {
+                    that.prop('checked', false);
+                    let errors = response.responseJSON;
+                    $.NotificationApp.send("Error", errors.message, "top-right", "#bf441d", "error");
+                },
+            });
+        }  
     });
 </script>

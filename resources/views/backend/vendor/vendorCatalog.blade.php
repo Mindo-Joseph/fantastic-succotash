@@ -5,6 +5,19 @@
 
 <style type="text/css">
     .pac-container, .pac-container .pac-item { z-index: 99999 !important; }
+    .fc-v-event{
+        border-color: #43bee1;
+        background-color: #43bee1;
+    }
+    .dd-list .dd3-content{
+        position: relative;
+    }
+    span.inner-div {
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
 </style>
 @endsection
 
