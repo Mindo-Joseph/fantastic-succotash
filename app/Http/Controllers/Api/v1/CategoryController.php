@@ -70,8 +70,11 @@ class CategoryController extends BaseController
     public function listData($langId, $cid, $tpye = '', $limit = 12, $userid){
         if($tpye == 'vendor' || $tpye == 'Vendor'){
             $blockedVendor = VendorCategory::where('category_id', $cid)->where('status', 0)->pluck('vendor_id')->toArray();
-            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount','is_show_category');
+            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id');
             $vendorData = $vendorData->where('status', '!=', $this->field_status)->whereNotIn('id', $blockedVendor)->paginate($limit);
+            foreach ($vendorData as $vendor) {
+                $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
+            }
             return $vendorData;
         }elseif($tpye == 'product' || $tpye == 'Product'){
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
