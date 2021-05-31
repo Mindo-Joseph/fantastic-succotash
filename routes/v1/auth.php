@@ -32,11 +32,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::post('user/getAddress', 'Api\v1\ProfileController@getAddress');
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');
-        Route::get('addressBook/{id?}', 'Api\v1\ProfileController@addressBook');
         Route::post('changePassword', 'Api\v1\ProfileController@changePassword');
-        Route::post('user/address/{id?}', 'Api\v1\ProfileController@userAddress');
-        Route::get('delete/address/{id}', 'Api\v1\ProfileController@deleteAddress');
-        Route::get('primary/address/{id}', 'Api\v1\ProfileController@primaryAddress');
+        Route::get('addressBook/{id?}', 'Api\v1\ProfileController@getAddressList');
+        Route::post('user/address/{id?}', 'Api\v1\ProfileController@postSaveAddress');
+        Route::get('delete/address/{id}', 'Api\v1\ProfileController@postDeleteAddress');
         Route::get('wishlist/update/{pid?}', 'Api\v1\ProfileController@updateWishlist');
+        Route::get('primary/address/{id}', 'Api\v1\ProfileController@postUpdatePrimaryAddress');
     });
 });

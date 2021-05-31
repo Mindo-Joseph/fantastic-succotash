@@ -7,18 +7,18 @@
 <section class="wrapper-main mb-5 py-lg-5">
     <div class="container">
         <script type="text/template" id="email_verified_template">
-                <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
-                <h3 class="mb-2">Email Address Verified!</h3>
-                <p>You have successfully verified the <br> email account.</p>
+            <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
+            <h3 class="mb-2">Email Address Verified!</h3>
+            <p>You have successfully verified the <br> email account.</p>
         </script>
         <script type="text/template" id="phone_verified_template">
-                <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
-                <h3 class="mb-2">Phone Verified!</h3>
-                <p>You have successfully verified the <br> Phone.</p>
+            <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
+            <h3 class="mb-2">Phone Verified!</h3>
+            <p>You have successfully verified the <br> Phone.</p>
         </script>
         <div class="row">
             @if($preference->verify_email == 1)
-            <div class="col-lg-6 mb-lg-0 mb-3 text-center border-right pb-4" id="verify_email_main_div">
+            <div class="col-lg-6 mb-lg-0 mb-3 text-center  pb-4 {{$user->is_phone_verified == 0 && $preference->verify_phone == 1 ? 'border-right' : ''}}" id="verify_email_main_div">
                 @if($user->is_email_verified == 0)
                     <img src="{{asset('front-assets/images/email_icon.svg')}}" alt="">
                     <h3 class="mb-2">Verify Email Address</h3>
@@ -61,7 +61,7 @@
                 @endif
             </div>
             @endif
-            <!-- @if($preference->verify_phone == 1)
+            @if($preference->verify_phone == 1 && $user->is_phone_verified == 0)
             <div class="col-lg-6 text-center" id="verify_phone_main_div">
                 @if($user->is_phone_verified == 0)
                 <img src="{{asset('front-assets/images/phone-otp.svg')}}">
@@ -104,7 +104,7 @@
                 <p>You have successfully verified the <br> Phone.</p>
                 @endif
             </div>
-            @endif -->
+            @endif
         </div>
     </div>
 </section> 
