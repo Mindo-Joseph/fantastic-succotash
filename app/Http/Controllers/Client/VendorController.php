@@ -81,6 +81,8 @@ class VendorController extends BaseController
         $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0; 
         $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0; 
         $vendor->delivery = ($request->has('delivery') && $request->delivery == 'on') ? 1 : 0;
+        $vendor->is_show_category = ($request->has('is_show_category') && $request->is_show_category == 'on') ? 1 : 0;
+        
 
         if($update == 'false'){
             $vendor->logo = 'default/default_logo.png';
