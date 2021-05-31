@@ -62,42 +62,17 @@
 </style>
 <link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
 @endsection
-
 @section('content')
-
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-
 <section class="register-page section-b-space">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <h3>Enter Email Address</h3>
                 <div class="theme-card">
-                    <!-- @if(session('preferences')->fb_login == 1 || session('preferences')->twitter_login == 1 || session('preferences')->google_login == 1 || session('preferences')->apple_login == 1)
-                        <div class="form-row mb-5">
-                            <h3>Social Login</h3>
-                            <div class="col-md-12">
-                                <div class="social-logins">
-                                    @if(session('preferences')->fb_login == 1)
-                                        <a href="{{url('auth/facebook')}}"><img src="{{asset('assets/images/social-fb-login.png')}}"></a>
-                                    @endif
-                                    @if(session('preferences')->twitter_login == 1)
-                                        <a href="{{url('auth/twitter')}}"><img src="{{asset('assets/images/twitter-login.png')}}"></a>
-                                    @endif
-                                    @if(session('preferences')->google_login == 1)
-                                        <a href="{{url('auth/google')}}"><img src="{{asset('assets/images/google-login.png')}}"> </a>
-                                    @endif
-                                    @if(session('preferences')->apple_login < 5)
-                                        <a href="{{url('auth/apple')}}"><img src="{{asset('assets/images/apple-login.png')}}"></a>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @endif -->
-
                     <form name="register" id="register" action="{{route('customer.forgotPass')}}" class="theme-form" method="post"> @csrf
                         <div class="form-row mb-3">
                             <div class="col-md-6">
@@ -125,51 +100,4 @@
         </div>
     </div>
 </section>
-
-@endsection
-
-@section('script')
-<script src="{{asset('assets/js/intlTelInput.js')}}"></script>
-<script>
-
-    var input = document.querySelector("#phone");
-    window.intlTelInput(input, {
-        separateDialCode: true,
-        //allowDropdown: true,
-        //autoHideDialCode: true,
-      // autoPlaceholder: "off",
-      // dropdownContainer: document.body,
-      // excludeCountries: ["us"],
-      // formatOnDisplay: false,
-      // geoIpLookup: function(callback) {
-      //   $.get("http://ipinfo.io", function() {}, "jsonp").always(function(resp) {
-      //     var countryCode = (resp && resp.country) ? resp.country : "";
-      //     callback(countryCode);
-      //   });
-      // },
-        hiddenInput: "full_number",
-        //initialCountry: "auto",
-      // localizedCountries: { 'de': 'Deutschland' },
-        //nationalMode: false,
-      // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
-        //placeholderNumberType: "MOBILE",
-      // preferredCountries: ['cn', 'jp'],
-        //separateDialCode: true,
-      utilsScript: "{{asset('assets/js/utils.js')}}",
-    });
-
-    $(document).ready(function () {
-        $("#phone").keypress(function (e) {
-            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-                return false;
-            }
-            return true;
-        });
-    });
-
-    $('.iti__country').click(function(){
-        var code = $(this).attr('data-country-code');
-        $('#countryData').val(code);
-    })
-</script>
 @endsection

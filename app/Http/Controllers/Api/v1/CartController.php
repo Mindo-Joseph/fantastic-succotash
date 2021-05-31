@@ -17,6 +17,7 @@ class CartController extends BaseController{
     use ApiResponser;
 
     private $field_status = 2;
+    
     public function index(Request $request){
         try {
             $user = Auth::user();
@@ -130,17 +131,16 @@ class CartController extends BaseController{
                 'is_gift' => 0,
                 'status' => '1',
                 'item_count' => 0,
-                'user_id' => $user_id,
-                'created_by' => $user_id,
-                'currency_id' => $client_currency->currency_id,
+                'user_id' => $user->id,
+                'created_by' => $user->id,
                 'unique_identifier' => $unique_identifier,
+                'currency_id' => $client_currency->currency_id,
             ];
             if(!empty($user_id)){
                 $cart_detail = Cart::updateOrCreate(['user_id' => $user->id], $cart_detail);
             }else{
                 $cart_detail = Cart::updateOrCreate(['unique_identifier' => $unique_identifier], $cart_detail);
             }
-
             if($cart_detail->id > 0){
                 $oldquantity = $isnew = 0;
                 $cart_product_detail = [
@@ -178,7 +178,6 @@ class CartController extends BaseController{
                 }
                 if($isnew == 1){
                     $cartProduct = CartProduct::create($cart_product_detail);
-
                     if(!empty($addon_ids) && !empty($addon_options)){
                         $saveAddons = array();
                         foreach ($addon_options as $key => $opts) {

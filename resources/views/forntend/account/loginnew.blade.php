@@ -79,7 +79,7 @@
                                         <button type="submit" class="btn btn-solid submitLogin">Login</button>
                                     </div>
                                     <div class="col-md-6 text-md-right">
-                                        <a class="forgot_btn" href="#">Forgot Password?</a>
+                                        <a class="forgot_btn" href="{{url('user/forgotPassword')}}">Forgot Password?</a>
                                     </div>
                                 </div>
                             </form>
