@@ -164,8 +164,10 @@
                 take = document.getElementsByClassName('takeaway');
                 var switchery = new Switchery(take[0]);
 
-                deli = document.getElementsByClassName('delivery');
-                var switchery = new Switchery(deli[0]);
+                delivery = document.getElementsByClassName('delivery');
+                var switchery = new Switchery(delivery[0]);
+                categoryShow = document.getElementsByClassName('categoryShow');
+                var switchery = new Switchery(categoryShow[0]);
                 
                 autocompletesWraps.push('edit');
                 loadMap(autocompletesWraps);              
