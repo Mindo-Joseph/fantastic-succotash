@@ -43,64 +43,66 @@ class VendorController extends BaseController{
     }
 
     public function productsByVendor(Request $request, $vid = 0){
-        if($vid == 0){
-            return response()->json(['error' => 'No record found.'], 404);
-        }
-        $userid = Auth::user()->id;
-        $paginate = $request->has('limit') ? $request->limit : 12;
-        $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
-        $langId = Auth::user()->language;
-        $vendor = Vendor::select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 
-                    'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery')
-                    ->where('id', $vid)->first();
-        if(!$vendor){
-            return response()->json(['error' => 'No record found.'], 200);
-        }
-        $variantSets =  ProductVariantSet::with(['options' => function($zx) use($langId){
-                            $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
-                            $zx->select('variant_options.*', 'vt.title');
-                            $zx->where('vt.language_id', $langId);
-                        }])->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id')
-                        ->join('variant_translations as vt','vt.variant_id','vr.id')
-                        ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
-                        ->where('vt.language_id', $langId)
-                        ->whereIn('product_id', function($qry) use($vid){ 
-                        $qry->select('id')->from('products')
-                            ->where('vendor_id', $vid);
-                        })
-                    ->groupBy('product_variant_sets.variant_type_id')->get();
-        $products = Product::with('category.categoryDetail',['inwishlist' => function($qry) use($userid){
-                        $qry->where('user_id', $userid);
-                    },
-                    'media.image', 'translation' => function($q) use($langId){
-                    $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
-                    },
-                    'variant' => function($q) use($langId){
-                        $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
-                        $q->groupBy('product_id');
-                    },
-                ])->join('product_categories as pc', 'pc.product_id', 'products.id')
-                ->whereNotIn('pc.category_id', function($qr) use($vid){ 
-                            $qr->select('category_id')->from('vendor_categories')
-                                ->where('vendor_id', $vid)->where('status', 0);
-                })
-                ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id')
-                ->where('products.vendor_id', $vid)
-                ->where('products.is_live', 1)->paginate($paginate);
-        if(!empty($products)){
-            foreach ($products as $key => $product) {
-                $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
-                foreach ($product->variant as $k => $v) {
-                    $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
+        try {
+            if($vid == 0){
+                return response()->json(['error' => 'No record found.'], 404);
+            }
+            $userid = Auth::user()->id;
+            $paginate = $request->has('limit') ? $request->limit : 12;
+            $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+            $langId = Auth::user()->language;
+            $vendor = Vendor::select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 
+                        'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery')
+                        ->where('id', $vid)->first();
+            if(!$vendor){
+                return response()->json(['error' => 'No record found.'], 200);
+            }
+            $variantSets =  ProductVariantSet::with(['options' => function($zx) use($langId){
+                                $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
+                                $zx->select('variant_options.*', 'vt.title');
+                                $zx->where('vt.language_id', $langId);
+                            }])->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id')
+                            ->join('variant_translations as vt','vt.variant_id','vr.id')
+                            ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
+                            ->where('vt.language_id', $langId)
+                            ->whereIn('product_id', function($qry) use($vid){ 
+                            $qry->select('id')->from('products')
+                                ->where('vendor_id', $vid);
+                            })
+                        ->groupBy('product_variant_sets.variant_type_id')->get();
+            $products = Product::with('category.categoryDetail',['inwishlist' => function($qry) use($userid){
+                            $qry->where('user_id', $userid);
+                        },
+                        'media.image', 'translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                        },
+                        'variant' => function($q) use($langId){
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->groupBy('product_id');
+                        },
+                    ])->join('product_categories as pc', 'pc.product_id', 'products.id')
+                    ->whereNotIn('pc.category_id', function($qr) use($vid){ 
+                                $qr->select('category_id')->from('vendor_categories')
+                                    ->where('vendor_id', $vid)->where('status', 0);
+                    })
+                    ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id')
+                    ->where('products.vendor_id', $vid)
+                    ->where('products.is_live', 1)->paginate($paginate);
+            if(!empty($products)){
+                foreach ($products as $key => $product) {
+                    $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+                    foreach ($product->variant as $k => $v) {
+                        $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                    }
                 }
             }
+            $response['vendor'] = $vendor;
+            $response['products'] = $products;
+            $response['filterData'] = $variantSets;
+            return response()->json(['data' => $response]);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage().''.$e->getLineNo(), $e->getCode());
         }
-        $response['vendor'] = $vendor;
-        $response['products'] = $products;
-        $response['filterData'] = $variantSets;
-        return response()->json([
-            'data' => $response,
-        ]);
     }
 
     /**
