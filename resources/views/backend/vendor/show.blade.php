@@ -206,7 +206,7 @@
                                 </div>
                             </div>
                             @endif
-                            @if($vendor->show_slot == 1)
+                            @if($vendor->show_slot == 0)
                                 <div class="row card-box">
                                     <h4 class="mb-4 "> Weekly Slot</h4>
                                     <div class="col-md-12">
