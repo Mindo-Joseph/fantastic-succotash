@@ -146,7 +146,7 @@
                        <a href="#">{{$order->user->name}}</a>
                     </div>
                     <div class="col-md-3">
-                        <p class="ellipsis" data-toggle="tooltip" data-placement="top" title="{{$order->address['address']}}">
+                        <p class="ellipsis" data-toggle="tooltip" data-placement="top" title="{{$order->address ?? $order->address['address']}}">
                             {{$order->address ?? $order->address['address']}}
                         </p>
                     </div>                    
