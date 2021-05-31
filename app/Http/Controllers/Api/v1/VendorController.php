@@ -70,7 +70,7 @@ class VendorController extends BaseController{
                                 ->where('vendor_id', $vid);
                             })
                         ->groupBy('product_variant_sets.variant_type_id')->get();
-            $products = Product::with('category.categoryDetail',['inwishlist' => function($qry) use($userid){
+            $products = Product::with(['category.categoryDetail', 'inwishlist' => function($qry) use($userid){
                             $qry->where('user_id', $userid);
                         },
                         'media.image', 'translation' => function($q) use($langId){
