@@ -47,7 +47,6 @@
                             </form>
                         </div>
                     </div>    
-                    
                 </div>
                 <div class="col-lg-6 text-center">
                     <h3 class="mb-md-5 mb-4">New Customer</h3>   
@@ -57,7 +56,7 @@
                         <p>Sign up for a free account at our store. Registration is quick and easy. It allows you to be able to order from our shop. To start shopping click register.</p>
                         <a href="#" class="btn btn-solid mt-4">Create an Account</a>
                     </div>
-                </div
+                </div>
             </div>
         </div>
     </section> 

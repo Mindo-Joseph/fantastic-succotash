@@ -25,50 +25,40 @@ class CustomerAuthController extends FrontController{
     }
 
     public function loginForm($domain = ''){
-        $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
+        $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-
-        return view('forntend/account/login')->with(['navCategories' => $navCategories]);
+        return view('forntend.account.loginnew')->with(['navCategories' => $navCategories]);
     }
 
-    /**     * Display register Form     */
-    public function registerForm($domain = '')
-    {
+    public function registerForm($domain = ''){
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-
-        return view('forntend/account/register')->with(['navCategories' => $navCategories]);
+        return view('forntend.account.registernew')->with(['navCategories' => $navCategories]);
     }
 
     /**     * Display forgotPassword Form     */
-    public function forgotPasswordForm($domain = '')
-    {
-        $langId = Session::get('customerLanguage');
+    public function forgotPasswordForm($domain = ''){
         $curId = Session::get('customerCurrency');
+        $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-
         return view('forntend/account/forgotPassword')->with(['navCategories' => $navCategories]);
     }
 
     /**     * Display resetPassword Form     */
-    public function resetPasswordForm($domain = '')
-    {
+    public function resetPasswordForm($domain = ''){
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-
         return view('forntend/account/resetPassword')->with(['navCategories' => $navCategories]);
     }
 
     /**     * Display resetPassword Form     */
-    public function resetSuccess($domain = '')
-    {
+    public function resetSuccess($domain = ''){
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-
         return view('forntend/account/resetSuccess')->with(['navCategories' => $navCategories]);
     }
 
@@ -120,6 +110,7 @@ class CustomerAuthController extends FrontController{
             return redirect()->route('user.verify');
         }
         $checkEmail = User::where('email', $req->email)->first();
+
         if ($checkEmail) {
             return redirect()->back()->with('err_password', 'Password not matched. Please enter correct password.');
         }
@@ -128,72 +119,70 @@ class CustomerAuthController extends FrontController{
 
      
     /**     * Display register Form     */
-    public function register(SignupRequest $req, $domain = ''){   
-        $user = new User();
-        $county = Country::where('code', strtoupper($req->countryData))->first();
-        $phoneCode = mt_rand(100000, 999999);
-        $emailCode = mt_rand(100000, 999999);
-        $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
-        $user->name = $req->name;
-        $user->email = $req->email;
-        $user->phone_number = $req->full_number;
-        $user->type = 1;
-        $user->role_id = 1;
-        $user->country_id = $county->id;
-        $user->password = Hash::make($req->password);
-        $user->is_email_verified = 0;
-        $user->is_phone_verified = 0;
-        $user->status = 1;
-        $user->phone_token = $phoneCode;
-        $user->email_token = $emailCode;
-        $user->phone_token_valid_till = $sendTime;
-        $user->email_token_valid_till = $sendTime;
-        $user->save();
-
-        $userRefferal = new UserRefferal();
-        $userRefferal->refferal_code = $this->randomData("user_refferals", 8, 'refferal_code');
-
-        if($req->refferal_code != null){
-            $userRefferal->reffered_by = $req->refferal_code;
-        }
-        $userRefferal->user_id = $user->id;
-        $userRefferal->save();
-
-        if ($user->id > 0) {
-            $userCustomData = $this->userMetaData($user->id, 'web', 'web');
-            $rae = ReferAndEarn::first();
-            if($rae){
-                $userReff_by = UserRefferal::where('refferal_code', $req->refferal_code)->first();
-                $wallet_by = Wallet::where('user_id' , $userReff_by->user_id)->first();
-                $wallet_to = Wallet::where('user_id' , $user->id)->first();
-
-                if($rae->reffered_by_amount != null){
-                $wallet_history = new WalletHistory();
-                $wallet_history->user_id = $userReff_by->user_id;
-                $wallet_history->wallet_id = $wallet_by->id;
-                $wallet_history->amount = $rae->reffered_by_amount;
-                $wallet_history->save();
-                }
-                if($rae->reffered_to_amount != null){
-                $wallet_history = new WalletHistory();
-                $wallet_history->user_id = $user->id;
-                $wallet_history->wallet_id = $wallet_to->id;
-                $wallet_history->amount = $rae->reffered_to_amount;
-                $wallet_history->save();
-                }
+    public function register(SignupRequest $req, $domain = ''){
+        try {
+            $user = new User();
+            $county = Country::where('code', strtoupper($req->countryData))->first();
+            $phoneCode = mt_rand(100000, 999999);
+            $emailCode = mt_rand(100000, 999999);
+            $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
+            $user->type = 1;
+            $user->status = 1;
+            $user->role_id = 1;
+            $user->name = $req->name;
+            $user->email = $req->email;
+            $user->is_email_verified = 0;
+            $user->is_phone_verified = 0;
+            $user->country_id = $county->id;
+            $user->phone_token = $phoneCode;
+            $user->email_token = $emailCode;
+            $user->phone_number = $req->full_number;
+            $user->phone_token_valid_till = $sendTime;
+            $user->email_token_valid_till = $sendTime;
+            $user->password = Hash::make($req->password);
+            $user->save();
+            $userRefferal = new UserRefferal();
+            $userRefferal->refferal_code = $this->randomData("user_refferals", 8, 'refferal_code');
+            if($req->refferal_code != null){
+                $userRefferal->reffered_by = $req->refferal_code;
             }
-            Auth::login($user);
-            $this->checkCookies($user->id);
-            return redirect()->route('user.verify');
-        }
+            $userRefferal->user_id = $user->id;
+            $userRefferal->save();
+            if ($user->id > 0) {
+                $userCustomData = $this->userMetaData($user->id, 'web', 'web');
+                $rae = ReferAndEarn::first();
+                if($rae){
+                    $userReff_by = UserRefferal::where('refferal_code', $req->refferal_code)->first();
+                    $wallet_by = Wallet::where('user_id' , $userReff_by->user_id)->first();
+                    $wallet_to = Wallet::where('user_id' , $user->id)->first();
+                    if($rae->reffered_by_amount != null){
+                        $wallet_history = new WalletHistory();
+                        $wallet_history->user_id = $userReff_by->user_id;
+                        $wallet_history->wallet_id = $wallet_by->id;
+                        $wallet_history->amount = $rae->reffered_by_amount;
+                        $wallet_history->save();
+                    }
+                    if($rae->reffered_to_amount != null){
+                        $wallet_history = new WalletHistory();
+                        $wallet_history->user_id = $user->id;
+                        $wallet_history->wallet_id = $wallet_to->id;
+                        $wallet_history->amount = $rae->reffered_to_amount;
+                        $wallet_history->save();
+                    }
+                }
+                Auth::login($user);
+                $this->checkCookies($user->id);
+                return redirect()->route('user.verify');
+            }
+        } catch (Exception $e) {
+            die();
+        }  
     }
 
-    /**     * Display forgotPassword Form     */
     public function forgotPassword(Request $request, $domain = ''){
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:50'
         ]);
-
         if ($validator->fails()) {
             foreach ($validator->errors()->toArray() as $error_key => $error_value) {
                 $errors['error'] = $error_value[0];
@@ -240,15 +229,13 @@ class CustomerAuthController extends FrontController{
     }
 
     /**     * Display resetPassword Form     */
-    public function resetPassword(Request $request, $domain = '')
-    {
+    public function resetPassword(Request $request, $domain = ''){
         $validator = Validator::make($request->all(), [
             'email' => 'required|string',
             'otp' => 'required|string|min:6|max:50',
             'new_password' => 'required|string|min:6|max:50',
             'confirm_password' => 'required|same:new_password',
         ]);
-
         if ($validator->fails()) {
             foreach ($validator->errors()->toArray() as $error_key => $error_value) {
                 $errors['error'] = $error_value[0];
@@ -266,25 +253,12 @@ class CustomerAuthController extends FrontController{
         if ($currentTime > $user->email_token_valid_till) {
             return redirect()->back()->with('err_otp', 'OTP has been expired.');
         }
-
         $user->password = Hash::make($request['new_password']);
         $user->save();
         return redirect()->route('customer.resetSuccess');
     }
 
-    /**     * Validate existing email     */
-    public function validateEmail(Request $request, $domain = '')
-    {
-    }
-
-    /**     * Validate existing email     */
-    public function fblogin(Request $request, $domain = '')
-    {
-        dd($request->all());
-    }
-
-    public function logout()
-    {
+    public function logout(){
         Auth::logout();
         return redirect()->route('customer.login');
     }

@@ -2,16 +2,28 @@
 
 namespace App\Http\Controllers\Front;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\{Client, Category, Product, ClientPreference,UserDevice,UserLoyaltyPoint, Wallet};
-use Session;
 use App;
 use Config;
+use Session;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Twilio\Rest\Client as TwilioClient;
+use App\Models\{Client, Category, Product, ClientPreference,UserDevice,UserLoyaltyPoint, Wallet};
 
 class FrontController extends Controller
 {
     private $field_status = 2;
+    protected function sendSms($provider, $sms_key, $sms_secret, $sms_from, $to, $body){
+        $to = "+918950473361";
+        try{
+            $client = new TwilioClient($sms_key, $sms_secret);
+            $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+        }
+        catch(\Exception $e){
+            return '2';
+        }
+        return '1';
+    }
     public function categoryNav($lang_id) {
         $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
                         ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')

@@ -4,15 +4,13 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SignupRequest extends FormRequest
-{
+class SignupRequest extends FormRequest{
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize(){
         return true;
     }
 
@@ -21,8 +19,7 @@ class SignupRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules(){
         return [
             'name' => 'required|min:3|max:50',
             'email' => 'required|email|max:50||unique:users',
@@ -30,7 +27,6 @@ class SignupRequest extends FormRequest
             'phone_number' => 'required|string|min:10|max:15|unique:users',
             'device_type' => 'required|string',
             'device_token' => 'required|string',
-            //'country_id' => 'required|string',
         ];
     }
 }

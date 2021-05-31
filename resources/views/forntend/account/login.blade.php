@@ -79,8 +79,6 @@
                             </div>
                         </div>
                     @endif
-
-
                     <form name="login" id="login" action="{{route('customer.loginData')}}" class="theme-form" method="post"> @csrf
                         <div class="form-row mb-3">
                             <div class="col-md-12 mb-3">
