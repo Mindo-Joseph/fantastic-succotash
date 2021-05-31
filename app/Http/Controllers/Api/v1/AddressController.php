@@ -74,7 +74,6 @@ class AddressController extends Controller{
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }
     }
-
     
     public function postDeleteAddress($addressId = 0){
         try {
