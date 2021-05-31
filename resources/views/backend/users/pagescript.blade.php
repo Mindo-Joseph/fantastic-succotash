@@ -1,4 +1,5 @@
 <script>
+    var CSRF_TOKEN = $("input[name=_token]").val();
     $('.addUserModal').click(function(){
         $('#user-modal').modal({
             //backdrop: 'static',
@@ -6,10 +7,35 @@
         });
         $('.dropify').dropify();
         $('.selectize-select').selectize();
-        
+    });
 
-        
+    var userActive = $('.chk_box');
 
+    $(userActive).on("change" , function() {
+        var user_id = $(this).data('id');
+        var chk = $('#cur_' + user_id + ':checked').length;
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ route('customer.changeStatus') }}",
+            data: {
+                _token: CSRF_TOKEN,
+                value: chk,
+                userId: user_id
+            },
+            success: function(response) {
+
+                if (response.status == 'success') {
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                }
+            }
+        });
     });
 
     $(".editVendor").click(function (e) {  
