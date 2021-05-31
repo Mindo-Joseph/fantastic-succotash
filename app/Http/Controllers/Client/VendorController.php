@@ -145,7 +145,7 @@ class VendorController extends BaseController
         $vendor = Vendor::findOrFail($id);
         $co_ordinates = $all_coordinates = array();
         $areas = ServiceArea::where('vendor_id', $id)->orderBy('created_at', 'DESC')->get();
-        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
+        $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $zz = 1;
         foreach ($areas as $k => $v) {
             $all_coordinates[] = [
@@ -183,20 +183,20 @@ class VendorController extends BaseController
                         ->orderBy('id', 'asc')
                         ->orderBy('parent_id', 'asc')->get();
         $categoryToggle = array();
-        $blocked = array();
+        $active = array();
 
         foreach ($categories as $category) {
-          if(in_array($category->id, $blockedCategory) || in_array($category->parent_id, $blockedCategory) || in_array($category->id, $blocked) || in_array($category->parent_id, $blocked)){
-            $blocked[] = $category->id;
+          if(in_array($category->id, $VendorCategory)){
+            $active[] = $category->id;
           }
         }
         if($categories){
             $build = $this->buildTree($categories->toArray());
-            $categoryToggle = $this->printTreeToggle($build, $blocked);
+            $categoryToggle = $this->printTreeToggle($build, $active);
         }
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
 
-        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'blockedCategory' => $blockedCategory, 'templetes' => $templetes]);
+        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes]);
     }
 
     /**   show vendor page - category tab      */
@@ -316,9 +316,10 @@ class VendorController extends BaseController
     /**     Activate Category for vendor     */
     public function activeCategory(Request $request, $domain = '', $id)
     {
-
-      //dd($request->all());
         $vendor = Vendor::where('id', $id)->firstOrFail();
+        $vendor->vendor_templete_id = $request->assignTo;
+        $vendor->add_category = ($request->has('add_category') && $request->add_category == 'on') ? 1 : 0;
+        $vendor->save();
         $activeCategory = array();
         $data = VendorCategory::where('vendor_id', $id)->delete();
         $enableCategory = array();
