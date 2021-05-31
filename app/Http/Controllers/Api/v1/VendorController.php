@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{Type, User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
+use App\Models\{Type, User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand, VendorCategory};
 
 class VendorController extends BaseController{
     use ApiResponser;
@@ -21,21 +21,30 @@ class VendorController extends BaseController{
             $vendor_ids = [];
             $category_details = [];
             $vendor_id = $request->vendor_id;
-            $type = Type::where('title', 'Product')->first();
-            $vendor_products = Product::with('category.categoryDetail')->where('vendor_id', $vendor_id)->get(['id']);
-            foreach ($vendor_products as $vendor_product) {
-                if(!in_array($vendor_product->category->categoryDetail->id, $vendor_ids)){
-                    if($vendor_product->category->categoryDetail->id == $type->id){
-                        $vendor_ids[] = $vendor_product->category->categoryDetail->id;
-                        $category_details[] = array(
-                            'id' => $vendor_product->category->categoryDetail->id,
-                            'name' => $vendor_product->category->categoryDetail->slug,
-                            'icon' => $vendor_product->category->categoryDetail->icon,
-                            'image' => $vendor_product->category->categoryDetail->image
-                        );
-                    }
-                }
+            $vendor_categories = VendorCategory::with('category')->where('vendor_id', $vendor_id)->get();
+            foreach ($vendor_categories as $vendor_category) {
+                $category_details[] = array(
+                    'id' => $vendor_category->category->id,
+                    'name' => $vendor_category->category->slug,
+                    'icon' => $vendor_category->category->icon,
+                    'image' => $vendor_category->category->image
+                );
             }
+            // $type = Type::where('title' ,'Vendor')->first();
+            // $vendor_products = Product::with('category.categoryDetail')->where('vendor_id', $vendor_id)->get(['id']);
+            // foreach ($vendor_products as $vendor_product) {
+            //     if(!in_array($vendor_product->category->categoryDetail->id, $vendor_ids)){
+            //         if($vendor_product->category->categoryDetail->id != $type->id){
+            //             $vendor_ids[] = $vendor_product->category->categoryDetail->id;
+            //             $category_details[] = array(
+            //                 'id' => $vendor_product->category->categoryDetail->id,
+            //                 'name' => $vendor_product->category->categoryDetail->slug,
+            //                 'icon' => $vendor_product->category->categoryDetail->icon,
+            //                 'image' => $vendor_product->category->categoryDetail->image
+            //             );
+            //         }
+            //     }
+            // }
             return $this->successResponse($category_details, '', 200);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
