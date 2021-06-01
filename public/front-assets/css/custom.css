@@ -470,8 +470,8 @@ a{
     padding-top: 0;
 }
 
-.add_on_items td {
-    padding: 0 15px;
+.add_on_items th,.add_on_items td {
+    padding: 5px 15px;
 }
 
 .add_on_items td:first-child {
@@ -482,9 +482,9 @@ a{
     width: 80px;
 }
 
-.add_on_items tr:last-child td{
+/*.add_on_items tr:last-child td{
     padding-bottom: 15px;
-}
+}*/
 
 
 .cart_img_outer{

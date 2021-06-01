@@ -115,6 +115,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
     Route::post('user/placeorder/make', 'Front\OrderController@makePayment')->name('placeorder.makePayment');
     Route::get('user/changePassword', 'Front\ProfileController@changePassword')->name('user.changePassword');
+	Route::post('promocode/list', 'Front\PromoCodeController@postPromoCodeList')->name('verify.promocode.list');
 	Route::post('verify/promocode', 'Front\PromoCodeController@postVerifyPromoCode')->name('verify.promocode');
 	Route::post('remove/promocode', 'Front\PromoCodeController@postRemovePromoCode')->name('remove.promocode');
 	Route::get('order/success/{order_id}', 'Front\OrderController@getOrderSuccessPage')->name('order.success');

@@ -69,54 +69,55 @@
                             </span>
                         </div>
                     </td>
-                    <td class="text-center">
-                        <div class="items-price mb-3">$<%= vendor_product.pvariant.quantity_price %></div>
-                    </td>
                     <td class="text-right">
                         <a  class="action-icon d-block mb-3 remove_product_via_cart" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                         </a>
                     </td>
-                </tr>
-                <!-- <tr>
-                    <td colspan="5" class="border_0 p-0 border-0">
-                        <table class="add_on_items w-100">
-                            <thead>
-                                <tr>
-                                    <h6 class="m-0 pl-3"><b>Add Ons</b></h6>
-                                </tr>
-                            </thead>    
-                            <tbody>
-                                <tr class="border_0 padding-top">
-                                    <td class="items-details text-left">
-                                        <p class="m-0">Spicy Dip</p>
-                                    </td>
-                                    <td>
-                                        <div class="extra-items-price">$5.00</div>
-                                    </td>
-                                    <td>
-                                    </td>
-                                    
-                                    <td class="text-center">
-                                        <div class="extra-items-price">$5.00</div>
-                                    </td>
-                                    <td class="text-right">
-                                        <a href="#" class="action-icon d-block">
-                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <td class="text-center">
+                        <div class="items-price mb-3">$<%= vendor_product.pvariant.quantity_price %></div>
                     </td>
-                </tr> -->
+                </tr>
+                <% if(vendor_product.addon.length != 0) { %>
+                    <tr>
+                        <td colspan="7" class="border_0 p-0 border-0">
+                            <table class="add_on_items w-100">
+                                <thead>
+                                    <tr>
+                                        <th colspan="6">
+                                            <h6 class="m-0 pl-0"><b>Add Ons</b></h6>
+                                        </th>
+                                    </tr>
+                                </thead>    
+                                <% _.each(vendor_product.addon, function(addon, ad){%>
+                                <tbody>
+                                    <tr class="border_0 padding-top">
+                                        <td style="width:117px;"></td>
+                                        <td class="items-details text-left" style="width: 210px;">
+                                            <p class="m-0"><%= addon.set.title %></p>
+                                        </td>
+                                        <td>
+                                            <div class="extra-items-price">$<%= addon.option.price_in_cart %></div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td class="text-left" style="width: 140px;">
+                                            <div class="extra-items-price">$<%= addon.option.quantity_price %></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <% }); %>
+                            </table>
+                        </td>
+                    </tr> 
+                <% } %>
             <% }); %>
             <tr>
                 <td colspan="2">
                     <div class="coupon_box d-flex align-items-center">
                         <img src="{{ asset('assets/images/discount_icon.svg') }}">
                         <input class="form-control" type="text" placeholder="Enter Coupon Code">
-                        <a class="btn btn-outline-info" data-cart_id="" data-vendor_id="" data-coupon_id="">Apply</a>
+                        <a class="btn btn-outline-info apply_promo_code" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>">Apply</a>
                     </div>
                 </td> 
                 <!-- <td>
@@ -176,6 +177,33 @@
             </td>
         </tr>
     </tfoot>
+</script>
+<script type="text/template" id="promo_code_template">
+    <% _.each(promo_codes, function(promo_code, key){%>
+    <div class="col-lg-6">
+        <div class="coupon-code">
+            <div class="p-2">
+                <img src="<%= promo_code.image.proxy_url %>91/30<%= promo_code.image.image_path %>" alt="">
+                <h6 class="mt-0"><%= promo_code.title %></h6>
+                <p class="m-0"><%= promo_code.short_desc %></p>
+            </div>
+            <hr class="m-0">
+            <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
+                <label class="m-0"><%= promo_code.name %></label>
+                <a href="javascript::void(0);" id="apply_promo_code_btn" data-vendor_id="<%= vendor_id %>" data-cart_id="<%= cart_id %>" data-coupon_id="<%= promo_code %>">Apply</a>
+            </div>
+            <hr class="m-0">
+            <div class="offer-text p-2">
+                <p class="m-0">Add items worth ₹200 to apply this offer.</p>
+            </div>
+        </div>
+    </div>
+    <% }); %>
+</script>
+<script type="text/template" id="no_promo_code_template">
+    <div class="col-12 no-more-coupon text-center">
+        <p>No coupon available</p>
+    </div>
 </script>
 <div class="container" id="cart_main_page">
     @if($cartData)
@@ -318,6 +346,29 @@
         </div>
     @endif
 </div>
+<div class="modal fade refferal_modal" id="refferal-modal" tabindex="-1" aria-labelledby="refferal-modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="refferal-modalLabel">Apply Coupon Code</h5>
+        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="code-input d-flex align-items-center">
+            <input class="form-control" type="text">
+            <button class="btn btn-solid">Apply</button>
+        </div>
+        <div class="coupon-box mt-4">
+            <div class="row" id="promo_code_list_main_div">
+                
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="modal fade remove-item-modal" id="remove_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_itemLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -342,6 +393,7 @@
 <script type="text/javascript">
     var user_store_address_url = "{{url('user/store')}}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
+    var promocode_list_url = "{{ route('verify.promocode.list') }}";
     $("form").submit(function(e){
         let address_id = $("input[name='address_id']").val();
         if(!address_id){

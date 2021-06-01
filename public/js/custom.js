@@ -29,6 +29,30 @@ $(document).ready(function() {
             }
         });
     }
+    $(document).on("click",".apply_promo_code",function() {
+        let cart_id = $(this).data('cart_id');
+        let vendor_id = $(this).data('vendor_id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: promocode_list_url,
+            data: {vendor_id:vendor_id},
+            success: function(response) {
+                $("#promo_code_list_main_div").html('');
+                if (response.status == "Success") {
+                    $('#refferal-modal').modal('show');
+                    if(response.data.length != 0){
+                        let promo_code_template = _.template($('#promo_code_template').html());
+                        $("#promo_code_list_main_div").append(promo_code_template({promo_codes:response.data, vendor_id:vendor_id, cart_id:cart_id}));
+                    }else{
+                        let no_promo_code_template = _.template($('#no_promo_code_template').html());
+                        $("#promo_code_list_main_div").append(no_promo_code_template());
+                    }
+                }
+            }
+        });
+        
+    });
     $(document).on("click",".remove-product",function() {
         let vendor_id = $(this).data('vendor_id');
         let cartproduct_id = $(this).data('product');

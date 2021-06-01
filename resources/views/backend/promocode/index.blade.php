@@ -48,6 +48,7 @@
                                     <th>#</th>
                                     <th>Image</th>
                                     <th>Promo Code</th>
+                                    <th>Title</th>
                                     <th>Description</th>
                                     <th>Promo Types</th>
                                     <th>Total Amount</th>
@@ -69,6 +70,7 @@
                                         <img class="promo_img" src="{{$promo->image['proxy_url'].'200/100'.$promo->image['image_path']}}" alt="{{$promo->id}}" >
                                     </td>
                                     <td>{{$promo->name}}</td>
+                                    <td>{{$promo->title}}</td>
                                     <td>{{$promo->short_desc}}</td>
                                     <td>{{$promo->type->title}}</td>
                                     <td>{{$promo->amount}}</td>

@@ -1,12 +1,51 @@
 <?php
 
 namespace App\Http\Controllers\Front;
-
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use App\Models\Cart;
+use App\Models\Vendor;
+use App\Models\Product;
+use App\Models\Promocode;
+use App\Models\CartCoupon;
 use Illuminate\Http\Request;
+use App\Models\PromoCodeDetail;
+use App\Http\Traits\ApiResponser;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class PromoCodeController extends Controller{
+    use ApiResponser;
 
+    public function postPromoCodeList(Request $request){
+        try {
+            $promo_codes = new \Illuminate\Database\Eloquent\Collection;
+            $vendor_id = $request->vendor_id;
+            $validator = $this->validatePromoCodeList();
+            if($validator->fails()){
+                return $this->errorResponse($validator->messages(), 422);
+            }
+            $vendor = Vendor::where('id', $request->vendor_id)->first();
+            if(!$vendor){
+                return response()->json(['error' => 'Invalid vendor id.'], 404);
+            }
+            $now = Carbon::now()->toDateTimeString();
+            $product_ids = Product::where('vendor_id', 200)->pluck("id");
+            if($product_ids){
+                $promo_code_details = PromoCodeDetail::whereIn('refrence_id', $product_ids->toArray())->pluck('promocode_id');
+                if($promo_code_details->count() > 0){
+                    $result1 = Promocode::whereIn('id', $promo_code_details->toArray())->whereDate('expiry_date', '>=', $now)->get();
+                    $promo_codes = $promo_codes->merge($result1);
+                }
+                $result2 = Promocode::where('restriction_on', 1)->whereHas('details', function($q) use($vendor_id){
+                    $q->where('refrence_id', $vendor_id);
+                })->whereDate('expiry_date', '>=', $now)->get();
+                $promo_codes = $promo_codes->merge($result2);
+            }
+            return $this->successResponse($promo_codes, '', 200);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
+    }
     public function postVerifyPromoCode(Request $request){
         try {
             $validator = $this->validatePromoCode();
