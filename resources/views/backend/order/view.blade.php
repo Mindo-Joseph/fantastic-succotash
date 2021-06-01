@@ -36,29 +36,28 @@
                             </div>
                         </div>
                         <div class="row track-order-list">
-                            
                             <div class="col-lg-6">
                                 <ul class="list-unstyled">
                                     <li class="completed">
                                         <h5 class="mt-0 mb-1">Placed</h5>
                                         <p class="text-muted">April 21 2019 <small class="text-muted">07:22 AM</small> </p>
                                     </li>
-                                    <li class="completed">
+                                    <li>
                                         <h5 class="mt-0 mb-1">Accepted</h5>
-                                        <p class="text-muted">April 22 2019 <small class="text-muted">12:16 AM</small></p>
+                                        <p class="text-muted"><small class="text-muted">...</small></p>
                                     </li>
                                     <li>
                                         <span class="active-dot dot"></span>
                                         <h5 class="mt-0 mb-1">Processing</h5>
-                                        <p class="text-muted">April 22 2019 <small class="text-muted">05:16 PM</small></p>
+                                        <p class="text-muted"><small class="text-muted">...</small></p>
                                     </li>
                                     <li>
                                         <h5 class="mt-0 mb-1"> Out For Delivery</h5>
-                                        <p class="text-muted">Estimated delivery within 3 days</p>
+                                        <p class="text-muted">...</p>
                                     </li>
                                      <li>
                                         <h5 class="mt-0 mb-1">Delivered</h5>
-                                        <p class="text-muted">Estimated delivery within 3 days</p>
+                                        <p class="text-muted">....</p>
                                     </li>
                                 </ul>
                                  <div class="text-center mt-2">
@@ -86,7 +85,7 @@
                                     </li>
                                      <li>
                                         <h5 class="mt-0 mb-1">Completed</h5>
-                                        <p class="text-muted">Estimated delivery within 3 days</p>
+                                        <p class="text-muted">....</p>
                                     </li>
                                 </ul>
                                  <div class="text-center mt-2">

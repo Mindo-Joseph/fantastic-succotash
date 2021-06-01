@@ -36,7 +36,7 @@ class AuthController extends BaseController{
      */
     public function login(LoginRequest $loginReq){
         $errors = array();
-        $user = User::where('email', $loginReq->email)->first();
+        $user = User::with('country')->where('email', $loginReq->email)->first();
         if(!$user){
             $errors['error'] = 'Invalid email';
             return response()->json($errors, 422);
@@ -101,12 +101,14 @@ class AuthController extends BaseController{
             Cart::where('unique_identifier', $loginReq->device_token)->update(['user_id' => $user->id,  'unique_identifier' => '']);
         }
         $checkSystemUser = $this->checkCookies($user->id);
-        $data['auth_token'] =  $token;
         $data['name'] = $user->name;
         $data['email'] = $user->email;
-        $data['phone_number'] = $user->phone_number;
-        $data['client_preference'] = $prefer;
+        $data['auth_token'] =  $token;
         $data['verify_details'] = $verified;
+        $data['client_preference'] = $prefer;
+        $data['phone_number'] = $user->phone_number;
+        $data['cca2'] = $user->country ? $user->country->cca2 : '';
+        $data['callingCode'] = $user->country ? $user->country->code : '';
         return response()->json(['data' => $data]);
     }
 

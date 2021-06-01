@@ -36,7 +36,7 @@
 </script>
 <script type="text/template" id="cart_template">
     <% _.each(cart_details.products, function(product, key){%>
-        <tbody id="tbody_|<%= product.vendor.id %>">
+        <tbody id="tbody_<%= product.vendor.id %>">
             <tr>
                 <td colspan="6"><%= product.vendor.name %></td>
             </tr>
@@ -152,8 +152,14 @@
             <td colspan="3"></td>
             <td>Tax</td>
             <td class="text-right" colspan="2">
-                <p class="m-1"><label class="m-0">CGST 7.5%</label><span class="pl-4">$10.00</span></p>
-                <p class="m-0"><label class="m-0">CGST 7.5%</label><span class="pl-4">$10.00</span></p>
+                <% _.each(cart_details.products, function(product, key){%>
+                <% _.each(product.vendor_products, function(vendor_product, vp){%>
+                    <% _.each(vendor_product.taxdata, function(tax, tx)  { var vendor_details = [];%>
+                        <p class="m-1">
+                            <label class="m-0"><%= tax.identifier %> (For <%= vendor_product.product.sku %>) <%= tax.rate %>%</label><span class="pl-4">$<%= tax.product_tax %></span></p>
+                    <% }); %>
+                <% }); %>
+                <% }); %>
             </td>
         </tr>
         <tr class="border_0">
