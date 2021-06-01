@@ -51,7 +51,9 @@
                     </td>
                     <td class="items-details text-left">
                         <h4><%= vendor_product.product.sku %></h4>
-                        <label><span>Size:</span> Regular</label>
+                        <% _.each(vendor_product.pvariant.vset, function(vset, vs){%>
+                            <label><span><%= vset.variant_detail.trans.title %>:</span> <%= vset.option_data.trans.title %></label>
+                        <% }); %>
                     </td>
                     <td>
                         <div class="items-price mb-3">$<%= vendor_product.pvariant.price %></div>

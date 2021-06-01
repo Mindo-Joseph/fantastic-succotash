@@ -273,19 +273,31 @@ a{
     line-height: 11px;
 }*/
 
-.coupon_box button {
+.coupon_box a {
     border-color: #ff4c3b;
     color: #ff4c3b;
 }
 
-.coupon_box button:hover {
+.coupon_box a:hover {
     border-color: #ff4c3b;
     background: #ff4c3b;
+    color: #fff !important; 
 }
 
 .items-details h4 {
     font-size: 16px;
+    margin: 0 0 5px;
+}
+
+.items-details label {
+    display: block;
     margin: 0;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.items-details label span {
+    font-weight: 700;
 }
 
 .items-details h6 {
@@ -1560,6 +1572,7 @@ label{
     color: #ff0000;
     font-size: 14px;
 }
+
 
 
 
