@@ -15,20 +15,12 @@ class ProductController extends BaseController
 {
     private $folderName = 'prods';
     use ToasterResponser;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    /**   Display   List of products  */
     public function index()
     {
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    /**   Add new product view - currently not working add product show in modal  */
     public function create($domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
@@ -223,7 +215,8 @@ class ProductController extends BaseController
                         ->where('is_live', 1)->where('id', '!=', $product->id)->get();
 
         //dd($otherProducts->toArray());
-        $configData = ClientPreference::select('celebrity_check')->where('id', '>', 0)->first();
+        $configData = ClientPreference::select('celebrity_check', 'need_dispacher_ride', 'need_delivery_service')
+                        ->where('id', '>', 0)->first();
         $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
         return view('backend/product/edit', ['typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
     }

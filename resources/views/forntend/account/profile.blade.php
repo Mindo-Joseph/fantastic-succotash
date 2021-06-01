@@ -87,7 +87,7 @@
                         <div class="welcome-msg">
                             <h5>Hello, {{ucwords(Auth::user()->name)}} !</h5>
 
-                            <h3>Your Refferal Code: {{$userRefferal['refferal_code']}}</h3>
+                            <h3>Your Refferal Code: {{(isset($userRefferal['refferal_code'])) ? $userRefferal['refferal_code'] : ''}}</h3>
                             <div class="box mb-2">
                                <a href="{{route('user.sendRefferal')}}">Send Refferal</a>
                             </div>

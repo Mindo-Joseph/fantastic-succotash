@@ -38,7 +38,6 @@ class UserController extends BaseController
      */
     public function deleteCustomer($domain = '', $uid, $action)
     {
-        dd($request->all());
         $user = User::where('id', $uid)->firstOrFail();
         //$user->status = $action;
         $user->save();
