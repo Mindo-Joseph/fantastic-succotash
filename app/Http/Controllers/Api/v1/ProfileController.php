@@ -202,15 +202,18 @@ class ProfileController extends BaseController
             }
         }
         $country_detail = Country::where('code', $request->country_code)->first();
+        if(!$country_detail){
+            return response()->json(['error' => 'Invalid country code.'], 404);
+        }
         $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username','mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
         $user = User::where('id', $usr)->first();
         $user->name = $request->name;
+        $user->country_id = $country_detail->id;
         $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
         if($user->phone_number != trim($request->phone_number)){
             $phoneCode = mt_rand(100000, 999999);
             $user->is_phone_verified = 0;
             $user->phone_token = $phoneCode;
-            $user->country_id = $country_detail->id;
             $user->phone_token_valid_till = $sendTime;
             $user->phone_number = $request->phone_number;
             if(!empty($prefer->sms_key) && !empty($prefer->sms_secret) && !empty($prefer->sms_from)){
@@ -256,6 +259,7 @@ class ProfileController extends BaseController
         $user->save();
         $data['name'] = $user->name;
         $data['email'] = $user->email;
+        $data['cca2'] = $request->country_code;
         $data['phone_number'] = $user->phone_number;
         $data['is_phone_verified'] = $user->is_phone_verified;
         $data['is_email_verified'] = $user->is_email_verified;
