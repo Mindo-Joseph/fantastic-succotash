@@ -255,4 +255,16 @@ class ProfileController extends FrontController
     {
     }
 
+    /** User account information        */
+    public function accountInformation(Request $request, $domain = '')
+    {
+        $langId = Session::get('customerLanguage');
+        $user = User::with('country')->find(Auth::user()->id);
+        // dd($useraddress[0]->country->toArray());
+        $navCategories = $this->categoryNav($langId);
+        return view('forntend/account/accountInformation')->with(['user' => $user, 'navCategories' => $navCategories]);
+    }
+
+    
+
 }

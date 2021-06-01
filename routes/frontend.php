@@ -102,6 +102,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/addAddress', 'Front\AddressController@add')->name('addNewAddress');
 	Route::post('user/store', 'Front\AddressController@store')->name('address.store');
 	Route::post('user/update/{id}', 'Front\AddressController@update')->name('address.update');
+	Route::get('user/account', 'Front\ProfileController@accountInformation')->name('user.account');
 
 	Route::get('user/orders', 'Front\ProfileController@orders')->name('user.orders');
 

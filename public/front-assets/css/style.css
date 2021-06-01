@@ -1105,7 +1105,7 @@ button {
   letter-spacing: 0.05em;
   border: 2px solid var(--theme-deafult);
   background-image: linear-gradient(30deg, var(--theme-deafult) 50%, transparent 50%);
-  background-size: 900px;
+  background-size: 2000px;
   background-repeat: no-repeat;
   background-position: 0;
   -webkit-transition: background 300ms ease-in-out;
