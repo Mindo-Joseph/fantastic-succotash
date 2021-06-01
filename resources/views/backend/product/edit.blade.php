@@ -348,11 +348,12 @@
                             {!! Form::label('title', 'Featured',['class' => 'control-label']) !!}
                             <input type="checkbox" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#43bee1" @if($product->is_new == 1) checked @endif>
                         </div>
-                        
-                        <div class="col-md-5 d-flex justify-content-between">
-                            {!! Form::label('title', 'Required Last Mile',['class' => 'control-label']) !!}
-                            <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#43bee1" @if($product->Requires_last_mile == 1) checked @endif>
-                        </div>
+                        @if($configData->need_delivery_service == 1)
+                            <div class="col-md-5 d-flex justify-content-between">
+                                {!! Form::label('title', 'Required Last Mile',['class' => 'control-label']) !!}
+                                <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#43bee1" @if($product->Requires_last_mile == 1) checked @endif>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="row">

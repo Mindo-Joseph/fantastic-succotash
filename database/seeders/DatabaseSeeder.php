@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
               //CategoryTranslationSeeder::class,
               CommonDataSeeder::class,
               BannerDataSeeder::class,
+              TimezoneSeeder::class,
               /*AddonsetDataSeeder::class,
               VariantSeeder::class,
               CatalogSeeder::class,
