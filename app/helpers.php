@@ -17,3 +17,10 @@ function generateOrderNo($length = 8){
     } while (!empty(\DB::table('orders')->where('order_number', $number)->first(['order_number'])) );
     return $number;
 }
+function getTaxDetails($vendor_products){
+    foreach ($vendor_products as $vendor_product) {
+        foreach ($vendor_product->taxdata as $key => $value) {
+            # code...
+        }
+    }
+}

@@ -190,6 +190,7 @@ class ProfileController extends BaseController
     {
         $usr = Auth::user()->id; 
         $validator = Validator::make($request->all(), [
+            'country_code'  => 'required|string',
             'name'          => 'required|string|min:3|max:50',
             'email'         => 'required|email|max:50||unique:users,email,'.$usr,
             'phone_number'  => 'required|string|min:10|max:15|unique:users,phone_number,'.$usr,
@@ -200,23 +201,24 @@ class ProfileController extends BaseController
                 return response()->json($errors, 422);
             }
         }
-        $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
-                        'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
+        $country_detail = Country::where('code', $request->country_code)->first();
+        if(!$country_detail){
+            return response()->json(['error' => 'Invalid country code.'], 404);
+        }
+        $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username','mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
         $user = User::where('id', $usr)->first();
-
         $user->name = $request->name;
+        $user->country_id = $country_detail->id;
         $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
         if($user->phone_number != trim($request->phone_number)){
             $phoneCode = mt_rand(100000, 999999);
-            $user->phone_number = $request->phone_number;
             $user->is_phone_verified = 0;
             $user->phone_token = $phoneCode;
             $user->phone_token_valid_till = $sendTime;
-
+            $user->phone_number = $request->phone_number;
             if(!empty($prefer->sms_key) && !empty($prefer->sms_secret) && !empty($prefer->sms_from)){
-
-                $provider = $prefer->sms_provider;
                 $to = $request->phone_number;
+                $provider = $prefer->sms_provider;
                 $body = "Dear ".ucwords($request->phone_number).", Please enter OTP ".$phoneCode." to verify your account.";
                 $send = $this->sendSms($provider, $prefer->sms_key, $prefer->sms_secret, $prefer->sms_from, $to, $body);
                 $response['send_otp'] = 1;
@@ -224,19 +226,14 @@ class ProfileController extends BaseController
         }
 
         if($user->email != trim($request->email)){
-
             $emailCode = mt_rand(100000, 999999);
             $user->email = $request->email;
             $user->is_email_verified = 0;
             $user->email_token = $emailCode;
             $user->email_token_valid_till = $sendTime;
-
             if(!empty($prefer->mail_driver) && !empty($prefer->mail_host) && !empty($prefer->mail_port) && !empty($prefer->mail_port) && !empty($prefer->mail_password) && !empty($prefer->mail_encryption)){
-
                 $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
-
                 $confirured = $this->setMailDetail($prefer->mail_driver, $prefer->mail_host, $prefer->mail_port, $prefer->mail_username, $prefer->mail_password, $prefer->mail_encryption);
-
                 $client_name = $client->name;
                 $mail_from = $prefer->mail_from;
                 $sendto = $request->email;
@@ -262,12 +259,13 @@ class ProfileController extends BaseController
         $user->save();
         $data['name'] = $user->name;
         $data['email'] = $user->email;
+        $data['cca2'] = $request->country_code;
         $data['phone_number'] = $user->phone_number;
         $data['is_phone_verified'] = $user->is_phone_verified;
         $data['is_email_verified'] = $user->is_email_verified;
         return response()->json([
-            'message' => 'Profile updated successfully.',
-            'data' => $data
+            'data' => $data,
+            'message' => 'Profile updated successfully.'
         ]);
     }
 

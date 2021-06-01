@@ -93,6 +93,33 @@
                                                 <img src="{{asset('assets/images/products/product-1.png')}}" alt="">
                                             </span>
                                         </label>
+                        <div class="welcome-msg">
+                            <h5>Hello, {{ucwords(Auth::user()->name)}} !</h5>
+
+                            <h3>Your Refferal Code: {{(isset($userRefferal['refferal_code'])) ? $userRefferal['refferal_code'] : ''}}</h3>
+                            <div class="box mb-2">
+                               <a href="{{route('user.sendRefferal')}}">Send Refferal</a>
+                            </div>
+
+                            <p>From your My Account Dashboard you have the ability to view a snapshot of your recent
+                                account activity and update your account information. Select a link below to view or
+                                edit information.</p>
+                        </div>
+                        <div class="box-account box-info">
+                            <div class="box-head">
+                                <h2>Account Information</h2>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="box">
+                                        <div class="box-title">
+                                            <h3>Contact Information</h3><a href="#">Edit</a>
+                                        </div>
+                                        <div class="box-content">
+                                            <h6>{{ucwords(Auth::user()->name)}}</h6>
+                                            <h6>{{Auth::user()->email}}</h6>
+                                            <h6>{{Auth::user()->phone_number}}</h6>
+                                        </div>
                                     </div>
                                     <div class="name_location">
                                         <h5 class="mt-0 mb-1"> {{ucwords(Auth::user()->name)}}</h5>

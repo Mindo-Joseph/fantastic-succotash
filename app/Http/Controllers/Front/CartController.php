@@ -36,9 +36,12 @@ class CartController extends FrontController
         $navCategories = $this->categoryNav($langId);
         return view('forntend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries]);
     }
+    
     public function postAddToCart(Request $request, $domain = ''){
         try {
             $user = Auth::user();
+            $addon_ids = $request->addonID;
+            $addon_options_ids = $request->addonoptID;
             $new_session_token = session()->get('_token');
             $client_currency = ClientCurrency::where('is_primary', '=', 1)->first();
             $user_id = $user ? $user->id : '';
@@ -74,6 +77,15 @@ class CartController extends FrontController
                     'currency_id' => $client_currency->currency_id,
                 ];
                 CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id, 'product_id' => $request->product_id], $cart_product_detail);
+                $create_cart_addons = [];
+                foreach ($addon_options_ids as $k => $addon_options_id) {
+                    $create_cart_addons[] = [
+                        'addon_id' => $addon_ids[$k],
+                        'option_id' => $addon_options_id,
+                        'cart_product_id' => $request->product_id,
+                    ];
+                }
+                CartAddon::insert($create_cart_addons);
             }
             return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
         } catch (Exception $e) {
@@ -222,12 +234,21 @@ class CartController extends FrontController
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
         $cartData = CartProduct::with(['vendor', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
+                        'vendorProducts.pvariant.vset.variantDetail.trans' => function($qry) use($langId){
+                            $qry->where('language_id', $langId);
+                        },
+                        'vendorProducts.pvariant.vset.optionData.trans' => function($qry) use($langId){
+                            $qry->where('language_id', $langId);
+                        },
                         'vendorProducts.product.translation' => function($q) use($langId){
                             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                             $q->where('language_id', $langId);
                         },
                         'vendorProducts'=> function($qry) use($cart_id){
                             $qry->where('cart_id', $cart_id);
+                        },
+                        'vendorProducts.addon.set' => function($qry) use($langId){
+                            $qry->where('language_id', $langId);
                         },
                         'vendorProducts.addon.option' => function($qry) use($langId){
                             $qry->where('language_id', $langId);
