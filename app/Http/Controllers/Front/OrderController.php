@@ -47,8 +47,10 @@ class OrderController extends FrontController{
             $taxable_amount = 0;
             $payable_amount = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
-                $vendor_discount_amount = 0;
                 $vendor_payable_amount = 0;
+                $vendor_discount_amount = 0;
+                $product_taxable_amount = 0;
+                $product_payable_amount = 0;
                 foreach ($vendor_cart_products as $vendor_cart_product) {
                     $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
                     $quantity_price = 0;
@@ -58,21 +60,20 @@ class OrderController extends FrontController{
                     $quantity_price = $price_in_dollar_compare * $vendor_cart_product->quantity;
                     $payable_amount = $payable_amount + $quantity_price;
                     $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
-                    $product_taxable_amount = 0;
-                    $product_payable_amount = 0;
                     foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
                         $rate = round($tax_rate_detail->tax_rate);
                         $tax_amount = ($price_in_dollar_compare * $rate) / 100;
                         $product_tax = $quantity_price * $rate / 100;
-                        $product_taxable_amount += $taxable_amount + $product_tax;
+                        $product_taxable_amount += $product_tax;
                         $payable_amount = $payable_amount + $product_tax;
                         $vendor_payable_amount = $vendor_payable_amount + $product_tax;
                     }
-                    $total_amount += $variant->price;
-                    $taxable_amount += $product_taxable_amount;
+                    $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
                     $order_product->order_id = $order->id;
                     $order_product->price = $variant->price;
+                    $taxable_amount += $product_taxable_amount;
+                    $order_product->taxable_amount = $product_taxable_amount;
                     $order_product->quantity = $vendor_cart_product->quantity;
                     $order_product->vendor_id = $vendor_cart_product->vendor_id;
                     $order_product->product_id = $vendor_cart_product->product_id;
@@ -90,7 +91,7 @@ class OrderController extends FrontController{
                             $orderAddon->addon_id = $cart_addon->addon_id;
                             $orderAddon->option_id = $cart_addon->option_id;
                             $orderAddon->order_product_id = $order_product->id;
-                            $orderAddon->save();
+                            // $orderAddon->save();
                         }
                         CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                     }

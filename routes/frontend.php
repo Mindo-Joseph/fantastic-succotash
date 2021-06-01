@@ -83,8 +83,8 @@ Route::group(['middleware' => ['domain']], function () {
 
 Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('viewcart','Front\CartController@showCart')->name('showCart');
-    Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
     Route::post('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInformation');
+    Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
     Route::get('user/resetSuccess','Front\CustomerAuthController@resetSuccess')->name('customer.resetSuccess');
 
     Route::get('user/profile', 'Front\ProfileController@profile')->name('user.profile');
@@ -95,31 +95,27 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/sendRefferal', 'Front\ProfileController@showRefferal')->name('user.sendRefferal');
     Route::post('user/sendRefferalCode', 'Front\ProfileController@sendRefferalCode')->name('user.sendEmail');
 
+	Route::post('user/store', 'Front\AddressController@store')->name('address.store');
+	Route::get('user/addAddress', 'Front\AddressController@add')->name('addNewAddress');
+	Route::get('user/editAddress/{id}', 'Front\AddressController@edit')->name('editAddress');
+	Route::post('user/update/{id}', 'Front\AddressController@update')->name('address.update');
+	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
     Route::get('user/addressBook', 'Front\ProfileController@addresBook')->name('user.addressBook');
 	Route::get('user/setPrimaryAddress/{id}', 'Front\AddressController@setPrimaryAddress')->name('setPrimaryAddress');
-	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
-	Route::get('user/editAddress/{id}', 'Front\AddressController@edit')->name('editAddress');
-	Route::get('user/addAddress', 'Front\AddressController@add')->name('addNewAddress');
-	Route::post('user/store', 'Front\AddressController@store')->name('address.store');
-	Route::post('user/update/{id}', 'Front\AddressController@update')->name('address.update');
 
 	Route::get('user/orders', 'Front\ProfileController@orders')->name('user.orders');
-
-    Route::get('user/newsLetter', 'Front\ProfileController@newsLetter')->name('user.newsLetter');
-    Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
-    Route::get('user/changePassword', 'Front\ProfileController@changePassword')->name('user.changePassword');
-	Route::post('user/submitPassword','Front\ProfileController@submitChangePassword')->name('user.submitChangePassword');
+	Route::get('user/checkout', 'Front\UserController@checkout')->name('user.checkout');
     Route::get('user/logout', 'Front\CustomerAuthController@logout')->name('user.logout');
     Route::get('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
-
 	Route::post('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
-	Route::post('verifTokenProcess', 'Front\UserController@verifyToken')->name('user.verifyToken');
-
-	Route::get('user/checkout', 'Front\UserController@checkout')->name('user.checkout');
-	Route::get('order/success/{order_id}', 'Front\OrderController@getOrderSuccessPage')->name('order.success');
-
 	Route::post('user/placeorder', 'Front\OrderController@placeOrder')->name('user.placeorder');
-
-	// Route::post('user/placeorder/showForm', 'Front\OrderController@showFormApp')->name('placeorder.formApp');
+    Route::get('user/newsLetter', 'Front\ProfileController@newsLetter')->name('user.newsLetter');
+	Route::post('verifTokenProcess', 'Front\UserController@verifyToken')->name('user.verifyToken');
+    Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
     Route::post('user/placeorder/make', 'Front\OrderController@makePayment')->name('placeorder.makePayment');
+    Route::get('user/changePassword', 'Front\ProfileController@changePassword')->name('user.changePassword');
+	Route::post('verify/promocode', 'Front\PromoCodeController@postVerifyPromoCode')->name('verify.promocode');
+	Route::post('remove/promocode', 'Front\PromoCodeController@postRemovePromoCode')->name('remove.promocode');
+	Route::get('order/success/{order_id}', 'Front\OrderController@getOrderSuccessPage')->name('order.success');
+	Route::post('user/submitPassword','Front\ProfileController@submitChangePassword')->name('user.submitChangePassword');
 });
