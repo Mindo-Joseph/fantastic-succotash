@@ -10,7 +10,7 @@
 </style>
 <header>
     <div class="mobile-fix-option"></div>
-    @include('layouts.store/left-sidebar')
+    @include('layouts.store.left-sidebar')
 </header>
 <script type="text/template" id="address_template">
     <div class="col-md-12">
@@ -114,7 +114,7 @@
                     <div class="coupon_box d-flex align-items-center">
                         <img src="{{ asset('assets/images/discount_icon.svg') }}">
                         <input class="form-control" type="text" placeholder="Enter Coupon Code">
-                        <button class="btn btn-outline-info">Apply</button>
+                        <a class="btn btn-outline-info" data-cart_id="" data-vendor_id="" data-coupon_id="">Apply</a>
                     </div>
                 </td> 
                 <!-- <td>
@@ -187,13 +187,12 @@
                         <div class="col-md-12">
                             <div class="delivery_box">
                                 <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}} 
-                                    <input type="radio" checked="checked" name="address_id" value="{{$address->id}}">
+                                    <input type="radio" name="address_id" value="{{$address->id}}"  {{ $address->is_primary ? 'checked="checked""' : '' }}>
                                     <span class="checkround"></span>
                                 </label>
                             </div>
                         </div>
                     @empty
-
                     @endforelse
                 </div>
                 <div class="col-12 mt-4 text-center" id="add_new_address_btn">
