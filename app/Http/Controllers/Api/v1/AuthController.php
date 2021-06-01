@@ -107,8 +107,8 @@ class AuthController extends BaseController{
         $data['verify_details'] = $verified;
         $data['client_preference'] = $prefer;
         $data['phone_number'] = $user->phone_number;
-        $data['cca2'] = $user->country ? $user->country->phonecode : '';
-        $data['callingCode'] = $user->country ? $user->country->code : '';
+        $data['cca2'] = $user->country ? $user->country->code : '';
+        $data['callingCode'] = $user->country ? $user->country->phonecode : '';
         return response()->json(['data' => $data]);
     }
 
@@ -118,12 +118,13 @@ class AuthController extends BaseController{
      */
     public function signup(Request $signReq){
         $validator = Validator::make($signReq->all(), [
-            'name'          => 'required|string|min:3|max:50',
-            'email'         => 'required|email|max:50||unique:users',
-            'password'      => 'required|string|min:6|max:50',
-            'phone_number'  => 'required|string|min:10|max:15|unique:users',
             'device_type'   => 'required|string',
-            'device_token'  => 'required|string'
+            'device_token'  => 'required|string',
+            'country_code'  => 'required|string',
+            'name'          => 'required|string|min:3|max:50',
+            'password'      => 'required|string|min:6|max:50',
+            'email'         => 'required|email|max:50||unique:users',
+            'phone_number'  => 'required|string|min:10|max:15|unique:users'
         ]);
         if($validator->fails()){
             foreach($validator->errors()->toArray() as $error_key => $error_value){
@@ -136,7 +137,7 @@ class AuthController extends BaseController{
         foreach ($signReq->only('name', 'email', 'phone_number', 'country_id') as $key => $value) {
             $user->{$key} = $value;
         }
-
+        $country_detail = Country::where('code', $signReq->country_code)->first();
         $phoneCode = mt_rand(100000, 999999);
         $emailCode = mt_rand(100000, 999999);
         $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
@@ -148,6 +149,7 @@ class AuthController extends BaseController{
         $user->is_phone_verified = 0;
         $user->phone_token = $phoneCode;
         $user->email_token = $emailCode;
+        $user->country_id = $country_detail->id;
         $user->phone_token_valid_till = $sendTime;
         $user->email_token_valid_till = $sendTime;
         $user->save();

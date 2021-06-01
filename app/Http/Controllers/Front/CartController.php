@@ -36,6 +36,7 @@ class CartController extends FrontController
         $navCategories = $this->categoryNav($langId);
         return view('forntend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries]);
     }
+    
     public function postAddToCart(Request $request, $domain = ''){
         try {
             $user = Auth::user();
@@ -233,6 +234,12 @@ class CartController extends FrontController
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
         $cartData = CartProduct::with(['vendor', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
+                        'vendorProducts.pvariant.vset.variantDetail.trans' => function($qry) use($langId){
+                            $qry->where('language_id', $langId);
+                        },
+                        'vendorProducts.pvariant.vset.optionData.trans' => function($qry) use($langId){
+                            $qry->where('language_id', $langId);
+                        },
                         'vendorProducts.product.translation' => function($q) use($langId){
                             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                             $q->where('language_id', $langId);
