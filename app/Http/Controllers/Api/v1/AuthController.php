@@ -107,7 +107,7 @@ class AuthController extends BaseController{
         $data['verify_details'] = $verified;
         $data['client_preference'] = $prefer;
         $data['phone_number'] = $user->phone_number;
-        $data['cca2'] = $user->country ? $user->country->cca2 : '';
+        $data['cca2'] = $user->country ? $user->country->phonecode : '';
         $data['callingCode'] = $user->country ? $user->country->code : '';
         return response()->json(['data' => $data]);
     }
