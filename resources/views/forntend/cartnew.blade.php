@@ -293,7 +293,7 @@
                     <a class="btn btn-solid" href="{{url('/')}}">Continue Shopping</a>
                 </div>
                 <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4 text-md-right">
-                    <button class="btn btn-solid" type="submit">Place Order</button>
+                    <button id="order_palced_btn" class="btn btn-solid" type="submit" {{$addresses->count() == 0 ? 'disabled': ''}} >Place Order</button>
                 </div>
             </div>
         </form>
@@ -335,5 +335,11 @@
 <script type="text/javascript">
     var user_store_address_url = "{{url('user/store')}}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
+    $("form").submit(function(e){
+        let address_id = $("input[name='address_id']").val();
+        if(!address_id){
+            return false;
+        }
+    });
 </script>
 @endsection

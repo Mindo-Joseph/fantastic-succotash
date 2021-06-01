@@ -176,6 +176,7 @@ $(document).ready(function() {
                 $('#add_new_address_form').hide();
                 let address_template = _.template($('#address_template').html());
                 if(address.length > 0){
+                    $('#order_palced_btn').attr('disabled', false);
                     $("#address_template_main_div").append(address_template({address:response.address}));
                 }
             },
