@@ -62,7 +62,8 @@ class HomeController extends BaseController
     }
 
     /** return dashboard content like categories, vendors, brands, products     */
-    public function homepage(Request $request){
+    public function homepage(Request $request)
+    {
         try{
             $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
             $lats = $request->latitude;
