@@ -7,7 +7,7 @@ use App\Model\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand, VendorCategory,ProductCategory};
+use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand, VendorCategory};
 use Validation;
 use DB;
 use App\Http\Traits\ApiResponser;
@@ -69,31 +69,16 @@ class CategoryController extends BaseController
 
     public function listData($langId, $category_id, $tpye = '', $limit = 12, $userid){
         if($tpye == 'vendor' || $tpye == 'Vendor'){
-            $vendor_ids = [];
-            // $blockedVendor = VendorCategory::where('category_id', $cid)->where('status', 0)->pluck('vendor_id')->toArray();
-            // $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id');
-            // $vendorData = $vendorData->where('status', '!=', $this->field_status)->whereNotIn('id', $blockedVendor)->paginate($limit);
-            // foreach ($vendorData as $vendor) {
-            //     $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
-            // }
-            $vendor_details = [];
-            $vendor_products = ProductCategory::with(array('product' => function($query) {
-                $query->select('id','vendor_id');
-            }))->where('category_id', $category_id)->get();
-            foreach ($vendor_products as $vendor_product) {
-                    if(!in_array($vendor_product->product->vendor_id, $vendor_ids)){
-                        if($vendor_product->product->vendor){
-                            $vendor_ids[] = $vendor_product->product->vendor->id;
-                            $vendor_details[] = array(
-                                'id' => $vendor_product->product->vendor->id,
-                                'name' => $vendor_product->product->vendor->name,
-                                'banner' => $vendor_product->product->vendor->banner,
-                                'is_show_category' => ($vendor_product->product->vendor->vendor_templete_id == 1) ? 0 : 1,
-                            );
-                        }
-                    }
+            $blockedVendor = VendorCategory::where('category_id', $category_id)->where('status', 0)->pluck('vendor_id')->toArray();
+            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id');
+            $vendorData = $vendorData->with(['products.category' => function($qry) use($category_id){
+                        $qry->where('category_id', $category_id);
+                    }])->where('status', '!=', $this->field_status)->whereNotIn('id', $blockedVendor)->paginate($limit);
+            foreach ($vendorData as $vendor) {
+                unset($vendor->products);
+                $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
             }
-            return $vendor_details;
+            return $vendorData;
         }elseif($tpye == 'product' || $tpye == 'Product'){
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
