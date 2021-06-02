@@ -71,9 +71,9 @@ class CategoryController extends BaseController
         if($tpye == 'vendor' || $tpye == 'Vendor'){
             $blockedVendor = VendorCategory::where('category_id', $category_id)->where('status', 0)->pluck('vendor_id')->toArray();
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id');
-            $vendorData = $vendorData->with(['products.category' => function($qry) use($category_id){
+            $vendorData = $vendorData->whereHas('products.category', function($qry) use($category_id){
                         $qry->where('category_id', $category_id);
-                    }])->where('status', '!=', $this->field_status)->whereNotIn('id', $blockedVendor)->paginate($limit);
+                    })->where('status', '!=', $this->field_status)->whereNotIn('id', $blockedVendor)->paginate($limit);
             foreach ($vendorData as $vendor) {
                 unset($vendor->products);
                 $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
