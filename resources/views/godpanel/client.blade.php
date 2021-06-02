@@ -66,10 +66,10 @@
                                     <td><a target="_blank" href="{{$client->sub_domain_url}}">{{$client->sub_domain }}.royoorders.com</a> </td>
                                     <td> {{$client->code}} </td>
                                     <td>
-                                        <a href="{{route('client.edit', $client->id)}}" class="btn btn-primary-outlineaction-icon"> 
+                                        <a href="{{route('client.edit', $client->id)}}" class="btn btn-primary-outlineaction-icon p-0"> 
                                             <i class="mdi mdi-square-edit-outline"></i>
                                         </a>
-                                        <a class="btn btn-primary-outlineaction-icon delete-client" data-client_id="{{ $client->id }}" data-url="{{ URL::to('godpanel/delete/client/'.$client->id) }}">
+                                        <a class="btn btn-primary-outlineaction-icon delete-client p-0" data-client_id="{{ $client->id }}" data-url="{{ URL::to('godpanel/delete/client/'.$client->id) }}">
                                             <i class="mdi mdi-delete"></i>
                                         </a>
                                     </td>
