@@ -311,6 +311,7 @@ class CartController extends BaseController{
             $cart = $cart->where('user_id', $user->id);
         }
         $cart = $cart->delete();
+        CartCoupon::where('cart_id', $cart->id)->delete();
         return response()->json(['message' => 'Empty cart successfully.']);
     }
 

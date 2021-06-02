@@ -323,12 +323,14 @@ class CartController extends FrontController
             $is_percent = 0;
             $amount_value = 0;
             if($cart->coupon){
-                foreach ($cart->coupon as $ck => $code) {
-                    if($code->promo->promo_type_id == 1){
-                        $is_percent = 1;
-                        $total_discount_percent = $total_discount_percent + round($code->promo->amount);
-                    }else{
-                        $amount_value = $amount_value + $code->promo->amount;
+                foreach ($cart->coupon as $ck => $coupon) {
+                    if(isset($coupon->promo)){
+                        if($coupon->promo->promo_type_id == 1){
+                            $is_percent = 1;
+                            $total_discount_percent = $total_discount_percent + round($coupon->promo->amount);
+                        }else{
+                            $amount_value = $amount_value + $coupon->promo->amount;
+                        }
                     }
                 }
             }
@@ -339,7 +341,6 @@ class CartController extends FrontController
             if($amount_value > 0){
                 $amount_value = $amount_value * $clientCurrency->doller_compare;
                 $total_discount_amount = $total_discount_amount + $amount_value;
-                
             }
             $total_payable_amount = $total_payable_amount - $total_discount_amount;
             $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount - $total_taxable_amount), 2);

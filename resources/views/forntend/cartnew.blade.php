@@ -117,7 +117,7 @@
                     <div class="coupon_box d-flex align-items-center">
                         <img src="{{ asset('assets/images/discount_icon.svg') }}">
                         <input class="form-control" type="text" placeholder="Enter Coupon Code">
-                        <a class="btn btn-outline-info apply_promo_code" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>">Apply</a>
+                        <a class="btn btn-outline-info promo_code_list_btn" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>">Apply</a>
                     </div>
                 </td> 
                 <!-- <td>
@@ -156,12 +156,12 @@
             <td>Tax</td>
             <td class="text-right" colspan="2">
                 <% _.each(cart_details.products, function(product, key){%>
-                <% _.each(product.vendor_products, function(vendor_product, vp){%>
-                    <% _.each(vendor_product.taxdata, function(tax, tx)  { var vendor_details = [];%>
-                        <p class="m-1">
-                            <label class="m-0"><%= tax.identifier %> (For <%= vendor_product.product.sku %>) <%= tax.rate %>%</label><span class="pl-4">$<%= tax.product_tax %></span></p>
+                    <% _.each(product.vendor_products, function(vendor_product, vp){%>
+                        <% _.each(vendor_product.taxdata, function(tax, tx)  { var vendor_details = [];%>
+                            <p class="m-1">
+                                <label class="m-0"><%= tax.identifier %> (For <%= vendor_product.product.sku %>) <%= tax.rate %>%</label><span class="pl-4">$<%= tax.product_tax %></span></p>
+                        <% }); %>
                     <% }); %>
-                <% }); %>
                 <% }); %>
             </td>
         </tr>
@@ -190,7 +190,7 @@
             <hr class="m-0">
             <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
                 <label class="m-0"><%= promo_code.name %></label>
-                <a href="javascript::void(0);" id="apply_promo_code_btn" data-vendor_id="<%= vendor_id %>" data-cart_id="<%= cart_id %>" data-coupon_id="<%= promo_code %>">Apply</a>
+                <a class="apply_promo_code_btn" data-vendor_id="<%= vendor_id %>" data-cart_id="<%= cart_id %>" data-coupon_id="<%= promo_code.id %>">Apply</a>
             </div>
             <hr class="m-0">
             <div class="offer-text p-2">
@@ -394,6 +394,7 @@
     var user_store_address_url = "{{url('user/store')}}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
+    var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
     $("form").submit(function(e){
         let address_id = $("input[name='address_id']").val();
         if(!address_id){

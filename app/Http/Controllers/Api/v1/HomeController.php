@@ -62,8 +62,7 @@ class HomeController extends BaseController
     }
 
     /** return dashboard content like categories, vendors, brands, products     */
-    public function homepage(Request $request)
-    {
+    public function homepage(Request $request){
         try{
             $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
             $lats = $request->latitude;
@@ -99,13 +98,10 @@ class HomeController extends BaseController
             $homeData['vendors'] = $vendorData;
             $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
                             $q->select('brand_id', 'title')->where('language_id', $langId);
-                            }])
-                        ->select('id', 'image')
-                        ->where('status', '!=', $this->field_status)
-                        ->orderBy('position', 'asc')->get();
-            $homeData['featuredProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_featured');
-            $homeData['newProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_new');
-            $homeData['onSale'] = $this->productList($vends, $langId, Auth::user()->currency);
+                            }])->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
+            // $homeData['featuredProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_featured');
+            // $homeData['newProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_new');
+            // $homeData['onSale'] = $this->productList($vends, $langId, Auth::user()->currency);
             return $this->successResponse($homeData);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());

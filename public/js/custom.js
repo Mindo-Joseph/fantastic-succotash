@@ -29,7 +29,7 @@ $(document).ready(function() {
             }
         });
     }
-    $(document).on("click",".apply_promo_code",function() {
+    $(document).on("click",".promo_code_list_btn",function() {
         let cart_id = $(this).data('cart_id');
         let vendor_id = $(this).data('vendor_id');
         $.ajax({
@@ -52,6 +52,22 @@ $(document).ready(function() {
             }
         });
         
+    });
+    $(document).on("click",".apply_promo_code_btn",function() {
+        let cart_id = $(this).data('cart_id');
+        let vendor_id = $(this).data('vendor_id');
+        let coupon_id = $(this).data('coupon_id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: apply_promocode_coupon_url,
+            data: {cart_id:cart_id, vendor_id:vendor_id, coupon_id:coupon_id},
+            success: function(response) {
+                if (response.status == "Success") {
+                 $('#refferal-modal').modal('hide');
+                }
+            }
+        });
     });
     $(document).on("click",".remove-product",function() {
         let vendor_id = $(this).data('vendor_id');
