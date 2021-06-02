@@ -257,8 +257,7 @@ class VendorController extends BaseController
 
         $categories = Category::with('primary')->select('id', 'slug')
                         ->where('id', '>', '1')->where('status', '!=', '2')->where('type_id', '1')
-                        ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();
+                        ->where('can_add_products', 1)->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->get();
         $products = Product::with(['media.image', 'primary', 'category.cat', 'brand','variant' => function($v){
                             $v->select('id','product_id', 'quantity', 'price')->groupBy('product_id');
                     }])->select('id', 'sku','vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
