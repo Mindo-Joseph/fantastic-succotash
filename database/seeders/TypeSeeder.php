@@ -1,5 +1,6 @@
 <?php
 namespace Database\Seeders;
+use App\Models\Type;
 use Illuminate\Database\Seeder;
 
 class TypeSeeder extends Seeder
@@ -11,9 +12,7 @@ class TypeSeeder extends Seeder
      */
     public function run()
     {
-        \DB::table('types')->delete();
- 
-        $maps = array(
+        $types = array(
             ['id' => 1,
                 'title' => 'Product',
             ],
@@ -29,7 +28,12 @@ class TypeSeeder extends Seeder
             ['id' => 5,
                 'title' => 'Celebrity',
             ],
-        ); 
-        \DB::table('types')->insert($maps);
+            ['id' => 6,
+                'title' => 'Subcategory',
+            ],
+        );
+        foreach ($types as $type) {
+           Type::upsert($type, ['id', 'title']);
+        }
     }
 }
