@@ -77,7 +77,7 @@ class Client extends Authenticatable
             //'database_password' => 'required|max:50',
             'company_name' => 'required',
             'company_address' => 'required',
-            //'custom_domain' => 'required',
+            'sub_domain' => 'required',
         );
 
         if(empty($id)){

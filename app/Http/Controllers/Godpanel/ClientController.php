@@ -63,14 +63,11 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $client = new Client();
-
         $validation  = Validator::make($request->all(), $client->rules());
-
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
         $data = $this->saveClient($request, $client, 'false');
-
         if(!$data){
             return redirect()->back()->withErrors(['error' => "Something went wrong."]);
         }
@@ -180,7 +177,6 @@ class ClientController extends Controller
     public function destroy($id)
     {
         $client = Client::where('id', $id)->first();
-        //dd($client->toArray());
         $client->status = $request->action;
         $msg = '';
         if($request->action == 3){

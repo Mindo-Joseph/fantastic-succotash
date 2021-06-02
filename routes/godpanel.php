@@ -7,7 +7,6 @@ Route::group(['prefix' => '/godpanel'], function () {
 	Route::post('login','Godpanel\LoginController@Login')->name('god.login');
 
 	Route::middleware(['middleware' => 'auth:admin'])->group(function () {
-	
 		Route::post('/logout', 'Godpanel\LoginController@logout')->name('god.logout');
 		Route::get('dashboard','Godpanel\DashBoardController@index')->name('god.dashboard');
 		Route::resource('language','Godpanel\LanguageController');

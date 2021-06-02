@@ -239,11 +239,11 @@
                                     <input type="text" class="form-control" name="sub_domain" id="sub_domain"
                                         value="{{ old('sub_domain', $client->sub_domain ?? '')}}"
                                         placeholder="Enter sub domain">
-                                    @if($errors->has('sub_domain'))
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('sub_domain') }}</strong>
-                                    </span>
-                                    @endif
+                                        @if($errors->has('sub_domain'))
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $errors->first('sub_domain') }}</strong>
+                                        </span>
+                                        @endif
                                 </div>
                             </div>
                             <div class="col-md-6">
