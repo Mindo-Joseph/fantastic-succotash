@@ -194,7 +194,7 @@ class ClientController extends Controller{
     }
 
     public function remove(Request $request){
-        $client = Client::where('id', $id)->first();
+        $client = Client::where('id', $request->client_id)->first();
         $cmd =  \DB::statement("DROP DATABASE `royo_".$client->database_name."`");
         $client->delete();
         return $this->successResponse(['status'=>'success', 'message' => 'Client account deleted successfully!'], '', 200);
