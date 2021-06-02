@@ -7,7 +7,7 @@ use App\Model\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand, VendorCategory};
+use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand, VendorCategory,ProductCategory};
 use Validation;
 use DB;
 use App\Http\Traits\ApiResponser;
@@ -67,15 +67,32 @@ class CategoryController extends BaseController
         
     }
 
-    public function listData($langId, $cid, $tpye = '', $limit = 12, $userid){
+    public function listData($langId, $category_id, $tpye = '', $limit = 12, $userid){
         if($tpye == 'vendor' || $tpye == 'Vendor'){
-            $blockedVendor = VendorCategory::where('category_id', $cid)->where('status', 0)->pluck('vendor_id')->toArray();
-            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id');
-            $vendorData = $vendorData->where('status', '!=', $this->field_status)->whereNotIn('id', $blockedVendor)->paginate($limit);
-            foreach ($vendorData as $vendor) {
-                $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
+            $vendor_ids = [];
+            // $blockedVendor = VendorCategory::where('category_id', $cid)->where('status', 0)->pluck('vendor_id')->toArray();
+            // $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id');
+            // $vendorData = $vendorData->where('status', '!=', $this->field_status)->whereNotIn('id', $blockedVendor)->paginate($limit);
+            // foreach ($vendorData as $vendor) {
+            //     $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
+            // }
+            $vendor_details = [];
+            $vendor_products = ProductCategory::with(array('product' => function($query) {
+                $query->select('id','vendor_id');
+            }))->get();
+            foreach ($vendor_products as $vendor_product) {
+                    if(!in_array($vendor_product->product->vendor_id, $vendor_ids)){
+                        if($vendor_product->product->vendor){
+                            $vendor_ids[] = $vendor_product->product->vendor->id;
+                            $vendor_details[] = array(
+                                'id' => $vendor_product->product->vendor->id,
+                                'name' => $vendor_product->product->vendor->name,
+                                'is_show_category' => ($vendor_product->product->vendor->vendor_templete_id == 1) ? 0 : 1,
+                            );
+                        }
+                    }
             }
-            return $vendorData;
+            return $vendor_details;
         }elseif($tpye == 'product' || $tpye == 'Product'){
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
@@ -90,7 +107,7 @@ class CategoryController extends BaseController
                             $q->groupBy('product_id');
                         },
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->paginate($limit);
+                    ->where('pc.category_id', $category_id)->where('products.is_live', 1)->paginate($limit);
             if(!empty($products)){
                 foreach ($products as $key => $product) {
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
