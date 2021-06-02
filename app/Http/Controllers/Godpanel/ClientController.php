@@ -15,9 +15,11 @@ use App\Jobs\{ProcessClientDatabase, EditClient};
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Session;
-use Illuminate\Support\Facades\Storage; 
+use Illuminate\Support\Facades\Storage;
+use App\Http\Traits\ApiResponser;
 
 class ClientController extends Controller{
+    use ApiResponser;
     /**
      * Display a listing of the resource.
      *
@@ -191,11 +193,11 @@ class ClientController extends Controller{
         return redirect()->back()->with('success', 'Client account ' . $msg . ' successfully!');
     }
 
-    public function remove($id){
+    public function remove(Request $request){
         $client = Client::where('id', $id)->first();
         $cmd =  \DB::statement("DROP DATABASE `royo_".$client->database_name."`");
         $client->delete();
-        return redirect()->back()->with('success', 'Client account deleted successfully!');
+        return $this->successResponse(['status'=>'success', 'message' => 'Client account deleted successfully!'], '', 200);
     }
 
     /**

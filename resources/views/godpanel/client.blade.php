@@ -49,14 +49,13 @@
                                     <th>Phone</th>
                                     <th>DB Name</th>
                                     <th>SUB Domain</th>
-                                    <th>DB Password</th>
                                     <th>Client Code</th>
                                     <th style="width: 85px;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($clients as $client)
-                                <tr>
+                                <tr id="tr_{{ $client->id }}">
                                     <td class="table-user">
                                         <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$client->name}}</a>
                                     </td>
@@ -67,11 +66,12 @@
                                     <td><a target="_blank" href="{{$client->sub_domain_url}}">{{$client->sub_domain }}.royoorders.com</a> </td>
                                     <td> {{$client->code}} </td>
                                     <td>
-                                        <a href="{{route('client.edit', $client->id)}}" class="btn btn-primary-outlineaction-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
-                                        <!-- <button class="btn btn-primary-outline blockClient action-icon" cli_id="{{$client->id}}" status="{{$client->status}}"> <h3><i class="mdi {{ ($client->status == 2) ? 'mdi-lock-open-variant-outline' : 'mdi-lock-outline'}}"></i></h3></button> 
-                                        <button class="btn btn-primary-outline deleteClient action-icon" cli_id="{{$client->id}}"> <i class="mdi mdi-delete"></i></button>-->
-                                        <a href="{{URL::to('godpanel/delete/client/'.$client->id)}}" class="btn btn-primary-outlineaction-icon"> <i class="mdi mdi-delete"></i></a>
-                                        </div>
+                                        <a href="{{route('client.edit', $client->id)}}" class="btn btn-primary-outlineaction-icon"> 
+                                            <i class="mdi mdi-square-edit-outline"></i>
+                                        </a>
+                                        <a class="btn btn-primary-outlineaction-icon delete-client" data-client_id="{{ $client->id }}" data-url="{{ URL::to('godpanel/delete/client/'.$client->id) }}">
+                                            <i class="mdi mdi-delete"></i>
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -86,84 +86,31 @@
         </div> <!-- end col -->
     </div>
 </div>
-@endsection
-
-@section('script')
-
-
 <script type="text/javascript">
-
-    $('.deleteClient').click(function(){
-        alert('deleteClient');
-        var id = $(this).attr('cli_id');
-
-        if(confirm('Are you sure? You want to delete this client.')) {
-            //document.getElementById('client_'+id).value = action;
-            $('#formClient_'+id).submit();
-        }
-        return false;
-    });
-
-    // $('.blockClient').click(function(){
-    //     var status = $(this).attr('status');
-    //     var id = $(this).attr('cli_id');
-
-    //     var msg = 'Are you sure? You want to block this client.';
-    //     var action = 2;
-    //     if(status == 2) {
-    //         msg = 'Are you sure? You want to activate this client.';
-    //         action = 1;
-    //     }
-
-    //     if(confirm(msg)) {
-    //         document.getElementById('client_'+id).value = action;
-    //         $('#formClient_'+id).submit();
-    //     }
-    //     return false;
-    // });
-
-    // $('.deleteClient').click(function(){
-    //     var status = $(this).attr('status');
-    //     var id = $(this).attr('cli_id');
-
-    //     var msg = 'Are you sure? You want to delete this client.';
-    //     var action = 3;
-
-    //     if(confirm(msg)) {
-    //         document.getElementById('client_'+id).value = action;
-    //         $('#formClient_'+id).submit();
-    //     }
-    //     return false;
-    // });
-    
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': $('input[name="_token"]').val()}
+        });
+        $(document).on("click",".delete-client",function() {
+            var url = $(this).data('url');
+            var client_id = $(this).data('client_id');
+            if(confirm('Are you sure? You want to delete this client.')) {
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    dataType: 'json',
+                    data: {client_id:client_id},
+                    headers: {Accept: "application/json"},
+                    success: function(response) {
+                        $("#promo_code_list_main_div").html('');
+                        if (response.status == "Success") {
+                            $('#tr_'+client_id).remove();
+                        }
+                    }
+                });
+            }
+            return false;
+        });
+    }); 
 </script>
-
-<!-- @parent
-
-@if(count($errors->add) > 0)
-<script>
-$(function() {
-    $('#add-client-modal').modal({
-        show: true
-    });
-});
-</script>
-@elseif(count($errors->update) > 0)
-<script>
-$(function() {
-    $('#update-client-modal').modal({
-        show: true
-    });
-});
-</script>
-@endif
-@if(\Session::has('getClient'))
-<script>
-$(function() {
-    $('#update-client-modal').modal({
-        show: true
-    });
-});
-</script>
-@endif -->
 @endsection
