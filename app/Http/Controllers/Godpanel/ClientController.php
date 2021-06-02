@@ -17,16 +17,18 @@ use Illuminate\Support\Facades\Redis;
 use Session;
 use Illuminate\Support\Facades\Storage; 
 
-class ClientController extends Controller
-{
+class ClientController extends Controller{
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $clients = Client::where('is_deleted', 0)->orderBy('created_at', 'DESC')->paginate(10);
+        foreach ($clients as $client) {
+            $client->sub_domain_url = 'https://'.$client->sub_domain.'.royoorders.com';
+        }
+
         return view('godpanel/client')->with(['clients' => $clients]);
     }
 

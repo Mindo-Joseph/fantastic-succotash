@@ -48,8 +48,8 @@
                                     <th>Password</th>
                                     <th>Phone</th>
                                     <th>DB Name</th>
-                                    <!-- <th>DB User</th>
-                                    <th>DB Password</th> -->
+                                    <th>SUB Domain</th>
+                                    <th>DB Password</th>
                                     <th>Client Code</th>
                                     <th style="width: 85px;">Action</th>
                                 </tr>
@@ -64,16 +64,12 @@
                                     <td style="width:100px;max-width:100px;"> {{$client->encpass}} </td>
                                     <td> {{$client->phone_number}} </td>
                                     <td> {{$client->database_name}} </td>
-                                    <!-- <td> {{$client->database_username}} </td>
-                                    <td> {{$client->database_password}} </td> -->
+                                    <td><a target="_blank" href="{{$client->sub_domain_url}}">{{$client->sub_domain }}.royoorders.com</a> </td>
                                     <td> {{$client->code}} </td>
                                     <td>
-
                                         <a href="{{route('client.edit', $client->id)}}" class="btn btn-primary-outlineaction-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
-                                        
                                         <!-- <button class="btn btn-primary-outline blockClient action-icon" cli_id="{{$client->id}}" status="{{$client->status}}"> <h3><i class="mdi {{ ($client->status == 2) ? 'mdi-lock-open-variant-outline' : 'mdi-lock-outline'}}"></i></h3></button> 
                                         <button class="btn btn-primary-outline deleteClient action-icon" cli_id="{{$client->id}}"> <i class="mdi mdi-delete"></i></button>-->
-
                                         <a href="{{URL::to('godpanel/delete/client/'.$client->id)}}" class="btn btn-primary-outlineaction-icon"> <i class="mdi mdi-delete"></i></a>
                                         </div>
                                     </td>
@@ -85,13 +81,10 @@
                     <div class="pagination pagination-rounded justify-content-end mb-0">
                         {{ $clients->links() }}
                     </div>
-
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
         </div> <!-- end col -->
     </div>
-
-
 </div>
 @endsection
 
