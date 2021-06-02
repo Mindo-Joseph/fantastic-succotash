@@ -79,7 +79,7 @@ class CategoryController extends BaseController
             $vendor_details = [];
             $vendor_products = ProductCategory::with(array('product' => function($query) {
                 $query->select('id','vendor_id');
-            }))->get();
+            }))->where('category_id', $category_id)->get();
             foreach ($vendor_products as $vendor_product) {
                     if(!in_array($vendor_product->product->vendor_id, $vendor_ids)){
                         if($vendor_product->product->vendor){
@@ -87,6 +87,7 @@ class CategoryController extends BaseController
                             $vendor_details[] = array(
                                 'id' => $vendor_product->product->vendor->id,
                                 'name' => $vendor_product->product->vendor->name,
+                                'banner' => $vendor_product->product->vendor->banner,
                                 'is_show_category' => ($vendor_product->product->vendor->vendor_templete_id == 1) ? 0 : 1,
                             );
                         }
