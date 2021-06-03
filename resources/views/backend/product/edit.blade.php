@@ -109,15 +109,7 @@
                 <div class="card-box">
                     <h5 class="text-uppercase bg-light p-2 mt-0 mb-3">General</h5>
                     <div class="row mb-2 row-spacing">
-                        <!--<div class="col-6 mb-2">
-                            {!! Form::label('title', 'Product Type',['class' => 'control-label']) !!}
-                            <select class="form-control selectizeInput" id="typeSelectBox" name="type_id">
-                                @foreach($typeArray as $type)
-                                    <option value="{{$type->id}}" @if($type->id == $product->type_id) selected @endif >{{$type->title}}</option>
-                                @endforeach
-                            </select>
-                        </div> -->
-
+                       
                         <div class="col-md-5 mb-2" style="cursor: not-allowed;">
                             {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
@@ -202,7 +194,6 @@
                     </div>
                     @endif
                     <div class="row mb-2">
-                        <!-- {!! Form::label('title', 'Track Inventory',['class' => 'control-label col-sm-4']) !!} -->
                         <div class="col-sm-4">
                         {!! Form::label('title', 'Track Inventory') !!} <br>
                             <input type="checkbox" bid="" id="has_inventory" data-plugin="switchery" name="has_inventory" class="chk_box" data-color="#43bee1" checked>
@@ -360,8 +351,8 @@
                         <div class="col-sm-12 mb-2">
                             {!! Form::label('title', 'Live',['class' => 'control-label']) !!}
                             <select class="selectizeInput form-control" id="is_live" name="is_live">
-                                <option value="0" @if($product->is_live == 0) selected @endif>Draft</option>
-                                <option value="1" @if($product->is_live == 1) selected @endif>Published</option>
+                                <option value="0" @if($product->is_live == 1) selected @endif>Draft</option>
+                                <option value="1" @if($product->is_live == 2) selected @endif>Published</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-2">
@@ -534,7 +525,6 @@
             $('.shippingDiv').hide();
         }
     });
-
     $('#is_physical').change(function(){
         var val = $(this).prop('checked');
         if(val == true){
@@ -693,7 +683,6 @@
         var prod_id = '{{$product->id}}';
         var prod_var_id = $(this).attr('varid');
         $this = $(this);
-
         if(confirm("Are you sure? You want to delete this brand.")) {
             $.ajax({
                 type: "post",
@@ -701,7 +690,6 @@
                 data: {"_token": "{{ csrf_token() }}", 'prod_id' : prod_id, 'prod_var_id' : prod_var_id},
                 dataType: 'json',
                 success: function (resp) {
-                    alert(resp.msg);
                     $this.closest('tr').remove();
                 }
             });
@@ -827,7 +815,6 @@
                 imageId.push($this.attr('imgId'));
             }
         });
-
         $.ajax({
             type: "post",
             url: "{{route('product.variant.update')}}",

@@ -131,7 +131,7 @@
                                                   <td> {{ !empty($product->brand) ? $product->brand->title : 'N/A'  }}</td>
                                                   <td> {{ $product->variant->first() ? $product->variant->first()->quantity : 0 }}</td>
                                                   <td> {{ $product->variant->first() ? $product->variant->first()->price : 0 }}</td>
-                                                  <td> {{ ($product->is_live == 0) ? 'Draft' : 'Published' }}</td>
+                                                  <td> {{ ($product->is_live == 1) ? 'Published' : 'Draft'}}</td>
                                                   <td> {{ ($product->is_new == 0) ? 'No' : 'Yes' }}</td>
                                                   <td> {{ ($product->is_featured == 0) ? 'No' : 'Yes' }}</td>
                                                   <td> {{ ($product->Requires_last_mile == 0) ? 'No' : 'Yes' }}</td>
