@@ -69,16 +69,13 @@ class CategoryController extends BaseController
     public function listData($langId, $category_id, $tpye = '', $limit = 12, $userid){
         if($tpye == 'vendor' || $tpye == 'Vendor'){
             $vendor_ids = [];
-            $blockedVendor = VendorCategory::where('category_id', $category_id)->where('status', 0)->pluck('vendor_id')->toArray();
-            $product_categories = ProductCategory::with('product')->where('category_id', $category_id)->get();
-            foreach ($product_categories as $product_category) {
-                if($product_category->product){
-                    if(!in_array($product_category->product->vendor_id, $vendor_ids)){
-                        $vendor_ids[] = $product_category->product->vendor_id;
-                    }
-                }
+            $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
+            foreach ($vendor_categories as $vendor_category) {
+               if(!in_array($vendor_category->vendor_id, $vendor_ids)){
+                    $vendor_ids[] = $vendor_category->vendor_id;
+               }
             }
-            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('status', '!=', $this->field_status)->whereIn('id', $vendor_ids)->whereNotIn('id', $blockedVendor)->paginate($limit);
+            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('status', '!=', $this->field_status)->whereIn('id', $vendor_ids)->paginate($limit);
             foreach ($vendorData as $vendor) {
                 unset($vendor->products);
                 $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
