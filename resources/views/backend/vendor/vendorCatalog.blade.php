@@ -202,8 +202,8 @@
                             {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
                             <select class="form-control selectizeInput" id="category_list" name="category[]">
                                 <option value="">Select Category...</option>
-                                @foreach($categories as $cate)
-                                    <option value="{{$cate->id}}">{{(isset($cate->primary->name)) ? $cate->primary->name : $cate->slug}}</option>
+                                @foreach($product_categories as $product_category)
+                                    <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
                                 @endforeach
                             </select>
 
