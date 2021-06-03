@@ -81,7 +81,7 @@ class CategoryController extends BaseController
             return $vendorData;
         }elseif($tpye == 'product' || $tpye == 'Product'){
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
-            $products = Product::whereHas('vendor')->join('product_categories as pc', 'pc.product_id', 'products.id')
+            $products = Product::has('vendor')->join('product_categories as pc', 'pc.product_id', 'products.id')
                     ->with(['category.categoryDetail','inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
                     },
