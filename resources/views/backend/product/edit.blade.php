@@ -351,8 +351,8 @@
                         <div class="col-sm-12 mb-2">
                             {!! Form::label('title', 'Live',['class' => 'control-label']) !!}
                             <select class="selectizeInput form-control" id="is_live" name="is_live">
-                                <option value="0" @if($product->is_live == 1) selected @endif>Draft</option>
-                                <option value="1" @if($product->is_live == 2) selected @endif>Published</option>
+                                <option value="0" @if($product->is_live == 0) selected @endif>Draft</option>
+                                <option value="1" @if($product->is_live == 1) selected @endif>Published</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-2">
