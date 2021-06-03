@@ -73,7 +73,7 @@ class CategoryController extends BaseController
             $product_categories = ProductCategory::with('product')->where('category_id', $category_id)->get();
             foreach ($product_categories as $product_category) {
                 if($product_category->product){
-                    if(in_array($product_category->product->vendor_id, $vendor_ids)){
+                    if(!in_array($product_category->product->vendor_id, $vendor_ids)){
                         $vendor_ids[] = $product_category->product->vendor_id;
                     }
                 }
