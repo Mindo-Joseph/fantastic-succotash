@@ -428,7 +428,7 @@ class CartController extends BaseController{
                             }
                         }
                         $prod->taxdata = $taxData;
-                        $tax_details[] = $taxData
+                        $tax_details[] = $taxData;
                         if(!empty($prod->addon)){
                             foreach ($prod->addon as $ck => $addons) {
                                 $opt_quantity_price = 0;
