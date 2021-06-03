@@ -88,7 +88,7 @@ class BaseController extends Controller
                     $name = 'category['.$node["id"].']';
                     $this->toggleData .='<a class="action-icon" data-id="'.$node["id"].'" href="javascript:void(0)">';
                     if($node['type_id'] == 3){
-                        $this->toggleData .='<input type="checkbox" data-id="'.$node["id"].'" name="'.$name.'" data-color="#43bee1" class="form-control activeCategory"  data-plugin="switchery" disabled>';
+                        $this->toggleData .='<input type="checkbox" data-id="'.$node["id"].'" name="'.$name.'" data-color="#43bee1" class="form-control activeCategory"  data-plugin="switchery">';
                     }else{
                         if(in_array($node["id"], $activeCategory) && $node["parent_id"] == 1){
                             $this->toggleData .='<input class="form-control" type="checkbox" data-id="'.$node["id"].'" name="'.$name.'"  data-color="#43bee1" data-plugin="switchery" checked>';
