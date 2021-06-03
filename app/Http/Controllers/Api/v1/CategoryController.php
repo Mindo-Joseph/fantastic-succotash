@@ -73,7 +73,9 @@ class CategoryController extends BaseController
             $product_categories = ProductCategory::with('product')->where('category_id', $category_id)->get();
             foreach ($product_categories as $product_category) {
                 if($product_category->product){
-                    $vendor_ids[] = $product_category->product->vendor_id;
+                    if(in_array($product_category->product->vendor_id, $vendor_ids)){
+                        $vendor_ids[] = $product_category->product->vendor_id;
+                    }
                 }
             }
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('status', '!=', $this->field_status)->whereNotIn('id', $vendor_ids)->whereNotIn('id', $blockedVendor)->paginate($limit);
