@@ -53,10 +53,10 @@
                                     <th>Promo Types</th>
                                     <th>Total Amount</th>
                                     <th>Expiry Date</th>
-                                    <th>Min amount to spend</th>
-                                    <th>Max amount to spend</th>
+                                    <th>Min Amount To Spend</th>
+                                    <th>Max Amount To Spend</th>
                                     <th>Limit Per User</th>
-                                    <th>Total limit</th>
+                                    <th>Total Limit</th>
                                     <th>Restriction On</th>
                                     <th>Restriction Type</th>
                                     <th>Action</th>

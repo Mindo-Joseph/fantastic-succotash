@@ -78,12 +78,14 @@ class CartController extends FrontController
                 ];
                 CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id, 'product_id' => $request->product_id], $cart_product_detail);
                 $create_cart_addons = [];
-                foreach ($addon_options_ids as $k => $addon_options_id) {
-                    $create_cart_addons[] = [
-                        'addon_id' => $addon_ids[$k],
-                        'option_id' => $addon_options_id,
-                        'cart_product_id' => $request->product_id,
-                    ];
+                if($addon_options_ids){
+                    foreach ($addon_options_ids as $k => $addon_options_id) {
+                        $create_cart_addons[] = [
+                            'addon_id' => $addon_ids[$k],
+                            'option_id' => $addon_options_id,
+                            'cart_product_id' => $request->product_id,
+                        ];
+                    }
                 }
                 CartAddon::insert($create_cart_addons);
             }
@@ -379,6 +381,8 @@ class CartController extends FrontController
      */
     public function deleteCartProduct($domain = '', Request $request){
         CartProduct::where('id', $request->cartproduct_id)->delete();
+        CartCoupon::where('vendor_id', $request->vendor_id)->delete();
+        CartAddon::where('cart_product_id', $request->cartproduct_id)->delete();
         return response()->json(['status' => 'success', 'message' => 'Product deleted successfully.']);
     }
 

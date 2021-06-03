@@ -15,7 +15,7 @@
 <script type="text/template" id="address_template">
     <div class="col-md-12">
         <div class="delivery_box">
-            <label class="radio m-0"><%= address.address %> <%= address.city %> <%= address.state %> <%= address.pincode %>
+            <label class="radio m-0"><%= address.address %> <%= address.city %><%= address.state %> <%= address.pincode %>
                 <input type="radio" checked="checked" name="address_id" value="<%= address.id %>">
                 <span class="checkround"></span>
             </label>
@@ -34,6 +34,7 @@
         </div>
     </div>
 </script>
+<h1 ></h1>
 <script type="text/template" id="cart_template">
     <% _.each(cart_details.products, function(product, key){%>
         <tbody id="tbody_<%= product.vendor.id %>">
@@ -183,18 +184,17 @@
     <div class="col-lg-6">
         <div class="coupon-code">
             <div class="p-2">
-                <img src="<%= promo_code.image.proxy_url %>91/30<%= promo_code.image.image_path %>" alt="">
+                <img src="<%= promo_code.image.proxy_url %>100/35<%= promo_code.image.image_path %>" alt="">
                 <h6 class="mt-0"><%= promo_code.title %></h6>
-                <p class="m-0"><%= promo_code.short_desc %></p>
             </div>
             <hr class="m-0">
             <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
                 <label class="m-0"><%= promo_code.name %></label>
-                <a class="apply_promo_code_btn" data-vendor_id="<%= vendor_id %>" data-cart_id="<%= cart_id %>" data-coupon_id="<%= promo_code.id %>">Apply</a>
+                <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="<%= vendor_id %>" data-cart_id="<%= cart_id %>" data-coupon_id="<%= promo_code.id %>" style="cursor: pointer;">Apply</a>
             </div>
             <hr class="m-0">
             <div class="offer-text p-2">
-                <p class="m-0">Add items worth ₹200 to apply this offer.</p>
+                <p class="m-0"><%= promo_code.short_desc %></p>
             </div>
         </div>
     </div>
@@ -314,12 +314,9 @@
                     </div>
                 </div> 
                 </div>
-                
                 <div class="col-8">
                     <div class="table-responsive">
-                        <table class="table table-centered table-nowrap table-striped" id="cart_table">
-                            
-                        </table>
+                        <table class="table table-centered table-nowrap table-striped" id="cart_table"></table>
                     </div>
                 </div>
             </div>
@@ -355,11 +352,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <div class="code-input d-flex align-items-center">
-            <input class="form-control" type="text">
-            <button class="btn btn-solid">Apply</button>
-        </div>
+      <div class="modal-body mt-0">
         <div class="coupon-box mt-4">
             <div class="row" id="promo_code_list_main_div">
                 

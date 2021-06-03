@@ -38,8 +38,7 @@ class CartController extends BaseController{
     }
 
     /**   check auth and system user to add product in cart    */
-    public function userCheck()
-    {
+    public function userCheck(){
         $user = Auth::user();
         if ($user->id && $user->id > 0) {
             $user_id = $user->id;
@@ -79,29 +78,23 @@ class CartController extends BaseController{
             if(!$product){
                 return $this->errorResponse('Invalid product.', 404);
             }
-
             $productVariant = ProductVariant::where('product_id',$product->id)->where('id',$request->product_variant_id)->first();
             if(!$productVariant){
                 return $this->errorResponse('Invalid product variant.', 404);
             }
-
             if($product->sell_when_out_of_stock == 0 && $productVariant->quantity < $request->quantity){
                 return $this->errorResponse('You Can not order more than '.$productVariant->quantity.' quantity.', 404);
             }
-
             $addonSets = $addon_ids = $addon_options = array();
-
             if($request->has('addon_ids')){
                 $addon_ids = $request->addon_ids;
             }
             if($request->has('addon_options')){
                 $addon_options = $request->addon_options;
             }
-
             foreach($addon_options as $key => $opt){
                 $addonSets[$addon_ids[$key]][] = $opt;
             }
-
             foreach($addonSets as $key => $value){
                 $addon = AddonSet::join('addon_set_translations as ast', 'ast.addon_id', 'addon_sets.id')
                             ->select('addon_sets.id', 'addon_sets.min_select', 'addon_sets.max_select', 'ast.title')
@@ -212,7 +205,6 @@ class CartController extends BaseController{
     **/
     public function updateQuantity(Request $request){
         $user = Auth::user();
-
         if ($request->quantity < 1) {
             return response()->json(['error' => 'Quantity should not be less than 1'], 422);
         }
@@ -227,25 +219,20 @@ class CartController extends BaseController{
         $cartProduct->quantity = $request->quantity;
         $cartProduct->save();
         $totalProducts = CartProduct::where('cart_id', $cart->id)->sum('quantity');
-        //$cart->item_count = $totalProducts;
-        //$cart->save();
-
+        $cart->item_count = $totalProducts;
+        $cart->save();
         $cartData = $this->getCart($cart, $user->language, $user->currency);
-
         return response()->json([
             'data' => $cartData,
         ]);
     }
 
-    /**     *       Get Cart Items            *     */
     public function getItemCount(Request $request){
         $cart = Cart::where('user_id', Auth::user()->id)->where('id', $request->cart_id)->first();
         if(!$cart){
             return response()->json(['error' => 'User cart not exist.'], 404);
         }
-
         $totalProducts = CartProduct::where('cart_id', $cart->id)->sum('quantity');
-
         $cart->item_count = $totalProducts;
         $cart->save();
         return response()->json([
@@ -253,7 +240,6 @@ class CartController extends BaseController{
         ]);
     }
 
-    /**         *       Remove item from cart       *          */
     public function removeItem(Request $request){
         $user = Auth::user();
         $user_id = $user->id;
@@ -271,14 +257,12 @@ class CartController extends BaseController{
         if(!$cart){
             return response()->json(['error' => 'Cart not exist'], 404);
         }
-
         $cartProduct = CartProduct::where('cart_id', $cart->id)->where('id', $request->cart_product_id)->first();
         if(!$cartProduct){
             return response()->json(['error' => 'Product not exist in cart.'], 404);
         }
         $cartProduct->delete();
         $totalProducts = CartProduct::where('cart_id', $cart->id)->sum('quantity');
-
         if(!$totalProducts || $totalProducts < 1){
             $cart->delete();
             return response()->json([
@@ -286,8 +270,8 @@ class CartController extends BaseController{
                 'data' => array(),
             ]);
         }
-        //$cart->item_count = $totalProducts;
-        //$cart->save();
+        $cart->item_count = $totalProducts;
+        $cart->save();
         $cartData = $this->getCart($cart, $user->language, $user->currency);
         return response()->json([
             "message" => "Product removed from cart successfully.",
@@ -348,21 +332,17 @@ class CartController extends BaseController{
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         $total_tax = $total_paying = $total_disc_amount = 0.00; $item_count = 0;
         if($cartData){
+            $tax_details = [];
             foreach ($cartData as $ven_key => $vendorData) {
-
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
-
                 $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
                 $couponData = $couponProducts = array();
                 if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->vendor_id == $vendorData->vendor_id)){
-
                     $now = Carbon::now()->toDateTimeString();
-
                     $minimum_spend = 0;
                     if(isset($vendorData->coupon->promo->minimum_spend)){
                         $minimum_spend = $vendorData->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
                     }
-
                     if($vendorData->coupon->promo->expiry_date < $now){
                         $coupon_removed = 1;
                         $coupon_removed_msg = 'Coupon code is expired.';
@@ -393,25 +373,18 @@ class CartController extends BaseController{
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
                     $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0; 
                     $variantsData = $taxData = $vendorAddons = array();
-
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
-
-                    //$price_in_currency = round($prod->pvariant->price / $divider);
                     $price_in_currency = $prod->pvariant ? $prod->pvariant->price : 0;
                     $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
-
                     $item_count = $item_count + $prod->quantity;
-
                     $proSum = $proSum + $quantity_price;
-
                     if(isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)){
                         $prod->cartImg = $prod->pvariant->image->imagedata;
                     }else{
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
                     if($prod->pvariant){
-
                         $variantsData['price']              = $price_in_currency;
                         $variantsData['id']                 = $prod->pvariant->id;
                         $variantsData['sku']                = $prod->pvariant->sku;
@@ -441,28 +414,21 @@ class CartController extends BaseController{
                         $variantsData['discount_amount'] = $pro_disc;
                         $variantsData['coupon_applied'] = $codeApplied;
                         $variantsData['quantity_price'] = $quantity_price;
-
                         $payable_amount = $payable_amount + $quantity_price;
-
                         if(!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0){
-
                             foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
-
                                 $rate = round($tax_value->tax_rate);
                                 $tax_amount = ($price_in_doller_compare * $rate) / 100;
                                 $product_tax = $quantity_price * $rate / 100;
-
                                 $taxData[$tckey]['identifier'] = $tax_value->identifier;
                                 $taxData[$tckey]['rate'] = $rate;
                                 $taxData[$tckey]['tax_amount'] = $tax_amount;
                                 $taxData[$tckey]['product_tax'] = $product_tax;
                                 $taxable_amount = $taxable_amount + $product_tax;
-
-                                //$payable_amount = $payable_amount + $product_tax;
                             }
                         }
                         $prod->taxdata = $taxData;
-                        
+                        $tax_details[] = $taxData
                         if(!empty($prod->addon)){
                             foreach ($prod->addon as $ck => $addons) {
                                 $opt_quantity_price = 0;
@@ -507,7 +473,6 @@ class CartController extends BaseController{
                     $prod->product_addons = $vendorAddons;
                 }
                 $couponApplied = 0;
-
                 if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 1)){
                     $minimum_spend = $vendorData->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
                     if($minimum_spend < $proSum){
@@ -545,16 +510,15 @@ class CartController extends BaseController{
                 }
             }
         }
-
-        $cart->gross_paybale_amount = $total_paying;
         $cart->total_tax = $total_tax;
-        $cart->total_payable_amount = $total_paying + $total_tax - $total_disc_amount;
+        $cart->tax_details = $tax_details;
+        $cart->gross_paybale_amount = $total_paying;
         $cart->total_discount_amount = $total_disc_amount;
+        $cart->total_payable_amount = $total_paying + $total_tax - $total_disc_amount;
         if($cart->user_id > 0){
             $cart->loyaltyPoints = $this->getLoyaltyPoints($cart->user_id, $clientCurrency->doller_compare);
             $cart->wallet = $this->getWallet($cart->user_id, $clientCurrency->doller_compare, $currency);
         }
-        
         $cart->products = $cartData;
         $cart->item_count = $item_count;
         return $cart;
