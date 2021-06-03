@@ -68,12 +68,13 @@ class CategoryController extends BaseController
 
     public function listData($langId, $category_id, $tpye = '', $limit = 12, $userid){
         if($tpye == 'vendor' || $tpye == 'Vendor'){
+            $vendor_ids = [];
             $blockedVendor = VendorCategory::where('category_id', $category_id)->where('status', 0)->pluck('vendor_id')->toArray();
-            $product_ids = ProductCategory::where('category_id', $category_id)->pluck('product_id')->toArray();
-            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')
-                          ->whereHas('products.category', function($q) use($product_ids){
-                            $q->where('id', $product_ids);
-                          })->where('status', '!=', $this->field_status)->whereNotIn('id', $blockedVendor)->paginate($limit);
+            $product_categories = ProductCategory::with('product')->where('category_id', $category_id)->pluck('product_id')->toArray();
+            foreach ($product_categories as $product_category) {
+                $vendor_ids[] = $product_category->product->vendor_id;
+            }
+            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('status', '!=', $this->field_status)->whereNotIn('id', $vendor_ids)->whereNotIn('id', $blockedVendor)->paginate($limit);
             foreach ($vendorData as $vendor) {
                 unset($vendor->products);
                 $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
