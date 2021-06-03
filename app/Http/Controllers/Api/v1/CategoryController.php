@@ -70,7 +70,7 @@ class CategoryController extends BaseController
         if($tpye == 'vendor' || $tpye == 'Vendor'){
             $vendor_ids = [];
             $blockedVendor = VendorCategory::where('category_id', $category_id)->where('status', 0)->pluck('vendor_id')->toArray();
-            $product_categories = ProductCategory::with('product')->where('category_id', $category_id)->pluck('product_id')->toArray();
+            $product_categories = ProductCategory::with('product')->where('category_id', $category_id)->get();
             foreach ($product_categories as $product_category) {
                 $vendor_ids[] = $product_category->product->vendor_id;
             }
