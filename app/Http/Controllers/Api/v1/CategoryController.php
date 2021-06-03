@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Api\v1\BaseController;
+use DB;
+use Validation;
+use Carbon\Carbon;
 use App\Model\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand, VendorCategory};
-use Validation;
-use DB;
 use App\Http\Traits\ApiResponser;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Api\v1\BaseController;
+use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand, VendorCategory,ProductCategory};
 
 class CategoryController extends BaseController
 {
@@ -69,10 +69,11 @@ class CategoryController extends BaseController
     public function listData($langId, $category_id, $tpye = '', $limit = 12, $userid){
         if($tpye == 'vendor' || $tpye == 'Vendor'){
             $blockedVendor = VendorCategory::where('category_id', $category_id)->where('status', 0)->pluck('vendor_id')->toArray();
-            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id');
-            $vendorData = $vendorData->whereHas('products.category', function($qry) use($category_id){
-                        $qry->where('category_id', $category_id);
-                    })->where('status', '!=', $this->field_status)->whereNotIn('id', $blockedVendor)->paginate($limit);
+            $product_ids = ProductCategory::where('category_id', $category_id)->pluck('product_id')->toArray();
+            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')
+                          ->whereHas('products.category', function($q) use($product_ids){
+                            $q->where('id', $product_ids);
+                          })->where('status', '!=', $this->field_status)->whereNotIn('id', $blockedVendor)->paginate($limit);
             foreach ($vendorData as $vendor) {
                 unset($vendor->products);
                 $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
