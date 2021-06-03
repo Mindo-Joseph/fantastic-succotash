@@ -289,13 +289,11 @@ class CartController extends BaseController{
             if(empty($user->system_user)){
                 return $this->errorResponse('System id should not be empty.', 404);
             }
-            $cart = $cart->where('unique_identifier', $user->system_user);
-            
+            $cart = $cart->where('unique_identifier', $user->system_user)->;
         }else{
-            $cart = $cart->where('user_id', $user->id);
+            $cart = $cart->where('user_id', $user->id)->first();
         }
-        $cart = $cart->delete();
-        CartCoupon::where('cart_id', $cart->id)->delete();
+        $cart->delete();
         return response()->json(['message' => 'Empty cart successfully.']);
     }
 
