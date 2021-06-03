@@ -38,7 +38,6 @@ class CategoryController extends BaseController
                         }])
                         ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
                         ->where('id', $cid)->first();
-
             $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
                                 $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
                                 $zx->select('variant_options.*', 'vt.title');
@@ -98,8 +97,12 @@ class CategoryController extends BaseController
             if(!empty($products)){
                 foreach ($products as $key => $product) {
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
-                    foreach ($product->variant as $k => $v) {
-                        $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                    if($product->variant->count() > 0){
+                        foreach ($product->variant as $k => $v) {
+                            $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                        }
+                    }else{
+                        $product->variant =  $product;
                     }
                 }
             }

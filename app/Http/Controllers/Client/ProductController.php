@@ -368,7 +368,7 @@ class ProductController extends BaseController
      */
     public function destroy($domain = '', $id)
     {
-        Product::where('id',$id)->update(['is_live' => 2]);
+        Product::where('id',$id)->delete();
         return redirect()->back()->with('success', 'Product deleted successfully!');
     }
 
@@ -518,9 +518,7 @@ class ProductController extends BaseController
             $html .= '</tr>';
             
         }
-
         ProductVariantSet::insert($all_variant_sets);
-       
         $html .= '</table>';
         return $html;
     }
@@ -560,11 +558,12 @@ class ProductController extends BaseController
     }
 
     public function deleteVariant(Request $request){
-        $pv = ProductVariant::where('id', $request->prod_var_id)->where('product_id', $request->prod_id)->first();
-        $pv->status = 0;
-        $pv->save();
-        //$pv = ProductVariantSet::where('product_variant_id', $request->prod_var_id)->delete();
-
+        $product_variant = ProductVariant::where('id', $request->product_variant_id)->where('product_id', $request->product_id)->first();
+        $product_variant->status = 0;
+        $product_variant->save();
+        if($request->is_product_delete){
+            Product::where('id', $request->product_id)->delete();
+        }
         return response()->json(array('success' => true, 'msg' => 'Product variant deleted successfully.'));
     }
 

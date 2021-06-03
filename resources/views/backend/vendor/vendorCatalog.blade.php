@@ -77,14 +77,10 @@
                     <div class="tab-content">
                         <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} card-body" id="configuration">
 
-                        </div> <!-- end tab-pane -->
-                        <!-- end about me section content -->
-
+                        </div>
                         <div class="tab-pane {{($tab == 'category') ? 'active show' : '' }}" id="category">
 
                         </div>
-                        <!-- end timeline content-->
-
                         <div class="tab-pane {{($tab == 'catalog') ? 'active show' : '' }}" id="catalog">
                            <div class="row card-box">
                                 <h4 class="mb-4"> Catalog</h4>
@@ -98,7 +94,6 @@
                                           </a>
                                       </div>
                                     </div>
-
                                     <div class="table-responsive">
                                       <table class="table table-centered table-nowrap table-striped" id="">
                                           <thead>
@@ -205,7 +200,6 @@
                         <div class="col-12">
                           <div class="form-group" id="categoryInput">
                             {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
-
                             <select class="form-control selectizeInput" id="category_list" name="category[]">
                                 <option value="">Select Category...</option>
                                 @foreach($categories as $cate)
@@ -238,7 +232,6 @@
     var regexp = /^[a-zA-Z0-9-_]+$/;
     function alplaNumeric(evt){
         var charCode = String.fromCharCode(event.which || event.keyCode);
-
         if (!regexp.test(charCode)){
             return false;
         }
@@ -251,8 +244,6 @@
     $(document).on('click', '.submitProduct', function(e) { 
         var form =  document.getElementById('save_product_form');
         var formData = new FormData(form);
-
-       console.log('asdas');
         $.ajax({
             type: "post",
             url: "{{route('product.validate')}}",
@@ -294,7 +285,6 @@
             }
         });
     });
-
 </script>
 @include('backend.vendor.modals')
 @endsection
