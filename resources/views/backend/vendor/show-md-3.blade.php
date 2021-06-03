@@ -152,7 +152,7 @@
                     <div class="col-md-6 mb-3">
                         <select class="selectize-select form-control assignToSelect" name="assignTo">
                             @foreach($templetes as $templete)
-                                <option value="{{$templete->id}}">{{$templete->title}}</option>
+                                <option value="{{$templete->id}}" {{$vendor->vendor_templete_id == $templete->id ? 'selected="selected"' : ''}}>{{$templete->title}}</option>
                             @endforeach
                         </select>
                     </div>

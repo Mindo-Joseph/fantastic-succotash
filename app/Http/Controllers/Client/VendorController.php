@@ -24,7 +24,6 @@ class VendorController extends BaseController
      */
     public function index()
     {
-        //$vendors = Vendor::where('status', '!=', '2')->orderBy('id', 'desc')->get();
         $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])
                   ->where('status', '!=', '2')->orderBy('id', 'desc')->get();
         return view('backend/vendor/index')->with(['vendors' => $vendors]);
@@ -153,19 +152,15 @@ class VendorController extends BaseController
                 'coordinates' => $v->geo_coordinates
             ];
         }
-
         $center = [
             'lat' => 30.0612323,
             'lng' => 76.1239239
         ];
-
-         if (!empty($all_coordinates)) {
+        if (!empty($all_coordinates)) {
             $center['lat'] = $all_coordinates[0]['coordinates'][0]['lat'];
             $center['lng'] = $all_coordinates[0]['coordinates'][0]['lng'];
         }
-
         $area1 = ServiceArea::where('vendor_id', $id)->orderBy('created_at', 'DESC')->first();
-
         if(isset($area1)){
             $co_ordinates = $area1->geo_coordinates[0];
          }else{
@@ -178,10 +173,7 @@ class VendorController extends BaseController
                         ->where('id', '>', '1')
                         ->where(function($q) use($id){
                               $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
-                        })
-                        ->orderBy('position', 'asc')
-                        ->orderBy('id', 'asc')
-                        ->orderBy('parent_id', 'asc')->get();
+                        })->orderBy('position', 'asc')->orderBy('id', 'asc')->orderBy('parent_id', 'asc')->get();
         $categoryToggle = array();
         $active = array();
         /* get active category list also with parent */
@@ -198,9 +190,7 @@ class VendorController extends BaseController
             $build = $this->buildTree($categories->toArray());
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
-
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-
         return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes]);
     }
 
@@ -209,7 +199,6 @@ class VendorController extends BaseController
     {
         $vendor = Vendor::findOrFail($id);
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
-
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
                         ->where('id', '>', '1')
                         ->where(function($q) use($id){
@@ -245,7 +234,6 @@ class VendorController extends BaseController
                     ->where('is_active', 1)
                     ->orderBy('is_primary', 'desc')->get();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        
         return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes]);
     }
 
@@ -254,22 +242,19 @@ class VendorController extends BaseController
         $type = Type::all();
         $vendor = Vendor::findOrFail($id);
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
-
         $categories = Category::with('primary')->select('id', 'slug')
                         ->where('id', '>', '1')->where('status', '!=', '2')->where('type_id', '1')
                         ->where('can_add_products', 1)->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->get();
         $products = Product::with(['media.image', 'primary', 'category.cat', 'brand','variant' => function($v){
                             $v->select('id','product_id', 'quantity', 'price')->groupBy('product_id');
                     }])->select('id', 'sku','vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
-                    ->where('vendor_id', $id)->get();
-
+                    ->where('vendor_id', $id)->where('is_live', 1)->get();
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
                         ->where('id', '>', '1')
                         ->where(function($q) use($id){
                               $q->whereNull('vendor_id')
                                 ->orWhere('vendor_id', $id);
-                        })
-                        ->orderBy('position', 'asc')
+                        })->orderBy('position', 'asc')
                         ->orderBy('id', 'asc')
                         ->orderBy('parent_id', 'asc')->get();
         $categoryToggle = array();
