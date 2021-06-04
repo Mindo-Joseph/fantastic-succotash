@@ -427,7 +427,7 @@ class CartController extends BaseController{
                                 $tax_details[] = array(
                                     'rate' => $rate,
                                     'tax_amount' => $tax_amount,
-                                    'rate' => $tax_value->identifier,
+                                    'identifier' => $tax_value->identifier,
                                     'sku' => ucfirst($prod->pvariant->sku),
                                 );
                             }
