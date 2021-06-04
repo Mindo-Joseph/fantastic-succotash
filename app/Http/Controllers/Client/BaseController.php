@@ -81,7 +81,8 @@ class BaseController extends Controller
         if(!is_null($tree) && count($tree) > 0) {
             $this->toggleData .='<ol class="dd-list">';
             foreach($tree as $node) {
-                if($node['type_id'] == 1 || $node['type_id'] == 3){ // type_id 1 means product in type table
+                // type_id 1 means product in type table
+                if($node['type_id'] == 1 || $node['type_id'] == 3){ 
                     $this->toggleData .='<li class="dd-item dd3-item" data-id="'.$node["id"].'">';
                     $icon = $node['icon']['proxy_url'].'30/30'.$node['icon']['image_path'];
                     $this->toggleData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node["slug"].'<span class="inner-div text-right">';
@@ -100,7 +101,6 @@ class BaseController extends Controller
                     }
                     $this->toggleData .='<input type="hidden" name="category_id[]" value="'.$node["id"].'">';
                     $this->toggleData .='</a></span> </div>';
-
                     if(isset($node['children']) && count($node['children']) > 0){
                         $ss = $this->printTreeToggle($node['children'], $activeCategory);
                     }

@@ -196,7 +196,6 @@
                             {!! Form::text('product_url', null, ['class'=>'form-control', 'id' => 'product_url', 'placeholder' => 'Apple iMac', 'style' => 'pointer-events:none;']) !!}
                           </div>
                         </div>
-
                         <div class="col-12">
                           <div class="form-group" id="categoryInput">
                             {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
@@ -208,7 +207,6 @@
                                     @endif
                                 @endforeach
                             </select>
-
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
                             </span>
