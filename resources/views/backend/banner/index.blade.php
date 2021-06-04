@@ -6,7 +6,9 @@
 @endsection
 
 @section('content')
-
+@php
+$timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
+@endphp
 <!-- Start Content-->
 <div class="container-fluid">
 
@@ -71,7 +73,7 @@
                                     </td>
 
                                     <td> {{ $ban->name }} </td>
-                                    <td> <span class="text-center d-inline-block"> {{ $ban->start_date_time }} <br/> to <br/> {{$ban->end_date_time}} </span></td>
+                                    <td> <span class="text-center d-inline-block"> {{ convertDateTimeInTimeZone($ban->start_date_time, $timezone) }} <br/> to <br/> {{convertDateTimeInTimeZone($ban->end_date_time,  $timezone)}} </span></td>
                                     <td>                                         
                                         @if($ban->link == 'category')
                                             Category
