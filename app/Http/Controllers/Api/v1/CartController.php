@@ -424,10 +424,15 @@ class CartController extends BaseController{
                                 $taxable_amount = $taxable_amount + $product_tax;
                                 $taxData[$tckey]['sku'] = ucfirst($prod->pvariant->sku);
                                 $taxData[$tckey]['identifier'] = $tax_value->identifier;
+                                $tax_details[] = array(
+                                    'rate' => $rate,
+                                    'tax_amount' => $tax_amount,
+                                    'rate' => $tax_value->identifier,
+                                    'sku' => ucfirst($prod->pvariant->sku),
+                                );
                             }
                         }
                         $prod->taxdata = $taxData;
-                        $tax_details = $taxData;
                         if(!empty($prod->addon)){
                             foreach ($prod->addon as $ck => $addons) {
                                 $opt_quantity_price = 0;
