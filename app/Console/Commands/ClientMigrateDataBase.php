@@ -30,8 +30,7 @@ class ClientMigrateDataBase extends Command
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(){
         parent::__construct();
     }
 

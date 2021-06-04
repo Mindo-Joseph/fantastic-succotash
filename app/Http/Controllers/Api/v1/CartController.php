@@ -433,7 +433,6 @@ class CartController extends BaseController{
                                 $opt_price_in_currency = $addons->option->price;
                                 $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
                                 $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
-
                                 $vendorAddons[$ck]['cart_product_id'] = $addons->cart_product_id;
                                 $vendorAddons[$ck]['addon_id'] = $addons->addon_id;
                                 $vendorAddons[$ck]['addon_title'] = $addons->set->title;
@@ -444,7 +443,6 @@ class CartController extends BaseController{
                                 $vendorAddons[$ck]['multiplier'] = $clientCurrency->doller_compare;
                                 $vendorAddons[$ck]['quantity'] = $prod->quantity;
                                 $vendorAddons[$ck]['quantity_price'] = $opt_quantity_price;
-
                                 $ttAddon = $ttAddon + $opt_quantity_price;
                                 $payable_amount = $payable_amount + $opt_quantity_price;
                             }
@@ -462,10 +460,9 @@ class CartController extends BaseController{
                             );
                         }
                     }
-                    $prod->variant_options = $variant_options;
-                    $prod->variants = $variantsData;
-
                     $deliver_charge = 0;
+                    $prod->variants = $variantsData;
+                    $prod->variant_options = $variant_options;
                     $prod->deliver_charge = $deliver_charge;
                     $payable_amount = $payable_amount + $deliver_charge;
                     $prod->product_addons = $vendorAddons;

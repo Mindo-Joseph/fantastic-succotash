@@ -214,6 +214,7 @@ class ProductController extends BaseController
         foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live', 'brand_id') as $k => $val) {
             $product->{$k} = $val;
         }
+        $product->tax_category_id = $request->tax_category;
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
         $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;
         $product->is_physical               = ($request->has('is_physical') && $request->is_physical == 'on') ? 1 : 0;
@@ -250,7 +251,6 @@ class ProductController extends BaseController
 
             if($request->has('fileIds')){
                 foreach ($request->fileIds as $key => $value) {
-
                     $productImageSave[] = [
                         'product_id' => $product->id,
                         'media_id' => $value,
