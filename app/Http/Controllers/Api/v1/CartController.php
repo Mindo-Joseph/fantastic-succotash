@@ -418,11 +418,12 @@ class CartController extends BaseController{
                                 $rate = round($tax_value->tax_rate);
                                 $tax_amount = ($price_in_doller_compare * $rate) / 100;
                                 $product_tax = $quantity_price * $rate / 100;
-                                $taxData[$tckey]['identifier'] = $tax_value->identifier;
                                 $taxData[$tckey]['rate'] = $rate;
                                 $taxData[$tckey]['tax_amount'] = $tax_amount;
                                 $taxData[$tckey]['product_tax'] = $product_tax;
+                                $taxData[$tckey]['sku'] = $prod->pvariant->sku;
                                 $taxable_amount = $taxable_amount + $product_tax;
+                                $taxData[$tckey]['identifier'] = $tax_value->identifier;
                             }
                         }
                         $prod->taxdata = $taxData;
