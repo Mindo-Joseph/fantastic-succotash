@@ -65,6 +65,9 @@ class ClientMigrateDataBase extends Command
                 Artisan::call('migrate', ['--database' => $database_name]);
                 DB::disconnect($database_name);
                 $this->info("migrate database start: {$database_name}!");
+            }else{
+                DB::disconnect($database_name);
+                $this->info("migrate database start: {$database_name}!");
             }
         }
     }
