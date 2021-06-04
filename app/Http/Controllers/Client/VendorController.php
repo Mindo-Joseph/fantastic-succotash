@@ -141,6 +141,8 @@ class VendorController extends BaseController
     /*  /**   show vendor page - config tab      */
     public function show($domain = '', $id)
     {
+        $active = array();
+        $categoryToggle = array();
         $vendor = Vendor::findOrFail($id);
         $co_ordinates = $all_coordinates = array();
         $areas = ServiceArea::where('vendor_id', $id)->orderBy('created_at', 'DESC')->get();
@@ -174,8 +176,7 @@ class VendorController extends BaseController
                         ->where(function($q) use($id){
                               $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
                         })->orderBy('position', 'asc')->orderBy('id', 'asc')->orderBy('parent_id', 'asc')->get();
-        $categoryToggle = array();
-        $active = array();
+        
         /* get active category list also with parent */
         foreach ($categories as $category) {
           if(in_array($category->id, $VendorCategory) && $category->parent_id == 1){
@@ -185,18 +186,16 @@ class VendorController extends BaseController
             $active[] = $category->id;
           }
         }
-
         if($categories){
             $build = $this->buildTree($categories->toArray());
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes]);
+        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes, 'builds' => $build]);
     }
 
     /**   show vendor page - category tab      */
-    public function vendorCategory($domain = '', $id)
-    {
+    public function vendorCategory($domain = '', $id){
         $vendor = Vendor::findOrFail($id);
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
@@ -234,7 +233,7 @@ class VendorController extends BaseController
                     ->where('is_active', 1)
                     ->orderBy('is_primary', 'desc')->get();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes]);
+        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build]);
     }
 
     /**   show vendor page - catalog tab      */
@@ -310,50 +309,34 @@ class VendorController extends BaseController
     }
 
     /**     Activate Category for vendor     */
-    public function activeCategory(Request $request, $domain = '', $id)
-    {
-        $vendor = Vendor::where('id', $id)->firstOrFail();
-        $vendor->vendor_templete_id = $request->assignTo;
-        $vendor->add_category = ($request->has('add_category') && $request->add_category == 'on') ? 1 : 0;
-        $vendor->save();
-        $activeCategory = array();
-        $data = VendorCategory::where('vendor_id', $id)->delete();
-        $enableCategory = array();
-        if($request->has('category')){
-          foreach($request->category as $key => $value){
-            $enableCategory[] = [
-              'vendor_id' => $id,
-              'category_id' => $key,
-              'status' => 1
-            ];
-          }
+    public function activeCategory(Request $request, $domain = '', $vendor_id){
+        if($request->has('can_add_category')){
+            $vendor = Vendor::where('id', $request->vendor_id)->firstOrFail();
+            $vendor->add_category = $request->can_add_category == 'true' ? 1 : 0;
+            $vendor->save();
+        }elseif($request->has('assignTo')){
+            $vendor = Vendor::where('id', $request->vendor_id)->firstOrFail();
+            $vendor->vendor_templete_id = $request->assignTo;
+            $vendor->save();
+        }else{
+            $status = $request->status == 'true' ? 1 : 0;
+            $vendor_category = VendorCategory::where('vendor_id', $request->vendor_id)->where('category_id', $request->category_id)->first();
+            if($vendor_category){
+                VendorCategory::where(['vendor_id' => $request->vendor_id, 'category_id'=> $request->category_id])->update(['status'=> $status]);
+            }else{
+                VendorCategory::create(['vendor_id' => $request->vendor_id, 'category_id'=> $request->category_id, 'status'=> $status]);
+            }
         }
-        VendorCategory::insert($enableCategory);
-
-        
-       /* $vc = VendorCategory::where('vendor_id', $id)->where('category_id', $request->category_id)->first();
-        $msg = 'deactivated';
-        if(!$vc){
-            $vc = new VendorCategory();
-            $vc->vendor_id = $id;
-            $vc->category_id = $request->category_id;
-        }
-        $vc->status = $request->status;
-        $msg = ($request->status == 1) ? 'activated' : 'deactivated';
-        $vc->save();*/
-        $toaster = $this->successToaster('Success', 'Category setting saved successfully.');
-        return redirect()->back()->with('toaster', $toaster);
+        return $this->successResponse(null, 'Category setting saved successfully.');
     }
 
     /**     Check parent category enable status - true if all parent, false if any parent disable     */
     public function checkParentStatus(Request $request, $domain = '', $id)
     {
         $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
-        //dd($request->all());
         $is_parent_disabled = $exit = 0;
         $category = Category::where('id', $request->category_id)->select('id', 'parent_id')->first();
         $parent_id = $category->parent_id;
-
         while($exit == 0){
           if($parent_id == 1){
             $exit = 1;
@@ -366,15 +349,10 @@ class VendorController extends BaseController
             $parent_id = $category->parent_id;
           }
         }
-
         if($is_parent_disabled == 1){
           return $this->errorResponse('Parent category is disabled. First enable parent category to enable this category.', 422);
         }else{
           return $this->successResponse(null, 'Parent is enabled.');
         }
-
-        // $toaster = $this->successToaster('Success', 'Category '.$msg.' successfully.');
-        // return redirect()->back()->with('toaster', $toaster);
-          //}
     }
 }
