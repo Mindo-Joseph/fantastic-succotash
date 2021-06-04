@@ -385,7 +385,7 @@ class CartController extends BaseController{
                     if($prod->pvariant){
                         $variantsData['price']              = $price_in_currency;
                         $variantsData['id']                 = $prod->pvariant->id;
-                        $variantsData['sku']                = $prod->pvariant->sku;
+                        $variantsData['sku']                = ucfirst($prod->pvariant->sku);
                         $variantsData['title']              = $prod->pvariant->title;
                         $variantsData['barcode']            = $prod->pvariant->barcode;
                         $variantsData['product_id']         = $prod->pvariant->product_id;
@@ -421,8 +421,8 @@ class CartController extends BaseController{
                                 $taxData[$tckey]['rate'] = $rate;
                                 $taxData[$tckey]['tax_amount'] = $tax_amount;
                                 $taxData[$tckey]['product_tax'] = $product_tax;
-                                $taxData[$tckey]['sku'] = $prod->pvariant->sku;
                                 $taxable_amount = $taxable_amount + $product_tax;
+                                $taxData[$tckey]['sku'] = ucfirst($prod->pvariant->sku);
                                 $taxData[$tckey]['identifier'] = $tax_value->identifier;
                             }
                         }
