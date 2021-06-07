@@ -168,6 +168,7 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>Icon</th>
                                         <th>Name</th>
                                         <th>Category</th>
                                         <th>Action</th>
@@ -177,6 +178,7 @@
                                     @foreach($brands as $key => $brand)
                                     <tr class="brandList" data-row-id="{{$brand->id}}">
                                         <td><span class="dragula-handle"></span></td>
+                                        <td><img class="rounded-circle" src="{{$brand->image['proxy_url'].'30/30'.$brand->image['image_path']}}"></td>
                                         <td>{{$brand->title}}</td>
                                         <td>{{isset($brand->bc->cate->primary) ? $brand->bc->cate->primary->name : ''}}</td>
                                         <td>

@@ -26,6 +26,7 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     Route::resource('banner', 'Client\BannerController');
     Route::post('banner/saveOrder', 'Client\BannerController@saveOrder');
     Route::post('banner/changeValidity', 'Client\BannerController@validity');
+    Route::post('banner/toggle', 'Client\BannerController@toggleAllBanner')->name('banner.toggle');
 
     Route::resource('category', 'Client\CategoryController');
     Route::post('categoryOrder', 'Client\CategoryController@updateOrder')->name('category.order');
@@ -36,7 +37,6 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     Route::resource('brand', 'Client\BrandController');
     Route::post('brand/order', 'Client\BrandController@updateOrders')->name('brand.order');
 
-    Route::resource('promocode', 'Client\PromocodeController');
     Route::resource('cms', 'Client\CmsController');
     Route::resource('tax', 'Client\TaxCategoryController');
     Route::resource('taxRate', 'Client\TaxRateController');

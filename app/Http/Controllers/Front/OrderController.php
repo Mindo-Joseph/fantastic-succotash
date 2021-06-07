@@ -7,7 +7,7 @@ use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, UserAddress, OrderVendor,Vendor};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor, UserAddress,Vendor};
 use GuzzleHttp\Client;
 class OrderController extends FrontController{
     
@@ -41,12 +41,14 @@ class OrderController extends FrontController{
             $order->payment_method = $paymentMethod;
             $order->address_id = $request->address_id;
             $order->save();
-            $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
+            $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon.promo')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
             $total_amount = 0;
             $total_discount = 0;
             $taxable_amount = 0;
             $payable_amount = 0;
-            foreach ($cart_products->groupBy('vendor_id') as $vendor_cart_products) {
+            foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
+                $vendor_discount_amount = 0;
+                $vendor_payable_amount = 0;
                 foreach ($vendor_cart_products as $vendor_cart_product) {
                     $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
                     $quantity_price = 0;
@@ -55,6 +57,7 @@ class OrderController extends FrontController{
                     $price_in_dollar_compare = $price_in_currency * $clientCurrency->doller_compare;
                     $quantity_price = $price_in_dollar_compare * $vendor_cart_product->quantity;
                     $payable_amount = $payable_amount + $quantity_price;
+                    $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
                     $product_taxable_amount = 0;
                     $product_payable_amount = 0;
                     foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
@@ -63,6 +66,7 @@ class OrderController extends FrontController{
                         $product_tax = $quantity_price * $rate / 100;
                         $product_taxable_amount += $taxable_amount + $product_tax;
                         $payable_amount = $payable_amount + $product_tax;
+                        $vendor_payable_amount = $vendor_payable_amount + $product_tax;
                     }
                     $total_amount += $variant->price;
                     $taxable_amount += $product_taxable_amount;
@@ -91,6 +95,13 @@ class OrderController extends FrontController{
                         CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                     }
                 }
+                $OrderVendor = new OrderVendor();
+                $OrderVendor->status = 0;
+                $OrderVendor->order_id= $order->id;
+                $OrderVendor->vendor_id= $vendor_id;
+                $OrderVendor->payable_amount= $vendor_payable_amount;
+                $OrderVendor->discount_amount= $vendor_discount_amount;
+                $OrderVendor->save();
             }
             $order->total_amount = $total_amount;
             $order->total_discount = $total_discount;
@@ -152,90 +163,96 @@ class OrderController extends FrontController{
     public function placeRequestToDispatch($order,$cart_products,$request){
         try
         {
-           $customer = User::find(Auth::id());
-           $cus_address = UserAddress::find($request->address_id);
-           $vendor_ids = array_column($cart_products->toArray(),'vendor_id');
-           $vendor_ids = array_unique($vendor_ids);
-           $tasks = array();
-           
-           if($request->input("payment-group") == 2){
-            $cash_to_be_collected = 'Yes';
-           }else{
-            $cash_to_be_collected = 'No';
-           }
-           foreach($vendor_ids as $key => $vendor){
-               $vendor_details = Vendor::find($vendor);
-               $tasks = array();
-
-               $tasks[] = array('task_type_id' => 1,
-                                'latitude' => $vendor_details->latitude??'',
-                                'longitude' => $vendor_details->longitude??'',
-                                'short_name' => '',
-                                'address' => $vendor_details->address??'',
-                                'post_code' => '',
-                                'barcode' => '',
-                                );
-                
-                $tasks[] = array('task_type_id' => 2,
-                                'latitude' => $cus_address->latitude??'',
-                                'longitude' => $cus_address->longitude??'',
-                                'short_name' => '',
-                                'address' => $cus_address->address??'',
-                                'post_code' => $cus_address->pincode??'',
-                                'barcode' => '',
-                                );
-               
-                $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
-                                'customer_phone_number' => $customer->phone_number ?? '+919041969648',
-                                'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
-                                'recipient_phone' => $customer->phone_number ?? '+919041969648',
-                                'recipient_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
-                                'task_description' => 'Order from:'.$vendor_details->name??Null,
-                                'allocation_type' => 'a',
-                                'task_type' => 'now',
-                                'cash_to_be_collected' => $cash_to_be_collected,
-                                'barcode' => '',
-                                'task' => $tasks              
-                                ];
-
-                $client = new Client([
-                                    'headers' => ['client' => 'newclient1',
-                                    'content-type' => ' multipart/form-data']
-                                ]);
+           $dispatch_domain = $this->getDispatchDomain();
+           if($dispatch_domain && $dispatch_domain != false){
+                        $customer = User::find(Auth::id());
+                        $cus_address = UserAddress::find($request->address_id);
+                        $vendor_ids = array_column($cart_products->toArray(),'vendor_id');
+                        $vendor_ids = array_unique($vendor_ids);
+                        $tasks = array();
                         
-                $res = $client->post('https://royodispatch.com/api/public/task/create',
-                            ['form_params' => ($postdata
-                            )]
-                        );                      
-              
-                                       
+                        if($request->input("payment-group") == 2){
+                            $cash_to_be_collected = 'Yes';
+                        }else{
+                            $cash_to_be_collected = 'No';
+                        }
+                        foreach($vendor_ids as $key => $vendor){
+                            $vendor_details = Vendor::find($vendor);
+                            $tasks = array();
+
+                            $tasks[] = array('task_type_id' => 1,
+                                                'latitude' => $vendor_details->latitude??'',
+                                                'longitude' => $vendor_details->longitude??'',
+                                                'short_name' => '',
+                                                'address' => $vendor_details->address??'',
+                                                'post_code' => '',
+                                                'barcode' => '',
+                                                );
+                                
+                                $tasks[] = array('task_type_id' => 2,
+                                                'latitude' => $cus_address->latitude??'',
+                                                'longitude' => $cus_address->longitude??'',
+                                                'short_name' => '',
+                                                'address' => $cus_address->address??'',
+                                                'post_code' => $cus_address->pincode??'',
+                                                'barcode' => '',
+                                                );
+                            
+                                $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
+                                                'customer_phone_number' => $customer->phone_number ?? '+919041969648',
+                                                'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
+                                                'recipient_phone' => $customer->phone_number ?? '+919041969648',
+                                                'recipient_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
+                                                'task_description' => 'Order from:'.$vendor_details->name??Null,
+                                                'allocation_type' => 'a',
+                                                'task_type' => 'now',
+                                                'cash_to_be_collected' => $cash_to_be_collected,
+                                                'barcode' => '',
+                                                'task' => $tasks              
+                                                ];
+
+                                $client = new Client([
+                                                    'headers' => ['client' => 'newclient1',
+                                                    'content-type' => ' multipart/form-data']
+                                                ]);
+                                        
+                                $res = $client->post('https://winhires.com/api/public/task/create',
+                                            ['form_params' => ($postdata
+                                            )]
+                                        );                      
+                            
+                                                    
+                        }
+
+                        
+                        //    if ($res->getStatusCode() == 200) { 
+                        //     $response_data = json_decode($res->getBody()->getContents());
+                        //     if($response_data->status == 200)
+                        //     {
+                        //         dd('success');
+                        //     }
+                        //     else{
+                        //         dd($response_data->message);
+                        //     }
+                            
+                        //     }
+                        
+                        }
+                        catch(\Exception $e)
+                        {
+                        // dd($e->getMessage());
+                        
+                        }
            }
-
            
-        //    if ($res->getStatusCode() == 200) { 
-        //     $response_data = json_decode($res->getBody()->getContents());
-        //     if($response_data->status == 200)
-        //     {
-        //         dd('success');
-        //     }
-        //     else{
-        //         dd($response_data->message);
-        //     }
-            
-        //     }
-        
-        }
-        catch(\Exception $e)
-        {
-           // dd($e->getMessage());
-           
-        }
-
-
-       
-
-
-
-    }    
+    }
+    
+    public function getDispatchDomain(){
+        $preference = ClientPreference::where('client_code', Auth::user()->code)->first();
+        if($preference->need_delivery_service == 1)
+            return $preference->need_delivery_service;
+        else
+            return false;
+    }
       
 }

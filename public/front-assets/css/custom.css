@@ -440,3 +440,232 @@
 .action-icon.d-block.mb-3 {
     margin-bottom: 11px !important;
 }
+
+.padding-bottom td {
+    vertical-align: top !important;
+    padding-bottom: 0;
+}
+
+.padding-top td {
+    padding-top: 0;
+}
+
+.add_on_items td {
+    padding: 0 15px;
+}
+
+.add_on_items td:first-child {
+    width: 200px;
+}
+
+.add_on_items td:last-child {
+    width: 80px;
+}
+
+.add_on_items tr:last-child td{
+    padding-bottom: 15px;
+}
+
+
+.cart_img_outer{
+    width: 300px;
+    max-width: 100%;
+    height: 300px;
+    margin: auto;
+}
+
+.cart_img_outer img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.main-menu .brand-logo {
+    padding: 0;
+}
+
+.slide-6 .slick-track {
+    display: flex;
+    align-items: center;
+}
+
+/* Login Page Css */
+ul.social-links {
+    width: max-content;
+}
+
+ul.social-links li {
+    padding: 0 10px;
+}
+
+ul.social-links li a {
+    width: 55px;
+    height: 55px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 4px 7px 0 rgba(0,0,0,0.05);
+    display: block;
+    line-height: 55px;
+    font-size: 26px;
+}
+
+.divider_line{
+    height: 1.2px;
+    width: 353px;
+    border: 1.2px solid #979797;
+    opacity: 0.24;
+    background-color: #979797;
+}
+
+.divider_line span {
+    height: 25.15px;
+    width: 25.15px;
+    line-height: 21.15px;
+    border: 1.2px solid #DFE2E6;
+    box-shadow: 0 0 4px 0 rgb(0 0 0 / 5%);
+    color: #000000;
+    font-size: 9.56px;
+    font-weight: bold;
+    border-radius: 50%;
+    text-align: center;
+    display: block;
+    margin: -13px auto;
+    background: #fff;
+}
+
+.wrapper-main h3{
+    color: #000000;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 27px;
+}
+
+.wrapper-main p{
+    opacity: 0.4;
+    color: #000000;
+    font-size: 13.28px;
+    font-weight: 600;
+    line-height: 15px;
+}
+
+.create_box{
+    width: 365px;
+    max-width: 100%;
+    margin: auto;
+}
+
+.create_box h6{
+    color: #000000;
+    font-size: 15.94px;
+    font-weight: 700;
+    line-height: 19px;
+}
+
+.create_box p{
+    opacity: 0.6;
+    color: #000000;
+    font-size: 16px;
+    line-height: 19.92px;
+}
+
+.forgot_btn{
+    color: #000000;
+    font-size: 15.94px;
+    font-weight: 400;
+    line-height: 19px;
+}
+
+.wrapper-main .btn, form .form-control, form .btn {
+    height: 45px;
+    padding: 5px 25px;
+    line-height: 30px;
+}
+
+.verify_id .form-control,.verify_id .input-group-text {
+    border-radius: 50px;
+}
+
+.verify_id .form-control {
+    opacity: 0.6;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 19px 20px;
+}
+
+.verify_id .input-group-text {
+    color: #2B8AFF;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 22.58px;
+}
+
+.otp_inputs .form-control {
+    height: 58.44px;
+    width: 58.44px;
+    border-radius: 11.95px;
+    background-color: #D8E2EA;
+    text-align: center;
+    opacity: 0.63;
+    color: #000000;
+    font-size: 23.91px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 27px;
+    padding: 0 20px;
+}
+
+.resend_txt p{
+    opacity: 0.6;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.resend_txt a{
+    color: #2B8AFF;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
+}
+
+.wrapper-main .form-control {
+    font-weight: 600;
+    color: #000;
+    opacity: 1;
+}
+
+.wrapper-main .form-control::-webkit-input-placeholder,.wrapper-main .form-control::placeholder {
+    opacity: 0.6;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Responsiveness Css Start From Here */
+@media(max-width:991px){
+    .wrapper-main .border-right,.wrapper-main .border-left{
+        border: 0 !important;
+    }
+}

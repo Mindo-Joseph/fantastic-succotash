@@ -62,9 +62,9 @@
                                     <th>Commission Percentage</th>
                                     <th>Commission Fixed per Order</th>
                                     <th>Commission Monthly</th>
-                                    <!-- <th>Products</th>
+                                    <th>Products</th>
                                     <th>Orders</th>
-                                    <th>Active Orders</th> -->
+                                    <th>Active Orders</th>
                                     <th></th>
                                     <!-- <th>Latitude</th>
                                     <th>Longitude</th> -->
@@ -72,41 +72,44 @@
                                 </tr>
                             </thead>
                             <tbody id="post_list">
-                                @foreach($vendors as $ven)
-                                <tr data-row-id="{{$ven->id}}">
+                                @foreach($vendors as $vendor)
+                                <tr data-row-id="{{$vendor->id}}">
                                     <td>
-                                        <a href="{{ route('vendor.show', $ven->id) }}"><img class="rounded-circle" src="{{$ven->logo['proxy_url'].'90/90'.$ven->logo['image_path']}}" alt="{{$ven->id}}"></a>
+                                        <a href="{{ route('vendor.show', $vendor->id) }}"><img class="rounded-circle" src="{{$vendor->logo['proxy_url'].'90/90'.$vendor->logo['image_path']}}" alt="{{$vendor->id}}"></a>
                                     </td>
-                                    <td><a href="{{ route('vendor.show', $ven->id) }}">{{ $ven->name }}</a> </td>
-                                    <td> {{ $ven->address }}</td>
+                                    <td><a href="{{ route('vendor.show', $vendor->id) }}">{{ $vendor->name }}</a> </td>
+                                    <td> {{ $vendor->address }}</td>
 
                                         <td>
-                                            @if($ven->dine_in == 1)
+                                            @if($vendor->dine_in == 1)
                                                 <span class="badge bg-soft-warning text-warning">Dine In</span>
                                             @endif
-                                            @if($ven->takeaway == 1)
+                                            @if($vendor->takeaway == 1)
                                                 <span class="badge bg-soft-warning text-warning">Take Away</span>
                                             @endif
-                                            @if($ven->delivery == 1)
+                                            @if($vendor->delivery == 1)
                                                 <span class="badge bg-soft-warning text-warning">Delivery</span>
                                             @endif
                                         </td>
-                                        <td>{{ ($ven->add_category == 0) ? 'No' : 'Yes' }}</td>
-                                        <td>{{ $ven->commission_percent }}</td>
-                                        <td>{{ $ven->commission_fixed_per_order}}</td>
-                                        <td>{{ $ven->commission_monthly }}</td>
+                                        <td>{{($vendor->add_category == 0) ? 'No' : 'Yes' }}</td>
+                                        <td>{{$vendor->commission_percent }}</td>
+                                        <td>{{$vendor->commission_fixed_per_order}}</td>
+                                        <td>{{$vendor->commission_monthly }}</td>
+                                        <td>{{$vendor->products_count}}</td>
+                                        <td>{{$vendor->orders_count}}</td>
+                                        <td>{{$vendor->active_orders_count}}</td>
                                         <td> </td>
-                                        <!-- <td> {{ $ven->latitude }} </td>
-                                        <td> {{ $ven->longitude }}</td> -->
+                                        <!-- <td> {{ $vendor->latitude }} </td>
+                                        <td> {{ $vendor->longitude }}</td> -->
                                         <td> 
                                             <div class="form-ul" style="width: 60px;">
                                                 <div class="inner-div" style="float: left;">
-                                                    <a class="action-icon" userId="{{$ven->id}}" href="{{ route('vendor.show', $ven->id) }}">
+                                                    <a class="action-icon" userId="{{$vendor->id}}" href="{{ route('vendor.show', $vendor->id) }}">
                                                         <i class="mdi mdi-eye"></i>
                                                     </a> 
                                                 </div>
                                                 <div class="inner-div">
-                                                    <form method="POST" action="{{ route('vendor.destroy', $ven->id) }}">
+                                                    <form method="POST" action="{{ route('vendor.destroy', $vendor->id) }}">
                                                         @csrf
                                                         @method('DELETE')
                                                         <div class="form-group action-icon mb-0">

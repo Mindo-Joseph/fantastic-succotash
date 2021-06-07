@@ -30,7 +30,9 @@ class CartController extends FrontController
             $addresses = [];
         }
         $countries = Country::get();
-        $cartData = $this->getCart($cart);
+        if($cart){
+            $cartData = $this->getCart($cart);
+        }
         $navCategories = $this->categoryNav($langId);
         return view('forntend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries]);
     }
@@ -348,12 +350,10 @@ class CartController extends FrontController
                 }
             }
         }
-        
         if($is_percent == 1){
             $total_discount_percent = ($total_discount_percent > 100) ? 100 : $total_discount_percent;
             $total_discount_amount = ($total_payable_amount * $total_discount_percent) / 100;
         }
-
         if($amount_value > 0){
             $amount_value = $amount_value * $clientCurrency->doller_compare;
             $total_discount_amount = $total_discount_amount + $amount_value;

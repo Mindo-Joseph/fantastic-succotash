@@ -27,7 +27,6 @@ class CelebrityController extends BaseController
                 return $this->successResponse($celebrity);
             }
             $chars = str_split($keyword);
-
             $celebrity = Celebrity::with('country')->select('id', 'name', 'avatar', 'description', 'country_id')
                             ->where('status', '!=', 3)
                             ->where(function ($q) use ($chars) {
@@ -162,9 +161,6 @@ class CelebrityController extends BaseController
                 }
             }
             $order_type = $request->has('order_type') ? $request->order_type : '';
-
-            //$productVariant = ProductVariant
-
             $products = Product::join('product_celebrities as pc', 'pc.product_id', 'products.id')
                     ->with(['variant.vimage.pimage.image', 'media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
@@ -192,22 +188,20 @@ class CelebrityController extends BaseController
                             ->where('price',  '<=', $endRange);
                         });
 
-        if(!empty($productIds)){
-            $products = $products->whereIn('products.id', $productIds);
-        }
-        if(!empty($order_type) && $request->order_type == 'rating'){
-            $products = $products->orderBy('products.averageRating', 'desc');
-        }
-
-        $products = $products->paginate($paginate);
-
-        if(!empty($products)){
-            foreach ($products as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+            if(!empty($productIds)){
+                $products = $products->whereIn('products.id', $productIds);
+            }
+            if(!empty($order_type) && $request->order_type == 'rating'){
+                $products = $products->orderBy('products.averageRating', 'desc');
+            }
+            $products = $products->paginate($paginate);
+            if(!empty($products)){
+                foreach ($products as $key => $value) {
+                    foreach ($value->variant as $k => $v) {
+                        $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                    }
                 }
             }
-        }
             return $this->successResponse($products);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());

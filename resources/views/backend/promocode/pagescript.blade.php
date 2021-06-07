@@ -26,6 +26,7 @@
                         backdrop: 'static',
                         keyboard: false
                     });
+                    $('.dropify').dropify();
                     elems1 = document.getElementsByClassName('switch1Edit');
                     elems2 = document.getElementsByClassName('switch2Edit');
                     var switchery = new Switchery(elems1[0]);
@@ -38,7 +39,7 @@
                         backdrop: 'static',
                         keyboard: false
                     });
-
+                     $('.dropify').dropify();
                     elems1 = document.getElementsByClassName('switch1');
                     elems2 = document.getElementsByClassName('switch2');
                     var switchery = new Switchery(elems1[0]);

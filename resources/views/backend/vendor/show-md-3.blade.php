@@ -1,18 +1,20 @@
-<div class="card-box text-center" style="">
+<div class="card-box text-center p-0 overflow-hidden" style="">
     
-    <div class="background">
-        <img src="{{$vendor->logo['proxy_url'] . '90/90' . $vendor->logo['image_path']}}" class="rounded-circle avatar-lg img-thumbnail"
-            alt="profile-image">
+    <div class="background pt-3 pb-2 px-2" style="background:url({{$vendor->banner['proxy_url'] . '90/90' . $vendor->banner['image_path']}}) no-repeat center center;background-size:cover;">
+        <div class="vendor_text">
+            <img src="{{$vendor->logo['proxy_url'] . '90/90' . $vendor->logo['image_path']}}" class="rounded-circle avatar-lg img-thumbnail"
+                alt="profile-image">
 
-        <h4 class="mb-0">{{ucfirst($vendor->name)}}</h4>
-        <p class="text-muted">{{$vendor->address}}</p>
+            <h4 class="mb-0 text-white">{{ucfirst($vendor->name)}}</h4>
+            <p class="text-white">{{$vendor->address}}</p>
 
-        <button type="button" class="btn btn-success btn-sm waves-effect mb-2 waves-light openEditModal"> Edit </button>
-        <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light"> Block </button>
+            <button type="button" class="btn btn-success btn-sm waves-effect mb-2 waves-light openEditModal"> Edit </button>
+            <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light"> Block </button>
+        </div>
     </div>
-    <div class="text-left mt-3">
+    <div class="text-left mt-0 p-3">
         <!-- <h4 class="font-13">Description :</h4> -->
-        <p class="text-muted font-13 mb-3">
+        <p class="text-muted font-13 mb-0">
            {{$vendor->desc}}
         </p>
         <!-- <p class="text-muted mb-2 font-13"><strong>Latitude :</strong> <span class="ml-2">{{$vendor->latitude}}</span></p>

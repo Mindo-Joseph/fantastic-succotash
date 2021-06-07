@@ -137,12 +137,12 @@
                         <span> Payment Options </span>
                     </a>
                 </li>
-                <li>   
+                <!-- <li>   
                     <a href="{{route('payment.index')}}" >
                         <span class="icon-payment_icon"></span>
                         <span> Payments </span>
                     </a>
-                </li>
+                </li> -->
                 <li>   
                     <a href="{{route('promocode.index')}}" >
                         <span class="icon-promocode_icon"></span>

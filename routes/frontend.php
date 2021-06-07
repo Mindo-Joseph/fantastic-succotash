@@ -46,7 +46,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
 	Route::post('/product/cart','Front\CartController@postAddToCart')->name('addToCart');
 	Route::get('cartProducts','Front\CartController@getCartData')->name('getCartProducts');
-	Route::get('viewcart','Front\CartController@showCart')->name('showCart');
+	
 	Route::post('/product/updateCartQuantity','Front\CartController@updateQuantity')->name('updateQuantity');
 	Route::post('/product/deletecartproduct','Front\CartController@deleteCartProduct')->name('deleteCartProduct');
 	Route::get('userAddress','Front\UserController@getUserAddress')->name('getUserAddress');
@@ -67,7 +67,6 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('auth/{driver}', 'Front\FacebookController@redirectToSocial');
 	Route::get('auth/callback/{driver}', 'Front\FacebookController@handleSocialCallback');
 
-
 	Route::get('UserCheck', 'Front\UserController@checkUserLogin')->name('checkUserLogin');
 
 	Route::get('stripe/showForm/{token}', 'Front\PaymentController@showFormApp')->name('stripe.formApp');
@@ -78,11 +77,12 @@ Route::group(['middleware' => ['domain']], function () {
 
 	//Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
 
-	Route::get('user/cart/ding/dong/ping/pong', 'Front\CartController@getCartData')->name('user.dingPong');
+	Route::get('/search','Front\SearchController@search');
 
 });
 
 Route::group(['middleware' => ['domain', 'webAuth']], function() {
+	Route::get('viewcart','Front\CartController@showCart')->name('showCart');
     Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
     Route::post('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInformation');
     Route::get('user/resetSuccess','Front\CustomerAuthController@resetSuccess')->name('customer.resetSuccess');

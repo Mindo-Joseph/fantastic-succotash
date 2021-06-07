@@ -45,4 +45,13 @@ class Vendor extends Model
       $result = Vendor::where('id', $vendor_id)->first();
       return $result->name;
     }
+
+    public function orders(){
+       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id'); 
+    }
+
+    public function activeOrders(){
+       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id')
+              ->where('status', '!=', 3); 
+    }
 }
