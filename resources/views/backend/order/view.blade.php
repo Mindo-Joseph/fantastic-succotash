@@ -141,7 +141,7 @@
                                     </tr> -->
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Estimated Tax :</th>
-                                        <td>${{$taxable_amount}}</td>
+                                        <td>${{$order->taxable_amount}}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Total :</th>
