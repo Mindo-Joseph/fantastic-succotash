@@ -109,15 +109,7 @@
                 <div class="card-box">
                     <h5 class="text-uppercase bg-light p-2 mt-0 mb-3">General</h5>
                     <div class="row mb-2 row-spacing">
-                        <!--<div class="col-6 mb-2">
-                            {!! Form::label('title', 'Product Type',['class' => 'control-label']) !!}
-                            <select class="form-control selectizeInput" id="typeSelectBox" name="type_id">
-                                @foreach($typeArray as $type)
-                                    <option value="{{$type->id}}" @if($type->id == $product->type_id) selected @endif >{{$type->title}}</option>
-                                @endforeach
-                            </select>
-                        </div> -->
-
+                       
                         <div class="col-md-5 mb-2" style="cursor: not-allowed;">
                             {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
@@ -202,7 +194,6 @@
                     </div>
                     @endif
                     <div class="row mb-2">
-                        <!-- {!! Form::label('title', 'Track Inventory',['class' => 'control-label col-sm-4']) !!} -->
                         <div class="col-sm-4">
                         {!! Form::label('title', 'Track Inventory') !!} <br>
                             <input type="checkbox" bid="" id="has_inventory" data-plugin="switchery" name="has_inventory" class="chk_box" data-color="#43bee1" checked>
@@ -268,8 +259,9 @@
                                         <th>Compare at price</th>
                                         <th>Cost Price</th>
                                         <th>Quantity</th>
-                                        <th> </th>
+                                        <th>Action</th>
                                     </thead>
+                                    <tbody id="product_tbody_{{$product->id}}">
                                     @foreach($product->variant as $varnt)
                                         <?php 
                                             $existSet = array();
@@ -286,7 +278,7 @@
                                                 $vsets .= $vs->title.', ';
                                             }
                                         ?>
-                                        <tr>
+                                        <tr id="tr_{{$varnt->id}}">
                                             <td>
                                                 <div class="image-upload">
                                                   <label class="file-input uploadImages" for="{{$varnt->id}}">
@@ -313,10 +305,13 @@
                                                 <input type="text" style="width: 70px;" name="variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
                                             </td>
                                             <td>
-                                                <a href="javascript:void(0);" varId="{{$varnt->id}}" class="action-icon deleteExistRow"> <i class="mdi mdi-delete"></i></a>
+                                                <a href="javascript:void(0);" data-varient_id="{{$varnt->id}}" class="action-icon deleteExistRow"> 
+                                                    <i class="mdi mdi-delete"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
+                                    </tbody>
                                 </table>
                             </div>
                             @endif
@@ -326,7 +321,6 @@
                                 <h5 class="">No variant assigned to category.</h5>
                             </div>
                         @endif
-
                     </div>
                 </div>                
 
@@ -348,11 +342,12 @@
                             {!! Form::label('title', 'Featured',['class' => 'control-label']) !!}
                             <input type="checkbox" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#43bee1" @if($product->is_new == 1) checked @endif>
                         </div>
-                        
-                        <div class="col-md-5 d-flex justify-content-between">
-                            {!! Form::label('title', 'Required Last Mile',['class' => 'control-label']) !!}
-                            <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#43bee1" @if($product->Requires_last_mile == 1) checked @endif>
-                        </div>
+                        @if($configData->need_delivery_service == 1)
+                            <div class="col-md-5 d-flex justify-content-between">
+                                {!! Form::label('title', 'Required Last Mile',['class' => 'control-label']) !!}
+                                <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#43bee1" @if($product->Requires_last_mile == 1) checked @endif>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="row">
@@ -533,7 +528,6 @@
             $('.shippingDiv').hide();
         }
     });
-
     $('#is_physical').change(function(){
         var val = $(this).prop('checked');
         if(val == true){
@@ -553,10 +547,40 @@
     });
 
     var regexp = /^[a-zA-Z0-9-_]+$/;
-
+    function removeVariant(product_id, product_variant_id, is_product_delete){
+        var redirect_url = "{{url('client/vendor/catalogs/'.$product->vendor_id)}}";
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: "{{route('product.deleteVariant')}}",
+            data: {"_token": "{{ csrf_token() }}", product_id : product_id, product_variant_id: product_variant_id, is_product_delete : is_product_delete},
+            success: function (response) {
+                $('#tr_'+product_variant_id).remove();
+                if(is_product_delete){
+                    window.location.href = redirect_url;
+                }
+            }
+        });
+    }
+    $(document).on('click', '.deleteExistRow', function () {
+        var that = $(this);
+        var product_id = "{{$product->id}}";
+        var product_variant_id = $(this).data('varient_id');
+        var rowCount = $('#product_tbody_'+product_id+' tr').length;
+        if(rowCount == 1){
+            var is_product_delete = true;
+            if(confirm("Are you sure? You want to delete this variant.")) {
+                removeVariant(product_id, product_variant_id, is_product_delete);
+            }
+        }else{
+            var is_product_delete = false;
+            if(confirm("Are you sure? You want to delete this brand.")) {
+                removeVariant(product_id, product_variant_id, is_product_delete);
+            }
+        }
+    });
     function alplaNumeric(evt){
         var charCode = String.fromCharCode(event.which || event.keyCode);
-
         if (!regexp.test(charCode)){
             return false;
         }
@@ -571,10 +595,8 @@
     });
 
     var uploadedDocumentMap = {};
-
     Dropzone.autoDiscover = false;
-    jQuery(document).ready(function() {
-
+    $(document).ready(function() {
         $("div#my-awesome-dropzone").dropzone({
             acceptedFiles: ".jpeg,.jpg,.png",
             addRemoveLinks: true,
@@ -653,11 +675,9 @@
                 vids.push($this.attr('varid'));
             }
         });
-
         $("#exist_variant_div .exist_sets").each(function(){
             exist.push($(this).val());
         });
-
         $.ajax({
             type: "post",
             url: "{{route('product.makeRows')}}",
@@ -688,25 +708,7 @@
         $(this).closest('tr').remove();
     });
 
-    $(document).on('click', '.deleteExistRow', function () {
-        var prod_id = '{{$product->id}}';
-        var prod_var_id = $(this).attr('varid');
-        $this = $(this);
-
-        if(confirm("Are you sure? You want to delete this brand.")) {
-            $.ajax({
-                type: "post",
-                url: "{{route('product.deleteVariant')}}",
-                data: {"_token": "{{ csrf_token() }}", 'prod_id' : prod_id, 'prod_var_id' : prod_var_id},
-                dataType: 'json',
-                success: function (resp) {
-                    alert(resp.msg);
-                    $this.closest('tr').remove();
-                }
-            });
-        }
-        return false;
-    });
+    
 
     $(document).on('change', '.vimageNew', function () {
 
@@ -826,7 +828,6 @@
                 imageId.push($this.attr('imgId'));
             }
         });
-
         $.ajax({
             type: "post",
             url: "{{route('product.variant.update')}}",

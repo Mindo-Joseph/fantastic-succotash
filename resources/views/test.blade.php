@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-lg-6 mb-lg-0 mb-3 text-center border-right pb-4">
                     <h3 class="mb-2">Login to Your Account</h3>
-                    <div class="sub_heading">Social media logins</div>
+                    <!-- <div class="sub_heading">Social media logins</div> -->
                     <ul class="social-links d-flex align-items-center mx-auto mb-4 mt-3">
                         <li>
                             <a href="#"><img src="{{asset('front-assets/images/google.svg')}}" alt=""></a>
@@ -47,7 +47,6 @@
                             </form>
                         </div>
                     </div>    
-                    
                 </div>
                 <div class="col-lg-6 text-center">
                     <h3 class="mb-md-5 mb-4">New Customer</h3>   
@@ -57,7 +56,7 @@
                         <p>Sign up for a free account at our store. Registration is quick and easy. It allows you to be able to order from our shop. To start shopping click register.</p>
                         <a href="#" class="btn btn-solid mt-4">Create an Account</a>
                     </div>
-                </div
+                </div>
             </div>
         </div>
     </section> 
@@ -69,8 +68,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 mb-lg-0 mb-3 text-center">
-                    <h3 class="mb-2">Login to Your Account</h3>
-                    <div class="sub_heading">Social media logins</div>
+                    <h3 class="mb-2">New Customer</h3>
+                    <!-- <div class="sub_heading">Social media logins</div> -->
                     <ul class="social-links d-flex align-items-center mx-auto mb-4 mt-3">
                         <li>
                             <a href="#"><img src="{{asset('front-assets/images/google.svg')}}" alt=""></a>
@@ -95,16 +94,16 @@
                                 <div class="row form-group mb-0">
                                     <div class="col-md-6 mb-3">
                                         <label for="">Full Name</label>
-                                        <input type="" class="form-control" id="" aria-describedby="" placeholder="Enter  address">
+                                        <input type="" class="form-control" id="" aria-describedby="" placeholder="Enter Name">
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="">Contact No.</label>
-                                        <input type="" class="form-control" id="" aria-describedby="" placeholder="Enter password">
+                                        <label for="">Phone No.</label>
+                                        <input type="" class="form-control" id="" aria-describedby="" placeholder="Enter Phone No.">
                                     </div>                                    
                                 </div>
                                 <div class="row form-group mb-0">
                                     <div class="col-md-6 mb-3">
-                                        <label for=""> Email</label>
+                                        <label for="">Email</label>
                                         <input type="" class="form-control" id="" aria-describedby="" placeholder="Enter email address">
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -114,8 +113,8 @@
                                 </div>
                                 <div class="row form-group mb-0 align-items-end">
                                     <div class="col-md-6 mb-3">
-                                        <label for="">Refferal Code</label>
-                                        <input type="" class="form-control" id="" aria-describedby="" placeholder="Enter refferal code">
+                                        <label for="">Referral Code</label>
+                                        <input type="" class="form-control" id="" aria-describedby="" placeholder="Enter Referral code">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <button type="submit" class="btn btn-solid submitLogin w-100">Create An Account</button>
@@ -240,6 +239,8 @@
                                     <button type="submit" class="btn btn-solid submitLogin">Verify</button>
                                 </div>
                             </div>
+
+                            
                         </div>
                     </div>
                 </div

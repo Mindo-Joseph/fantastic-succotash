@@ -17,6 +17,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('category/filters/{id?}', 'Api\v1\CategoryController@categoryFilters');
         Route::get('celebrityProducts/{id?}', 'Api\v1\CelebrityController@celebrityProducts');
         Route::post('celebrity/filters/{id?}', 'Api\v1\CelebrityController@celebrityFilters');
+        Route::post('vendor/category/list', 'Api\v1\VendorController@postVendorCategoryList');
         Route::post('productByVariant/{id}','Api\v1\ProductController@getVariantData')->name('productVariant');
     });
     Route::group(['middleware' => ['dbCheck','systemAuth', 'apilogger']], function() {

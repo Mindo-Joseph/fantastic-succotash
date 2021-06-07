@@ -35,28 +35,62 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="track-order-list">
-                            <ul class="list-unstyled">
-                                <li class="completed">
-                                    <h5 class="mt-0 mb-1">Order Placed</h5>
-                                    <p class="text-muted">April 21 2019 <small class="text-muted">07:22 AM</small> </p>
-                                </li>
-                                <li class="completed">
-                                    <h5 class="mt-0 mb-1">Packed</h5>
-                                    <p class="text-muted">April 22 2019 <small class="text-muted">12:16 AM</small></p>
-                                </li>
-                                <li>
-                                    <span class="active-dot dot"></span>
-                                    <h5 class="mt-0 mb-1">Shipped</h5>
-                                    <p class="text-muted">April 22 2019 <small class="text-muted">05:16 PM</small></p>
-                                </li>
-                                <li>
-                                    <h5 class="mt-0 mb-1"> Delivered</h5>
-                                    <p class="text-muted">Estimated delivery within 3 days</p>
-                                </li>
-                            </ul>
-                            <div class="text-center mt-4">
-                                <a href="#" class="btn btn-primary">Show Details</a>
+                        <div class="row track-order-list">
+                            <div class="col-lg-6">
+                                <ul class="list-unstyled">
+                                    <li class="completed">
+                                        <h5 class="mt-0 mb-1">Placed</h5>
+                                        <p class="text-muted">April 21 2019 <small class="text-muted">07:22 AM</small> </p>
+                                    </li>
+                                    <li>
+                                        <h5 class="mt-0 mb-1">Accepted</h5>
+                                        <p class="text-muted"><small class="text-muted">...</small></p>
+                                    </li>
+                                    <li>
+                                        <span class="active-dot dot"></span>
+                                        <h5 class="mt-0 mb-1">Processing</h5>
+                                        <p class="text-muted"><small class="text-muted">...</small></p>
+                                    </li>
+                                    <li>
+                                        <h5 class="mt-0 mb-1"> Out For Delivery</h5>
+                                        <p class="text-muted">...</p>
+                                    </li>
+                                     <li>
+                                        <h5 class="mt-0 mb-1">Delivered</h5>
+                                        <p class="text-muted">....</p>
+                                    </li>
+                                </ul>
+                                 <div class="text-center mt-2">
+                                    <a href="#" class="btn btn-primary">Update Status</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <ul class="list-unstyled">
+                                    <li class="completed">
+                                        <h5 class="mt-0 mb-1">Created</h5>
+                                        <p class="text-muted">April 21 2019 <small class="text-muted">07:22 AM</small> </p>
+                                    </li>
+                                    <li class="completed">
+                                        <h5 class="mt-0 mb-1">Assigned</h5>
+                                        <p class="text-muted">April 22 2019 <small class="text-muted">12:16 AM</small></p>
+                                    </li>
+                                    <li>
+                                        <span class="active-dot dot"></span>
+                                        <h5 class="mt-0 mb-1">Started</h5>
+                                        <p class="text-muted">April 22 2019 <small class="text-muted">05:16 PM</small></p>
+                                    </li>
+                                    <li>
+                                        <h5 class="mt-0 mb-1">Arrived</h5>
+                                        <p class="text-muted">Estimated delivery within 3 days</p>
+                                    </li>
+                                     <li>
+                                        <h5 class="mt-0 mb-1">Completed</h5>
+                                        <p class="text-muted">....</p>
+                                    </li>
+                                </ul>
+                                 <div class="text-center mt-2">
+                                    <a href="#" class="btn btn-primary">Update Status</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -78,32 +112,40 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $product_total_count = 0;
+                                        $taxable_amount = 0;
+                                    @endphp
                                     @foreach($order->products as $product)
+                                    @php
+                                        $product_total_count += $product->quantity * $product->price;
+                                        $taxable_amount += $product->taxable_amount;
+                                    @endphp
                                     <tr>
                                         <th scope="row">{{$product->product_name}}</th>
                                         <td>
                                             <img src="{{$product->image['proxy_url'].'32/32'.$product->image['image_path']}}" alt="product-img" height="32">
                                         </td>
                                         <td>{{ $product->quantity }}</td>
-                                        <td>$39</td>
-                                        <td>$39</td>
+                                        <td>${{ $product->price }}</td>
+                                        <td>${{ $product->quantity * $product->price}}</td>
                                     </tr>
                                     @endforeach
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Sub Total :</th>
-                                        <td><div class="fw-bold">$177</div></td>
+                                        <td><div class="fw-bold">${{$product_total_count}}</div></td>
                                     </tr>
-                                    <tr>
+                                   <!--  <tr>
                                         <th scope="row" colspan="4" class="text-end">Shipping Charge :</th>
                                         <td>$24</td>
-                                    </tr>
+                                    </tr> -->
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Estimated Tax :</th>
-                                        <td>$12</td>
+                                        <td>${{$taxable_amount}}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Total :</th>
-                                        <td><div class="fw-bold">$213</div></td>
+                                        <td><div class="fw-bold">${{$product_total_count + $taxable_amount}}</div></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -117,40 +159,43 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="header-title mb-3">Shipping Information</h4>
-                        <h5 class="font-family-primary fw-semibold">Brent Jones</h5>
-                        <p class="mb-2"><span class="fw-semibold me-2">Address:</span> 3559 Roosevelt Wilson Lane San Bernardino, CA 92405</p>
-                        <p class="mb-2"><span class="fw-semibold me-2">Phone:</span> (123) 456-7890</p>
-                        <p class="mb-0"><span class="fw-semibold me-2">Mobile:</span> (+01) 12345 67890</p>
+                        <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
+                        <p class="mb-2"><span class="fw-semibold me-2">Address:</span> {{ $order->address->address}}</p>
+                        <p class="mb-0"><span class="fw-semibold me-2">Mobile:</span> {{$order->user->phone_number}}</p>
                     </div>
                 </div>
             </div> 
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="header-title mb-3">Billing Information</h4>
-                        <ul class="list-unstyled mb-0">
-                            <li>
-                                <p class="mb-2"><span class="fw-semibold me-2">Payment Type:</span> Credit Card</p>
-                                <p class="mb-2"><span class="fw-semibold me-2">Provider:</span> Visa ending in 2851</p>
-                                <p class="mb-2"><span class="fw-semibold me-2">Valid Date:</span> 02/2020</p>
-                                <p class="mb-0"><span class="fw-semibold me-2">CVV:</span> xxx</p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
+            <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="header-title mb-3">Delivery Info</h4>
                         <div class="text-center">
                             <i class="mdi mdi-truck-fast h2 text-muted"></i>
                             <h5><b>UPS Delivery</b></h5>
-                            <p class="mb-1"><span class="fw-semibold">Order ID :</span> xxxx235</p>
+                            <p class="mb-1"><span class="fw-semibold">Order ID :</span> #{{$order->order_number}}</p>
                             <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> COD</p>
+                        </div>
+                        <div class="text-center mt-2">
+                            <a href="javascript::void(0);" class="btn btn-primary" id="delivery_info_button">Delivery Info</a>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="delivery_info_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delivery Info</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body" id="AddCardBox">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info waves-effect waves-light submitAddForm">Submit</button>
             </div>
         </div>
     </div>

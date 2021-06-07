@@ -108,11 +108,13 @@ class PromoCodeController extends Controller{
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }
     }
+
     public function validatePromoCodeList(){
         return Validator::make(request()->all(), [
             'vendor_id' => 'required',
         ]);
     }
+    
     public function validatePromoCode(){
         return Validator::make(request()->all(), [
             'cart_id' => 'required',

@@ -1,6 +1,15 @@
 <!-- bundle -->
 <!-- Vendor js -->
-
+<?php 
+    if(Session::has('toaster')){
+    $toast = Session::get('toaster');
+        echo '<script>
+            $(document).ready(function(){
+                $.NotificationApp.send("'.$toast["title"].'", "'.$toast["body"].'", "top-right", "'.$toast["color"].'", "'.$toast["type"].'");
+            });
+        </script>';
+    }
+?>
 <script src="{{asset('assets/libs/selectize/selectize.min.js')}}"></script>
 <script src="{{asset('assets/libs/mohithg-switchery/mohithg-switchery.min.js')}}"></script>
 <script src="{{asset('assets/libs/multiselect/multiselect.min.js')}}"></script>
@@ -19,7 +28,8 @@
 <script src="{{asset('assets/libs/devbridge-autocomplete/devbridge-autocomplete.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
 <script src="{{asset('assets/js/pages/my-form-advanced.init.js')}}"></script>
-
+<script src="{{asset('assets/libs/jquery-toast-plugin/jquery-toast-plugin.min.js')}}"></script>
+<script src="{{asset('assets/js/pages/toastr.init.js')}}"></script>
 <script>
 
 function gm_authFailure() {
@@ -63,9 +73,6 @@ const stopLoader = function(element) {
     // close the loader
     $(element).waitMe("hide");
 }
-
-
-
 </script>
 
 @yield('script-bottom')

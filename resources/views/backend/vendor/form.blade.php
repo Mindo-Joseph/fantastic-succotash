@@ -1,7 +1,5 @@
 <div class="row">
     <div class="col-md-12">
-        
-
         <div class="row mb-2">
             <div class="col-md-1"></div>
             <div class="col-md-3">
@@ -41,7 +39,6 @@
                     </span>
                 </div>
             </div>
-        
             <div class="col-md-4">
                 <div class="form-group mb-3" id="latitudeInput">
                     {!! Form::label('title', 'latitude',['class' => 'control-label']) !!} 
@@ -77,7 +74,7 @@
                 <div class="form-group">
                     {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
                     <div>
-                        <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control takeaway" data-color="#43bee1" checked='checked'>
+                        <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control takeaway" data-color="#43bee1" @if($vendor->takeaway == 1) checked @endif>
                     </div>
                 </div>
             </div>
@@ -85,11 +82,18 @@
                 <div class="form-group">
                     {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
                     <div>
-                        <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control delivery" data-color="#43bee1" checked='checked'>
+                        <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control delivery" data-color="#43bee1" @if($vendor->delivery == 1) checked @endif>
                     </div>
                 </div>
             </div>
-
+            <!-- <div class="col-md-3">
+                <div class="form-group">
+                    {!! Form::label('title', 'Show Category',['class' => 'control-label']) !!} 
+                    <div>
+                        <input type="checkbox" data-plugin="switchery" name="is_show_category" class="form-control categoryShow" data-color="#43bee1" @if($vendor->is_show_category == 1) checked @endif>
+                    </div>
+                </div>
+            </div> -->
             <div class="col-md-12">
                 <div class="form-group" id="descInput">
                     {!! Form::label('title', 'Description',['class' => 'control-label']) !!} 

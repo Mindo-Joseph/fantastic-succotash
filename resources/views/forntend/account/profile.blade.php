@@ -71,7 +71,7 @@
                             <li><a href="{{route('user.addressBook')}}">Address Book</a></li>
                             <li><a href="{{route('user.orders')}}">My Orders</a></li>
                             <li><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
-                            <li><a href="#">My Account</a></li>
+                            <li><a href="{{route('user.account')}}">My Account</a></li>
                             <li><a href="{{route('user.changePassword')}}">Change Password</a></li>
                             <li class="last"><a href="{{route('user.logout')}}" >Log Out</a></li>
                         </ul>
@@ -82,12 +82,21 @@
                 <div class="dashboard-right">
                     <div class="dashboard">
                         <div class="page-title">
-                            <h2>My Dashboard</h2>
+                            <h2>My Profile</h2>
                         </div>
+                        <div class="card-box">
+                            <div class="row align-items-center">
+                                <div class="col-sm-6 d-flex align-items-center">
+                                    <div class='file file--upload'>
+                                        <label>
+                                            <span class="update_pic">
+                                                <img src="{{asset('assets/images/products/product-1.png')}}" alt="">
+                                            </span>
+                                        </label>
                         <div class="welcome-msg">
                             <h5>Hello, {{ucwords(Auth::user()->name)}} !</h5>
 
-                            <h3>Your Refferal Code: {{$userRefferal['refferal_code']}}</h3>
+                            <h3>Your Refferal Code: {{(isset($userRefferal['refferal_code'])) ? $userRefferal['refferal_code'] : ''}}</h3>
                             <div class="box mb-2">
                                <a href="{{route('user.sendRefferal')}}">Send Refferal</a>
                             </div>
@@ -112,32 +121,48 @@
                                             <h6>{{Auth::user()->phone_number}}</h6>
                                         </div>
                                     </div>
+                                    <div class="name_location">
+                                        <h5 class="mt-0 mb-1"> {{ucwords(Auth::user()->name)}}</h5>
+                                        <p class="m-0"><i class="fa fa-map-marker mr-1" aria-hidden="true"></i> Chandigarh</p>
+                                    </div>  
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="box">
-                                        <div class="box-title">
-                                            <h3>Newsletters</h3><a href="#">Edit</a>
-                                        </div>
-                                        <div class="box-content">
-                                            <p>You are currently not subscribed to any newsletter.</p>
-                                        </div>
-                                    </div>
+                                <div class="col-sm-6 text-center text-md-right mt-3 mt-md-0">
+                                    <a class="btn btn-solid" data-toggle="modal" data-target="#refferal-modal" href="javascript:void(0)">Edit Profile</a>
                                 </div>
                             </div>
-                            <div>
-                                <div class="box">
-                                    <div class="box-title">
-                                        <h3>Address Book</h3><a href="#">Manage Addresses</a>
-                                    </div>
+                        </div>
+                        <hr class="mt-2">
+                        <div class="welcome-msg">
+                            <h4 class="d-flex align-items-center justify-content-between m-0"><span>Your Refferal Code: {{$userRefferal['refferal_code']}}</span> <a href="{{route('user.sendRefferal')}}">Send Refferal</a></h4>                           
+                        </div>
+                        
+                        <div class="row mt-3">
+                            <div class="col-lg-7">
+                                <div class="card-box">
                                     <div class="row">
-                                        <div class="col-sm-6">
-                                            <h6>Default Billing Address</h6>
-                                            <address>You have not set a default billing address.<br><a href="#">Edit
-                                                    Address</a></address>
+                                        <div class="col-md-6">
+                                            <div class="info-text mb-3">
+                                                <label class="m-0">Name</label>
+                                                <p>Chander Mohan</p>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <h6>Default Shipping Address</h6>
-                                            <address>You have not set a default shipping address.<br><a href="#">Edit Address</a></address>
+                                        <div class="col-md-6">
+                                            <div class="info-text mb-3">
+                                                <label class="m-0">Email</label>
+                                                <p>Chander123@yopmail.com</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-text mb-3">
+                                                <label class="m-0">Phone Number</label>
+                                                <p>8521354681</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-text mb-3">
+                                                <label class="m-0">Time Zone</label>
+                                                <p>Chander Mohan</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -149,6 +174,9 @@
         </div>
     </div>
 </section>
+
+
+<!-- Refferal Code Popup -->
 
 
 @endsection
@@ -188,6 +216,12 @@
             },
         });
     }
+</script>
+<script>
+  var loadFile = function(event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+   };
 </script>
 
 @endsection

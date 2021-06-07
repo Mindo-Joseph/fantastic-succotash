@@ -5,6 +5,19 @@
 
 <style type="text/css">
     .pac-container, .pac-container .pac-item { z-index: 99999 !important; }
+    .fc-v-event{
+        border-color: #43bee1;
+        background-color: #43bee1;
+    }
+    .dd-list .dd3-content{
+        position: relative;
+    }
+    span.inner-div {
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
 </style>
 @endsection
 
@@ -64,14 +77,10 @@
                     <div class="tab-content">
                         <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} card-body" id="configuration">
 
-                        </div> <!-- end tab-pane -->
-                        <!-- end about me section content -->
-
+                        </div>
                         <div class="tab-pane {{($tab == 'category') ? 'active show' : '' }}" id="category">
 
                         </div>
-                        <!-- end timeline content-->
-
                         <div class="tab-pane {{($tab == 'catalog') ? 'active show' : '' }}" id="catalog">
                            <div class="row card-box">
                                 <h4 class="mb-4"> Catalog</h4>
@@ -85,7 +94,6 @@
                                           </a>
                                       </div>
                                     </div>
-
                                     <div class="table-responsive">
                                       <table class="table table-centered table-nowrap table-striped" id="">
                                           <thead>
@@ -118,7 +126,7 @@
                                                   <td> {{ !empty($product->brand) ? $product->brand->title : 'N/A'  }}</td>
                                                   <td> {{ $product->variant->first() ? $product->variant->first()->quantity : 0 }}</td>
                                                   <td> {{ $product->variant->first() ? $product->variant->first()->price : 0 }}</td>
-                                                  <td> {{ ($product->is_live == 0) ? 'Draft' : 'Published' }}</td>
+                                                  <td> {{ ($product->is_live == 1) ? 'Published' : 'Draft'}}</td>
                                                   <td> {{ ($product->is_new == 0) ? 'No' : 'Yes' }}</td>
                                                   <td> {{ ($product->is_featured == 0) ? 'No' : 'Yes' }}</td>
                                                   <td> {{ ($product->Requires_last_mile == 0) ? 'No' : 'Yes' }}</td>
@@ -188,18 +196,17 @@
                             {!! Form::text('product_url', null, ['class'=>'form-control', 'id' => 'product_url', 'placeholder' => 'Apple iMac', 'style' => 'pointer-events:none;']) !!}
                           </div>
                         </div>
-
                         <div class="col-12">
                           <div class="form-group" id="categoryInput">
                             {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
-
                             <select class="form-control selectizeInput" id="category_list" name="category[]">
                                 <option value="">Select Category...</option>
-                                @foreach($categories as $cate)
-                                    <option value="{{$cate->id}}">{{(isset($cate->primary->name)) ? $cate->primary->name : $cate->slug}}</option>
+                                @foreach($product_categories as $product_category)
+                                    @if($product_category->category->type_id == 1)
+                                    <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
+                                    @endif
                                 @endforeach
                             </select>
-
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
                             </span>
@@ -225,7 +232,6 @@
     var regexp = /^[a-zA-Z0-9-_]+$/;
     function alplaNumeric(evt){
         var charCode = String.fromCharCode(event.which || event.keyCode);
-
         if (!regexp.test(charCode)){
             return false;
         }
@@ -238,8 +244,6 @@
     $(document).on('click', '.submitProduct', function(e) { 
         var form =  document.getElementById('save_product_form');
         var formData = new FormData(form);
-
-       console.log('asdas');
         $.ajax({
             type: "post",
             url: "{{route('product.validate')}}",
@@ -281,7 +285,6 @@
             }
         });
     });
-
 </script>
 @include('backend.vendor.modals')
 @endsection

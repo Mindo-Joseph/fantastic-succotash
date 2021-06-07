@@ -15,18 +15,22 @@ use App\Jobs\{ProcessClientDatabase, EditClient};
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Session;
-use Illuminate\Support\Facades\Storage; 
+use Illuminate\Support\Facades\Storage;
+use App\Http\Traits\ApiResponser;
 
-class ClientController extends Controller
-{
+class ClientController extends Controller{
+    use ApiResponser;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $clients = Client::where('is_deleted', 0)->orderBy('created_at', 'DESC')->paginate(10);
+        foreach ($clients as $client) {
+            $client->sub_domain_url = 'https://'.$client->sub_domain.'.royoorders.com';
+        }
+
         return view('godpanel/client')->with(['clients' => $clients]);
     }
 
@@ -63,14 +67,11 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $client = new Client();
-
         $validation  = Validator::make($request->all(), $client->rules());
-
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
         $data = $this->saveClient($request, $client, 'false');
-
         if(!$data){
             return redirect()->back()->withErrors(['error' => "Something went wrong."]);
         }
@@ -177,10 +178,8 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id){
         $client = Client::where('id', $id)->first();
-        //dd($client->toArray());
         $client->status = $request->action;
         $msg = '';
         if($request->action == 3){
@@ -194,14 +193,11 @@ class ClientController extends Controller
         return redirect()->back()->with('success', 'Client account ' . $msg . ' successfully!');
     }
 
-    public function remove($id)
-    {
-        $client = Client::where('id', $id)->first();
-        
+    public function remove(Request $request){
+        $client = Client::where('id', $request->client_id)->first();
         $cmd =  \DB::statement("DROP DATABASE `royo_".$client->database_name."`");
-       
         $client->delete();
-        return redirect()->back()->with('success', 'Client account deleted successfully!');
+        return $this->successResponse(['status'=>'success', 'message' => 'Client account deleted successfully!'], '', 200);
     }
 
     /**

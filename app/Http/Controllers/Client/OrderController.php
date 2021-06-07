@@ -26,8 +26,10 @@ class OrderController extends BaseController{
      * @return \Illuminate\Http\Response
      */
 
-    public function show($domain = '', $id){
-        $order = Order::with('products')->findOrFail($id);
+    public function getOrderDetail($domain = '', $order_id, $vendor_id){
+        $order = Order::with(array('products' => function($query) use ($vendor_id){
+                    $query->where('vendor_id', $vendor_id);
+                }))->findOrFail($order_id);
         return view('backend.order.view', compact('order'));
     }
 }

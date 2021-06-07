@@ -10,9 +10,13 @@ use Illuminate\Support\Facades\Validator;
 use Phumbor;
 use Image;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Traits\ToasterResponser;
+use App\Http\Traits\ApiResponser;
 
 class VendorController extends BaseController
 {
+  use ToasterResponser;
+  use ApiResponser;
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +24,6 @@ class VendorController extends BaseController
      */
     public function index()
     {
-        //$vendors = Vendor::where('status', '!=', '2')->orderBy('id', 'desc')->get();
         $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])
                   ->where('status', '!=', '2')->orderBy('id', 'desc')->get();
         return view('backend/vendor/index')->with(['vendors' => $vendors]);
@@ -73,7 +76,6 @@ class VendorController extends BaseController
         foreach ($request->only('name', 'address', 'latitude', 'longitude', 'desc') as $key => $value) {
             $vendor->{$key} = $value;
         }
-
         $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0; 
         $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0; 
         $vendor->delivery = ($request->has('delivery') && $request->delivery == 'on') ? 1 : 0;
@@ -136,17 +138,15 @@ class VendorController extends BaseController
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Vendor  $vendor
-     * @return \Illuminate\Http\Response
-     */
+    /*  /**   show vendor page - config tab      */
     public function show($domain = '', $id)
     {
+        $active = array();
+        $categoryToggle = array();
         $vendor = Vendor::findOrFail($id);
         $co_ordinates = $all_coordinates = array();
         $areas = ServiceArea::where('vendor_id', $id)->orderBy('created_at', 'DESC')->get();
+        $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $zz = 1;
         foreach ($areas as $k => $v) {
             $all_coordinates[] = [
@@ -154,19 +154,15 @@ class VendorController extends BaseController
                 'coordinates' => $v->geo_coordinates
             ];
         }
-
         $center = [
             'lat' => 30.0612323,
             'lng' => 76.1239239
         ];
-
-         if (!empty($all_coordinates)) {
+        if (!empty($all_coordinates)) {
             $center['lat'] = $all_coordinates[0]['coordinates'][0]['lat'];
             $center['lng'] = $all_coordinates[0]['coordinates'][0]['lng'];
         }
-
         $area1 = ServiceArea::where('vendor_id', $id)->orderBy('created_at', 'DESC')->first();
-
         if(isset($area1)){
             $co_ordinates = $area1->geo_coordinates[0];
          }else{
@@ -175,55 +171,57 @@ class VendorController extends BaseController
                 'lng' => -111.9267386
             ];
          }
-
-        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '1')
-                    ->where(function($q) use($id){
-                          $q->whereNull('vendor_id')
-                            ->orWhere('vendor_id', $id);
-                    })
-                    ->where('status', '!=', '2')
-                    ->orderBy('position', 'asc')->get();
-
-        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
+         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
+                        ->where('id', '>', '1')
+                        ->where(function($q) use($id){
+                              $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
+                        })->orderBy('position', 'asc')->orderBy('id', 'asc')->orderBy('parent_id', 'asc')->get();
         
-        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categorList' => $categorList, 'blockedCategory' => $blockedCategory]);
+        /* get active category list also with parent */
+        foreach ($categories as $category) {
+          if(in_array($category->id, $VendorCategory) && $category->parent_id == 1){
+            $active[] = $category->id;
+          }
+          if(in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)){
+            $active[] = $category->id;
+          }
+        }
+        if($categories){
+            $build = $this->buildTree($categories->toArray());
+            $categoryToggle = $this->printTreeToggle($build, $active);
+        }
+        $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
+        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes, 'builds' => $build]);
     }
 
-    /**
-     * Display the specified resource.
-     * 
-     * @param  \App\Vendor  $vendor
-     * @return \Illuminate\Http\Response
-     */
-    public function vendorCategory($domain = '', $id)
-    {
+    /**   show vendor page - category tab      */
+    public function vendorCategory($domain = '', $id){
         $vendor = Vendor::findOrFail($id);
-        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
-
+        $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
                         ->where('id', '>', '1')
                         ->where(function($q) use($id){
                               $q->whereNull('vendor_id')
                                 ->orWhere('vendor_id', $id);
                         })
-                        ->whereNotIn('id', $blockedCategory)
-                        ->whereNotIn('parent_id', $blockedCategory)
-                        ->orderBy('position', 'asc')
-                        ->orderBy('id', 'asc')
+                        ->orderBy('position', 'asc')->orderBy('id', 'asc')
                         ->orderBy('parent_id', 'asc')->get();
+        $categoryToggle = array();
+        $active = array();
+        /* get active category list also with parent */
+        foreach ($categories as $category) {
+          if(in_array($category->id, $VendorCategory) && $category->parent_id == 1){
+            $active[] = $category->id;
+          }
+          if(in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)){
+            $active[] = $category->id;
+          }
+        }
 
-        /*$categories = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
-                        ->select('ct.name', 'categories.id', 'ct.category_id', 'categories.icon', 'categories.slug', 'categories.type_id', 'categories.parent_id', 'categories.vendor_id', 'categories.is_core')
-
-                        
-                        ->where('categories.id', '>', '1')
-                        ->where('ct.language_id', '=', '1')
-                        ->where('categories.status', '!=', '2')
-                        ->orderBy('categories.parent_id', 'asc')
-                        ->orderBy('categories.position', 'asc')->get();*/
         if($categories){
             $build = $this->buildTree($categories->toArray());
             $tree = $this->printTree($build, 'vendor');
+            $categoryToggle = $this->printTreeToggle($build, $active);
         }
 
         $addons = AddonSet::with('option')->select('id', 'title', 'min_select', 'max_select', 'position')
@@ -234,44 +232,50 @@ class VendorController extends BaseController
         $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
                     ->where('is_active', 1)
                     ->orderBy('is_primary', 'desc')->get();
-
-        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '1')
-                    ->where(function($q) use($id){
-                          $q->whereNull('vendor_id')
-                            ->orWhere('vendor_id', $id);
-                    })
-                    ->where('status', '!=', '2')
-                    ->orderBy('position', 'asc')->get();
-        
-        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'categorList' => $categorList, 'blockedCategory' => $blockedCategory]);
+        $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
+        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build]);
     }
 
-    /**   vendor product catalog     */
+    /**   show vendor page - catalog tab      */
     public function vendorCatalog($domain = '', $id){
+        $active = array();
         $type = Type::all();
+        $categoryToggle = array();
         $vendor = Vendor::findOrFail($id);
+        $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $categories = Category::with('primary')->select('id', 'slug')
-                        ->where('id', '>', '1')->where('status', '!=', '2')
-                        ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();
+                        ->where('id', '>', '1')->where('status', '!=', '2')->where('type_id', '1')
+                        ->where('can_add_products', 1)->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->get();
         $products = Product::with(['media.image', 'primary', 'category.cat', 'brand','variant' => function($v){
                             $v->select('id','product_id', 'quantity', 'price')->groupBy('product_id');
                     }])->select('id', 'sku','vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
                     ->where('vendor_id', $id)->get();
-        $categorList = Category::select('id', 'slug', 'vendor_id')->where('parent_id', '1')
-                    ->where(function($q) use($id){
-                      $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
-                    })->where('status', '!=', '2')->orderBy('position', 'asc')->get();
-        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
-        return view('backend/vendor/vendorCatalog')->with(['vendor' => $vendor, 'blockedCategory' => $blockedCategory, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categorList' => $categorList]);
+        $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
+                        ->where('id', '>', '1')
+                        ->where(function($q) use($id){
+                              $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
+                        })->orderBy('position', 'asc')
+                        ->orderBy('id', 'asc')
+                        ->orderBy('parent_id', 'asc')->get();
+        /*    get active category list also with parent     */
+        foreach ($categories as $category) {
+          if(in_array($category->id, $VendorCategory) && $category->parent_id == 1){
+            $active[] = $category->id;
+          }
+          if(in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)){
+            $active[] = $category->id;
+          }
+        }
+        if($categories){
+            $build = $this->buildTree($categories->toArray());
+            $categoryToggle = $this->printTreeToggle($build, $active);
+        }
+        $product_categories = VendorCategory::with('category')->where('vendor_id', $vendor->id)->get();
+        $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
+        return view('backend.vendor.vendorCatalog')->with(['vendor' => $vendor, 'VendorCategory' => $VendorCategory, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Vendor  $vendor
-     * @return \Illuminate\Http\Response
-     */
+    /**       delete vendor       */
     public function destroy($domain = '', $id)
     {
         $vendor = Vendor::where('id', $id)->first();
@@ -280,6 +284,7 @@ class VendorController extends BaseController
         return redirect()->back()->with('success', 'Vendor deleted successfully!');
     }
 
+    /**     update vendor configuration data     */
     public function updateConfig(Request $request, $domain = '',  $id)
     {
         $vendor = Vendor::where('id', $id)->first();
@@ -295,31 +300,59 @@ class VendorController extends BaseController
             $vendor->commission_percent         = $request->commission_percent;
             $vendor->commission_fixed_per_order = $request->commission_fixed_per_order;
             $vendor->commission_monthly         = $request->commission_monthly;
-            $vendor->add_category = ($request->has('add_category') && $request->add_category == 'on') ? 1 : 0;
-
+            //$vendor->add_category = ($request->has('add_category') && $request->add_category == 'on') ? 1 : 0;
+            $vendor->show_slot         = ($request->has('show_slot') && $request->show_slot == 'on') ? 1 : 0;
             $msg = 'commission configuration';
         }
         $vendor->save();
         return redirect()->back()->with('success', $msg.' updated successfully!');
-        
     }
 
-    /** Activate Category for vendor     */
-    public function activeCategory(Request $request, $domain = '', $id)
-    {
-        //dd($request->all());
-        $vendor = Vendor::where('id', $id)->firstOrFail();
-        $vc = VendorCategory::where('vendor_id', $request->vid)->where('category_id', $request->cid)->first();
-        if(!$vc){
-            $vc = new VendorCategory();
-            $vc->vendor_id = $request->vid;
-            $vc->category_id = $request->cid;
+    /**     Activate Category for vendor     */
+    public function activeCategory(Request $request, $domain = '', $vendor_id){
+        if($request->has('can_add_category')){
+            $vendor = Vendor::where('id', $request->vendor_id)->firstOrFail();
+            $vendor->add_category = $request->can_add_category == 'true' ? 1 : 0;
+            $vendor->save();
+        }elseif($request->has('assignTo')){
+            $vendor = Vendor::where('id', $request->vendor_id)->firstOrFail();
+            $vendor->vendor_templete_id = $request->assignTo;
+            $vendor->save();
+        }else{
+            $status = $request->status == 'true' ? 1 : 0;
+            $vendor_category = VendorCategory::where('vendor_id', $request->vendor_id)->where('category_id', $request->category_id)->first();
+            if($vendor_category){
+                VendorCategory::where(['vendor_id' => $request->vendor_id, 'category_id'=> $request->category_id])->update(['status'=> $status]);
+            }else{
+                VendorCategory::create(['vendor_id' => $request->vendor_id, 'category_id'=> $request->category_id, 'status'=> $status]);
+            }
         }
-        $vc->status = ($request->has('category') && $request->category == 'on') ? 1 : 0;
-        $msg = ($request->has('category') && $request->category == 'on') ? 'activated' : 'deactivated';
-        $vc->save();
-        return redirect()->back()->with('success', 'Category '.$msg.' successfully!');
+        return $this->successResponse(null, 'Category setting saved successfully.');
     }
 
-    
+    /**     Check parent category enable status - true if all parent, false if any parent disable     */
+    public function checkParentStatus(Request $request, $domain = '', $id)
+    {
+        $blockedCategory = VendorCategory::where('vendor_id', $id)->where('status', 0)->pluck('category_id')->toArray();
+        $is_parent_disabled = $exit = 0;
+        $category = Category::where('id', $request->category_id)->select('id', 'parent_id')->first();
+        $parent_id = $category->parent_id;
+        while($exit == 0){
+          if($parent_id == 1){
+            $exit = 1;
+            break;
+          }elseif(in_array($parent_id, $blockedCategory)){
+            $is_parent_disabled = 1;
+            $exit = 1;
+          }else{
+            $category = Category::where('id', $parent_id)->select('id', 'parent_id')->first();
+            $parent_id = $category->parent_id;
+          }
+        }
+        if($is_parent_disabled == 1){
+          return $this->errorResponse('Parent category is disabled. First enable parent category to enable this category.', 422);
+        }else{
+          return $this->successResponse(null, 'Parent is enabled.');
+        }
+    }
 }

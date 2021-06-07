@@ -50,6 +50,7 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     Route::get('vendor/categories/{id}', 'Client\VendorController@vendorCategory')->name('vendor.categories');
     Route::post('vendor/saveConfig/{id}', 'Client\VendorController@updateConfig')->name('vendor.config.update');
     Route::post('vendor/activeCategory/{id}', 'Client\VendorController@activeCategory')->name('vendor.category.update');
+    Route::post('vendor/parentStatus/{id}', 'Client\VendorController@checkParentStatus')->name('category.parent.status');
 
     Route::get('calender/data/{id}', 'Client\VendorSlotController@returnJson')->name('vendor.calender.data');
     Route::post('vendor/slot/{id}', 'Client\VendorSlotController@store')->name('vendor.saveSlot');
@@ -62,8 +63,10 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     Route::post('vendor/deleteArea/{vid}', 'Client\ServiceAreaController@destroy')->name('vendor.serviceArea.delete');
 
     Route::resource('order', 'Client\OrderController');
+    Route::get('order/{order_id}/{vendor_id}', 'Client\OrderController@getOrderDetail')->name('order.show.detail');
     Route::resource('customer', 'Client\UserController');
-    Route::get('customer/account/{user}/{action}', 'Client\UserController@changeStatus')->name('customer.account.action');
+    Route::get('customer/account/{user}/{action}', 'Client\UserController@deleteCustomer')->name('customer.account.action');
+    Route::post('customer/change/status', 'Client\UserController@changeStatus')->name('customer.changeStatus');
 
     Route::resource('product', 'Client\ProductController');
     Route::post('product/validate', 'Client\ProductController@validateData')->name('product.validate');

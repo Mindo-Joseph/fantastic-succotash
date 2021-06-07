@@ -13,37 +13,10 @@
         </div>
     </div>
     <div class="text-left mt-0 p-3">
-        <!-- <h4 class="font-13">Description :</h4> -->
         <p class="text-muted font-13 mb-0">
            {{$vendor->desc}}
         </p>
-        <!-- <p class="text-muted mb-2 font-13"><strong>Latitude :</strong> <span class="ml-2">{{$vendor->latitude}}</span></p>
-
-        <p class="text-muted mb-2 font-13"><strong>Longitude :</strong><span class="ml-2">{{$vendor->longitude}}</span></p>
-
-        <p class="text-muted mb-1 font-13"><strong>Status :</strong> <span class="ml-2">
-            {{ ($vendor->status == 1) ? 'Active' : (($vendor->status == 2) ? 'Blocked' : 'Pending') }}
-        </span></p> -->
     </div>
-
-    <!-- <ul class="social-list list-inline mt-3 mb-0">
-        <li class="list-inline-item">
-            <a href="javascript: void(0);" class="social-list-item border-primary text-primary"><i
-                    class="mdi mdi-facebook"></i></a>
-        </li>
-        <li class="list-inline-item">
-            <a href="javascript: void(0);" class="social-list-item border-danger text-danger"><i
-                    class="mdi mdi-google"></i></a>
-        </li>
-        <li class="list-inline-item">
-            <a href="javascript: void(0);" class="social-list-item border-info text-info"><i
-                    class="mdi mdi-twitter"></i></a>
-        </li>
-        <li class="list-inline-item">
-            <a href="javascript: void(0);" class="social-list-item border-secondary text-secondary"><i
-                    class="mdi mdi-github"></i></a>
-        </li>
-    </ul> -->
 </div>
 <div class="card-box">
     <div class="row text-left">
@@ -95,8 +68,8 @@
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
-                        {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!} 
-                        <input type="checkbox" data-plugin="switchery" name="add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif >
+                        {!! Form::label('title', '24*7 Availability',['class' => 'control-label']) !!} 
+                        <input type="checkbox" data-plugin="switchery" name="show_slot" class="form-control" data-color="#43bee1" @if($vendor->show_slot == 1) checked @endif >
                     </div>
                     <div class="col-md-12">
                         <div class="form-group" id="commission_percentInput">
@@ -123,40 +96,113 @@
             </form>
         </div>
     </div>
-</div> <!-- end card-box -->
-
-
-
+</div>
+<style type="text/css">
+    #nestable_list_1 ol, #nestable_list_1 ul{
+        list-style-type: none;
+    }
+</style>
 <div class="card-box">
     <div class="row text-left">
         <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-12">
-                    <h4 class="mb-2"> <span class="">Active Main Category</h4>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="mb-2"> <span class="">Category Setup</span> (Visible For Admin)</h4>
+                    </div>
                 </div>
-            </div>
-            
-            @foreach($categorList as $key => $list)
-                <form name="config-form" id="categorForm_{{$list->id}}" action="{{route('vendor.category.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
-                    @csrf
-                    <input type="hidden" name="vid" value="{{$vendor->id}}">
-                    <input type="hidden" name="cid" value="{{$list->id}}">
-                    <div class="row mb-2">
-                        <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
-                            {!! Form::label('title', $list->slug, ['class' => 'control-label']) !!} 
-                            <input type="checkbox" data-plugin="switchery" data-id="{{$list->id}}" name="category" class="form-control activeCategory" data-color="#43bee1" @if(!in_array($list->id, $blockedCategory)) checked @endif>
+                <div class="row mb-2">
+                    <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
+                        {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!} 
+                        <input type="checkbox" data-plugin="switchery" name="can_add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif >
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6 mb-3">
+                        {!! Form::label('title', 'Vendor Detail To Show',['class' => 'control-label ']) !!}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <select class="selectize-select form-control assignToSelect" id="assignTo">
+                            @foreach($templetes as $templete)
+                                <option value="{{$templete->id}}" {{$vendor->vendor_templete_id == $templete->id ? 'selected="selected"' : ''}}>{{$templete->title}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        {!! Form::label('title', 'Vendor Category',['class' => 'control-label']) !!}
+                        <div class="custom-dd dd nestable_list_1" id="nestable_list_1" >
+                            <!-- <?php print_r($categoryToggle); ?> -->
+                        </div>
+                        <div class="custom-dd dd nestable_list_1" id="nestable_list_1">
+                            <ol class="dd-list">
+                                @forelse($builds as $build)
+                                <li class="dd-item dd3-item" data-category_id="{{$build['id']}}">
+                                    <div class="dd3-content"> 
+                                        <img class="rounded-circle mr-1" src="{{$build['icon']['proxy_url']}}30/30{{$build['icon']['image_path']}}"> {{$build['slug']}}
+                                        <span class="inner-div text-right">
+                                            <a class="action-icon" data-id="3" href="javascript:void(0)">
+                                                @if(in_array($build['id'], $VendorCategory))
+                                                    <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked>
+                                                @else
+                                                    <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery">
+                                                @endif
+                                                <input type="hidden" value="{{ $build['id'] }}">
+                                            </a>
+                                        </span> 
+                                    </div>
+                                    @if(isset($build['children']))
+                                    <ol class="dd-list">
+                                        @forelse($build['children']  as $first_child)
+                                        <li class="dd-item dd3-item" data-id="{{$first_child['id']}}">
+                                            <div class="dd3-content"> 
+                                                <img class="rounded-circle mr-1" src="{{$first_child['icon']['proxy_url']}}30/30{{$first_child['icon']['image_path']}}"> {{$first_child['slug']}} 
+                                                <span class="inner-div text-right">
+                                                    <a class="action-icon" data-id="2" href="javascript:void(0)">
+                                                        @if(in_array($first_child['id'], $VendorCategory))
+                                                            <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="">
+                                                        @else
+                                                            <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery">
+                                                        @endif
+                                                    </a>
+                                                </span>
+                                            </div>
+                                            @if(isset($first_child['children']))
+                                                <ol class="dd-list">
+                                                    @forelse($first_child['children'] as $second_child)
+                                                        <li class="dd-item dd3-item" data-id="6">
+                                                            <div class="dd3-content">
+                                                                <img class="rounded-circle mr-1" src="{{$second_child['icon']['proxy_url']}}30/30{{$second_child['icon']['image_path']}}">{{$second_child['slug']}}
+                                                                    <span class="inner-div text-right">
+                                                                        <a class="action-icon" data-id="6" href="javascript:void(0)">
+                                                                            @if(in_array($second_child['id'], $VendorCategory))
+                                                                                <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="">
+                                                                            @else
+                                                                                <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery">
+                                                                            @endif
+                                                                        </a>
+                                                                    </span> 
+                                                            </div>
+                                                        </li>
+                                                    @empty
+                                                    @endforelse
+                                                </ol>
+                                            @endif
+                                        </li>
+                                        @empty
+                                        @endforelse
+                                    </ol>
+                                    @endif
+                                </li>
+                                @empty
+                                @endforelse
+                            </ol>
                         </div>
                     </div>
-                </form>
-            
-            @endforeach
+                </div>
         </div>
     </div>
 </div>
-
-<div class="card-box">
+<!-- <div class="card-box">
     <h4 class="header-title mb-3">Users</h4>
-
     <div class="inbox-widget" data-simplebar style="max-height: 350px;">
         <div class="inbox-item">
             <div class="inbox-item-img"><img src="{{asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt=""></div>
@@ -182,7 +228,6 @@
                 <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
             </p>
         </div>
-
         <div class="inbox-item">
             <div class="inbox-item-img"><img src="{{asset('assets/images/users/user-5.jpg')}}" class="rounded-circle" alt=""></div>
             <p class="inbox-item-author">Shahedk</p>
@@ -199,7 +244,6 @@
                 <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
             </p>
         </div>
-
         <div class="inbox-item">
             <div class="inbox-item-img"><img src="{{asset('assets/images/users/user-3.jpg')}}" class="rounded-circle" alt=""></div>
             <p class="inbox-item-author">Stillnotdavid</p>
@@ -216,15 +260,63 @@
                 <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
             </p>
         </div>
-    </div> <!-- end inbox-widget -->
-
-</div>
+    </div>
+</div> -->
 <script type="text/javascript">
-    $('.activeCategory').change(function(){
-        var id = $(this).data('id');
-        console.log(id);
-        $('#categorForm_'+id).submit();
-
-        //$('.vendorRow').toggle();
+    $( document ).ready(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('input[name="_token"]').val()
+        }
     });
+    $(document).on('change', '.can_add_category1', function(){
+        var vendor_id = "{{$vendor->id}}";
+        var can_add_category = $(this).is(":checked");
+        var url = "{{ url('client/vendor/activeCategory').'/'.$vendor->id}}"
+        $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "json",
+            data: {vendor_id:vendor_id, can_add_category:can_add_category},
+            success: function(response) {
+                if (response.status == 'Success') {
+
+                }
+            }
+        });
+    });
+    $(document).on('change', '#assignTo', function(){
+        var assignTo = $(this).val();
+        var vendor_id = "{{$vendor->id}}";
+        var url = "{{ url('client/vendor/activeCategory').'/'.$vendor->id}}"
+        $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "json",
+            data: {vendor_id:vendor_id, assignTo:assignTo},
+            success: function(response) {
+                if (response.status == 'Success') {
+
+                }
+            }
+        });
+    });
+    $(document).on('change', '.activeCategory', function(){
+        var vendor_id = "{{$vendor->id}}";
+        var status = $(this).is(":checked");
+        var category_id = $(this).data('category_id');
+        var url = "{{ url('client/vendor/activeCategory').'/'.$vendor->id}}"
+        $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "json",
+            data: {category_id: category_id, status:status, vendor_id:vendor_id},
+            success: function(response) {
+                if (response.status == 'Success') {
+
+                }
+            }
+        });
+    });
+});
 </script>

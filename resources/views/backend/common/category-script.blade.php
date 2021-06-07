@@ -28,10 +28,12 @@
                         keyboard: false
                     });
                     $('#edit-category-form #editCategoryBox').html(data.html);
-                    elems1 = document.getElementsByClassName('switch1Edit');
-                    elems2 = document.getElementsByClassName('switch2Edit');
-                    var switchery = new Switchery(elems1[0]);
-                    var switchery = new Switchery(elems2[0]);
+                    element1 = document.getElementsByClassName('edit-switch_menu');
+                    element2 = document.getElementsByClassName('edit-wishlist_switch');
+                    element3 = document.getElementsByClassName('edit-add_product_switch');
+                    var switchery = new Switchery(element1[0]);
+                    var switchery = new Switchery(element2[0]);
+                    var switchery = new Switchery(element3[0]);
                     makeTag();
 
                 }else{
@@ -41,10 +43,12 @@
                         keyboard: false
                     });
                     $('#add-category-form #AddCategoryBox').html(data.html);
-                    elems1 = document.getElementsByClassName('switch1');
-                    elems2 = document.getElementsByClassName('switch2');
-                    var switchery = new Switchery(elems1[0]);
-                    var switchery = new Switchery(elems2[0]);
+                    element1 = document.getElementsByClassName('switch_menu');
+                    element2 = document.getElementsByClassName('wishlist_switch');
+                    element3 = document.getElementsByClassName('add_product_switch');
+                    var switchery = new Switchery(element1[0]);
+                    var switchery = new Switchery(element2[0]);
+                    var switchery = new Switchery(element3[0]);
                     makeTag();
 
                 }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Http\Controllers\Client\BaseController;
+use Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag};
+use App\Http\Controllers\Client\BaseController;
+use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag, Vendor};
 
 class CategoryController extends BaseController{
     private $blocking = '2';
@@ -25,10 +25,8 @@ class CategoryController extends BaseController{
                         ->where('categories.is_core', 1)
                         ->orderBy('categories.parent_id', 'asc')
                         ->orderBy('categories.position', 'asc')->get();
-        $variants = Variant::with('option', 'varcategory.cate.primary')
-                        ->where('status', '!=', 2)->orderBy('position', 'asc')->get();
-        $brands = Brand::with( 'bc.cate.primary')
-                        ->where('status', '!=', 2)->orderBy('position', 'asc')->get();
+        $variants = Variant::with('option', 'varcategory.cate.primary')->where('status', '!=', 2)->orderBy('position', 'asc')->get();
+        $brands = Brand::with( 'bc.cate.primary')->where('status', '!=', 2)->orderBy('position', 'asc')->get();
         if($categories){
             $build = $this->buildTree($categories->toArray());
             $tree = $this->printTree($build);
@@ -52,12 +50,13 @@ class CategoryController extends BaseController{
         $type = Type::all();
         $category = new Category();
         $parCategory = Category::select('id', 'slug')->where('status', '!=', $this->blocking)->get();
+        $vendor_list = Vendor::select('id', 'name')->where('status', '!=', $this->blocking)->get();
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
-        $returnHTML = view('backend.catalog.add-category')->with(['category' => $category, 'is_vendor' => $is_vendor, 'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type])->render();
+        $returnHTML = view('backend.catalog.add-category')->with(['category' => $category, 'is_vendor' => $is_vendor, 'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type, 'vendor_list' => $vendor_list])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -69,9 +68,12 @@ class CategoryController extends BaseController{
      */
     public function store(Request $request){
         $rules = array(
-            'slug' => 'required|string|max:30|unique:categories',
             'name.0' => 'required|string|max:60',
+            'slug' => 'required|string|max:30|unique:categories',
         );
+        if($request->type == 'Vendor'){
+            $rules['vendor_ids'] = "required";
+        }
         $validation  = Validator::make($request->all(), $rules)->validate();
         $cate = new Category();
         $save = $this->save($request, $cate, 'false');
@@ -168,8 +170,8 @@ class CategoryController extends BaseController{
                 }
             }
             $hs = new CategoryHistory();
-            $hs->category_id = $save;
             $hs->action = 'Update';
+            $hs->category_id = $save;
             $hs->updater_role = 'Admin';
             $hs->update_id = Auth::user()->id;
             $hs->client_code = Auth::user()->code;
@@ -195,7 +197,8 @@ class CategoryController extends BaseController{
         $cate->type_id = $request->type_id;
         $cate->display_mode = $request->display_mode;
         $cate->is_visible = ($request->has('is_visible') && $request->is_visible == 'on') ? 1 : 0;
-        $cate->can_add_products = ($request->has('can_add_products') && $request->can_add_products == 'on') ? 1 : 0;
+        $cate->show_wishlist = ($request->has('show_wishlist') && $request->show_wishlist == 'on') ? 1 : 0;
+        $cate->can_add_products = ($request->has('can_add_products') && $request->can_add_products == 'on' && $request->type_id == 1) ? 1 : 0;
 
         if($request->has('parent_cate') && $request->parent_cate > 0){
             $cate->parent_id = $request->parent_cate;
@@ -204,7 +207,6 @@ class CategoryController extends BaseController{
         }
 
         if($update == 'false'){
-
             if($request->has('vendor_id')){
                 $cate->is_core = 0;
                 $cate->vendor_id = $request->vendor_id;

@@ -9,14 +9,14 @@ class CartProduct extends Model{
 
     use HasFactory;
 
-    protected $fillable = ['cart_id','product_id', 'vendor_id', 'quantity','created_by', 'status', 'variant_id', 'is_tax_applied', 'tax_rate_id', 'currency_id', 'tax_category_id'];
+    protected $fillable = ['cart_id','product_id', 'vendor_id', 'quantity', 'status', 'variant_id', 'is_tax_applied', 'tax_rate_id', 'currency_id', 'tax_category_id'];
 
     public function cart(){
         return $this->belongsTo('App\Models\Cart');
     }
 
     public function addon(){
-       return $this->hasMany('App\Models\CartAddon', 'cart_product_id', 'id')->select('cart_product_id', 'addon_id', 'option_id'); 
+       return $this->hasMany('App\Models\CartAddon', 'cart_product_id', 'product_id')->select('cart_product_id', 'addon_id', 'option_id'); 
     }
 
 

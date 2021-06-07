@@ -22,9 +22,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('social/login/{driver}', 'Api\v1\SocialController@login');
     });
     Route::group(['middleware' => ['dbCheck', 'AppAuth', 'apilogger']], function() {
-        Route::get('orders', 'Api\v1\OrderController@getOrdersList');
         Route::get('profile', 'Api\v1\ProfileController@profile');
         Route::get('account', 'Api\v1\ProfileController@account');
+        Route::get('orders', 'Api\v1\OrderController@getOrdersList');
         Route::get('wishlists', 'Api\v1\ProfileController@wishlists');
         Route::get('newsLetter', 'Api\v1\ProfileController@newsLetter');
         Route::post('place/order', 'Api\v1\OrderController@postPlaceOrder');
@@ -32,11 +32,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::post('user/getAddress', 'Api\v1\ProfileController@getAddress');
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');
-        Route::get('addressBook/{id?}', 'Api\v1\ProfileController@addressBook');
         Route::post('changePassword', 'Api\v1\ProfileController@changePassword');
-        Route::post('user/address/{id?}', 'Api\v1\ProfileController@userAddress');
-        Route::get('delete/address/{id}', 'Api\v1\ProfileController@deleteAddress');
-        Route::get('primary/address/{id}', 'Api\v1\ProfileController@primaryAddress');
+        Route::get('addressBook/{id?}', 'Api\v1\AddressController@getAddressList');
+        Route::post('user/address/{id?}', 'Api\v1\AddressController@postSaveAddress');
+        Route::get('delete/address/{id}', 'Api\v1\AddressController@postDeleteAddress');
         Route::get('wishlist/update/{pid?}', 'Api\v1\ProfileController@updateWishlist');
+        Route::get('primary/address/{id}', 'Api\v1\AddressController@postUpdatePrimaryAddress');
     });
 });

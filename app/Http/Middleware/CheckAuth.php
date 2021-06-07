@@ -26,29 +26,21 @@ class CheckAuth
         
         $user = new User();
 
-        if (isset($header['authorization']) && Token::check($header['authorization'][0], 'royoorders-jwt'))
-        {
+        if (isset($header['authorization']) && Token::check($header['authorization'][0], 'royoorders-jwt')){
             $token = $header['authorization'][0];
-
             $tokenBlock = BlockedToken::where('token', $token)->first();
-
-            if($tokenBlock)
-            {
+            if($tokenBlock){
                 return response()->json(['error' => 'Invalid Session', 'message' => 'Session Expired'], 401);
                 abort(404);
             }
-
             $user = User::where('auth_token', $token)->first();
-
-            if(!$user)
-            {
+            if(!$user){
                 return response()->json(['error' => 'Invalid Session', 'message' => 'Invalid Token or session has been expired.'], 401);
                 abort(404);
             }
         }
         if(isset($header['systemuser'])){
             $systemUser = $header['systemuser'][0];
-            //$exist = User::where('system_id', $systemUser)->first();
             $user->system_user = $systemUser;
         }
 

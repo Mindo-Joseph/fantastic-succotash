@@ -23,4 +23,7 @@ class Variant extends Model
   public function option(){
     return $this->hasMany('App\Models\VariantOption'); 
   }
+  public function trans(){
+       return $this->hasOne('App\Models\VariantTranslation')->select('title', 'variant_id'); 
+  }
 }

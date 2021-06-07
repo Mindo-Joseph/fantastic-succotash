@@ -6,7 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductCategory extends Model
 {
+
+	public function product(){
+	    return $this->hasOne('App\Models\Product', 'id', 'product_id'); 
+	}
     public function cat(){
 	    return $this->belongsTo('App\Models\Category', 'category_id', 'id')->select('id', 'slug'); 
+	}
+	public function categoryDetail(){
+	    return $this->belongsTo('App\Models\Category', 'category_id', 'id'); 
 	}
 }

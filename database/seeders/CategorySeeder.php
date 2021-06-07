@@ -17,12 +17,12 @@ class CategorySeeder extends Seeder
             array(
                 'id' => '1',
                 'slug' => 'root',
-                'type_id' => 1,
-                'is_visible' => 1,
+                'type_id' => 3,
+                'is_visible' => 0,
                 'status' => 1,
                 'position' => 1,
                 'is_core' => 1,
-                'can_add_products' => 1,
+                'can_add_products' => 0,
                 'display_mode' => 1,
                 'parent_id' => NULL
             ),

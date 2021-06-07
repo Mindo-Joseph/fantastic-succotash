@@ -44,7 +44,7 @@
                     </span>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group">
                     {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control type-select" for="add" id="typeSelectBox" name="type_id">
@@ -61,11 +61,19 @@
                 </div>
             </div>
 
-            <div class="col-md-3 text-center">
+            <div class="col-md-2 text-center">
                 <div class="form-group">
                     {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
                     <div>
-                        <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch2" data-color="#43bee1" checked='checked'>
+                        <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch_menu" data-color="#43bee1" checked='checked'>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 text-center">
+                <div class="form-group">
+                    {!! Form::label('title', 'Wishlist',['class' => 'control-label']) !!} 
+                    <div>
+                        <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control wishlist_switch" data-color="#43bee1" checked='checked'>
                     </div>
                 </div>
             </div>
@@ -73,7 +81,7 @@
                 <div class="form-group">
                     {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
                     <div>
-                        <input type="checkbox" data-plugin="switchery" name="can_add_products" class="form-control switch1" data-color="#43bee1" checked='checked'>
+                        <input type="checkbox" data-plugin="switchery" name="can_add_products" class="form-control add_product_switch" data-color="#43bee1" checked='checked'>
                     </div>
                 </div>
             </div>

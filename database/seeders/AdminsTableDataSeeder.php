@@ -13,9 +13,7 @@ class AdminsTableDataSeeder extends Seeder
 
     public function run()
     {
-    	//factory(App\Models\User::class,1)->create();
         \DB::table('admins')->delete();
- 
         $maps = array(
             array(
                 'name' => 'Admin',

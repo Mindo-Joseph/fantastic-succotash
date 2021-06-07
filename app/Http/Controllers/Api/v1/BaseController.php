@@ -48,6 +48,7 @@ class BaseController extends Controller{
                         ->where('categories.id', '>', '1')
                         ->where('categories.is_visible', 1)
                         ->where('categories.status', '!=', $this->field_status)
+                        ->where('categories.is_core', 1)
                         ->where('cts.language_id', $lang_id)
                         ->orderBy('categories.parent_id', 'asc')
                         ->orderBy('categories.position', 'asc')->get();

@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 function changeDateFormate($date,$date_format){
     return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->format($date_format);    
 }
@@ -16,4 +17,7 @@ function generateOrderNo($length = 8){
         }
     } while (!empty(\DB::table('orders')->where('order_number', $number)->first(['order_number'])) );
     return $number;
+}
+function convertDateTimeInTimeZone($date, $timezone){
+    return Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone($timezone);
 }

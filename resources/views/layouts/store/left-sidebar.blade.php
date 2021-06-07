@@ -153,7 +153,37 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             <i class="ti-shopping-cart"></i>
                                         </div>
                                         <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span>
-                                        <ul class="show-div shopping-cart">
+                                        <script type="text/template" id="header_cart_template">
+                                             <% _.each(cart_details.products, function(product, key){%>
+                                              <% _.each(product.vendor_products, function(vendor_product, vp){%>
+                                                <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
+                                                    <div class='media'>
+                                                        <a href='#'>
+                                                            <% if(vendor_product.pvariant.media_one) { %>
+                                                                <img class='mr-3' src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.image.path.image_path %>">
+                                                            <% } %>
+                                                        </a>
+                                                        <div class='media-body'>
+                                                            <a href='#'>
+                                                                <h4><%= vendor_product.product.sku %></h4>
+                                                            </a>
+                                                            <h4>
+                                                                <span><%= vendor_product.quantity %> x <%= vendor_product.pvariant.price %></span>
+                                                            </h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class='close-circle'>
+                                                        <a href="javascript::void(0);" data-product="<%= vendor_product.id %>" class='remove-product'>
+                                                            <i class='fa fa-times' aria-hidden='true'></i>
+                                                        </a>
+                                                    </div>
+                                                </li>
+                                              <% }); %>
+                                            <% }); %>
+                                            <li><div class='total'><h5>subtotal : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
+                                            <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>viewcart</a>
+                                        </script>
+                                        <ul class="show-div shopping-cart" id="header_cart_main_ul">
 
                                         </ul>
                                     </li>

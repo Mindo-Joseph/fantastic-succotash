@@ -9,25 +9,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{Client, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell};
 use Illuminate\Support\Facades\Storage;
+use App\Http\Traits\ToasterResponser;
 
 class ProductController extends BaseController
 {
     private $folderName = 'prods';
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use ToasterResponser;
+    /**   Display   List of products  */
     public function index()
     {
-        
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    /**   Add new product view - currently not working add product show in modal  */
     public function create($domain = '', $id)
     {
         $vendor = Vendor::findOrFail($id);
@@ -48,9 +41,6 @@ class ProductController extends BaseController
                         ->where('client_languages.client_code', Auth::user()->code)->get();
 
         $taxCate = TaxCategory::all();
-
-
-        // dd($categories->toArray());
         return view('backend/product/create', ['typeArray' => $type, 'categories' => $categories, 'vendor_id' => $vendor->id, 'addons' => $addons, 'languages' => $langs, 'taxCate' => $taxCate, 'countries' => $countries]);
     }
 
@@ -62,7 +52,6 @@ class ProductController extends BaseController
      */
     public function validateData(Request $request)
     {
-        //dd($request->all());
         $rules = array(
             'sku' => 'required|unique:products',
             'category.*' => 'required',
@@ -145,17 +134,6 @@ class ProductController extends BaseController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Product $product)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Product  $product
@@ -164,23 +142,15 @@ class ProductController extends BaseController
     public function edit($domain = '', $id)
     {
         $product = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related' , 'upSell' , 'crossSell', 'celebrities')->where('id', $id)->firstOrFail();
-        //dd($product->toArray());
         $type = Type::all();
         $countries = Country::all();
         $addons = AddonSet::with('option')->select('id', 'title')
                         ->where('status', '!=', 2)
                         ->where('vendor_id', $product->vendor_id)
                         ->orderBy('position', 'asc')->get();
-
         $brands = Brand::join('brand_categories as bc', 'bc.brand_id', 'brands.id')
                         ->select('brands.id', 'brands.title', 'brands.image')
                         ->where('bc.category_id', $product->category->category_id)->get(); 
-
-        /*$categories = Category::with('primary')->select('id', 'slug')
-                        ->where('id', '>', '1')->where('status', '!=', '2')
-                        ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();*/
-
         $clientLanguages = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.is_primary')
                     ->where('client_languages.client_code', Auth::user()->code)
@@ -222,11 +192,9 @@ class ProductController extends BaseController
                 $celeb_ids[] = $value->celebrity_id;
             }
         }
-        $otherProducts = Product::with('primary')->select('id', 'sku')
-                        ->where('is_live', 1)->where('id', '!=', $product->id)->get();
-
-        //dd($otherProducts->toArray());
-        $configData = ClientPreference::select('celebrity_check')->where('id', '>', 0)->first();
+        $otherProducts = Product::with('primary')->select('id', 'sku')->where('is_live', 1)->where('id', '!=', $product->id)->get();
+        $configData = ClientPreference::select('celebrity_check', 'need_dispacher_ride', 'need_delivery_service')
+                        ->where('id', '>', 0)->first();
         $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
         return view('backend/product/edit', ['typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
     }
@@ -238,16 +206,15 @@ class ProductController extends BaseController
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $domain = '', $id)
-    {
+    public function update(Request $request, $domain = '', $id){
         $product = Product::where('id', $id)->firstOrFail();
         if($product->is_live == 0){
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
         }
-
         foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live', 'brand_id') as $k => $val) {
             $product->{$k} = $val;
         }
+        $product->tax_category_id = $request->tax_category;
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
         $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;
         $product->is_physical               = ($request->has('is_physical') && $request->is_physical == 'on') ? 1 : 0;
@@ -284,7 +251,6 @@ class ProductController extends BaseController
 
             if($request->has('fileIds')){
                 foreach ($request->fileIds as $key => $value) {
-
                     $productImageSave[] = [
                         'product_id' => $product->id,
                         'media_id' => $value,
@@ -366,14 +332,12 @@ class ProductController extends BaseController
                         $variantData->compare_at_price  = $request->variant_compare_price[$key];
                         $variantData->cost_price        = $request->variant_cost_price[$key];
                         $variantData->quantity          = $request->variant_quantity[$key];
-                        //$variantData->currency_id       = $request->
                         $variantData->tax_category_id   = $request->tax_category;
                         $variantData->save();
                     } 
                 }
                 $delOpt = ProductVariant::whereNotIN('id', $existv)->where('product_id', $product->id)->whereNull('title')->delete();
             }else{
-
                 $variantData = ProductVariant::where('product_id', $product->id)->first();
                 if(!$variantData){
                     $variantData = new ProductVariant();
@@ -390,88 +354,9 @@ class ProductController extends BaseController
                 $variantData->tax_category_id   = $request->tax_category;
                 $variantData->save();
             }
-
-            /*if($request->has('exist_variant') && count($request->exist_variant) > 0){
-                foreach ($request->exist_variant as $key => $value) {
-
-                    $update = DB::table('product_variants')->where('id', $request->get('area_id'))->update([
-                         'title'            => $request->exist_variant_titles[$key],
-                         'price'            => $request->exist_variant_price[$key],
-                         'compare_at_price' => $request->exist_variant_compare_price[$key],
-                         'cost_price'       => $request->exist_variant_cost_price[$key],
-                         'quantity'         => $request->exist_variant_quantity[$key],
-                         'currency_id'      => 1,
-                         'tax_category_id'  => $request->tax_category,
-                    ]);
-                }
-            }*/
         }
-
-            /*if($request->has('variant_skus') && !empty($request->variant_skus)){
-
-                $varOpts = explode(';', $request->all_variant_set);
-                foreach ($varOpts as $varOpt) {
-                    $ops = explode('=>', $varOpt);
-                    $varOptArray[$ops[0]] = explode(',' ,$ops[1]);
-                }
-
-                foreach ($request->variant_skus as $key => $value) {
-                    $proVariant = new ProductVariant();
-                    $proVariant->sku = $value.'-'.$product->id;
-                    $proVariant->product_id = $product->id;
-                    $proVariant->title = $request->variant_titles[$key];
-                    $proVariant->quantity = $request->variant_quantity[$key];
-                    $proVariant->price = $request->variant_price[$key];
-                    $proVariant->position = 1;
-                    $proVariant->compare_at_price = $request->variant_compare_price[$key];
-                    $proVariant->barcode = $this->generateBarcodeNumber();
-                    $proVariant->cost_price = $request->variant_cost_price[$key];
-                    $proVariant->currency_id = 1;
-                    $proVariant->tax_category_id = $request->tax_category;
-                    $proVariant->inventory_policy = '';
-                    $proVariant->fulfillment_service = '';
-                    $proVariant->inventory_management = '';
-                    $proVariant->save();
-
-                    $img = ''; $fname = 'variantImage-'.$key;
-                    if($request->has($fname) && !empty($request->{$fname})){
-                        $image = new ProductImage();
-                        $image->media_type = 1;
-                        $file = $request->file($fname);
-                        $image->product_id = $product->id;
-                        $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-                        //$s3filePath = '/assets/Clientlogo/' . $file_name;
-                        //$path = Storage::disk('s3')->put($s3filePath, $file,'public');
-                        $image->path = $request->file($fname)->storeAs('/product', $file_name, 'public');
-                        $image->save();
-                        $img = $image->id;
-
-                    }
-                    foreach ($request->variant[$key] as $k => $v) {
-
-                        $prodVarSet[$i] = [
-                            'product_id' => $product->id,
-                            'product_variant_id' => $proVariant->id,
-                            'variant_option_id' => $v,
-                        ];
-
-                        foreach ($varOptArray as $key => $value) {
-
-                            if(in_array($v, $value)){
-                                $prodVarSet[$i]['variant_type_id'] = $key;
-                            }
-                        }
-                        
-                        if(!empty($img)){
-                            $prodVarSet[$i]['media_id'] = $img;
-                        }
-                        $i++;
-                    }
-                }
-                ProductVariantSet::insert($prodVarSet);
-            }*/
-        
-        return redirect()->back()->with('success', 'Product updated successfully!');
+        $toaster = $this->successToaster('Success', 'Product  updated successfully.');
+        return redirect('client/vendor/catalogs/'.$product->vendor_id)->with('toaster', $toaster);
 
     }
 
@@ -483,7 +368,7 @@ class ProductController extends BaseController
      */
     public function destroy($domain = '', $id)
     {
-        Product::where('id',$id)->update(['is_live' => 2]);
+        Product::where('id',$id)->delete();
         return redirect()->back()->with('success', 'Product deleted successfully!');
     }
 
@@ -633,9 +518,7 @@ class ProductController extends BaseController
             $html .= '</tr>';
             
         }
-
         ProductVariantSet::insert($all_variant_sets);
-       
         $html .= '</table>';
         return $html;
     }
@@ -675,9 +558,12 @@ class ProductController extends BaseController
     }
 
     public function deleteVariant(Request $request){
-        //$pv = ProductVariant::where('id', $request->prod_var_id)->where('product_id', $request->prod_id)->delete();
-        //$pv = ProductVariantSet::where('product_variant_id', $request->prod_var_id)->delete();
-
+        $product_variant = ProductVariant::where('id', $request->product_variant_id)->where('product_id', $request->product_id)->first();
+        $product_variant->status = 0;
+        $product_variant->save();
+        if($request->is_product_delete){
+            Product::where('id', $request->product_id)->delete();
+        }
         return response()->json(array('success' => true, 'msg' => 'Product variant deleted successfully.'));
     }
 
@@ -825,7 +711,5 @@ class ProductController extends BaseController
 
         $img->delete();
         return redirect()->back()->with('success', 'Product image deleted successfully!');
-        
     }
-  
 }

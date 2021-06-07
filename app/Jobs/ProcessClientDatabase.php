@@ -118,13 +118,13 @@ class ProcessClientDatabase implements ShouldQueue
             DB::connection($schemaName)->table('client_currencies')->insert($cli_currs);
 
             if($this->languId == 1){
-            Artisan::call('db:seed', ['--class' => 'CategorySeeder', '--database' => $schemaName,  '--force' => true]);
-            Artisan::call('db:seed',['--class' => 'CatalogSeeder', '--database' => $schemaName,  '--force' => true]);
-            Artisan::call('db:seed', ['--class' => 'AddonsetDataSeeder', '--database' => $schemaName,  '--force' => true]);
-            Artisan::call('db:seed', ['--class' => 'VariantSeeder', '--database' => $schemaName,  '--force' => true]);
-            Artisan::call('db:seed', ['--class' => 'ProductSeeder', '--database' => $schemaName,  '--force' => true]);
+                Artisan::call('db:seed', ['--class' => 'TypeSeeder', '--database' => $schemaName,  '--force' => true]);
+                Artisan::call('db:seed', ['--class' => 'CategorySeeder', '--database' => $schemaName,  '--force' => true]);
+                Artisan::call('db:seed',['--class' => 'CatalogSeeder', '--database' => $schemaName,  '--force' => true]);
+                Artisan::call('db:seed', ['--class' => 'AddonsetDataSeeder', '--database' => $schemaName,  '--force' => true]);
+                Artisan::call('db:seed', ['--class' => 'VariantSeeder', '--database' => $schemaName,  '--force' => true]);
+                Artisan::call('db:seed', ['--class' => 'ProductSeeder', '--database' => $schemaName,  '--force' => true]);
             }else{
-
                 $main_category = [
                     'id' => '1',
                     'slug' => 'root',
@@ -137,7 +137,6 @@ class ProcessClientDatabase implements ShouldQueue
                     'display_mode' => 1,
                     'parent_id' => NULL
                 ];
-
                 $main_trans = [
                     'id' => 1,
                     'name' => 'root',
@@ -148,11 +147,9 @@ class ProcessClientDatabase implements ShouldQueue
                     'category_id' => 1,
                     'language_id' => $this->languId,
                 ];
-
                 DB::connection($schemaName)->table('categories')->insert($main_category);
                 DB::connection($schemaName)->table('category_translations')->insert($main_category);
             }
-
             DB::disconnect($schemaName);
         } catch (Exception $ex) {
             print_r($ex->getMessage());die;

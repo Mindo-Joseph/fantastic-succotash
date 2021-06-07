@@ -39,7 +39,7 @@ class User extends Authenticatable
     ];
 
     public function country(){
-       return $this->belongsTo('App\Models\Country')->select("id", "code", "name"); 
+       return $this->belongsTo('App\Models\Country')->select('id', 'code', 'name','phonecode'); 
     }
 
     public function sendPasswordResetNotification($token)
@@ -54,7 +54,7 @@ class User extends Authenticatable
     public function role(){
        return $this->belongsTo('App\Models\Role')->select('id', 'role'); 
     }
-
+   
     public function device(){
        return $this->hasMany('App\Models\UserDevice'); 
     }
@@ -95,5 +95,14 @@ class User extends Authenticatable
             $rule['database_name'] = 'max:60|unique:clients,database_name,'.$id;
         }*/
         return $rules;
+    }
+
+    public function orders(){
+       return $this->hasMany('App\Models\Order', 'user_id', 'id')->select('id', 'user_id'); 
+    }
+
+    public function activeOrders(){
+       return $this->hasMany('App\Models\Order', 'user_id', 'id')->select('id', 'user_id')
+              ->where('is_deleted', '!=', 1); 
     }
 }

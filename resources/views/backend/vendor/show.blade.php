@@ -7,6 +7,16 @@
         border-color: #43bee1;
         background-color: #43bee1;
     }
+    .dd-list .dd3-content{
+        position: relative;
+    }
+    span.inner-div {
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+    
 </style>
 @endsection
 
@@ -196,17 +206,18 @@
                                 </div>
                             </div>
                             @endif
-
-                            <div class="row card-box">
-                                <h4 class="mb-4 "> Weekly Slot</h4>
-                                <div class="col-md-12">
-                                    <div class="row mb-2">
-                                        <div class="col-md-12">
-                                            <div id='calendar'></div>
+                            @if($vendor->show_slot == 0)
+                                <div class="row card-box">
+                                    <h4 class="mb-4 "> Weekly Slot</h4>
+                                    <div class="col-md-12">
+                                        <div class="row mb-2">
+                                            <div class="col-md-12">
+                                                <div id='calendar'></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
 
                         </div> <!-- end tab-pane -->
                         <!-- end about me section content -->
@@ -679,19 +690,12 @@
             success: function(data) {
 
                 document.getElementById("edit-area-form").action = "{{url('client/vendor/updateArea')}}" + '/' + aid;
-
                 $('#edit-area-form #editAreaBox').html(data.html);
-
                 initialize_edit(data.zoomLevel, data.coordinate);
                 $('#edit-area-modal').modal({
                     backdrop: 'static',
                     keyboard: false
                 });
-               // load_area_map(data.zoomLevel, data.coordinate);
-
-               //google.maps.event.addDomListener(document.getElementById('refresh'), 'click', initialize_edit);
-
-            //
             }
         });
     });
