@@ -129,9 +129,6 @@
                     </div>
                     <div class="col-md-12 mb-3">
                         {!! Form::label('title', 'Vendor Category',['class' => 'control-label']) !!}
-                        <div class="custom-dd dd nestable_list_1" id="nestable_list_1" >
-                            <!-- <?php print_r($categoryToggle); ?> -->
-                        </div>
                         <div class="custom-dd dd nestable_list_1" id="nestable_list_1">
                             <ol class="dd-list">
                                 @forelse($builds as $build)

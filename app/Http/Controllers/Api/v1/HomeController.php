@@ -177,10 +177,8 @@ class HomeController extends BaseController
                 
                 foreach ($categories as $key => $value) {
                     $value->response_type = 'category';
-
                     $response[] = $value;
                 }
-
                 $brands = Brand::join('brand_translations as bt', 'bt.brand_id', 'brands.id')
                         ->select('brands.id', 'bt.title  as dataname')
                         ->where('bt.title', 'LIKE', '%' . $keyword . '%')
@@ -223,7 +221,6 @@ class HomeController extends BaseController
                                     ->orWhere('pt.meta_keyword', 'LIKE', '%' . $keyword . '%')
                                     ->orWhere('pt.meta_description', 'LIKE', '%' . $keyword . '%');
                     });
-
                 if($for == 'category'){
                     $prodIds = array();
                     $productCategory = ProductCategory::select('product_id')->where('category_id', $dataId)->get();
@@ -234,11 +231,9 @@ class HomeController extends BaseController
                     }
                     $products = $products->whereIn('products.id', $prodIds);
                 }
-
                 if($for == 'vendor'){
                     $products = $products->where('products.vendor_id', $dataId);
                 }
-
                 if($for == 'brand'){
                     $products = $products->where('products.brand_id', $dataId);
                 }

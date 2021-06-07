@@ -52,7 +52,6 @@ $(document).ready(function() {
                 }
             }
         });
-        
     });
     $(document).on("click",".apply_promo_code_btn",function() {
         let amount = $(this).data('amount');
@@ -262,7 +261,6 @@ $(document).ready(function() {
             },
         });
     }
-    
     $(document).on('click', '.quantity-right-plus', function() {
         var quan = parseInt($('.quantity_count').val());
         var str = $('#instock').html();
