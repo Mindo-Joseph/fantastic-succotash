@@ -66,8 +66,8 @@ class CategoryController extends BaseController
         
     }
 
-    public function listData($langId, $category_id, $tpye = '', $limit = 12, $userid){
-        if($tpye == 'vendor' || $tpye == 'Vendor'){
+    public function listData($langId, $category_id, $type = '', $limit = 12, $userid){
+        if($type == 'vendor' || $type == 'Vendor'){
             $vendor_ids = [];
             $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
             foreach ($vendor_categories as $vendor_category) {
@@ -81,7 +81,20 @@ class CategoryController extends BaseController
                 $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
             }
             return $vendorData;
-        }elseif($tpye == 'product' || $tpye == 'Product'){
+        }elseif (strtolower($type) == 'subcategory') {
+            $category_details = [];
+            $category_list = Category::where('parent_id', $category_id)->get();
+            foreach ($category_list as $category) {
+                $category_details[] = array(
+                    'id' => $category->id,
+                    'name' => $category->slug,
+                    'icon' => $category->icon,
+                    'image' => $category->image
+                );
+            }
+            return $category_details;
+        }
+        elseif($type == 'product' || $type == 'Product'){
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
             $vendor_ids = Vendor::where('status', 1)->pluck('id')->toArray();
             $products = Product::has('vendor')->join('product_categories as pc', 'pc.product_id', 'products.id')
