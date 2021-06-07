@@ -23,7 +23,7 @@ class Product extends Model{
     }
 
     public function vendor(){
-       return $this->belongsTo('App\Models\Vendor')->select('id', 'name', 'desc', 'logo'); 
+       return $this->belongsTo('App\Models\Vendor')->select('id', 'name', 'desc', 'logo','status'); 
     }
 
     public function related(){
