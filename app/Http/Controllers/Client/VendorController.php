@@ -245,7 +245,7 @@ class VendorController extends BaseController
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $categories = Category::with('primary')->select('id', 'slug')
                         ->where('id', '>', '1')->where('status', '!=', '2')->where('type_id', '1')
-                        ->where('can_add_products', 1)->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->get();
+                        ->where('can_add_products', 1)->orderBy('parent_id', 'asc')->where('status', 1)->orderBy('position', 'asc')->get();
         $products = Product::with(['media.image', 'primary', 'category.cat', 'brand','variant' => function($v){
                             $v->select('id','product_id', 'quantity', 'price')->groupBy('product_id');
                     }])->select('id', 'sku','vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
@@ -254,7 +254,7 @@ class VendorController extends BaseController
                         ->where('id', '>', '1')
                         ->where(function($q) use($id){
                               $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
-                        })->orderBy('position', 'asc')
+                        })->where('status', 1)->orderBy('position', 'asc')
                         ->orderBy('id', 'asc')
                         ->orderBy('parent_id', 'asc')->get();
         /*    get active category list also with parent     */
