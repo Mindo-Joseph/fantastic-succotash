@@ -38,7 +38,7 @@ class ProductUpdate extends Command
     public function handle()
     {
         foreach (Product::with('vendor')->cursor() as $key => $product) {
-            if(!$product->vendor){
+            if($product->vendor->status == 2){
                 $product->deleted_at = date('Y-m-d H:i:s');
                 $product->save();
             }
