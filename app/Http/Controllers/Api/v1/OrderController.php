@@ -77,7 +77,7 @@ class OrderController extends Controller{
 	    			}
     			}
     			$user_address = UserAddress::where('id', $request->address_id)->first();
-                if($user_address){
+                if(!$user_address){
                     return response()->json(['error' => 'Invalid address id.'], 404);
                 }
                 $clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
