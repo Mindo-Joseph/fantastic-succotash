@@ -121,7 +121,7 @@
                                     </li> -->
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">Tax</label>
-                                        <span>${{$total_tax_order_price}}</span>
+                                        <span>${{$order->taxable_amount}}</span>
                                     </li>
                                     <li class="grand_total d-flex align-items-center justify-content-between">
                                         <label class="m-0">Total Payable</label>
