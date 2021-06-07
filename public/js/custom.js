@@ -66,6 +66,7 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.status == "Success") {
                  $('#refferal-modal').modal('hide');
+                 cartHeader();
                 }
             },
             error: function (reject) {

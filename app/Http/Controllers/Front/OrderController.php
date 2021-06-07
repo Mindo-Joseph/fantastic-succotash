@@ -7,7 +7,7 @@ use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor,CartCoupon};
 
 class OrderController extends FrontController{
     
@@ -120,6 +120,7 @@ class OrderController extends FrontController{
             $order->payable_amount = $payable_amount - $total_discount;
             $order->save();
             CartProduct::where('cart_id', $cart->id)->delete();
+            CartCoupon::where('cart_id', $cart->id)->delete();
             DB::commit();
             return $order; 
         } catch (Exception $e) {

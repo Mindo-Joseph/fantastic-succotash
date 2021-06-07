@@ -117,7 +117,7 @@
                 <td colspan="2">
                     <div class="coupon_box d-flex align-items-center">
                         <img src="{{ asset('assets/images/discount_icon.svg') }}">
-                        <input class="form-control" type="text" placeholder="Enter Coupon Code" value="<%= product.coupon.promo.name %>">
+                        <input class="form-control" type="text" placeholder="Enter Coupon Code" value="<%= product.coupon ? product.coupon.promo.name : '' %>" disabled>
                         <% if(!product.coupon) { %>
                             <a class="btn btn-outline-info promo_code_list_btn" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_total_amount %>">Apply</a>
                         <% } %>
