@@ -83,7 +83,7 @@ class CategoryController extends BaseController
             return $vendorData;
         }elseif (strtolower($type) == 'subcategory') {
             $category_details = [];
-            $category_list = Category::where('parent_id', $category_id)->paginate($limit);
+            $category_list = Category::where('parent_id', $category_id)->get();
             foreach ($category_list as $category) {
                 $category_details[] = array(
                     'id' => $category->id,

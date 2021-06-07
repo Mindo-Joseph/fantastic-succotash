@@ -30,20 +30,21 @@ $(document).ready(function() {
         });
     }
     $(document).on("click",".promo_code_list_btn",function() {
+        let amount = $(this).data('amount');
         let cart_id = $(this).data('cart_id');
         let vendor_id = $(this).data('vendor_id');
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: promocode_list_url,
-            data: {vendor_id:vendor_id},
+            data: {vendor_id:vendor_id, amount:amount, cart_id:cart_id},
             success: function(response) {
                 $("#promo_code_list_main_div").html('');
                 if (response.status == "Success") {
                     $('#refferal-modal').modal('show');
                     if(response.data.length != 0){
                         let promo_code_template = _.template($('#promo_code_template').html());
-                        $("#promo_code_list_main_div").append(promo_code_template({promo_codes:response.data, vendor_id:vendor_id, cart_id:cart_id}));
+                        $("#promo_code_list_main_div").append(promo_code_template({promo_codes:response.data, vendor_id:vendor_id, cart_id:cart_id, amount:amount}));
                     }else{
                         let no_promo_code_template = _.template($('#no_promo_code_template').html());
                         $("#promo_code_list_main_div").append(no_promo_code_template());
@@ -54,6 +55,7 @@ $(document).ready(function() {
         
     });
     $(document).on("click",".apply_promo_code_btn",function() {
+        let amount = $(this).data('amount');
         let cart_id = $(this).data('cart_id');
         let vendor_id = $(this).data('vendor_id');
         let coupon_id = $(this).data('coupon_id');
@@ -61,10 +63,16 @@ $(document).ready(function() {
             type: "POST",
             dataType: 'json',
             url: apply_promocode_coupon_url,
-            data: {cart_id:cart_id, vendor_id:vendor_id, coupon_id:coupon_id},
+            data: {cart_id:cart_id, vendor_id:vendor_id, coupon_id:coupon_id, amount:amount},
             success: function(response) {
                 if (response.status == "Success") {
                  $('#refferal-modal').modal('hide');
+                }
+            },
+            error: function (reject) {
+                if( reject.status === 422 ) {
+                    var message = $.parseJSON(reject.responseText);
+                    alert(message.message);
                 }
             }
         });

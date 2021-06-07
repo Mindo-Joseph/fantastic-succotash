@@ -91,9 +91,19 @@ class OrderController extends FrontController{
                             $orderAddon->addon_id = $cart_addon->addon_id;
                             $orderAddon->option_id = $cart_addon->option_id;
                             $orderAddon->order_product_id = $order_product->id;
-                            // $orderAddon->save();
+                            $orderAddon->save();
                         }
                         CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
+                    }
+                }
+                if($vendor_cart_product->coupon->promo){
+                    if($vendor_cart_product->coupon->promo->promo_type_id == 2){
+                        $amount = round($vendor_cart_product->coupon->promo->amount);
+                        $total_discount += $amount;
+                        $vendor_payable_amount -= $amount;
+                        $vendor_discount_amount += $amount;
+                    }else{
+                        
                     }
                 }
                 $OrderVendor = new OrderVendor();
@@ -107,7 +117,7 @@ class OrderController extends FrontController{
             $order->total_amount = $total_amount;
             $order->total_discount = $total_discount;
             $order->taxable_amount = $taxable_amount;
-            $order->payable_amount = $payable_amount;
+            $order->payable_amount = $payable_amount - $total_discount;
             $order->save();
             CartProduct::where('cart_id', $cart->id)->delete();
             DB::commit();

@@ -187,9 +187,9 @@ class CartController extends FrontController
                     $aa = $addon_ids[$key];
                     $bb = $addon_options[$key];
                     $cartAddOn = new CartAddon;
-                    $cartAddOn->cart_product_id = $cartProduct->id;
                     $cartAddOn->addon_id = $aa;
                     $cartAddOn->option_id = $bb;
+                    $cartAddOn->cart_product_id = $cartProduct->id;
                     $cartAddOn->save();
                 }
             }
@@ -235,30 +235,33 @@ class CartController extends FrontController
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
-        $cartData = CartProduct::with(['vendor', 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
-                        'vendorProducts.pvariant.vset.variantDetail.trans' => function($qry) use($langId){
-                            $qry->where('language_id', $langId);
-                        },
-                        'vendorProducts.pvariant.vset.optionData.trans' => function($qry) use($langId){
-                            $qry->where('language_id', $langId);
-                        },
-                        'vendorProducts.product.translation' => function($q) use($langId){
-                            $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
-                            $q->where('language_id', $langId);
-                        },
-                        'vendorProducts'=> function($qry) use($cart_id){
+        $cartData = CartProduct::with(['vendor', 'coupon'=> function($qry) use($cart_id){
                             $qry->where('cart_id', $cart_id);
-                        },
-                        'vendorProducts.addon.set' => function($qry) use($langId){
-                            $qry->where('language_id', $langId);
-                        },
-                        'vendorProducts.addon.option' => function($qry) use($langId){
-                            $qry->where('language_id', $langId);
-                        }, 'vendorProducts.product.taxCategory.taxRate', 
+                    },'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
+                    'vendorProducts.pvariant.vset.variantDetail.trans' => function($qry) use($langId){
+                        $qry->where('language_id', $langId);
+                    },
+                    'vendorProducts.pvariant.vset.optionData.trans' => function($qry) use($langId){
+                        $qry->where('language_id', $langId);
+                    },
+                    'vendorProducts.product.translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                        $q->where('language_id', $langId);
+                    },
+                    'vendorProducts'=> function($qry) use($cart_id){
+                        $qry->where('cart_id', $cart_id);
+                    },
+                    'vendorProducts.addon.set' => function($qry) use($langId){
+                        $qry->where('language_id', $langId);
+                    },
+                    'vendorProducts.addon.option' => function($qry) use($langId){
+                        $qry->where('language_id', $langId);
+                    }, 'vendorProducts.product.taxCategory.taxRate', 
                     ])->select('vendor_id')->where('status', [0,1])->where('cart_id', $cart_id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if($cartData){
             foreach ($cartData as $ven_key => $vendorData) {
+                
                 $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0.00;
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
                     $quantity_price = 0;
@@ -287,9 +290,7 @@ class CartController extends FrontController
                         }
                     }
                     $prod->taxdata = $taxData;
-
                     unset($prod->product->taxCategory);
-
                     foreach ($prod->addon as $ck => $addons) {
                         $opt_price_in_currency = $addons->option->price / $divider;
                         $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
@@ -309,7 +310,14 @@ class CartController extends FrontController
                     $deliver_charge = 0;
                     $prod->deliver_charge = number_format($deliver_charge, 2);
                     $payable_amount = $payable_amount + $deliver_charge;
+                }
+                if($vendorData->coupon){
+                    if($vendorData->coupon->promo->promo_type_id == 2){
+                        $total_discount_percent = $vendorData->coupon->promo->amount;
+                        $payable_amount -=$total_discount_percent;
+                    }else{
 
+                    }
                 }
                 $vendorData->payable_amount = number_format($payable_amount, 2);
                 $vendorData->discount_amount = number_format($discount_amount, 2);
@@ -331,7 +339,7 @@ class CartController extends FrontController
                             $is_percent = 1;
                             $total_discount_percent = $total_discount_percent + round($coupon->promo->amount);
                         }else{
-                            $amount_value = $amount_value + $coupon->promo->amount;
+                            
                         }
                     }
                 }

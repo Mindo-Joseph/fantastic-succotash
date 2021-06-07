@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 use Carbon\Carbon;
 use App\Models\Cart;
+use App\Models\Order;
 use App\Models\Vendor;
 use App\Models\Product;
 use App\Models\Promocode;
@@ -11,10 +12,12 @@ use Illuminate\Http\Request;
 use App\Models\PromoCodeDetail;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class PromoCodeController extends Controller{
     use ApiResponser;
+    protected $user;
 
     public function postPromoCodeList(Request $request){
         try {
@@ -48,6 +51,7 @@ class PromoCodeController extends Controller{
     }
     public function postVerifyPromoCode(Request $request){
         try {
+            $user = Auth::user();
             $validator = $this->validatePromoCode();
             if($validator->fails()){
                 return $this->errorResponse($validator->messages(), 422);
@@ -71,6 +75,12 @@ class PromoCodeController extends Controller{
             $cart_coupon_detail2 = CartCoupon::where('cart_id', $request->cart_id)->where('coupon_id', $request->coupon_id)->first();
             if($cart_coupon_detail2){
                 return $this->errorResponse('Coupon Code already applied other vendor.', 422);
+            }
+            if($cart_detail->first_order_only == 1){
+                $orders_count = Order::where('user_id', $user->id)->count();
+                if($orders_count > 0){
+                    return $this->errorResponse('Coupon Code apply only first order.', 422);
+                }
             }
             $cart_coupon = new CartCoupon();
             $cart_coupon->cart_id = $request->cart_id;

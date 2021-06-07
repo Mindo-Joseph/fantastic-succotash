@@ -203,11 +203,8 @@ class HomeController extends BaseController
                             ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
                             ->where('pt.language_id', $langId)
                             ->where(function ($q) use ($keyword) {
-                                    $q->where('products.sku', ' LIKE', '%' . $keyword . '%')
-                                    ->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')
-                                     ->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
-                        })->where('products.is_live', 1)->get();
-              
+                                $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
+                            })->where('products.is_live', 1)->whereNull('deleted_at')->get();
                 foreach ($products as $product) {
                     $product->response_type = 'product';
                     $response[] = $product;
@@ -245,7 +242,7 @@ class HomeController extends BaseController
                 if($for == 'brand'){
                     $products = $products->where('products.brand_id', $dataId);
                 }
-                $products = $products->where('products.is_live', 1)->get();
+                $products = $products->where('products.is_live', 1)->whereNull('deleted_at')->get();
                 foreach ($products as $product) {
                     $product->response_type = 'product';
                     $response[] = $product;
