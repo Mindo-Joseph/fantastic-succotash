@@ -121,16 +121,10 @@
                         <a class="btn btn-outline-info promo_code_list_btn" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>">Apply</a>
                     </div>
                 </td> 
-                <!-- <td>
-                    <label class="d-block txt-13">Delivery Fee</label>
-                    <p class="total_amt m-0">Amount</p>
-                </td> -->
-                <td colspan="2"></td>
+                <td colspan="3"></td>
                 <td class="text-center">
-                    <!-- <label class="d-block  txt-13">$5.00</label> -->
-                    <p class="total_amt m-0">$ <%= product.payable_amount %></p>
+                    <p class="total_amt m-0">$ <%= product.product_total_amount %></p>
                 </td>
-                <td></td>
             </tr>
         </tbody>
     <% }); %>
@@ -156,14 +150,7 @@
             <td colspan="3"></td>
             <td>Tax</td>
             <td class="text-right" colspan="2">
-                <% _.each(cart_details.products, function(product, key){%>
-                    <% _.each(product.vendor_products, function(vendor_product, vp){%>
-                        <% _.each(vendor_product.taxdata, function(tax, tx)  { var vendor_details = [];%>
-                            <p class="m-1">
-                                <label class="m-0"><%= tax.identifier %> (For <%= vendor_product.product.sku %>) <%= tax.rate %>%</label><span class="pl-4">$<%= tax.product_tax %></span></p>
-                        <% }); %>
-                    <% }); %>
-                <% }); %>
+                <p class="m-1"><span class="pl-4">$<%= cart_details.total_taxable_amount %></span></p>
             </td>
         </tr>
         <tr class="border_0">

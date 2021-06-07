@@ -20,7 +20,7 @@ class OrderStoreRequest extends FormRequest{
      */
     public function rules(){
         return [
-            'address_id' => 'required',
+            'address_id' => 'required:exists:user_addresses,id',
             'payment_option_id' => 'required',
         ];
     }

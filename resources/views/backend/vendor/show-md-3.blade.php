@@ -174,9 +174,9 @@
                                                                     <span class="inner-div text-right">
                                                                         <a class="action-icon" data-id="6" href="javascript:void(0)">
                                                                             @if(in_array($second_child['id'], $VendorCategory))
-                                                                                <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="">
+                                                                                <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="">
                                                                             @else
-                                                                                <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery">
+                                                                                <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery">
                                                                             @endif
                                                                         </a>
                                                                     </span> 
@@ -201,7 +201,7 @@
         </div>
     </div>
 </div>
-<div class="card-box">
+<!-- <div class="card-box">
     <h4 class="header-title mb-3">Users</h4>
     <div class="inbox-widget" data-simplebar style="max-height: 350px;">
         <div class="inbox-item">
@@ -261,7 +261,7 @@
             </p>
         </div>
     </div>
-</div>
+</div> -->
 <script type="text/javascript">
     $( document ).ready(function() {
     $.ajaxSetup({
