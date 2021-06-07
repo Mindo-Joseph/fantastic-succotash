@@ -28,7 +28,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('user/resetPassword', [
 		'as' => 'customer.resetPassword',
 		'uses' => 'Front\CustomerAuthController@resetPasswordForm'
-	])   ;
+	]);
 
 	//Route::post('user/facebook/callback','Front\CustomerAuthController@fblogin');
 

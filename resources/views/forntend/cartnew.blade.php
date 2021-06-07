@@ -34,7 +34,7 @@
         </div>
     </div>
 </script>
-<h1 ></h1>
+<h1></h1>
 <script type="text/template" id="cart_template">
     <% _.each(cart_details.products, function(product, key){%>
         <tbody id="tbody_<%= product.vendor.id %>">
@@ -171,7 +171,7 @@
 <script type="text/template" id="promo_code_template">
     <% _.each(promo_codes, function(promo_code, key){%>
         <div class="col-lg-6">
-            <div class="coupon-code">
+            <div class="coupon-code mt-0">
                 <div class="p-2">
                     <img src="<%= promo_code.image.proxy_url %>100/35<%= promo_code.image.image_path %>" alt="">
                     <h6 class="mt-0"><%= promo_code.title %></h6>
@@ -341,8 +341,8 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body mt-0">
-        <div class="coupon-box mt-4">
+      <div class="modal-body mt-0 pt-0">
+        <div class="coupon-box">
             <div class="row" id="promo_code_list_main_div">
                 
             </div>

@@ -96,7 +96,7 @@ class OrderController extends FrontController{
                         CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                     }
                 }
-                if($vendor_cart_product->coupon->promo){
+                if($vendor_cart_product->coupon){
                     if($vendor_cart_product->coupon->promo->promo_type_id == 2){
                         $amount = round($vendor_cart_product->coupon->promo->amount);
                         $total_discount += $amount;
