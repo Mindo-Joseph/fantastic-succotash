@@ -76,7 +76,7 @@ class OrderController extends Controller{
 	    				return response()->json(['error' => 'Your phone is not verified.'], 404);
 	    			}
     			}
-    			$user_address = UserAddress::where('id', $user->address_id)->first();
+    			$user_address = UserAddress::where('id', $request->address_id)->first();
                 if($user_address){
                     return response()->json(['error' => 'Invalid address id.'], 404);
                 }
