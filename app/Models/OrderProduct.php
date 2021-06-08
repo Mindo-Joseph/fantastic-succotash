@@ -14,6 +14,9 @@ class OrderProduct extends Model{
     public function addon(){
        return $this->hasMany('App\Models\OrderProductAddon', 'order_product_id', 'id'); 
     }
+    public function pvariant(){
+      return $this->belongsTo('App\Models\ProductVariant', 'variant_id', 'id')->select('id', 'sku', 'product_id', 'title', 'price', 'tax_category_id', 'barcode');
+    }
     public function getImageAttribute($value){
       $values = array();
       $img = 'default/default_image.png';
