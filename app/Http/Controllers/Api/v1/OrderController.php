@@ -131,13 +131,12 @@ class OrderController extends Controller{
     	                        $rate = round($tax_rate_detail->tax_rate);
     	                        $tax_amount = ($price_in_dollar_compare * $rate) / 100;
     	                        $product_tax = $quantity_price * $rate / 100;
-    	                        $product_taxable_amount += $taxable_amount + $product_tax;
+    	                        $taxable_amount = $taxable_amount + $product_tax;
     	                        $payable_amount = $payable_amount + $product_tax;
     	                        $vendor_payable_amount = $vendor_payable_amount;
     	                    }
                         }
                         $total_amount += $variant->price;
-                        $taxable_amount += $product_taxable_amount;
                         $order_product = new OrderProduct;
                         $order_product->order_id = $order->id;
                         $order_product->price = $variant->price;
