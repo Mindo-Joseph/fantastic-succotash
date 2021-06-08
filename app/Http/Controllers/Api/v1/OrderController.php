@@ -151,8 +151,8 @@ class OrderController extends Controller{
                             $order_product->image = $vendor_cart_product->product->pimage->first() ? $vendor_cart_product->product->pimage->first()->path : '';
                         }
                         $order_product->save();
-                        if(!empty($order_product->addon)){
-                            foreach ($order_product->addon as $ck => $addon) {
+                        if(!empty($vendor_cart_product->addon)){
+                            foreach ($vendor_cart_product->addon as $ck => $addon) {
                                 $opt_quantity_price = 0;
                                 $opt_price_in_currency = $addon->option->price;
                                 $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
