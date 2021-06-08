@@ -33,12 +33,38 @@ class OrderController extends Controller{
 
     public function postOrderDetail(Request $request){
     	try {
+            $langId = 0;
+            $currency = 1;
     		$user = Auth::user();
     		$order_item_count = 0;
     		$order_id = $request->order_id;
-	    	$order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){
-                        $q->where('order_id', $order_id);
-                    },'vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+            $order = Order::with(['vendors.vendor', 'coupon'=> function($qry) use($order_id){
+                        $qry->where('cart_id', $order_id);
+                    }, 'coupon.promo.details', 'vendors.products.pvariant.media.image', 'vendors.products.product.media.image', 
+                    'vendors.products.pvariant.vset.variantDetail.trans' => function($qry) use($langId){
+                        $qry->where('language_id', $langId);
+                    },
+                    'vendors.products.pvariant.vset.optionData.trans' => function($qry) use($langId){
+                        $qry->where('language_id', $langId);
+                    },
+                    'vendors.products.product.translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                        $q->where('language_id', $langId);
+                    },
+                    'vendors.products'=> function($qry) use($order_id){
+                        $qry->where('order_id', $order_id);
+                    },                    
+                    'vendors.products.addon.set' => function($qry) use($langId){
+                        $qry->where('language_id', $langId);
+                    },
+                    'vendors.products.addon.option' => function($qry) use($langId){
+                        $qry->where('language_id', $langId);
+                    }, 'vendors.products.product.taxCategory.taxRate', 
+                ])->where('user_id', $user->id)->where('id', $order_id)->orderBy('created_at', 'asc')->first();
+
+	    	// $order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){
+      //                   $q->where('order_id', $order_id);
+      //               },'vendors.coupon','address'])->first();
             if($order->vendors){
     	    	foreach ($order->vendors as $vendor) {
     				$couponData = [];
