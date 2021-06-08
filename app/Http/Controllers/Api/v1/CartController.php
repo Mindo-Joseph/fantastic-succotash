@@ -500,8 +500,7 @@ class CartController extends BaseController{
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
                 $vendorData->taxable_amount = $taxable_amount;
-                $vendorData->payable_amount = $payable_amount + $taxable_amount - $discount_amount;
-
+                $vendorData->payable_amount = $payable_amount - $discount_amount;
                 $total_paying = $total_paying + $payable_amount;
                 $total_tax = $total_tax + $taxable_amount;
                 $total_disc_amount = $total_disc_amount + $discount_amount;

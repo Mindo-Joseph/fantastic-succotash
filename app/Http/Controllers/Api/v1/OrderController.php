@@ -157,8 +157,8 @@ class OrderController extends Controller{
                                 $opt_price_in_currency = $addon->option->price;
                                 $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
                                 $opt_quantity_price = $opt_price_in_doller_compare * $order_product->quantity;
-                                $payable_amount += $opt_quantity_price;
-                                $vendor_payable_amount += $opt_quantity_price;
+                                $payable_amount = $vendor_payable_amount + $opt_quantity_price;
+                                $vendor_payable_amount = $vendor_payable_amount + $opt_quantity_price;
                             }
                         }
                         $cart_addons = CartAddon::where('cart_product_id', $vendor_cart_product->id)->get();
