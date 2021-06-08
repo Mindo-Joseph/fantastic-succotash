@@ -16,7 +16,7 @@ class CartProduct extends Model{
     }
 
     public function addon(){
-       return $this->hasMany('App\Models\CartAddon', 'cart_product_id', 'product_id')->select('cart_product_id', 'addon_id', 'option_id'); 
+       return $this->hasMany('App\Models\CartAddon', 'cart_product_id', 'id')->select('cart_product_id', 'addon_id', 'option_id'); 
     }
 
 

@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,Country,UserAddress};
-use Illuminate\Http\Request;
-use Session;
 use Auth;
+use Session;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Front\FrontController;
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,Country,UserAddress,CartCoupon};
 
-class CartController extends FrontController
-{
-    private function randomString()
-    {
+class CartController extends FrontController{
+
+    private function randomString(){
         $random_string = substr(md5(microtime()), 0, 32);
         while (User::where('system_id', $random_string)->exists()) {
             $random_string = substr(md5(microtime()), 0, 32);

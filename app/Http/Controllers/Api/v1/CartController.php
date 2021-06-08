@@ -439,16 +439,16 @@ class CartController extends BaseController{
                                 $opt_price_in_currency = $addons->option->price;
                                 $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
                                 $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
-                                $vendorAddons[$ck]['cart_product_id'] = $addons->cart_product_id;
+                                $vendorAddons[$ck]['quantity'] = $prod->quantity;
                                 $vendorAddons[$ck]['addon_id'] = $addons->addon_id;
-                                $vendorAddons[$ck]['addon_title'] = $addons->set->title;
                                 $vendorAddons[$ck]['option_id'] = $addons->option_id;
+                                $vendorAddons[$ck]['price'] = $opt_price_in_currency;
+                                $vendorAddons[$ck]['addon_title'] = $addons->set->title;
+                                $vendorAddons[$ck]['quantity_price'] = $opt_quantity_price;
                                 $vendorAddons[$ck]['option_title'] = $addons->option->title;
                                 $vendorAddons[$ck]['price_in_cart'] = $addons->option->price;
-                                $vendorAddons[$ck]['price'] = $opt_price_in_currency;
+                                $vendorAddons[$ck]['cart_product_id'] = $addons->cart_product_id;
                                 $vendorAddons[$ck]['multiplier'] = $clientCurrency->doller_compare;
-                                $vendorAddons[$ck]['quantity'] = $prod->quantity;
-                                $vendorAddons[$ck]['quantity_price'] = $opt_quantity_price;
                                 $ttAddon = $ttAddon + $opt_quantity_price;
                                 $payable_amount = $payable_amount + $opt_quantity_price;
                             }
