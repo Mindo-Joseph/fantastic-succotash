@@ -107,7 +107,7 @@ class OrderController extends Controller{
 		        $order->address_id = $request->address_id;
 		        $order->payment_option_id = $request->payment_option_id;
 		        $order->save();
-		        $cart_products = CartProduct::with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
+		        $cart_products = CartProduct::with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon', 'product.addon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
 		        $total_amount = 0;
                 $total_discount = 0;
                 $taxable_amount = 0;
@@ -151,6 +151,16 @@ class OrderController extends Controller{
                             $order_product->image = $vendor_cart_product->product->pimage->first() ? $vendor_cart_product->product->pimage->first()->path : '';
                         }
                         $order_product->save();
+                        if(!empty($order_product->addon)){
+                            foreach ($order_product->addon as $ck => $addon) {
+                                $opt_quantity_price = 0;
+                                $opt_price_in_currency = $addon->option->price;
+                                $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
+                                $opt_quantity_price = $opt_price_in_doller_compare * $order_product->quantity;
+                                $payable_amount += $opt_quantity_price;
+                                $vendor_payable_amount += $opt_quantity_price;
+                            }
+                        }
                         $cart_addons = CartAddon::where('cart_product_id', $vendor_cart_product->id)->get();
                         if($cart_addons){
                             foreach ($cart_addons as $cart_addon) {
