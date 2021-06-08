@@ -10,7 +10,10 @@ class OrderProduct extends Model{
 
     protected $table = 'order_vendor_products';
     protected $casts = ['price' => 'double'];
-    
+
+    public function addon(){
+       return $this->hasMany('App\Models\OrderProductAddon', 'order_product_id', 'id'); 
+    }
     public function getImageAttribute($value){
       $values = array();
       $img = 'default/default_image.png';

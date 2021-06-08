@@ -36,21 +36,23 @@ class OrderController extends Controller{
     		$user = Auth::user();
     		$order_item_count = 0;
     		$order_id = $request->order_id;
-	    	$order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){
+	    	$order = Order::with(['vendors.vendor','vendors.products.addon' => function($q) use($order_id){
                             $q->where('order_id', $order_id);
                 },'vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
-	    	foreach ($order->vendors as $key => $vendor) {
-				$couponData = [];
-				$delivery_fee = 0;
-				$payable_amount = 0;
-    			$discount_amount = 0;
-				$product_addons = [];
-    			foreach ($vendor->products as  $product) {
-	    			$order_item_count += $product->quantity;
-    			}
-    			$vendor->delivery_fee = $delivery_fee;
-    			$vendor->product_addons = $product_addons;
-    		}
+            if($order->vendors){
+    	    	foreach ($order->vendors as $vendor) {
+    				$couponData = [];
+    				$delivery_fee = 0;
+    				$payable_amount = 0;
+        			$discount_amount = 0;
+    				$product_addons = [];
+        			foreach ($vendor->products as  $product) {
+    	    			$order_item_count += $product->quantity;
+        			}
+        			$vendor->delivery_fee = $delivery_fee;
+        			$vendor->product_addons = $product_addons;
+        		}
+            }
     		$order->order_item_count = $order_item_count;
 	    	return $this->successResponse($order, null, 201);
     	} catch (Exception $e) {
