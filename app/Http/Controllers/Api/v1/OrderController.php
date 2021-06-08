@@ -36,9 +36,10 @@ class OrderController extends Controller{
     		$user = Auth::user();
     		$order_item_count = 0;
     		$order_id = $request->order_id;
-	    	$order = Order::with(['vendors.vendor','vendors.products.addon' => function($q) use($order_id){
-                            $q->where('order_id', $order_id);
-                },'vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+	    	$order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){
+                        $q->where('order_id', $order_id);
+                    },
+                    'vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
             if($order->vendors){
     	    	foreach ($order->vendors as $vendor) {
     				$couponData = [];
@@ -48,6 +49,7 @@ class OrderController extends Controller{
     				$product_addons = [];
         			foreach ($vendor->products as  $product) {
     	    			$order_item_count += $product->quantity;
+                        $product_addons[] = $product->addon;
         			}
         			$vendor->delivery_fee = $delivery_fee;
         			$vendor->product_addons = $product_addons;
