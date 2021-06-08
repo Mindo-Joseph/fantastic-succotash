@@ -47,9 +47,9 @@ class OrderController extends Controller{
         			$discount_amount = 0;
     				$product_addons = [];
         			foreach ($vendor->products as  $product) {
-                        pr($product->pvariant);die;
     	    			$order_item_count += $product->quantity;
                         $product->product_addons = $product->addon;
+                        $product->variant_options = ['option' => $product->pvariant->optionData->trans->title,'title' => $product->pvariant->variantDetail->trans->title];
         			}
         			$vendor->delivery_fee = $delivery_fee;
         			$vendor->product_addons = $product_addons;
