@@ -49,7 +49,7 @@ class OrderController extends Controller{
         			foreach ($vendor->products as  $product) {
     	    			$order_item_count += $product->quantity;
                         $product->product_addons = $product->addon;
-                        $product->variant_options = ['option' => $product->pvariant->optionData->trans->title,'title' => $product->pvariant->variantDetail->trans->title];
+                        $product->variant_options = ['option' => $product->pvariant->vset->optionData->trans->title,'title' => $product->pvariant->vset->variantDetail->trans->title];
         			}
         			$vendor->delivery_fee = $delivery_fee;
         			$vendor->product_addons = $product_addons;
