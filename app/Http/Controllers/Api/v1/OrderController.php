@@ -38,18 +38,18 @@ class OrderController extends Controller{
     		$order_id = $request->order_id;
 	    	$order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){
                         $q->where('order_id', $order_id);
-                    },'vendors.products.pvariant.vset.optionData.trans','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+                    },'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
             if($order->vendors){
     	    	foreach ($order->vendors as $vendor) {
     				$couponData = [];
-    				$delivery_fee = 0;
     				$payable_amount = 0;
         			$discount_amount = 0;
     				$product_addons = [];
         			foreach ($vendor->products as  $product) {
-    	    			$order_item_count += $product->quantity;
-                        $product->product_addons = $product->addon;
+                        $product_addons = [];
                         $variant_options = [];
+    	    			$order_item_count += $product->quantity;
+                        
                         if($product->pvariant){
                             foreach ($product->pvariant->vset as $variant_set_option) {
                                 $variant_options [] = array(
@@ -59,8 +59,17 @@ class OrderController extends Controller{
                             }
                         }
                         $product->variant_options = $variant_options;
+                        if(!empty($product->addon)){
+                            foreach ($product->addon as $addon) {
+                                $product_addons[] = array(
+                                    'addon_id' =>  $addon->addon_id,
+                                    'addon_title' =>  $addon->set->title,
+                                    'option_title' =>  $addon->option->title,
+                                );
+                            }
+                        }
+                        $product->product_addons = $product_addons;
         			}
-        			$vendor->delivery_fee = $delivery_fee;
         		}
             }
     		$order->order_item_count = $order_item_count;
