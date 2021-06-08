@@ -96,10 +96,6 @@ class PromoCodeController extends Controller{
     
     public function postRemovePromoCode(Request $request){
         try {
-            $validator = $this->validatePromoCode();
-            if($validator->fails()){
-                return $this->errorResponse($validator->messages(), 422);
-            }
             $cart_detail = Cart::where('id', $request->cart_id)->first();
             if(!$cart_detail){
                 return $this->errorResponse('Invalid Cart Id', 422);

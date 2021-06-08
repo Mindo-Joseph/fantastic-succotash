@@ -255,7 +255,14 @@ a{
 .coupon_box {
     background: #F3F9FF;
     padding: 5px 10px;
-    width: 300px;
+    width: fit-content;
+}
+
+.coupon_box .fa-times {
+    color: #f64a3b;
+    font-size: 20px;
+    cursor: pointer;
+
 }
 
 .coupon_box .form-control {
@@ -1577,9 +1584,16 @@ label{
 
 
 
+.btn-outline-info{
+    border-color: #ff4c3b;
+    color: #ff4c3b !important;
+}
 
-
-
+.btn-outline-info:hover {
+    color: #fff !important;
+    background-color: #ff4c3b;
+    border-color: #ff4c3b;
+}
 
 
 

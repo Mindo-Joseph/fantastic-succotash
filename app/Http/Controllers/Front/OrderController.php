@@ -14,7 +14,7 @@ class OrderController extends FrontController{
     public function getOrderSuccessPage(Request $request){
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        $order = Order::with(['products', 'address'])->findOrfail($request->order_id);
+        $order = Order::with(['products.pvariant.vset', 'address'])->findOrfail($request->order_id);
         return view('frontend.order.success', compact('order','navCategories'));
     }
     public function placeOrder(Request $request, $domain = ''){

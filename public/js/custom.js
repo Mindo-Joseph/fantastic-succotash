@@ -29,6 +29,21 @@ $(document).ready(function() {
             }
         });
     }
+    $(document).on("click",".remove_promo_code_btn",function() {
+        let cart_id = $(this).data('cart_id');
+        let coupon_id = $(this).data('coupon_id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: promo_code_remove_url,
+            data: {coupon_id:coupon_id, cart_id:cart_id},
+            success: function(response) {
+                if (response.status == "Success") {
+                    cartHeader();
+                }
+            }
+        });
+    });
     $(document).on("click",".promo_code_list_btn",function() {
         let amount = $(this).data('amount');
         let cart_id = $(this).data('cart_id');

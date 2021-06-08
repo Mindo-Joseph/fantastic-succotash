@@ -1,5 +1,6 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
+<link type="stylesheet" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"></link>
 <style type="text/css">
 .swal2-title {
   margin: 0px;
@@ -75,56 +76,53 @@
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                         </a>
                     </td>
-                    <td class="text-center">
+                    <td class="text-right pl-lg-2">
                         <div class="items-price mb-3">$<%= vendor_product.pvariant.quantity_price %></div>
                     </td>
                 </tr>
                 <% if(vendor_product.addon.length != 0) { %>
                     <tr>
-                        <td colspan="7" class="border_0 p-0 border-0">
-                            <table class="add_on_items w-100">
-                                <thead>
-                                    <tr>
-                                        <th colspan="6">
-                                            <h6 class="m-0 pl-0"><b>Add Ons</b></h6>
-                                        </th>
-                                    </tr>
-                                </thead>    
-                                <% _.each(vendor_product.addon, function(addon, ad){%>
-                                <tbody>
-                                    <tr class="border_0 padding-top">
-                                        <td style="width:117px;"></td>
-                                        <td class="items-details text-left" style="width: 210px;">
-                                            <p class="m-0"><%= addon.set.title %></p>
-                                        </td>
-                                        <td>
-                                            <div class="extra-items-price">$<%= addon.option.price_in_cart %></div>
-                                        </td>
-                                        <td>
-                                        </td>
-                                        <td class="text-left" style="width: 140px;">
-                                            <div class="extra-items-price">$<%= addon.option.quantity_price %></div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <% }); %>
-                            </table>
+                         <td colspan="6" class="border_0 p-0 border-0">
+                           <h6 class="m-0 pl-0"><b>Add Ons</b></h6>
                         </td>
+                    </tr>
+                    <% _.each(vendor_product.addon, function(addon, ad){%>
+                    <tr>
+                         
+                            <td></td>
+                            <td class="items-details text-left">
+                                <p class="m-0"><%= addon.set.title %></p>
+                            </td>
+                            <td>
+                                <div class="extra-items-price">$<%= addon.option.price_in_cart %></div>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right pl-lg-2">
+                                <div class="extra-items-price">$<%= addon.option.quantity_price %></div>
+                            </td>
                     </tr> 
+
+                        <% }); %>
                 <% } %>
             <% }); %>
             <tr>
                 <td colspan="2">
-                    <div class="coupon_box d-flex align-items-center">
+                    <div class="d-flex w-100 ">
+                    <div class="coupon_box d-flex w-50 align-items-center">
                         <img src="{{ asset('assets/images/discount_icon.svg') }}">
-                        <input class="form-control" type="text" placeholder="Enter Coupon Code" value="<%= product.coupon ? product.coupon.promo.name : '' %>" disabled>
-                        <% if(!product.coupon) { %>
-                            <a class="btn btn-outline-info promo_code_list_btn" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_total_amount %>">Apply</a>
-                        <% } %>
+                        <label class="mb-0 ml-2"><%= product.coupon ? product.coupon.promo.name : '' %></label>
+                        
                     </div>
+                    <% if(!product.coupon) { %>
+                            <a class="btn btn-outline-info promo_code_list_btn" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_total_amount %>">Apply</a>
+                        <% }else{ %>
+                        <i class="fa fa-times ml-4 remove_promo_code_btn" data-coupon_id="<%= product.coupon ? product.coupon.promo.id : '' %>" data-cart_id="<%= cart_details.id %>"></i>
+                        <% } %>
+                        </div>
                 </td> 
                 <td colspan="3"></td>
-                <td class="text-center">
+                <td class="text-right pl-lg-2">
                     <p class="total_amt m-0">$ <%= product.product_total_amount %></p>
                 </td>
             </tr>
@@ -374,12 +372,14 @@
 </div>
 <script type="text/javascript">
     var user_store_address_url = "{{url('user/store')}}";
+    var promo_code_remove_url = "{{ route('remove.promocode') }}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
     var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
     $("form").submit(function(e){
-        let address_id = $("input[name='address_id']").val();
+        let address_id = $("input:radio[name='address_id']").is(":checked");
         if(!address_id){
+            alert('Address field required.');
             return false;
         }
     });
