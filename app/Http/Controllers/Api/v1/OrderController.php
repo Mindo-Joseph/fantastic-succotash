@@ -133,7 +133,7 @@ class OrderController extends Controller{
     	                        $product_tax = $quantity_price * $rate / 100;
     	                        $product_taxable_amount += $taxable_amount + $product_tax;
     	                        $payable_amount = $payable_amount + $product_tax;
-    	                        $vendor_payable_amount = $vendor_payable_amount + $product_tax;
+    	                        $vendor_payable_amount = $vendor_payable_amount;
     	                    }
                         }
                         $total_amount += $variant->price;
@@ -185,7 +185,7 @@ class OrderController extends Controller{
                     $order_vendor->status = 0;
                     $order_vendor->order_id= $order->id;
                     $order_vendor->vendor_id= $vendor_id;
-                    $order_vendor->payable_amount= $vendor_payable_amount;
+                    $order_vendor->payable_amount= $vendor_payable_amount ;
                     $order_vendor->discount_amount= $vendor_discount_amount;
                     $order_vendor->save();
                 }
