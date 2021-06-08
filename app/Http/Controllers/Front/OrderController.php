@@ -41,7 +41,7 @@ class OrderController extends FrontController{
             $order->payment_method = $paymentMethod;
             $order->address_id = $request->address_id;
             $order->save();
-            $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon.promo')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
+            $cart_products = CartProduct::select('*')->with(['product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon.promo', 'product.addon'])->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
             $total_amount = 0;
             $total_discount = 0;
             $taxable_amount = 0;
@@ -66,7 +66,6 @@ class OrderController extends FrontController{
                         $product_tax = $quantity_price * $rate / 100;
                         $product_taxable_amount += $product_tax;
                         $payable_amount = $payable_amount + $product_tax;
-                        $vendor_payable_amount = $vendor_payable_amount + $product_tax;
                     }
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
@@ -84,6 +83,17 @@ class OrderController extends FrontController{
                         $order_product->image = $vendor_cart_product->product->pimage->first() ? $vendor_cart_product->product->pimage->first()->path : '';
                     }
                     $order_product->save();
+                    if(!empty($vendor_cart_product->addon)){
+                        foreach ($vendor_cart_product->addon as $ck => $addon) {
+                            $opt_quantity_price = 0;
+                            $opt_price_in_currency = $addon->option->price;
+                            $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
+                            $opt_quantity_price = $opt_price_in_doller_compare * $order_product->quantity;
+                            $total_amount = $total_amount + $opt_quantity_price;
+                            $payable_amount = $payable_amount + $opt_quantity_price;
+                            $vendor_payable_amount = $vendor_payable_amount + $opt_quantity_price;
+                        }
+                    }
                     $cart_addons = CartAddon::where('cart_product_id', $vendor_cart_product->id)->get();
                     if($cart_addons){
                         foreach ($cart_addons as $cart_addon) {

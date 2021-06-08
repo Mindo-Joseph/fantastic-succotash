@@ -75,14 +75,14 @@ class CartController extends FrontController{
                     'variant_id'  => $request->variant_id,
                     'currency_id' => $client_currency->currency_id,
                 ];
-                CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id, 'product_id' => $request->product_id], $cart_product_detail);
+                $cart_product = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id, 'product_id' => $request->product_id], $cart_product_detail);
                 $create_cart_addons = [];
                 if($addon_options_ids){
                     foreach ($addon_options_ids as $k => $addon_options_id) {
                         $create_cart_addons[] = [
                             'addon_id' => $addon_ids[$k],
                             'option_id' => $addon_options_id,
-                            'cart_product_id' => $request->product_id,
+                            'cart_product_id' => $cart_product->id,
                         ];
                     }
                 }

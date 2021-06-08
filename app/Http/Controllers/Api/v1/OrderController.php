@@ -173,14 +173,14 @@ class OrderController extends Controller{
                             CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                         }
                     }
-                    // if(isset(var)$vendor_cart_products->coupon){
-                    //     if($vendor_cart_products->coupon->promo->promo_type_id == 2){
-                    //         $total_discount_percent = $vendorData->coupon->promo->amount;
-                    //         $payable_amount -=$total_discount_percent;
-                    //     }else{
+                    if(isset(var)$vendor_cart_products->coupon){
+                        if($vendor_cart_products->coupon->promo->promo_type_id == 2){
+                            $total_discount_percent = $vendorData->coupon->promo->amount;
+                            $payable_amount -=$total_discount_percent;
+                        }else{
                             
-                    //     }
-                    // }
+                        }
+                    }
                     $order_vendor = new OrderVendor;
                     $order_vendor->status = 0;
                     $order_vendor->order_id= $order->id;

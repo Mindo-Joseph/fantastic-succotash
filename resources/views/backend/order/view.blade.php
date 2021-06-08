@@ -160,7 +160,7 @@
                     <div class="card-body">
                         <h4 class="header-title mb-3">Shipping Information</h4>
                         <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
-                        <p class="mb-2"><span class="fw-semibold me-2">Address:</span> {{ $order->address->address}}</p>
+                        <p class="mb-2"><span class="fw-semibold me-2">Address:</span> {{ $order->address ? $order->address->address : ''}}</p>
                         <p class="mb-0"><span class="fw-semibold me-2">Mobile:</span> {{$order->user->phone_number}}</p>
                     </div>
                 </div>
