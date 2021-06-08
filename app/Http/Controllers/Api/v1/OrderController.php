@@ -36,7 +36,7 @@ class OrderController extends Controller{
     		$user = Auth::user();
     		$order_item_count = 0;
     		$order_id = $request->order_id;
-	    	$order = Order::with(['vendors.vendor','vendors.products.pvariant' => function($q) use($order_id){
+	    	$order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){
                         $q->where('order_id', $order_id);
                     },'vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
             if($order->vendors){
@@ -47,6 +47,7 @@ class OrderController extends Controller{
         			$discount_amount = 0;
     				$product_addons = [];
         			foreach ($vendor->products as  $product) {
+                        pr($product->pvariant);die;
     	    			$order_item_count += $product->quantity;
                         $product->product_addons = $product->addon;
         			}
