@@ -1,6 +1,7 @@
 @extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Edit Product'])
 
 @section('css')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
 <style type="text/css">
@@ -156,7 +157,7 @@
 
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Product Description',['class' => 'control-label']) !!}
-                            {!! Form::textarea('body_html', $product->primary->body_html, ['class'=>'form-control', 'id' => 'body_html', 'placeholder' => 'Description', 'rows' => '3']) !!}
+                            {!! Form::textarea('body_html', $product->primary->body_html, ['class'=>'form-control', 'id' => 'body_html', 'placeholder' => 'Description', 'rows' => '5']) !!}
                         </div>
 
                         <div class="col-12 mb-2">
@@ -518,6 +519,7 @@
 
 <link href="{{asset('assets/css/dropzone.css')}}" rel="stylesheet" />
 <script src="{{asset('assets/js/dropzone.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 <script type="text/javascript">
     $('#requiredShipping').change(function(){
@@ -597,6 +599,19 @@
     var uploadedDocumentMap = {};
     Dropzone.autoDiscover = false;
     $(document).ready(function() {
+        $('#body_html').summernote({
+            placeholder: 'Description',
+            tabsize: 2,
+            height: 120,
+            toolbar: [
+              ['style', ['style']],
+              ['color', ['color']],
+              ['table', ['table']],
+              ['para', ['ul', 'ol', 'paragraph']],
+              ['font', ['bold', 'underline', 'clear']],
+              ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
         $("div#my-awesome-dropzone").dropzone({
             acceptedFiles: ".jpeg,.jpg,.png",
             addRemoveLinks: true,
