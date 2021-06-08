@@ -49,9 +49,7 @@ class OrderController extends Controller{
 	    			$order_item_count += $product->quantity;
     			}
     			$vendor->delivery_fee = $delivery_fee;
-    			$vendor->payable_amount = $payable_amount;
     			$vendor->product_addons = $product_addons;
-    			$vendor->discount_amount = $discount_amount;
     		}
     		$order->order_item_count = $order_item_count;
 	    	return $this->successResponse($order, null, 201);
@@ -88,7 +86,7 @@ class OrderController extends Controller{
 		        $order->address_id = $request->address_id;
 		        $order->payment_option_id = $request->payment_option_id;
 		        $order->save();
-		        $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
+		        $cart_products = CartProduct::with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
 		        $total_amount = 0;
                 $total_discount = 0;
                 $taxable_amount = 0;
