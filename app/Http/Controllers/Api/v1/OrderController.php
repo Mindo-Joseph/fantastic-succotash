@@ -49,10 +49,9 @@ class OrderController extends Controller{
     				$product_addons = [];
         			foreach ($vendor->products as  $product) {
     	    			$order_item_count += $product->quantity;
-                        $product_addons[] = $product->addon;
+                        $product->product_addons = $product->addon ? $product->addon->set : [];
         			}
         			$vendor->delivery_fee = $delivery_fee;
-        			$vendor->product_addons = $product_addons;
         		}
             }
     		$order->order_item_count = $order_item_count;
