@@ -115,7 +115,7 @@ class PaymentController extends FrontController
         // dd($token);
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/payment')->with(['navCategories' => $navCategories]);
+        return view('frontend.payment')->with(['navCategories' => $navCategories]);
     }
 
     public function makePayment(Request $request)

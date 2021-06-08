@@ -43,7 +43,7 @@ class UserController extends FrontController
             }
         }
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/verifyaccountnew')->with(['preference' => $preference, 'navCategories' => $navCategories, 'user' => $user]);
+        return view('frontend/account/verifyaccountnew')->with(['preference' => $preference, 'navCategories' => $navCategories, 'user' => $user]);
     }
 
     /**
@@ -188,7 +188,7 @@ class UserController extends FrontController
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
-        return view('forntend.checkout')->with(['navCategories' => $navCategories, 'addresses' => $addresses, 'countries' => $countries]);
+        return view('frontend.checkout')->with(['navCategories' => $navCategories, 'addresses' => $addresses, 'countries' => $countries]);
     }
 
     /**

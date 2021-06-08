@@ -15,13 +15,13 @@ class OrderController extends FrontController{
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         $order = Order::with(['products', 'address'])->findOrfail($request->order_id);
-        return view('forntend.order.success', compact('order','navCategories'));
+        return view('frontend.order.success', compact('order','navCategories'));
     }
     public function placeOrder(Request $request, $domain = ''){
         if ($request->input("payment-group") == '1') {
             $langId = Session::get('customerLanguage');
             $navCategories = $this->categoryNav($langId);
-            return view('forntend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone , 'total_amount' => $request->total_amount , 'address_id' => $request->address_id]);
+            return view('frontend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone , 'total_amount' => $request->total_amount , 'address_id' => $request->address_id]);
         }
         $order = $this->orderSave($request, "1", "2");
         return redirect('order/success/'.$order->id)->with('success', 'your message,here'); 

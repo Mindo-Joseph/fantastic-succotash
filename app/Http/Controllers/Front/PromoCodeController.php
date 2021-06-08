@@ -36,12 +36,13 @@ class PromoCodeController extends Controller{
             if($product_ids){
                 $promo_code_details = PromoCodeDetail::whereIn('refrence_id', $product_ids->toArray())->pluck('promocode_id');
                 if($promo_code_details->count() > 0){
-                    $result1 = Promocode::whereIn('id', $promo_code_details->toArray())->whereDate('expiry_date', '>=', $now)->where('restriction_on', 1)->where('is_deleted', 0)->where('restriction_type', 1)->get();
+                    $result1 = Promocode::whereIn('id', $promo_code_details->toArray())->whereDate('expiry_date', '>=', $now)->where('restriction_on', 0)->where('restriction_type', 0)->where('is_deleted', 0)->get();
                     $promo_codes = $promo_codes->merge($result1);
                 }
-                $result2 = Promocode::where('restriction_on', 1)->whereHas('details', function($q) use($vendor_id){
+                $vendor_promo_code_details = PromoCodeDetail::whereHas('promocode')->where('refrence_id', $vendor_id)->pluck('promocode_id');
+                $result2 = Promocode::whereIn('id', $vendor_promo_code_details->toArray())->where('restriction_on', 1)->whereHas('details', function($q) use($vendor_id){
                     $q->where('refrence_id', $vendor_id);
-                })->where('restriction_on', 1)->where('restriction_type', 1)->where('is_deleted', 0)->whereDate('expiry_date', '>=', $now)->get();
+                })->where('restriction_on', 1)->where('is_deleted', 0)->whereDate('expiry_date', '>=', $now)->get();
                 $promo_codes = $promo_codes->merge($result2);
             }
             return $this->successResponse($promo_codes, '', 200);

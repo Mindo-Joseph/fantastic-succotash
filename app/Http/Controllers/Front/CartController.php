@@ -34,7 +34,7 @@ class CartController extends FrontController
             $cartData = $this->getCart($cart);
         }
         $navCategories = $this->categoryNav($langId);
-        return view('forntend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries]);
+        return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries]);
     }
 
     public function postAddToCart(Request $request, $domain = ''){
@@ -316,7 +316,9 @@ class CartController extends FrontController
                         $total_discount_percent = $vendorData->coupon->promo->amount;
                         $payable_amount -=$total_discount_percent;
                     }else{
-
+                        $gross_amount = number_format(($payable_amount - $taxable_amount), 2);
+                        $percentage_amount = ($gross_amount * $vendorData->coupon->promo->amount / 100);
+                        $payable_amount -= $percentage_amount;
                     }
                 }
                 $vendorData->payable_amount = number_format($payable_amount, 2);

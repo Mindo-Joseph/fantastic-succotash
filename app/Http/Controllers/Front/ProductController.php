@@ -81,7 +81,7 @@ class ProductController extends FrontController
                 $v->multiplier = $clientCurrency->doller_compare;
             }
         }
-        return view('forntend/product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts]);
+        return view('frontend/product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts]);
     }
 
     /**

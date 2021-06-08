@@ -19,7 +19,7 @@ class AddressController extends FrontController{
         $langId = Session::get('customerLanguage');
         $useraddress = UserAddress::where('user_id', Auth::user()->id)->with('country')->get();
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/addressbook')->with(['useraddress' => $useraddress, 'navCategories' => $navCategories]);
+        return view('frontend/account/addressbook')->with(['useraddress' => $useraddress, 'navCategories' => $navCategories]);
     }
 
     /**
@@ -32,7 +32,7 @@ class AddressController extends FrontController{
         $langId = Session::get('customerLanguage');
         $countries = Country::all();
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/editAddress')->with(['navCategories' => $navCategories,'countries' => $countries, 'address' => $address]);
+        return view('frontend/account/editAddress')->with(['navCategories' => $navCategories,'countries' => $countries, 'address' => $address]);
     }
 
     /**
@@ -95,7 +95,7 @@ class AddressController extends FrontController{
         $langId = Session::get('customerLanguage');
         $countries = Country::all();
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/editAddress')->with(['navCategories' => $navCategories,'countries' => $countries, 'address' => $address]);
+        return view('frontend/account/editAddress')->with(['navCategories' => $navCategories,'countries' => $countries, 'address' => $address]);
     }
 
    
