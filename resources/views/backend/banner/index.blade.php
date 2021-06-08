@@ -63,7 +63,6 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                             </thead>
                             <tbody id="post_list">
                                 @foreach($banners as $ban)
-
                                 <tr data-row-id="{{$ban->id}}">
                                     <td class="draggableTd"><span class="dragula-handle"></span></td>
                                     <td class="banner_wrapper"> 
@@ -73,7 +72,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                                     </td>
 
                                     <td> {{ $ban->name }} </td>
-                                    <td> <span class="text-center d-inline-block"> {{ convertDateTimeInTimeZone($ban->start_date_time, $timezone) }} <br/> to <br/> {{convertDateTimeInTimeZone($ban->end_date_time,  $timezone)}} </span></td>
+                                    <td> <span class="text-center d-inline-block"> {{ $ban->start_date_time, $timezone}} <br/> to <br/> {{$ban->end_date_time,  $timezone}} </span></td>
                                     <td>                                         
                                         @if($ban->link == 'category')
                                             Category
