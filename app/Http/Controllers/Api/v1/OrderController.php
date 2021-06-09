@@ -99,7 +99,6 @@ class OrderController extends Controller{
                 if(!$user_address){
                     return response()->json(['error' => 'Invalid address id.'], 404);
                 }
-                $clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
 	    		$cart = Cart::where('user_id', $user->id)->first();
 		        $order = new Order;
 		        $order->user_id = $user->id;
@@ -107,6 +106,7 @@ class OrderController extends Controller{
 		        $order->address_id = $request->address_id;
 		        $order->payment_option_id = $request->payment_option_id;
 		        $order->save();
+                $clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
 		        $cart_products = CartProduct::with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon', 'product.addon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
 		        $total_amount = 0;
                 $total_discount = 0;
@@ -173,15 +173,15 @@ class OrderController extends Controller{
                             CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                         }
                     }
-                    if($vendor_cart_products->coupon){
-                        if($vendor_cart_products->coupon->promo->promo_type_id == 1){
-                            $coupon_discount_amount = $vendorData->coupon->promo->amount;
+                    if($vendor_cart_product->coupon){
+                        if($vendor_cart_product->coupon->promo->promo_type_id == 1){
+                            $coupon_discount_amount = $vendor_cart_product->coupon->promo->amount;
                             $total_discount += $coupon_discount_amount;
                             $vendor_payable_amount -=$coupon_discount_amount;
                             $vendor_discount_amount +=$coupon_discount_amount;
                         }else{
                             $gross_amount = number_format(($payable_amount - $taxable_amount), 2);
-                            $coupon_discount_amount = ($gross_amount * $vendorData->coupon->promo->amount / 100);
+                            $coupon_discount_amount = ($gross_amount * $vendor_cart_product->coupon->promo->amount / 100);
                             $final_coupon_discount_amount = $coupon_discount_amount * $clientCurrency->doller_compare;
                             $total_discount += $final_coupon_discount_amount;
                             $vendor_payable_amount -=$final_coupon_discount_amount;
