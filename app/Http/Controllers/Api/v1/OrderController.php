@@ -181,8 +181,7 @@ class OrderController extends Controller{
                                 $vendor_payable_amount -= $coupon_discount_amount;
                                 $vendor_discount_amount +=$coupon_discount_amount;
                             }else{
-                                $gross_amount = number_format(($payable_amount), 2);
-                                $coupon_discount_amount = ($gross_amount * $vendor_cart_product->coupon->promo->amount / 100);
+                                $coupon_discount_amount = ($quantity_price * $vendor_cart_product->coupon->promo->amount / 100);
                                 $final_coupon_discount_amount = $coupon_discount_amount * $clientCurrency->doller_compare;
                                 $total_discount += $final_coupon_discount_amount;
                                 $vendor_payable_amount -=$final_coupon_discount_amount;
@@ -200,7 +199,7 @@ class OrderController extends Controller{
                     $order->total_amount = $total_amount;
                     $order->total_discount = $total_discount;
                     $order->taxable_amount = $taxable_amount;
-                    $order->payable_amount = $payable_amount-  $total_discount;
+                    $order->payable_amount = $payable_amount -  $total_discount;
                     $order->save();
                     CartProduct::where('cart_id', $cart->id)->delete();
                     CartCoupon::where('cart_id', $cart->id)->delete();
