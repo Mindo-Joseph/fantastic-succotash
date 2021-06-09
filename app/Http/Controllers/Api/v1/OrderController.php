@@ -174,7 +174,7 @@ class OrderController extends Controller{
                         }
                     }
                     if(isset($vendor_cart_products->coupon)){
-                        if($vendor_cart_products->coupon->promo->promo_type_id == 2){
+                        if($vendor_cart_products->coupon->promo->promo_type_id == 1){
                             $coupon_discount_amount = $vendorData->coupon->promo->amount;
                             $total_discount += $coupon_discount_amount;
                             $vendor_payable_amount -=$coupon_discount_amount;
@@ -182,9 +182,10 @@ class OrderController extends Controller{
                         }else{
                             $gross_amount = number_format(($payable_amount - $taxable_amount), 2);
                             $coupon_discount_amount = ($gross_amount * $vendorData->coupon->promo->amount / 100);
-                            $total_discount += $coupon_discount_amount;
-                            $vendor_payable_amount -=$coupon_discount_amount;
-                            $vendor_discount_amount +=$coupon_discount_amount; 
+                            $final_coupon_discount_amount = $coupon_discount_amount * $clientCurrency->doller_compare;
+                            $total_discount += $final_coupon_discount_amount;
+                            $vendor_payable_amount -=$final_coupon_discount_amount;
+                            $vendor_discount_amount +=$final_coupon_discount_amount; 
                         }   
                     }
                     $order_vendor = new OrderVendor;
