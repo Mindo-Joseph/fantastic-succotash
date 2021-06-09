@@ -200,7 +200,7 @@ class OrderController extends Controller{
                     $order->total_amount = $total_amount;
                     $order->total_discount = $total_discount;
                     $order->taxable_amount = $taxable_amount;
-                    $order->payable_amount = $payable_amount;
+                    $order->payable_amount = $payable_amount-  $total_discount;
                     $order->save();
                     CartProduct::where('cart_id', $cart->id)->delete();
                     CartCoupon::where('cart_id', $cart->id)->delete();

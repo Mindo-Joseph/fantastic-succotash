@@ -26,7 +26,6 @@ class ProductController extends FrontController
 
         $product = Product::select('id')->where('sku', $sku)->firstOrFail();
         $p_id = $product->id;
-
         $product = Product::with([
             'variant' => function ($sel) {
                 $sel->groupBy('product_id');
@@ -64,24 +63,19 @@ class ProductController extends FrontController
             ->where('sku', $sku)
             ->where('is_live', 1)
             ->firstOrFail();
-
-        //dd($product->toArray());
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         foreach ($product->variant as $key => $value) {
             $product->variant[$key]->multiplier = $clientCurrency->doller_compare;
         }
-
         $vendorIds[] = $product->vendor_id;
-
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-
         foreach ($product->addOn as $key => $value) {
             foreach ($value->setoptions as $k => $v) {
                 $v->multiplier = $clientCurrency->doller_compare;
             }
         }
-        return view('frontend/product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts]);
+        return view('frontend.product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts]);
     }
 
     /**
