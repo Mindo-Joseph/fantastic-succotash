@@ -173,7 +173,7 @@ class OrderController extends Controller{
                             CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                         }
                     }
-                    if(isset(var)$vendor_cart_products->coupon){
+                    if(isset($vendor_cart_products->coupon)){
                         if($vendor_cart_products->coupon->promo->promo_type_id == 2){
                             $coupon_discount_amount = $vendorData->coupon->promo->amount;
                             $total_discount += $coupon_discount_amount;

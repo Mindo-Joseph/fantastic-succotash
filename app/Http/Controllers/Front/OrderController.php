@@ -7,7 +7,7 @@ use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor,CartCoupon};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor,CartCoupon, LoyaltyCard};
 
 class OrderController extends FrontController{
     
@@ -34,6 +34,7 @@ class OrderController extends FrontController{
             $currency_id = Session::get('customerCurrency');
             $language_id = Session::get('customerLanguage');
             $cart = Cart::where('user_id', $user->id)->first();
+            $order_loyalty_points_earned = Order::where('user_id', $user->id)->sum('loyalty_points_earned');
             $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
             $order = new Order;
             $order->user_id = $user->id;
@@ -131,9 +132,11 @@ class OrderController extends FrontController{
             $order->total_discount = $total_discount;
             $order->taxable_amount = $taxable_amount;
             $order->payable_amount = $payable_amount - $total_discount;
+            $order->loyalty_points_earned = LoyaltyCard::getLoyaltyPoint($order_loyalty_points_earned);
             $order->save();
             CartProduct::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();
+            CartAddon::where('cart_id', $cart->id)->delete();
             DB::commit();
             return $order; 
         } catch (Exception $e) {

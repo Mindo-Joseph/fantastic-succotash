@@ -175,9 +175,10 @@ class CartController extends BaseController{
                         $saveAddons = array();
                         foreach ($addon_options as $key => $opts) {
                             $saveAddons[] = [
-                                'cart_product_id' => $cartProduct->id,
+                                'option_id' => $opts,
+                                'cart_id' => $cart_detail->id,
                                 'addon_id' => $addon_ids[$key],
-                                'option_id' => $opts
+                                'cart_product_id' => $cartProduct->id,
                             ];
                         }
                         if(!empty($saveAddons)){

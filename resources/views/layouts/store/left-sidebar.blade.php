@@ -165,7 +165,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                         </a>
                                                         <div class='media-body'>
                                                             <a href='#'>
-                                                                <h4><%= vendor_product.product.sku %></h4>
+                                                                
+                                                                <h4><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>
                                                             </a>
                                                             <h4>
                                                                 <span><%= vendor_product.quantity %> x <%= vendor_product.pvariant.price %></span>

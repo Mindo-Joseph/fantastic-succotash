@@ -52,9 +52,11 @@
                         </div>
                     </td>
                     <td class="items-details text-left">
-                        <h4><%= vendor_product.product.sku %></h4>
+                        <h4><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>
                         <% _.each(vendor_product.pvariant.vset, function(vset, vs){%>
-                            <label><span><%= vset.variant_detail.trans.title %>:</span> <%= vset.option_data.trans.title %></label>
+                            <% if(vset.variant_detail.trans) { %>
+                                <label><span><%= vset.variant_detail.trans.title %>:</span> <%= vset.option_data.trans.title %></label>
+                            <% } %>
                         <% }); %>
                     </td>
                     <td>
@@ -195,111 +197,117 @@
 <div class="container" id="cart_main_page">
     @if($cartData)
         @if($cartData->products)
-            <form method="post" action="{{route('user.placeorder')}}">
+            <form method="post" action="{{route('user.placeorder')}}" id="placeorder_form">
                 @csrf
                 <div class="row card-box">
                     <div class="col-4 left_box">
                         <div class="row">
-                        <div class="col-12 mb-2">
-                            <h4 class="page-title">Delivery Address</h4>
-                        </div>
-                        <span class="text-danger" id="address_error"></span>
-                    </div>
-                    <div class="row mb-4" id="address_template_main_div">
-                        @forelse($addresses as $address)
-                            <div class="col-md-12">
-                                <div class="delivery_box">
-                                    <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}} 
-                                        <input type="radio" name="address_id" value="{{$address->id}}"  {{ $address->is_primary ? 'checked="checked""' : '' }}>
-                                        <span class="checkround"></span>
-                                    </label>
-                                </div>
+                            <div class="col-12 mb-2">
+                                <h4 class="page-title">Delivery Address</h4>
+                                <span class="text-danger hide" id="address_error"></span>
                             </div>
-                        @empty
-                        @endforelse
-                    </div>
-                    <div class="col-12 mt-4 text-center" id="add_new_address_btn">
-                        <a class="btn btn-solid w-100 m-auto" >
-                            <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address
-                        </a>
-                    </div>
-                    <div class="col-md-12" id="add_new_address_form" style="display:none;">
-                        <div class="theme-card w-100">
-                            <div class="form-row no-gutters">
-                                <div class="col-12">
-                                    <label for="type">Address Type</label>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="delivery_box pt-0 pl-0  pb-3">
-                                        <label class="radio m-0">Home 
-                                            <input type="radio" checked="checked" name="address_type" value="1">
+                        </div>
+                        <div class="row mb-4" id="address_template_main_div">
+                            @forelse($addresses as $address)
+                                <div class="col-md-12">
+                                    <div class="delivery_box">
+                                        <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}} 
+                                            <input type="radio" name="address_id" value="{{$address->id}}"  {{ $address->is_primary ? 'checked="checked""' : '' }}>
                                             <span class="checkround"></span>
                                         </label>
                                     </div>
+                                    
                                 </div>
-                                <div class="col-md-3">
-                                <div class="delivery_box pt-0 pl-0  pb-3">
-                                    <label class="radio m-0">Office 
-                                        <input type="radio" name="address_type" value="2">
-                                        <span class="checkround"></span>
-                                    </label>
+                            @empty
+                                <div class="address-no-found">
+                                    <p>Address not available.</p>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="delivery_box pt-0 pl-0  pb-3">
-                                    <label class="radio m-0">Others
-                                        <input type="radio" name="address_type" value="3">
-                                        <span class="checkround"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-12 mb-3">
-                                    <label for="address">Address</label>
-                                    <div class="input-group">
-                                      <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2">
-                                      <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" id="button-addon2">
-                                            <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        </button>
-                                      </div>
-                                    </div>
-                                    <span class="text-danger" id="address_error"></span>
-                                </div>
-                            </div>
-                            <div class="form-row mb-3">
-                                <div class="col-md-6 mb-3">
-                                    <label for="city">City</label>
-                                    <input type="text" class="form-control" id="city" placeholder="City" value="">
-                                    <span class="text-danger" id="city_error"></span>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="state">State</label>
-                                    <input type="text" class="form-control" id="state" placeholder="State" value="">
-                                    <span class="text-danger" id="state_error"></span>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="country">Country</label>
-                                    <select name="country" id="country" class="form-control">
-                                        @foreach($countries as $co)
-                                            <option value="{{$co->id}}" selected>{{$co->name}}</option>
-                                        @endforeach
-                                    </select>
-                                    <span class="text-danger" id="country_error"></span>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="pincode">Pincode</label>
-                                    <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
-                                    <span class="text-danger" id="pincode_error"></span>
-                                </div>
-                                <div class="col-md-12 mt-3">
-                                    <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
-                                    <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
-                                </div>
-                            </div>
+                            @endforelse
                         </div>
-                    </div> 
+                        <div class="row">
+                            <div class="col-12 mt-4 text-center" id="add_new_address_btn">
+                                <a class="btn btn-solid w-100 m-auto" >
+                                    <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address
+                                </a>
+                            </div>
+                            <div class="col-md-12" id="add_new_address_form" style="display:none;">
+                                <div class="theme-card w-100">
+                                    <div class="form-row no-gutters">
+                                        <div class="col-12">
+                                            <label for="type">Address Type</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="delivery_box pt-0 pl-0  pb-3">
+                                                <label class="radio m-0">Home 
+                                                    <input type="radio" checked="checked" name="address_type" value="1">
+                                                    <span class="checkround"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                        <div class="delivery_box pt-0 pl-0  pb-3">
+                                            <label class="radio m-0">Office 
+                                                <input type="radio" name="address_type" value="2">
+                                                <span class="checkround"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="delivery_box pt-0 pl-0  pb-3">
+                                            <label class="radio m-0">Others
+                                                <input type="radio" name="address_type" value="3">
+                                                <span class="checkround"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="address">Address</label>
+                                            <div class="input-group">
+                                              <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2">
+                                              <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                                </button>
+                                              </div>
+                                            </div>
+                                            <span class="text-danger" id="address_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-row mb-3">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="city">City</label>
+                                            <input type="text" class="form-control" id="city" placeholder="City" value="">
+                                            <span class="text-danger" id="city_error"></span>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="state">State</label>
+                                            <input type="text" class="form-control" id="state" placeholder="State" value="">
+                                            <span class="text-danger" id="state_error"></span>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="country">Country</label>
+                                            <select name="country" id="country" class="form-control">
+                                                @foreach($countries as $co)
+                                                    <option value="{{$co->id}}" selected>{{$co->name}}</option>
+                                                @endforeach
+                                            </select>
+                                            <span class="text-danger" id="country_error"></span>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="pincode">Pincode</label>
+                                            <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
+                                            <span class="text-danger" id="pincode_error"></span>
+                                        </div>
+                                        <div class="col-md-12 mt-3">
+                                            <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
+                                            <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
                     </div>
                     <div class="col-8">
                         <div class="table-responsive">
@@ -376,12 +384,25 @@
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
     var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
-    $("form").submit(function(e){
-        let address_id = $("input:radio[name='address_id']").is(":checked");
-        if(!address_id){
-            alert('Address field required.');
-            return false;
+    $( document ).ready(function() {
+        let address_checked = $("input:radio[name='address_id']").is(":checked");
+        if(address_checked){
+            $('#order_palced_btn').prop('disabled', false);
+        }else{
+            $('#order_palced_btn').prop('disabled', true);
         }
+        $("input:radio[name='address_id']").change(function() {
+            if($(this).val()){
+                $('#order_palced_btn').prop('disabled', false);
+            }
+        });
+        $("form").submit(function(e){
+            let address_id = $("input:radio[name='address_id']").is(":checked");
+            if(!address_id){
+                alert('Address field required.');
+                return false;
+            }
+        });
     });
 </script>
 @endsection

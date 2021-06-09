@@ -81,6 +81,7 @@ class CartController extends FrontController{
                     foreach ($addon_options_ids as $k => $addon_options_id) {
                         $create_cart_addons[] = [
                             'addon_id' => $addon_ids[$k],
+                            'cart_id' => $cart_detail->id,
                             'option_id' => $addon_options_id,
                             'cart_product_id' => $cart_product->id,
                         ];
@@ -188,6 +189,7 @@ class CartController extends FrontController{
                     $cartAddOn = new CartAddon;
                     $cartAddOn->addon_id = $aa;
                     $cartAddOn->option_id = $bb;
+                    $cartAddOn->cart_id = $cart_detail->id;
                     $cartAddOn->cart_product_id = $cartProduct->id;
                     $cartAddOn->save();
                 }
@@ -243,7 +245,7 @@ class CartController extends FrontController{
                     'vendorProducts.pvariant.vset.optionData.trans' => function($qry) use($langId){
                         $qry->where('language_id', $langId);
                     },
-                    'vendorProducts.product.translation' => function($q) use($langId){
+                    'vendorProducts.product.translation_one' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $langId);
                     },
