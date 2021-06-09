@@ -175,11 +175,17 @@ class OrderController extends Controller{
                     }
                     if(isset(var)$vendor_cart_products->coupon){
                         if($vendor_cart_products->coupon->promo->promo_type_id == 2){
-                            $total_discount_percent = $vendorData->coupon->promo->amount;
-                            $payable_amount -=$total_discount_percent;
+                            $coupon_discount_amount = $vendorData->coupon->promo->amount;
+                            $total_discount += $coupon_discount_amount;
+                            $vendor_payable_amount -=$coupon_discount_amount;
+                            $vendor_discount_amount +=$coupon_discount_amount;
                         }else{
-                            
-                        }
+                            $gross_amount = number_format(($payable_amount - $taxable_amount), 2);
+                            $coupon_discount_amount = ($gross_amount * $vendorData->coupon->promo->amount / 100);
+                            $total_discount += $coupon_discount_amount;
+                            $vendor_payable_amount -=$coupon_discount_amount;
+                            $vendor_discount_amount +=$coupon_discount_amount; 
+                        }   
                     }
                     $order_vendor = new OrderVendor;
                     $order_vendor->status = 0;

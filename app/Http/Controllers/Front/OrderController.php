@@ -113,7 +113,10 @@ class OrderController extends FrontController{
                         $vendor_payable_amount -= $amount;
                         $vendor_discount_amount += $amount;
                     }else{
-                        
+                        $gross_amount = number_format(($payable_amount - $taxable_amount), 2);
+                        $percentage_amount = ($gross_amount * $vendorData->coupon->promo->amount / 100);
+                        $vendor_payable_amount -= $percentage_amount;
+                        $vendor_discount_amount += $percentage_amount;
                     }
                 }
                 $OrderVendor = new OrderVendor();
