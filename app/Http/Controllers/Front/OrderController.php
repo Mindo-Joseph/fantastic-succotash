@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor, UserAddress,Vendor};
+use App\Models\ClientPreference;
 use GuzzleHttp\Client;
 class OrderController extends FrontController{
     
@@ -162,89 +163,74 @@ class OrderController extends FrontController{
 
 
     public function placeRequestToDispatch($order,$cart_products,$request){
-        try
-        {
-           $dispatch_domain = $this->getDispatchDomain();
-           if($dispatch_domain && $dispatch_domain != false){
-                        $customer = User::find(Auth::id());
-                        $cus_address = UserAddress::find($request->address_id);
-                        $vendor_ids = array_column($cart_products->toArray(),'vendor_id');
-                        $vendor_ids = array_unique($vendor_ids);
-                        $tasks = array();
-                        
-                        if($request->input("payment-group") == 2){
-                            $cash_to_be_collected = 'Yes';
-                        }else{
-                            $cash_to_be_collected = 'No';
-                        }
-                        foreach($vendor_ids as $key => $vendor){
-                            $vendor_details = Vendor::find($vendor);
-                            $tasks = array();
-
-                            $tasks[] = array('task_type_id' => 1,
-                                                'latitude' => $vendor_details->latitude??'',
-                                                'longitude' => $vendor_details->longitude??'',
-                                                'short_name' => '',
-                                                'address' => $vendor_details->address??'',
-                                                'post_code' => '',
-                                                'barcode' => '',
-                                                );
+        try {
+                $dispatch_domain = $this->getDispatchDomain();
+                if ($dispatch_domain && $dispatch_domain != false) {
+                    $customer = User::find(Auth::id());
+                    $cus_address = UserAddress::find($request->address_id);
+                    $vendor_ids = array_column($cart_products->toArray(), 'vendor_id');
+                    $vendor_ids = array_unique($vendor_ids);
+                    $tasks = array();
                                 
-                                $tasks[] = array('task_type_id' => 2,
-                                                'latitude' => $cus_address->latitude??'',
-                                                'longitude' => $cus_address->longitude??'',
-                                                'short_name' => '',
-                                                'address' => $cus_address->address??'',
-                                                'post_code' => $cus_address->pincode??'',
-                                                'barcode' => '',
-                                                );
-                            
-                                $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
-                                                'customer_phone_number' => $customer->phone_number ?? '+919041969648',
-                                                'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
-                                                'recipient_phone' => $customer->phone_number ?? '+919041969648',
-                                                'recipient_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
-                                                'task_description' => 'Order from:'.$vendor_details->name??Null,
-                                                'allocation_type' => 'a',
-                                                'task_type' => 'now',
-                                                'cash_to_be_collected' => $cash_to_be_collected,
-                                                'barcode' => '',
-                                                'task' => $tasks              
-                                                ];
+                    if ($request->input("payment-group") == 2) {
+                        $cash_to_be_collected = 'Yes';
+                    } else {
+                        $cash_to_be_collected = 'No';
+                    }
+                    foreach ($vendor_ids as $key => $vendor) {
+                        $vendor_details = Vendor::find($vendor);
+                        $tasks = array();
 
-                                $client = new Client([
-                                                    'headers' => ['client' => 'newclient1',
-                                                    'content-type' => ' multipart/form-data']
-                                                ]);
+                        $tasks[] = array('task_type_id' => 1,
+                                                        'latitude' => $vendor_details->latitude??'',
+                                                        'longitude' => $vendor_details->longitude??'',
+                                                        'short_name' => '',
+                                                        'address' => $vendor_details->address??'',
+                                                        'post_code' => '',
+                                                        'barcode' => '',
+                                                        );
                                         
-                                $res = $client->post('https://winhires.com/api/public/task/create',
-                                            ['form_params' => ($postdata
-                                            )]
-                                        );                      
-                            
-                                                    
-                        }
+                        $tasks[] = array('task_type_id' => 2,
+                                                        'latitude' => $cus_address->latitude??'',
+                                                        'longitude' => $cus_address->longitude??'',
+                                                        'short_name' => '',
+                                                        'address' => $cus_address->address??'',
+                                                        'post_code' => $cus_address->pincode??'',
+                                                        'barcode' => '',
+                                                        );
+                                    
+                        $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
+                                                        'customer_phone_number' => $customer->phone_number ?? '+919041969648',
+                                                        'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
+                                                        'recipient_phone' => $customer->phone_number ?? '+919041969648',
+                                                        'recipient_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
+                                                        'task_description' => 'Order from:'.$vendor_details->name??null,
+                                                        'allocation_type' => 'a',
+                                                        'task_type' => 'now',
+                                                        'cash_to_be_collected' => $cash_to_be_collected,
+                                                        'barcode' => '',
+                                                        'task' => $tasks
+                                                        ];
 
+                        $client = new Client(['headers' => ['client' => 'newclient1',
+                                                    'content-type' => ' multipart/form-data']
+                                                        ]);
+                                                
+                        $res = $client->post(
+                            'https://winhires.com/api/public/task/create',
+                            ['form_params' => (
+                                                        $postdata
+                                                    )]
+                        );
+                    }
+                }
+            }    
+            catch(\Exception $e)
+            {
+                // dd($e->getMessage());
                         
-                        //    if ($res->getStatusCode() == 200) { 
-                        //     $response_data = json_decode($res->getBody()->getContents());
-                        //     if($response_data->status == 200)
-                        //     {
-                        //         dd('success');
-                        //     }
-                        //     else{
-                        //         dd($response_data->message);
-                        //     }
-                            
-                        //     }
-                        
-                        }
-                        catch(\Exception $e)
-                        {
-                        // dd($e->getMessage());
-                        
-                        }
-           }
+            }
+           
            
     }
     

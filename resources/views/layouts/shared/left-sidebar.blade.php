@@ -156,6 +156,14 @@
                     </a>
                 </li>
                 
+                <li>
+                    <a href="{{route('acl.index')}}">
+                        <i data-feather="users"></i>
+                        <span> ACL </span>
+                    </a>
+                </li>
+                
+                
                 <!-- <li>   
                     <a href="{{route('wallet.index')}}" >
                         <span class="icon-waller_icon"></span>

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Validator;
 use App\Models\Client;
-
+use DB;
 class LoginController extends Controller
 {
     /*

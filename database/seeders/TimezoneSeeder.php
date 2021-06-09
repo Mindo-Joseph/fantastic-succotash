@@ -1,7 +1,7 @@
 <?php
 namespace Database\Seeders;
-use App\Models\Timezone;
 use Illuminate\Database\Seeder;
+use App\Models\Timezone;
 
 class TimezoneSeeder extends Seeder
 {

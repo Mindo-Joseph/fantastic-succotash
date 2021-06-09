@@ -30,7 +30,6 @@ class ClientController extends Controller{
         foreach ($clients as $client) {
             $client->sub_domain_url = 'https://'.$client->sub_domain.'.royoorders.com';
         }
-
         return view('godpanel/client')->with(['clients' => $clients]);
     }
 

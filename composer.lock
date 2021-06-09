@@ -3289,15 +3289,8 @@
                 "issues": "https://github.com/thephpleague/omnipay/issues",
                 "source": "https://github.com/thephpleague/omnipay/tree/v3.1.0"
             },
-<<<<<<< HEAD
-<<<<<<< HEAD
-            "time": "2020-09-22T14:02:17+00:00"
-=======
-            "time": "2021-05-02T15:02:18+00:00"
->>>>>>> c938d88d106077d6e8d9023a020b9f7c806e65d0
-=======
-            "time": "2020-09-22T14:02:17+00:00"
->>>>>>> 981e548602944f5de2d1d52f810cb7fc8a7216f2
+             "time": "2020-09-22T14:02:17+00:00"
+
         },
         {
             "name": "moneyphp/money",
@@ -3775,15 +3768,7 @@
                 "issues": "https://github.com/thephpleague/omnipay-common/issues",
                 "source": "https://github.com/thephpleague/omnipay-common/tree/v3.0.5"
             },
-<<<<<<< HEAD
-<<<<<<< HEAD
-            "time": "2020-08-20T18:22:12+00:00"
-=======
-            "time": "2020-12-13T12:53:48+00:00"
->>>>>>> c938d88d106077d6e8d9023a020b9f7c806e65d0
-=======
-            "time": "2020-08-20T18:22:12+00:00"
->>>>>>> 981e548602944f5de2d1d52f810cb7fc8a7216f2
+             "time": "2020-08-20T18:22:12+00:00"
         },
         {
             "name": "omnipay/paypal",

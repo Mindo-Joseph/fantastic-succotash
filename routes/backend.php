@@ -99,6 +99,8 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     // Route::get('stripe/showForm', 'Client\PaymentController@showForm')->name('stripe.form');
     // Route::post('stripe/make', 'Client\PaymentController@makePayment')->name('stripe.makePayment');
     Route::resource('payoption', 'Client\PaymentOptionController');
+
+    Route::resource('acl','Client\AclController'); # create manager/vendors with permission
 });
 
 

@@ -30,10 +30,11 @@ class DatabaseSeeder extends Seeder
               CommonDataSeeder::class,
               BannerDataSeeder::class,
               TimezoneSeeder::class,
-              /*AddonsetDataSeeder::class,
-              VariantSeeder::class,
-              CatalogSeeder::class,
-              ProductSeeder::class,*/
+              PermissionSeeder::class,
+            //   AddonsetDataSeeder::class,
+            //   VariantSeeder::class,
+            //   CatalogSeeder::class,
+            //   ProductSeeder::class,
 
           ]);
     }
