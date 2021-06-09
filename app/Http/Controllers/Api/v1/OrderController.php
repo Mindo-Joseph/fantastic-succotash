@@ -100,112 +100,116 @@ class OrderController extends Controller{
                     return response()->json(['error' => 'Invalid address id.'], 404);
                 }
 	    		$cart = Cart::where('user_id', $user->id)->first();
-		        $order = new Order;
-		        $order->user_id = $user->id;
-		        $order->order_number = generateOrderNo();
-		        $order->address_id = $request->address_id;
-		        $order->payment_option_id = $request->payment_option_id;
-		        $order->save();
-                $clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
-		        $cart_products = CartProduct::with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon', 'product.addon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
-		        $total_amount = 0;
-                $total_discount = 0;
-                $taxable_amount = 0;
-                $payable_amount = 0;
-                foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
-                    $vendor_payable_amount = 0;
-                    $vendor_discount_amount = 0;
-                    foreach ($vendor_cart_products as $vendor_cart_product) {
-                        $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
-                        $quantity_price = 0;
-                        $divider = (empty($vendor_cart_product->doller_compare) || $vendor_cart_product->doller_compare < 0) ? 1 : $vendor_cart_product->doller_compare;
-                        $price_in_currency = $variant->price / $divider;
-                        $price_in_dollar_compare = $price_in_currency * $clientCurrency->doller_compare;
-                        $quantity_price = $price_in_dollar_compare * $vendor_cart_product->quantity;
-                        $payable_amount = $payable_amount + $quantity_price;
-                        $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
-                        $product_taxable_amount = 0;
-                        $product_payable_amount = 0;
-                        if($vendor_cart_product->product['taxCategory']){
-    	                    foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
-    	                        $rate = round($tax_rate_detail->tax_rate);
-    	                        $tax_amount = ($price_in_dollar_compare * $rate) / 100;
-    	                        $product_tax = $quantity_price * $rate / 100;
-    	                        $taxable_amount = $taxable_amount + $product_tax;
-    	                        $payable_amount = $payable_amount + $product_tax;
-    	                        $vendor_payable_amount = $vendor_payable_amount;
-    	                    }
-                        }
-                        $total_amount += $variant->price;
-                        $order_product = new OrderProduct;
-                        $order_product->order_id = $order->id;
-                        $order_product->price = $variant->price;
-                        $order_product->quantity = $vendor_cart_product->quantity;
-                        $order_product->vendor_id = $vendor_cart_product->vendor_id;
-                        $order_product->product_id = $vendor_cart_product->product_id;
-                        $order_product->created_by = $vendor_cart_product->created_by;
-                        $order_product->variant_id = $vendor_cart_product->variant_id;
-                        $order_product->product_name = $vendor_cart_product->product->sku;
-                        if($vendor_cart_product->product->pimage){
-                            $order_product->image = $vendor_cart_product->product->pimage->first() ? $vendor_cart_product->product->pimage->first()->path : '';
-                        }
-                        $order_product->save();
-                        if(!empty($vendor_cart_product->addon)){
-                            foreach ($vendor_cart_product->addon as $ck => $addon) {
-                                $opt_quantity_price = 0;
-                                $opt_price_in_currency = $addon->option->price;
-                                $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
-                                $opt_quantity_price = $opt_price_in_doller_compare * $order_product->quantity;
-                                $total_amount = $total_amount + $opt_quantity_price;
-                                $payable_amount = $payable_amount + $opt_quantity_price;
-                                $vendor_payable_amount = $vendor_payable_amount + $opt_quantity_price;
+		        if($cart){
+                    $order = new Order;
+                    $order->user_id = $user->id;
+                    $order->order_number = generateOrderNo();
+                    $order->address_id = $request->address_id;
+                    $order->payment_option_id = $request->payment_option_id;
+                    $order->save();
+                    $clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
+                    $cart_products = CartProduct::with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon', 'product.addon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
+                    $total_amount = 0;
+                    $total_discount = 0;
+                    $taxable_amount = 0;
+                    $payable_amount = 0;
+                    foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
+                        $vendor_payable_amount = 0;
+                        $vendor_discount_amount = 0;
+                        foreach ($vendor_cart_products as $vendor_cart_product) {
+                            $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
+                            $quantity_price = 0;
+                            $divider = (empty($vendor_cart_product->doller_compare) || $vendor_cart_product->doller_compare < 0) ? 1 : $vendor_cart_product->doller_compare;
+                            $price_in_currency = $variant->price / $divider;
+                            $price_in_dollar_compare = $price_in_currency * $clientCurrency->doller_compare;
+                            $quantity_price = $price_in_dollar_compare * $vendor_cart_product->quantity;
+                            $payable_amount = $payable_amount + $quantity_price;
+                            $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
+                            $product_taxable_amount = 0;
+                            $product_payable_amount = 0;
+                            if($vendor_cart_product->product['taxCategory']){
+                                foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
+                                    $rate = round($tax_rate_detail->tax_rate);
+                                    $tax_amount = ($price_in_dollar_compare * $rate) / 100;
+                                    $product_tax = $quantity_price * $rate / 100;
+                                    $taxable_amount = $taxable_amount + $product_tax;
+                                    $payable_amount = $payable_amount + $product_tax;
+                                    $vendor_payable_amount = $vendor_payable_amount;
+                                }
+                            }
+                            $total_amount += $variant->price;
+                            $order_product = new OrderProduct;
+                            $order_product->order_id = $order->id;
+                            $order_product->price = $variant->price;
+                            $order_product->quantity = $vendor_cart_product->quantity;
+                            $order_product->vendor_id = $vendor_cart_product->vendor_id;
+                            $order_product->product_id = $vendor_cart_product->product_id;
+                            $order_product->created_by = $vendor_cart_product->created_by;
+                            $order_product->variant_id = $vendor_cart_product->variant_id;
+                            $order_product->product_name = $vendor_cart_product->product->sku;
+                            if($vendor_cart_product->product->pimage){
+                                $order_product->image = $vendor_cart_product->product->pimage->first() ? $vendor_cart_product->product->pimage->first()->path : '';
+                            }
+                            $order_product->save();
+                            if(!empty($vendor_cart_product->addon)){
+                                foreach ($vendor_cart_product->addon as $ck => $addon) {
+                                    $opt_quantity_price = 0;
+                                    $opt_price_in_currency = $addon->option->price;
+                                    $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
+                                    $opt_quantity_price = $opt_price_in_doller_compare * $order_product->quantity;
+                                    $total_amount = $total_amount + $opt_quantity_price;
+                                    $payable_amount = $payable_amount + $opt_quantity_price;
+                                    $vendor_payable_amount = $vendor_payable_amount + $opt_quantity_price;
+                                }
+                            }
+                            $cart_addons = CartAddon::where('cart_product_id', $vendor_cart_product->id)->get();
+                            if($cart_addons){
+                                foreach ($cart_addons as $cart_addon) {
+                                    $orderAddon = new OrderProductAddon;
+                                    $orderAddon->addon_id = $cart_addon->addon_id;
+                                    $orderAddon->option_id = $cart_addon->option_id;
+                                    $orderAddon->order_product_id = $order_product->id;
+                                    $orderAddon->save();
+                                }
+                                CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                             }
                         }
-                        $cart_addons = CartAddon::where('cart_product_id', $vendor_cart_product->id)->get();
-                        if($cart_addons){
-                            foreach ($cart_addons as $cart_addon) {
-                                $orderAddon = new OrderProductAddon;
-                                $orderAddon->addon_id = $cart_addon->addon_id;
-                                $orderAddon->option_id = $cart_addon->option_id;
-                                $orderAddon->order_product_id = $order_product->id;
-                                $orderAddon->save();
-                            }
-                            CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
+                        if($vendor_cart_product->coupon){
+                            if($vendor_cart_product->coupon->promo->promo_type_id == 2){
+                                $coupon_discount_amount = $vendor_cart_product->coupon->promo->amount;
+                                $total_discount += $coupon_discount_amount;
+                                $vendor_payable_amount -= $coupon_discount_amount;
+                                $vendor_discount_amount +=$coupon_discount_amount;
+                            }else{
+                                $gross_amount = number_format(($payable_amount - $taxable_amount), 2);
+                                $coupon_discount_amount = ($gross_amount * $vendor_cart_product->coupon->promo->amount / 100);
+                                $final_coupon_discount_amount = $coupon_discount_amount * $clientCurrency->doller_compare;
+                                $total_discount += $final_coupon_discount_amount;
+                                $vendor_payable_amount -=$final_coupon_discount_amount;
+                                $vendor_discount_amount +=$final_coupon_discount_amount; 
+                            }   
                         }
+                        $order_vendor = new OrderVendor;
+                        $order_vendor->status = 0;
+                        $order_vendor->order_id= $order->id;
+                        $order_vendor->vendor_id= $vendor_id;
+                        $order_vendor->payable_amount= $vendor_payable_amount;
+                        $order_vendor->discount_amount= $vendor_discount_amount;
+                        $order_vendor->save();
                     }
-                    if($vendor_cart_product->coupon){
-                        if($vendor_cart_product->coupon->promo->promo_type_id == 2){
-                            $coupon_discount_amount = $vendor_cart_product->coupon->promo->amount;
-                            $total_discount += $coupon_discount_amount;
-                            $vendor_payable_amount -= $coupon_discount_amount;
-                            $vendor_discount_amount +=$coupon_discount_amount;
-                        }else{
-                            $gross_amount = number_format(($payable_amount - $taxable_amount), 2);
-                            $coupon_discount_amount = ($gross_amount * $vendor_cart_product->coupon->promo->amount / 100);
-                            $final_coupon_discount_amount = $coupon_discount_amount * $clientCurrency->doller_compare;
-                            $total_discount += $final_coupon_discount_amount;
-                            $vendor_payable_amount -=$final_coupon_discount_amount;
-                            $vendor_discount_amount +=$final_coupon_discount_amount; 
-                        }   
+                    $order->total_amount = $total_amount;
+                    $order->total_discount = $total_discount;
+                    $order->taxable_amount = $taxable_amount;
+                    $order->payable_amount = $payable_amount;
+                    $order->save();
+                    CartProduct::where('cart_id', $cart->id)->delete();
+                    CartCoupon::where('cart_id', $cart->id)->delete();
+                    DB::commit();
+                    return $this->successResponse($order, 'Order placed successfully.', 201);
                     }
-                    $order_vendor = new OrderVendor;
-                    $order_vendor->status = 0;
-                    $order_vendor->order_id= $order->id;
-                    $order_vendor->vendor_id= $vendor_id;
-                    $order_vendor->payable_amount= $vendor_payable_amount ;
-                    $order_vendor->discount_amount= $vendor_discount_amount;
-                    $order_vendor->save();
+		        }else{
+                    return $this->errorResponse(['error' => 'Empty cart.'], 404);
                 }
-	            $order->total_amount = $total_amount;
-	            $order->total_discount = $total_discount;
-	            $order->taxable_amount = $taxable_amount;
-	            $order->payable_amount = $payable_amount;
-	            $order->save();
-	            CartProduct::where('cart_id', $cart->id)->delete();
-                CartCoupon::where('cart_id', $cart->id)->delete();
-	            DB::commit();
-		        return $this->successResponse($order, 'Order placed successfully.', 201);
-    		}
     	} catch (Exception $e) {
     		DB::rollback();
             return $this->errorResponse($e->getMessage(), $e->getCode());
