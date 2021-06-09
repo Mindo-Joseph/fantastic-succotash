@@ -356,7 +356,7 @@ class CartController extends BaseController{
                         $couponData['restriction_on'] = ($vendorData->coupon->promo->restriction_on == 1) ? 'Vendor' : 'Product';
 
                         $is_coupon_applied = 1;
-                        if($vendorData->coupon->promo->promo_type_id){
+                        if($vendorData->coupon->promo->promo_type_id == 1){
                             $is_percent = 1;
                             $discount_percent = round($vendorData->coupon->promo->amount);
                         }else{
