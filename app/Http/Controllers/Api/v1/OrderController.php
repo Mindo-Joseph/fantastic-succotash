@@ -174,10 +174,10 @@ class OrderController extends Controller{
                         }
                     }
                     if($vendor_cart_product->coupon){
-                        if($vendor_cart_product->coupon->promo->promo_type_id == 1){
+                        if($vendor_cart_product->coupon->promo->promo_type_id == 2){
                             $coupon_discount_amount = $vendor_cart_product->coupon->promo->amount;
                             $total_discount += $coupon_discount_amount;
-                            $vendor_payable_amount -=$coupon_discount_amount;
+                            $vendor_payable_amount -= $coupon_discount_amount;
                             $vendor_discount_amount +=$coupon_discount_amount;
                         }else{
                             $gross_amount = number_format(($payable_amount - $taxable_amount), 2);
