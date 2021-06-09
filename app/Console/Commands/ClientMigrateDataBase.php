@@ -40,7 +40,8 @@ class ClientMigrateDataBase extends Command
      * @return int
      */
     public function handle(){
-        foreach (Client::cursor() as $key => $client) {
+        $clients = Client::where('status', 1)->get();
+        foreach ($clients as $client) {
             $database_name = 'royo_' . $client->database_name;
             $this->info("migrate database start: {$database_name}!");
             $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
@@ -63,10 +64,10 @@ class ClientMigrateDataBase extends Command
                 Config::set("database.connections.$database_name", $default);
                 Artisan::call('migrate', ['--database' => $database_name]);
                 DB::disconnect($database_name);
-                $this->info("migrate database start: {$database_name}!");
+                $this->info("migrate database end: {$database_name}!");
             }else{
                 DB::disconnect($database_name);
-                $this->info("migrate database start: {$database_name}!");
+                $this->info("migrate database end: {$database_name}!");
             }
         }
     }
