@@ -2,7 +2,6 @@
 
 @section('css')
 <link href="{{asset('assets/libs/fullcalendar-list/fullcalendar-list.min.css')}}" rel="stylesheet" type="text/css" />
-
 <style type="text/css">
     .pac-container, .pac-container .pac-item { z-index: 99999 !important; }
     .fc-v-event{
@@ -23,8 +22,6 @@
 
 @section('content')
     <div class="container-fluid">
-
-        <!-- start page title -->
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
@@ -48,8 +45,6 @@
                 </div>
             </div>
         </div>
-        <!-- end page title -->
-
         <div class="row">
             <div class="col-lg-3 col-xl-3">
                 @include('backend.vendor.show-md-3')
@@ -75,12 +70,8 @@
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} card-body" id="configuration">
-
-                        </div>
-                        <div class="tab-pane {{($tab == 'category') ? 'active show' : '' }}" id="category">
-
-                        </div>
+                        <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} card-body" id="configuration"></div>
+                        <div class="tab-pane {{($tab == 'category') ? 'active show' : '' }}" id="category"></div>
                         <div class="tab-pane {{($tab == 'catalog') ? 'active show' : '' }}" id="catalog">
                            <div class="row card-box">
                                 <h4 class="mb-4"> Catalog</h4>
@@ -116,7 +107,7 @@
                                               <tr data-row-id="{{$product->id}}">
                                                   <td> 
                                                     @if(isset($product->media[0]))
-                                                        <img alt="{{$product->id}}" class="rounded-circle" src="{{$product->media[0]->image->path['proxy_url'].'30/30'.$product->media[0]->image->path['image_path']}}">
+                                                        <img alt="{{$product->sku}}" class="rounded-circle" src="{{$product->media[0]->image->path['proxy_url'].'30/30'.$product->media[0]->image->path['image_path']}}">
                                                     @else
                                                         {{ $product->sku }}
                                                     @endif

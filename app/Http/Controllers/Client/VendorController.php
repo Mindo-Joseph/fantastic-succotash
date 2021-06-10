@@ -270,8 +270,8 @@ class VendorController extends BaseController
             $build = $this->buildTree($categories->toArray());
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
-        $product_categories = VendorCategory::with('category')->where('vendor_id', $vendor->id)->get();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
+        $product_categories = VendorCategory::with('category')->where('status', 1)->where('vendor_id', $vendor->id)->get();
         return view('backend.vendor.vendorCatalog')->with(['vendor' => $vendor, 'VendorCategory' => $VendorCategory, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
     }
 
