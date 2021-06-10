@@ -122,7 +122,7 @@
                                                     @endif
                                                   </td>
                                                   <td> {{ (isset($product->primary->title) && !empty($product->primary->title)) ? $product->primary->title : '' }} </td>
-                                                  <td> {{ $product->category->cat->slug }}</td>
+                                                  <td> {{ $product->category ? $product->category->cat->slug : '' }}</td>
                                                   <td> {{ !empty($product->brand) ? $product->brand->title : 'N/A'  }}</td>
                                                   <td> {{ $product->variant->first() ? $product->variant->first()->quantity : 0 }}</td>
                                                   <td> {{ $product->variant->first() ? $product->variant->first()->price : 0 }}</td>
