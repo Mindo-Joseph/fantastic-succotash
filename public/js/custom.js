@@ -110,12 +110,17 @@ $(document).ready(function() {
         $('#remove_item_modal').modal('hide');
         productRemove(cartproduct_id, vendor_id);
     });
+    function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
     function initialize() {
       var input = document.getElementById('address');
       var autocomplete = new google.maps.places.Autocomplete(input);
       google.maps.event.addListener(autocomplete, 'place_changed', function () {
         var place = autocomplete.getPlace();
         document.getElementById('city').value = place.name;
+        document.getElementById('longitude').value = place.geometry.location.lng()
+        document.getElementById('latitude').value = place.geometry.location.lat()
         for(let i=1; i < place.address_components.length; i++){
             let mapAddress = place.address_components[i];
             if(mapAddress.long_name !=''){
@@ -124,6 +129,15 @@ $(document).ready(function() {
                 }
                 if(mapAddress.types[0] =="postal_code"){
                     document.getElementById('pincode').value = mapAddress.long_name;
+                }
+                if(mapAddress.types[0] == "country"){
+                    var country = document.getElementById('country');
+                    for (let i = 0; i < country.options.length; i++) {
+                        if (country.options[i].text == mapAddress.long_name.toUpperCase()) {
+                            country.value = i;
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -223,6 +237,8 @@ $(document).ready(function() {
         let country = $('#add_new_address_form #country').val();
         let pincode = $('#add_new_address_form #pincode').val();
         let type = $("input[name='address_type']:checked").val();
+        let latitude = $('#add_new_address_form #latitude').val();
+        let longitude = $('#add_new_address_form #longitude').val();
         $.ajax({
             type: "post",
             dataType: "json",
@@ -234,6 +250,8 @@ $(document).ready(function() {
                 "address": address,
                 "country": country,
                 "pincode": pincode,
+                "latitude": latitude,
+                "longitude": longitude,
             },
             success: function(response) {
                 $('#add_new_address_form').hide();

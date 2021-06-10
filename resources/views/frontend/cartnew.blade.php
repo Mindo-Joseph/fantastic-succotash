@@ -261,6 +261,8 @@
                                         </div>
                                     </div>
                                     </div>
+                                    <input type="text" id="latitude">
+                                    <input type="text" id="longitude">
                                     <div class="form-row">
                                         <div class="col-md-12 mb-3">
                                             <label for="address">Address</label>
@@ -290,7 +292,7 @@
                                             <label for="country">Country</label>
                                             <select name="country" id="country" class="form-control">
                                                 @foreach($countries as $co)
-                                                    <option value="{{$co->id}}" selected>{{$co->name}}</option>
+                                                    <option value="{{$co->id}}">{{$co->name}}</option>
                                                 @endforeach
                                             </select>
                                             <span class="text-danger" id="country_error"></span>
@@ -379,7 +381,7 @@
   </div>
 </div>
 <script type="text/javascript">
-    var user_store_address_url = "{{url('user/store')}}";
+    var user_store_address_url = "{{route('address.store')}}";
     var promo_code_remove_url = "{{ route('remove.promocode') }}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
