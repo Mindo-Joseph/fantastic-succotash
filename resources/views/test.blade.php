@@ -259,7 +259,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">           
                 <div class="modal-body p-0">
-                    <div class="row">
+                    <div class="row no-gutters pr-3">
                         <div class="col-4">
                             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                             <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Debit/Credit Card</a>
@@ -269,7 +269,7 @@
                             </div>
                         </div>
                         <div class="col-8">
-                            <div class="tab-content-box">
+                            <div class="tab-content-box pl-3">
                                 <h5 class="modal-title pt-4" id="pay-billLabel">Pay Bill</h5>
                                 <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
