@@ -58,14 +58,13 @@ class UpdateClient implements ShouldQueue
         if($this->client_data != 'empty'){
             $data = array(
                 'name'                  =>  $this->client_data['name'],
-                'phone_number'          =>  $this->client_data['phone_number'],
-                'company_name'          =>  $this->client_data['company_name'],
-                'company_address'       =>  $this->client_data['company_address'],
                 'logo'                  =>  $this->client_data['logo'],
-                'country_id'            =>  $this->client_data['country_id'],
                 'timezone'              =>  $this->client_data['timezone'],
+                'country_id'            =>  $this->client_data['country_id'],
+                'company_name'          =>  $this->client_data['company_name'],
+                'phone_number'          =>  $this->client_data['phone_number'],
+                'company_address'       =>  $this->client_data['company_address'],
             );
-
             DB::connection($schemaName)->table('clients')->where('code',Auth::user()->code)->update($data);
         } else {
             DB::connection($schemaName)->table('clients')->where('code',Auth::user()->code)->update(['password'=>$this->password]);
