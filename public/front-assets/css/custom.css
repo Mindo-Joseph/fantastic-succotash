@@ -1629,6 +1629,10 @@ label{
 
 
 /* Payment Popup Css Start From Here */
+#pay-bill .close.top_right {
+    right: -50px;
+}
+
 #pay-bill .modal-content {
     height: 380px;
     border-radius: 12px;

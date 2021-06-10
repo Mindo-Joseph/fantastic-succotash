@@ -309,7 +309,7 @@
                                                 </form>
                                             </div>
                                         </div>
-                                        <div class="row pr-3 mt-5">
+                                        <div class="row mt-5">
                                             <div class="col-md-12 text-md-right">
                                                 <button type="button" class="btn btn-solid" data-dismiss="modal">Cancel</button>
                                                 <button type="button" class="btn btn-solid ml-1">Continue to Pay</button>
