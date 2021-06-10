@@ -99,13 +99,10 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/addAddress', 'Front\AddressController@add')->name('addNewAddress');
 	Route::get('user/editAddress/{id}', 'Front\AddressController@edit')->name('editAddress');
 	Route::post('user/update/{id}', 'Front\AddressController@update')->name('address.update');
-<<<<<<< HEAD
 	Route::get('user/account', 'Front\ProfileController@accountInformation')->name('user.account');
-=======
 	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
     Route::get('user/addressBook', 'Front\ProfileController@addresBook')->name('user.addressBook');
 	Route::get('user/setPrimaryAddress/{id}', 'Front\AddressController@setPrimaryAddress')->name('setPrimaryAddress');
->>>>>>> 25aaac85226a129d045678f2139cbee3c36fe952
 
 	Route::get('user/orders', 'Front\ProfileController@orders')->name('user.orders');
 	Route::get('user/checkout', 'Front\UserController@checkout')->name('user.checkout');

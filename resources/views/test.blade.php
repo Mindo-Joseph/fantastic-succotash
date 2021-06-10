@@ -2,6 +2,12 @@
 @section('content')
     <section class="wrapper-main mb-5 py-lg-5">
         <div class="container">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pay-bill">
+                Launch static backdrop modal
+            </button>
+
+
             <div class="row">
                 <div class="col-lg-6 mb-lg-0 mb-3 text-center border-right pb-4">
                     <h3 class="mb-2">Login to Your Account</h3>
@@ -248,6 +254,83 @@
         </div>
     </section> 
 
+    <!-- Modal -->
+    <div class="modal fade" id="pay-bill"  data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="pay-billLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">           
+                <div class="modal-body p-0">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Debit/Credit Card</a>
+                            <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Wallets</a>
+                            <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">loyalty</a>
+                            <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">loyalty</a>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="tab-content-box">
+                                <h5 class="modal-title pt-4" id="pay-billLabel">Pay Bill</h5>
+                                <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <div class="tab-content h-100" id="v-pills-tabContent">
+                                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <form action="">
+                                                    <div class="row form-group">
+                                                        <div class="col-sm-8">
+                                                            <label for="">Name</label>
+                                                            <input class="form-control" type="text">
+                                                        </div>                                                    
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <div class="col-sm-4">
+                                                            <label for="">Card Number</label>
+                                                            <input class="form-control" type="text">
+                                                        </div>
+                                                        <div class="col-sm-8">
+                                                            <div class="row align-items-end">
+                                                                <div class="col-6">
+                                                                    <label for="">EXPIRATION DATE</label>
+                                                                    <input class="form-control" type="text">
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <label for="">CVV</label>
+                                                                    <input class="form-control" type="text">
+                                                                </div>
+                                                                <div class="col-2 pb-1">
+                                                                    <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>                                                        
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="row pr-3 mt-5">
+                                            <div class="col-md-12 text-md-right">
+                                                <button type="button" class="btn btn-solid" data-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-solid ml-1">Continue to Pay</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                                       
+                                    </div>
+                                    <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
+                                    <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $('.digit-group').find('input').each(function() {
             $(this).attr('maxlength', 1);
@@ -274,6 +357,8 @@
             });
         });
     </script>
+
+  
 
     
 @endsection

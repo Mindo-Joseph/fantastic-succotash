@@ -619,7 +619,6 @@ ul.social-links li a {
 .otp_inputs .form-control {
     height: 44px;
     width: 44px;
-    border-radius: 11.95px;
     background-color: #fff;
     text-align: center;
     opacity: 0.63;
@@ -629,6 +628,9 @@ ul.social-links li a {
     letter-spacing: 0;
     line-height: 27px;
     padding: 0 5px;
+    border: 0;
+    border-bottom: 1px solid #ced4da;
+    border-radius: 0;
 }
 
 .resend_txt p{
@@ -656,7 +658,6 @@ form .form-control {
     font-weight: 600;
     color: #000;
     opacity: 1;
-    border-radius: 4px !important;
     padding: 0 10px;
 }
 
@@ -1561,26 +1562,159 @@ label{
     font-size: 14px;
 }
 
+.main-img {
+    height: 40vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.info-text label {
+    font-weight: 100;
+}
+
+.info-text p {
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 0;
+    margin-block-end: 0;
+}
+
+.profile-edit {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 24px;
+    text-decoration: underline !important;
+}
+
+.address_box p:last-child{
+    margin: 0;
+}
+
+.text-16 {
+    color: #000000 !important;
+    font-size: 16px !important;
+    font-weight: 300;
+    letter-spacing: 0 !important;
+    line-height: 24px !important;
+}
+
+.address_box p {
+    margin: 0;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 24px;
+}
+
+.address_btn a {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 24px;
+    text-decoration: underline !important;
+    margin-right: 15px;
+    display: inline-block;
+}
+
+.address_btn a:last-child {
+    margin-right: 0;
+}
+
+.profile-page h6{
+    font-size: 16px;
+}
 
 
 
+/* Payment Popup Css Start From Here */
+#pay-bill .modal-title {
+    font-size: 28px;
+}
+
+#pay-bill .modal-content {
+    height: calc(100vh - 500px);
+    border-radius: 12px;
+}
+
+#v-pills-tab {
+    height: calc(100vh - 500px);
+    background: #ff4c3b;
+    padding: 50px 0 0 20px;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.nav-pills .nav-link {
+    border-radius: 0;
+    font-weight: 400;
+    color: #fff;
+    padding: 20px;
+}
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #ff4c3b;
+    background: #fff;
+}
+
+.tab-content-box {
+    height: calc(100% - 25px);
+}
+
+.tab-content-box .tab-content {
+    padding: 20px 0;
+}
+
+ul.bank-list li {
+    padding-right: 20px;
+}
+
+ul.bank-list li:last-child {
+    padding-right: 0;
+}
+
+ul.bank-list input[type="radio"] {
+    display: none;
+}
 
 
+ul.bank-list .radio{
+    padding: 0;
+}
 
+ul.bank-list .checkround {
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    line-height: 90px;
+    padding: 0;
+    text-align: center;
+    cursor: pointer;
+    position: initial;
+    display: block;
+}
 
+ul.bank-list .checkround::after{
+    content: none;
+}
 
+ul.bank-list label img {
+    height: 50px;
+}
 
+ul.bank-list input[type="radio"]:checked~.checkround {
+    border-color: red;
+}
+.add-new-bank{
+    display: none;
+}
 
-
-
-
-
-
-
-
-
-
-
+/* 
+.modal{
+    background-color: rgba(0, 0, 0, 0.438);
+} */
 
 
 
@@ -1611,6 +1745,9 @@ label{
     }
     .refferal_modal .modal-dialog {
         max-width: 1000px;
+    }
+    #pay-bill .modal-dialog {
+        max-width: 800px;
     }
 }
 
