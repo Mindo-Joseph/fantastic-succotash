@@ -310,6 +310,7 @@ class VendorController extends BaseController
 
     /**     Activate Category for vendor     */
     public function activeCategory(Request $request, $domain = '', $vendor_id){
+        $product_categories = [];
         if($request->has('can_add_category')){
             $vendor = Vendor::where('id', $request->vendor_id)->firstOrFail();
             $vendor->add_category = $request->can_add_category == 'true' ? 1 : 0;
@@ -327,7 +328,8 @@ class VendorController extends BaseController
                 VendorCategory::create(['vendor_id' => $request->vendor_id, 'category_id'=> $request->category_id, 'status'=> $status]);
             }
         }
-        return $this->successResponse(null, 'Category setting saved successfully.');
+        $product_categories = VendorCategory::with('category')->where('status', 1)->where('vendor_id', $request->vendor_id)->get();
+        return $this->successResponse($product_categories, 'Category setting saved successfully.');
     }
 
     /**     Check parent category enable status - true if all parent, false if any parent disable     */

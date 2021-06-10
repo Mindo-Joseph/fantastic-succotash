@@ -195,7 +195,7 @@
                                 @foreach($product_categories as $product_category)
                                     @if($product_category->category)
                                       @if($product_category->category->type_id == 1)
-                                          <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
+                                        <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
                                       @endif
                                     @endif
                                 @endforeach
