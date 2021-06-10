@@ -113,7 +113,7 @@
                                                     @endif
                                                   </td>
                                                   <td> {{ (isset($product->primary->title) && !empty($product->primary->title)) ? $product->primary->title : '' }} </td>
-                                                  <td> {{ $product->category ? $product->category->cat->slug : '' }}</td>
+                                                  <td> {{ $product->category->cat ? $product->category->cat->slug : '' }}</td>
                                                   <td> {{ !empty($product->brand) ? $product->brand->title : 'N/A'  }}</td>
                                                   <td> {{ $product->variant->first() ? $product->variant->first()->quantity : 0 }}</td>
                                                   <td> {{ $product->variant->first() ? $product->variant->first()->price : 0 }}</td>
@@ -195,7 +195,7 @@
                                 @foreach($product_categories as $product_category)
                                     @if($product_category->category)
                                       @if($product_category->category->type_id == 1)
-                                        <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
+                                          <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
                                       @endif
                                     @endif
                                 @endforeach
