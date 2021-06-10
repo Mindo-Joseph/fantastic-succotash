@@ -6,7 +6,9 @@
 @endsection
 
 @section('content')
-
+@php
+$timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
+@endphp
 <!-- Start Content-->
 <div class="container-fluid">
 
@@ -61,7 +63,6 @@
                             </thead>
                             <tbody id="post_list">
                                 @foreach($banners as $ban)
-
                                 <tr data-row-id="{{$ban->id}}">
                                     <td class="draggableTd"><span class="dragula-handle"></span></td>
                                     <td class="banner_wrapper"> 
@@ -71,7 +72,7 @@
                                     </td>
 
                                     <td> {{ $ban->name }} </td>
-                                    <td> <span class="text-center d-inline-block"> {{ $ban->start_date_time }} <br/> to <br/> {{$ban->end_date_time}} </span></td>
+                                    <td> <span class="text-center d-inline-block"> {{ $ban->start_date_time, $timezone}} <br/> to <br/> {{$ban->end_date_time,  $timezone}} </span></td>
                                     <td>                                         
                                         @if($ban->link == 'category')
                                             Category

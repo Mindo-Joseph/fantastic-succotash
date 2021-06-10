@@ -134,17 +134,6 @@ class ProductController extends BaseController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Product $product)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Product  $product
@@ -153,23 +142,15 @@ class ProductController extends BaseController
     public function edit($domain = '', $id)
     {
         $product = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related' , 'upSell' , 'crossSell', 'celebrities')->where('id', $id)->firstOrFail();
-        //dd($product->toArray());
         $type = Type::all();
         $countries = Country::all();
         $addons = AddonSet::with('option')->select('id', 'title')
                         ->where('status', '!=', 2)
                         ->where('vendor_id', $product->vendor_id)
                         ->orderBy('position', 'asc')->get();
-
         $brands = Brand::join('brand_categories as bc', 'bc.brand_id', 'brands.id')
                         ->select('brands.id', 'brands.title', 'brands.image')
                         ->where('bc.category_id', $product->category->category_id)->get(); 
-
-        /*$categories = Category::with('primary')->select('id', 'slug')
-                        ->where('id', '>', '1')->where('status', '!=', '2')
-                        ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();*/
-
         $clientLanguages = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.is_primary')
                     ->where('client_languages.client_code', Auth::user()->code)
@@ -211,10 +192,7 @@ class ProductController extends BaseController
                 $celeb_ids[] = $value->celebrity_id;
             }
         }
-        $otherProducts = Product::with('primary')->select('id', 'sku')
-                        ->where('is_live', 1)->where('id', '!=', $product->id)->get();
-
-        //dd($otherProducts->toArray());
+        $otherProducts = Product::with('primary')->select('id', 'sku')->where('is_live', 1)->where('id', '!=', $product->id)->get();
         $configData = ClientPreference::select('celebrity_check', 'need_dispacher_ride', 'need_delivery_service')
                         ->where('id', '>', 0)->first();
         $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
@@ -228,16 +206,15 @@ class ProductController extends BaseController
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $domain = '', $id)
-    {
+    public function update(Request $request, $domain = '', $id){
         $product = Product::where('id', $id)->firstOrFail();
         if($product->is_live == 0){
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
         }
-
         foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live', 'brand_id') as $k => $val) {
             $product->{$k} = $val;
         }
+        $product->tax_category_id = $request->tax_category;
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
         $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;
         $product->is_physical               = ($request->has('is_physical') && $request->is_physical == 'on') ? 1 : 0;
@@ -274,7 +251,6 @@ class ProductController extends BaseController
 
             if($request->has('fileIds')){
                 foreach ($request->fileIds as $key => $value) {
-
                     $productImageSave[] = [
                         'product_id' => $product->id,
                         'media_id' => $value,
@@ -356,14 +332,12 @@ class ProductController extends BaseController
                         $variantData->compare_at_price  = $request->variant_compare_price[$key];
                         $variantData->cost_price        = $request->variant_cost_price[$key];
                         $variantData->quantity          = $request->variant_quantity[$key];
-                        //$variantData->currency_id       = $request->
                         $variantData->tax_category_id   = $request->tax_category;
                         $variantData->save();
                     } 
                 }
                 $delOpt = ProductVariant::whereNotIN('id', $existv)->where('product_id', $product->id)->whereNull('title')->delete();
             }else{
-
                 $variantData = ProductVariant::where('product_id', $product->id)->first();
                 if(!$variantData){
                     $variantData = new ProductVariant();
@@ -380,24 +354,9 @@ class ProductController extends BaseController
                 $variantData->tax_category_id   = $request->tax_category;
                 $variantData->save();
             }
-
-            /*if($request->has('exist_variant') && count($request->exist_variant) > 0){
-                foreach ($request->exist_variant as $key => $value) {
-
-                    $update = DB::table('product_variants')->where('id', $request->get('area_id'))->update([
-                         'title'            => $request->exist_variant_titles[$key],
-                         'price'            => $request->exist_variant_price[$key],
-                         'compare_at_price' => $request->exist_variant_compare_price[$key],
-                         'cost_price'       => $request->exist_variant_cost_price[$key],
-                         'quantity'         => $request->exist_variant_quantity[$key],
-                         'currency_id'      => 1,
-                         'tax_category_id'  => $request->tax_category,
-                    ]);
-                }
-            }*/
         }
-        $toaster = $this->successToaster('Success', 'Product updated successfully.');
-        return redirect()->back()->with('toaster', $toaster);
+        $toaster = $this->successToaster('Success', 'Product  updated successfully.');
+        return redirect('client/vendor/catalogs/'.$product->vendor_id)->with('toaster', $toaster);
 
     }
 
@@ -409,7 +368,7 @@ class ProductController extends BaseController
      */
     public function destroy($domain = '', $id)
     {
-        Product::where('id',$id)->update(['is_live' => 2]);
+        Product::where('id',$id)->delete();
         return redirect()->back()->with('success', 'Product deleted successfully!');
     }
 
@@ -559,9 +518,7 @@ class ProductController extends BaseController
             $html .= '</tr>';
             
         }
-
         ProductVariantSet::insert($all_variant_sets);
-       
         $html .= '</table>';
         return $html;
     }
@@ -601,11 +558,12 @@ class ProductController extends BaseController
     }
 
     public function deleteVariant(Request $request){
-        $pv = ProductVariant::where('id', $request->prod_var_id)->where('product_id', $request->prod_id)->first();
-        $pv->status = 0;
-        $pv->save();
-        //$pv = ProductVariantSet::where('product_variant_id', $request->prod_var_id)->delete();
-
+        $product_variant = ProductVariant::where('id', $request->product_variant_id)->where('product_id', $request->product_id)->first();
+        $product_variant->status = 0;
+        $product_variant->save();
+        if($request->is_product_delete){
+            Product::where('id', $request->product_id)->delete();
+        }
         return response()->json(array('success' => true, 'msg' => 'Product variant deleted successfully.'));
     }
 

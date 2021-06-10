@@ -7,6 +7,19 @@
 
 @section('content')
 
+<style type="text/css">
+    .sub-domain-input #sub_domain {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: 0;
+    }
+    
+    .sub-domain-input #inputGroupPrepend2 {
+        font-size: 18px;
+        padding: 0 30px;
+    }
+</style>
+
 <!-- Start Content-->
 <div class="container-fluid">
 
@@ -236,14 +249,20 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="sub_domain" class="control-label">SUB DOMAIN</label>
-                                    <input type="text" class="form-control" name="sub_domain" id="sub_domain"
-                                        value="{{ old('sub_domain', $client->sub_domain ?? '')}}"
-                                        placeholder="Enter sub domain">
-                                    @if($errors->has('sub_domain'))
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('sub_domain') }}</strong>
-                                    </span>
-                                    @endif
+                                    <div class="input-group">
+                                        <div class="sub-domain-input input-group-prepend w-100">
+                                            <input type="text" class="form-control" name="sub_domain" id="sub_domain"
+                                            value="{{ old('sub_domain', $client->sub_domain ?? '')}}"
+                                            placeholder="Enter sub domain">
+                                             <span class="input-group-text" id="inputGroupPrepend2">royoorders.com</span>
+                                        </div>
+                                      </div>
+                                    
+                                        @if($errors->has('sub_domain'))
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $errors->first('sub_domain') }}</strong>
+                                        </span>
+                                        @endif
                                 </div>
                             </div>
                             <div class="col-md-6">

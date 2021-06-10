@@ -12,7 +12,6 @@ class PromoTypeSeeder extends Seeder
     public function run()
     {
         \DB::table('promo_types')->delete();
- 
         $maps = array(
             array(
                 'id' => 1,

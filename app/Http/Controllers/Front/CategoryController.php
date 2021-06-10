@@ -76,7 +76,7 @@ class CategoryController extends FrontController
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
 
         //dd($category->toArray());
-        return view('forntend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
+        return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
     }
 
     public function listData($langId, $cid, $tpye = ''){
@@ -260,7 +260,7 @@ class CategoryController extends FrontController
         $listData = $products;
         //dd($listData->toArray());
 
-        $returnHTML = view('forntend.ajax.productList')->with(['listData' => $listData])->render();
+        $returnHTML = view('frontend.ajax.productList')->with(['listData' => $listData])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 

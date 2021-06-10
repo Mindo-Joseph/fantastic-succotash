@@ -255,7 +255,14 @@ a{
 .coupon_box {
     background: #F3F9FF;
     padding: 5px 10px;
-    width: 300px;
+    width: fit-content;
+}
+
+.coupon_box .fa-times {
+    color: #f64a3b;
+    font-size: 20px;
+    cursor: pointer;
+
 }
 
 .coupon_box .form-control {
@@ -273,19 +280,31 @@ a{
     line-height: 11px;
 }*/
 
-.coupon_box button {
+.coupon_box a {
     border-color: #ff4c3b;
     color: #ff4c3b;
 }
 
-.coupon_box button:hover {
+.coupon_box a:hover {
     border-color: #ff4c3b;
     background: #ff4c3b;
+    color: #fff !important; 
 }
 
 .items-details h4 {
     font-size: 16px;
+    margin: 0 0 5px;
+}
+
+.items-details label {
+    display: block;
     margin: 0;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.items-details label span {
+    font-weight: 700;
 }
 
 .items-details h6 {
@@ -458,8 +477,8 @@ a{
     padding-top: 0;
 }
 
-.add_on_items td {
-    padding: 0 15px;
+.add_on_items th,.add_on_items td {
+    padding: 5px 15px;
 }
 
 .add_on_items td:first-child {
@@ -470,9 +489,9 @@ a{
     width: 80px;
 }
 
-.add_on_items tr:last-child td{
+/*.add_on_items tr:last-child td{
     padding-bottom: 15px;
-}
+}*/
 
 
 .cart_img_outer{
@@ -1606,6 +1625,15 @@ label{
     font-weight: 300;
     letter-spacing: 0;
     line-height: 24px;
+.btn-outline-info{
+    border-color: #ff4c3b;
+    color: #ff4c3b !important;
+}
+
+.btn-outline-info:hover {
+    color: #fff !important;
+    background-color: #ff4c3b;
+    border-color: #ff4c3b;
 }
 
 .address_btn a {

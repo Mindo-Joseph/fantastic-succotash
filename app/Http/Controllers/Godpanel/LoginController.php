@@ -36,29 +36,22 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(){
         $this->middleware('guest')->except('logout');
     }
 
-    public function Login(Request $request)
-    {
+    public function Login(Request $request){
         $this->validate($request, [
             'email'           => 'required|max:255|email',
             'password'        => 'required',
         ]);
-
         $guard = Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password]);
-    
-        //echo $guard;die;
         if ($guard) {
             $admin = Admin::where('email', $request->email)->first();
-
             Auth::login($admin);
             $details = Auth::guard('admin')->user();
             $user = $details['original'];
             return redirect()->route('client.index');
-    
         } else {
             return redirect()->back()->with('Error', 'Invalid Credentials');
         }

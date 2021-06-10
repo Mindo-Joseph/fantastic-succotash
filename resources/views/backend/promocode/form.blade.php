@@ -15,10 +15,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="form-group" id="nameInput">
-                    {!! Form::label('title', 'Promocode ',['class' => 'control-label']) !!}
-                    {!! Form::text('name', $promo->name, ['class' => 'form-control', 'placeholder'=>'Enter promocode']) !!}
+                    {!! Form::label('title', 'Title ',['class' => 'control-label']) !!}
+                    {!! Form::text('title', $promo->title, ['class' => 'form-control', 'placeholder'=>'Enter Title']) !!}
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>
                     </span>
@@ -29,16 +29,6 @@
                 }
                 ?>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    {!! Form::label('title', 'Promo Type',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control promoTypeField" name="promo_type_id">
-                        @foreach($promoTypes as $key => $types)
-                        <option value="{{$types->id}}" @if(isset($promo->id) && $promo->id > 0 && $types->id == $promo->promo_type_id) selected @endif >{{$types->title}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
             <div class="col-md-12">
                 <div class="form-group" id="short_descInput">
                     {!! Form::label('short_desc', 'Short Description',['class' => 'control-label']) !!}
@@ -48,6 +38,26 @@
                     </span>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-group" id="nameInput">
+                    {!! Form::label('title', 'Promocode ',['class' => 'control-label']) !!}
+                    {!! Form::text('name', $promo->name, ['class' => 'form-control', 'placeholder'=>'Enter promocode']) !!}
+                    <span class="invalid-feedback" role="alert">
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    {!! Form::label('title', 'Promo Type',['class' => 'control-label']) !!}
+                    <select class="selectize-select form-control promoTypeField" name="promo_type_id">
+                        @foreach($promoTypes as $key => $types)
+                            <option value="{{$types->id}}" @if(isset($promo->id) && $promo->id > 0 && $types->id == $promo->promo_type_id) selected @endif >{{$types->title}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            
             <div class="col-md-6">
                 <?php 
                 $pricevalue = (isset($promo->id) && $promo->id > 0 && $promo->promo_type_id == 1) ? (int)$promo->amount : $promo->amount; ?>
@@ -154,9 +164,9 @@
                 <div class="form-group">
                     {!! Form::label('title', 'Apply Restriction On',['class' => 'control-label']) !!}
                     <select class="selectize-select form-control inlineRadioOptions" name="restriction_on" for="{{(isset($promo->id) && $promo->id > 0) ? 'edit' : 'add'}}">
-                        <option value=''>select</option>
                         <option value='0' @if($promo->restriction_on == 0) selected @endif>Products</option>
                         <option value='1' @if($promo->restriction_on == 1) selected @endif>Vendors</option>
+                        <option value='2' @if($promo->restriction_on == 2) selected @endif>Category</option>
                     </select>
                 </div>
             </div>

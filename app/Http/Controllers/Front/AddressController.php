@@ -19,7 +19,7 @@ class AddressController extends FrontController{
         $langId = Session::get('customerLanguage');
         $useraddress = UserAddress::where('user_id', Auth::user()->id)->with('country')->get();
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/addressbook')->with(['useraddress' => $useraddress, 'navCategories' => $navCategories]);
+        return view('frontend/account/addressbook')->with(['useraddress' => $useraddress, 'navCategories' => $navCategories]);
     }
 
     /**
@@ -32,7 +32,7 @@ class AddressController extends FrontController{
         $langId = Session::get('customerLanguage');
         $countries = Country::all();
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/editAddress')->with(['navCategories' => $navCategories,'countries' => $countries, 'address' => $address]);
+        return view('frontend/account/editAddress')->with(['navCategories' => $navCategories,'countries' => $countries, 'address' => $address]);
     }
 
     /**
@@ -42,23 +42,25 @@ class AddressController extends FrontController{
      */
     public function store(Request $request, $domain = ''){
         $validatedData = $request->validate([
-                'country' => 'required',
                 'type' => 'required',
-                'pincode' => 'required',
                 'city' => 'required',
                 'state' => 'required',
+                'pincode' => 'required',
                 'address' => 'required',
+                'country' => 'required',
         ], [
             'type.required' => 'Address Type is required'
         ]);
         $address = new UserAddress;
-        $address->user_id = Auth::user()->id;
-        $address->address = $request->address;
-        $address->street = $request->street;
+        $address->type = $request->type;
         $address->city = $request->city;
         $address->state = $request->state;
+        $address->street = $request->street;
+        $address->user_id = Auth::user()->id;
+        $address->address = $request->address;
         $address->pincode = $request->pincode;
-        $address->type = $request->type;
+        $address->latitude  = $request->latitude;
+        $address->longitude  = $request->longitude;
         $address->save();
         if($request->ajax()){
             return response()->json(['status' => 'success', 'message' => 'Address Added Successfully!', 'address' => $address]);
@@ -95,7 +97,7 @@ class AddressController extends FrontController{
         $langId = Session::get('customerLanguage');
         $countries = Country::all();
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/editAddress')->with(['navCategories' => $navCategories,'countries' => $countries, 'address' => $address]);
+        return view('frontend/account/editAddress')->with(['navCategories' => $navCategories,'countries' => $countries, 'address' => $address]);
     }
 
    

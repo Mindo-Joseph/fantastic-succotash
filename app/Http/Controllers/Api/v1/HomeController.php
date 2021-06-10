@@ -25,16 +25,11 @@ class HomeController extends BaseController
     }
 
     /** Return header data, client profile and configure data */
-    public function headerContent(Request $request)
-    {
+    public function headerContent(Request $request){
         try {
             $homeData = array();
-
             $homeData['profile'] = Client::with('preferences')->select('company_name', 'code', 'logo', 'company_address', 'phone_number', 'email')->first();
-
-            $homeData['languages'] = ClientLanguage::with('language')->select('language_id', 'is_primary')
-                                    ->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
-
+            $homeData['languages'] = ClientLanguage::with('language')->select('language_id', 'is_primary')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
             $banners = Banner::select("id", "name", "description", "image", "link", 'redirect_category_id', 'redirect_vendor_id')
                         ->where('status', 1)->where('validity_on', 1)
                         ->where(function($q){
@@ -42,11 +37,8 @@ class HomeController extends BaseController
                                 $q2->whereDate('start_date_time', '<=', Carbon::now())
                                     ->whereDate('end_date_time', '>=', Carbon::now());
                             });
-                        })
-                        ->orderBy('sorting', 'asc')->get();
-
+                        })->orderBy('sorting', 'asc')->get();
             if($banners){
-
                 foreach ($banners as $key => $value) {
                     $bannerLink = '';
                     if(!empty($value->link) && $value->link == 'category'){
@@ -54,18 +46,14 @@ class HomeController extends BaseController
                     }
                     if(!empty($value->link) && $value->link == 'vendor'){
                         $bannerLink = $value->redirect_vendor_id;
-                        
                     }
                     $value->redirect_to = ucwords($value->link);
                     $value->redirect_id = $bannerLink;
-
                     unset($value->redirect_category_id);
                     unset($value->redirect_vendor_id);
                 }
             }
-
             $homeData['banners'] = $banners;
-
             $homeData['currencies'] = ClientCurrency::with('currency')->select('currency_id', 'is_primary', 'doller_compare')->orderBy('is_primary', 'desc')->get();
             return $this->successResponse($homeData);
         } catch (Exception $e) {
@@ -111,13 +99,10 @@ class HomeController extends BaseController
             $homeData['vendors'] = $vendorData;
             $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
                             $q->select('brand_id', 'title')->where('language_id', $langId);
-                            }])
-                        ->select('id', 'image')
-                        ->where('status', '!=', $this->field_status)
-                        ->orderBy('position', 'asc')->get();
-            $homeData['featuredProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_featured');
-            $homeData['newProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_new');
-            $homeData['onSale'] = $this->productList($vends, $langId, Auth::user()->currency);
+                            }])->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
+            // $homeData['featuredProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_featured');
+            // $homeData['newProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_new');
+            // $homeData['onSale'] = $this->productList($vends, $langId, Auth::user()->currency);
             return $this->successResponse($homeData);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
@@ -192,10 +177,8 @@ class HomeController extends BaseController
                 
                 foreach ($categories as $key => $value) {
                     $value->response_type = 'category';
-
                     $response[] = $value;
                 }
-
                 $brands = Brand::join('brand_translations as bt', 'bt.brand_id', 'brands.id')
                         ->select('brands.id', 'bt.title  as dataname')
                         ->where('bt.title', 'LIKE', '%' . $keyword . '%')
@@ -218,11 +201,8 @@ class HomeController extends BaseController
                             ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
                             ->where('pt.language_id', $langId)
                             ->where(function ($q) use ($keyword) {
-                                    $q->where('products.sku', ' LIKE', '%' . $keyword . '%')
-                                    ->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')
-                                     ->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
-                        })->where('products.is_live', 1)->get();
-              
+                                $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
+                            })->where('products.is_live', 1)->whereNull('deleted_at')->get();
                 foreach ($products as $product) {
                     $product->response_type = 'product';
                     $response[] = $product;
@@ -241,7 +221,6 @@ class HomeController extends BaseController
                                     ->orWhere('pt.meta_keyword', 'LIKE', '%' . $keyword . '%')
                                     ->orWhere('pt.meta_description', 'LIKE', '%' . $keyword . '%');
                     });
-
                 if($for == 'category'){
                     $prodIds = array();
                     $productCategory = ProductCategory::select('product_id')->where('category_id', $dataId)->get();
@@ -252,15 +231,13 @@ class HomeController extends BaseController
                     }
                     $products = $products->whereIn('products.id', $prodIds);
                 }
-
                 if($for == 'vendor'){
                     $products = $products->where('products.vendor_id', $dataId);
                 }
-
                 if($for == 'brand'){
                     $products = $products->where('products.brand_id', $dataId);
                 }
-                $products = $products->where('products.is_live', 1)->get();
+                $products = $products->where('products.is_live', 1)->whereNull('deleted_at')->get();
                 foreach ($products as $product) {
                     $product->response_type = 'product';
                     $response[] = $product;

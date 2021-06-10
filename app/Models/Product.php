@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Product extends Model
-{
+
+class Product extends Model{
+      use SoftDeletes;
   
     //protected $fillables = ['sku', 'title', 'url_slug', 'description', 'body_html', 'vendor_id', 'category_id', 'type_id', 'country_origin_id', 'is_new', 'is_featured', 'is_live', 'is_physical', 'weight', 'weight_unit', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'publish_at'];
 
@@ -22,7 +23,7 @@ class Product extends Model
     }
 
     public function vendor(){
-       return $this->belongsTo('App\Models\Vendor')->select('id', 'name', 'desc', 'logo'); 
+       return $this->belongsTo('App\Models\Vendor')->select('id', 'name', 'desc', 'logo','status'); 
     }
 
     public function related(){
@@ -52,11 +53,9 @@ class Product extends Model
         return $this->hasMany('App\Models\ProductTranslation'); 
       }
     }
-
-  	/*public function english(){
-  	    return $this->hasOne('App\Models\ProductTranslation')->select('title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description', 'product_id', 'language_id')->where('language_id', 1); 
-  	}*/
-
+    public function translation_one($langId = 0){
+        return $this->hasOne('App\Models\ProductTranslation'); 
+    }
     public function primary(){
 
       $langData = $this->hasOne('App\Models\ProductTranslation')->join('client_languages as cl', 'cl.language_id', 'product_translations.language_id')->select('product_translations.product_id', 'product_translations.title', 'product_translations.language_id', 'product_translations.body_html', 'product_translations.meta_title', 'product_translations.meta_keyword', 'product_translations.meta_description')->where('cl.is_primary', 1);

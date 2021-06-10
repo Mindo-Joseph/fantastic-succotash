@@ -38,7 +38,7 @@ class ProfileController extends FrontController
         if(!empty($wishList)){
             $wishList = $wishList->toArray();
         }
-       return view('forntend/account/wishlist')->with(['navCategories' => $navCategories, 'wishList' => $wishList]);
+       return view('frontend/account/wishlist')->with(['navCategories' => $navCategories, 'wishList' => $wishList]);
     }
 
     /**
@@ -53,7 +53,7 @@ class ProfileController extends FrontController
        
         $navCategories = $this->categoryNav($langId);
 
-        return view('forntend/account/sendRefferal')->with(['navCategories' => $navCategories]);
+        return view('frontend/account/sendRefferal')->with(['navCategories' => $navCategories]);
     }
 
      /**
@@ -165,7 +165,7 @@ class ProfileController extends FrontController
         $useraddress = UserAddress::where('user_id', Auth::user()->id)->with('country')->get();
         // dd($useraddress[0]->country->toArray());
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/addressbook')->with(['useraddress' => $useraddress, 'navCategories' => $navCategories]);
+        return view('frontend/account/addressbook')->with(['useraddress' => $useraddress, 'navCategories' => $navCategories]);
     }
 
     /**
@@ -177,7 +177,7 @@ class ProfileController extends FrontController
     {
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-       return view('forntend/account/orders')->with(['navCategories' => $navCategories]);
+       return view('frontend/account/orders')->with(['navCategories' => $navCategories]);
     }
 
     /**
@@ -203,7 +203,7 @@ class ProfileController extends FrontController
 
         $refferal_code = UserRefferal::where('user_id', Auth::user()->id)->first();
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/profile')->with(['user' => $user, 'navCategories' => $navCategories, 'userRefferal' => $refferal_code]);
+        return view('frontend/account/profile')->with(['user' => $user, 'navCategories' => $navCategories, 'userRefferal' => $refferal_code]);
     }
 
     /**
@@ -215,7 +215,7 @@ class ProfileController extends FrontController
     {
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-       return view('forntend/account/changePassword')->with(['navCategories' => $navCategories]);
+       return view('frontend/account/changePassword')->with(['navCategories' => $navCategories]);
     }
 
     /**
@@ -262,7 +262,7 @@ class ProfileController extends FrontController
         $user = User::with('country')->find(Auth::user()->id);
         // dd($useraddress[0]->country->toArray());
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/accountInformation')->with(['user' => $user, 'navCategories' => $navCategories]);
+        return view('frontend/account/accountInformation')->with(['user' => $user, 'navCategories' => $navCategories]);
     }
 
     

@@ -9,4 +9,8 @@ class PromoCodeDetail extends Model
 {
     use HasFactory;
     protected $table = 'promocode_details';
+
+    public function promocode(){
+        return $this->hasOne('App\Models\Promocode' , 'id', 'promocode_id')->where('restriction_on', 1)->where('restriction_type', 0);
+    }
 }

@@ -1,5 +1,4 @@
 @extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Loyalty Cards'])
-
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
@@ -12,13 +11,8 @@
 <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
 <style>.error{color: red;}</style>
 @endsection
-
 @section('content')
-
-<!-- Start Content-->
 <div class="container-fluid">
-
-    <!-- start page title -->
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
@@ -26,7 +20,6 @@
             </div>
         </div>
     </div>
-    <!-- end page title -->
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -65,22 +58,21 @@
                                     <th>Name</th>
                                     <th>Description</th>
                                     <th>Minimum Points</th>
-                                    <th></th>
+                                    <th>Earnings Per Order</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="post_list">
                                 @foreach($loyaltycards as $ban)
-
                                 <tr data-row-id="{{$ban->id}}">
-                                    <td class="draggableTd"><span class="dragula-handle"></span></td>
-
+                                    <td class="draggableTd">
+                                        <span class="dragula-handle"></span>
+                                    </td>
                                     <td> {{ $ban->name }} </td>
-
-                                    <td> {{ $ban->description }} </td>
-
+                                    <td> {{ Str::limit($ban->description, 50, ' ...') }} </td>
                                     <td> {{ $ban->minimum_points }} </td>
-                                   
+                                    <td> {{ $ban->per_order_points }} </td>
                                     <td> 
                                         <input type="checkbox" bid="{{$ban->id}}" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1" {{($ban->status == '0') ? 'checked' : ''}} >
                                      </td>
@@ -95,7 +87,6 @@
                                                     @method('DELETE')
                                                     <div class="form-group">
                                                        <button type="submit" onclick="return confirm('Are you sure? You want to delete the loyalty card.')" class="btn btn-primary-outline action-icon"><i class="mdi mdi-delete"></i></button> 
-
                                                     </div>
                                                 </form>
                                             </div>
@@ -109,17 +100,13 @@
                     <div class="pagination pagination-rounded justify-content-end mb-0">
                         {{-- $loyaltycards->links() --}}
                     </div>
-                </div> <!-- end card-body-->
-            </div> <!-- end card-->
-        </div> <!-- end col -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
 @include('backend.loyality.modals')
 @endsection
-
 @section('script')
-
 @include('backend.loyality.pagescript')
-
 @endsection

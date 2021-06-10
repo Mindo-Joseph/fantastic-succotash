@@ -70,7 +70,7 @@ class VendorController extends FrontController
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
 
-        return view('forntend/vendor-products')->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
+        return view('frontend/vendor-products')->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
     }
 
     /**
@@ -165,9 +165,7 @@ class VendorController extends FrontController
             $products = $products->orderBy('averageRating', 'desc');
         }
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
-        
         $products = $products->paginate($pagiNate);
-
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
@@ -176,8 +174,7 @@ class VendorController extends FrontController
             }
         }
         $listData = $products;
-
-        $returnHTML = view('forntend.ajax.productList')->with(['listData' => $listData])->render();
+        $returnHTML = view('frontend.ajax.productList')->with(['listData' => $listData])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 

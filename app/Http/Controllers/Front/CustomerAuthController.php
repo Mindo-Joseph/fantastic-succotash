@@ -28,14 +28,14 @@ class CustomerAuthController extends FrontController{
         $curId = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        return view('forntend.account.loginnew')->with(['navCategories' => $navCategories]);
+        return view('frontend.account.loginnew')->with(['navCategories' => $navCategories]);
     }
 
     public function registerForm($domain = ''){
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-        return view('forntend.account.registernew')->with(['navCategories' => $navCategories]);
+        return view('frontend.account.registernew')->with(['navCategories' => $navCategories]);
     }
 
     /**     * Display forgotPassword Form     */
@@ -43,7 +43,7 @@ class CustomerAuthController extends FrontController{
         $curId = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/forgotPassword')->with(['navCategories' => $navCategories]);
+        return view('frontend/account/forgotPassword')->with(['navCategories' => $navCategories]);
     }
 
     /**     * Display resetPassword Form     */
@@ -51,7 +51,7 @@ class CustomerAuthController extends FrontController{
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/resetPassword')->with(['navCategories' => $navCategories]);
+        return view('frontend/account/resetPassword')->with(['navCategories' => $navCategories]);
     }
 
     /**     * Display resetPassword Form     */
@@ -59,7 +59,7 @@ class CustomerAuthController extends FrontController{
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-        return view('forntend/account/resetSuccess')->with(['navCategories' => $navCategories]);
+        return view('frontend/account/resetSuccess')->with(['navCategories' => $navCategories]);
     }
 
 

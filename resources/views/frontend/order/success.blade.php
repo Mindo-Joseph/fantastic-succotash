@@ -35,6 +35,9 @@
 	                            <div>
 	                                <h4>product name</h4>
 	                                <h5>{{$product->product_name}}</h5>
+                                    @foreach($product->pvariant->vset as $vset)
+                                        <label><span>{{$vset->optionData->trans->title}}:</span>{{$vset->variantDetail->trans->title}}</label>
+                                    @endforeach
 	                            </div>
 	                        </div>
 	                        <div class="col-3 order_detail">
@@ -83,12 +86,6 @@
                         <h4>payment method</h4>
                         <p>Pay on Delivery (Cash/Card). Cash on delivery (COD) available. Card/Net banking acceptance subject to device availability.</p>
                     </div>
-                    <!-- <div class="col-md-12">
-                        <div class="delivery-sec">
-                            <h3>expected date of delivery</h3>
-                            <h2>october 22, 2018</h2>
-                        </div>
-                    </div> -->
                 </div>
             </div>
         </div>
