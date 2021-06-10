@@ -81,7 +81,6 @@ class DashBoardController extends BaseController
     public function updateProfile(Request $request, $domain = '', $id)
     {
         $client = Client::where('code', Auth::user()->code)->firstOrFail();
-
         $rules = array(
             'name' => 'required|string|max:50',
             'phone_number' => 'required|digits:10',
@@ -114,9 +113,7 @@ class DashBoardController extends BaseController
         }
 
         $client = Client::where('code', Auth::user()->code)->update($data);
-        
         $this->dispatchNow(new UpdateClient($data, $pass = ''));
-
         return redirect()->back()->with('success', 'Client Updated successfully!');
     }
 }

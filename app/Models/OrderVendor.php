@@ -13,7 +13,7 @@ class OrderVendor extends Model{
 	}
 	
     public function products(){
-	    return $this->hasMany('App\Models\OrderProduct' , 'vendor_id', 'vendor_id'); 
+	    return $this->hasMany('App\Models\OrderProduct' , 'order_id', 'order_id'); 
 	}
 	
 	public function coupon(){

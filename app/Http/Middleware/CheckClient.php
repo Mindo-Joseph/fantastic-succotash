@@ -28,7 +28,6 @@ class CheckClient
         $database_name = '';
         if (isset($client)) {
             $database_name = 'db_' . $client['database_name'];
-            
         } else {
             $database_serch = Client::where('database_name', $database)->first();
             if (isset($database_serch)) {
@@ -36,7 +35,6 @@ class CheckClient
                 Cache::set($database_serch->database_name, $database_serch);
             } 
         }
-            
         if (isset($database_name)) {
             $default = [
                 'driver' => env('DB0_CONNECTION', 'mysql'),
@@ -57,8 +55,6 @@ class CheckClient
             Config::set("client_data", $client);
             DB::setDefaultConnection($database_name);
             DB::purge($database_name);
-
-
             return $next($request);
         }
         abort(404);

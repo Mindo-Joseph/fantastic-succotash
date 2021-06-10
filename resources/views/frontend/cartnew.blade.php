@@ -208,15 +208,18 @@
                             </div>
                         </div>
                         <div class="row mb-4" id="address_template_main_div">
-                            @forelse($addresses as $address)
+                            @forelse($addresses as $k => $address)
                                 <div class="col-md-12">
                                     <div class="delivery_box">
                                         <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}} 
-                                            <input type="radio" name="address_id" value="{{$address->id}}"  {{ $address->is_primary ? 'checked="checked""' : '' }}>
+                                            @if($address->is_primary)
+                                                <input type="radio" name="address_id" value="{{$address->id}}"  checked="checked">
+                                            @else
+                                                <input type="radio" name="address_id" value="{{$address->id}}"  {{$k == 0? 'checked="checked""' : '' }} >
+                                            @endif
                                             <span class="checkround"></span>
                                         </label>
                                     </div>
-                                    
                                 </div>
                             @empty
                                 <div class="address-no-found">
@@ -319,7 +322,7 @@
                 </div>
                 <div class="row mb-4">
                     <div class="col-lg-3 col-md-4">
-                        <a class="btn btn-solid" href="{{url('/')}}">Continue Shopping</a>
+                        <a class="btn btn-solid" href="{{ url('/') }}">Continue Shopping</a>
                     </div>
                     <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4 text-md-right">
                         <button id="order_palced_btn" class="btn btn-solid" type="submit" {{$addresses->count() == 0 ? 'disabled': ''}} >Place Order</button>

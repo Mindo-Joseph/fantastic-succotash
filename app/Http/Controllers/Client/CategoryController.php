@@ -19,12 +19,7 @@ class CategoryController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
-                        ->where('categories.id', '>', '1')
-                        ->where('categories.status', '!=', '2')
-                        ->where('categories.is_core', 1)
-                        ->orderBy('categories.parent_id', 'asc')
-                        ->orderBy('categories.position', 'asc')->get();
+        $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')->where('id', '>', '1')->where('is_core', 1)->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->get();
         $variants = Variant::with('option', 'varcategory.cate.primary')->where('status', '!=', 2)->orderBy('position', 'asc')->get();
         $brands = Brand::with( 'bc.cate.primary')->where('status', '!=', 2)->orderBy('position', 'asc')->get();
         if($categories){
@@ -278,17 +273,15 @@ class CategoryController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function destroy($domain = '', $id){
-        $category = Category::where('id', $id)->first();
-        $category->status = 2;
-        $category->save();
-        $action = 'deleted';
-        $hs = new CategoryHistory();
-        $hs->category_id = $category->id;
-        $hs->action = $action;
-        $hs->updater_role = 'Admin';
-        $hs->update_id = Auth::user()->id;
-        $hs->client_code = Auth::user()->code;
-        $hs->save();
-        return redirect()->back()->with('success', 'Category '.$action.' successfully!');
+        $user = Auth::user();
+        Category::where('id', $id)->delete();
+        CategoryHistory::insert([
+            'category_id' => $id,
+            'action' => 'deleted',
+            'update_id' =>$user->id,
+            'updater_role' =>'Admin',
+            'client_code' => $user->code,
+        ]);
+        return redirect()->back()->with('success', 'Category deleted successfully!');
     }
 }

@@ -36,12 +36,8 @@ class UpdateClient implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
-    {
-        // dd($this->client_data);
-        //$client = Client::where('id', $this->client_id)->first(['name', 'email', 'password', 'phone_number', 'password', 'database_path', 'database_name', 'database_username', 'database_password', 'logo', 'company_name', 'company_address', 'custom_domain', 'status'])->toarray();
-
-        $schemaName = 'royoorders' ?: config("database.connections.mysql.database");
+    public function handle(){
+        $schemaName = config("database.connections.mysql.database") ? config("database.connections.mysql.database") : 'royo_orders';
         $default = [
             'driver' => env('DB_CONNECTION', 'mysql'),
             'host' => env('DB_HOST'),
@@ -56,14 +52,9 @@ class UpdateClient implements ShouldQueue
             'strict' => false,
             'engine' => null
         ];
-
         config(["database.connections.mysql.database" => null]);
-
-//,'email'=>$this->client_data['email']
-
         Config::set("database.connections.$schemaName", $default);
         config(["database.connections.mysql.database" => $schemaName]);
-
         if($this->client_data != 'empty'){
             $data = array(
                 'name'                  =>  $this->client_data['name'],

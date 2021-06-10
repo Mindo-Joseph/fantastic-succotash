@@ -1,15 +1,9 @@
 @extends('layouts.vertical', ['title' => 'Category'])
-
 @section('css')
     <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
-
 @section('content')
-
-<!-- Start Content-->
 <div class="container-fluid">
-
-    <!-- start page title -->
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
@@ -31,7 +25,6 @@
             </div>
         </div>
     </div>
-
     <div class="row catalog_box">
         <div class="col-xl-4 col-lg-6 mb-4">
             <div class="card-box h-100">
@@ -63,10 +56,9 @@
                     <div class="col-sm-12 text-right btn_bottom">
                         <button class="btn btn-info waves-effect waves-light text-sm-right saveList">Save Order</button>
                     </div>
-                </div> <!-- end row -->
-            </div> <!-- end card-box -->
-        </div> <!-- end col -->
-
+                </div>
+            </div>
+        </div>
         <div class="col-xl-4 col-lg-6 mb-4">
             <div class="card-box h-100">
                 <div class="row mb-2">
@@ -81,11 +73,9 @@
                          dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                         </button>
                     </div>
-
                     <div class="col-sm-8">
                         <h4 class="page-title"></h4>
                     </div>
-                    
                 </div>
                 <div class="row variant-row">
                     <div class="col-md-12">
@@ -120,9 +110,12 @@
                                             @endforeach
                                         </td>
                                         <td>
-                                            <a class="action-icon editVariantBtn" dataid="{{$variant->id}}" href="javascript:void(0);" >  <i class="mdi mdi-square-edit-outline"></i> </a>
-
-                                            <a class="action-icon deleteVariant" dataid="{{$variant->id}}" href="javascript:void(0);">  <i class="mdi mdi-delete"></i></a>
+                                            <a class="action-icon editVariantBtn" dataid="{{$variant->id}}" href="javascript:void(0);" >
+                                                <i class="mdi mdi-square-edit-outline"></i>
+                                            </a>
+                                            <a class="action-icon deleteVariant" dataid="{{$variant->id}}" href="javascript:void(0);">
+                                                <i class="mdi mdi-delete"></i>
+                                            </a>
                                             <form action="{{route('variant.destroy', $variant->id)}}" method="POST"  style="display: none;" id="varDeleteForm{{$variant->id}}">
                                                 @csrf
                                                 @method('DELETE')
@@ -147,13 +140,12 @@
                 <div class="row mb-2">
                     <div class="col-sm-8">
                         <h4 class="page-title">Brand</h4>
-                        <p class="sub-header">
-                            
-                        </p>
+                        <p class="sub-header"></p>
                     </div>
                     <div class="col-sm-4 text-right">
                         <button class="btn btn-info waves-effect waves-light text-sm-right addBrandbtn"
-                         dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
+                         dataid="0">
+                         <i class="mdi mdi-plus-circle mr-1"></i> Add
                         </button>
                     </div>
                 </div>
@@ -182,8 +174,9 @@
                                         <td>{{$brand->title}}</td>
                                         <td>{{isset($brand->bc->cate->primary) ? $brand->bc->cate->primary->name : ''}}</td>
                                         <td>
-                                            <a class="action-icon editBrandBtn" dataid="{{$brand->id}}" href="javascript:void(0);" > <i class="mdi mdi-square-edit-outline"></i> </a>
-
+                                            <a class="action-icon editBrandBtn" dataid="{{$brand->id}}" href="javascript:void(0);" > 
+                                                <i class="mdi mdi-square-edit-outline"></i>
+                                            </a>
                                             <a class="action-icon deleteBrand" dataid="{{$brand->id}}" href="javascript:void(0);"> <i class="mdi mdi-delete"></i> </a>
                                             <form action="{{route('brand.destroy', $brand->id)}}" method="POST" style="display: none;" id="brandDeleteForm{{$brand->id}}">
                                                 @csrf
@@ -201,29 +194,26 @@
                         <button class="btn btn-info waves-effect waves-light text-sm-right saveBrandOrder">Save Order</button>
                     </div>
                 </div>
-            </div> <!-- end card-box -->
+            </div>
         </div>
     </div>
 </div>
 @include('backend.common.category-modals')
 @include('backend.catalog.modals')
 @endsection
-
 @section('script')
-    <script src="{{asset('assets/libs/nestable2/nestable2.min.js')}}"></script>
-    <script src="{{asset('assets/js/pages/my-nestable.init.js')}}"></script>
-    <script src="{{asset('assets/libs/dragula/dragula.min.js')}}"></script>
-    <script src="{{asset('assets/js/pages/dragula.init.js')}}"></script>
-    <script src="{{asset('assets/js/jscolor.js')}}"></script>
-    <script src="{{ asset('assets/js/jquery.tagsinput-revisited.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('assets/css/jquery.tagsinput-revisited.css') }}" />
-    @include('backend.common.category-script')
-    @include('backend.catalog.pagescript')
-
+<script src="{{asset('assets/libs/nestable2/nestable2.min.js')}}"></script>
+<script src="{{asset('assets/js/pages/my-nestable.init.js')}}"></script>
+<script src="{{asset('assets/libs/dragula/dragula.min.js')}}"></script>
+<script src="{{asset('assets/js/pages/dragula.init.js')}}"></script>
+<script src="{{asset('assets/js/jscolor.js')}}"></script>
+<script src="{{ asset('assets/js/jquery.tagsinput-revisited.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('assets/css/jquery.tagsinput-revisited.css') }}" />
+@include('backend.common.category-script')
+@include('backend.catalog.pagescript')
 <script type="text/javascript">
     var tagList = "";
     tagList = tagList.split(',');
-    console.log(tagList);
     function makeTag(tagList = ''){
         $('.myTag1').tagsInput({
             'autocomplete': {
@@ -231,7 +221,6 @@
             } 
         });
     }
-
     $('.saveList').on('click', function(e) {
         e.preventDefault();
         $.ajaxSetup({
@@ -239,27 +228,9 @@
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token-z"]').attr('content')
             }
         });
-
         var data = $('.dd').nestable('serialize');
         document.getElementById('orderDta').value = JSON.stringify(data);
         $('#category_order').submit();
-        
-        /*var jsonString = ;
-         console.log(jsonString);
-        $.ajax({
-            type: "post",
-            headers: {
-                Accept: "application/json"
-            },
-            url: "{{route('category.order')}}",
-            data: {data : jsonString}, 
-            dataType : 'json',
-            success: function(response) {
-                console.log(response);
-                location.reload();
-            }
-        });*/
-
     });
     
 </script>
