@@ -23,7 +23,6 @@ class ProductController extends FrontController
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-
         $product = Product::select('id')->where('sku', $sku)->firstOrFail();
         $p_id = $product->id;
         $product = Product::with([
@@ -65,7 +64,7 @@ class ProductController extends FrontController
             ->firstOrFail();
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         foreach ($product->variant as $key => $value) {
-            $product->variant[$key]->multiplier = $clientCurrency->doller_compare;
+            $product->variant[$key]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : '1.00';
         }
         $vendorIds[] = $product->vendor_id;
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
