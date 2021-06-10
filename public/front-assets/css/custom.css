@@ -255,14 +255,7 @@ a{
 .coupon_box {
     background: #F3F9FF;
     padding: 5px 10px;
-    width: fit-content;
-}
-
-.coupon_box .fa-times {
-    color: #f64a3b;
-    font-size: 20px;
-    cursor: pointer;
-
+    width: 300px;
 }
 
 .coupon_box .form-control {
@@ -280,31 +273,19 @@ a{
     line-height: 11px;
 }*/
 
-.coupon_box a {
+.coupon_box button {
     border-color: #ff4c3b;
     color: #ff4c3b;
 }
 
-.coupon_box a:hover {
+.coupon_box button:hover {
     border-color: #ff4c3b;
     background: #ff4c3b;
-    color: #fff !important; 
 }
 
 .items-details h4 {
     font-size: 16px;
-    margin: 0 0 5px;
-}
-
-.items-details label {
-    display: block;
     margin: 0;
-    font-weight: 400;
-    font-size: 12px;
-}
-
-.items-details label span {
-    font-weight: 700;
 }
 
 .items-details h6 {
@@ -477,8 +458,8 @@ a{
     padding-top: 0;
 }
 
-.add_on_items th,.add_on_items td {
-    padding: 5px 15px;
+.add_on_items td {
+    padding: 0 15px;
 }
 
 .add_on_items td:first-child {
@@ -489,9 +470,9 @@ a{
     width: 80px;
 }
 
-/*.add_on_items tr:last-child td{
+.add_on_items tr:last-child td{
     padding-bottom: 15px;
-}*/
+}
 
 
 .cart_img_outer{
@@ -638,6 +619,7 @@ ul.social-links li a {
 .otp_inputs .form-control {
     height: 44px;
     width: 44px;
+    border-radius: 11.95px;
     background-color: #fff;
     text-align: center;
     opacity: 0.63;
@@ -647,9 +629,6 @@ ul.social-links li a {
     letter-spacing: 0;
     line-height: 27px;
     padding: 0 5px;
-    border: 0;
-    border-bottom: 1px solid #ced4da;
-    border-radius: 0;
 }
 
 .resend_txt p{
@@ -677,6 +656,7 @@ form .form-control {
     font-weight: 600;
     color: #000;
     opacity: 1;
+    border-radius: 4px !important;
     padding: 0 10px;
 }
 
@@ -1625,15 +1605,6 @@ label{
     font-weight: 300;
     letter-spacing: 0;
     line-height: 24px;
-.btn-outline-info{
-    border-color: #ff4c3b;
-    color: #ff4c3b !important;
-}
-
-.btn-outline-info:hover {
-    color: #fff !important;
-    background-color: #ff4c3b;
-    border-color: #ff4c3b;
 }
 
 .address_btn a {
@@ -1658,23 +1629,22 @@ label{
 
 
 /* Payment Popup Css Start From Here */
-#pay-bill .modal-title {
-    font-size: 28px;
+#pay-bill .close.top_right {
+    right: -50px;
 }
 
 #pay-bill .modal-content {
-    height: calc(100vh - 500px);
+    height: 380px;
     border-radius: 12px;
 }
 
 #v-pills-tab {
-    height: calc(100vh - 500px);
+    height: 380px;
     background: #ff4c3b;
     padding: 50px 0 0 20px;
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
 }
-
 .nav-pills .nav-link {
     border-radius: 0;
     font-weight: 400;
@@ -1687,62 +1657,12 @@ label{
 }
 
 .tab-content-box {
-    height: calc(100% - 25px);
+    height: calc(100% - 130px);
 }
 
 .tab-content-box .tab-content {
     padding: 20px 0;
 }
-
-ul.bank-list li {
-    padding-right: 20px;
-}
-
-ul.bank-list li:last-child {
-    padding-right: 0;
-}
-
-ul.bank-list input[type="radio"] {
-    display: none;
-}
-
-
-ul.bank-list .radio{
-    padding: 0;
-}
-
-ul.bank-list .checkround {
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    line-height: 90px;
-    padding: 0;
-    text-align: center;
-    cursor: pointer;
-    position: initial;
-    display: block;
-}
-
-ul.bank-list .checkround::after{
-    content: none;
-}
-
-ul.bank-list label img {
-    height: 50px;
-}
-
-ul.bank-list input[type="radio"]:checked~.checkround {
-    border-color: red;
-}
-.add-new-bank{
-    display: none;
-}
-
-/* 
-.modal{
-    background-color: rgba(0, 0, 0, 0.438);
-} */
 
 
 
