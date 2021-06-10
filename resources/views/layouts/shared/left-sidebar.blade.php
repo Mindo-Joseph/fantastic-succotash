@@ -28,14 +28,8 @@
             </div>
             <p class="text-muted">Admin Head</p>
         </div>
-
-        <!--- Sidemenu -->
         <div id="sidebar-menu">
-
             <ul id="side-menu" 1>
-
-                <li class="menu-title mt-2">Home</li>
-
                 <li>
                     <a href="{{route('client.dashboard')}}" >
                         <span class="icon-dashboard_icon"></span>
@@ -87,38 +81,6 @@
                         <span> Banner </span>
                     </a>
                 </li> 
-                
-                <!--<li>
-                    <a href="#SettingSidebar" data-toggle="collapse">
-                        <i data-feather="settings"></i>
-                        <span> Setting </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                     <div class="collapse" id="SettingSidebar">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a href="{{route('client.profile')}}">
-                                    <i data-feather="user"></i><span> Profile </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{route('configure.customize')}}" >
-                                    <i data-feather="settings"></i><span> Customize </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{route('configure.index')}}">
-                                    <i data-feather="tool"></i><span> Configure </span>
-                                </a>
-                            </li>
-                            <li>   
-                                <a href="{{route('banner.index')}}" >
-                                    <i data-feather="columns"></i><span> Banner </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div> 
-                </li> -->
                 <li>   
                     <a href="{{route('category.index')}}">
                         <span class="icon-catalog_icon"></span>
@@ -137,12 +99,7 @@
                         <span> Payment Options </span>
                     </a>
                 </li>
-                <!-- <li>   
-                    <a href="{{route('payment.index')}}" >
-                        <span class="icon-payment_icon"></span>
-                        <span> Payments </span>
-                    </a>
-                </li> -->
+                
                 <li>   
                     <a href="{{route('promocode.index')}}" >
                         <span class="icon-promocode_icon"></span>
@@ -155,23 +112,10 @@
                         <span> Loyalty Cards </span>
                     </a>
                 </li>
-                
-                <!-- <li>   
-                    <a href="{{route('wallet.index')}}" >
-                        <span class="icon-waller_icon"></span>
-                        <span> Wallet </span>
-                    </a>
-                </li>  -->
                 <li class="menu-title mt-2">Extra</li>
                 @php 
                     $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
                 @endphp
-                <!-- <li>   
-                    <a href="#" href1="{{route('referandearn.index')}}" >
-                        <span class="icon-1370259"></span>
-                        <span> Refer and Earn </span>
-                    </a>
-                </li> -->
                 @if(!empty($brity) && $brity->celebrity_check == 1)
                 <li>   
                     <a href="{{route('celebrity.index')}}" >
