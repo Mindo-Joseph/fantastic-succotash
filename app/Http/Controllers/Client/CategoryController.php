@@ -19,9 +19,9 @@ class CategoryController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')->where('id', '>', '1')->where('is_core', 1)->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->get();
-        $variants = Variant::with('option', 'varcategory.cate.primary')->where('status', '!=', 2)->orderBy('position', 'asc')->get();
         $brands = Brand::with( 'bc.cate.primary')->where('status', '!=', 2)->orderBy('position', 'asc')->get();
+        $variants = Variant::with('option', 'varcategory.cate.primary')->where('status', '!=', 2)->orderBy('position', 'asc')->get();
+        $categories = Category::where('id', '>', '1')->where('is_core', 1)->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->where('deleted_at', NULL)->get();
         if($categories){
             $build = $this->buildTree($categories->toArray());
             $tree = $this->printTree($build);
@@ -31,7 +31,7 @@ class CategoryController extends BaseController{
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
-        return view('backend/catalog/index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs, 'variants' => $variants, 'brands' => $brands]);
+        return view('backend.catalog.index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs, 'variants' => $variants, 'brands' => $brands]);
     }
 
     /**
@@ -44,7 +44,7 @@ class CategoryController extends BaseController{
         $vendors = array();
         $type = Type::all();
         $category = new Category();
-        $parCategory = Category::select('id', 'slug')->where('status', '!=', $this->blocking)->get();
+        $parCategory = Category::select('id', 'slug')->where('deleted_at', NULL)->get();
         $vendor_list = Vendor::select('id', 'name')->where('status', '!=', $this->blocking)->get();
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
@@ -128,7 +128,7 @@ class CategoryController extends BaseController{
         foreach ($category->translation as $key => $value) {
             $existlangs[] = $value->language_id;
         }
-        $parCategory = Category::select('id', 'slug')->where('categories.id', '!=', $id)->where('status', '!=', $this->blocking)->get();
+        $parCategory = Category::select('id', 'slug')->where('categories.id', '!=', $id)->where('status', '!=', $this->blocking)->where('deleted_at', NULL)->get();
         $returnHTML = view('backend.catalog.edit-category')->with(['typeArray' => $type, 'category' => $category,  'languages' => $langs, 'is_vendor' => $is_vendor, 'parCategory' => $parCategory, 'langIds' => $langIds, 'existlangs' => $existlangs, 'tagList' => $tagList])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML, 'tagList' => $tagList));
     }
