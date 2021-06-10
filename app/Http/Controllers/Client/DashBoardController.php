@@ -97,16 +97,16 @@ class DashBoardController extends BaseController
         foreach ($request->only('name', 'phone_number', 'company_name', 'company_address', 'country_id', 'timezone') as $key => $value) {
             $data[$key] = $value;
         }
+        $client = Client::where('code', Auth::user()->code)->first();
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
             $file_name = 'Clientlogo/'.uniqid() .'.'.  $file->getClientOriginalExtension();
             $path = Storage::disk('s3')->put($file_name, file_get_contents($file), 'public');
             $data['logo'] = $file_name;
         }else{
-             $client = Client::where('code', Auth::user()->code)->first();
              $data['logo'] = $client->getRawOriginal('logo');
         }
-        $client = Client::where('code', Auth::user()->code)->update($data);
+        $client->update($data);
         $this->dispatchNow(new UpdateClient($data, $pass = ''));
         return redirect()->back()->with('success', 'Client Updated successfully!');
     }
