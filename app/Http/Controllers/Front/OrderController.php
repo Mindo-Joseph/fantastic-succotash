@@ -5,12 +5,13 @@ use DB;
 use Auth;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
+use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor,CartCoupon, LoyaltyCard};
 
 class OrderController extends FrontController{
-    
+    use ApiResponser;
     public function getOrderSuccessPage(Request $request){
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
@@ -24,7 +25,8 @@ class OrderController extends FrontController{
             return view('frontend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone , 'total_amount' => $request->total_amount , 'address_id' => $request->address_id]);
         }
         $order = $this->orderSave($request, "1", "2");
-        return redirect('order/success/'.$order->id)->with('success', 'your message,here'); 
+        return $this->successResponse(['status' => 'success','order' => $order, 'message' => 'Order placed successfully.']);
+        // return redirect('order/success/'.$order->id)->with('success', 'your message,here'); 
     }
 
     public function orderSave($request, $paymentStatus, $paymentMethod){
@@ -51,6 +53,7 @@ class OrderController extends FrontController{
             $order->order_number = generateOrderNo();
             $order->payment_method = $paymentMethod;
             $order->address_id = $request->address_id;
+            $order->payment_option_id = $request->payment_option_id;
             $order->save();
             $cart_products = CartProduct::select('*')->with(['product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon.promo', 'product.addon'])->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
             $total_amount = 0;

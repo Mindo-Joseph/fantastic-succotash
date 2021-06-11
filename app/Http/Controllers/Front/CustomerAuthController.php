@@ -270,53 +270,7 @@ class CustomerAuthController extends FrontController{
         return redirect()->route('customer.login');
     }
 
-    public function stripeCharge(request $request)
-    {
-        $paypal_creds = PaymentOption::select('credentials')->where('code', 'stripe')->where('status', 1)->first();
-        $creds_arr = json_decode($paypal_creds->credentials);
-
-        $api_key = (isset($creds_arr->api_key)) ? $creds_arr->api_key : '';
-
-        $message = $html = $transactionReference = '';
-        
-        try{
-            $gateway = Omnipay::create('Stripe');
-            $token = $request->input('stripe_token');
-            $gateway->setApiKey($api_key);
-            $gateway->setTestMode(true);
-            
-            // Send purchase request
-            $response = $gateway->purchase(
-                [
-                    'amount' => $request->input('amount'),
-                    'currency' => 'INR',
-                    'description' => 'This is a test purchase transaction.',
-                    'token' => $token,
-                    'metadata' => ['order_id' => '10']
-                ]
-            )->send();
-
-            // Process response
-            if ($response->isSuccessful()) {
-
-                // $html = file_get_contents($response->getData()['receipt_url']);
-                return response()->json(array('success' => true, 'transactionReference'=>$response->getTransactionReference(), 'msg'=>"Thankyou for your payment"));
-
-            } elseif ($response->isRedirect()) {
-                
-                // Redirect to offsite payment gateway
-                return response()->json(array('success' => true, 'redirect_url'=>$response->getRedirectUrl(), 'msg'=>''));
-
-            } else {
-                // Payment failed
-                return response()->json(array('success' => false, 'msg'=>$response->getMessage()));
-            }
-        }
-        catch(\Exception $ex){
-            return response()->json(array('success' => false, 'msg'=>$ex->getMessage()));
-        }
-    }
-
+   
     public function paypalCharge(request $request)
     {
         $paypal_creds = PaymentOption::select('credentials')->where('code', 'paypal')->where('status', 1)->first();
@@ -330,9 +284,9 @@ class CustomerAuthController extends FrontController{
         
         try{
             $gateway = Omnipay::create('PayPal_Express');
-            $gateway->setUsername($username);
-            $gateway->setPassword($password);
-            $gateway->setSignature($signature);
+            $gateway->setUsername('sb-r6ryi6463363_api1.business.example.com');
+            $gateway->setPassword('2WT35LCJ73SYWLMD');
+            $gateway->setSignature('Ai9cuHQXupERagE016AbIPpQXy9fAgblu9y2ZXrzYkt1e0GUY.EPoJBl');
             $gateway->setTestMode(true); //set it to 'false' when go live
 
             // Send purchase request
