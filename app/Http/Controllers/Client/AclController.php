@@ -7,9 +7,9 @@ use App\Http\Controllers\Client\BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Client;
 use App\Models\Permissions;
-use App\Models\ClientPermissions;
+use App\Models\{Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory,CartProduct};
+use App\Models\UserPermissions;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Crypt;
@@ -24,7 +24,7 @@ class AclController extends BaseController
      */
     public function index()
     {
-        $subadmins = Client::where('is_superadmin', 0)->where('id', '!=', Auth::user()->id)->orderBy('id', 'DESC')->paginate(10);
+        $subadmins = User::where('is_superadmin', 0)->where('id', '!=', Auth::user()->id)->orderBy('id', 'DESC')->paginate(10);
         return view('backend.acl.index')->with(['subadmins' => $subadmins]);
     }
 
@@ -47,7 +47,7 @@ class AclController extends BaseController
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:clients'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone_number' => ['required'],
             'password' => ['required']
         ]);
@@ -62,51 +62,115 @@ class AclController extends BaseController
     public function store(Request $request, $domain = '')
     {
         $validator = $this->validator($request->all())->validate();
+        DB::beginTransaction();
 
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'confirm_password' => Crypt::encryptString($request->password),
-            'phone_number' => $request->phone_number,
-            'status' => $request->status,
-            'is_superadmin' => 0,
-        ];
-       
-        $superadmin_data = Client::select('country_id','timezone','custom_domain','sub_domain','is_deleted','is_blocked','database_path','database_name','database_username','database_password','company_name','company_address','logo','code','database_host','database_port')
-        ->where('is_superadmin', 1)
-        ->first()->toArray();
-      
-        $clientcode = $superadmin_data['code'];
-        $superadmin_data['code'] = rand(11111,4444);
-        $superadmin_data['logo'] = $superadmin_data['logo']['logo_db_value']??null;
-
-
-        $finaldata = array_merge($data, $superadmin_data);
-                     
-        $subdmin = Client::create($finaldata);
+        try {
+         $subdmin = $this->register($request);
         
-        //update client code
-        $codedata = [
-            'code' => $subdmin->id.'_'.$clientcode,
-            'is_superadmin' => 0
-            
-        ];
         
-        $clientcodeupdate = Client::where('id', $subdmin->id)->update($codedata);
 
         if ($request->permissions) {
             $userpermissions = $request->permissions;
             $addpermission = [];
-            $removepermissions = ClientPermissions::where('client_id', $subdmin->id)->delete();
+            $removepermissions = UserPermissions::where('user_id', $subdmin->id)->delete();
             for ($i=0;$i<count($userpermissions);$i++) {
-                $addpermission[] =  array('client_id' => $subdmin->id,'permission_id' => $userpermissions[$i]);
+                $addpermission[] =  array('user_id' => $subdmin->id,'permission_id' => $userpermissions[$i]);
             }
-            ClientPermissions::insert($addpermission);
+            UserPermissions::insert($addpermission);
         }
 
         
+        
+        DB::commit();
         return redirect()->route('acl.index')->with('success', 'Manager Added successfully!');
+       
+            // all good
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('acl.index')->with('error', $e->getMessage());
+        }
+    }
+
+
+
+    /**     * Display register Form     */
+    public function register($req){
+        try {
+            $user = new User();
+            $county = Country::where('code', strtoupper($req->countryData))->first();
+            $phoneCode = mt_rand(100000, 999999);
+            $emailCode = mt_rand(100000, 999999);
+            $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
+            $user->type = 1;
+            $user->status = 1;
+            $user->role_id = 1;
+            $user->name = $req->name;
+            $user->email = $req->email;
+            $user->is_email_verified = 0;
+            $user->is_phone_verified = 0;
+            $user->is_superadmin = 0;
+            $user->is_admin = 1;
+            $user->country_id = $county->id;
+            $user->phone_token = $phoneCode;
+            $user->email_token = $emailCode;
+            $user->phone_number = $req->countryCode.$req->phone_number;
+            $user->phone_token_valid_till = $sendTime;
+            $user->email_token_valid_till = $sendTime;
+            $user->password = Hash::make($req->password);
+            $user->save();
+            $userRefferal = new UserRefferal();
+            $userRefferal->refferal_code = $this->randomData("user_refferals", 8, 'refferal_code');
+            if($req->refferal_code != null){
+                $userRefferal->reffered_by = $req->refferal_code;
+            }
+            $userRefferal->user_id = $user->id;
+            $userRefferal->save();
+            if ($user->id > 0) {
+                $userCustomData = $this->userMetaData($user->id, 'web', 'web');
+                $rae = ReferAndEarn::first();
+                if($rae){
+                    $userReff_by = UserRefferal::where('refferal_code', $req->refferal_code)->first();
+                    $wallet_by = Wallet::where('user_id' , $userReff_by->user_id)->first();
+                    $wallet_to = Wallet::where('user_id' , $user->id)->first();
+                    if($rae->reffered_by_amount != null){
+                        $wallet_history = new WalletHistory();
+                        $wallet_history->user_id = $userReff_by->user_id;
+                        $wallet_history->wallet_id = $wallet_by->id;
+                        $wallet_history->amount = $rae->reffered_by_amount;
+                        $wallet_history->save();
+                    }
+                    if($rae->reffered_to_amount != null){
+                        $wallet_history = new WalletHistory();
+                        $wallet_history->user_id = $user->id;
+                        $wallet_history->wallet_id = $wallet_to->id;
+                        $wallet_history->amount = $rae->reffered_to_amount;
+                        $wallet_history->save();
+                    }
+                }
+                $this->checkCookies($user->id);
+               return $user;
+            }
+        } catch (Exception $e) {
+            die();
+        }  
+    }
+
+    /**     * check if cookie already exist     */
+    public function checkCookies($userid){
+        if (\Cookie::has('uuid')) {
+            $existCookie = \Cookie::get('uuid');
+            $userFind = User::where('system_id', $existCookie)->first();
+            if($userFind){
+                $cart = Cart::where('user_id', $userFind->id)->first();
+                if($cart){
+                    $cart->user_id = $userid;
+                    $cart->save();
+                }
+                $userFind->delete();
+            }
+            \Cookie::queue(\Cookie::forget('uuid'));
+            return redirect()->route('user.checkout');
+        }
     }
 
     /**
@@ -128,9 +192,9 @@ class AclController extends BaseController
      */
     public function edit($domain = '', $id)
     {
-        $subadmin = Client::find($id);
+        $subadmin = User::find($id);
         $permissions = Permissions::all();
-        $user_permissions = ClientPermissions::where('client_id', $id)->get();
+        $user_permissions = UserPermissions::where('user_id', $id)->get();
         
         return view('backend.acl.form')->with(['subadmin'=> $subadmin,'permissions'=>$permissions,'user_permissions'=>$user_permissions]);
     }
@@ -141,7 +205,7 @@ class AclController extends BaseController
         return Validator::make($data, [
 
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255',\Illuminate\Validation\Rule::unique('clients')->ignore($id)],
+            'email' => ['required', 'string', 'email', 'max:255',\Illuminate\Validation\Rule::unique('users')->ignore($id)],
             'phone_number' => ['required'],
         ]);
     }
@@ -167,20 +231,19 @@ class AclController extends BaseController
         ];
         if ($request->password!="") {
             $data['password'] = Hash::make($request->password);
-            $data['confirm_password'] = Crypt::encryptString($request->password);
         }
                 
-        $client = Client::where('id', $id)->update($data);
+        $client = User::where('id', $id)->update($data);
 
         //for updating permissions
         if ($request->permissions) {
             $userpermissions = $request->permissions;
             $addpermission = [];
-            $removepermissions = ClientPermissions::where('client_id', $id)->delete();
+            $removepermissions = UserPermissions::where('user_id', $id)->delete();
             for ($i=0;$i<count($userpermissions);$i++) {
-                $addpermission[] =  array('client_id' => $id,'permission_id' => $userpermissions[$i]);
+                $addpermission[] =  array('user_id' => $id,'permission_id' => $userpermissions[$i]);
             }
-            ClientPermissions::insert($addpermission);
+            UserPermissions::insert($addpermission);
         }
 
         

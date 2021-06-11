@@ -48,6 +48,15 @@ class ProcessClientDatabase implements ShouldQueue
                 $clientData[$key] = $value;
             }
         }
+        $userData = array();
+        foreach ($client as $key => $value) {
+            $userData['name'] = $value['name'];
+            $userData['email'] = $value['email'];
+            $userData['password'] = $value['password'];
+            $userData['phone_number'] = $value['phone_number'];
+            $userData['status'] = 1;
+            $userData['is_superadmin'] = 1;
+            }
         try {
            
             $schemaName = 'royo_' . $client['database_name'] ?: config("database.connections.mysql.database");
@@ -116,7 +125,7 @@ class ProcessClientDatabase implements ShouldQueue
             DB::connection($schemaName)->table('client_preferences')->insert($settings);
             DB::connection($schemaName)->table('client_languages')->insert($cli_langs);
             DB::connection($schemaName)->table('client_currencies')->insert($cli_currs);
-
+            DB::connection($schemaName)->table('users')->insert($userData);
             if($this->languId == 1){
                 Artisan::call('db:seed', ['--class' => 'TypeSeeder', '--database' => $schemaName,  '--force' => true]);
                 Artisan::call('db:seed', ['--class' => 'CategorySeeder', '--database' => $schemaName,  '--force' => true]);

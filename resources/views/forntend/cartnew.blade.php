@@ -123,8 +123,9 @@
                 </td> 
                 <td colspan="3"></td>
                 <td class="text-center">
+                    <p class="total_amt m-0">Delivery Fee : $ <%= product.delivery_fee_charges %></p>
                     <p class="total_amt m-0">$ <%= product.product_total_amount %></p>
-                    <p class="total_amt m-0">Delivery Fee : $ <%= product.product_total_amount %></p>
+                    
                    
                 </td>
             </tr>

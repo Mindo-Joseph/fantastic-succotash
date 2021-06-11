@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,Country,UserAddress};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor};
 use Illuminate\Http\Request;
 use Session;
 use Auth;
-
+use GuzzleHttp\Client;
 class CartController extends FrontController
 {
     private function randomString()
@@ -34,7 +34,7 @@ class CartController extends FrontController
             $cartData = $this->getCart($cart);
         }
         $navCategories = $this->categoryNav($langId);
-      
+       
         return view('forntend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries]);
     }
 
@@ -262,6 +262,7 @@ class CartController extends FrontController
             foreach ($cartData as $ven_key => $vendorData) {
                 $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0.00;
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
+                    $deliver_charge = 0;
                     $quantity_price = 0;
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
                     $price_in_currency = $prod->pvariant->price / $divider;
@@ -287,6 +288,7 @@ class CartController extends FrontController
                             $payable_amount = $payable_amount + $product_tax;
                         }
                     }
+                   
                     $prod->taxdata = $taxData;
 
                     unset($prod->product->taxCategory);
@@ -307,11 +309,18 @@ class CartController extends FrontController
                     }else{
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
+                    if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1)
+                    {
+                        $deliver_charge = $this->getDeliveryFeeDispatcher($cartData,$vendorData->vendor_id);
+                    }
+                    if(empty($deliver_charge))
                     $deliver_charge = 0;
                     $prod->deliver_charge = number_format($deliver_charge, 2);
                     $payable_amount = $payable_amount + $deliver_charge;
+                    $delivery_fee_charges = $deliver_charge;
 
                 }
+                $vendorData->delivery_fee_charges = number_format($delivery_fee_charges, 2);
                 $vendorData->payable_amount = number_format($payable_amount, 2);
                 $vendorData->discount_amount = number_format($discount_amount, 2);
                 $vendorData->discount_percent = number_format($discount_percent, 2);
@@ -407,4 +416,67 @@ class CartController extends FrontController
         }
         return response()->json(['status' => 'success', 'cart_details' => $cart_details]);
     }
+
+
+    # get delivery fee from dispatcher 
+    public function getDeliveryFeeDispatcher($cart_products,$vendor_id){
+        try {
+                 $dispatch_domain = $this->checkIfLastMileOn();
+                
+                if ($dispatch_domain && $dispatch_domain != false && !empty($dispatch_domain->delivery_service_key)) {
+                    //$db = getDispatchClient($dispatch_domain);
+                    $customer = User::find(Auth::id());
+                    $cus_address = UserAddress::where('user_id',Auth::id())->orderBy('is_primary','desc')->first();
+                    if($cus_address){
+                     
+                        $tasks = array();
+                        $vendor_details = Vendor::find($vendor_id);
+    
+                            $location[] = array('latitude' => $vendor_details->latitude??30.71728880,
+                                                'longitude' => $vendor_details->longitude??76.80350870
+                                                );
+                                            
+                            $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
+                                              'longitude' => $cus_address->longitude??76.803508700000
+                                            );
+                                        
+                            $postdata =  ['locations' => $location];
+                            $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
+                                                        'shortcode' => $dispatch_domain->delivery_service_key_code,
+                                                        'content-type' => 'application/json']
+                                                            ]);
+                            $url = $dispatch_domain->delivery_service_key_url;                      
+                            $res = $client->post($url.'/api/get-delivery-fee',
+                                ['form_params' => ($postdata)]
+                            );
+
+                            //$result = file_get_contents($res);
+                            $response = json_decode($res->getBody(), true);
+                            if($response && $response['message'] == 'success'){
+                                return $response['total'];
+                            }
+                           
+                        
+                    }
+                   
+                }
+            }    
+            catch(\Exception $e)
+            {
+                 dd($e->getMessage());
+                        
+            }
+           
+           
+    }
+    # check if last mile delivery on 
+    public function checkIfLastMileOn(){
+        $preference = ClientPreference::first();
+        if($preference->need_delivery_service == 1)
+            return $preference;
+        else
+            return false;
+    }
+
+
 }

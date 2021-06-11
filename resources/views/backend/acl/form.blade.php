@@ -78,6 +78,8 @@
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="basic-addon1">+91</span>
+                                                <input type="hidden" id="countryData" name="countryData" value="in">
+                                                <input type="hidden" id="countryCode" name="countryCode" value="+91">
                                             </div>
                                             <input type="text" class="form-control" name="phone_number"
                                                 id="phone_number"

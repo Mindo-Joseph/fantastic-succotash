@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Validator;
 use App\Models\Client;
+use App\Models\User;
 use DB;
 class LoginController extends Controller
 {
@@ -49,20 +50,32 @@ class LoginController extends Controller
             'email'           => 'required|max:255|email',
             'password'        => 'required',
         ]);
-        $guard = Auth::guard('client')->attempt(['email' => $request->email, 'password' => $request->password]);
+        $guard = Auth::attempt(['email' => $request->email, 'password' => $request->password]);
         if ($guard) {
-            $client = Client::with('preferences')->where('email', $request->email)->first();
+            $client = Client::with('preferences')->first();
             if($client->is_blocked == 1 || $client->is_deleted == 1){
-                return redirect()->back()->with('Error', 'Your account has been blocked by admin. Please contact administration.');
+                Auth::logout();
+               return redirect()->back()->with('Error', 'Your account has been blocked by admin. Please contact administration.');
             }
-            Auth::login($client);
-            return redirect()->route('client.dashboard');
+            $client = User::where('email',$request->email)->first();
+            if($client->is_superadmin == 1 || $client->is_admin == 1){
+               
+                return redirect()->route('client.dashboard');
+            }
+            else{
+                Auth::logout();
+                return redirect()->back()->with('Error', 'You are unauthorized user.');
+            }
+            
+            
         }
         return redirect()->back()->with('Error', 'Invalid Credentials');
     }
 
     public function Logout()
-    {
+    {   
+        
+        Auth::guard('client')->logout();
         Auth::logout();
         return redirect()->route('admin.login');
     }

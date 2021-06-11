@@ -31,7 +31,7 @@ class DashBoardController extends BaseController
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
+    {   
         return view('backend/dashboard');
     }
 
@@ -115,7 +115,7 @@ class DashBoardController extends BaseController
 
         $client = Client::where('code', Auth::user()->code)->update($data);
         
-        $this->dispatchNow(new UpdateClient($data, $pass = ''));
+        //$this->dispatchNow(new UpdateClient($data, $pass = ''));
 
         return redirect()->back()->with('success', 'Client Updated successfully!');
     }

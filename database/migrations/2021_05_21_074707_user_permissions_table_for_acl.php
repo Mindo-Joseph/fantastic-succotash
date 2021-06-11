@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ClientPermissionsTableForAcl extends Migration
+class UserPermissionsTableForAcl extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class ClientPermissionsTableForAcl extends Migration
      */
     public function up()
     {
-        Schema::create('client_permissions', function (Blueprint $table) {
+        Schema::create('user_permissions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('client_id');
+            $table->bigInteger('user_id');
             $table->bigInteger('permission_id');					
 			$table->timestamps();
         });
@@ -28,8 +28,8 @@ class ClientPermissionsTableForAcl extends Migration
      */
     public function down()
     {
-        Schema::table('client_permissions', function (Blueprint $table) {
-            Schema::drop('client_permissions');
+        Schema::table('user_permissions', function (Blueprint $table) {
+            Schema::drop('user_permissions');
         });
     }
 }

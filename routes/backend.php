@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Front\SearchController;
 
+
+
 Route::get('admin/login', function () {
     return view('auth/login');
 })->name('admin.login');
@@ -9,10 +11,10 @@ Route::get('admin/login', function () {
 Route::post('admin/login/client', 'Auth\LoginController@clientLogin')->name('client.login');
 Route::get('admin/wrong/url', 'Auth\LoginController@wrongurl')->name('wrong.client');
 
-Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'], function () {
+Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'], function () {
     //Route::middleware('auth')->group(function () {
 
-    Route::post('/logout', 'Auth\LoginController@logout')->name('client.logout');
+    Route::any('/logout', 'Auth\LoginController@logout')->name('client.logout');
     Route::get('profile', 'Client\DashBoardController@profile')->name('client.profile');
     Route::get('dashboard', 'Client\DashBoardController@index')->name('client.dashboard');
     Route::put('profile/{id}', 'Client\DashBoardController@updateProfile')->name('client.profile.update');
