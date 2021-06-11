@@ -16,12 +16,17 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory,CartProduct};
+use App\Models\{Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory,CartProduct, PaymentOption};
+use Omnipay\Omnipay;
+use Omnipay\Common\CreditCard;
 
 class CustomerAuthController extends FrontController{
 
     public function getTestHtmlPage(){
-        return view('test');
+
+        $active_methods = PaymentOption::select('id', 'code', 'title')->where('status', 1)->get();
+
+        return view('test')->with('active_methods', $active_methods);
     }
 
     public function loginForm($domain = ''){
@@ -265,5 +270,149 @@ class CustomerAuthController extends FrontController{
     public function logout(){
         Auth::logout();
         return redirect()->route('customer.login');
+    }
+
+    public function stripeCharge(request $request)
+    {
+        $paypal_creds = PaymentOption::select('credentials')->where('code', 'stripe')->where('status', 1)->first();
+        $creds_arr = json_decode($paypal_creds->credentials);
+
+        $api_key = (isset($creds_arr->api_key)) ? $creds_arr->api_key : '';
+
+        $message = $html = $transactionReference = '';
+        
+        try{
+            $gateway = Omnipay::create('Stripe');
+            $token = $request->input('stripe_token');
+            $gateway->setApiKey($api_key);
+            $gateway->setTestMode(true);
+            
+            // Send purchase request
+            $response = $gateway->purchase(
+                [
+                    'amount' => $request->input('amount'),
+                    'currency' => 'INR',
+                    'description' => 'This is a test purchase transaction.',
+                    'token' => $token,
+                    'metadata' => ['order_id' => '10']
+                ]
+            )->send();
+
+            // Process response
+            if ($response->isSuccessful()) {
+
+                // $html = file_get_contents($response->getData()['receipt_url']);
+                return response()->json(array('success' => true, 'transactionReference'=>$response->getTransactionReference(), 'msg'=>"Thankyou for your payment"));
+
+            } elseif ($response->isRedirect()) {
+                
+                // Redirect to offsite payment gateway
+                return response()->json(array('success' => true, 'redirect_url'=>$response->getRedirectUrl(), 'msg'=>''));
+
+            } else {
+                // Payment failed
+                return response()->json(array('success' => false, 'msg'=>$response->getMessage()));
+            }
+        }
+        catch(\Exception $ex){
+            return response()->json(array('success' => false, 'msg'=>$ex->getMessage()));
+        }
+    }
+
+    public function paypalCharge(request $request)
+    {
+        $paypal_creds = PaymentOption::select('credentials')->where('code', 'paypal')->where('status', 1)->first();
+        $creds_arr = json_decode($paypal_creds->credentials);
+
+        $username = (isset($creds_arr->username)) ? $creds_arr->username : '';
+        $password = (isset($creds_arr->password)) ? $creds_arr->password : '';
+        $signature = (isset($creds_arr->signature)) ? $creds_arr->signature : '';
+
+        $message = $html = $transactionReference = '';
+        
+        try{
+            $gateway = Omnipay::create('PayPal_Express');
+            $gateway->setUsername($username);
+            $gateway->setPassword($password);
+            $gateway->setSignature($signature);
+            $gateway->setTestMode(true); //set it to 'false' when go live
+
+            // Send purchase request
+            $response = $gateway->purchase(
+                [
+                    'amount' => $request->input('amount'),
+                    'currency' => 'USD',
+                    // 'card' => $formInputData,
+                    'returnUrl' => url('/payment/paypalSuccess'),
+                    'cancelUrl' => url('/payment/paypalError')
+                ]
+            )->send();
+
+            // dd($response);
+            // exit;
+
+            // Process response
+            if ($response->isSuccessful()) {
+                
+                return response()->json(array('success' => true, 'transactionReference'=>$response->getTransactionReference(), 'msg'=>"Thankyou for your payment"));
+
+            } elseif ($response->isRedirect()) {
+                
+                // Redirect to offsite payment gateway
+                // $response->redirect();
+                return response()->json(array('success' => true, 'redirect_url'=>$response->getRedirectUrl()));
+
+            } else {
+                // Payment failed
+                return response()->json(array('success' => false, 'msg'=>$response->getMessage()));
+            }
+        }
+        catch(\Exception $ex){
+            return response()->json(array('success' => false, 'msg'=>$ex->getMessage()));
+        }
+        
+    }
+
+    public function paypalSuccess(request $request)
+    {
+        $message = $html = '';
+
+        if($request->has(['token', 'PayerID'])){
+            $transaction = $this->paypalGateway->completePurchase(array(
+                'amount' => '0.01',
+                'payer_id'             => $request->input('PayerID'),
+                'transactionReference' => $request->input('token'),
+            ));
+
+            $response = $transaction->send();
+
+            if ($response->isSuccessful())
+            {
+                // The customer has successfully paid.
+                $arr_body = $response->getData();
+                
+                // dd($arr_body);
+                // exit;
+         
+                // Insert transaction data into the database
+         
+                $message = "Payment is successful. Your transaction id is: ". $arr_body['TOKEN'];
+            } else {
+                $message = $response->getMessage();
+            }
+        } else {
+            $message = 'Transaction is declined';
+        }
+
+    }
+
+    public function paypalError(request $request)
+    {
+        $message = $html = '';
+
+        
+        dd($request);
+        exit;
+        
     }
 }

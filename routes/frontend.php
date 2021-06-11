@@ -10,6 +10,15 @@ Route::group(['middleware' => ['domain']], function () {
 		'as' => 'customer.login',
 		'uses' => 'Front\CustomerAuthController@getTestHtmlPage'
 	]);
+	
+	Route::post('payment/stripe', 'Front\CustomerAuthController@stripeCharge')->name('payment.stripe');
+
+	Route::post('payment/paypal', 'Front\CustomerAuthController@paypalCharge')->name('payment.paypal');
+
+	Route::post('payment/paypalSucceess', 'Front\CustomerAuthController@paypalSuccess')->name('payment.paypalSuccess');
+
+	Route::post('payment/paypalError', 'Front\CustomerAuthController@paypalError')->name('payment.paypalError');
+
 	Route::get('user/login', [
 		'as' => 'customer.login',
 		'uses' => 'Front\CustomerAuthController@loginForm'
