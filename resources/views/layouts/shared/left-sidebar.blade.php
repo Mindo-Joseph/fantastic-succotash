@@ -69,6 +69,12 @@
                         <span> Customize </span>
                     </a>
                 </li>
+                <li>   
+                    <a href="{{route('styling.index')}}" >
+                        <span class="icon-customize_icon"></span>
+                        <span> App-Styling </span>
+                    </a>
+                </li>
                 <li>
                     <a href="{{route('configure.index')}}">
                         <span class="icon-configure_icon"></span>

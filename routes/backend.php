@@ -26,6 +26,8 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     Route::post('banner/changeValidity', 'Client\BannerController@validity');
     Route::post('banner/toggle', 'Client\BannerController@toggleAllBanner')->name('banner.toggle');
 
+    Route::get('app-styling', 'Client\AppStylingController@index')->name('styling.index');
+
     Route::resource('category', 'Client\CategoryController');
     Route::post('categoryOrder', 'Client\CategoryController@updateOrder')->name('category.order');
     Route::get('category/delete/{id}', 'Client\CategoryController@destroy');

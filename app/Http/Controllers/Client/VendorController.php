@@ -330,10 +330,9 @@ class VendorController extends BaseController
     }
 
     /**     Activate Category for vendor     */
-    public function activeCategory(Request $request, $domain = '', $vendor_id)
-    {
+    public function activeCategory(Request $request, $domain = '', $vendor_id){
         $product_categories = [];
-        if ($request->has('can_add_category')) {
+        if($request->has('can_add_category')){
             $vendor = Vendor::where('id', $request->vendor_id)->firstOrFail();
             $vendor->add_category = $request->can_add_category == 'true' ? 1 : 0;
             $vendor->save();
