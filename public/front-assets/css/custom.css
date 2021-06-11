@@ -1674,6 +1674,9 @@ label{
     border-radius: 4px;
 }
 
+.brand-logo img.img-fluid {
+    height: 50px;
+}
 
 
 

@@ -387,8 +387,10 @@ hr.style1 {
   padding-top: 30px; }
 
 .border-section {
-  border-top: 1px solid #dddddd;
-  border-bottom: 1px solid #dddddd; }
+  /* border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;  */
+  border:0;
+} 
 
 .border-b {
   border-bottom: 1px solid #38352f; }
@@ -6065,7 +6067,7 @@ footer.footer-theme-color .form-inline .btn {
     Header css start
 ==========================**/
 header {
-  background-color: #ffffff; }
+  background-color: #ffffff;padding: 5px 0; }
   header.header-absolute {
     position: absolute;
     width: 100%;
@@ -6713,8 +6715,7 @@ header {
 
 .onhover-div {
   position: relative;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding: 0;
   font-family: Lato, sans-serif; }
   .onhover-div img,
   .onhover-div i {
@@ -6806,11 +6807,13 @@ header {
       color: #777777;
       font-size: 40px;
       cursor: pointer; }
-
+      .brand-logo img.img-fluid {
+        height: 50px;
+    }
 .top-header {
   background-color: #f8f8f8; }
   .top-header .header-contact {
-    padding: 15px 0; }
+    padding: 5px 0; }
     .top-header .header-contact li {
       color: #999999;
       font-size: 14px;
@@ -6821,7 +6824,7 @@ header {
   .top-header .header-dropdown li {
     cursor: pointer;
     color: #999999;
-    padding: 15px 25px;
+    padding: 5px 25px;
     /* padding-right: 0;  */
   }
     .top-header .header-dropdown li:first-child {
@@ -6963,6 +6966,7 @@ header {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    align-items: center;
     float: right; }
     .main-menu .menu-right .icon-nav {
       display: inline-block; }
@@ -8725,15 +8729,13 @@ header.stickycls {
   color: #393230; }
 
 .pixelstrap a, .pixelstrap a:hover, .pixelstrap a:active {
-  padding-right: 45px;
   color: #222222;
   font-size: 16px;
   font-weight: 400;
   line-height: 23px;
   text-decoration: none;
   text-transform: uppercase;
-  padding-top: 42px;
-  padding-bottom: 42px;
+  padding: 0 15px;
   letter-spacing: 0.07em; }
 
 .pixelstrap a:hover {
@@ -8747,7 +8749,7 @@ header.stickycls {
   top: 50%;
   margin-top: -17px;
   left: auto;
-  right: 15px;
+  right: -4px;
   width: 34px;
   height: 34px;
   overflow: hidden;
