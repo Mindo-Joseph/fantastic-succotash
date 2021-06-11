@@ -78,7 +78,7 @@
                                 @foreach($vendors as $vendor)
                                 <tr data-row-id="{{$vendor->id}}">
                                     <td>
-                                        <a href="{{ route('vendor.show', $vendor->id) }}"><img class="rounded-circle" src="{{$vendor->logo['proxy_url'].'90/90'.$vendor->logo['image_path']}}" alt="{{$vendor->id}}"></a>
+                                        <a class="round_img_box" href="{{ route('vendor.show', $vendor->id) }}"><img class="rounded-circle" src="{{$vendor->logo['proxy_url'].'90/90'.$vendor->logo['image_path']}}" alt="{{$vendor->id}}"></a>
                                     </td>
                                     <td><a href="{{ route('vendor.show', $vendor->id) }}">{{ $vendor->name }}</a> </td>
                                     <td> {{ $vendor->address }}</td>
