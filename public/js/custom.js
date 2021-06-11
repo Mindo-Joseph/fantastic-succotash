@@ -12,28 +12,13 @@ $(document).ready(function() {
             event.preventDefault();
             stripe.createToken(card).then(function(result) {
                 if (result.error) {
-                var errorElement = document.getElementById('card-errors');
-                errorElement.textContent = result.error.message;
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
                 } else {
-                $("#stripe_token").val(result.token.id);
-                var amount = $("input[name='amount']").val();
-                $.ajax({
-                    type: "post",
-                    url: "{{route('payment.stripe')}}",
-                    data: {"_token": "{{ csrf_token() }}", 'stripe_token' : result.token.id, 'amount' : amount},
-                    dataType: 'json',
-                    success: function (resp) {
-                        if(resp.success == 'false'){
-                            alert(resp.msg);
-                        }else{
-                            $('#stripe-payment-form .form_fields').hide();
-                            $('#stripe-payment-form .payment_resp').html('<h3>'+resp.msg+'<h3><h4>Transaction ID : '+resp.transactionReference+'</h4>');
-                        }
-                    },
-                    error: function (resp) {
-                        console.log('data2');
-                    }
-                });
+                    alert(result.token.id);
+                    $("#stripe_token").val(result.token.id);
+                    var amount = $("input[name='amount']").val();
+                
                 }
             });
         });
@@ -68,6 +53,46 @@ $(document).ready(function() {
             }
         });
     }
+    function paymentViaStripe(stripe_token){
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: payment_stripe_url,
+            data: {'stripe_token' : stripe_token ,'amount': 50},
+            success: function (resp) {
+                if(resp.success == 'false'){
+                    alert(resp.msg);
+                }else{
+                    $('#stripe-payment-form .form_fields').hide();
+                    $('#stripe-payment-form .payment_resp').html('<h3>'+resp.msg+'<h3><h4>Transaction ID : '+resp.transactionReference+'</h4>');
+                }
+            }
+        });
+    }
+    function placeOrder(address_id, payment_option_id){
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: place_order_url,
+            data: {address_id:address_id, payment_option_id:payment_option_id },
+            success: function(response) {
+                if (response.status == "Success") {
+
+                }
+            }
+        });
+    }
+    $(document).on("click", ".proceed_to_pay", function() {
+        let stripe_token = $("#stripe_token").val();
+        let address_id = $("input:radio[name='address_id']").is(":checked");
+        let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
+        alert(payment_option_id);
+        if(payment_option_id == 1){
+            placeOrder(address_id, payment_option_id);
+        }else if (payment_option_id == 4){
+            paymentViaStripe(stripe_token);
+        }
+    });
     $(document).on("click","#order_palced_btn",function() {
         $.ajax({
             data: {},

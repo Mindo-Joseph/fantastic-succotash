@@ -197,7 +197,7 @@
 <div class="container" id="cart_main_page">
     @if($cartData)
         @if($cartData->products)
-            <form method="post" action="{{route('user.placeorder')}}" id="placeorder_form">
+            <form method="post" action="" id="placeorder_form">
                 @csrf
                 <div class="card-box">
                     <div class="row">
@@ -326,7 +326,7 @@
                             <a class="btn btn-solid" href="{{ url('/') }}">Continue Shopping</a>
                         </div>
                         <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4 text-md-right">
-                            <button id="order_palced_btn" class="btn btn-solid" type="button" {{$addresses->count() == 0 ? 'disabled': ''}} >Place Order</button>
+                            <button id="order_palced_btn" class="btn btn-solid" type="button" {{$addresses->count() == 0 ? 'disabled': ''}} >Continue</button>
                         </div>
                     </div>
                 </div>
@@ -388,13 +388,13 @@
 </div>
 <script type="text/template" id="payment_method_template">
     <% _.each(payment_options, function(payment_option, k){%>
-        <a class="nav-link <%= k == 0 ? 'show': ''%>" id="v-pills-<%= payment_option.slug %>-tab" data-toggle="pill" href="#v-pills-<%= payment_option.slug %>" role="tab" aria-controls="v-pills-wallet" aria-selected="true"><%= payment_option.title %></a>
+        <a class="nav-link <%= payment_option.slug == 'cash_on_delivery' ? 'active': ''%>" id="v-pills-<%= payment_option.slug %>-tab" data-toggle="pill" href="#v-pills-<%= payment_option.slug %>" role="tab" aria-controls="v-pills-wallet" aria-selected="true" data-payment_option_id="<%= payment_option.id %>"><%= payment_option.title %></a>
     <% }); %>
 </script>
 <script type="text/template" id="payment_method_tab_pane_template">
     <% _.each(payment_options, function(payment_option, k){%>
-        <div class="tab-pane fade <%= k == 0 ? 'active show': ''%>" id="v-pills-<%= payment_option.slug %>" role="tabpanel" aria-labelledby="v-pills-<%= payment_option.slug %>-tab">
-            <form method="POST" action="" id="stripe-payment-form">
+        <div class="tab-pane fade <%= payment_option.slug == 'cash_on_delivery' ? 'active show': ''%>" id="v-pills-<%= payment_option.slug %>" role="tabpanel" aria-labelledby="v-pills-<%= payment_option.slug %>-tab">
+            <form method="POST" id="stripe-payment-form">
                 @csrf
                 @method('POST')
                 <div class="payment_resp" role="alert"></div>
@@ -403,8 +403,7 @@
                         <div class="col-md-12">
                             <div class="row form-group">
                                 <div class="col-sm-8">
-                                    <label for="">Amount</label>
-                                    <input class="form-control" name="amount" type="text" value="0.5">
+                                    <label for="">Amount:</label>
                                 </div>                                                    
                             </div>
                             <% if(payment_option.slug == 'stripe') { %>
@@ -415,7 +414,7 @@
                     <div class="row mt-5">
                         <div class="col-md-12 text-md-right">
                             <button type="button" class="btn btn-solid" data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-solid ml-1 payment_btn">Continue to Pay</button>
+                            <button type="button" class="btn btn-solid ml-1 proceed_to_pay">Place Order</button>
                         </div>
                     </div>
                 </div>
@@ -448,6 +447,8 @@
 </div>
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
+    var place_order_url = "{{route('user.placeorder')}}";
+    var payment_stripe_url = "{{route('payment.stripe')}}";
     var user_store_address_url = "{{route('address.store')}}";
     var promo_code_remove_url = "{{ route('remove.promocode') }}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
