@@ -201,7 +201,7 @@
                             </div>
                         </div>
                     </div>
-                </div
+                </div>
             </div>
         </div>
     </section> 
@@ -249,7 +249,7 @@
                             
                         </div>
                     </div>
-                </div
+                </div>
             </div>
         </div>
     </section> 
@@ -260,12 +260,12 @@
             <div class="modal-content">           
                 <div class="modal-body p-0">
                     <div class="row no-gutters pr-3">
+                        @if ( (isset($active_methods))  && (!empty($active_methods)) )
                         <div class="col-4">
                             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Debit/Credit Card</a>
-                            <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Wallets</a>
-                            <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">loyalty</a>
-                            <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">loyalty</a>
+                            @foreach($active_methods as $key => $method)
+                                <a class="nav-link" id="v-pills-{{strtolower($method->code)}}-tab" data-toggle="pill" href="#v-pills-{{strtolower($method->code)}}" role="tab" aria-controls="v-pills-{{strtolower($method->code)}}" aria-selected="true">{{$method->title}}</a>
+                            @endforeach
                             </div>
                         </div>
                         <div class="col-8">
@@ -275,63 +275,176 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                                 <div class="tab-content h-100" id="v-pills-tabContent">
-                                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <form action="">
-                                                    <div class="row form-group">
-                                                        <div class="col-sm-8">
-                                                            <label for="">Name</label>
-                                                            <input class="form-control" type="text">
-                                                        </div>                                                    
-                                                    </div>
-                                                    <div class="row form-group">
-                                                        <div class="col-sm-4">
-                                                            <label for="">Card Number</label>
-                                                            <input class="form-control" type="text">
-                                                        </div>
-                                                        <div class="col-sm-8">
-                                                            <div class="row align-items-end">
-                                                                <div class="col-6">
-                                                                    <label for="">EXPIRATION DATE</label>
-                                                                    <input class="form-control" type="text">
-                                                                </div>
-                                                                <div class="col-4">
-                                                                    <label for="">CVV</label>
-                                                                    <input class="form-control" type="text">
-                                                                </div>
-                                                                <div class="col-2 pb-1">
-                                                                    <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
-                                                                </div>
-                                                            </div>
-                                                        </div>                                                        
-                                                    </div>
-                                                </form>
-                                            </div>
+                                @foreach($active_methods as $key => $method)
+                                    @if ( (strtolower($method->code) == 'paypal') )
+                                    <div class="tab-pane fade" id="v-pills-paypal" role="tabpanel" aria-labelledby="v-pills-paypal-tab">
+                                        <form method="POST" action="" id="paypal-payment-form">
+                                        @csrf
+                                        @method('POST')
+                                        <div class="row form-group">
+                                            <div class="col-sm-8">
+                                                <label for="">Amount</label>
+                                                <input class="form-control" name="amount" type="text" value="0.5">
+                                            </div>                                                    
                                         </div>
                                         <div class="row mt-5">
                                             <div class="col-md-12 text-md-right">
                                                 <button type="button" class="btn btn-solid" data-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-solid ml-1">Continue to Pay</button>
+                                                <button type="button" class="btn btn-solid ml-1 payment_btn">Continue to Pay</button>
                                             </div>
                                         </div>
+                                        </form>
                                     </div>
-                                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                                       
+                                    @endif
+
+                                    @if ( (strtolower($method->code) == 'stripe') )
+                                    <div class="tab-pane fade" id="v-pills-stripe" role="tabpanel" aria-labelledby="v-pills-stripe-tab">
+                                        <form method="POST" action="" id="stripe-payment-form">
+                                            @csrf
+                                            @method('POST')
+                                            <div class="payment_resp" role="alert"></div>
+                                            <div class="form_fields">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="row form-group">
+                                                            <div class="col-sm-8">
+                                                                <label for="">Amount</label>
+                                                                <input class="form-control" name="amount" type="text" value="0.5">
+                                                            </div>                                                    
+                                                        </div>
+                                                        <div class="form-control">
+                                                        <label class="d-flex flex-row pt-1 pb-1 mb-0">
+                                                        <div id="card-element" style="flex:1; padding:0 15px; background:transparent; font-weight:400; color:#000; outline:none; cursor:text; padding:0;">
+                                                        <!-- A Stripe Element will be inserted here. -->
+                                                        </div>
+                                                        </label>
+                                                        </div>
+                                                        <!--<div class="row form-group">
+                                                            <div class="col-sm-4">
+                                                                <label for="">Card Number</label>
+                                                                <input class="form-control" name="number" type="text">
+                                                            </div>
+                                                            <div class="col-sm-8">
+                                                                <div class="row align-items-end">
+                                                                    <div class="col-6">
+                                                                        <label for="">EXPIRATION DATE</label>
+                                                                        <input class="form-control" name="expiry" type="text">
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <label for="">CVV</label>
+                                                                        <input class="form-control" name="cvv" type="text">
+                                                                    </div>
+                                                                    <div class="col-2 pb-1">
+                                                                        <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>                                                        
+                                                        </div>-->
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-5">
+                                                    <div class="col-md-12 text-md-right">
+                                                        <button type="button" class="btn btn-solid" data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-solid ml-1 payment_btn">Continue to Pay</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
-                                    <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
+                                    @endif
+                                    
+                                    @if ( (strtolower($method->code) == 'cod') )
+                                        <div class="tab-pane fade" id="v-pills-cod" role="tabpanel" aria-labelledby="v-pills-cod-tab">Cash On Delivery</div>
+                                    @endif
+
+                                    @if ( (strtolower($method->code) == 'wallet') )
+                                        <div class="tab-pane fade" id="v-pills-wallet" role="tabpanel" aria-labelledby="v-pills-wallet-tab">Wallet</div>
+                                    @endif
+                                    
+                                    @if ( (strtolower($method->code) == 'loyalty-points') )
+                                        <div class="tab-pane fade" id="v-pills-loyalty-points" role="tabpanel" aria-labelledby="v-pills-loyalty-points-tab">Loyality Points</div>
+                                    @endif
+                                @endforeach
                                 </div>
-                                
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="https://js.stripe.com/v3/"></script>
     <script>
+        var stripe = Stripe('pk_test_51J0nVZSBx0AFwevbSTIDlYAaLjdsg4V4yoHpSo4BCZqGBzzGeU8Mnw1o0spfOYfMtyCXC11wEn6vBqbJeSNnAkw600U6jkzS3R');
+        var elements = stripe.elements();
+        
+        // const token = stripe.tokens.create({
+        //     card: {
+        //         number: '4242424242424242',
+        //         exp_month: 6,
+        //         exp_year: 2022,
+        //         cvc: '314',
+        //     },
+        // });
+        // Custom styling can be passed to options when creating an Element.
+        var style = {
+            base: {
+                // Add your base input styles here. For example:
+                fontSize: '16px',
+                color: '#32325d',
+                borderColor: '#ced4da'
+            },
+        };
+
+        // Create an instance of the card Element.
+        var card = elements.create('card', {hidePostalCode: true, style: style});
+
+        // Add an instance of the card Element into the `card-element` <div>.
+        card.mount('#card-element');
+
+        // Create a token or display an error when the form is submitted.
+        var form = document.getElementById('stripe-payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            stripe.createToken(card).then(function(result) {
+                if (result.error) {
+                // Inform the customer that there was an error.
+                var errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+                } else {
+                // Send the token to your server.
+                // stripeTokenHandler(result.token);
+
+                $("#stripe_token").val(result.token.id);
+                var amount = $("input[name='amount']").val();
+
+                $.ajax({
+                    type: "post",
+                    url: "{{route('payment.stripe')}}",
+                    data: {"_token": "{{ csrf_token() }}", 'stripe_token' : result.token.id, 'amount' : amount},
+                    dataType: 'json',
+                    success: function (resp) {
+                        if(resp.success == 'false'){
+                            alert(resp.msg);
+                        }else{
+                            $('#stripe-payment-form .form_fields').hide();
+                            $('#stripe-payment-form .payment_resp').html('<h3>'+resp.msg+'<h3><h4>Transaction ID : '+resp.transactionReference+'</h4>');
+                        }
+                    },
+                    error: function (resp) {
+                        console.log('data2');
+                    }
+                });
+
+                // form.submit();
+                // console.log(result.token.id);
+                }
+            });
+        });
+
         $('.digit-group').find('input').each(function() {
             $(this).attr('maxlength', 1);
             $(this).on('keyup', function(e) {
@@ -356,6 +469,37 @@
                 }
             });
         });
+
+        $(document).ready(function(){
+            $(document).delegate("#paypal-payment-form .payment_btn", "click", function(){
+                var amount = $("input[name='amount']").val();
+
+                $.ajax({
+                    type: "post",
+                    url: "{{route('payment.paypal')}}",
+                    data: {"_token": "{{ csrf_token() }}", 'amount' : amount},
+                    dataType: 'json',
+                    success: function (resp) {
+                        if(resp.success == 'false'){
+                            alert(resp.msg);
+                        }else{
+
+                            window.location = resp.redirect_url;
+
+                            // $('#paypal-payment-form .form_fields').hide();
+                            // $('#paypal-payment-form .payment_resp').html('<h3>'+resp.msg+'<h3><h4>Transaction ID : '+resp.transactionReference+'</h4>');
+                        }
+                    },
+                    error: function (resp) {
+                        console.log('data2');
+                    }
+                });
+            });
+        });
+
+        function callRoute(route){
+            window.location = route;
+        }
     </script>
 
   

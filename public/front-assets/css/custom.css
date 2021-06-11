@@ -1311,9 +1311,6 @@ h1,h2,h3,h4,h5,h6{
     padding-top: 10px;
 }
 
-
-
-
 /* Order Page Css */
 .order_detail {
     position: relative;
@@ -1626,19 +1623,17 @@ label{
     font-size: 16px;
 }
 
-
-
 /* Payment Popup Css Start From Here */
-#pay-bill .close.top_right {
+#proceed_to_pay_modal .close.top_right {
     right: -50px;
 }
 
-#pay-bill .modal-content {
+#proceed_to_pay_modal .modal-content {
     height: 380px;
     border-radius: 12px;
 }
 
-#v-pills-tab {
+#v_pills_tab {
     height: 380px;
     background: #ff4c3b;
     padding: 50px 0 0 20px;
@@ -1663,7 +1658,6 @@ label{
 .tab-content-box .tab-content {
     padding: 20px 0;
 }
-
 .error_msg {
     width: 100%;
     background-color: #cfe4ca;
@@ -1706,7 +1700,7 @@ label{
     .refferal_modal .modal-dialog {
         max-width: 1000px;
     }
-    #pay-bill .modal-dialog {
+    #proceed_to_pay_modal .modal-dialog {
         max-width: 800px;
     }
 }

@@ -231,13 +231,16 @@ span.inner-div {
 
 .nestable_list_1 span.inner-div {
     position: absolute;
-    right: 16px;
+    right: 5px;
     top: 50%;
     -webkit-transform: translateY(-50%);
     -moz-transform: translateY(-50%);
     transform: translateY(-50%);
 }
 
+.dd-list .dd3-content {
+    padding: 8px 50px 8px 16px;
+}
 .nestable_list_1 > .dd-list {
     padding: 0;
 }
@@ -623,6 +626,17 @@ body .tagsinput .tag {
     }
 }
 
+@media(max-width: 1199px){
+    .ipad-view .col-lg-5.col-xl-4{
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .ipad-view .col-lg-7.col-xl-8{
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
 /*
  *  Scroll Style
  */
@@ -845,10 +859,12 @@ body[data-sidebar-size="condensed"]
 }
 
 #exist_variant_div input {
-    color: #94a0ad;
-    background-color: #3b4651;
-    background-clip: padding-box;
-    border: 1px solid #424e5a;
+   border: 1px solid #ced4da !important;
+   color: #6c757d;
+}
+
+#exist_variant_div input:focus-visible{
+    outline: none !important;
 }
 
 label.file-input.uploadImages img {

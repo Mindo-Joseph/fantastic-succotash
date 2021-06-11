@@ -50,12 +50,12 @@
 
         <div class="row">
 
-            <div class="col-lg-3 col-xl-3">
+            <div class="col-lg-5 col-xl-4">
                 @include('backend.vendor.show-md-3')
 
             </div> <!-- end col-->
 
-            <div class="col-lg-9 col-xl-9">
+            <div class="col-lg-7 col-xl-8">
                 <div class="">
                     <ul class="nav nav-pills navtab-bg nav-justified">
                         <li class="nav-item">

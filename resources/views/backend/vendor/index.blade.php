@@ -43,6 +43,9 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
+                        <button class="btn btn-info waves-effect waves-light text-sm-right openImportModal"
+                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Import
+                            </button>
                             <button class="btn btn-info waves-effect waves-light text-sm-right openAddModal"
                              userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </button>

@@ -1,6 +1,5 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
-<link type="stylesheet" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"></link>
 <style type="text/css">
 .swal2-title {
   margin: 0px;
@@ -189,6 +188,7 @@
         </div>
     <% }); %>
 </script>
+
 <script type="text/template" id="no_promo_code_template">
     <div class="col-12 no-more-coupon text-center">
         <p>No other coupons available.</p>
@@ -197,7 +197,7 @@
 <div class="container" id="cart_main_page">
     @if($cartData)
         @if($cartData->products)
-            <form method="post" action="{{route('user.placeorder')}}" id="placeorder_form">
+            <form method="post" action="" id="placeorder_form">
                 @csrf
                 <div class="card-box">
                     <div class="row">
@@ -326,7 +326,7 @@
                             <a class="btn btn-solid" href="{{ url('/') }}">Continue Shopping</a>
                         </div>
                         <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4 text-md-right">
-                            <button id="order_palced_btn" class="btn btn-solid" type="submit" {{$addresses->count() == 0 ? 'disabled': ''}} >Place Order</button>
+                            <button id="order_palced_btn" class="btn btn-solid" type="button" {{$addresses->count() == 0 ? 'disabled': ''}} >Continue</button>
                         </div>
                     </div>
                 </div>
@@ -386,11 +386,82 @@
     </div>
   </div>
 </div>
+<script type="text/template" id="payment_method_template">
+    <% _.each(payment_options, function(payment_option, k){%>
+        <a class="nav-link <%= payment_option.slug == 'cash_on_delivery' ? 'active': ''%>" id="v-pills-<%= payment_option.slug %>-tab" data-toggle="pill" href="#v-pills-<%= payment_option.slug %>" role="tab" aria-controls="v-pills-wallet" aria-selected="true" data-payment_option_id="<%= payment_option.id %>"><%= payment_option.title %></a>
+    <% }); %>
+</script>
+<script type="text/template" id="payment_method_tab_pane_template">
+    <% _.each(payment_options, function(payment_option, k){%>
+        <div class="tab-pane fade <%= payment_option.slug == 'cash_on_delivery' ? 'active show': ''%>" id="v-pills-<%= payment_option.slug %>" role="tabpanel" aria-labelledby="v-pills-<%= payment_option.slug %>-tab">
+        <% if(payment_option.slug == 'stripe') { %>
+            <form method="POST" id="stripe-payment-form">
+        <% } else if(payment_option.slug == 'paypal') { %>
+            <form method="POST" id="paypal-payment-form">
+        <% } else { %>
+            <form method="POST">
+        <% } %>
+
+            @csrf
+            @method('POST')
+                <div class="payment_resp" role="alert"></div>
+                <div class="form_fields">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row form-group">
+                                <div class="col-sm-8">
+                                    <label for="">Amount:</label>
+                                </div>
+                            </div>
+                            <% if(payment_option.slug == 'stripe') { %>
+                                <div id="stripe-card-element"></div>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-md-12 text-md-right">
+                            <button type="button" class="btn btn-solid" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-solid ml-1 proceed_to_pay">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    <% }); %>
+</script>
+<div class="modal fade" id="proceed_to_pay_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="pay-billLabel">
+   <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+         <div class="modal-body p-0">
+            <div class="row no-gutters pr-3">
+               <div class="col-4">
+                  <div class="nav flex-column nav-pills" id="v_pills_tab" role="tablist" aria-orientation="vertical"></div>
+               </div>
+               <div class="col-8">
+                  <div class="tab-content-box pl-3">
+                     <h5 class="modal-title pt-4" id="pay-billLabel">Total Amount</h5>
+                     <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                     <span aria-hidden="true">×</span>
+                     </button>
+                     <div class="tab-content h-100" id="v_pills_tabContent">
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
+    var place_order_url = "{{route('user.placeorder')}}";
+    var payment_stripe_url = "{{route('payment.stripe')}}";
+    var payment_paypal_url = "{{route('payment.paypal')}}";
     var user_store_address_url = "{{route('address.store')}}";
     var promo_code_remove_url = "{{ route('remove.promocode') }}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
+    var payment_option_list_url = "{{route('payment.option.list')}}";
     var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
     $( document ).ready(function() {
         let address_checked = $("input:radio[name='address_id']").is(":checked");
