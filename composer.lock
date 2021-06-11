@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "584c2f7742f1ddb370717dee3be71986",
+    "content-hash": "9f7f0068b362c99781511bd7f044e130",
     "packages": [
         {
             "name": "99designs/phumbor",
@@ -293,16 +293,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.183.14",
+            "version": "3.184.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "5664b49a3338acb1dac095778f4136bd1e514d7d"
+                "reference": "2450c0568aae59842b5e4cdf50a12c213ed9640e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5664b49a3338acb1dac095778f4136bd1e514d7d",
-                "reference": "5664b49a3338acb1dac095778f4136bd1e514d7d",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2450c0568aae59842b5e4cdf50a12c213ed9640e",
+                "reference": "2450c0568aae59842b5e4cdf50a12c213ed9640e",
                 "shasum": ""
             },
             "require": {
@@ -377,9 +377,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.183.14"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.184.1"
             },
-            "time": "2021-06-07T18:19:21+00:00"
+            "time": "2021-06-10T18:19:17+00:00"
         },
         {
             "name": "awt/apilogger",
@@ -9263,16 +9263,16 @@
         },
         {
             "name": "facade/ignition",
-            "version": "2.10.1",
+            "version": "2.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facade/ignition.git",
-                "reference": "508d80f91de953617977e5666f8953669b6e81f2"
+                "reference": "43688227bbf27c43bc1ad83af224f135b6ef0ff4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facade/ignition/zipball/508d80f91de953617977e5666f8953669b6e81f2",
-                "reference": "508d80f91de953617977e5666f8953669b6e81f2",
+                "url": "https://api.github.com/repos/facade/ignition/zipball/43688227bbf27c43bc1ad83af224f135b6ef0ff4",
+                "reference": "43688227bbf27c43bc1ad83af224f135b6ef0ff4",
                 "shasum": ""
             },
             "require": {
@@ -9336,7 +9336,7 @@
                 "issues": "https://github.com/facade/ignition/issues",
                 "source": "https://github.com/facade/ignition"
             },
-            "time": "2021-06-03T21:41:42+00:00"
+            "time": "2021-06-11T06:57:25+00:00"
         },
         {
             "name": "facade/ignition-contracts",
