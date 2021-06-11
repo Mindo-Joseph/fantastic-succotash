@@ -2,25 +2,31 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Http\Controllers\Front\FrontController;
-use App\Models\Payment;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use Omnipay\Omnipay;
 use Auth;
+use Omnipay\Omnipay;
+use App\Models\Payment;
+use App\Models\PaymentOption;
+use Illuminate\Http\Request;
 use App\Models\{Order, User};
+use App\Http\Traits\ApiResponser;
+use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\Front\FrontController;
 
 
-class PaymentController extends FrontController
-{
+class PaymentController extends FrontController{
+
+    use ApiResponser;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $payments = array();
-        return view('backend/payment/index')->with(['payments' => $payments]);
+        $payment_options = PaymentOption::select('id', 'code', 'title')->where('status', 1)->get();
+        foreach ($payment_options as $payment_option) {
+           $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
+        }
+        return $this->successResponse($payment_options);
     }
 
     /**

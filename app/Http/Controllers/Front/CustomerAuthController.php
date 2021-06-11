@@ -23,9 +23,7 @@ use Omnipay\Common\CreditCard;
 class CustomerAuthController extends FrontController{
 
     public function getTestHtmlPage(){
-
         $active_methods = PaymentOption::select('id', 'code', 'title')->where('status', 1)->get();
-
         return view('test')->with('active_methods', $active_methods);
     }
 
