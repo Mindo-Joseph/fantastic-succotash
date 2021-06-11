@@ -12,6 +12,7 @@ use Image;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Traits\ToasterResponser;
 use App\Http\Traits\ApiResponser;
+use App\Models\UserVendor;
 
 class VendorController extends BaseController
 {
@@ -25,7 +26,14 @@ class VendorController extends BaseController
     public function index()
     {
         $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])
-                  ->where('status', '!=', '2')->orderBy('id', 'desc')->get();
+                  ->where('status', '!=', '2')->orderBy('id', 'desc');
+
+        if (Auth::user()->is_superadmin == 0) {
+                    $vendors = $vendors->whereHas('permissionToUser', function ($query) {
+                        $query->where('user_id', Auth::user()->id);
+                    });
+        }
+        $vendors = $vendors->get();
         return view('backend/vendor/index')->with(['vendors' => $vendors]);
     }
 

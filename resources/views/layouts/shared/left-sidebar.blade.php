@@ -148,7 +148,7 @@
                     </a>
                 </li>
                 @endif
-                @if(in_array('ACL',$allowed) || Auth::user()->is_superadmin == 1) 
+                {{-- @if(in_array('ACL',$allowed) || Auth::user()->is_superadmin == 1) 
                 <li>
                     <a href="{{route('acl.index')}}">
                         <i data-feather="users"></i>
@@ -156,7 +156,7 @@
                     </a>
                 </li>
                 @endif
-                
+                 --}}
                 
                 <li class="menu-title mt-2">Extra</li>
                 @php 

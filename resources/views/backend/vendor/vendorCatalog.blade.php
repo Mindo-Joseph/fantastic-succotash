@@ -98,7 +98,7 @@
                                               <th>Status</th>
                                               <th>New</th>
                                               <th>Featured</th>
-                                              <th>Requires Last Mile Delivery</th>
+                                              <th>Requires Last<br>Mile Delivery</th>
                                               <th>Action</th>
                                             </tr>
                                           </thead>

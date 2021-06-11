@@ -7,7 +7,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Client\BaseController;
-
+use Auth;
 class OrderController extends BaseController{
     /**
      * Display a listing of the resource.
@@ -15,7 +15,15 @@ class OrderController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $orders = Order::with(['vendors','vendors.products', 'address','user'])->orderBy('id', 'DESC')->paginate();
+        $orders = Order::with(['vendors','vendors.products', 'address','user'])->orderBy('id', 'DESC');
+        
+        if (Auth::user()->is_superadmin == 0) {
+            $orders = $orders->whereHas('vendors.vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        
+        $orders = $orders->paginate(10);
         return view('backend.order.index', compact('orders'));
     }
 

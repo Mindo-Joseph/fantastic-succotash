@@ -53,4 +53,8 @@ class Vendor extends Model{
        return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id')
               ->where('status', '!=', 3); 
     }
+
+    public function permissionToUser(){
+      return $this->hasMany('App\Models\UserVendor');
+  }
 }

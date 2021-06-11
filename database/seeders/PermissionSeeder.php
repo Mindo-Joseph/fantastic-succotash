@@ -83,11 +83,6 @@ class PermissionSeeder extends Seeder
                 'id' => 14,
                 'name' => 'CELEBRITY',
                 'slug' => 'celebrity'
-            ),
-            array(
-                'id' => 15,
-                'name' => 'ACL',
-                'slug' => 'acl'
             )
         );
         DB::table('permissions')->insert($type);

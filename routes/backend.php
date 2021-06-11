@@ -67,6 +67,8 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('order/{order_id}/{vendor_id}', 'Client\OrderController@getOrderDetail')->name('order.show.detail');
     Route::resource('customer', 'Client\UserController');
     Route::get('customer/account/{user}/{action}', 'Client\UserController@deleteCustomer')->name('customer.account.action');
+    Route::get('customer/edit/{id}', 'Client\UserController@newEdit')->name('customer.new.edit');
+    Route::put('newUpdate/edit/{id}', 'Client\UserController@newUpdate')->name('customer.new.update');
     Route::post('customer/change/status', 'Client\UserController@changeStatus')->name('customer.changeStatus');
 
     Route::resource('product', 'Client\ProductController');

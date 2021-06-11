@@ -50,6 +50,7 @@
         @endif
     </div>
     <div class="row">
+        @if(Auth::user()->is_superadmin == 1)
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
@@ -128,7 +129,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="company_address" class="control-label">COMPANY ADDRESS</label>
-                                    <input type="text" class="form-control" id="company_address" name="company_address" value="{{ old('company_address', Auth::user()->company_address ?? '')}}" placeholder="Enter company address">
+                                    <input type="text" class="form-control" id="company_address" name="company_address" value="{{ old('company_address', $client->company_address ?? '')}}" placeholder="Enter company address">
                                     @if($errors->has('company_address'))
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $errors->first('company_address') }}</strong>
@@ -139,7 +140,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="company_name" class="control-label">COMPANY NAME</label>
-                                    <input type="text" class="form-control" name="company_name" id="company_name" value="{{ old('company_name', Auth::user()->company_name ?? '')}}" placeholder="Enter company name">
+                                    <input type="text" class="form-control" name="company_name" id="company_name" value="{{ old('company_name', $client->company_name ?? '')}}" placeholder="Enter company name">
                                     @if($errors->has('company_name'))
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $errors->first('company_name') }}</strong>
@@ -177,7 +178,7 @@
                                     @endif
                                     <select class="form-control" id="timezone" name="timezone" value="{{ old('timezone', $client->timezone ?? '')}}" placeholder="Timezone">
                                         @foreach($tzlist as $tz)
-                                        <option value="{{ $tz }}" @if(Auth::user()->timezone == $tz) selected @endif>{{ $tz }}</option>
+                                        <option value="{{ $tz }}" @if($client->timezone == $tz) selected @endif>{{ $tz }}</option>
                                         @endforeach
                                     </select>
                                     <span class="invalid-feedback" role="alert">
@@ -195,6 +196,8 @@
                 </div>
             </div>
         </div>
+        @endif
+        
         <div class="col-md-12">
             <form method="post" action="{{route('client.password.update')}}">
                 @csrf

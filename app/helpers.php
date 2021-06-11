@@ -1,6 +1,7 @@
 <?php
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+
 function changeDateFormate($date,$date_format){
     return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->format($date_format);    
 }
@@ -25,28 +26,3 @@ function convertDateTimeInTimeZone($date, $timezone, $format = 'Y-m-d H:i:s'){
     return $date->format($format);
 }
 
-
-function getDispatchClient($dispatch_domain){
-   // try {
-                       
-                        $postdata =  ['shortCode' => $dispatch_domain->delivery_service_key_code];
-                        $client = new Client(['headers' => ['content-type' => 'application/json']
-                                                        ]);
-                        $url = $dispatch_domain->delivery_service_key_url;                        
-                        $res = $client->post($url.'/api/shortCode',
-                            ['form_params' => ($postdata)]
-                        );
-                       
-                        //$result = file_get_contents($res);
-                        $response = json_decode($res->getBody(), true);
-                        if($response){
-                            return $response['data']['database_name'];
-                        }
-                        
-        // }    
-        // catch(\Exception $e)
-        // {
-        //                      dd($e->getMessage());
-                                    
-        // }                    
-}

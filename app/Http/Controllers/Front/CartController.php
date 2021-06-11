@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Session;
 use Auth;
 use GuzzleHttp\Client;
+use Log;
 class CartController extends FrontController
 {
     private function randomString()
@@ -264,9 +265,8 @@ class CartController extends FrontController
         if($cartData){
             foreach ($cartData as $ven_key => $vendorData) {
                 
-                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0.00;
+                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = $deliver_charge = 0.00;
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
-                    $deliver_charge = 0;
                     $quantity_price = 0;
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
                     $price_in_currency = $prod->pvariant->price / $divider;
@@ -312,8 +312,9 @@ class CartController extends FrontController
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
                     if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1)
-                    {
-                        $deliver_charge = $this->getDeliveryFeeDispatcher($cartData,$vendorData->vendor_id);
+                    {   
+                        Log::info($prod->product);
+                        $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                     }
                     if(empty($deliver_charge))
                     $deliver_charge = 0;
@@ -431,16 +432,14 @@ class CartController extends FrontController
 
 
     # get delivery fee from dispatcher 
-    public function getDeliveryFeeDispatcher($cart_products,$vendor_id){
+    public function getDeliveryFeeDispatcher($vendor_id){
         try {
                  $dispatch_domain = $this->checkIfLastMileOn();
-                
-                if ($dispatch_domain && $dispatch_domain != false && !empty($dispatch_domain->delivery_service_key)) {
-                    //$db = getDispatchClient($dispatch_domain);
+                if ($dispatch_domain && $dispatch_domain != false) {
                     $customer = User::find(Auth::id());
                     $cus_address = UserAddress::where('user_id',Auth::id())->orderBy('is_primary','desc')->first();
                     if($cus_address){
-                     
+                        Log::info($vendor_id);
                         $tasks = array();
                         $vendor_details = Vendor::find($vendor_id);
     
@@ -484,7 +483,7 @@ class CartController extends FrontController
     # check if last mile delivery on 
     public function checkIfLastMileOn(){
         $preference = ClientPreference::first();
-        if($preference->need_delivery_service == 1)
+        if($preference->need_delivery_service == 1 && !empty($preference->delivery_service_key) && !empty($preference->delivery_service_key_code) && !empty($preference->delivery_service_key_url))
             return $preference;
         else
             return false;
