@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "90f6b75f53f7a1b1bb46b92b0c0859f0",
+=======
+    "content-hash": "9f7f0068b362c99781511bd7f044e130",
+>>>>>>> e0157464fe6b24f59ab50074357ce299a9c3020c
     "packages": [
         {
             "name": "99designs/phumbor",
