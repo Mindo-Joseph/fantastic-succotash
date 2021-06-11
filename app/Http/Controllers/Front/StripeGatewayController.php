@@ -36,12 +36,12 @@ class StripeGatewayController extends Controller{
                 return $this->successResponse(['status' => 'success', 'response' => $response->getData()]);
             } elseif ($response->isRedirect()) {
                 return $this->errorResponse(['status' => 'error', 'response' => $response->getRedirectUrl()], 400);
-                return response()->json();
+                // return response()->json();
             } else {
                 return $this->errorResponse(['status' => 'error', 'message'=>$response->getMessage()], 400);
             }
         }catch(\Exception $ex){
-            return $this->errorResponse($e->getMessage(), $e->getCode());
+            return $this->errorResponse($ex->getMessage(), $ex->getCode());
         }
     }
 

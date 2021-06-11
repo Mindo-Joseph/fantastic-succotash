@@ -295,13 +295,10 @@ class CustomerAuthController extends FrontController{
                     'amount' => $request->input('amount'),
                     'currency' => 'USD',
                     // 'card' => $formInputData,
-                    'returnUrl' => url('/payment/paypalSuccess'),
+                    'returnUrl' => url('/payment/paypalSuccess?amount='.$request->input('amount')),
                     'cancelUrl' => url('/payment/paypalError')
                 ]
             )->send();
-
-            // dd($response);
-            // exit;
 
             // Process response
             if ($response->isSuccessful()) {
@@ -330,7 +327,13 @@ class CustomerAuthController extends FrontController{
         $message = $html = '';
 
         if($request->has(['token', 'PayerID'])){
-            $transaction = $this->paypalGateway->completePurchase(array(
+            $gateway = Omnipay::create('PayPal_Express');
+            $gateway->setUsername('sb-r6ryi6463363_api1.business.example.com');
+            $gateway->setPassword('2WT35LCJ73SYWLMD');
+            $gateway->setSignature('Ai9cuHQXupERagE016AbIPpQXy9fAgblu9y2ZXrzYkt1e0GUY.EPoJBl');
+            $gateway->setTestMode(true); //set it to 'false' when go live
+
+            $transaction = $gateway->completePurchase(array(
                 'amount' => '0.01',
                 'payer_id'             => $request->input('PayerID'),
                 'transactionReference' => $request->input('token'),

@@ -46,7 +46,7 @@ $(document).ready(function() {
             type: "POST",
             dataType: 'json',
             url: payment_stripe_url,
-            data: {'stripe_token' : stripe_token ,'amount': 0.5},
+            data: {'stripe_token' : stripe_token ,'amount': 0.25},
             success: function (resp) {
                 if(resp.status == 'Success'){
                     placeOrder(address_id, payment_option_id);
@@ -60,11 +60,11 @@ $(document).ready(function() {
             dataType: 'json',
             url: payment_paypal_url,
             data: {'amount': 0.5},
-            success: function (resp) {
-                if(resp.success == 'false'){
-                    alert(resp.msg);
+            success: function (response) {
+                if(response.status == "Success"){
+                    window.location.href = response.data.response;
                 }else{
-                    window.location = resp.redirect_url;
+                    alert(response.message);
                 }
             }
         });
