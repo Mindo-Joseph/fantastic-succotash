@@ -96,6 +96,7 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     // Route::get('stripe/showForm', 'Client\PaymentController@showForm')->name('stripe.form');
     // Route::post('stripe/make', 'Client\PaymentController@makePayment')->name('stripe.makePayment');
     Route::resource('payoption', 'Client\PaymentOptionController');
+    Route::post('updateAll', 'Client\PaymentOptionController@updateAll')->name('payoption.updateAll');
 });
 
 
