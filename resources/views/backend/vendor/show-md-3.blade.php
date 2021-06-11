@@ -310,7 +310,14 @@
             data: {category_id: category_id, status:status, vendor_id:vendor_id},
             success: function(response) {
                 if (response.status == 'Success') {
-
+                    $('#category_list').html('');
+                   $('#category_list').html('<option value="">Select Category...</option>');
+                   $('#category_list').selectize()[0].selectize.destroy();
+                   $.each(response.data, function (key, value) {
+                        if(value.category.type_id == 1){
+                           $('#category_list').append('<option value='+value.category_id+'>'+value.category.slug+'</option>');
+                        }
+                   });
                 }
             }
         });

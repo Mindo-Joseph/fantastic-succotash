@@ -1,4 +1,28 @@
 $(document).ready(function() {
+    function stripeInitialize(){
+        var stripe = Stripe('pk_test_51J0nVZSBx0AFwevbSTIDlYAaLjdsg4V4yoHpSo4BCZqGBzzGeU8Mnw1o0spfOYfMtyCXC11wEn6vBqbJeSNnAkw600U6jkzS3R');
+        var elements = stripe.elements();
+        var style = {
+            base: {fontSize: '16px',color: '#32325d',borderColor: '#ced4da'},
+        };
+        var card = elements.create('card', {style: style});
+        card.mount('#stripe-card-element');
+        var form = document.getElementById('stripe-payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            stripe.createToken(card).then(function(result) {
+                if (result.error) {
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    alert(result.token.id);
+                    $("#stripe_token").val(result.token.id);
+                    var amount = $("input[name='amount']").val();
+                
+                }
+            });
+        });
+    }
     function productRemove(cartproduct_id, vendor_id){
         $.ajax({
             type: "POST",
@@ -29,6 +53,66 @@ $(document).ready(function() {
             }
         });
     }
+    function paymentViaStripe(stripe_token){
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: payment_stripe_url,
+            data: {'stripe_token' : stripe_token ,'amount': 50},
+            success: function (resp) {
+                if(resp.success == 'false'){
+                    alert(resp.msg);
+                }else{
+                    $('#stripe-payment-form .form_fields').hide();
+                    $('#stripe-payment-form .payment_resp').html('<h3>'+resp.msg+'<h3><h4>Transaction ID : '+resp.transactionReference+'</h4>');
+                }
+            }
+        });
+    }
+    function placeOrder(address_id, payment_option_id){
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: place_order_url,
+            data: {address_id:address_id, payment_option_id:payment_option_id },
+            success: function(response) {
+                if (response.status == "Success") {
+
+                }
+            }
+        });
+    }
+    $(document).on("click", ".proceed_to_pay", function() {
+        let stripe_token = $("#stripe_token").val();
+        let address_id = $("input:radio[name='address_id']").is(":checked");
+        let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
+        alert(payment_option_id);
+        if(payment_option_id == 1){
+            placeOrder(address_id, payment_option_id);
+        }else if (payment_option_id == 4){
+            paymentViaStripe(stripe_token);
+        }
+    });
+    $(document).on("click","#order_palced_btn",function() {
+        $.ajax({
+            data: {},
+            type: "POST",
+            dataType: 'json',
+            url: payment_option_list_url,
+            success: function(response) {
+                if (response.status == "Success") {
+                    $('#v_pills_tab').html('');
+                    $('#v_pills_tabContent').html('');
+                    let payment_method_template = _.template($('#payment_method_template').html());
+                    $("#v_pills_tab").append(payment_method_template({payment_options: response.data}));
+                    let payment_method_tab_pane_template = _.template($('#payment_method_tab_pane_template').html());
+                    $("#v_pills_tabContent").append(payment_method_tab_pane_template({payment_options: response.data}));
+                    $('#proceed_to_pay_modal').modal('show');
+                    stripeInitialize();
+                }
+            }
+        });
+    });
     $(document).on("click",".remove_promo_code_btn",function() {
         let cart_id = $(this).data('cart_id');
         let coupon_id = $(this).data('coupon_id');
@@ -110,12 +194,17 @@ $(document).ready(function() {
         $('#remove_item_modal').modal('hide');
         productRemove(cartproduct_id, vendor_id);
     });
+    function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
     function initialize() {
       var input = document.getElementById('address');
       var autocomplete = new google.maps.places.Autocomplete(input);
       google.maps.event.addListener(autocomplete, 'place_changed', function () {
         var place = autocomplete.getPlace();
         document.getElementById('city').value = place.name;
+        document.getElementById('longitude').value = place.geometry.location.lng()
+        document.getElementById('latitude').value = place.geometry.location.lat()
         for(let i=1; i < place.address_components.length; i++){
             let mapAddress = place.address_components[i];
             if(mapAddress.long_name !=''){
@@ -124,6 +213,15 @@ $(document).ready(function() {
                 }
                 if(mapAddress.types[0] =="postal_code"){
                     document.getElementById('pincode').value = mapAddress.long_name;
+                }
+                if(mapAddress.types[0] == "country"){
+                    var country = document.getElementById('country');
+                    for (let i = 0; i < country.options.length; i++) {
+                        if (country.options[i].text == mapAddress.long_name.toUpperCase()) {
+                            country.value = i;
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -223,6 +321,8 @@ $(document).ready(function() {
         let country = $('#add_new_address_form #country').val();
         let pincode = $('#add_new_address_form #pincode').val();
         let type = $("input[name='address_type']:checked").val();
+        let latitude = $('#add_new_address_form #latitude').val();
+        let longitude = $('#add_new_address_form #longitude').val();
         $.ajax({
             type: "post",
             dataType: "json",
@@ -234,6 +334,8 @@ $(document).ready(function() {
                 "address": address,
                 "country": country,
                 "pincode": pincode,
+                "latitude": latitude,
+                "longitude": longitude,
             },
             success: function(response) {
                 $('#add_new_address_form').hide();

@@ -31,10 +31,20 @@ class OrderController extends FrontController{
         try {
            DB::beginTransaction();
             $user = Auth::user();
+            $loyalty_amount_saved = '';
+            $redeem_points_per_primary_currency = '';
+            $loyalty_card = LoyaltyCard::where('status', '0')->first();
+            if($loyalty_card){
+                $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
+            }
             $currency_id = Session::get('customerCurrency');
             $language_id = Session::get('customerLanguage');
             $cart = Cart::where('user_id', $user->id)->first();
-            $order_loyalty_points_earned = Order::where('user_id', $user->id)->sum('loyalty_points_earned');
+            $order_loyalty_points_earned_detail = Order::where('user_id', $user->id)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
+            if($order_loyalty_points_earned_detail){
+                $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
+                $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
+            }
             $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
             $order = new Order;
             $order->user_id = $user->id;
@@ -128,15 +138,24 @@ class OrderController extends FrontController{
                 $OrderVendor->discount_amount= $vendor_discount_amount;
                 $OrderVendor->save();
             }
+            $loyalty_points_earned = LoyaltyCard::getLoyaltyPoint($loyalty_points_used, $payable_amount);
             $order->total_amount = $total_amount;
             $order->total_discount = $total_discount;
             $order->taxable_amount = $taxable_amount;
-            $order->payable_amount = $payable_amount - $total_discount;
-            $order->loyalty_points_earned = LoyaltyCard::getLoyaltyPoint($order_loyalty_points_earned);
+            if($loyalty_amount_saved > 0){
+                if($payable_amount < $loyalty_amount_saved){
+                    $loyalty_amount_saved =  $payable_amount;
+                    $loyalty_points_used = $payable_amount * $redeem_points_per_primary_currency;
+                }
+            }
+            $order->loyalty_points_used = $loyalty_points_used;
+            $order->loyalty_amount_saved = $loyalty_amount_saved;
+            $order->payable_amount = $payable_amount - $total_discount - $loyalty_amount_saved;
+            $order->loyalty_points_earned = $loyalty_points_earned;
             $order->save();
-            CartProduct::where('cart_id', $cart->id)->delete();
-            CartCoupon::where('cart_id', $cart->id)->delete();
             CartAddon::where('cart_id', $cart->id)->delete();
+            CartCoupon::where('cart_id', $cart->id)->delete();
+            CartProduct::where('cart_id', $cart->id)->delete();
             DB::commit();
             return $order; 
         } catch (Exception $e) {

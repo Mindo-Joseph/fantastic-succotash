@@ -61,36 +61,34 @@
 <section class="login-page section-b-space">
     <div class="container">
         <div class="row">
-            <h3>Send Refferal</h3>
-            <div class="col-lg-12">
+            <div class="offset-lg-3 col-lg-6">
                 <div class="dashboard-right">
+                    <h3>Send Refferal</h3>
                     <div class="dashboard">
-                        <div class="welcome-msg">
-                            <h5>Hello, {{ucwords(Auth::user()->name)}} !</h5>
-                            <!-- <p>To enjoy shopping from our website, Please verify below information. So you will not face any interruption in future.</p> -->
-                        </div>
-                        <div class="box-account box-info">
-                            <div class="box-head">
-                                <h2>Enter email address</h2>
+                        <div class="card-box">
+                            <div class="welcome-msg">
+                                <h5>Hello, {{ucwords(Auth::user()->name)}} !</h5>
+                                <!-- <p>To enjoy shopping from our website, Please verify below information. So you will not face any interruption in future.</p> -->
                             </div>
-
-                            <!-- <form name="register" id="register" action="{{route('customer.register')}}" class="theme-form" method="post"> @csrf -->
-                            <form id="sendEmail" class="theme-form">@csrf
-                                <div class="form-row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="email"></label>
-                                        <input type="text" class="form-control" id="email" placeholder="Email" name="email" required="" value="{{ old('email')}}">
-                                        @if($errors->first('email'))
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $errors->first('email') }}</strong>
-                                        </span>
-                                        @endif
+                            <div class="box-account box-info">
+                                <!-- <form name="register" id="register" action="{{route('customer.register')}}" class="theme-form" method="post"> @csrf -->
+                                <form id="sendEmail" class="theme-form">@csrf
+                                    <div class="form-row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="email">Enter email address</label>
+                                            <input type="text" class="form-control" id="email" placeholder="Email" name="email" required="" value="{{ old('email')}}">
+                                            @if($errors->first('email'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $errors->first('email') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-solid mt-3">Create Account</button>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                    </div>
-                                    <button type="submit" class="btn btn-solid mt-3">Create Account</button>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -4,13 +4,12 @@ use App\Http\Controllers\Front\SearchController;
 
 Route::get('admin/login', function () {
     return view('auth/login');
-})->name('admin.login');
+})->name('admin.login')->middleware('domain');
 
 Route::post('admin/login/client', 'Auth\LoginController@clientLogin')->name('client.login');
 Route::get('admin/wrong/url', 'Auth\LoginController@wrongurl')->name('wrong.client');
 
 Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'], function () {
-    //Route::middleware('auth')->group(function () {
 
     Route::post('/logout', 'Auth\LoginController@logout')->name('client.logout');
     Route::get('profile', 'Client\DashBoardController@profile')->name('client.profile');
@@ -22,7 +21,6 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     Route::get('customize', 'Client\ClientPreferenceController@customize')->name('configure.customize');
     Route::post('configUpdate/{code}', 'Client\ClientPreferenceController@update')->name('configure.update');
     Route::post('updateDomain/{code}', 'Client\ClientPreferenceController@updateDomain')->name('client.updateDomain');
-    //Route::post('configUpdate/{code}','Client\ClientPreferenceController@upDateConfig')->name('configure.index');
     Route::resource('banner', 'Client\BannerController');
     Route::post('banner/saveOrder', 'Client\BannerController@saveOrder');
     Route::post('banner/changeValidity', 'Client\BannerController@validity');
@@ -100,10 +98,10 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     Route::post('updateRefferto', 'Client\ReferAndEarnController@updateRefferto')->name('referandearn.reffered_to_amount');
 
     Route::resource('promocode', 'Client\PromocodeController');
-
     // Route::get('stripe/showForm', 'Client\PaymentController@showForm')->name('stripe.form');
     // Route::post('stripe/make', 'Client\PaymentController@makePayment')->name('stripe.makePayment');
     Route::resource('payoption', 'Client\PaymentOptionController');
+    Route::post('updateAll', 'Client\PaymentOptionController@updateAll')->name('payoption.updateAll');
 });
 
 

@@ -18,6 +18,8 @@ function generateOrderNo($length = 8){
     } while (!empty(\DB::table('orders')->where('order_number', $number)->first(['order_number'])) );
     return $number;
 }
-function convertDateTimeInTimeZone($date, $timezone){
-    return Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone($timezone);
+function convertDateTimeInTimeZone($date, $timezone, $format = 'Y-m-d H:i:s'){
+    $date = Carbon::parse($date, 'UTC');
+    $date->setTimezone($timezone);
+    return $date->format($format);
 }

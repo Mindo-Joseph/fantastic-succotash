@@ -2,7 +2,6 @@
 
 @section('css')
 <link href="{{asset('assets/libs/fullcalendar-list/fullcalendar-list.min.css')}}" rel="stylesheet" type="text/css" />
-
 <style type="text/css">
     .pac-container,
     .pac-container .pac-item {
@@ -162,8 +161,8 @@
                             </div>
                         </div>
                     </div>
-                </div> <!-- end tab-content -->
-            </div> <!-- end card-box-->
+                </div>
+            </div> 
         </div>
     </div>
 </div>
@@ -275,6 +274,23 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                        <div class="col-12">
+                          <div class="form-group" id="categoryInput">
+                            {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
+                            <select class="form-control selectizeInput" id="category_list" name="category[]">
+                                <option value="">Select Category...</option>
+                                @foreach($product_categories as $product_category)
+                                    @if($product_category->category)
+                                      @if($product_category->category->type_id == 1)
+                                        <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
+                                      @endif
+                                    @endif
+                                @endforeach
+                            </select>
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                          </div>
                         </div>
                     </div>
                 </div>

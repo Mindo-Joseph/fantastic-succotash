@@ -115,8 +115,29 @@
 
                         <div class="box-account box-info">
 
-                            <div class="outer-box">
+                            <div class="card-box">
                                 <form>
+                                    <div class="row mb-3">
+                                        <div class="col-12 d-flex align-items-center">
+                                            <div class='file file--upload'>
+                                                <label for='input-file'>
+                                                    <span class="update_pic">
+                                                        <img src="{{asset('assets/images/products/product-1.png')}}" alt=""
+                                                            id="output">
+                                                    </span>
+                                                    <span class="plus_icon"><i class="fa fa-camera"
+                                                            aria-hidden="true"></i></span>
+                                                </label>
+                                                <input id='input-file' type='file' name="profile_image" accept="image/*"
+                                                    onchange="loadFile(event)" />
+                                            </div>
+                                            <div class="name_location">
+                                                <h5 class="mt-0 mb-1">CM Azad</h5>
+                                                <p class="m-0"><i class="fa fa-map-marker mr-1" aria-hidden="true"></i>
+                                                    Chandigarh</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <label for="">Your Name</label>
                                         <input type="text" class="form-control" id="" aria-describedby="">
@@ -137,27 +158,7 @@
                                 <h2>Account Information</h2>
                             </div> -->
 
-                            <div class="row">
-                                <div class="col-12 d-flex align-items-center">
-                                    <div class='file file--upload'>
-                                        <label for='input-file'>
-                                            <span class="update_pic">
-                                                <img src="{{asset('assets/images/products/product-1.png')}}" alt=""
-                                                    id="output">
-                                            </span>
-                                            <span class="plus_icon"><i class="fa fa-camera"
-                                                    aria-hidden="true"></i></span>
-                                        </label>
-                                        <input id='input-file' type='file' name="profile_image" accept="image/*"
-                                            onchange="loadFile(event)" />
-                                    </div>
-                                    <div class="name_location">
-                                        <h5 class="mt-0 mb-1">CM Azad</h5>
-                                        <p class="m-0"><i class="fa fa-map-marker mr-1" aria-hidden="true"></i>
-                                            Chandigarh</p>
-                                    </div>
-                                </div>
-                            </div>
+                            
 
                             <!-- <div class="row">
                                 <div class="col-sm-6">

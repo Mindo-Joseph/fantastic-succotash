@@ -28,19 +28,20 @@
                         <div class="col-sm-8">
                             <div class="text-sm-left">
                                 @if (\Session::has('success'))
-                                <div class="alert alert-success">
-                                    <span>{!! \Session::get('success') !!}</span>
-                                </div>
+                                    <div class="alert alert-success">
+                                        <span>{!! \Session::get('success') !!}</span>
+                                    </div>
                                 @endif
                                 @if (\Session::has('error_delete'))
-                                <div class="alert alert-danger">
-                                    <span>{!! \Session::get('error_delete') !!}</span>
-                                </div>
+                                    <div class="alert alert-danger">
+                                        <span>{!! \Session::get('error_delete') !!}</span>
+                                    </div>
                                 @endif
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                        <button class="btn btn-info waves-effect waves-light text-sm-right"
+                            <input type="checkbox" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1">
+                            <button class="btn btn-info waves-effect waves-light text-sm-right"
                               data-toggle="modal" data-target=".redeemPoint"><i class="mdi mdi-plus-circle mr-1"></i> Change Redeem Point
                             </button>
                             <button class="btn btn-info waves-effect waves-light text-sm-right"
@@ -48,7 +49,6 @@
                             </button>
                         </div>
                     </div>
-
                     <div class="table-responsive">
                         <form name="saveOrder" id="saveOrder"> @csrf </form>
                         <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
