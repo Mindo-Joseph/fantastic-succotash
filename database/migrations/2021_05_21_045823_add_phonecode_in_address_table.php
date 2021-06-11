@@ -14,9 +14,9 @@ class AddPhonecodeInAddressTable extends Migration
     public function up()
     {
         Schema::table('user_addresses', function (Blueprint $table) {
-            if (Schema::hasColumn('user_addresses', 'country_id')) {
-                $table->dropColumn('country_id');
-            }
+            // if (Schema::hasColumn('user_addresses', 'country_id')) {
+            //     $table->dropColumn('country_id');
+            // }
         });
 
         Schema::table('user_addresses', function (Blueprint $table) {

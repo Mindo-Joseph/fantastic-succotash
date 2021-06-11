@@ -11,6 +11,15 @@
         loadMap(autocompletesWraps);
     });
 
+    $('.openImportModal').click(function(){
+        $('#import-form').modal({
+            //backdrop: 'static',
+            keyboard: false
+        });
+        //runPicker();
+        $('.dropify').dropify();
+    });
+
     function runPicker(){
         $('.datetime-datepicker').flatpickr({
             enableTime: true,
