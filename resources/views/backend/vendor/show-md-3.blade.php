@@ -129,9 +129,6 @@
                     </div>
                     <div class="col-md-12 mb-3">
                         {!! Form::label('title', 'Vendor Category',['class' => 'control-label']) !!}
-                        <div class="custom-dd dd nestable_list_1" id="nestable_list_1" >
-                            <!-- <?php print_r($categoryToggle); ?> -->
-                        </div>
                         <div class="custom-dd dd nestable_list_1" id="nestable_list_1">
                             <ol class="dd-list">
                                 @forelse($builds as $build)
@@ -313,7 +310,14 @@
             data: {category_id: category_id, status:status, vendor_id:vendor_id},
             success: function(response) {
                 if (response.status == 'Success') {
-
+                    $('#category_list').html('');
+                   $('#category_list').html('<option value="">Select Category...</option>');
+                   $('#category_list').selectize()[0].selectize.destroy();
+                   $.each(response.data, function (key, value) {
+                        if(value.category.type_id == 1){
+                           $('#category_list').append('<option value='+value.category_id+'>'+value.category.slug+'</option>');
+                        }
+                   });
                 }
             }
         });

@@ -111,15 +111,16 @@
                                         <th>Total</th>
                                     </tr>
                                 </thead>
+                                @foreach($order->vendors as $vendor)
                                 <tbody>
                                     @php
-                                        $product_total_count = 0;
+                                        $sub_total = 0;
                                         $taxable_amount = 0;
                                     @endphp
-                                    @foreach($order->products as $product)
+                                    @foreach($vendor->products as $product)
                                     @php
-                                        $product_total_count += $product->quantity * $product->price;
                                         $taxable_amount += $product->taxable_amount;
+                                        $sub_total += $product->quantity * $product->price;
                                     @endphp
                                     <tr>
                                         <th scope="row">{{$product->product_name}}</th>
@@ -127,27 +128,28 @@
                                             <img src="{{$product->image['proxy_url'].'32/32'.$product->image['image_path']}}" alt="product-img" height="32">
                                         </td>
                                         <td>{{ $product->quantity }}</td>
-                                        <td>${{ $product->price }}</td>
-                                        <td>${{ $product->quantity * $product->price}}</td>
+                                        <td>$@money($product->price)</td>
+                                        <td>$@money($product->quantity * $product->price)</td>
                                     </tr>
                                     @endforeach
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Sub Total :</th>
-                                        <td><div class="fw-bold">${{$product_total_count}}</div></td>
+                                        <td><div class="fw-bold">$@money($sub_total)</div></td>
                                     </tr>
-                                   <!--  <tr>
-                                        <th scope="row" colspan="4" class="text-end">Shipping Charge :</th>
-                                        <td>$24</td>
-                                    </tr> -->
+                                    <tr>
+                                        <th scope="row" colspan="4" class="text-end">Total Discount :</th>
+                                        <td>$@money($vendor->discount_amount)</td>
+                                    </tr>
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Estimated Tax :</th>
-                                        <td>${{$taxable_amount}}</td>
+                                        <td>$@money($taxable_amount)</td>
                                     </tr>
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Total :</th>
-                                        <td><div class="fw-bold">${{$product_total_count + $taxable_amount}}</div></td>
+                                        <td><div class="fw-bold">$@money($vendor->payable_amount)</div></td>
                                     </tr>
                                 </tbody>
+                                @endforeach
                             </table>
                         </div>
                     </div>
@@ -160,7 +162,7 @@
                     <div class="card-body">
                         <h4 class="header-title mb-3">Shipping Information</h4>
                         <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
-                        <p class="mb-2"><span class="fw-semibold me-2">Address:</span> {{ $order->address->address}}</p>
+                        <p class="mb-2"><span class="fw-semibold me-2">Address:</span> {{ $order->address ? $order->address->address : ''}}</p>
                         <p class="mb-0"><span class="fw-semibold me-2">Mobile:</span> {{$order->user->phone_number}}</p>
                     </div>
                 </div>

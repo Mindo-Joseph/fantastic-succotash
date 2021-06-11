@@ -29,8 +29,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('newsLetter', 'Api\v1\ProfileController@newsLetter');
         Route::post('place/order', 'Api\v1\OrderController@postPlaceOrder');
         Route::post('update/image', 'Api\v1\ProfileController@updateAvatar');
-        Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::post('user/getAddress', 'Api\v1\ProfileController@getAddress');
+        Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');
         Route::post('changePassword', 'Api\v1\ProfileController@changePassword');
         Route::get('addressBook/{id?}', 'Api\v1\AddressController@getAddressList');

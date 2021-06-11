@@ -1,5 +1,4 @@
 @extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Customers'])
-
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
@@ -25,11 +24,7 @@
 @endsection
 
 @section('content')
-
-<!-- Start Content-->
 <div class="container-fluid">
-
-    <!-- start page title -->
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
@@ -37,7 +32,6 @@
             </div>
         </div>
     </div>
-    <!-- end page title -->
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -63,7 +57,6 @@
                             </button>
                         </div>
                     </div>
-
                     <div class="table-responsive">
                         <form name="saveOrder" id="saveOrder"> @csrf </form>
                         <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
@@ -143,44 +136,22 @@
                     <div class="pagination pagination-rounded justify-content-end mb-0">
                         {{-- $users->links() --}}
                     </div>
-                </div> <!-- end card-body-->
-            </div> <!-- end card-->
-        </div> <!-- end col -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
 @include('backend.users.modals')
 @endsection
-
 @section('script')
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
 <script type="text/javascript">
     var input = document.querySelector("#phone");
     window.intlTelInput(input, {
         separateDialCode: true,
-        //allowDropdown: true,
-        //autoHideDialCode: true,
-      // autoPlaceholder: "off",
-      // dropdownContainer: document.body,
-      // excludeCountries: ["us"],
-      // formatOnDisplay: false,
-      // geoIpLookup: function(callback) {
-      //   $.get("http://ipinfo.io", function() {}, "jsonp").always(function(resp) {
-      //     var countryCode = (resp && resp.country) ? resp.country : "";
-      //     callback(countryCode);
-      //   });
-      // },
         hiddenInput: "contact",
-        //initialCountry: "auto",
-      // localizedCountries: { 'de': 'Deutschland' },
-        //nationalMode: false,
-      // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
-        //placeholderNumberType: "MOBILE",
-      // preferredCountries: ['cn', 'jp'],
-        //separateDialCode: true,
-      utilsScript: "{{asset('assets/js/utils.js')}}",
+        utilsScript: "{{asset('assets/js/utils.js')}}",
     });
-
     $(document).ready(function () {
         $("#phone").keypress(function (e) {
             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
@@ -189,12 +160,10 @@
             return true;
         });
     });
-
     $('.iti__country').click(function(){
         var code = $(this).attr('data-country-code');
         document.getElementById('addCountryData').value = code;
     })
 </script>
 @include('backend.users.pagescript')
-
 @endsection

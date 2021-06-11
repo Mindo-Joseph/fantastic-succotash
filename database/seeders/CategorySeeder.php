@@ -289,7 +289,5 @@ class CategorySeeder extends Seeder
             ),
         );
         \DB::table('category_translations')->insert($translati);
-
-        
     }
 }

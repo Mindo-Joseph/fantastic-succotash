@@ -79,7 +79,7 @@ class BrandController extends FrontController
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
 
-        return view('forntend/brand-products')->with(['brand' => $brand, 'products' => $products, 'newProducts' => $newProducts, 'navCategories' => $navCategories, 'variantSets' => $variantSets]);
+        return view('frontend.brand-products')->with(['brand' => $brand, 'products' => $products, 'newProducts' => $newProducts, 'navCategories' => $navCategories, 'variantSets' => $variantSets]);
     }
 
     /**
@@ -173,7 +173,7 @@ class BrandController extends FrontController
         }
         $listData = $products;
 
-        $returnHTML = view('forntend.ajax.productList')->with(['listData' => $listData])->render();
+        $returnHTML = view('frontend.ajax.productList')->with(['listData' => $listData])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 

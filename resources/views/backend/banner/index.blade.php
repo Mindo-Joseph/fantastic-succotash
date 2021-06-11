@@ -63,7 +63,6 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                             </thead>
                             <tbody id="post_list">
                                 @foreach($banners as $ban)
-
                                 <tr data-row-id="{{$ban->id}}">
                                     <td class="draggableTd"><span class="dragula-handle"></span></td>
                                     <td class="banner_wrapper"> 

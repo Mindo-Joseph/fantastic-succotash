@@ -15,7 +15,7 @@ class OrderController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $orders = Order::with(['products', 'address','user'])->orderBy('id', 'DESC')->paginate();
+        $orders = Order::with(['vendors','vendors.products', 'address','user'])->orderBy('id', 'DESC')->paginate();
         return view('backend.order.index', compact('orders'));
     }
 
@@ -27,7 +27,11 @@ class OrderController extends BaseController{
      */
 
     public function getOrderDetail($domain = '', $order_id, $vendor_id){
-        $order = Order::with(array('products' => function($query) use ($vendor_id){
+        $order = Order::with(array(
+                'vendors' => function($query) use ($vendor_id){
+                    $query->where('vendor_id', $vendor_id);
+                },
+                'vendors.products' => function($query) use ($vendor_id){
                     $query->where('vendor_id', $vendor_id);
                 }))->findOrFail($order_id);
         return view('backend.order.view', compact('order'));

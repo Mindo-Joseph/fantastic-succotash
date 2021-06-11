@@ -9,20 +9,21 @@ class PaymentOptionSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    { 
-        \DB::table('payment_options')->delete();
- 
+    public function run(){ 
+
+      \DB::table('payment_options')->truncate();
       $opt = array(
         array('id' => '1','code' => 'wallet','path' => '','title' => 'Wallet','status' => '1'),
-        array('id' => '2','code' => 'loyalty-points','path' => '','title' => 'loyalty Points','status' => '1'),
-        array('id' => '3','code' => 'COD','path' => '','title' => 'Cash On Delivery','status' => '1'),
+        array('id' => '2','code' => 'COD','path' => '','title' => 'Cash On Delivery','status' => '1'),
+        array('id' => '3','code' => 'loyalty-points','path' => '','title' => 'loyalty Points','status' => '1'),
+        array('id' => '4', 'path' => 'omnipay/paypal', 'code' => 'paypal', 'title' => 'PayPal', 'status' => '1'),
+        array('id' => '5', 'path' => 'omnipay/targetpay', 'code' => 'stripe', 'title' => 'Stripe', 'status' => '1'),
+
         array('id' => '8', 'path' => 'omnipay/tpay', 'code' => 'tpay', 'title' => 'Tpay', 'status' => '0'),
         array('id' => '9','path' =>'dilab/omnipay-2c2p', 'code' => '2c2p', 'title' => '2c2p', 'status' => '0'),
         array('id' => '10','path' => 'collizo4sky/omnipay-2checkout', 'code' => '2checkout', 'title' => '2Checkout', 'status' => '0'),
         array('id' => '11','path' => 'agmscode/omnipay-agms', 'code' => 'agms', 'title' => 'AGMS', 'status' => '0'),
         array('id' => '12','path' => 'lokielse/omnipay-global-alipay', 'code' => 'global-alipay', 'title' => 'Alipay (Global)', 'status' => '0'),
-
         array('id' => '13', 'path' => 'lokielse/omnipay-alipay', 'code' => 'alipay', 'title' => 'Alipay', 'status' => '0'),
         array('id' => '14', 'path' => 'x-class/omnipay-99bill', 'code' => '99bill', 'title' => '99Bill', 'status' => '0'),
         array('id' => '15', 'path' => 'delatbabel/omnipay-alliedwallet', 'code' => 'alliedwallet', 'title' => 'Allied Wallet', 'status' => '0'),
@@ -103,7 +104,7 @@ class PaymentOptionSeeder extends Seeder
         array('id' => '90', 'path' => 'pinguinjkeke/omnipay-paymentgateru', 'code' => 'paymentgateru', 'title' => 'PaymentgateRu', 'status' => '0'),
         array('id' => '91', 'path' => 'digitickets/omnipay-paymentsense', 'code' => 'paymentsense', 'title' => 'PaymentSense', 'status' => '0'),
         array('id' => '92', 'path' => 'incube8/omnipay-paymentwall', 'code' => 'paymentwall', 'title' => 'PaymentWall', 'status' => '0'),
-        array('id' => '93', 'path' => 'omnipay/paypal', 'code' => 'paypal', 'title' => 'PayPal', 'status' => '0'),
+        
         array('id' => '94', 'path' => 'paypronl/omnipay-paypro', 'code' => 'paypro', 'title' => 'PayPro', 'status' => '0'),
         array('id' => '95', 'path' => 'academe/omnipay-payone', 'code' => 'payone', 'title' => 'PAYONE', 'status' => '0'),
         array('id' => '96',  'path' => 'dercoder/omnipay-paysafecard', 'code' => 'paysafecard', 'title' => 'Paysafecard', 'status' => '0'),
@@ -133,7 +134,7 @@ class PaymentOptionSeeder extends Seeder
         array('id' => '120', 'path' => 'aimeoscom/omnipay-sofort', 'code' => 'sofort', 'title' => 'Sofort', 'status' => '0'),
         array('id' => '121', 'path' => 'gregoriohc/omnipay-spreedly' , 'code' => 'spreedly', 'title' => 'Spreedly', 'status' => '0'),
         array('id' => '122', 'path' => 'transportersio/omnipay-square' , 'code' => 'square', 'title' => 'Square', 'status' => '0'),
-        array('id' => '123', 'path' => 'omnipay/targetpay', 'code' => 'stripe', 'title' => 'Stripe', 'status' => '0'),
+        
         array('id' => '124', 'path' => 'lokielse/omnipay-unionpay', 'code' => 'targetpay', 'title' => 'TargetPay', 'status' => '0'),
         array('id' => '125', 'path' => 'lemonstand/omnipay-vantiv', 'code' => 'unionpay', 'title' => 'UnionPay', 'status' => '0'),
         array('id' => '126', 'path' => 'andylibrian/omnipay-veritrans', 'code' => 'vantiv', 'title' => 'Vantiv', 'status' => '0'),
@@ -146,7 +147,6 @@ class PaymentOptionSeeder extends Seeder
         array('id' => '133', 'path' => 'igaponov/omnipay-wirecard', 'code' => 'wepay', 'title' => 'WePay', 'status' => '0'),
         array('id' => '134', 'path' => 'academe/omnipay-wirecard', 'code' => 'wirecard', 'title' => 'Wirecard', 'status' => '0'),
         array('id' => '135', 'path' => 'teaandcode/omnipay-worldpay-xml', 'code' => 'wirecard', 'title' => 'Wirecard', 'status' => '0'),
-        array('id' => '136', 'path' => 'comicrelief/omnipay-worldpay-cg-hosted', 'code' => 'worldpay-xml', 'title' => 'Worldpay XML Direct Corporate Gateway', 'status' => '0'),
         array('id' => '137', 'path' => 'omnipay/worldpay', 'code' => 'worldpay-cg-hosted', 'title' => 'Worldpay XML Hosted Corporate Gateway', 'status' => '0'),
         array('id' => '138', 'path' => 'yandexmoney/omnipay', 'code' => 'worldpay', 'title' => 'Worldpay Business Gateway', 'status' => '0'),
         ); 

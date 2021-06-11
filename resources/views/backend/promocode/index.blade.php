@@ -4,6 +4,9 @@
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
+@php
+$timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
+@endphp
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -74,7 +77,7 @@
                                     <td>{{$promo->short_desc}}</td>
                                     <td>{{$promo->type->title}}</td>
                                     <td>{{$promo->amount}}</td>
-                                    <td>{{$promo->expiry_date}}</td>
+                                    <td>{{convertDateTimeInTimeZone($promo->expiry_date, $timezone, 'Y-m-d H:i A')}}</td>
                                     <td>{{$promo->minimum_spend}}</td>
                                     <td>{{$promo->maximum_spend}}</td>
                                     <td>{{$promo->limit_per_user}}</td>

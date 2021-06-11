@@ -37,9 +37,8 @@ class DashBoardController extends BaseController
 
     public function profile()
     {
-        $client = Client::where('code', Auth::user()->code)->first();
         $countries = Country::all();
-        //dd($client->toArray());
+        $client = Client::where('code', Auth::user()->code)->first();
         $tzlist = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
         return view('backend/setting/profile')->with(['client' => $client, 'countries'=> $countries,'tzlist'=>$tzlist]);
     }
@@ -80,8 +79,8 @@ class DashBoardController extends BaseController
      */
     public function updateProfile(Request $request, $domain = '', $id)
     {
-        $client = Client::where('code', Auth::user()->code)->firstOrFail();
-
+        $user = Auth::user();
+        $client = Client::where('code', $user->code)->firstOrFail();
         $rules = array(
             'name' => 'required|string|max:50',
             'phone_number' => 'required|digits:10',
@@ -90,27 +89,22 @@ class DashBoardController extends BaseController
             'country_id' => 'required',
             'timezone' => 'required',
         );
-
         $validation  = Validator::make($request->all(), $rules);
-
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
         $data = array();
-
         foreach ($request->only('name', 'phone_number', 'company_name', 'company_address', 'country_id', 'timezone') as $key => $value) {
             $data[$key] = $value;
         }
-         $data['logo'] = Auth::user()->logo;
-
-        if ($request->hasFile('logo')) {    /* upload logo file */
+        $client = Client::where('code', Auth::user()->code)->first();
+        if ($request->hasFile('logo')) {
             $file = $request->file('logo');
             $file_name = 'Clientlogo/'.uniqid() .'.'.  $file->getClientOriginalExtension();
             $path = Storage::disk('s3')->put($file_name, file_get_contents($file), 'public');
-            //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            //$path = $request->file('logo')->storeAs('/Clientlogo', $file_name, 'public');
-            //$getFileName = Storage::disk('s3')->put($this->folderName, $file,'public');
             $data['logo'] = $file_name;
+        }else{
+             $data['logo'] = $client->getRawOriginal('logo');
         }
 
         $client = Client::where('code', Auth::user()->code)->update($data);

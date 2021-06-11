@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Http\Request;
 use DB;
@@ -13,6 +12,7 @@ use Config;
 use App\Models\Client;
 use App\Models\ClientPreference;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {

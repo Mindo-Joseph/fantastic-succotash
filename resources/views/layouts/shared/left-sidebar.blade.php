@@ -28,8 +28,6 @@
             </div>
             <p class="text-muted">Admin Head</p>
         </div>
-
-        <!--- Sidemenu -->
         <div id="sidebar-menu">
             <?php 
                         $allowed = [];
@@ -43,9 +41,8 @@
                             array_push($allowed,'99999');
                         }
                         ?>
-            <ul id="side-menu" 1>
+            <ul id="side-menu">
 
-                <li class="menu-title mt-2">Home</li>
                 @if(in_array('DASHBOARD',$allowed) || Auth::user()->is_superadmin == 1) 
                 <li>
                     <a href="{{route('client.dashboard')}}" >
@@ -110,39 +107,8 @@
                         <span> Banner </span>
                     </a>
                 </li> 
-                @endif    
-                <!--<li>
-                    <a href="#SettingSidebar" data-toggle="collapse">
-                        <i data-feather="settings"></i>
-                        <span> Setting </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                     <div class="collapse" id="SettingSidebar">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a href="{{route('client.profile')}}">
-                                    <i data-feather="user"></i><span> Profile </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{route('configure.customize')}}" >
-                                    <i data-feather="settings"></i><span> Customize </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{route('configure.index')}}">
-                                    <i data-feather="tool"></i><span> Configure </span>
-                                </a>
-                            </li>
-                            <li>   
-                                <a href="{{route('banner.index')}}" >
-                                    <i data-feather="columns"></i><span> Banner </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div> 
-                </li> -->
-                @if(in_array('CONFIGURATIONS',$allowed) || Auth::user()->is_superadmin == 1) 
+                @endif
+                @if(in_array('CATALOG',$allowed) || Auth::user()->is_superadmin == 1) 
                 <li>   
                     <a href="{{route('category.index')}}">
                         <span class="icon-catalog_icon"></span>
@@ -150,7 +116,7 @@
                     </a>
                 </li>
                 @endif
-                @if(in_array('CONFIGURATIONS',$allowed) || Auth::user()->is_superadmin == 1) 
+                @if(in_array('TAX',$allowed) || Auth::user()->is_superadmin == 1) 
                 <li>
                     <a href="{{route('tax.index')}}">
                         <span class="icon-tax_icon"></span>
@@ -158,7 +124,7 @@
                     </a>
                 </li>
                 @endif
-                @if(in_array('CONFIGURATIONS',$allowed) || Auth::user()->is_superadmin == 1) 
+                @if(in_array('PAYMENT',$allowed) || Auth::user()->is_superadmin == 1) 
                 <li>   
                     <a href="{{route('payoption.index')}}" >
                         <span class="icon-payment_options_icon"></span>
@@ -166,13 +132,7 @@
                     </a>
                 </li>
                 @endif
-                <!-- <li>   
-                    <a href="{{route('payment.index')}}" >
-                        <span class="icon-payment_icon"></span>
-                        <span> Payments </span>
-                    </a>
-                </li> -->
-                @if(in_array('CONFIGURATIONS',$allowed) || Auth::user()->is_superadmin == 1) 
+                @if(in_array('PROMOCODE',$allowed) || Auth::user()->is_superadmin == 1) 
                 <li>   
                     <a href="{{route('promocode.index')}}" >
                         <span class="icon-promocode_icon"></span>
@@ -180,7 +140,7 @@
                     </a>
                 </li>
                 @endif
-                @if(in_array('CONFIGURATIONS',$allowed) || Auth::user()->is_superadmin == 1) 
+                @if(in_array('LOYALTY CARDS',$allowed) || Auth::user()->is_superadmin == 1) 
                 <li>   
                     <a href="{{route('loyalty.index')}}" >
                         <span class="icon-loyality_icon"></span>
@@ -188,7 +148,7 @@
                     </a>
                 </li>
                 @endif
-                @if(in_array('CONFIGURATIONS',$allowed) || Auth::user()->is_superadmin == 1) 
+                @if(in_array('ACL',$allowed) || Auth::user()->is_superadmin == 1) 
                 <li>
                     <a href="{{route('acl.index')}}">
                         <i data-feather="users"></i>
@@ -197,29 +157,20 @@
                 </li>
                 @endif
                 
-                <!-- <li>   
-                    <a href="{{route('wallet.index')}}" >
-                        <span class="icon-waller_icon"></span>
-                        <span> Wallet </span>
-                    </a>
-                </li>  -->
+                
                 <li class="menu-title mt-2">Extra</li>
                 @php 
                     $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
                 @endphp
-                <!-- <li>   
-                    <a href="#" href1="{{route('referandearn.index')}}" >
-                        <span class="icon-1370259"></span>
-                        <span> Refer and Earn </span>
-                    </a>
-                </li> -->
                 @if(!empty($brity) && $brity->celebrity_check == 1)
+                @if(in_array('CELEBRITY',$allowed) || Auth::user()->is_superadmin == 1) 
                 <li>   
                     <a href="{{route('celebrity.index')}}" >
                         <span class="icon-celebrities_icon"></span>
                         <span> Celebrities </span>
                     </a>
                 </li>
+                @endif
                 @endif
             </ul>
         </div>

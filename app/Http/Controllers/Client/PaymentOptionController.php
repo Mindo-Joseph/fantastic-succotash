@@ -36,11 +36,34 @@ class PaymentOptionController extends BaseController
     {
         $status = 0;
         $msg = $request->method_name .' deactivated successfully!';
+
+        $saved_creds = PaymentOption::select('credentials')->where('id', $id)->first();
+        
+        if( (isset($saved_creds)) && (!empty($saved_creds->credentials)) ){
+            $json_creds = $saved_creds->credentials;
+        }else{
+            $json_creds = NULL;
+        }
+
         if($request->has('active') && $request->active == 'on'){
             $status = 1;
             $msg = $request->method_name .' activated successfully!';
+            
+            if(strtolower($request->method_name) == 'paypal'){
+                $json_creds = json_encode(array(
+                    'username' => $request->paypal_username,
+                    'password' => $request->paypal_password,
+                    'signature' => $request->paypal_signature,
+                ));
+            }
+            else if(strtolower($request->method_name) == 'stripe'){
+                $json_creds = json_encode(array(
+                    'api_key' => $request->stripe_api_key
+                ));
+            }
         }
-        PaymentOption::where('id', $id)->update(['status' => $status]);
+        
+        PaymentOption::where('id', $id)->update(['status' => $status, 'credentials' => $json_creds]);
 
         return redirect()->back()->with('success', $msg);
 

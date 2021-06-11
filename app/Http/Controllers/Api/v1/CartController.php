@@ -175,9 +175,10 @@ class CartController extends BaseController{
                         $saveAddons = array();
                         foreach ($addon_options as $key => $opts) {
                             $saveAddons[] = [
-                                'cart_product_id' => $cartProduct->id,
+                                'option_id' => $opts,
+                                'cart_id' => $cart_detail->id,
                                 'addon_id' => $addon_ids[$key],
-                                'option_id' => $opts
+                                'cart_product_id' => $cartProduct->id,
                             ];
                         }
                         if(!empty($saveAddons)){
@@ -355,7 +356,7 @@ class CartController extends BaseController{
                         $couponData['restriction_on'] = ($vendorData->coupon->promo->restriction_on == 1) ? 'Vendor' : 'Product';
 
                         $is_coupon_applied = 1;
-                        if($vendorData->coupon->promo->promo_type_id){
+                        if($vendorData->coupon->promo->promo_type_id == 1){
                             $is_percent = 1;
                             $discount_percent = round($vendorData->coupon->promo->amount);
                         }else{
@@ -439,16 +440,16 @@ class CartController extends BaseController{
                                 $opt_price_in_currency = $addons->option->price;
                                 $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
                                 $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
-                                $vendorAddons[$ck]['cart_product_id'] = $addons->cart_product_id;
+                                $vendorAddons[$ck]['quantity'] = $prod->quantity;
                                 $vendorAddons[$ck]['addon_id'] = $addons->addon_id;
-                                $vendorAddons[$ck]['addon_title'] = $addons->set->title;
                                 $vendorAddons[$ck]['option_id'] = $addons->option_id;
+                                $vendorAddons[$ck]['price'] = $opt_price_in_currency;
+                                $vendorAddons[$ck]['addon_title'] = $addons->set->title;
+                                $vendorAddons[$ck]['quantity_price'] = $opt_quantity_price;
                                 $vendorAddons[$ck]['option_title'] = $addons->option->title;
                                 $vendorAddons[$ck]['price_in_cart'] = $addons->option->price;
-                                $vendorAddons[$ck]['price'] = $opt_price_in_currency;
+                                $vendorAddons[$ck]['cart_product_id'] = $addons->cart_product_id;
                                 $vendorAddons[$ck]['multiplier'] = $clientCurrency->doller_compare;
-                                $vendorAddons[$ck]['quantity'] = $prod->quantity;
-                                $vendorAddons[$ck]['quantity_price'] = $opt_quantity_price;
                                 $ttAddon = $ttAddon + $opt_quantity_price;
                                 $payable_amount = $payable_amount + $opt_quantity_price;
                             }
@@ -500,8 +501,7 @@ class CartController extends BaseController{
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
                 $vendorData->taxable_amount = $taxable_amount;
-                $vendorData->payable_amount = $payable_amount + $taxable_amount - $discount_amount;
-
+                $vendorData->payable_amount = $payable_amount - $discount_amount;
                 $total_paying = $total_paying + $payable_amount;
                 $total_tax = $total_tax + $taxable_amount;
                 $total_disc_amount = $total_disc_amount + $discount_amount;

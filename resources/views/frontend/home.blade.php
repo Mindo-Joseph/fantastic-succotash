@@ -70,7 +70,31 @@
 <!-- <div class="title1 section-t-space">
         <h2 class="title-inner1">Vendors</h2>
     </div> -->
-<section class="section-b-space p-t-1 ratio_asos">
+<!-- Home Banner Start From Here -->
+<!-- <section class="home-banner">
+    <div class="home_slider">
+        <div>
+            <div class="main-img" style="background: url({{asset('assets/images/food.webp')}});">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="offset-lg-6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="main-img" style="background: url({{asset('assets/images/food.webp')}});">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="offset-lg-6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+<section class="section-b-space p-t-0 pt-5 ratio_asos">
     <div class="container">
         <div class="row">
             <div class="col">
@@ -341,7 +365,14 @@
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
 <script src="{{asset('front-assets/js/fly-cart.js')}}"></script>
 <script type="text/javascript">
-
+    jQuery('.home_slider').slick({
+        dots: true,
+        arrows: false,
+        infinite: true,
+        speed: 300,
+        slidesToShow: 1,
+        adaptiveHeight: true
+    });  
 </script>
 
 @endsection

@@ -7,7 +7,7 @@ use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor, UserAddress,Vendor};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor, UserAddress,Vendor,CartCoupon, LoyaltyCard};
 use App\Models\ClientPreference;
 use GuzzleHttp\Client;
 class OrderController extends FrontController{
@@ -15,14 +15,14 @@ class OrderController extends FrontController{
     public function getOrderSuccessPage(Request $request){
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        $order = Order::with(['products', 'address'])->findOrfail($request->order_id);
-        return view('forntend.order.success', compact('order','navCategories'));
+        $order = Order::with(['products.pvariant.vset', 'address'])->findOrfail($request->order_id);
+        return view('frontend.order.success', compact('order','navCategories'));
     }
     public function placeOrder(Request $request, $domain = ''){
         if ($request->input("payment-group") == '1') {
             $langId = Session::get('customerLanguage');
             $navCategories = $this->categoryNav($langId);
-            return view('forntend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone , 'total_amount' => $request->total_amount , 'address_id' => $request->address_id]);
+            return view('frontend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone , 'total_amount' => $request->total_amount , 'address_id' => $request->address_id]);
         }
         $order = $this->orderSave($request, "1", "2");
         return redirect('order/success/'.$order->id)->with('success', 'your message,here'); 
@@ -32,9 +32,20 @@ class OrderController extends FrontController{
         try {
            DB::beginTransaction();
             $user = Auth::user();
+            $loyalty_amount_saved = '';
+            $redeem_points_per_primary_currency = '';
+            $loyalty_card = LoyaltyCard::where('status', '0')->first();
+            if($loyalty_card){
+                $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
+            }
             $currency_id = Session::get('customerCurrency');
             $language_id = Session::get('customerLanguage');
             $cart = Cart::where('user_id', $user->id)->first();
+            $order_loyalty_points_earned_detail = Order::where('user_id', $user->id)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
+            if($order_loyalty_points_earned_detail){
+                $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
+                $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
+            }
             $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
             $order = new Order;
             $order->user_id = $user->id;
@@ -42,7 +53,7 @@ class OrderController extends FrontController{
             $order->payment_method = $paymentMethod;
             $order->address_id = $request->address_id;
             $order->save();
-            $cart_products = CartProduct::select('*')->with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon.promo')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
+            $cart_products = CartProduct::select('*')->with(['product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon.promo', 'product.addon'])->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
             $total_amount = 0;
             $total_discount = 0;
             $taxable_amount = 0;
@@ -67,7 +78,6 @@ class OrderController extends FrontController{
                         $product_tax = $quantity_price * $rate / 100;
                         $product_taxable_amount += $product_tax;
                         $payable_amount = $payable_amount + $product_tax;
-                        $vendor_payable_amount = $vendor_payable_amount + $product_tax;
                     }
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
@@ -85,6 +95,17 @@ class OrderController extends FrontController{
                         $order_product->image = $vendor_cart_product->product->pimage->first() ? $vendor_cart_product->product->pimage->first()->path : '';
                     }
                     $order_product->save();
+                    if(!empty($vendor_cart_product->addon)){
+                        foreach ($vendor_cart_product->addon as $ck => $addon) {
+                            $opt_quantity_price = 0;
+                            $opt_price_in_currency = $addon->option->price;
+                            $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
+                            $opt_quantity_price = $opt_price_in_doller_compare * $order_product->quantity;
+                            $total_amount = $total_amount + $opt_quantity_price;
+                            $payable_amount = $payable_amount + $opt_quantity_price;
+                            $vendor_payable_amount = $vendor_payable_amount + $opt_quantity_price;
+                        }
+                    }
                     $cart_addons = CartAddon::where('cart_product_id', $vendor_cart_product->id)->get();
                     if($cart_addons){
                         foreach ($cart_addons as $cart_addon) {
@@ -92,9 +113,22 @@ class OrderController extends FrontController{
                             $orderAddon->addon_id = $cart_addon->addon_id;
                             $orderAddon->option_id = $cart_addon->option_id;
                             $orderAddon->order_product_id = $order_product->id;
-                            // $orderAddon->save();
+                            $orderAddon->save();
                         }
                         CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
+                    }
+                }
+                if($vendor_cart_product->coupon){
+                    if($vendor_cart_product->coupon->promo->promo_type_id == 2){
+                        $amount = round($vendor_cart_product->coupon->promo->amount);
+                        $total_discount += $amount;
+                        $vendor_payable_amount -= $amount;
+                        $vendor_discount_amount += $amount;
+                    }else{
+                        $gross_amount = number_format(($payable_amount - $taxable_amount), 2);
+                        $percentage_amount = ($gross_amount * $vendorData->coupon->promo->amount / 100);
+                        $vendor_payable_amount -= $percentage_amount;
+                        $vendor_discount_amount += $percentage_amount;
                     }
                 }
                 $OrderVendor = new OrderVendor();
@@ -105,11 +139,23 @@ class OrderController extends FrontController{
                 $OrderVendor->discount_amount= $vendor_discount_amount;
                 $OrderVendor->save();
             }
+            $loyalty_points_earned = LoyaltyCard::getLoyaltyPoint($loyalty_points_used, $payable_amount);
             $order->total_amount = $total_amount;
             $order->total_discount = $total_discount;
             $order->taxable_amount = $taxable_amount;
-            $order->payable_amount = $payable_amount;
+            if($loyalty_amount_saved > 0){
+                if($payable_amount < $loyalty_amount_saved){
+                    $loyalty_amount_saved =  $payable_amount;
+                    $loyalty_points_used = $payable_amount * $redeem_points_per_primary_currency;
+                }
+            }
+            $order->loyalty_points_used = $loyalty_points_used;
+            $order->loyalty_amount_saved = $loyalty_amount_saved;
+            $order->payable_amount = $payable_amount - $total_discount - $loyalty_amount_saved;
+            $order->loyalty_points_earned = $loyalty_points_earned;
             $order->save();
+            CartAddon::where('cart_id', $cart->id)->delete();
+            CartCoupon::where('cart_id', $cart->id)->delete();
             CartProduct::where('cart_id', $cart->id)->delete();
           
             

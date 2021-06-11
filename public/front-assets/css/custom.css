@@ -273,31 +273,19 @@ a{
     line-height: 11px;
 }*/
 
-.coupon_box a {
+.coupon_box button {
     border-color: #ff4c3b;
     color: #ff4c3b;
 }
 
-.coupon_box a:hover {
+.coupon_box button:hover {
     border-color: #ff4c3b;
     background: #ff4c3b;
-    color: #fff !important; 
 }
 
 .items-details h4 {
     font-size: 16px;
-    margin: 0 0 5px;
-}
-
-.items-details label {
-    display: block;
     margin: 0;
-    font-weight: 400;
-    font-size: 12px;
-}
-
-.items-details label span {
-    font-weight: 700;
 }
 
 .items-details h6 {
@@ -470,8 +458,8 @@ a{
     padding-top: 0;
 }
 
-.add_on_items th,.add_on_items td {
-    padding: 5px 15px;
+.add_on_items td {
+    padding: 0 15px;
 }
 
 .add_on_items td:first-child {
@@ -482,9 +470,9 @@ a{
     width: 80px;
 }
 
-/*.add_on_items tr:last-child td{
+.add_on_items tr:last-child td{
     padding-bottom: 15px;
-}*/
+}
 
 
 .cart_img_outer{
@@ -1573,28 +1561,118 @@ label{
     font-size: 14px;
 }
 
+.main-img {
+    height: 40vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.info-text label {
+    font-weight: 100;
+}
+
+.info-text p {
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 0;
+    margin-block-end: 0;
+}
+
+.profile-edit {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 24px;
+    text-decoration: underline !important;
+}
+
+.address_box p:last-child{
+    margin: 0;
+}
+
+.text-16 {
+    color: #000000 !important;
+    font-size: 16px !important;
+    font-weight: 300;
+    letter-spacing: 0 !important;
+    line-height: 24px !important;
+}
+
+.address_box p {
+    margin: 0;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 24px;
+}
+
+.address_btn a {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 24px;
+    text-decoration: underline !important;
+    margin-right: 15px;
+    display: inline-block;
+}
+
+.address_btn a:last-child {
+    margin-right: 0;
+}
+
+.profile-page h6{
+    font-size: 16px;
+}
 
 
 
+/* Payment Popup Css Start From Here */
+#pay-bill .close.top_right {
+    right: -50px;
+}
 
+#pay-bill .modal-content {
+    height: 380px;
+    border-radius: 12px;
+}
 
+#v-pills-tab {
+    height: 380px;
+    background: #ff4c3b;
+    padding: 50px 0 0 20px;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+.nav-pills .nav-link {
+    border-radius: 0;
+    font-weight: 400;
+    color: #fff;
+    padding: 20px;
+}
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #ff4c3b;
+    background: #fff;
+}
 
+.tab-content-box {
+    height: calc(100% - 130px);
+}
 
+.tab-content-box .tab-content {
+    padding: 20px 0;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.error_msg {
+    width: 100%;
+    background-color: #cfe4ca;
+    color: #718a6c;
+    padding: 5px 10px;
+    margin: 0 0 30px;
+    font-size: 14px;
+    border-radius: 4px;
+}
 
 
 
@@ -1624,6 +1702,9 @@ label{
     }
     .refferal_modal .modal-dialog {
         max-width: 1000px;
+    }
+    #pay-bill .modal-dialog {
+        max-width: 800px;
     }
 }
 

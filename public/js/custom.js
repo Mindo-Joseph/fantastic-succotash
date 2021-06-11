@@ -29,21 +29,37 @@ $(document).ready(function() {
             }
         });
     }
+    $(document).on("click",".remove_promo_code_btn",function() {
+        let cart_id = $(this).data('cart_id');
+        let coupon_id = $(this).data('coupon_id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: promo_code_remove_url,
+            data: {coupon_id:coupon_id, cart_id:cart_id},
+            success: function(response) {
+                if (response.status == "Success") {
+                    cartHeader();
+                }
+            }
+        });
+    });
     $(document).on("click",".promo_code_list_btn",function() {
+        let amount = $(this).data('amount');
         let cart_id = $(this).data('cart_id');
         let vendor_id = $(this).data('vendor_id');
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: promocode_list_url,
-            data: {vendor_id:vendor_id},
+            data: {vendor_id:vendor_id, amount:amount, cart_id:cart_id},
             success: function(response) {
                 $("#promo_code_list_main_div").html('');
                 if (response.status == "Success") {
                     $('#refferal-modal').modal('show');
                     if(response.data.length != 0){
                         let promo_code_template = _.template($('#promo_code_template').html());
-                        $("#promo_code_list_main_div").append(promo_code_template({promo_codes:response.data, vendor_id:vendor_id, cart_id:cart_id}));
+                        $("#promo_code_list_main_div").append(promo_code_template({promo_codes:response.data, vendor_id:vendor_id, cart_id:cart_id, amount:amount}));
                     }else{
                         let no_promo_code_template = _.template($('#no_promo_code_template').html());
                         $("#promo_code_list_main_div").append(no_promo_code_template());
@@ -51,9 +67,9 @@ $(document).ready(function() {
                 }
             }
         });
-        
     });
     $(document).on("click",".apply_promo_code_btn",function() {
+        let amount = $(this).data('amount');
         let cart_id = $(this).data('cart_id');
         let vendor_id = $(this).data('vendor_id');
         let coupon_id = $(this).data('coupon_id');
@@ -61,10 +77,17 @@ $(document).ready(function() {
             type: "POST",
             dataType: 'json',
             url: apply_promocode_coupon_url,
-            data: {cart_id:cart_id, vendor_id:vendor_id, coupon_id:coupon_id},
+            data: {cart_id:cart_id, vendor_id:vendor_id, coupon_id:coupon_id, amount:amount},
             success: function(response) {
                 if (response.status == "Success") {
                  $('#refferal-modal').modal('hide');
+                 cartHeader();
+                }
+            },
+            error: function (reject) {
+                if( reject.status === 422 ) {
+                    var message = $.parseJSON(reject.responseText);
+                    alert(message.message);
                 }
             }
         });
@@ -87,12 +110,17 @@ $(document).ready(function() {
         $('#remove_item_modal').modal('hide');
         productRemove(cartproduct_id, vendor_id);
     });
+    function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
     function initialize() {
       var input = document.getElementById('address');
       var autocomplete = new google.maps.places.Autocomplete(input);
       google.maps.event.addListener(autocomplete, 'place_changed', function () {
         var place = autocomplete.getPlace();
         document.getElementById('city').value = place.name;
+        document.getElementById('longitude').value = place.geometry.location.lng()
+        document.getElementById('latitude').value = place.geometry.location.lat()
         for(let i=1; i < place.address_components.length; i++){
             let mapAddress = place.address_components[i];
             if(mapAddress.long_name !=''){
@@ -101,6 +129,15 @@ $(document).ready(function() {
                 }
                 if(mapAddress.types[0] =="postal_code"){
                     document.getElementById('pincode').value = mapAddress.long_name;
+                }
+                if(mapAddress.types[0] == "country"){
+                    var country = document.getElementById('country');
+                    for (let i = 0; i < country.options.length; i++) {
+                        if (country.options[i].text == mapAddress.long_name.toUpperCase()) {
+                            country.value = i;
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -200,6 +237,8 @@ $(document).ready(function() {
         let country = $('#add_new_address_form #country').val();
         let pincode = $('#add_new_address_form #pincode').val();
         let type = $("input[name='address_type']:checked").val();
+        let latitude = $('#add_new_address_form #latitude').val();
+        let longitude = $('#add_new_address_form #longitude').val();
         $.ajax({
             type: "post",
             dataType: "json",
@@ -211,6 +250,8 @@ $(document).ready(function() {
                 "address": address,
                 "country": country,
                 "pincode": pincode,
+                "latitude": latitude,
+                "longitude": longitude,
             },
             success: function(response) {
                 $('#add_new_address_form').hide();
@@ -254,7 +295,6 @@ $(document).ready(function() {
             },
         });
     }
-    
     $(document).on('click', '.quantity-right-plus', function() {
         var quan = parseInt($('.quantity_count').val());
         var str = $('#instock').html();

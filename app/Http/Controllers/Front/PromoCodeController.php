@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 use Carbon\Carbon;
 use App\Models\Cart;
+use App\Models\Order;
 use App\Models\Vendor;
 use App\Models\Product;
 use App\Models\Promocode;
@@ -11,10 +12,12 @@ use Illuminate\Http\Request;
 use App\Models\PromoCodeDetail;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class PromoCodeController extends Controller{
     use ApiResponser;
+    protected $user;
 
     public function postPromoCodeList(Request $request){
         try {
@@ -29,16 +32,17 @@ class PromoCodeController extends Controller{
                 return response()->json(['error' => 'Invalid vendor id.'], 404);
             }
             $now = Carbon::now()->toDateTimeString();
-            $product_ids = Product::where('vendor_id', 200)->pluck("id");
+            $product_ids = Product::where('vendor_id', $request->vendor_id)->pluck("id");
             if($product_ids){
                 $promo_code_details = PromoCodeDetail::whereIn('refrence_id', $product_ids->toArray())->pluck('promocode_id');
                 if($promo_code_details->count() > 0){
-                    $result1 = Promocode::whereIn('id', $promo_code_details->toArray())->whereDate('expiry_date', '>=', $now)->get();
+                    $result1 = Promocode::whereIn('id', $promo_code_details->toArray())->whereDate('expiry_date', '>=', $now)->where('restriction_on', 0)->where('restriction_type', 0)->where('is_deleted', 0)->get();
                     $promo_codes = $promo_codes->merge($result1);
                 }
-                $result2 = Promocode::where('restriction_on', 1)->whereHas('details', function($q) use($vendor_id){
+                $vendor_promo_code_details = PromoCodeDetail::whereHas('promocode')->where('refrence_id', $vendor_id)->pluck('promocode_id');
+                $result2 = Promocode::whereIn('id', $vendor_promo_code_details->toArray())->where('restriction_on', 1)->whereHas('details', function($q) use($vendor_id){
                     $q->where('refrence_id', $vendor_id);
-                })->whereDate('expiry_date', '>=', $now)->get();
+                })->where('restriction_on', 1)->where('is_deleted', 0)->whereDate('expiry_date', '>=', $now)->get();
                 $promo_codes = $promo_codes->merge($result2);
             }
             return $this->successResponse($promo_codes, '', 200);
@@ -48,6 +52,7 @@ class PromoCodeController extends Controller{
     }
     public function postVerifyPromoCode(Request $request){
         try {
+            $user = Auth::user();
             $validator = $this->validatePromoCode();
             if($validator->fails()){
                 return $this->errorResponse($validator->messages(), 422);
@@ -72,6 +77,12 @@ class PromoCodeController extends Controller{
             if($cart_coupon_detail2){
                 return $this->errorResponse('Coupon Code already applied other vendor.', 422);
             }
+            if($cart_detail->first_order_only == 1){
+                $orders_count = Order::where('user_id', $user->id)->count();
+                if($orders_count > 0){
+                    return $this->errorResponse('Coupon Code apply only first order.', 422);
+                }
+            }
             $cart_coupon = new CartCoupon();
             $cart_coupon->cart_id = $request->cart_id;
             $cart_coupon->vendor_id = $request->vendor_id;
@@ -85,10 +96,6 @@ class PromoCodeController extends Controller{
     
     public function postRemovePromoCode(Request $request){
         try {
-            $validator = $this->validatePromoCode();
-            if($validator->fails()){
-                return $this->errorResponse($validator->messages(), 422);
-            }
             $cart_detail = Cart::where('id', $request->cart_id)->first();
             if(!$cart_detail){
                 return $this->errorResponse('Invalid Cart Id', 422);

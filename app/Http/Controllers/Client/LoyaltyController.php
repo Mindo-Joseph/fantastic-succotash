@@ -192,10 +192,8 @@ class LoyaltyController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function setRedeemPoints(Request $request)
-    {
-        $update = LoyaltyCard::where('id', '>', 0)
-        ->update(['redeem_points_per_primary_currency' => $request->redeem_points_per_primary_currency]);
+    public function setRedeemPoints(Request $request){
+        $update = LoyaltyCard::where('id', '>', 0)->update(['redeem_points_per_primary_currency' => $request->redeem_points_per_primary_currency]);
         return redirect()->back()->with('success', 'Successfully Updated!');
     }
 }

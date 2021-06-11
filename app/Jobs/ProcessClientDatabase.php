@@ -50,13 +50,13 @@ class ProcessClientDatabase implements ShouldQueue
         }
         $userData = array();
         foreach ($client as $key => $value) {
-            $userData['name'] = $value['name'];
-            $userData['email'] = $value['email'];
-            $userData['password'] = $value['password'];
-            $userData['phone_number'] = $value['phone_number'];
+            if ($key == 'name' || $key == 'email' || $key == 'password' || $key == 'phone_number') {
+                $userData[$key] = $value;
+                }
+            }
             $userData['status'] = 1;
             $userData['is_superadmin'] = 1;
-            }
+           
         try {
            
             $schemaName = 'royo_' . $client['database_name'] ?: config("database.connections.mysql.database");

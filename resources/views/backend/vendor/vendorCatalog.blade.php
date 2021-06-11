@@ -2,7 +2,6 @@
 
 @section('css')
 <link href="{{asset('assets/libs/fullcalendar-list/fullcalendar-list.min.css')}}" rel="stylesheet" type="text/css" />
-
 <style type="text/css">
     .pac-container, .pac-container .pac-item { z-index: 99999 !important; }
     .fc-v-event{
@@ -23,8 +22,6 @@
 
 @section('content')
     <div class="container-fluid">
-
-        <!-- start page title -->
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
@@ -48,8 +45,6 @@
                 </div>
             </div>
         </div>
-        <!-- end page title -->
-
         <div class="row">
             <div class="col-lg-3 col-xl-3">
                 @include('backend.vendor.show-md-3')
@@ -75,12 +70,8 @@
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} card-body" id="configuration">
-
-                        </div>
-                        <div class="tab-pane {{($tab == 'category') ? 'active show' : '' }}" id="category">
-
-                        </div>
+                        <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} card-body" id="configuration"></div>
+                        <div class="tab-pane {{($tab == 'category') ? 'active show' : '' }}" id="category"></div>
                         <div class="tab-pane {{($tab == 'catalog') ? 'active show' : '' }}" id="catalog">
                            <div class="row card-box">
                                 <h4 class="mb-4"> Catalog</h4>
@@ -116,13 +107,13 @@
                                               <tr data-row-id="{{$product->id}}">
                                                   <td> 
                                                     @if(isset($product->media[0]))
-                                                        <img alt="{{$product->id}}" class="rounded-circle" src="{{$product->media[0]->image->path['proxy_url'].'30/30'.$product->media[0]->image->path['image_path']}}">
+                                                        <img alt="{{$product->sku}}" class="rounded-circle" src="{{$product->media[0]->image->path['proxy_url'].'30/30'.$product->media[0]->image->path['image_path']}}">
                                                     @else
                                                         {{ $product->sku }}
                                                     @endif
                                                   </td>
                                                   <td> {{ (isset($product->primary->title) && !empty($product->primary->title)) ? $product->primary->title : '' }} </td>
-                                                  <td> {{ $product->category->cat->slug }}</td>
+                                                  <td> {{ $product->category->cat ? $product->category->cat->slug : '' }}</td>
                                                   <td> {{ !empty($product->brand) ? $product->brand->title : 'N/A'  }}</td>
                                                   <td> {{ $product->variant->first() ? $product->variant->first()->quantity : 0 }}</td>
                                                   <td> {{ $product->variant->first() ? $product->variant->first()->price : 0 }}</td>
@@ -154,8 +145,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div> <!-- end tab-content -->
-                </div> <!-- end card-box-->
+                    </div>
+                </div>
             </div> 
         </div>
     </div>
@@ -202,8 +193,10 @@
                             <select class="form-control selectizeInput" id="category_list" name="category[]">
                                 <option value="">Select Category...</option>
                                 @foreach($product_categories as $product_category)
-                                    @if($product_category->category->type_id == 1)
-                                    <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
+                                    @if($product_category->category)
+                                      @if($product_category->category->type_id == 1)
+                                        <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
+                                      @endif
                                     @endif
                                 @endforeach
                             </select>

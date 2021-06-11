@@ -4,18 +4,16 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterPreferenceDispatcherKeysTable extends Migration
+class AlterCategoriesTableForDeletedAt extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::table('client_preferences', function (Blueprint $table) {
-            $table->string('delivery_service_key_url')->nullable();
-            $table->string('delivery_service_key_code')->nullable();
+    public function up(){
+        Schema::table('categories', function (Blueprint $table) {
+            $table->softDeletes()->after('updated_at');
         });
     }
 

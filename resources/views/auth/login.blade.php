@@ -2,15 +2,15 @@
 <html lang="en">
     <head>
         @include('layouts.shared.title-meta', ['title' => "Log In"])
-
         @include('layouts.shared.head-content')
         <script src="{{asset('assets/js/jquery-3.1.1.min.js')}}"></script>
         <script src="{{asset('assets/js/vendor.min.js')}}"></script>
         <script src="{{asset('assets/js/jquery-ui.min.js')}}" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     </head>
-
+    @php
+    $clientData = App\Models\Client::first();
+    @endphp
     <body class="authentication-bg authentication-bg-pattern">
-
         <div class="account-pages mt-5 mb-5">
             <div class="container">
                 <div class="row justify-content-center">
@@ -23,10 +23,9 @@
                                     <div class="auth-logo">
                                         <a href="{{route('client.index')}}" class="logo logo-dark text-center">
                                             <span class="logo-lg">
-                                                <img src="{{asset('assets/images/logo-dark.png')}}" alt="" height="40">
+                                                <img src="{{$clientData ? $clientData->logo['image_fit'].'200/100'.$clientData->logo['image_path']:asset('assets/images/logo-dark.png')}}" alt="" height="50">
                                             </span>
                                         </a>
-                    
                                         <a href="{{route('client.index')}}" class="logo logo-light text-center">
                                             <span class="logo-lg">
                                                 <img src="{{asset('assets/images/logo-light.png')}}" alt="" height="40">
@@ -41,18 +40,13 @@
 
                                     <div class="form-group mb-3">
                                         <label for="emailaddress">Email address</label>
-                                        <input class="form-control  @if($errors->has('email')) is-invalid @endif" name="email" type="email" 
-                                            id="emailaddress" required=""
-                                            value="{{ old('email')}}"
-                                            placeholder="Enter your email" />
-
-                                            @if($errors->has('email'))
+                                        <input class="form-control  @if($errors->has('email')) is-invalid @endif" name="email" type="email" id="emailaddress" required="" value="{{ old('email')}}" placeholder="Enter your email" />
+                                        @if($errors->has('email'))
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $errors->first('email') }}</strong>
                                             </span>
-                                            @endif
+                                        @endif
                                     </div>
-
                                     <div class="form-group mb-3">
                                         <!-- <a href="{{route('login')}}" class="text-muted float-right"><small>Forgot your
                                             password?</small></a> -->
@@ -74,22 +68,16 @@
                                         @endif
                                     </div>
                                     </div>
-
                                     <div class="form-group mb-3">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="checkbox-signin" checked>
                                             <label class="custom-control-label" for="checkbox-signin">Remember me</label>
                                         </div>
                                     </div>
-
                                     <div class="form-group mb-0 text-center">
                                         <button class="btn btn-primary btn-block" type="submit"> Log In </button>
                                     </div>
-
-                                    
-
                                 </form>
-
                                 <!-- <div class="text-center">
                                     <h5 class="mt-3 text-muted">Sign in with</h5>
                                     <ul class="social-list list-inline mt-3 mb-0">
