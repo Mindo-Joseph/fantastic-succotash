@@ -350,13 +350,17 @@ class ProductsImport implements ToCollection
             }
         } 
 
-        // if (!empty($error)) {
-        //     dd($error);
-        //     $vendor_csv = CsvProductImport::where('vendor_id', '6')->first();
-        //     $vendor_csv->status = 2;
-        //     $vendor_csv->error = json_encode($error);
-        //     $vendor_csv->save();
-        // }
+        if (!empty($error)) {
+            $vendor_csv = CsvProductImport::where('vendor_id', '6')->first();
+            $vendor_csv->status = 3;
+            $vendor_csv->error = json_encode($error);
+            $vendor_csv->save();
+        }
+        else{
+            $vendor_csv = CsvProductImport::where('vendor_id', '6')->first();
+            $vendor_csv->status = 2;
+            $vendor_csv->save();
+        }
     }
 
     private function generateBarcodeNumber()

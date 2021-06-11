@@ -28,7 +28,8 @@ class VendorController extends BaseController
     {
         $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])
             ->where('status', '!=', '2')->orderBy('id', 'desc')->get();
-        return view('backend/vendor/index')->with(['vendors' => $vendors]);
+        $csvVendors = CsvVendorImport::all();
+        return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
     }
 
     /**
@@ -242,6 +243,7 @@ class VendorController extends BaseController
     /**   show vendor page - catalog tab      */
     public function vendorCatalog($domain = '', $id)
     {
+        $product_categories = [];
         $active = array();
         $type = Type::all();
         $categoryToggle = array();
@@ -278,7 +280,7 @@ class VendorController extends BaseController
             ->orderBy('parent_id', 'asc')->get();
 
         $csvProducts = CsvProductImport::where('vendor_id', $id)->get();
-
+        $csvVendors = CsvVendorImport::all();
         /*    get active category list also with parent     */
         foreach ($categories as $category) {
             if (in_array($category->id, $VendorCategory) && $category->parent_id == 1) {
@@ -292,8 +294,9 @@ class VendorController extends BaseController
             $build = $this->buildTree($categories->toArray());
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
+        $product_categories = VendorCategory::with('category')->where('status', 1)->where('vendor_id', $id)->get();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend.vendor.vendorCatalog')->with(['vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
+        return view('backend.vendor.vendorCatalog')->with(['vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
     }
 
     /**       delete vendor       */
@@ -387,20 +390,28 @@ class VendorController extends BaseController
      */
     public function importCsv(Request $request)
     {
-        // $fileModel = new CsvVendorImport;
-        
-        // if($request->file('vendor_csv')) {
-        //     $fileName = time().'_'.$request->file('vendor_csv')->getClientOriginalName();
-        //     $filePath = $request->file('vendor_csv')->storeAs('csv_vendors', $fileName, 'public');
-
-        //     $fileModel->name = $fileName;
-        //     $fileModel->path = '/storage/' . $filePath;
-        //     $fileModel->status = 1;
-        //     $fileModel->save();
-        // }
-
-        $data = Excel::import(new VendorImport, $request->file('vendor_csv'));
-
-        dd("Done");
+        if($request->has('vendor_csv')){
+            // dd($request->file('vendor_csv'));
+            $fileModel = new CsvVendorImport;
+            
+            if($request->file('vendor_csv')) {
+                $fileName = time().'_'.$request->file('vendor_csv')->getClientOriginalName();
+                $filePath = $request->file('vendor_csv')->storeAs('csv_vendors', $fileName, 'public');
+    
+                $fileModel->name = $fileName;
+                $fileModel->path = '/storage/' . $filePath;
+                $fileModel->status = 1;
+                $fileModel->save();
+            }
+    
+            $data = Excel::import(new VendorImport, $request->file('vendor_csv'));
+    
+            // dd("Done");
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Uploading!'
+            ]);
+        }
     }
 }
