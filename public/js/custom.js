@@ -1,7 +1,6 @@
 $(document).ready(function() {
     var stripe = '';
     var card = '';
-
     function stripeInitialize(){
         stripe = Stripe('pk_test_51J0nVZSBx0AFwevbSTIDlYAaLjdsg4V4yoHpSo4BCZqGBzzGeU8Mnw1o0spfOYfMtyCXC11wEn6vBqbJeSNnAkw600U6jkzS3R');
         var elements = stripe.elements();
@@ -11,20 +10,6 @@ $(document).ready(function() {
         card = elements.create('card', {hidePostalCode: true, style: style});
         card.mount('#stripe-card-element');
         var form = document.getElementById('stripe-payment-form');
-        // form.addEventListener('submit', function(event) {
-        //     event.preventDefault();
-        //     stripe.createToken(card).then(function(result) {
-        //         if (result.error) {
-        //             var errorElement = document.getElementById('card-errors');
-        //             errorElement.textContent = result.error.message;
-        //             return result.error.message;
-        //         } else {
-        //             // alert(result.token.id);
-        //             $("#stripe_token").val(result.token.id);
-        //             return result.token.id;
-        //         }
-        //     });
-        // });
     }
     function productRemove(cartproduct_id, vendor_id){
         $.ajax({
@@ -56,18 +41,15 @@ $(document).ready(function() {
             }
         });
     }
-    function paymentViaStripe(stripe_token){
+    function paymentViaStripe(stripe_token, address_id, payment_option_id){
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: payment_stripe_url,
             data: {'stripe_token' : stripe_token ,'amount': 0.5},
             success: function (resp) {
-                if(resp.success == 'false'){
-                    alert(resp.msg);
-                }else{
-                    $('#stripe-payment-form .form_fields').hide();
-                    $('#stripe-payment-form .payment_resp').html('<h3>'+resp.msg+'<h3><h4>Transaction ID : '+resp.transactionReference+'</h4>');
+                if(resp.status == 'Success'){
+                    placeOrder(address_id, payment_option_id);
                 }
             }
         });
@@ -92,30 +74,26 @@ $(document).ready(function() {
             type: "POST",
             dataType: 'json',
             url: place_order_url,
-            data: {address_id:address_id, payment_option_id:payment_option_id },
+            data: {address_id:address_id, payment_option_id:payment_option_id},
             success: function(response) {
                 if (response.status == "Success") {
-
+                    window.location.href = base_url+'/order/success/'+response.data.order.id;
                 }
             }
         });
     }
     $(document).on("click", ".proceed_to_pay", function() {
-        // let stripe_token = $("#stripe_token").val();
-        let address_id = $("input:radio[name='address_id']").is(":checked");
+        let address_id = $("input:radio[name='address_id']:checked").val();
         let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
-        // alert(payment_option_id);
         if(payment_option_id == 1){
             placeOrder(address_id, payment_option_id);
         }else if (payment_option_id == 4){
-
             stripe.createToken(card).then(function(result) {
                 if (result.error) {
                     var errorElement = document.getElementById('card-errors');
                     errorElement.textContent = result.error.message;
                 } else {
-                    $("#stripe_token").val(result.token.id);
-                    paymentViaStripe(result.token.id);
+                    paymentViaStripe(result.token.id, address_id, payment_option_id);
                 }
             });
         }else if(payment_option_id == 3){

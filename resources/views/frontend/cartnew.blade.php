@@ -454,6 +454,7 @@
 </div>
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
+    var base_url = "{{url('/')}}";
     var place_order_url = "{{route('user.placeorder')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
     var payment_paypal_url = "{{route('payment.paypal')}}";

@@ -60,7 +60,7 @@
                     </div>
                     <div class="form-group mb-0 switchery-demo">
                         <label for="" class="mr-3">Enable</label>
-                        <input type="checkbox" data-id="{{$opt->id}}" data-title="{{$opt->title}}" data-plugin="switchery" name="active[]" class="chk_box all_select" data-color="#43bee1" @if($opt->status == 1) checked @endif>
+                        <input type="checkbox" data-id="{{$opt->id}}" data-title="{{$opt->title}}" data-plugin="switchery" name="active[{{$opt->id}}]" class="chk_box all_select" data-color="#43bee1" @if($opt->status == 1) checked @endif>
                     </div>
 
                     @if ( (strtolower($opt->title) == 'stripe') )
