@@ -122,6 +122,35 @@
     </div>
 </div>
 
+<div id="import-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Import Vendors</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form method="post" enctype="multipart/form-data" action="{{route('vendor.import')}}">
+                @csrf
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row mb-2">
+                                <div class="col-md-12">            
+                                    <input type="file" accept="csv/*" data-plugins="dropify" name="vendor_csv" class="dropify" data-default-file="" />
+                                    <p class="text-muted text-center mt-2 mb-0">Upload Vendors CSV</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info waves-effect waves-light">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div id="show-map-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-full-width">
         <div class="modal-content">

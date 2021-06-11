@@ -163,6 +163,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         AkibTanjim\Currency\CurrencyServiceProvider::class,
         
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         
 
 
@@ -242,7 +243,7 @@ return [
         'ConvertCurrency' => AkibTanjim\Currency\Facades\CurrencyConverter::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         
-        
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 

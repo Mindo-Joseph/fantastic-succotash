@@ -57,6 +57,8 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     Route::post('vendor/updateSlot/{id}', 'Client\VendorSlotController@update')->name('vendor.updateSlot');
     Route::post('vendor/deleteSlot/{id}', 'Client\VendorSlotController@destroy')->name('vendor.deleteSlot');
 
+    Route::post('vendor/importCSV', 'Client\VendorController@importCsv')->name('vendor.import');
+
     Route::post('vendor/serviceArea/{vid}', 'Client\ServiceAreaController@store')->name('vendor.serviceArea');
     Route::post('vendor/editArea/{vid}', 'Client\ServiceAreaController@edit')->name('vendor.serviceArea.edit');
     Route::post('vendor/updateArea/{id}', 'Client\ServiceAreaController@update');
@@ -69,6 +71,9 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     Route::post('customer/change/status', 'Client\UserController@changeStatus')->name('customer.changeStatus');
 
     Route::resource('product', 'Client\ProductController');
+
+    Route::post('product/importCSV', 'Client\ProductController@importCsv')->name('product.import');
+
     Route::post('product/validate', 'Client\ProductController@validateData')->name('product.validate');
     Route::get('product/add/{vendor_id}', 'Client\ProductController@create')->name('product.add');
     Route::post('product/getImages', 'Client\ProductController@getImages')->name('productImage.get');

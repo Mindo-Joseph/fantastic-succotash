@@ -30,6 +30,7 @@
         "league/flysystem-aws-s3-v3": "~1.0",
         "league/glide-laravel": "^1.0",
         "league/omnipay": "^3",
+        "maatwebsite/excel": "^3.1",
         "omnipay/paypal": "^3.0",
         "omnipay/stripe": "^3.1",
         "pallares/laravel-nuxt": "^1.5",
