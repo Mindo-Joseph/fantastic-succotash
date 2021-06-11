@@ -330,9 +330,9 @@ class CustomerAuthController extends FrontController{
         
         try{
             $gateway = Omnipay::create('PayPal_Express');
-            $gateway->setUsername($username);
-            $gateway->setPassword($password);
-            $gateway->setSignature($signature);
+            $gateway->setUsername('sb-r6ryi6463363_api1.business.example.com');
+            $gateway->setPassword('2WT35LCJ73SYWLMD');
+            $gateway->setSignature('Ai9cuHQXupERagE016AbIPpQXy9fAgblu9y2ZXrzYkt1e0GUY.EPoJBl');
             $gateway->setTestMode(true); //set it to 'false' when go live
 
             // Send purchase request

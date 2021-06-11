@@ -394,9 +394,16 @@
 <script type="text/template" id="payment_method_tab_pane_template">
     <% _.each(payment_options, function(payment_option, k){%>
         <div class="tab-pane fade <%= payment_option.slug == 'cash_on_delivery' ? 'active show': ''%>" id="v-pills-<%= payment_option.slug %>" role="tabpanel" aria-labelledby="v-pills-<%= payment_option.slug %>-tab">
+        <% if(payment_option.slug == 'stripe') { %>
             <form method="POST" id="stripe-payment-form">
-                @csrf
-                @method('POST')
+        <% } else if(payment_option.slug == 'paypal') { %>
+            <form method="POST" id="paypal-payment-form">
+        <% } else { %>
+            <form method="POST">
+        <% } %>
+
+            @csrf
+            @method('POST')
                 <div class="payment_resp" role="alert"></div>
                 <div class="form_fields">
                     <div class="row">
@@ -404,7 +411,7 @@
                             <div class="row form-group">
                                 <div class="col-sm-8">
                                     <label for="">Amount:</label>
-                                </div>                                                    
+                                </div>
                             </div>
                             <% if(payment_option.slug == 'stripe') { %>
                                 <div id="stripe-card-element"></div>
@@ -449,6 +456,7 @@
 <script type="text/javascript">
     var place_order_url = "{{route('user.placeorder')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
+    var payment_paypal_url = "{{route('payment.paypal')}}";
     var user_store_address_url = "{{route('address.store')}}";
     var promo_code_remove_url = "{{ route('remove.promocode') }}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
