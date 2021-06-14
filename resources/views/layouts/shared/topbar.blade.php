@@ -68,8 +68,9 @@
         <div class="logo-box">
             @php
                 $urlImg = URL::to('/').'/assets/images/users/user-1.jpg';
-                if(!empty(Auth::user()->logo)){
-                    $urlImg = Auth::user()->logo['image_fit'].'200/80'.Auth::user()->logo['image_path'];
+                $clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
+                if($clientData){
+                    $urlImg = $clientData->logo['proxy_url'].'200/80'.$clientData->logo['image_path'];
                 }
             @endphp
             <a href="{{route('client.dashboard')}}" class="logo logo-dark text-center">
@@ -116,4 +117,3 @@
         <div class="clearfix"></div>
     </div>
 </div>
-<!-- end Topbar
