@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Imports;
-
-use App\Models\{Vendor, CsvVendorImport};
 use Illuminate\Support\Collection;
+use Spatie\Geocoder\Facades\Geocoder;
+use App\Models\{Vendor, CsvVendorImport};
 use Maatwebsite\Excel\Concerns\ToCollection;
 
 class VendorImport implements ToCollection
@@ -19,9 +19,9 @@ class VendorImport implements ToCollection
             foreach ($rows as $row) {
                 $row = $row->toArray();
                 $checker = 0;
-                if ($row[0] != "Logo") { //header of excel check
-                    if ($row[2] != "") { //check if name is empty
-                        $vendor_check = Vendor::where('name', $row[0])->first();
+                if ($row[0] != "Logo") {
+                    if ($row[2] != "") {
+                        $vendor_check = Vendor::where('name', $row[2])->first();
                         if ($vendor_check) { //if not empty, then is it already exists
                             $error[] = "Row " . $i . " : Vendor name already Exist";
                             $checker = 1;
@@ -30,14 +30,12 @@ class VendorImport implements ToCollection
                         $error[] = "Row " . $i . " : Name cannot be empty";
                         $checker = 1;
                     }
-
                     if($row[8] != ""){
                         if(!is_numeric($row[8])) {
                             $error[] = "Row " . $i . " : Invalid input for order prepare time";
                             $checker = 1;
                         }
                     }
-
                     if($row[9] != ""){
                         if(!is_numeric($row[9])) {
                             $error[] = "Row " . $i . " : Invalid input for Auto Reject Time";
@@ -68,7 +66,6 @@ class VendorImport implements ToCollection
                             $checker = 1;
                         }
                     }
-
                     if($checker == 0) { 
                         $data[] = $row;
                     }
@@ -76,15 +73,25 @@ class VendorImport implements ToCollection
                 $i++;
             }
             if (!empty($data)) {
+                $insert_vendor_details = [];
                 foreach ($data as $da) {
-                    if (!Vendor::where('name', $da[0])->exists()) {
-                        $product = Vendor::insertGetId([
-                            'latitude' => 0,
+                    if (!Vendor::where('name', $da[2])->exists()) {
+                        $latitude = 0;
+                        $longitude = 0;
+                        if($da[4]){
+                           $geoInfo = Geocoder::getCoordinatesForAddress($da[4]);
+                           $latitude = $geoInfo['lat'];
+                           $longitude = $geoInfo['lng'];
+                        }
+                        $insert_vendor_details[] = array(
                             'name' => $da[2],
-                            'longitude' => 0,
+                            'latitude' => $latitude,
+                            'longitude' => $longitude,
                             'dine_in' => ($da[5] == 'TRUE') ? 1 : 0,
                             'takeaway' => ($da[6] == 'TRUE') ? 1 : 0,
+                            'delivery' => ($da[7] == 'TRUE') ? 1 : 0,
                             'desc' => ($da[3] == "") ? "NULL" : $da[3],
+                            'show_slot' => ($da[15] == "TRUE") ? 1 : 0,
                             'logo' => ($da[0] == "") ? "NULL" : $da[0],
                             'banner' => ($da[1] == "") ? "NULL" : $da[1],
                             'address' => ($da[4] == "") ? "NULL" : $da[4],
@@ -94,10 +101,10 @@ class VendorImport implements ToCollection
                             'commission_monthly' => ($da[14] == "") ? "NULL" : $da[14],
                             'commission_percent' => ($da[12] == "") ? "NULL" : $da[12],
                             'commission_fixed_per_order' => ($da[13] == "") ? "NULL" : $da[13],
-                            'delivery' => ($da[7] == 'TRUE') ? 1 : 0,
-                        ]);
+                        );
                     }
                 }
+                Vendor::insert($insert_vendor_details);
             }
             $csv_vendor_import = CsvVendorImport::where('id', $this->csv_vendor_import_id)->first();
             if (!empty($error)) {

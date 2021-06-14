@@ -237,18 +237,14 @@
 
 
     function submitImportForm(){ 
-        //console.log("fg4rg");
-        // e.preventDefault();
         var form =  document.getElementById('save_imported_vendors');
         var formData = new FormData(form);
         var data_uri = "{{route('vendor.import')}}";
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
             }
         });
-
         $.ajax({
             type: "post",
             headers: {
@@ -259,10 +255,9 @@
             contentType: false,
             processData: false,
             success: function(response) {
-
                 if (response.status == 'success') {
-                    // $(".modal .close").click();
-                    // location.reload(); 
+                    $("#import-form").modal('hide');
+                    location.reload(); 
                 } else {
                     $(".show_all_error.invalid-feedback").show();
                     $(".show_all_error.invalid-feedback").text(response.message);
