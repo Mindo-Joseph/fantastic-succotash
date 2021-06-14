@@ -35,8 +35,8 @@ class PaypalGatewayController extends Controller
             $response = $gateway->purchase([
                 'amount' => $request->input('amount'),
                 'currency' => 'USD',
-                'returnUrl' => url('/payment/paypalSuccess?amount='.$request->input('amount')),
-                'cancelUrl' => url('/payment/paypalError')
+                'returnUrl' => url('/viewcart'),
+                'cancelUrl' => url('/viewcart')
             ])->send();
 
             if ($response->isSuccessful()) {
@@ -78,7 +78,7 @@ class PaypalGatewayController extends Controller
                 // Insert transaction data into the database
          
                 // $message = "Payment is successful. Your transaction id is: ". $arr_body['TOKEN'];
-                return $this->successResponse(['status' => 'success', 'response' => $response->getTransactionReference()]);
+                return $this->successResponse(['status' => 'success', 'id' => $response->getTransactionReference()]);
             } else {
                 $message = $response->getMessage();
                 return $this->errorResponse(['status' => 'error', 'message' => $response->getMessage()]);
@@ -86,13 +86,5 @@ class PaypalGatewayController extends Controller
         } else {
             return $this->errorResponse(['status' => 'error', 'message' => 'Transaction is declined']);
         }
-    }
-
-    public function paypalError(Request $request)
-    {
-        $message = '';
-
-        // dd($request);
-        // exit;
     }
 }
