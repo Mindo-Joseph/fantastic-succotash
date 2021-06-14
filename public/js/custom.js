@@ -49,7 +49,7 @@ $(document).ready(function() {
             data: {'stripe_token' : stripe_token ,'amount': 0.25},
             success: function (resp) {
                 if(resp.status == 'Success'){
-                    placeOrder(address_id, payment_option_id);
+                    placeOrder(address_id, payment_option_id, resp.data.response.id);
                 }
             }
         });
@@ -69,12 +69,12 @@ $(document).ready(function() {
             }
         });
     }
-    function placeOrder(address_id, payment_option_id){
+    function placeOrder(address_id, payment_option_id, transaction_id){
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: place_order_url,
-            data: {address_id:address_id, payment_option_id:payment_option_id},
+            data: {address_id:address_id, payment_option_id:payment_option_id, transaction_id:transaction_id},
             success: function(response) {
                 if (response.status == "Success") {
                     window.location.href = base_url+'/order/success/'+response.data.order.id;
@@ -86,12 +86,11 @@ $(document).ready(function() {
         let address_id = $("input:radio[name='address_id']:checked").val();
         let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
         if(payment_option_id == 1){
-            placeOrder(address_id, payment_option_id);
+            placeOrder(address_id, payment_option_id, '');
         }else if (payment_option_id == 4){
             stripe.createToken(card).then(function(result) {
                 if (result.error) {
-                    var errorElement = document.getElementById('card-errors');
-                    errorElement.textContent = result.error.message;
+                    $('#stripe_card_error').html(result.error.message);
                 } else {
                     paymentViaStripe(result.token.id, address_id, payment_option_id);
                 }
@@ -115,6 +114,8 @@ $(document).ready(function() {
                     let payment_method_tab_pane_template = _.template($('#payment_method_tab_pane_template').html());
                     $("#v_pills_tabContent").append(payment_method_tab_pane_template({payment_options: response.data}));
                     $('#proceed_to_pay_modal').modal('show');
+
+                    $('#proceed_to_pay_modal #total_amt').html($('#cart_total_payable_amount').html());
                     stripeInitialize();
                 }
             }

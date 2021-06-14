@@ -159,6 +159,14 @@ class OrderController extends FrontController{
             CartAddon::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();
             CartProduct::where('cart_id', $cart->id)->delete();
+            if($request->payment_option_id == 4){
+                Payment::insert([
+                    'date' => date('Y-m-d'),
+                    'order_id' => $order->id,
+                    'transaction_id' => $request->transaction_id,
+                    'balance_transaction' => $order->payable_amount,
+                ]);
+            }
             DB::commit();
             return $order; 
         } catch (Exception $e) {
