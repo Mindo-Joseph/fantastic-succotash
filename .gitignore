@@ -1,6 +1,4 @@
 /node_modules
-
-
 /node_modules
 /vendor
 /resources/js
@@ -15,3 +13,4 @@ yarn-error.log
 composer.lock
 query.php
 /storage/framework/laravel-excel
+storage/debugbar/

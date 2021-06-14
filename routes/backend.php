@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Front\SearchController;
 
+
+
 Route::get('admin/login', function () {
     return view('auth/login');
 })->name('admin.login')->middleware('domain');
@@ -9,9 +11,10 @@ Route::get('admin/login', function () {
 Route::post('admin/login/client', 'Auth\LoginController@clientLogin')->name('client.login');
 Route::get('admin/wrong/url', 'Auth\LoginController@wrongurl')->name('wrong.client');
 
-Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'], function () {
+Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'], function () {
+    //Route::middleware('auth')->group(function () {
 
-    Route::post('/logout', 'Auth\LoginController@logout')->name('client.logout');
+    Route::any('/logout', 'Auth\LoginController@logout')->name('client.logout');
     Route::get('profile', 'Client\DashBoardController@profile')->name('client.profile');
     Route::get('dashboard', 'Client\DashBoardController@index')->name('client.dashboard');
     Route::put('profile/{id}', 'Client\DashBoardController@updateProfile')->name('client.profile.update');
@@ -47,7 +50,6 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     Route::resource('vendor', 'Client\VendorController');
     Route::get('vendor/categories/{id}', 'Client\VendorController@vendorCategory')->name('vendor.categories');
     Route::get('vendor/catalogs/{id}', 'Client\VendorController@vendorCatalog')->name('vendor.catalogs');
-    Route::get('vendor/categories/{id}', 'Client\VendorController@vendorCategory')->name('vendor.categories');
     Route::post('vendor/saveConfig/{id}', 'Client\VendorController@updateConfig')->name('vendor.config.update');
     Route::post('vendor/activeCategory/{id}', 'Client\VendorController@activeCategory')->name('vendor.category.update');
     Route::post('vendor/parentStatus/{id}', 'Client\VendorController@checkParentStatus')->name('category.parent.status');
@@ -68,6 +70,8 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     Route::get('order/{order_id}/{vendor_id}', 'Client\OrderController@getOrderDetail')->name('order.show.detail');
     Route::resource('customer', 'Client\UserController');
     Route::get('customer/account/{user}/{action}', 'Client\UserController@deleteCustomer')->name('customer.account.action');
+    Route::get('customer/edit/{id}', 'Client\UserController@newEdit')->name('customer.new.edit');
+    Route::put('newUpdate/edit/{id}', 'Client\UserController@newUpdate')->name('customer.new.update');
     Route::post('customer/change/status', 'Client\UserController@changeStatus')->name('customer.changeStatus');
 
     Route::resource('product', 'Client\ProductController');
@@ -104,6 +108,7 @@ Route::group(['middleware' => ['auth:client', 'database'], 'prefix' => '/client'
     // Route::post('stripe/make', 'Client\PaymentController@makePayment')->name('stripe.makePayment');
     Route::resource('payoption', 'Client\PaymentOptionController');
     Route::post('updateAll', 'Client\PaymentOptionController@updateAll')->name('payoption.updateAll');
+    // Route::resource('acl','Client\AclController'); # create manager/vendors with permission
 });
 
 

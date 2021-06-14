@@ -105,17 +105,17 @@
                                     <table class="table table-centered table-nowrap table-striped" id="">
                                         <thead>
                                             <tr>
-                                                <th>#</th>
-                                                <th>Name</th>
-                                                <th>Category</th>
-                                                <th>Brand</th>
-                                                <th>Quantity</th>
-                                                <th>Price</th>
-                                                <th>Status</th>
-                                                <th>New</th>
-                                                <th>Featured</th>
-                                                <th>Requires Last Mile Delivery</th>
-                                                <th>Action</th>
+                                              <th>#</th>
+                                              <th>Name</th>
+                                              <th>Category</th>
+                                              <th>Brand</th>
+                                              <th>Quantity</th>
+                                              <th>Price</th>
+                                              <th>Status</th>
+                                              <th>New</th>
+                                              <th>Featured</th>
+                                              <th>Requires Last<br>Mile Delivery</th>
+                                              <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="post_list">

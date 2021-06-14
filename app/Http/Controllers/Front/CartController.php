@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Front;
 
-use Auth;
-use Session;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,Country,UserAddress,CartCoupon};
-
-class CartController extends FrontController{
-
-    private function randomString(){
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor};
+use Illuminate\Http\Request;
+use Session;
+use Auth;
+use GuzzleHttp\Client;
+use Log;
+class CartController extends FrontController
+{
+    private function randomString()
+    {
         $random_string = substr(md5(microtime()), 0, 32);
         while (User::where('system_id', $random_string)->exists()) {
             $random_string = substr(md5(microtime()), 0, 32);
@@ -38,18 +40,21 @@ class CartController extends FrontController{
 
     public function postAddToCart(Request $request, $domain = ''){
         try {
+            $cart_detail = [];
             $user = Auth::user();
             $addon_ids = $request->addonID;
             $addon_options_ids = $request->addonoptID;
             $new_session_token = session()->get('_token');
             $client_currency = ClientCurrency::where('is_primary', '=', 1)->first();
             $user_id = $user ? $user->id : '';
+            if($user){
+                $cart_detail['user_id'] = $user_id;
+                $cart_detail['created_by'] = $user_id;
+            }
             $cart_detail = [
                 'is_gift' => 1,
                 'status' => '0',
                 'item_count' => 0,
-                'user_id' => $user_id,
-                'created_by' => $user_id,
                 'currency_id' => $client_currency->currency_id,
                 'unique_identifier' => !$user ? $new_session_token : '',
             ];
@@ -263,7 +268,7 @@ class CartController extends FrontController{
         if($cartData){
             foreach ($cartData as $ven_key => $vendorData) {
                 
-                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = 0.00;
+                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = $deliver_charge = 0.00;
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
                     $quantity_price = 0;
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
@@ -290,6 +295,7 @@ class CartController extends FrontController{
                             $payable_amount = $payable_amount + $product_tax;
                         }
                     }
+                   
                     $prod->taxdata = $taxData;
                     unset($prod->product->taxCategory);
                     foreach ($prod->addon as $ck => $addons) {
@@ -308,9 +314,17 @@ class CartController extends FrontController{
                     }else{
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
+                    if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1)
+                    {   
+                        Log::info($prod->product);
+                        $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
+                    }
+                    if(empty($deliver_charge))
                     $deliver_charge = 0;
                     $prod->deliver_charge = number_format($deliver_charge, 2);
                     $payable_amount = $payable_amount + $deliver_charge;
+                    $delivery_fee_charges = $deliver_charge;
+
                 }
                 if($vendorData->coupon){
                     if($vendorData->coupon->promo->promo_type_id == 2){
@@ -322,6 +336,7 @@ class CartController extends FrontController{
                         $payable_amount -= $percentage_amount;
                     }
                 }
+                $vendorData->delivery_fee_charges = number_format($delivery_fee_charges, 2);
                 $vendorData->payable_amount = number_format($payable_amount, 2);
                 $vendorData->discount_amount = number_format($discount_amount, 2);
                 $vendorData->discount_percent = number_format($discount_percent, 2);
@@ -417,4 +432,65 @@ class CartController extends FrontController{
         }
         return response()->json(['status' => 'success', 'cart_details' => $cart_details]);
     }
+
+
+    # get delivery fee from dispatcher 
+    public function getDeliveryFeeDispatcher($vendor_id){
+        try {
+                 $dispatch_domain = $this->checkIfLastMileOn();
+                if ($dispatch_domain && $dispatch_domain != false) {
+                    $customer = User::find(Auth::id());
+                    $cus_address = UserAddress::where('user_id',Auth::id())->orderBy('is_primary','desc')->first();
+                    if($cus_address){
+                        Log::info($vendor_id);
+                        $tasks = array();
+                        $vendor_details = Vendor::find($vendor_id);
+    
+                            $location[] = array('latitude' => $vendor_details->latitude??30.71728880,
+                                                'longitude' => $vendor_details->longitude??76.80350870
+                                                );
+                                            
+                            $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
+                                              'longitude' => $cus_address->longitude??76.803508700000
+                                            );
+                                        
+                            $postdata =  ['locations' => $location];
+                            $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
+                                                        'shortcode' => $dispatch_domain->delivery_service_key_code,
+                                                        'content-type' => 'application/json']
+                                                            ]);
+                            $url = $dispatch_domain->delivery_service_key_url;                      
+                            $res = $client->post($url.'/api/get-delivery-fee',
+                                ['form_params' => ($postdata)]
+                            );
+
+                            //$result = file_get_contents($res);
+                            $response = json_decode($res->getBody(), true);
+                            if($response && $response['message'] == 'success'){
+                                return $response['total'];
+                            }
+                           
+                        
+                    }
+                   
+                }
+            }    
+            catch(\Exception $e)
+            {
+                 dd($e->getMessage());
+                        
+            }
+           
+           
+    }
+    # check if last mile delivery on 
+    public function checkIfLastMileOn(){
+        $preference = ClientPreference::first();
+        if($preference->need_delivery_service == 1 && !empty($preference->delivery_service_key) && !empty($preference->delivery_service_key_code) && !empty($preference->delivery_service_key_url))
+            return $preference;
+        else
+            return false;
+    }
+
+
 }

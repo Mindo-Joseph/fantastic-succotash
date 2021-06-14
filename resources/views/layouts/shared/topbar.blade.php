@@ -42,8 +42,12 @@
                         <h6 class="text-overflow m-0">Welcome !</h6>
                     </div>
 
+                    <a href="{{route('userHome')}}" class="dropdown-item notify-item">
+                        <i class="fe-globe"></i>
+                        <span>Website</span>
+                    </a>
 
-                    <a href="#" class="dropdown-item notify-item">
+                    <a href="{{route('client.profile')}}" class="dropdown-item notify-item">
                         <i class="fe-user"></i>
                         <span>My Account</span>
                     </a>

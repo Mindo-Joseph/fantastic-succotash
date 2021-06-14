@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
               CommonDataSeeder::class,
               BannerDataSeeder::class,
               TimezoneSeeder::class,
+              AppStylingSeeder::class,
               /*AddonsetDataSeeder::class,
               VariantSeeder::class,
               CatalogSeeder::class,

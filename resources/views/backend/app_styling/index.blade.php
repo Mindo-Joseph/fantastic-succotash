@@ -25,10 +25,9 @@
                         <div class="mb-3">
                             <label class="form-label">Selecting multiple dates</label>
                             <select class="form-control">
-                                <option selected="">Fonts</option>
-                                <option value="1">Open Sans</option>
-                                <option value="2">Roboto</option>
-                                <option value="3">Lato</option>
+                            @foreach($font_options as $font)
+                                <option value="{{$font->id}}">{{$font->name}}</option>
+                            @endforeach
                             </select>
                         </div>
                     </div>
@@ -52,9 +51,10 @@
                         <h4 class="header-title">Tab Bar Style</h4>
                         <p class="sub-header">Examples of Spectrum Colorpicker.</p>
                         <div class="row">
+                        @foreach($tab_style_options as $tab_style)
                             <div class="col-lg-4">
                                 <div class="card mb-0">
-                                    <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
+                                    <img class="card-img-top img-fluid" src="{{$tab_style->image}}" alt="Card image cap">
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-sm-12 custom-control custom-radio">
@@ -66,34 +66,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
-                                <div class="card mb-0">
-                                    <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-sm-12 custom-control custom-radio">
-                                                <input type="radio" value="" id="webTemplate" name="web_template_id" class="custom-control-input" }}>
-                                                <label class="custom-control-label" for="webTemplate">Select Image</label>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="card mb-0">
-                                    <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-sm-12 custom-control custom-radio">
-                                                <input type="radio" value="" id="webTemplate" name="web_template_id" class="custom-control-input" }}>
-                                                <label class="custom-control-label" for="webTemplate">Select Image</label>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
+                        @endforeach
+                            
                         </div>
                     </div>
                 </div>
@@ -104,9 +78,10 @@
                         <h4 class="header-title">Home Page Style</h4>
                         <p class="sub-header">Examples of Spectrum Colorpicker.</p>
                         <div class="row">
+                        @foreach($homepage_style_options as $homepage_style)
                             <div class="col-lg-4">
                                 <div class="card mb-0">
-                                    <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
+                                    <img class="card-img-top img-fluid" src="{{$homepage_style->image}}" alt="Card image cap">
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-sm-12 custom-control custom-radio">
@@ -118,34 +93,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
-                                <div class="card mb-0">
-                                    <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-sm-12 custom-control custom-radio">
-                                                <input type="radio" value="" id="webTemplate" name="web_template_id" class="custom-control-input" }}>
-                                                <label class="custom-control-label" for="webTemplate">Select Image</label>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="card mb-0">
-                                    <img class="card-img-top img-fluid" src="{{asset('assets/images/small/img-1.jpg')}}" alt="Card image cap">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-sm-12 custom-control custom-radio">
-                                                <input type="radio" value="" id="webTemplate" name="web_template_id" class="custom-control-input" }}>
-                                                <label class="custom-control-label" for="webTemplate">Select Image</label>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
+                        @endforeach
                         </div>
                     </div>
                 </div>

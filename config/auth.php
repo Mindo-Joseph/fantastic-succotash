@@ -23,7 +23,7 @@ return [
     ],
     'clients' => [
         'driver' => 'eloquent',
-        'model' => App\Models\Client::class,
+        'model' => App\Models\User::class,
     ],
 
     /*
@@ -89,7 +89,7 @@ return [
         ],
         'clients' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Client::class,
+            'model' => App\Models\User::class,
         ],
         'admin' => [
             'driver' => 'eloquent',

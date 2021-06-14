@@ -27,77 +27,81 @@ class ProductsImport implements ToCollection
 
             if ($row[0] != "Handle") { //header of excel check
                 if ($row[0] == "") { //if sku or handle is empty
-                    $error[] = "Line " . $i . " : handle is empty";
+                    $error[] = "Row " . $i . " : handle is empty";
+                    $checker = 1;
+                }
+                if (Product::where('sku', $row[0])->exists()) { //if sku or handle is empty
+                    $error[] = "Row " . $i . " : Product with this sku already exist";
                     $checker = 1;
                 }
                 if ($row[3] == "") { //check if published is empty
-                    $error[] = "Line " . $i . " : Please mark published either true or false";
+                    $error[] = "Row " . $i . " : Please mark published either true or false";
                     $checker = 1;
                 }
                 if ($row[4] == "") { // check if category is empty
-                    $error[] = "Line " . $i . " : Category cannot be empty";
+                    $error[] = "Row " . $i . " : Category cannot be empty";
                     $checker = 1;
                 }
                 if ($row[4] != "") {
                     $category_check = Category::where('slug', $row[4])->first();
                     if (!$category_check) { //check if category doesn't exist
-                        $error[] = "Line " . $i . " : Category doesn't exist";
+                        $error[] = "Row " . $i . " : Category doesn't exist";
                         $checker = 1;
                     } else {
                         $category_id = $category_check->id;
                         if (!VendorCategory::where([['vendor_id', '=', '6'], ['category_id', '=', $category_id]])->exists()) { //check if category is activated for this vendor
-                            $error[] = "Line " . $i . " : This category is not activated for this vendor";
+                            $error[] = "Row " . $i . " : This category is not activated for this vendor";
                             $checker = 1;
                         }
                     }
                 }
 
                 if ($row[5] != "" && $row[6] == "") {
-                    $error[] = "Line " . $i . " : There is no value for option 1";
+                    $error[] = "Row " . $i . " : There is no value for option 1";
                     $checker = 1;
                 }
 
                 if ($row[7] != "" && $row[8] == "") {
-                    $error[] = "Line " . $i . " : There is no value for option 2";
+                    $error[] = "Row " . $i . " : There is no value for option 2";
                     $checker = 1;
                 }
 
                 if ($row[9] != "" && $row[10] == "") {
-                    $error[] = "Line " . $i . " : There is no value for option 3";
+                    $error[] = "Row " . $i . " : There is no value for option 3";
                     $checker = 1;
                 }
 
                 if ($row[5] == "" && $row[6] != "") {
-                    $error[] = "Line " . $i . " : There is no name for option 1";
+                    $error[] = "Row " . $i . " : There is no name for option 1";
                     $checker = 1;
                 }
 
                 if ($row[7] == "" && $row[8] != "") {
-                    $error[] = "Line " . $i . " : There is no name for option 2";
+                    $error[] = "Row " . $i . " : There is no name for option 2";
                     $checker = 1;
                 }
 
                 if ($row[9] == "" && $row[10] != "") {
-                    $error[] = "Line " . $i . " : There is no name for option 3";
+                    $error[] = "Row " . $i . " : There is no name for option 3";
                     $checker = 1;
                 }
 
                 if ($row[5] != "" && $row[6] != "") {
                     $variant_check = Variant::where('title', $row[5])->first();
                     if (!$variant_check) {
-                        $error[] = "Line " . $i . " : Option1 Name doesn't exist";
+                        $error[] = "Row " . $i . " : Option1 Name doesn't exist";
                         $checker = 1;
                     }
 
                     $variant_option = VariantOption::where('title', $row[6])->first();
                     if (!$variant_option) {
-                        $error[] = "Line " . $i . " : Option1 value doesn't exist";
+                        $error[] = "Row " . $i . " : Option1 value doesn't exist";
                         $checker = 1;
                     }
 
                     if ($variant_check && $variant_option) {
                         if (($variant_option->variant_id) != ($variant_check->id)) {
-                            $error[] = "Line " . $i . " : Option1 value is not available for this Name";
+                            $error[] = "Row " . $i . " : Option1 value is not available for this Name";
                             $checker = 1;
                         } else {
                             $variant_exist = 1;
@@ -108,19 +112,19 @@ class ProductsImport implements ToCollection
                 if ($row[7] != "" && $row[8] != "") {
                     $variant_check = Variant::where('title', $row[7])->first();
                     if (!$variant_check) {
-                        $error[] = "Line " . $i . " : Option2 Name doesn't exist";
+                        $error[] = "Row " . $i . " : Option2 Name doesn't exist";
                         $checker = 1;
                     }
 
                     $variant_option = VariantOption::where('title', $row[8])->first();
                     if (!$variant_option) {
-                        $error[] = "Line " . $i . " : Option2 value doesn't exist";
+                        $error[] = "Row " . $i . " : Option2 value doesn't exist";
                         $checker = 1;
                     }
 
                     if ($variant_check && $variant_option) {
                         if (($variant_option->variant_id) != ($variant_check->id)) {
-                            $error[] = "Line " . $i . " : Option2 value is not available for this Name";
+                            $error[] = "Row " . $i . " : Option2 value is not available for this Name";
                             $checker = 1;
                         } else {
                             $variant_exist = 1;
@@ -131,19 +135,19 @@ class ProductsImport implements ToCollection
                 if ($row[9] != "" && $row[10] != "") {
                     $variant_check = Variant::where('title', $row[9])->first();
                     if (!$variant_check) {
-                        $error[] = "Line " . $i . " : Option3 Name doesn't exist";
+                        $error[] = "Row " . $i . " : Option3 Name doesn't exist";
                         $checker = 1;
                     }
 
                     $variant_option = VariantOption::where('title', $row[10])->first();
                     if (!$variant_option) {
-                        $error[] = "Line " . $i . " : Option3 value doesn't exist";
+                        $error[] = "Row " . $i . " : Option3 value doesn't exist";
                         $checker = 1;
                     }
 
                     if ($variant_check && $variant_option) {
                         if (($variant_option->variant_id) != ($variant_check->id)) {
-                            $error[] = "Line " . $i . " : Option3 value is not available for this Name";
+                            $error[] = "Row " . $i . " : Option3 value is not available for this Name";
                             $checker = 1;
                         } else {
                             $variant_exist = 1;
@@ -153,12 +157,12 @@ class ProductsImport implements ToCollection
 
                 if ($variant_exist == 1) {
                     if ($row[11] == "") {
-                        $error[] = "Line " . $i . " : Variant Sku is empty";
+                        $error[] = "Row " . $i . " : Variant Sku is empty";
                         $checker = 1;
                     } else {
                         $proVariant = ProductVariant::where('sku', $row[11])->first();
                         if ($proVariant) {
-                            $error[] = "Line " . $i . " : Variant Sku already exist";
+                            $error[] = "Row " . $i . " : Variant Sku already exist";
                             $checker = 1;
                         }
                     }
