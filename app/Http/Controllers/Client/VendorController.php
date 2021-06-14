@@ -14,6 +14,7 @@ use App\Http\Traits\ToasterResponser;
 use App\Http\Traits\ApiResponser;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\VendorImport;
+use App\Models\UserVendor;
 
 class VendorController extends BaseController
 {
@@ -26,9 +27,14 @@ class VendorController extends BaseController
      */
     public function index()
     {
-        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])
-            ->where('status', '!=', '2')->orderBy('id', 'desc')->get();
         $csvVendors = CsvVendorImport::all();
+        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->where('status', '!=', '2')->orderBy('id', 'desc');
+        if (Auth::user()->is_superadmin == 0) {
+            $vendors = $vendors->whereHas('permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendors = $vendors->get();
         return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
     }
 
@@ -200,6 +206,7 @@ class VendorController extends BaseController
     /**   show vendor page - category tab      */
     public function vendorCategory($domain = '', $id)
     {
+        $csvVendors = [];
         $vendor = Vendor::findOrFail($id);
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
@@ -237,7 +244,7 @@ class VendorController extends BaseController
             ->where('is_active', 1)
             ->orderBy('is_primary', 'desc')->get();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build]);
+        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build,'csvVendors'=> $csvVendors]);
     }
 
     /**   show vendor page - catalog tab      */

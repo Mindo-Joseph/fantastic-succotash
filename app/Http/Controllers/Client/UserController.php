@@ -13,7 +13,10 @@ use Password;
 use App\Notifications\PasswordReset;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Traits\ToasterResponser;
-
+use App\Models\UserPermissions;
+use App\Models\Permissions;
+use App\Models\UserVendor;
+use App\Models\Vendor;
 class UserController extends BaseController
 {
     use ToasterResponser;
@@ -26,7 +29,7 @@ class UserController extends BaseController
     {
         $roles = Role::all();
         $countries = Country::all();
-        $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->orderBy('id', 'desc')->paginate(20);
+        $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->paginate(20);
         //dd($users->toArray());
         return view('backend/users/index')->with(['users' => $users, 'roles' => $roles, 'countries' => $countries]);
     }
@@ -138,6 +141,68 @@ class UserController extends BaseController
 
         //$returnHTML = view('backend.banner.form')->with(['banner' => $banner,  'vendors' => $vendors, 'categories' => $categories])->render();
         //return response()->json(array('success' => true, 'html'=>$returnHTML));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function newEdit($domain = '', $id)
+    {
+        $subadmin = User::find($id);
+        $permissions = Permissions::all();
+        $user_permissions = UserPermissions::where('user_id', $id)->get();
+        $vendor_permissions = UserVendor::where('user_id', $id)->pluck('vendor_id')->toArray();
+        $vendors = Vendor::where('status',1)->get();
+        return view('backend.users.editUser')->with(['subadmin'=> $subadmin,'vendors'=> $vendors,'permissions'=>$permissions,'user_permissions'=>$user_permissions,'vendor_permissions'=>$vendor_permissions]);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function newUpdate(Request $request, $domain = '', $id)
+    {
+       
+        $data = [
+            'status' => $request->status,
+            'is_admin' => $request->is_admin,
+            'is_superadmin' => 0
+        ];
+
+        $client = User::where('id', $id)->update($data);
+
+        //for updating permissions
+        if ($request->permissions) {
+            $userpermissions = $request->permissions;
+            $addpermission = [];
+            $removepermissions = UserPermissions::where('user_id', $id)->delete();
+            for ($i=0;$i<count($userpermissions);$i++) {
+                $addpermission[] =  array('user_id' => $id,'permission_id' => $userpermissions[$i]);
+            }
+            UserPermissions::insert($addpermission);
+        }
+
+         //for updating vendor permissions
+         if ($request->vendor_permissions) {
+            $teampermissions = $request->vendor_permissions;
+            $addteampermission = [];
+            $removeteampermissions = UserVendor::where('user_id', $id)->delete();
+            for ($i=0;$i<count($teampermissions);$i++) {
+                $addteampermission[] =  array('user_id' => $id,'vendor_id' => $teampermissions[$i]);
+            }
+            UserVendor::insert($addteampermission);
+        }
+
+        
+        
+        return redirect()->route('customer.index')->with('success', 'Customer Updated successfully!');
     }
 
 }

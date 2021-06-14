@@ -124,6 +124,7 @@
                 </td> 
                 <td colspan="3"></td>
                 <td class="text-right pl-lg-2">
+                    <p class="total_amt m-0">Delivery Fee : $ <%= product.delivery_fee_charges %></p>
                     <p class="total_amt m-0">$ <%= product.product_total_amount %></p>
                 </td>
             </tr>

@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor,CartCoupon, LoyaltyCard};
-
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor, UserAddress,Vendor,CartCoupon, LoyaltyCard};
+use App\Models\ClientPreference;
+use GuzzleHttp\Client;
 class OrderController extends FrontController{
     use ApiResponser;
     public function getOrderSuccessPage(Request $request){
@@ -167,6 +168,7 @@ class OrderController extends FrontController{
                     'balance_transaction' => $order->payable_amount,
                 ]);
             }
+            $order_dispatch = $this->placeRequestToDispatch($order,$cart_products,$request);
             DB::commit();
             return $order; 
         } catch (Exception $e) {
@@ -209,4 +211,88 @@ class OrderController extends FrontController{
             exit($response->getMessage());
         }
     }
+
+
+
+
+    public function placeRequestToDispatch($order,$cart_products,$request){
+        try {
+                $dispatch_domain = $this->getDispatchDomain();
+                if ($dispatch_domain && $dispatch_domain != false) {
+                    $customer = User::find(Auth::id());
+                    $cus_address = UserAddress::find($request->address_id);
+                    $vendor_ids = array_column($cart_products->toArray(), 'vendor_id');
+                    $vendor_ids = array_unique($vendor_ids);
+                    $tasks = array();
+                                
+                    if ($request->input("payment-group") == 2) {
+                        $cash_to_be_collected = 'Yes';
+                    } else {
+                        $cash_to_be_collected = 'No';
+                    }
+                    foreach ($vendor_ids as $key => $vendor) {
+                        $vendor_details = Vendor::find($vendor);
+                        $tasks = array();
+
+                        $tasks[] = array('task_type_id' => 1,
+                                                        'latitude' => $vendor_details->latitude??'',
+                                                        'longitude' => $vendor_details->longitude??'',
+                                                        'short_name' => '',
+                                                        'address' => $vendor_details->address??'',
+                                                        'post_code' => '',
+                                                        'barcode' => '',
+                                                        );
+                                        
+                        $tasks[] = array('task_type_id' => 2,
+                                                        'latitude' => $cus_address->latitude??'',
+                                                        'longitude' => $cus_address->longitude??'',
+                                                        'short_name' => '',
+                                                        'address' => $cus_address->address??'',
+                                                        'post_code' => $cus_address->pincode??'',
+                                                        'barcode' => '',
+                                                        );
+                                    
+                        $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
+                                                        'customer_phone_number' => $customer->phone_number ?? '+919041969648',
+                                                        'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
+                                                        'recipient_phone' => $customer->phone_number ?? '+919041969648',
+                                                        'recipient_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
+                                                        'task_description' => 'Order from:'.$vendor_details->name??null,
+                                                        'allocation_type' => 'a',
+                                                        'task_type' => 'now',
+                                                        'cash_to_be_collected' => $cash_to_be_collected,
+                                                        'barcode' => '',
+                                                        'task' => $tasks
+                                                        ];
+
+                        $client = new Client(['headers' => ['client' => 'newclient1',
+                                                    'content-type' => ' multipart/form-data']
+                                                        ]);
+                                                
+                        $res = $client->post(
+                            'https://winhires.com/api/public/task/create',
+                            ['form_params' => (
+                                                        $postdata
+                                                    )]
+                        );
+                    }
+                }
+            }    
+            catch(\Exception $e)
+            {
+                // dd($e->getMessage());
+                        
+            }
+           
+           
+    }
+    
+    public function getDispatchDomain(){
+        $preference = ClientPreference::where('client_code', Auth::user()->code)->first();
+        if($preference->need_delivery_service == 1)
+            return $preference->need_delivery_service;
+        else
+            return false;
+    }
+      
 }

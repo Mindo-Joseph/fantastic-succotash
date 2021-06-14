@@ -71,8 +71,14 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                                         </div>    
                                     </td>
 
-                                    <td> {{ $ban->name }} </td>
-                                    <td> <span class="text-center d-inline-block"> {{convertDateTimeInTimeZone($ban->start_date_time, $timezone, 'Y-m-d H:i A')}} <br/> to <br/> {{convertDateTimeInTimeZone($ban->end_date_time, $timezone, 'Y-m-d H:i A')}} </span></td>
+                                    <td> {{ $ban->name }} </td> 
+                                    <td> <span class="text-center d-inline-block">
+                                        @if(isset($ban->start_date_time) && isset($ban->end_date_time))
+                                        {{ convertDateTimeInTimeZone($ban->start_date_time, $timezone) }} <br/> to <br/> {{convertDateTimeInTimeZone($ban->end_date_time,  $timezone)}} 
+                                        @else
+                                        -
+                                        @endif
+                                    </span></td>
                                     <td>                                         
                                         @if($ban->link == 'category')
                                             Category
