@@ -12,7 +12,6 @@ Route::group(['middleware' => ['domain']], function () {
 	]);
 	Route::post('payment/stripe', 'Front\StripeGatewayController@postPaymentViaStripe')->name('payment.stripe');
 	Route::post('payment/paypal', 'Front\PaypalGatewayController@postPaymentViaPaypal')->name('payment.paypal');
-	Route::post('payment/paypalError', 'Front\PaypalGatewayController@paypalError')->name('payment.paypalError');
 	Route::get('payment/paypalSuccess', 'Front\PaypalGatewayController@paypalSuccess')->name('payment.paypalSuccess');
 	Route::get('user/login', [
 		'as' => 'customer.login',

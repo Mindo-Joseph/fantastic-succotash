@@ -30,7 +30,6 @@ class ClientController extends Controller{
         foreach ($clients as $client) {
             $client->sub_domain_url = 'https://'.$client->sub_domain.'.royoorders.com';
         }
-
         return view('godpanel/client')->with(['clients' => $clients]);
     }
 
@@ -65,12 +64,14 @@ class ClientController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
         $client = new Client();
         $validation  = Validator::make($request->all(), $client->rules());
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
+        DB::beginTransaction();
+        try {
         $data = $this->saveClient($request, $client, 'false');
         if(!$data){
             return redirect()->back()->withErrors(['error' => "Something went wrong."]);
@@ -78,8 +79,14 @@ class ClientController extends Controller{
         $database_name = preg_replace('/\s+/', '', $request->database_name);
         Cache::set($database_name, $data);
         $languId = ($request->has('primary_language')) ? $request->primary_language : 1;
+        DB::commit();
         $this->dispatchNow(new ProcessClientDataBase($data->id, $languId));
-        return redirect()->route('client.index')->with('success', 'Client Added successfully!');  
+        
+        return redirect()->route('client.index')->with('success', 'Client Added successfully!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('client.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -132,6 +139,7 @@ class ClientController extends Controller{
             $client->code = $this->randomString();
             $client->country_id = $request->country ? $request->country : NULL;
             $client->timezone = $request->timezone ? $request->timezone : NULL;
+            $client->status = 1;
         }
         $isPasswordUpdate = 0;
         if($update == 'true'){

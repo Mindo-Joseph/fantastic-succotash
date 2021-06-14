@@ -61,15 +61,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group" id="typeInput">
-                                        {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
-                                        <select class="selectize-select form-control" name="role_id">
-                                            <option value="1">Buyer</option>
-                                            <option value="2">Seller</option>
-                                        </select>
-                                    </div>
-                                </div>
+                               
                                 <div class="col-md-6">
                                     <div class="form-group" id="countryInput">
                                         {!! Form::label('title', 'Country',['class' => 'control-label']) !!}
@@ -80,6 +72,15 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                </div>
+                                <div class="col-md-6">
+                                    {{-- <div class="form-group" id="typeInput">
+                                        {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
+                                        <select class="selectize-select form-control" name="role_id">
+                                            <option value="1">Buyer</option>
+                                            <option value="2">Seller</option>
+                                        </select>
+                                    </div> --}}
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">

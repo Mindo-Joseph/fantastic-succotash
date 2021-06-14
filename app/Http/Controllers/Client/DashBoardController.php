@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Client\BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country};
+use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country,User};
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Config;
@@ -31,7 +31,7 @@ class DashBoardController extends BaseController
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
+    {   
         return view('backend/dashboard');
     }
 
@@ -45,7 +45,7 @@ class DashBoardController extends BaseController
 
     public function changePassword(Request $request)
     {
-        $client = Client::where('code', Auth::user()->code)->first();
+        $client = User::where('id', Auth::id())->first();
 
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
@@ -62,7 +62,7 @@ class DashBoardController extends BaseController
             $client->save();
             
             $clientData = 'empty';
-            $this->dispatchNow(new UpdateClient($clientData, $client->password));
+        //    $this->dispatchNow(new UpdateClient($clientData, $client->password));
             return redirect()->back()->with('success', 'Password Changed successfully!');
         } else {
             $request->session()->flash('error', 'Wrong Old Password');
@@ -106,8 +106,17 @@ class DashBoardController extends BaseController
         }else{
              $data['logo'] = $client->getRawOriginal('logo');
         }
-        $client->update($data);
-        $this->dispatchNow(new UpdateClient($data, $pass = ''));
+
+        $client = Client::where('code', Auth::user()->code)->update($data);
+
+        $userdata = array();
+        foreach ($request->only('name','phone_number') as $key => $value) {
+            $userdata[$key] = $value;
+        }
+
+        $user = User::where('id', Auth::id())->update($userdata);
+        //$this->dispatchNow(new UpdateClient($data, $pass = ''));
+
         return redirect()->back()->with('success', 'Client Updated successfully!');
     }
 }
