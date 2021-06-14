@@ -15,15 +15,21 @@ class AppStylingController extends BaseController
      */
     public function index()
     {
+        $font_options =[];
+        $tab_style_options =[];
+        $homepage_style_options =[];
         $fonts = AppStyling::where('name', 'Fonts')->first();
-        $font_options = AppStylingOption::where('app_styling_id', $fonts->id)->get();
-
+        if($fonts){
+            $font_options = AppStylingOption::where('app_styling_id', $fonts->id)->get();
+        }
         $tab_style = AppStyling::where('name', 'Tab Bar Style')->first();
-        $tab_style_options = AppStylingOption::where('app_styling_id', $tab_style->id)->get();
-
+        if($tab_style){
+            $tab_style_options = AppStylingOption::where('app_styling_id', $tab_style->id)->get();
+        }
         $homepage_style = AppStyling::where('name', 'Home Page Style')->first();
-        $homepage_style_options = AppStylingOption::where('app_styling_id', $homepage_style->id)->get();
-
+        if($homepage_style){
+            $homepage_style_options = AppStylingOption::where('app_styling_id', $homepage_style->id)->get();
+        }
         return view('backend/app_styling/index')->with(['font_options' => $font_options, 'tab_style_options' => $tab_style_options,'homepage_style_options' => $homepage_style_options]);
     }
 
