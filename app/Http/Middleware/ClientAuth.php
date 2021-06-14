@@ -5,7 +5,7 @@ use Closure;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
-use App\Models\{Client, ClientPreference, ClientLanguage, ClientCurrency,Permissions};
+use App\Models\{Client, ClientPreference, ClientLanguage, ClientCurrency,Permissions,UserVendor};
 use Request;
 use Config;
 use Session;
@@ -30,15 +30,23 @@ class ClientAuth
                 return redirect('login')->with(['account_blocked' => 'Your account has been blocked by admin. Please contact administration.']);
             }
             if(Auth::user()->is_superadmin == 1 || Auth::user()->is_admin == 1){
-
+                                $route_name = $request->route()->getName();
+                                $currentPath = \Request::path();
+                                $per_url = explode('/', $currentPath);
+                               
+                                   
                                 if (Auth::user()->is_superadmin == 0) {
-                                    $currentPath = \Request::path();
                                     if ($currentPath == "client/profile") {
-                                    } else {
+                                    }elseif($route_name == 'vendor.show'){
+                                        $vendor_id = end($per_url);
+                                        $user_vendors = UserVendor::where(['user_id'=> Auth::id(),
+                                                                           'vendor_id' => $vendor_id])->count();
+                                        if($user_vendors == 0)
+                                        return Redirect::route('client.profile');
+                                    }
+                                     else {
                                         $sub_admin_per = false;
                                         $permission_exist = false;
-                                        $check_url = Request::path();
-                                        $per_url = explode('/', $check_url);
                                         $url_path = $per_url[1];
                                         $check_if_under_permision = Permissions::get()->pluck('slug')->toArray();
                                         if (in_array($url_path,$check_if_under_permision)){
@@ -60,7 +68,6 @@ class ClientAuth
                                             return Redirect::route('client.profile');
                                         }
                                     }
-                                
                             }
 
                 return $next($request);

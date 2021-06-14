@@ -65,7 +65,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'database' => \App\Http\Middleware\DatabaseDynamic::class,
-        'check'    =>  \App\Http\Middleware\CheckClient::class,
         'dbCheck'    => \App\Http\Middleware\DbChooserApi::class,
         'AppAuth'    =>\App\Http\Middleware\AppAuth::class,
         'checkAuth'    =>\App\Http\Middleware\CheckAuth::class,

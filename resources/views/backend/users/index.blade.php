@@ -125,9 +125,10 @@
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" >
                                                 @if(Auth::user()->is_superadmin == 1)<a href="{{route('customer.new.edit', $user->id)}}"  class="action-icon editIconBtn"> 
-                                                <i class="mdi mdi-square-edit-outline"></i></a>@endif
+                                                <i class="mdi mdi-square-edit-outline"></i></a>
 
                                                 <a href="{{route('customer.account.action', [$user->id, 3])}}" onclick="return confirm('Are you sure? You want to delete the user.')" class="action-icon"> <i class="mdi mdi-delete" title="Delete user"></i></a>
+                                                @endif    
                                             </div>
                                             
                                            
