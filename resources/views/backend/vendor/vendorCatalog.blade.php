@@ -230,7 +230,6 @@
         </div>
     </div>
 </div>
-
 <div id="import-product" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -243,7 +242,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <a href="/storage/sample_files/product_template.csv">Download Sample file here!</a>
+                            <a href="{{url('file-download'.'/sample_product.csv')}}">Download Sample file here!</a>
                         </div>
                         <div class="col-md-12">
                             <input type="hidden" value="{{$vendor->id}}" name="vendor_id" />

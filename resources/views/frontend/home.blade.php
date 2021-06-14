@@ -26,18 +26,18 @@
                 <img src="{{$banner->image['proxy_url'] . '1500/600' . $banner->image['image_path']}}"
                     class="bg-img blur-up lazyload" alt="">
                 <!--<div class="container">
-                        <div class="row">
-                            <div class="col">
-                                <div class="slider-contain">
-                                    <div>
-                                        <h4>welcome to fashion</h4>
-                                        <h1>men fashion</h1>
-                                        <a href="#" class="btn btn-solid">shop now</a>
-                                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="slider-contain">
+                                <div>
+                                    <h4>welcome to fashion</h4>
+                                    <h1>men fashion</h1>
+                                    <a href="#" class="btn btn-solid">shop now</a>
                                 </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
+                </div> -->
             </div>
         </div>
         @endforeach

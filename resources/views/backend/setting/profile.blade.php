@@ -65,7 +65,7 @@
                         <div class="row mb-2 d-flex align-items-center">
 
                             <div class="col-md-4">
-                                <input type="file" accept="image/*" data-plugins="dropify" name="logo" data-default-file="{{$client->logo['proxy_url'] . '400/400' . $client->logo['image_path']}}" />
+                                <input type="file" accept="image/*" data-plugins="dropify" name="logo" data-default-file="{{$client->logo['image_fit'] . '400/400' . $client->logo['image_path']}}" />
                                 <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
                             </div>
 

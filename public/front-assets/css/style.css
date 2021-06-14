@@ -6067,7 +6067,7 @@ footer.footer-theme-color .form-inline .btn {
     Header css start
 ==========================**/
 header {
-  background-color: #ffffff;padding: 5px 0; }
+  background-color: #ffffff;padding: 10px 0; }
   header.header-absolute {
     position: absolute;
     width: 100%;
@@ -8735,8 +8735,12 @@ header.stickycls {
   line-height: 23px;
   text-decoration: none;
   text-transform: uppercase;
-  padding: 0 25px 0 0;
+  padding: 0 38px 0 0;
   letter-spacing: 0.07em; }
+
+.pixelstrap li:last-child a {
+    padding-right: 10px;
+}
 
 .pixelstrap a:hover {
   color: var(--theme-deafult); }
@@ -8750,7 +8754,7 @@ header.stickycls {
     transform: translateY(-50%);
     margin-top: 0;
     left: auto;
-    right: 3px;
+    right: 19px;
     width: 34px;
     height: 34px;
     overflow: hidden;
