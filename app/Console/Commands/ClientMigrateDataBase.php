@@ -40,7 +40,7 @@ class ClientMigrateDataBase extends Command
      * @return int
      */
     public function handle(){
-        $clients = Client::where('status', 1)->get();
+        $clients = Client::get();
         foreach ($clients as $key => $client) {
             $database_name = 'royo_' . $client->database_name;
             $this->info("migrate database start: {$database_name}!");

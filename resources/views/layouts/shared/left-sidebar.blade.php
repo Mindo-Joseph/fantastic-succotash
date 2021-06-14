@@ -75,7 +75,6 @@
                     </a>
                 </li>
                 @endif
-                <li class="menu-title mt-2">Setting</li>
                 @if(in_array('Profile',$allowed) || Auth::user()->is_superadmin == 1) 
                 <li>   
                     <a href="{{route('client.profile')}}" >
@@ -91,8 +90,14 @@
                         <span> Customize </span>
                     </a>
                 </li>
+                <li>   
+                    <a href="{{route('styling.index')}}" >
+                        <span class="icon-customize_icon"></span>
+                        <span> App-Styling </span>
+                    </a>
+                </li>
                 @endif
-                @if(in_array('CONFIGURATIONS',$allowed) || Auth::user()->is_superadmin == 1) 
+                @if(in_array('CONFIGURATIONS',$allowed) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="{{route('configure.index')}}">
                         <span class="icon-configure_icon"></span>
@@ -100,7 +105,7 @@
                     </a>
                 </li>
                 @endif
-                @if(in_array('CONFIGURATIONS',$allowed) || Auth::user()->is_superadmin == 1) 
+                @if(in_array('BANNER',$allowed) || Auth::user()->is_superadmin == 1) 
                 <li>   
                     <a href="{{route('banner.index')}}" >
                         <span class="icon-banner_icon"></span>
@@ -157,8 +162,6 @@
                 </li>
                 @endif
                  --}}
-                
-                <li class="menu-title mt-2">Extra</li>
                 @php 
                     $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
                 @endphp

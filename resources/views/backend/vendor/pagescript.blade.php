@@ -11,6 +11,15 @@
         loadMap(autocompletesWraps);
     });
 
+    $('.openImportModal').click(function(){
+        $('#import-form').modal({
+            //backdrop: 'static',
+            keyboard: false
+        });
+        //runPicker();
+        $('.dropify').dropify();
+    });
+
     function runPicker(){
         $('.datetime-datepicker').flatpickr({
             enableTime: true,
@@ -183,6 +192,91 @@
             }
         });
     });
+
+    function submitProductImportForm(){ 
+        //console.log("fg4rg");
+        // e.preventDefault();
+        var form =  document.getElementById('save_imported_products');
+        var formData = new FormData(form);
+        var data_uri = "{{route('product.import')}}";
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: data_uri,
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+
+                if (response.status == 'success') {
+                    $(".modal .close").click();
+                    location.reload(); 
+                } else {
+                    $(".show_all_error.invalid-feedback").show();
+                    $(".show_all_error.invalid-feedback").text(response.message);
+                }
+                return response;
+            },
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            complete: function(){
+                $(".loader_box").hide();
+            }
+        });
+    }
+
+
+    function submitImportForm(){ 
+        //console.log("fg4rg");
+        // e.preventDefault();
+        var form =  document.getElementById('save_imported_vendors');
+        var formData = new FormData(form);
+        var data_uri = "{{route('vendor.import')}}";
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: data_uri,
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+
+                if (response.status == 'success') {
+                    $(".modal .close").click();
+                    location.reload(); 
+                } else {
+                    $(".show_all_error.invalid-feedback").show();
+                    $(".show_all_error.invalid-feedback").text(response.message);
+                }
+                return response;
+            },
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            complete: function(){
+                $(".loader_box").hide();
+            }
+        });
+    }
 
     $(document).on('click', '.submitAddForm', function(e) { 
         e.preventDefault();

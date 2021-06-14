@@ -12,4 +12,5 @@ npm-debug.log
 yarn-error.log
 composer.lock
 query.php
+/storage/framework/laravel-excel/
 storage/debugbar/

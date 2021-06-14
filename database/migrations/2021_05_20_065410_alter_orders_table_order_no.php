@@ -23,9 +23,9 @@ class AlterOrdersTableOrderNo extends Migration
             if (Schema::hasColumn('orders', 'vendor_count')) {
                 $table->dropColumn('vendor_count');
             }
-            if (Schema::hasColumn('orders', 'promocode_id')) {
-                $table->dropColumn('promocode_id');
-            }
+            // if (Schema::hasColumn('orders', 'promocode_id')) {
+            //     $table->dropColumn('promocode_id');
+            // }
             if (Schema::hasColumn('orders', 'payment_status')) {
                 $table->dropColumn('payment_status');
             }

@@ -135,73 +135,6 @@ a{
     background: #000;
 }
 
-/* The radio */
-.radio {
-    display: block;
-    position: relative;
-    padding-left: 30px;
-    cursor: pointer;
-    font-size: 20px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    color: #000000;
-    font-size: 16px;
-    font-weight: 300;
-    letter-spacing: 0;
-    line-height: 24px;
-}
-
-/* Hide the browser's default radio button */
-.radio input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-}
-/* Create a custom radio button */
-.checkround {
-    position: absolute;
-    top: 2px;
-    left: 0;
-    height: 20px;
-    width: 20px;
-    background-color: #fff;
-    border-color: #161616;
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 50%;
-}
-
-/* When the radio button is checked, add a blue background */
-.radio input:checked~.checkround {
-    background-color: #fff;
-}
-
-/* Create the indicator (the dot/circle - hidden when not checked) */
-.checkround:after {
-    content: "";
-    position: absolute;
-    display: none;
-}
-
-/* Show the indicator (dot/circle) when checked */
-.radio input:checked~.checkround:after {
-    display: block;
-}
-
-/* Style the indicator (dot/circle) */
-.radio .checkround:after {
-    left: 0;
-    right: 0;
-    margin: auto;
-    top: 0;
-    bottom: 0;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #161616;
-}
 .border_outer {
     border: 1px solid #BDD5CC;
     padding: 27.5px 19.5px;
@@ -354,15 +287,13 @@ a{
 
 .checkround {
     position: absolute;
-    top: 2px;
+    top: 0;
     left: 0;
     height: 20px;
     width: 20px;
     background-color: #fff;
-    border-color: #979797;
-    border-style: solid;
-    border-width: 1px;
     border-radius: 50%;
+    border: 1px solid #979797;
 }
 
 /* When the radio button is checked, add a blue background */
@@ -721,6 +652,7 @@ form .btn{
 
 .theme-card .offer-slider a {
     width: 170px;
+    height: 170px;
 }
 
 .dashboard-left .block-content {
@@ -1667,6 +1599,23 @@ label{
     font-size: 14px;
     border-radius: 4px;
 }
+
+.brand-logo img.img-fluid {
+    height: 50px;
+}
+
+.sp-colorize-container {
+    background: rgb(74, 129, 212);
+}
+
+.blur-up.lazyloaded{
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+}
+
+
+
+
 
 /* Responsiveness Css Start From Here */
 @media(max-width:991px){

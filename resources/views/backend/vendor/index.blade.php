@@ -43,6 +43,9 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
+                        <button class="btn btn-info waves-effect waves-light text-sm-right openImportModal"
+                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Import
+                            </button>
                             <button class="btn btn-info waves-effect waves-light text-sm-right openAddModal"
                              userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </button>
@@ -75,7 +78,7 @@
                                 @foreach($vendors as $vendor)
                                 <tr data-row-id="{{$vendor->id}}">
                                     <td>
-                                        <a href="{{ route('vendor.show', $vendor->id) }}"><img class="rounded-circle" src="{{$vendor->logo['proxy_url'].'90/90'.$vendor->logo['image_path']}}" alt="{{$vendor->id}}"></a>
+                                        <a class="round_img_box" href="{{ route('vendor.show', $vendor->id) }}"><img class="rounded-circle" src="{{$vendor->logo['proxy_url'].'90/90'.$vendor->logo['image_path']}}" alt="{{$vendor->id}}"></a>
                                     </td>
                                     <td><a href="{{ route('vendor.show', $vendor->id) }}">{{ $vendor->name }}</a> </td>
                                     <td> {{ $vendor->address }}</td>

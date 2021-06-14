@@ -1,13 +1,14 @@
 <?php
 
 use App\Http\Controllers\Front\SearchController;
+use App\Http\Controllers\Client\DownloadFileController;
 
 
 
 Route::get('admin/login', function () {
     return view('auth/login');
 })->name('admin.login')->middleware('domain');
-
+Route::get('file-download/{filename}', [DownloadFileController::class, 'index'])->name('file.download.index');
 Route::post('admin/login/client', 'Auth\LoginController@clientLogin')->name('client.login');
 Route::get('admin/wrong/url', 'Auth\LoginController@wrongurl')->name('wrong.client');
 
@@ -29,6 +30,8 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('banner/changeValidity', 'Client\BannerController@validity');
     Route::post('banner/toggle', 'Client\BannerController@toggleAllBanner')->name('banner.toggle');
 
+    Route::get('app-styling', 'Client\AppStylingController@index')->name('styling.index');
+
     Route::resource('category', 'Client\CategoryController');
     Route::post('categoryOrder', 'Client\CategoryController@updateOrder')->name('category.order');
     Route::get('category/delete/{id}', 'Client\CategoryController@destroy');
@@ -48,7 +51,6 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::resource('vendor', 'Client\VendorController');
     Route::get('vendor/categories/{id}', 'Client\VendorController@vendorCategory')->name('vendor.categories');
     Route::get('vendor/catalogs/{id}', 'Client\VendorController@vendorCatalog')->name('vendor.catalogs');
-    Route::get('vendor/categories/{id}', 'Client\VendorController@vendorCategory')->name('vendor.categories');
     Route::post('vendor/saveConfig/{id}', 'Client\VendorController@updateConfig')->name('vendor.config.update');
     Route::post('vendor/activeCategory/{id}', 'Client\VendorController@activeCategory')->name('vendor.category.update');
     Route::post('vendor/parentStatus/{id}', 'Client\VendorController@checkParentStatus')->name('category.parent.status');
@@ -57,6 +59,8 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('vendor/slot/{id}', 'Client\VendorSlotController@store')->name('vendor.saveSlot');
     Route::post('vendor/updateSlot/{id}', 'Client\VendorSlotController@update')->name('vendor.updateSlot');
     Route::post('vendor/deleteSlot/{id}', 'Client\VendorSlotController@destroy')->name('vendor.deleteSlot');
+
+    Route::post('vendor/importCSV', 'Client\VendorController@importCsv')->name('vendor.import');
 
     Route::post('vendor/serviceArea/{vid}', 'Client\ServiceAreaController@store')->name('vendor.serviceArea');
     Route::post('vendor/editArea/{vid}', 'Client\ServiceAreaController@edit')->name('vendor.serviceArea.edit');
@@ -72,6 +76,9 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('customer/change/status', 'Client\UserController@changeStatus')->name('customer.changeStatus');
 
     Route::resource('product', 'Client\ProductController');
+
+    Route::post('product/importCSV', 'Client\ProductController@importCsv')->name('product.import');
+
     Route::post('product/validate', 'Client\ProductController@validateData')->name('product.validate');
     Route::get('product/add/{vendor_id}', 'Client\ProductController@create')->name('product.add');
     Route::post('product/getImages', 'Client\ProductController@getImages')->name('productImage.get');
@@ -101,8 +108,8 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     // Route::get('stripe/showForm', 'Client\PaymentController@showForm')->name('stripe.form');
     // Route::post('stripe/make', 'Client\PaymentController@makePayment')->name('stripe.makePayment');
     Route::resource('payoption', 'Client\PaymentOptionController');
-
-    Route::resource('acl','Client\AclController'); # create manager/vendors with permission
+    Route::post('updateAll', 'Client\PaymentOptionController@updateAll')->name('payoption.updateAll');
+    // Route::resource('acl','Client\AclController'); # create manager/vendors with permission
 });
 
 

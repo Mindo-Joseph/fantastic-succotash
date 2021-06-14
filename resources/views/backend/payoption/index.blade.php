@@ -27,14 +27,25 @@
          </div>
       </div>
    </div>
-    <div class="row">
-        @foreach($payOption as $key => $opt)
-        <div class="col-md-4">
-            <form method="POST" id="form_{{$opt->id}}" action="{{route('payoption.update', $opt->id)}}">
-                <input type="hidden" name="method_name" id="{{$opt->title}}" value="{{$opt->title}}">
-                @csrf
-                @method('PUT')
-
+    
+    <form method="POST" id="payment_option_form" action="{{route('payoption.updateAll')}}">
+        @csrf
+        @method('POST')
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="text-sm-left"></div>
+            </div>
+            <div class="col-sm-4 text-right mb-2">
+                <button class="btn btn-info waves-effect waves-light save_btn" type="submit"> Save</button>
+            </div>
+        </div>
+        <div class="row">
+            @foreach($payOption as $key => $opt)
+            <div class="col-md-4">
+            
+                <input type="hidden" name="method_id[]" id="{{$opt->id}}" value="{{$opt->id}}">
+                <input type="hidden" name="method_name[]" id="{{$opt->title}}" value="{{$opt->title}}">
+                
                 <?php 
                 $creds = json_decode($opt->credentials);
                 $username = (isset($creds->username)) ? $creds->username : '';
@@ -46,11 +57,10 @@
                 <div class="card-box">
                     <div class="d-flex align-items-center justify-content-between mb-2">
                         <h4 class="header-title text-uppercase mb-0">{{$opt->title}}</h4>
-                        <button class="btn btn-info btn-block save_btn" type="submit"> Save </button>
                     </div>
                     <div class="form-group mb-0 switchery-demo">
                         <label for="" class="mr-3">Enable</label>
-                        <input type="checkbox" data-id="{{$opt->id}}" data-title="{{$opt->title}}" data-plugin="switchery" name="active" class="chk_box all_select" data-color="#43bee1" @if($opt->status == 1) checked @endif>
+                        <input type="checkbox" data-id="{{$opt->id}}" data-title="{{$opt->title}}" data-plugin="switchery" name="active[{{$opt->id}}]" class="chk_box all_select" data-color="#43bee1" @if($opt->status == 1) checked @endif>
                     </div>
 
                     @if ( (strtolower($opt->title) == 'stripe') )
@@ -94,10 +104,10 @@
                         <button class="btn btn-info d-block" type="submit"> Save </button>
                     </div> -->
                 </div>
-            </form>
+            </div>
+            @endforeach
         </div>
-        @endforeach
-    </div>
+    </form>
 </div>
 
 @endsection

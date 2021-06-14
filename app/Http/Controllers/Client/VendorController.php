@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{VendorSlotDate, Vendor, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Product, Type, VendorCategory};
+use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Product, Type, VendorCategory};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -12,12 +12,14 @@ use Image;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Traits\ToasterResponser;
 use App\Http\Traits\ApiResponser;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\VendorImport;
 use App\Models\UserVendor;
 
 class VendorController extends BaseController
 {
-  use ToasterResponser;
-  use ApiResponser;
+    use ToasterResponser;
+    use ApiResponser;
     /**
      * Display a listing of the resource.
      *
@@ -25,16 +27,15 @@ class VendorController extends BaseController
      */
     public function index()
     {
-        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])
-                  ->where('status', '!=', '2')->orderBy('id', 'desc');
-
+        $csvVendors = CsvVendorImport::all();
+        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->where('status', '!=', '2')->orderBy('id', 'desc');
         if (Auth::user()->is_superadmin == 0) {
-                    $vendors = $vendors->whereHas('permissionToUser', function ($query) {
-                        $query->where('user_id', Auth::user()->id);
-                    });
+            $vendors = $vendors->whereHas('permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
         }
         $vendors = $vendors->get();
-        return view('backend/vendor/index')->with(['vendors' => $vendors]);
+        return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
     }
 
     /**
@@ -63,9 +64,9 @@ class VendorController extends BaseController
         $validation  = Validator::make($request->all(), $rules)->validate();
         $vendor = new Vendor();
         $saveVendor = $this->save($request, $vendor, 'false');
-        if($saveVendor > 0){
+        if ($saveVendor > 0) {
             return response()->json([
-                'status'=>'success',
+                'status' => 'success',
                 'message' => 'Vendor created Successfully!',
                 'data' => $saveVendor
             ]);
@@ -84,23 +85,23 @@ class VendorController extends BaseController
         foreach ($request->only('name', 'address', 'latitude', 'longitude', 'desc') as $key => $value) {
             $vendor->{$key} = $value;
         }
-        $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0; 
-        $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0; 
+        $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0;
+        $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0;
         $vendor->delivery = ($request->has('delivery') && $request->delivery == 'on') ? 1 : 0;
 
-        if($update == 'false'){
+        if ($update == 'false') {
             $vendor->logo = 'default/default_logo.png';
             $vendor->banner = 'default/default_image.png';
         }
 
         if ($request->hasFile('logo')) {    /* upload logo file */
             $file = $request->file('logo');
-            $vendor->logo = Storage::disk('s3')->put('/vendor', $file,'public');
+            $vendor->logo = Storage::disk('s3')->put('/vendor', $file, 'public');
         }
 
         if ($request->hasFile('banner')) {    /* upload logo file */
             $file = $request->file('banner');
-            $vendor->banner = Storage::disk('s3')->put('/vendor', $file,'public');
+            $vendor->banner = Storage::disk('s3')->put('/vendor', $file, 'public');
         }
 
         $vendor->save();
@@ -117,7 +118,7 @@ class VendorController extends BaseController
     {
         $vendor = Vendor::where('id', $id)->first();
         $returnHTML = view('backend.vendor.form')->with(['vendor' => $vendor])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML));
+        return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
     /**
@@ -130,16 +131,16 @@ class VendorController extends BaseController
     public function update(Request $request, $domain = '', $id)
     {
         $rules = array(
-            'name' => 'required|string|max:150|unique:vendors,name,'.$id,
+            'name' => 'required|string|max:150|unique:vendors,name,' . $id,
             'address' => 'required',
         );
         //dd($request->all());
         $validation  = Validator::make($request->all(), $rules)->validate();
         $vendor = Vendor::where('id', $id)->first();
         $saveVendor = $this->save($request, $vendor, 'true');
-        if($saveVendor > 0){
+        if ($saveVendor > 0) {
             return response()->json([
-                'status'=>'success',
+                'status' => 'success',
                 'message' => 'Vendor updated Successfully!',
                 'data' => $saveVendor
             ]);
@@ -158,7 +159,7 @@ class VendorController extends BaseController
         $zz = 1;
         foreach ($areas as $k => $v) {
             $all_coordinates[] = [
-                'name' => $k.'-a',
+                'name' => $k . '-a',
                 'coordinates' => $v->geo_coordinates
             ];
         }
@@ -171,30 +172,30 @@ class VendorController extends BaseController
             $center['lng'] = $all_coordinates[0]['coordinates'][0]['lng'];
         }
         $area1 = ServiceArea::where('vendor_id', $id)->orderBy('created_at', 'DESC')->first();
-        if(isset($area1)){
+        if (isset($area1)) {
             $co_ordinates = $area1->geo_coordinates[0];
-         }else{
+        } else {
             $co_ordinates[] = [
                 'lat' => 33.5362475,
                 'lng' => -111.9267386
             ];
-         }
-         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
-                        ->where('id', '>', '1')
-                        ->where(function($q) use($id){
-                              $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
-                        })->orderBy('position', 'asc')->orderBy('id', 'asc')->orderBy('parent_id', 'asc')->get();
-        
+        }
+        $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
+            ->where('id', '>', '1')
+            ->where(function ($q) use ($id) {
+                $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
+            })->orderBy('position', 'asc')->orderBy('id', 'asc')->orderBy('parent_id', 'asc')->get();
+
         /* get active category list also with parent */
         foreach ($categories as $category) {
-          if(in_array($category->id, $VendorCategory) && $category->parent_id == 1){
-            $active[] = $category->id;
-          }
-          if(in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)){
-            $active[] = $category->id;
-          }
+            if (in_array($category->id, $VendorCategory) && $category->parent_id == 1) {
+                $active[] = $category->id;
+            }
+            if (in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)) {
+                $active[] = $category->id;
+            }
         }
-        if($categories){
+        if ($categories) {
             $build = $this->buildTree($categories->toArray());
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
@@ -203,55 +204,60 @@ class VendorController extends BaseController
     }
 
     /**   show vendor page - category tab      */
-    public function vendorCategory($domain = '', $id){
+    public function vendorCategory($domain = '', $id)
+    {
+        $csvVendors = [];
         $vendor = Vendor::findOrFail($id);
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
-                        ->where('id', '>', '1')
-                        ->where(function($q) use($id){
-                              $q->whereNull('vendor_id')
-                                ->orWhere('vendor_id', $id);
-                        })
-                        ->orderBy('position', 'asc')->orderBy('id', 'asc')
-                        ->orderBy('parent_id', 'asc')->get();
+            ->where('id', '>', '1')
+            ->where(function ($q) use ($id) {
+                $q->whereNull('vendor_id')
+                    ->orWhere('vendor_id', $id);
+            })
+            ->orderBy('position', 'asc')->orderBy('id', 'asc')
+            ->orderBy('parent_id', 'asc')->get();
         $categoryToggle = array();
         $active = array();
         /* get active category list also with parent */
         foreach ($categories as $category) {
-          if(in_array($category->id, $VendorCategory) && $category->parent_id == 1){
-            $active[] = $category->id;
-          }
-          if(in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)){
-            $active[] = $category->id;
-          }
+            if (in_array($category->id, $VendorCategory) && $category->parent_id == 1) {
+                $active[] = $category->id;
+            }
+            if (in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)) {
+                $active[] = $category->id;
+            }
         }
 
-        if($categories){
+        if ($categories) {
             $build = $this->buildTree($categories->toArray());
             $tree = $this->printTree($build, 'vendor');
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
 
         $addons = AddonSet::with('option')->select('id', 'title', 'min_select', 'max_select', 'position')
-                    ->where('status', '!=', 2)
-                    ->where('vendor_id', $id)
-                    ->orderBy('position', 'asc')->get();
+            ->where('status', '!=', 2)
+            ->where('vendor_id', $id)
+            ->orderBy('position', 'asc')->get();
 
         $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
-                    ->where('is_active', 1)
-                    ->orderBy('is_primary', 'desc')->get();
+            ->where('is_active', 1)
+            ->orderBy('is_primary', 'desc')->get();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build]);
+        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build,'csvVendors'=> $csvVendors]);
     }
 
     /**   show vendor page - catalog tab      */
-    public function vendorCatalog($domain = '', $id){
+    public function vendorCatalog($domain = '', $id)
+    {
+        $product_categories = [];
         $active = array();
         $type = Type::all();
         $categoryToggle = array();
         $vendor = Vendor::findOrFail($id);
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $categories = Category::with('primary')->select('id', 'slug')
+
                         ->where('id', '>', '1')->where('status', '!=', '2')->where('type_id', '1')
                         ->where('can_add_products', 1)->orderBy('parent_id', 'asc')->where('status', 1)->orderBy('position', 'asc')->get();
         $products = Product::with(['media.image', 'primary', 'category.cat', 'brand','variant' => function($v){
@@ -265,22 +271,39 @@ class VendorController extends BaseController
                         })->where('status', 1)->orderBy('position', 'asc')
                         ->orderBy('id', 'asc')
                         ->orderBy('parent_id', 'asc')->get();
+
+            // ->where('id', '>', '1')->where('status', '!=', '2')->where('type_id', '1')
+            // ->where('can_add_products', 1)->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->get();
+        $products = Product::with(['media.image', 'primary', 'category.cat', 'brand', 'variant' => function ($v) {
+            $v->select('id', 'product_id', 'quantity', 'price')->groupBy('product_id');
+        }])->select('id', 'sku', 'vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
+            ->where('vendor_id', $id)->get();
+        $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
+            ->where('id', '>', '1')
+            ->where(function ($q) use ($id) {
+                $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
+            })->orderBy('position', 'asc')
+            ->orderBy('id', 'asc')
+            ->orderBy('parent_id', 'asc')->get();
+
+        $csvProducts = CsvProductImport::where('vendor_id', $id)->get();
+        $csvVendors = CsvVendorImport::all();
         /*    get active category list also with parent     */
         foreach ($categories as $category) {
-          if(in_array($category->id, $VendorCategory) && $category->parent_id == 1){
-            $active[] = $category->id;
-          }
-          if(in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)){
-            $active[] = $category->id;
-          }
+            if (in_array($category->id, $VendorCategory) && $category->parent_id == 1) {
+                $active[] = $category->id;
+            }
+            if (in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)) {
+                $active[] = $category->id;
+            }
         }
-        if($categories){
+        if ($categories) {
             $build = $this->buildTree($categories->toArray());
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
+        $product_categories = VendorCategory::with('category')->where('status', 1)->where('vendor_id', $id)->get();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        $product_categories = VendorCategory::with('category')->where('status', 1)->where('vendor_id', $vendor->id)->get();
-        return view('backend.vendor.vendorCatalog')->with(['vendor' => $vendor, 'VendorCategory' => $VendorCategory, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
+        return view('backend.vendor.vendorCatalog')->with(['vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
     }
 
     /**       delete vendor       */
@@ -298,13 +321,13 @@ class VendorController extends BaseController
         $vendor = Vendor::where('id', $id)->first();
         $msg = 'Order configuration';
 
-        if($request->has('order_pre_time')){
+        if ($request->has('order_pre_time')) {
             $vendor->order_min_amount   = $request->order_min_amount;
             $vendor->order_pre_time     = $request->order_pre_time;
             $vendor->auto_reject_time   = $request->auto_reject_time;
         }
 
-        if($request->has('commission_percent')){
+        if ($request->has('commission_percent')) {
             $vendor->commission_percent         = $request->commission_percent;
             $vendor->commission_fixed_per_order = $request->commission_fixed_per_order;
             $vendor->commission_monthly         = $request->commission_monthly;
@@ -313,7 +336,7 @@ class VendorController extends BaseController
             $msg = 'commission configuration';
         }
         $vendor->save();
-        return redirect()->back()->with('success', $msg.' updated successfully!');
+        return redirect()->back()->with('success', $msg . ' updated successfully!');
     }
 
     /**     Activate Category for vendor     */
@@ -323,17 +346,17 @@ class VendorController extends BaseController
             $vendor = Vendor::where('id', $request->vendor_id)->firstOrFail();
             $vendor->add_category = $request->can_add_category == 'true' ? 1 : 0;
             $vendor->save();
-        }elseif($request->has('assignTo')){
+        } elseif ($request->has('assignTo')) {
             $vendor = Vendor::where('id', $request->vendor_id)->firstOrFail();
             $vendor->vendor_templete_id = $request->assignTo;
             $vendor->save();
-        }else{
+        } else {
             $status = $request->status == 'true' ? 1 : 0;
             $vendor_category = VendorCategory::where('vendor_id', $request->vendor_id)->where('category_id', $request->category_id)->first();
-            if($vendor_category){
-                VendorCategory::where(['vendor_id' => $request->vendor_id, 'category_id'=> $request->category_id])->update(['status'=> $status]);
-            }else{
-                VendorCategory::create(['vendor_id' => $request->vendor_id, 'category_id'=> $request->category_id, 'status'=> $status]);
+            if ($vendor_category) {
+                VendorCategory::where(['vendor_id' => $request->vendor_id, 'category_id' => $request->category_id])->update(['status' => $status]);
+            } else {
+                VendorCategory::create(['vendor_id' => $request->vendor_id, 'category_id' => $request->category_id, 'status' => $status]);
             }
         }
         $product_categories = VendorCategory::with('category')->where('status', 1)->where('vendor_id', $request->vendor_id)->get();
@@ -347,22 +370,55 @@ class VendorController extends BaseController
         $is_parent_disabled = $exit = 0;
         $category = Category::where('id', $request->category_id)->select('id', 'parent_id')->first();
         $parent_id = $category->parent_id;
-        while($exit == 0){
-          if($parent_id == 1){
-            $exit = 1;
-            break;
-          }elseif(in_array($parent_id, $blockedCategory)){
-            $is_parent_disabled = 1;
-            $exit = 1;
-          }else{
-            $category = Category::where('id', $parent_id)->select('id', 'parent_id')->first();
-            $parent_id = $category->parent_id;
-          }
+        while ($exit == 0) {
+            if ($parent_id == 1) {
+                $exit = 1;
+                break;
+            } elseif (in_array($parent_id, $blockedCategory)) {
+                $is_parent_disabled = 1;
+                $exit = 1;
+            } else {
+                $category = Category::where('id', $parent_id)->select('id', 'parent_id')->first();
+                $parent_id = $category->parent_id;
+            }
         }
-        if($is_parent_disabled == 1){
-          return $this->errorResponse('Parent category is disabled. First enable parent category to enable this category.', 422);
-        }else{
-          return $this->successResponse(null, 'Parent is enabled.');
+        if ($is_parent_disabled == 1) {
+            return $this->errorResponse('Parent category is disabled. First enable parent category to enable this category.', 422);
+        } else {
+            return $this->successResponse(null, 'Parent is enabled.');
+        }
+    }
+
+    /**
+     * Import Excel file for vendors
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function importCsv(Request $request)
+    {
+        if($request->has('vendor_csv')){
+            // dd($request->file('vendor_csv'));
+            $fileModel = new CsvVendorImport;
+            
+            if($request->file('vendor_csv')) {
+                $fileName = time().'_'.$request->file('vendor_csv')->getClientOriginalName();
+                $filePath = $request->file('vendor_csv')->storeAs('csv_vendors', $fileName, 'public');
+    
+                $fileModel->name = $fileName;
+                $fileModel->path = '/storage/' . $filePath;
+                $fileModel->status = 1;
+                $fileModel->save();
+            }
+    
+            $data = Excel::import(new VendorImport, $request->file('vendor_csv'));
+    
+            // dd("Done");
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Uploading!'
+            ]);
         }
     }
 }

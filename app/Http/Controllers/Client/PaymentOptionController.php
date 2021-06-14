@@ -70,6 +70,44 @@ class PaymentOptionController extends BaseController
         
     }
 
+    public function updateAll(Request $request, $domain = '')
+    {
+        $msg = 'Payment options have been saved successfully!';
+        $method_id_arr = $request->input('method_id');
+        $method_name_arr = $request->input('method_name');
+        $active_arr = $request->input('active');
+
+        foreach ($method_id_arr as $key => $id) {
+            $saved_creds = PaymentOption::select('credentials')->where('id', $id)->first();
+            if( (isset($saved_creds)) && (!empty($saved_creds->credentials)) ){
+                $json_creds = $saved_creds->credentials;
+            }else{
+                $json_creds = NULL;
+            }
+
+            $status = 0;
+
+            if( (isset($active_arr[$id])) && ($active_arr[$id] == 'on') ){
+                $status = 1;
+                if( (isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'paypal') ){
+                    $json_creds = json_encode(array(
+                        'username' => $request->paypal_username,
+                        'password' => $request->paypal_password,
+                        'signature' => $request->paypal_signature,
+                    ));
+                }
+                else if( (isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'stripe') ){
+                    $json_creds = json_encode(array(
+                        'api_key' => $request->stripe_api_key
+                    ));
+                }
+            }
+            PaymentOption::where('id', $id)->update(['status' => $status, 'credentials' => $json_creds]);
+        }
+        return redirect()->back()->with('success', $msg);
+        
+    }
+
     /**
      * Remove the specified resource from storage.
      *

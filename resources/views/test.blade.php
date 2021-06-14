@@ -312,8 +312,12 @@
                                                                 <input class="form-control" name="amount" type="text" value="0.5">
                                                             </div>                                                    
                                                         </div>
-                                                        <div id="card-element">
+                                                        <div class="form-control">
+                                                        <label class="d-flex flex-row pt-1 pb-1 mb-0">
+                                                        <div id="card-element" style="flex:1; padding:0 15px; background:transparent; font-weight:400; color:#000; outline:none; cursor:text; padding:0;">
                                                         <!-- A Stripe Element will be inserted here. -->
+                                                        </div>
+                                                        </label>
                                                         </div>
                                                         <!--<div class="row form-group">
                                                             <div class="col-sm-4">
@@ -395,7 +399,7 @@
         };
 
         // Create an instance of the card Element.
-        var card = elements.create('card', {style: style});
+        var card = elements.create('card', {hidePostalCode: true, style: style});
 
         // Add an instance of the card Element into the `card-element` <div>.
         card.mount('#card-element');
