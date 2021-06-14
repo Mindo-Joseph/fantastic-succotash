@@ -21,6 +21,9 @@
                     <li class="onhover-dropdown mobile-account"> <i class="fa fa-user" aria-hidden="true"></i>
                         My Account
                         <ul class="onhover-show-div">
+                            @if(Auth::user()->is_superadmin == 1 || Auth::user()->is_admin == 1)
+                            <li><a href="{{route('client.dashboard')}}" data-lng="en">Dashboard</a></li>
+                            @endif
                             <li><a href="{{route('user.profile')}}" data-lng="en">Profile</a></li>
                             <li><a href="{{route('user.logout')}}" data-lng="es">Logout</a></li>
                         </ul>
