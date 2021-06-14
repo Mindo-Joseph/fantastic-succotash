@@ -21,22 +21,29 @@ class DatabaseDynamic{
      */
     public function handle($request, Closure $next){
         if(Auth::check()){
-          $client = Auth::user();
+            
+          $client = Client::first();
            if($client){
               $database_name = 'royo_'.$client->database_name;
+              $database_name = 'royo_'.$client->database_name;
+              $database_host = !empty($client->database_host) ? $client->database_host : env('DB_HOST','127.0.0.1');
+              $database_port = !empty($client->database_port) ? $client->database_port : env('DB_PORT','3306');
+              $database_username = !empty($client->database_username) ? $client->database_username : env('DB_USERNAME','royoorders');
+              $database_password = !empty($client->database_password) ? $client->database_password : env('DB_PASSWORD','');
+
               $default = [
-                  'prefix' => '',
-                  'engine' => null,
-                  'strict' => false,
-                  'charset' => 'utf8mb4',
-                  'prefix_indexes' => true,
-                  'database' => $database_name,
-                  'host' => $client->database_host,
-                  'port' => $client->database_port,
-                  'collation' => 'utf8mb4_unicode_ci',
                   'driver' => env('DB_CONNECTION','mysql'),
-                  'username' => $client->database_username,
-                  'password' => $client->database_password,
+                  'host' => $database_host,
+                  'port' => $database_port,
+                  'database' => $database_name,
+                  'username' => $database_username,
+                  'password' => $database_password,
+                  'charset' => 'utf8mb4',
+                  'collation' => 'utf8mb4_unicode_ci',
+                  'prefix' => '',
+                  'prefix_indexes' => true,
+                  'strict' => false,
+                  'engine' => null
               ];
               Config::set("database.connections.$database_name", $default);
               Config::set("client_id",1);
@@ -44,7 +51,9 @@ class DatabaseDynamic{
               Config::set("client_data",$client);
               DB::setDefaultConnection($database_name);
               DB::purge($database_name);
-              $clientPreference = ClientPreference::where('client_code',Auth::user()->code)->first();
+
+              $clientPreference = ClientPreference::first();
+
               Session::put('login_user_type', 'client');
               if(isset($clientPreference)){
                 $agentTitle = empty($clientPreference->agent_name) ? 'Agent' : $clientPreference->agent_name;

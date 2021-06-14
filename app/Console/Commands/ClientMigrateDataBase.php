@@ -41,7 +41,7 @@ class ClientMigrateDataBase extends Command
      */
     public function handle(){
         $clients = Client::get();
-        foreach ($clients as $client) {
+        foreach ($clients as $key => $client) {
             $database_name = 'royo_' . $client->database_name;
             $this->info("migrate database start: {$database_name}!");
             $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";

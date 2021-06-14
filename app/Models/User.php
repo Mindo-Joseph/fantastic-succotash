@@ -105,4 +105,19 @@ class User extends Authenticatable
        return $this->hasMany('App\Models\Order', 'user_id', 'id')->select('id', 'user_id')
               ->where('is_deleted', '!=', 1); 
     }
+
+    /**
+     * Get All permisions
+    */
+    public function getAllPermissions()
+    {
+      return $this->hasMany('App\Models\UserPermissions','user_id','id');
+    }
+
+
+    public function getCodeAttribute($value)
+    { 
+     $value = Client::first();
+     return $value->code;
+    }
 }

@@ -60,7 +60,7 @@
                                         <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$client->name}}</a>
                                     </td>
                                     <td> {{$client->email}} </td>
-                                    <td style="width:100px;max-width:100px;"> {{$client->encpass}} </td>
+                                    <td style="width:100px;max-width:100px;"> </td>
                                     <td> {{$client->phone_number}} </td>
                                     <td> {{$client->database_name}} </td>
                                     <td><a target="_blank" href="{{$client->sub_domain_url}}">{{$client->sub_domain }}.royoorders.com</a> </td>

@@ -111,15 +111,37 @@
                            <input data-plugin="switchery" name="need_delivery_service" id="need_delivery_service" class="form-control" data-color="#43bee1" type="checkbox" @if((isset($preference) && $preference->need_delivery_service == '1')) checked @endif >
                         </div>
                      </div>
+
+                     <div class="form-group mt-3 mb-0 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
+                        <label for="delivery_service_key_url">Royo Dispatcher Url</label>
+                        <input type="text" name="delivery_service_key_url" id="delivery_service_key_url" placeholder="" class="form-control" value="{{ old('delivery_service_key_url', $preference->delivery_service_key_url ?? '')}}">
+                        @if($errors->has('delivery_service_key_url'))
+                        <span class="text-danger" role="alert">
+                        <strong>{{ $errors->first('delivery_service_key_url') }}</strong>
+                        </span>
+                        @endif
+                     </div>
+
+                     <div class="form-group mt-3 mb-0 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
+                        <label for="delivery_service_key_code">Royo Dispatcher Short code</label>
+                        <input type="text" name="delivery_service_key_code" id="delivery_service_key_code" placeholder="" class="form-control" value="{{ old('delivery_service_key_code', $preference->delivery_service_key_code ?? '')}}">
+                        @if($errors->has('delivery_service_key_code'))
+                        <span class="text-danger" role="alert">
+                        <strong>{{ $errors->first('delivery_service_key_code') }}</strong>
+                        </span>
+                        @endif
+                     </div>
+
                      <div class="form-group mt-3 mb-0 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
                         <label for="delivery_service_key">Royo Dispatcher API key</label>
                         <input type="text" name="delivery_service_key" id="delivery_service_key" placeholder="" class="form-control" value="{{ old('delivery_service_key', $preference->delivery_service_key ?? '')}}">
                         @if($errors->has('delivery_service_key'))
                         <span class="text-danger" role="alert">
-                        <strong>{{ $errors->first(' delivery_service_key') }}</strong>
+                        <strong>{{ $errors->first('delivery_service_key') }}</strong>
                         </span>
                         @endif
                      </div>
+                     
                   </div>
                </div>
             </div>
