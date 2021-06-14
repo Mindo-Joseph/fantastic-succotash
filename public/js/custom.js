@@ -41,6 +41,29 @@ $(document).ready(function() {
             }
         });
     }
+    $(document).on("click","#order_palced_btn",function() {
+        $.ajax({
+            data: {},
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            url: payment_option_list_url,
+            success: function(response) {
+                if (response.status == "Success") {
+                    $('#v_pills_tab').html('');
+                    $('#v_pills_tabContent').html('');
+                    let payment_method_template = _.template($('#payment_method_template').html());
+                    $("#v_pills_tab").append(payment_method_template({payment_options: response.data}));
+                    let payment_method_tab_pane_template = _.template($('#payment_method_tab_pane_template').html());
+                    $("#v_pills_tabContent").append(payment_method_tab_pane_template({payment_options: response.data}));
+                    $('#proceed_to_pay_modal').modal('show');
+
+                    $('#proceed_to_pay_modal #total_amt').html($('#cart_total_payable_amount').html());
+                    stripeInitialize();
+                }
+            }
+        });
+    });
     function paymentViaStripe(stripe_token, address_id, payment_option_id){
         $.ajax({
             type: "POST",
@@ -77,6 +100,9 @@ $(document).ready(function() {
     }
 
     function paymentSuccessViaPaypal(token, payer_id){
+        $('#order_palced_btn').trigger('click');
+        $('#v-pills-paypal-tab').trigger('click');
+        $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
         let address_id = $("input:radio[name='address_id']:checked").val();
         $.ajax({
             type: "GET",
@@ -88,6 +114,7 @@ $(document).ready(function() {
                     placeOrder(address_id, 3, response.data.id);
                 }else{
                     alert(response.message);
+                    $("#order_palced_btn, .proceed_to_pay").attr("disabled", false);
                 }
             }
         });
@@ -101,11 +128,14 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.status == "Success") {
                     window.location.href = base_url+'/order/success/'+response.data.order.id;
+                }else{
+                    $("#order_palced_btn, .proceed_to_pay").attr("disabled", false);
                 }
             }
         });
     }
     $(document).on("click", ".proceed_to_pay", function() {
+        $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
         let address_id = $("input:radio[name='address_id']:checked").val();
         let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
         if(payment_option_id == 1){
@@ -114,6 +144,7 @@ $(document).ready(function() {
             stripe.createToken(card).then(function(result) {
                 if (result.error) {
                     $('#stripe_card_error').html(result.error.message);
+                    $("#order_palced_btn, .proceed_to_pay").attr("disabled", false);
                 } else {
                     paymentViaStripe(result.token.id, address_id, payment_option_id);
                 }
@@ -121,28 +152,6 @@ $(document).ready(function() {
         }else if(payment_option_id == 3){
             paymentViaPaypal(address_id, payment_option_id);
         }
-    });
-    $(document).on("click","#order_palced_btn",function() {
-        $.ajax({
-            data: {},
-            type: "POST",
-            dataType: 'json',
-            url: payment_option_list_url,
-            success: function(response) {
-                if (response.status == "Success") {
-                    $('#v_pills_tab').html('');
-                    $('#v_pills_tabContent').html('');
-                    let payment_method_template = _.template($('#payment_method_template').html());
-                    $("#v_pills_tab").append(payment_method_template({payment_options: response.data}));
-                    let payment_method_tab_pane_template = _.template($('#payment_method_tab_pane_template').html());
-                    $("#v_pills_tabContent").append(payment_method_tab_pane_template({payment_options: response.data}));
-                    $('#proceed_to_pay_modal').modal('show');
-
-                    $('#proceed_to_pay_modal #total_amt').html($('#cart_total_payable_amount').html());
-                    stripeInitialize();
-                }
-            }
-        });
     });
     $(document).on("click",".remove_promo_code_btn",function() {
         let cart_id = $(this).data('cart_id');
