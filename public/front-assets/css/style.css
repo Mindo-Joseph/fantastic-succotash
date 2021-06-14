@@ -1519,7 +1519,7 @@ button.btn.btn-solid:active, button.btn.btn-outline:active {
   display: block; }
 
 .ratio_asos .bg-size:before {
-  padding-top: 127.7777778%;
+  padding-top: 100.7777778%;
   content: "";
   display: block; }
 
@@ -6721,7 +6721,7 @@ header {
   .onhover-div i {
     cursor: pointer; }
   .onhover-div .show-div {
-    top: 103px;
+    top: calc(100% + 10px);
     position: absolute;
     z-index: 9;
     background-color: #ffffff;
@@ -8735,7 +8735,7 @@ header.stickycls {
   line-height: 23px;
   text-decoration: none;
   text-transform: uppercase;
-  padding: 0 15px;
+  padding: 0 25px 0 0;
   letter-spacing: 0.07em; }
 
 .pixelstrap a:hover {
@@ -8744,19 +8744,23 @@ header.stickycls {
 .pixelstrap a.disabled {
   color: #ffd8d4; }
 
-.pixelstrap a .sub-arrow {
-  position: absolute;
-  top: 50%;
-  margin-top: -17px;
-  left: auto;
-  right: -4px;
-  width: 34px;
-  height: 34px;
-  overflow: hidden;
-  font: bold 16px/34px monospace !important;
-  text-align: center;
-  text-shadow: none;
-  border-radius: 4px; }
+  .pixelstrap a .sub-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0;
+    left: auto;
+    right: 3px;
+    width: 34px;
+    height: 34px;
+    overflow: hidden;
+    font: bold 16px/34px monospace !important;
+    text-align: center;
+    text-shadow: none;
+    border-radius: 4px;
+}
+
+
 
 .pixelstrap > li:last-child > a, .pixelstrap > li:last-child > *:not(ul) a, .pixelstrap > li:last-child > ul,
 .pixelstrap > li:last-child > ul > li:last-child > a, .pixelstrap > li:last-child > ul > li:last-child > *:not(ul) a, .pixelstrap > li:last-child > ul > li:last-child > ul,
@@ -10786,7 +10790,8 @@ header.stickycls {
   .product-wrap .img-wrapper {
     position: relative;
     overflow: hidden;
-    z-index: 0; }
+    z-index: 0;
+    border-radius: 12px; }
     .product-box .img-wrapper .front,
     .product-wrap .img-wrapper .front {
       opacity: 1;
