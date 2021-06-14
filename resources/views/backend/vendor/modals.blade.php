@@ -134,7 +134,7 @@
                 <div class="modal-body">
                     <div class="row">
                     <div class="col-md-12 text-center">
-                            <a href="/storage/sample_files/vendor_template.csv">Download Sample file here!</a>
+                            <a href="{{url('file-download'.'/sample_product.csv')}}">Download Sample file here!</a>
                         </div>
                         <div class="col-md-12">
                             <div class="row mb-2">
