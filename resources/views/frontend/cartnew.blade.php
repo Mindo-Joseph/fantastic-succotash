@@ -162,7 +162,7 @@
             </td>
             <td colspan="2" class="pt-0 pl-0 text-right">
                 <hr class="mt-0 mb-2">
-                <p class="total_amt m-0">$<%= cart_details.total_payable_amount %></p>
+                <p class="total_amt m-0" id="cart_total_payable_amount">$<%= cart_details.total_payable_amount %></p>
             </td>
         </tr>
     </tfoot>
@@ -408,13 +408,9 @@
                 <div class="form_fields">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="row form-group">
-                                <div class="col-sm-8">
-                                    <label for="">Amount:</label>
-                                </div>
-                            </div>
                             <% if(payment_option.slug == 'stripe') { %>
                                 <div id="stripe-card-element"></div>
+                                <span class="error text-danger" id="stripe_card_error"></span>
                             <% } %>
                         </div>
                     </div>
@@ -439,7 +435,7 @@
                </div>
                <div class="col-8">
                   <div class="tab-content-box pl-3">
-                     <h5 class="modal-title pt-4" id="pay-billLabel">Total Amount</h5>
+                     <h5 class="modal-title pt-4" id="pay-billLabel">Total Amount: <span id="total_amt"></span></h5>
                      <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
                      <span aria-hidden="true">×</span>
                      </button>

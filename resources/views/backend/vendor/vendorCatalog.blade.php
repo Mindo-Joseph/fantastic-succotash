@@ -162,7 +162,7 @@
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
 </div>
@@ -238,65 +238,61 @@
                 <h4 class="modal-title">Add Product</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <form method="post" enctype="multipart/form-data" action="{{route('product.import')}}">
+            <form method="post" enctype="multipart/form-data" id="save_imported_products">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
                             <input type="hidden" value="{{$vendor->id}}" name="vendor_id" />
-                            <input type="file" accept=".csv" data-plugins="dropify" name="product_excel" class="dropify" />
+                            <input type="file" accept=".csv" onchange="submitProductImportForm()" data-plugins="dropify" name="product_excel" class="dropify" />
                             <p class="text-muted text-center mt-2 mb-0">Upload CSV File</p>
                         </div>
                         <div class="col-md-12">
-                        <table class="table table-centered table-nowrap table-striped" id="">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>File Name</th>
-                                                <th>Link</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="post_list">
-                                            @foreach($csvProducts as $csv)
-                                            <tr data-row-id="{{$csv->id}}"> 
-                                                <td> {{ $csv->id }}</td>
-                                                <td> {{ $csv->name }}</td>
-                                                <td> <a href="{{ $csv->path }}">Download</a> </td>
-                                                @if($csv->status == 1)
-                                                <td>Pending</td>
-                                                @elseif($csv->status == 2)
-                                                <td>Success</td>
-                                                @else
-                                                <td>Failed</td>
-                                                @endif
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                        <div class="col-12">
-                          <div class="form-group" id="categoryInput">
-                            {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
-                            <select class="form-control selectizeInput" id="category_list" name="category[]">
-                                <option value="">Select Category...</option>
-                                @foreach($product_categories as $product_category)
-                                    @if($product_category->category)
-                                      @if($product_category->category->type_id == 1)
-                                        <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
-                                      @endif
-                                    @endif
-                                @endforeach
-                            </select>
-                            <span class="invalid-feedback" role="alert">
-                                <strong></strong>
-                            </span>
-                          </div>
+                            <table class="table table-centered table-nowrap table-striped" id="">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>File Name</th>
+                                        <th colspan="2">Status</th>
+                                        <th>Link</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody id="post_list">
+                                    @foreach($csvProducts as $csv)
+                                    <tr data-row-id="{{$csv->id}}">
+                                        <td> {{ $csv->id }}</td>
+                                        <td> {{ $csv->name }}</td>
+                                        
+                                        @if($csv->status == 1)
+                                        <td>Pending</td>
+                                        @elseif($csv->status == 2)
+                                        <td>Success</td>
+                                        @else
+                                        <td>Errors</td>
+                                        <td class="position-relative text-center">
+                                            <i class="mdi mdi-exclamation-thick"></i>
+                                            <ul class="tooltip_error">
+                                                <?php $error_csv = json_decode($csv->error); ?>
+                                                @foreach($error_csv as $err)
+                                                <li>
+                                                   {{$err}}
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                        </td>
+                                        @endif
+                                        
+                                        <td> <a href="{{ $csv->path }}">Download</a> </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-info waves-effect waves-light ">Submit</button>
-                </div>
+                    <!-- <div class="modal-footer">
+                        <button type="submit" class="btn btn-info waves-effect waves-light ">Submit</button>
+                    </div> -->
             </form>
         </div>
     </div>

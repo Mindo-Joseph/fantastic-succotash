@@ -1672,7 +1672,9 @@ label{
     height: 50px;
 }
 
-
+.sp-colorize-container {
+    background: rgb(74, 129, 212);
+}
 
 
 

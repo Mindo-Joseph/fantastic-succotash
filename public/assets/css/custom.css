@@ -891,6 +891,21 @@ label.file-input.uploadImages {
     color: #43bee1 !important;
 }
 
+.round_img_box{
+    display: block;
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+    border: 1px solid #dddd;
+}
+
+.round_img_box img.rounded-circle {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
 #banner-datatable img.rounded-circle {
     width: 90px;
     height: 90px;
@@ -1174,4 +1189,59 @@ label.file-input.uploadImages {
 
 .brand-logo img.img-fluid {
     height: 50px;
+}
+i.mdi.mdi-exclamation-thick {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgb(0 0 0 / 60%);
+    display: inline-block;
+    color: rgb(0 0 0 / 60%);
+    cursor: pointer;
+}
+
+.tooltip_error {
+    position: absolute;
+    right: -87px;
+    background: #fff;
+    box-shadow: 0px 0px 5px #ddd;
+    padding: 10px 15px 10px 30px;
+    margin: 0;
+    border-radius: 5px;
+    opacity: 0;
+    bottom: -100%;
+    transform: translateY(-100%);
+    transition: all 0.5s;
+    color: rgb(255 0 0 / 80%);
+    line-height: 20px;
+    width: 260px;
+    text-align: left;
+}
+
+.tooltip_error li{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tooltip_error::after {
+    clip-path: polygon(50% 100%, 0 0, 100% 0);
+    width: 30px;
+    height: 15px;
+    content: "";
+    position: absolute;
+    right: 0;
+    left: 0;
+    margin: auto;
+    bottom: -15px;
+    background-color: #fff;
+    display: block;
+    box-shadow: 0px 2px 5px #ddd;
+}
+
+
+.mdi.mdi-exclamation-thick:hover + .tooltip_error {
+    opacity: 1;
+    bottom: 0;
+    transform: translateY(-50px);
 }

@@ -720,18 +720,18 @@ class ProductController extends BaseController
      */
     public function importCsv(Request $request)
     {
-        // $fileModel = new CsvProductImport;
+        $fileModel = new CsvProductImport;
         
-        // if($request->file('product_excel')) {
-        //     $fileName = time().'_'.$request->file('product_excel')->getClientOriginalName();
-        //     $filePath = $request->file('product_excel')->storeAs('csv_products', $fileName, 'public');
+        if($request->file('product_excel')) {
+            $fileName = time().'_'.$request->file('product_excel')->getClientOriginalName();
+            $filePath = $request->file('product_excel')->storeAs('csv_products', $fileName, 'public');
 
-        //     $fileModel->vendor_id = $request->vendor_id;
-        //     $fileModel->name = $fileName;
-        //     $fileModel->path = '/storage/' . $filePath;
-        //     $fileModel->status = 1;
-        //     $fileModel->save();
-        // }
+            $fileModel->vendor_id = $request->vendor_id;
+            $fileModel->name = $fileName;
+            $fileModel->path = '/storage/' . $filePath;
+            $fileModel->status = 1;
+            $fileModel->save();
+        }
 
         // dd($request->vendor_id);
 
