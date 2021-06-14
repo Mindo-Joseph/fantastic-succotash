@@ -1616,6 +1616,9 @@ label{
 
 
 /* Home Location Search Bar Css */
+.find_location {
+    margin: 0 0 25px;
+}
 .find_location .container {
     background: #fff;
     /* margin-top: -64px; */
