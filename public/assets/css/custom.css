@@ -1187,6 +1187,9 @@ label.file-input.uploadImages {
     position: relative;
 }
 
+.brand-logo img.img-fluid {
+    height: 50px;
+}
 i.mdi.mdi-exclamation-thick {
     width: 24px;
     height: 24px;

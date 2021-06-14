@@ -59,10 +59,33 @@ $(document).ready(function() {
             type: "POST",
             dataType: 'json',
             url: payment_paypal_url,
-            data: {'amount': 0.5},
+            data: {'amount': 0.05},
             success: function (response) {
                 if(response.status == "Success"){
                     window.location.href = response.data.response;
+                }else{
+                    alert(response.message);
+                }
+            }
+        });
+    }
+
+    let queryString = window.location.search;
+    let urlParams = new URLSearchParams(queryString);
+    if( (urlParams.has('PayerID')) && (urlParams.has('token')) ){
+        paymentSuccessViaPaypal(urlParams.get('token'), urlParams.get('PayerID'));
+    }
+
+    function paymentSuccessViaPaypal(token, payer_id){
+        let address_id = $("input:radio[name='address_id']:checked").val();
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            url: payment_success_paypal_url,
+            data: {'amount': 0.05, 'token': token, 'PayerID': payer_id},
+            success: function (response) {
+                if(response.status == "Success"){
+                    placeOrder(address_id, 3, response.data.id);
                 }else{
                     alert(response.message);
                 }
@@ -96,7 +119,7 @@ $(document).ready(function() {
                 }
             });
         }else if(payment_option_id == 3){
-            paymentViaPaypal();
+            paymentViaPaypal(address_id, payment_option_id);
         }
     });
     $(document).on("click","#order_palced_btn",function() {
