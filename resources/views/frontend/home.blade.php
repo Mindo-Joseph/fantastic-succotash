@@ -18,6 +18,30 @@
     @include('layouts.store/left-sidebar')
 </header>
 
+<div class="find_location">
+    <div class="container px-0">
+        <div class="row no-gutters">
+            <div class="col-lg-3 col-md-4">
+                <div class="d-flex align-items-center justify-content-between px-3" data-toggle="modal" data-target="#edit-address" href="javascript:void(0)">
+                    <div class="map-icon"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                    <div class="address">
+                        <h2 _ngcontent-saas-website-c153="" style="color: rgb(0, 0, 0);"><span _ngcontent-saas-website-c153="" data-placement="top" data-toggle="tooltip" title="Hyderabad,, Janapriya Nagar, Hafeezpet, Hyderabad, Telangana 500049, India" style="color: rgb(0, 0, 0);">Hyderabad,, Janapriya Nagar, Hafeezpet, Hyderabad, Telangana 500049, India </span></h2>
+                    </div>
+                    <div class="down-icon">
+                        <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-8">
+                <form class="search_form d-flex align-items-center justify-content-between" action="">
+                    <input class="form-control border-0" type="text" placeholder="Search">
+                    <button class="btn btn-solid"><i class="fa fa-search mr-1" aria-hidden="true"></i><span class="search-text">Search</span></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <section class="p-0 small-slider">
     <div class="slide-1 home-slider">
         @foreach($banners as $banner)
@@ -44,29 +68,7 @@
     </div>
 </section>
 
-<div class="find_location">
-    <div class="container px-0">
-        <div class="row no-gutters">
-            <div class="col-lg-3 col-md-4">
-                <div class="d-flex align-items-center justify-content-between px-3" data-toggle="modal" data-target="#edit-address" href="javascript:void(0)">
-                    <div class="map-icon"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-                    <div class="address">
-                        <h2 _ngcontent-saas-website-c153="" style="color: rgb(0, 0, 0);"><span _ngcontent-saas-website-c153="" data-placement="top" data-toggle="tooltip" title="Hyderabad,, Janapriya Nagar, Hafeezpet, Hyderabad, Telangana 500049, India" style="color: rgb(0, 0, 0);">Hyderabad,, Janapriya Nagar, Hafeezpet, Hyderabad, Telangana 500049, India </span></h2>
-                    </div>
-                    <div class="down-icon">
-                        <i class="fa fa-angle-down" aria-hidden="true"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-9 col-md-8">
-                <form class="search_form d-flex align-items-center justify-content-between" action="">
-                    <input class="form-control border-0" type="text" placeholder="Search">
-                    <button class="btn btn-solid"><i class="fa fa-search mr-1" aria-hidden="true"></i><span class="search-text">Search</span></button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <!-- Home slider end -->
 <!-- category -->
