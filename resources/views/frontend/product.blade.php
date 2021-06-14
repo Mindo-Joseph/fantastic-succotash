@@ -265,7 +265,7 @@
                                     <div class="product-buttons"><a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a> <a href="#" class="btn btn-solid">buy now</a></div>
                                     <div class="border-product">
                                         <h6 class="product-title">product details</h6>
-                                        <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''}}</p>
+                                        <p>{!!(!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''!!}</p>
                                     </div>
                                     <!--<div class="border-product">
                                         <h6 class="product-title">share it</h6>
@@ -321,7 +321,7 @@
                                 </ul>
                                 <div class="tab-content nav-material" id="top-tabContent">
                                     <div class="tab-pane fade show active" id="top-home" role="tabpanel" aria-labelledby="top-home-tab">
-                                        <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''}}</p>
+                                        <p>{!! (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''!!}</p>
                                     </div>
                                     <div class="tab-pane fade" id="top-profile" role="tabpanel" aria-labelledby="profile-top-tab">
                                         <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''}}</p>

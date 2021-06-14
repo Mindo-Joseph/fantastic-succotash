@@ -40,18 +40,21 @@ class CartController extends FrontController
 
     public function postAddToCart(Request $request, $domain = ''){
         try {
+            $cart_detail = [];
             $user = Auth::user();
             $addon_ids = $request->addonID;
             $addon_options_ids = $request->addonoptID;
             $new_session_token = session()->get('_token');
             $client_currency = ClientCurrency::where('is_primary', '=', 1)->first();
             $user_id = $user ? $user->id : '';
+            if($user){
+                $cart_detail['user_id'] = $user_id;
+                $cart_detail['created_by'] = $user_id;
+            }
             $cart_detail = [
                 'is_gift' => 1,
                 'status' => '0',
                 'item_count' => 0,
-                'user_id' => $user_id,
-                'created_by' => $user_id,
                 'currency_id' => $client_currency->currency_id,
                 'unique_identifier' => !$user ? $new_session_token : '',
             ];

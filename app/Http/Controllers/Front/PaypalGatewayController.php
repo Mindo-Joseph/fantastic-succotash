@@ -21,11 +21,9 @@ class PaypalGatewayController extends Controller
     {
         $paypal_creds = PaymentOption::select('credentials')->where('code', 'paypal')->where('status', 1)->first();
         $creds_arr = json_decode($paypal_creds->credentials);
-
         $username = (isset($creds_arr->username)) ? $creds_arr->username : '';
         $password = (isset($creds_arr->password)) ? $creds_arr->password : '';
         $signature = (isset($creds_arr->signature)) ? $creds_arr->signature : '';
-
         $gateway = Omnipay::create('PayPal_Express');
         $gateway->setUsername($username);
         $gateway->setPassword($password);
