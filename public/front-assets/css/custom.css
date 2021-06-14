@@ -1611,6 +1611,7 @@ label{
 .blur-up.lazyloaded{
     background-size: contain !important;
     background-repeat: no-repeat !important;
+    background-color: rgb(150 139 139 / 12%) !important;
 }
 
 
@@ -1632,7 +1633,7 @@ label{
     white-space: nowrap;
     overflow: hidden;
     font-size: 15px;
-    line-height: 65px;
+    line-height: 50px;
     margin: 0px;
     cursor: pointer !important;
 }
@@ -1643,7 +1644,7 @@ button.btn.btn-solid {
 }
 .search_form 
  input.form-control {
-    font-size: 26px;
+    font-size: 18px;
  }
 
 .search_form 

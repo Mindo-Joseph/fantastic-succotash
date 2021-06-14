@@ -3058,19 +3058,20 @@ button.btn.btn-solid:active, button.btn.btn-outline:active {
       bottom: 0; }
 
 .cart_qty_cls {
-  position: absolute;
-  background: var(--theme-deafult);
-  width: 20px;
-  height: 20px;
-  color: #fff;
-  border-radius: 20px;
-  text-align: center;
-  font-size: 12px;
-  line-height: 14px;
-  font-weight: 600;
-  top: 20%;
-  right: -8px;
-  padding: 3px; }
+    position: absolute;
+    background: var(--theme-deafult);
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 600;
+    top: -7px;
+    right: -10px;
+    padding: 3px;
+}
 
 .addcart_btm_popup {
   position: fixed;
