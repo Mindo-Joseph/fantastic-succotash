@@ -21,7 +21,7 @@ class VendorImport implements ToCollection
                 $checker = 0;
                 if ($row[0] != "Logo") { //header of excel check
                     if ($row[2] != "") { //check if name is empty
-                        $vendor_check = Vendor::where('name', $row[0])->first();
+                        $vendor_check = Vendor::where('name', $row[2])->first();
                         if ($vendor_check) { //if not empty, then is it already exists
                             $error[] = "Row " . $i . " : Vendor name already Exist";
                             $checker = 1;
@@ -77,7 +77,7 @@ class VendorImport implements ToCollection
             }
             if (!empty($data)) {
                 foreach ($data as $da) {
-                    if (!Vendor::where('name', $da[0])->exists()) {
+                    if (!Vendor::where('name', $da[2])->exists()) {
                         $product = Vendor::insertGetId([
                             'latitude' => 0,
                             'name' => $da[2],
