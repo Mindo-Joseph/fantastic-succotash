@@ -21,12 +21,12 @@ class VendorImport implements ToCollection
                 if ($row[2] != "") { //check if name is empty
                     $vendor_check = Vendor::where('name', $row[0])->first();
                     if ($vendor_check) { //if not empty, then is it already exists
-                        $error[] = "Line " . $i . " : Vendor name already Exist";
+                        $error[] = "Row " . $i . " : Vendor name already Exist";
                     } else { //if not empty, neither exist, add it for entry
                         $data[] = $row;
                     }
                 } else {
-                    $error[] = "Line " . $i . " : Name cannot be empty";
+                    $error[] = "Row " . $i . " : Name cannot be empty";
                 }
             }
             $i++;
