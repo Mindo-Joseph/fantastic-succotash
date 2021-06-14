@@ -14,7 +14,7 @@ class PaymentOptionSeeder extends Seeder
       DB::table('payment_options')->truncate();
       $payment_options = array(
         array('id' => '1','code' => 'cod','path' => '','title' => 'Cash On Delivery','status' => '1'),
-        array('id' => '2','code' => 'loyalty-points','path' => '','title' => 'loyalty Points','status' => '1'),
+        // array('id' => '2','code' => 'loyalty-points','path' => '','title' => 'loyalty Points','status' => '1'),
         array('id' => '3', 'path' => 'omnipay/paypal', 'code' => 'paypal', 'title' => 'PayPal', 'status' => '1'),
         array('id' => '4', 'path' => 'omnipay/targetpay', 'code' => 'stripe', 'title' => 'Stripe', 'status' => '1'),
       ); 
