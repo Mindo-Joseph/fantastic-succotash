@@ -10,6 +10,7 @@ use App\Http\Controllers\Front\FrontController;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor, UserAddress,Vendor,CartCoupon, LoyaltyCard};
 use App\Models\ClientPreference;
 use GuzzleHttp\Client;
+use Log;
 class OrderController extends FrontController{
     
     public function getOrderSuccessPage(Request $request){
@@ -78,6 +79,11 @@ class OrderController extends FrontController{
                         $product_tax = $quantity_price * $rate / 100;
                         $product_taxable_amount += $product_tax;
                         $payable_amount = $payable_amount + $product_tax;
+                    }
+                    if(!empty($vendor_cart_product->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1)
+                    {   
+                        Log::info($vendor_cart_product->product);
+                       // $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                     }
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
@@ -158,7 +164,7 @@ class OrderController extends FrontController{
             CartCoupon::where('cart_id', $cart->id)->delete();
             CartProduct::where('cart_id', $cart->id)->delete();
           
-            
+            dd($cart_products);
 
             $order_dispatch = $this->placeRequestToDispatch($order,$cart_products,$request);
           
@@ -261,9 +267,14 @@ class OrderController extends FrontController{
                         $client = new Client(['headers' => ['client' => 'newclient1',
                                                     'content-type' => ' multipart/form-data']
                                                         ]);
+                        
+                        $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
+                                                        'shortcode' => $dispatch_domain->delivery_service_key_code,
+                                                        'content-type' => 'application/json']
+                                                            ]);                                
                                                 
-                        $res = $client->post(
-                            'https://winhires.com/api/public/task/create',
+                        $url = $dispatch_domain->delivery_service_key_url;                      
+                        $res = $client->post($url.'/api/task/create',
                             ['form_params' => (
                                                         $postdata
                                                     )]
@@ -279,11 +290,11 @@ class OrderController extends FrontController{
            
            
     }
-    
+     
     public function getDispatchDomain(){
-        $preference = ClientPreference::where('client_code', Auth::user()->code)->first();
-        if($preference->need_delivery_service == 1)
-            return $preference->need_delivery_service;
+        $preference = ClientPreference::first();
+        if($preference->need_delivery_service == 1 && !empty($preference->delivery_service_key) && !empty($preference->delivery_service_key_code) && !empty($preference->delivery_service_key_url))
+            return $preference;
         else
             return false;
     }

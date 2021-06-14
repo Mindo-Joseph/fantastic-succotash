@@ -313,7 +313,7 @@ class CartController extends FrontController
                     }
                     if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1)
                     {   
-                        Log::info($prod->product);
+                       // Log::info($prod->product);
                         $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                     }
                     if(empty($deliver_charge))
@@ -439,7 +439,6 @@ class CartController extends FrontController
                     $customer = User::find(Auth::id());
                     $cus_address = UserAddress::where('user_id',Auth::id())->orderBy('is_primary','desc')->first();
                     if($cus_address){
-                        Log::info($vendor_id);
                         $tasks = array();
                         $vendor_details = Vendor::find($vendor_id);
     
