@@ -242,6 +242,9 @@
                 @csrf
                 <div class="modal-body">
                     <div class="row">
+                        <div class="col-md-12 text-center">
+                            <a href="/storage/sample_files/product_template.csv">Download Sample file here!</a>
+                        </div>
                         <div class="col-md-12">
                             <input type="hidden" value="{{$vendor->id}}" name="vendor_id" />
                             <input type="file" accept=".csv" onchange="submitProductImportForm()" data-plugins="dropify" name="product_excel" class="dropify" />
@@ -266,8 +269,10 @@
                                         
                                         @if($csv->status == 1)
                                         <td>Pending</td>
+                                        <td></td>
                                         @elseif($csv->status == 2)
                                         <td>Success</td>
+                                        <td></td>
                                         @else
                                         <td>Errors</td>
                                         <td class="position-relative text-center">
