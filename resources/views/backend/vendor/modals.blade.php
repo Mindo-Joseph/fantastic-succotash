@@ -139,7 +139,7 @@
                         <div class="col-md-12">
                             <div class="row mb-2">
                                 <div class="col-md-12">            
-                                    <input type="file" accept="csv/*" onchange="submitImportForm()" data-plugins="dropify" name="vendor_csv" class="dropify" data-default-file="" required/>
+                                    <input type="file" accept=".csv" onchange="submitImportForm()" data-plugins="dropify" name="vendor_csv" class="dropify" data-default-file="" required/>
                                     <p class="text-muted text-center mt-2 mb-0">Upload Vendors CSV</p>
                                 </div>
                             </div>

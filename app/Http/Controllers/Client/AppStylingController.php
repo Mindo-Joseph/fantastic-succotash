@@ -30,7 +30,12 @@ class AppStylingController extends BaseController
         if($homepage_style){
             $homepage_style_options = AppStylingOption::where('app_styling_id', $homepage_style->id)->get();
         }
-        return view('backend/app_styling/index')->with(['font_options' => $font_options, 'tab_style_options' => $tab_style_options,'homepage_style_options' => $homepage_style_options]);
+
+        $color = AppStyling::where('name', 'Color')->first();
+        if($color){
+            $color_options = AppStylingOption::where('app_styling_id', $color->id)->first();
+        }
+        return view('backend/app_styling/index')->with(['color_options' => $color_options, 'font_options' => $font_options, 'tab_style_options' => $tab_style_options,'homepage_style_options' => $homepage_style_options]);
     }
 
     /**
@@ -97,5 +102,16 @@ class AppStylingController extends BaseController
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateFont(Request $request)
+    {
+        $font = AppStylingOption::where('id', $request->fonts)->first();
     }
 }

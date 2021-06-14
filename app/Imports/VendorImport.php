@@ -13,20 +13,61 @@ class VendorImport implements ToCollection
         $data = array();
         $error = array();
         $i = 0;
-
         foreach ($rows as $row) {
             $row = $row->toArray();
-
-            if ($row[0] != "logo") { //header of excel check
+            $checker = 0;
+            if ($row[0] != "Logo") { //header of excel check
                 if ($row[2] != "") { //check if name is empty
                     $vendor_check = Vendor::where('name', $row[0])->first();
                     if ($vendor_check) { //if not empty, then is it already exists
                         $error[] = "Row " . $i . " : Vendor name already Exist";
-                    } else { //if not empty, neither exist, add it for entry
-                        $data[] = $row;
+                        $checker = 1;
                     }
                 } else {
                     $error[] = "Row " . $i . " : Name cannot be empty";
+                    $checker = 1;
+                }
+
+                if($row[8] != ""){
+                    if(!is_numeric($row[8])) {
+                        $error[] = "Row " . $i . " : Invalid input for order prepare time";
+                        $checker = 1;
+                    }
+                }
+
+                if($row[9] != ""){
+                    if(!is_numeric($row[9])) {
+                        $error[] = "Row " . $i . " : Invalid input for Auto Reject Time";
+                        $checker = 1;
+                    }
+                }
+                if($row[10] != ""){
+                    if(!is_numeric($row[10])) {
+                        $error[] = "Row " . $i . " : Invalid input for Order Minimum Amount";
+                        $checker = 1;
+                    }
+                }
+                if($row[12] != ""){
+                    if(!is_numeric($row[12])) {
+                        $error[] = "Row " . $i . " : Invalid input for Commission Percent";
+                        $checker = 1;
+                    }
+                }
+                if($row[13] != ""){
+                    if(!is_numeric($row[13])) {
+                        $error[] = "Row " . $i . " : Invalid input for Commission Fixed Per Order";
+                        $checker = 1;
+                    }
+                }
+                if($row[14] != ""){
+                    if(!is_numeric($row[14])) {
+                        $error[] = "Row " . $i . " : Invalid input for Commission Monthly";
+                        $checker = 1;
+                    }
+                }
+
+                if($checker == 0) { 
+                    $data[] = $row;
                 }
             }
             $i++;
@@ -42,24 +83,28 @@ class VendorImport implements ToCollection
                         'logo' => ($da[0] == "") ? "NULL" : $da[0],
                         'banner' => ($da[1] == "") ? "NULL" : $da[1],
                         'address' => ($da[4] == "") ? "NULL" : $da[4],
-                        'latitude' => ($da[5] == "") ? "NULL" : $da[5],
-                        'longitude' => ($da[6] == "") ? "NULL" : $da[6],
-                        'dine_in' => ($da[7] == 'TRUE') ? 1 : 0,
-                        'takeaway' => ($da[8] == 'TRUE') ? 1 : 0,
-                        'delivery' => ($da[9] == 'TRUE') ? 1 : 0,
+                        'latitude' => 0,
+                        'longitude' => 0,
+                        'order_min_amount' => ($da[10] == "") ? "NULL" : $da[10],
+                        'order_pre_time' => ($da[8] == "") ? "NULL" : $da[8],
+                        'auto_reject_time' => ($da[9] == "") ? "NULL" : $da[9],
+                        'commission_percent' => ($da[12] == "") ? "NULL" : $da[12],
+                        'commission_fixed_per_order' => ($da[13] == "") ? "NULL" : $da[13],
+                        'commission_monthly' => ($da[14] == "") ? "NULL" : $da[14],
+                        'dine_in' => ($da[5] == 'TRUE') ? 1 : 0,
+                        'takeaway' => ($da[6] == 'TRUE') ? 1 : 0,
+                        'delivery' => ($da[7] == 'TRUE') ? 1 : 0,
                     ]);
                 }
             }
         }
-
-         if (!empty($error)) {
+        if (!empty($error)) {
             dd($error);
             $vendor_csv = CsvVendorImport::first();
             $vendor_csv->status = 3;
             $vendor_csv->error = json_encode($error);
             $vendor_csv->save();
-        }
-        else{
+        }else{
             $vendor_csv = CsvVendorImport::first();
             $vendor_csv->status = 2;
             $vendor_csv->save();

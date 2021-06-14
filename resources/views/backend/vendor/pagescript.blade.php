@@ -261,8 +261,8 @@
             success: function(response) {
 
                 if (response.status == 'success') {
-                    $(".modal .close").click();
-                    location.reload(); 
+                    // $(".modal .close").click();
+                    // location.reload(); 
                 } else {
                     $(".show_all_error.invalid-feedback").show();
                     $(".show_all_error.invalid-feedback").text(response.message);

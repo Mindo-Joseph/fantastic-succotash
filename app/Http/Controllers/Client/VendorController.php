@@ -401,15 +401,15 @@ class VendorController extends BaseController
             // dd($request->file('vendor_csv'));
             $fileModel = new CsvVendorImport;
             
-            if($request->file('vendor_csv')) {
-                $fileName = time().'_'.$request->file('vendor_csv')->getClientOriginalName();
-                $filePath = $request->file('vendor_csv')->storeAs('csv_vendors', $fileName, 'public');
+            // if($request->file('vendor_csv')) {
+            //     $fileName = time().'_'.$request->file('vendor_csv')->getClientOriginalName();
+            //     $filePath = $request->file('vendor_csv')->storeAs('csv_vendors', $fileName, 'public');
     
-                $fileModel->name = $fileName;
-                $fileModel->path = '/storage/' . $filePath;
-                $fileModel->status = 1;
-                $fileModel->save();
-            }
+            //     $fileModel->name = $fileName;
+            //     $fileModel->path = '/storage/' . $filePath;
+            //     $fileModel->status = 1;
+            //     $fileModel->save();
+            // }
     
             $data = Excel::import(new VendorImport, $request->file('vendor_csv'));
     

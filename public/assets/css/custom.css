@@ -1246,3 +1246,47 @@ i.mdi.mdi-exclamation-thick {
     transform: translateY(-50px);
 }
 
+.custom-control-label{
+    cursor: pointer;
+}
+
+.custom-radio.radio_new .custom-control-label::before {
+    border-radius: 0;
+    clip-path: polygon(0 0, 0 35%, 35% 0);
+    width: 140px;
+    height: 120px;
+    left: 0;
+    top: -1px;
+    background-color: transparent;
+    opacity: 0;
+    content: "\F012C";
+    font-family: "Material Design Icons";
+    color: #fff;
+    font-size: 20px;
+    z-index: 1;
+}
+
+.custom-radio.radio_new .custom-control-label::before,.radio_new .custom-control-label::after{
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.radio_new .custom-control-label::after{
+    background: rgb(0 0 0 / 31%);
+    background-image: none !important;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before{
+    background-color: #43bee1 !important;
+    opacity: 1;
+}
+
+.custom-radio.radio_new .custom-control-input:checked ~ .custom-control-label::after {
+    opacity: 1;
+}
