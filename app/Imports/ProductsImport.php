@@ -2,29 +2,27 @@
 
 namespace App\Imports;
 
-use App\Models\{Category, ClientLanguage, CsvProductImport, Product, ProductCategory, ProductTranslation, ProductVariant, ProductVariantSet, Variant, VariantOption, VendorCategory, VendorMedia};
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Collection;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Intervention\Image\Facades\Image;
+use App\Models\{Category, ClientLanguage, CsvProductImport, Product, ProductCategory, ProductTranslation, ProductVariant, ProductVariantSet, Variant, VariantOption, VendorCategory, VendorMedia};
 
-class ProductsImport implements ToCollection
-{
+class ProductsImport implements ToCollection{
     private $folderName = 'prods';
-
-    public function collection(Collection $rows)
-    {
+    
+    public function  __construct($vendor_id){
+        $this->vendor_id= $vendor_id;
+    }
+    public function collection(Collection $rows){
+        $i = 0;
         $data = array();
         $error = array();
-        $i = 0;
-
         $variant_exist = 0;
-
         foreach ($rows as $row) {
             $checker = 0;
             $row = $row->toArray();
-
             if ($row[0] != "Handle") { //header of excel check
                 if ($row[0] == "") { //if sku or handle is empty
                     $error[] = "Row " . $i . " : handle is empty";
@@ -49,13 +47,12 @@ class ProductsImport implements ToCollection
                         $checker = 1;
                     } else {
                         $category_id = $category_check->id;
-                        if (!VendorCategory::where([['vendor_id', '=', '6'], ['category_id', '=', $category_id]])->exists()) { //check if category is activated for this vendor
+                        if (!VendorCategory::where([['vendor_id', '=', $this->vendor_id], ['category_id', '=', $category_id]])->exists()) { //check if category is activated for this vendor
                             $error[] = "Row " . $i . " : This category is not activated for this vendor";
                             $checker = 1;
                         }
                     }
                 }
-
                 if ($row[5] != "" && $row[6] == "") {
                     $error[] = "Row " . $i . " : There is no value for option 1";
                     $checker = 1;
@@ -108,7 +105,6 @@ class ProductsImport implements ToCollection
                         }
                     }
                 }
-
                 if ($row[7] != "" && $row[8] != "") {
                     $variant_check = Variant::where('title', $row[7])->first();
                     if (!$variant_check) {
@@ -174,22 +170,6 @@ class ProductsImport implements ToCollection
             }
             $i++;
         }
-
-        // if (!empty($data)) {
-        //     foreach ($data as $da) {
-        //         if ($da[17] != "") {
-        //             // dd($da[17]);
-        //             //$homepage = file_get_contents($da[17]);
-        //             $venmedia[] = [
-        //                 'vendor_id' => 6,
-        //                 'path' => 'true',
-        //             ];
-        //             VendorMedia::insert($venmedia);
-        //         }
-        //     }
-        // }
-        // dd("Done1");
-
         if (!empty($data)) {
             foreach ($data as $da) {
 
@@ -200,7 +180,7 @@ class ProductsImport implements ToCollection
                         'url_slug' => $da[0],
                         'title' => ($da[1] == "") ? "NULL" : $da[1],
                         'body_html' => ($da[2] == "") ? "NULL" : $da[2],
-                        'vendor_id' => 6,
+                        'vendor_id' => $this->vendor_id,
                         'type_id' => 1,
                         'is_new' => 1,
                         'is_featured' => 0,
@@ -355,23 +335,20 @@ class ProductsImport implements ToCollection
         } 
 
         if (!empty($error)) {
-            $vendor_csv = CsvProductImport::where('vendor_id', '6')->first();
+            $vendor_csv = CsvProductImport::where('vendor_id', $this->vendor_id)->first();
             $vendor_csv->status = 3;
             $vendor_csv->error = json_encode($error);
             $vendor_csv->save();
         }
         else{
-            $vendor_csv = CsvProductImport::where('vendor_id', '6')->first();
+            $vendor_csv = CsvProductImport::where('vendor_id', $this->vendor_id)->first();
             $vendor_csv->status = 2;
             $vendor_csv->save();
         }
     }
 
-    private function generateBarcodeNumber()
-    {
+    private function generateBarcodeNumber(){
         $random_string = substr(md5(microtime()), 0, 14);
-        // $number = mt_rand(1000000000, 9999999999);
-
         while (ProductVariant::where('barcode', $random_string)->exists()) {
             $random_string = substr(md5(microtime()), 0, 14);
         }

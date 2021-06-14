@@ -72,7 +72,5 @@ class RunSingleSeederCommand extends Command
                 $this->info("migrate database end: {$database_name}!");
             }
         }
-
-        return 0;
     }
 }

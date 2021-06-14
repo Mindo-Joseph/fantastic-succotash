@@ -720,24 +720,19 @@ class ProductController extends BaseController
      */
     public function importCsv(Request $request)
     {
+        $vendor_id = $request->vendor_id;
         $fileModel = new CsvProductImport;
-        
         if($request->file('product_excel')) {
             $fileName = time().'_'.$request->file('product_excel')->getClientOriginalName();
             $filePath = $request->file('product_excel')->storeAs('csv_products', $fileName, 'public');
-
             $fileModel->vendor_id = $request->vendor_id;
             $fileModel->name = $fileName;
             $fileModel->path = '/storage/' . $filePath;
             $fileModel->status = 1;
             $fileModel->save();
         }
-
-        // dd($request->vendor_id);
-
-        $data = Excel::import(new ProductsImport, $request->file('product_excel'));
-
-        dd("Done");
+        $data = Excel::import(new ProductsImport($vendor_id), $request->file('product_excel'));
+        return redirect()->back()->with('success', 'Product image deleted successfully!');
     }
 
 }

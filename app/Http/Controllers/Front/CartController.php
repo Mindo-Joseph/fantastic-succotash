@@ -314,8 +314,7 @@ class CartController extends FrontController
                     }else{
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
-                    if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1)
-                    {   
+                    if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1){   
                         Log::info($prod->product);
                         $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                     }
