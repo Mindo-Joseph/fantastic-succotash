@@ -732,7 +732,13 @@ class ProductController extends BaseController
             $fileModel->save();
         }
         $data = Excel::import(new ProductsImport($vendor_id), $request->file('product_excel'));
-        return redirect()->back()->with('success', 'Product image deleted successfully!');
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product image deleted successfully!'
+        ]);
+
+        // return redirect()->back()->with('success', 'Product image deleted successfully!');
     }
 
 }
