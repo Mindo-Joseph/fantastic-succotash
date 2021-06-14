@@ -398,23 +398,17 @@ class VendorController extends BaseController
     public function importCsv(Request $request)
     {
         if($request->has('vendor_csv')){
-            // dd($request->file('vendor_csv'));
-            $fileModel = new CsvVendorImport;
-            
-            // if($request->file('vendor_csv')) {
-            //     $fileName = time().'_'.$request->file('vendor_csv')->getClientOriginalName();
-            //     $filePath = $request->file('vendor_csv')->storeAs('csv_vendors', $fileName, 'public');
+            $csv_vendor_import = new CsvVendorImport;
+            if($request->file('vendor_csv')) {
+                $fileName = time().'_'.$request->file('vendor_csv')->getClientOriginalName();
+                $filePath = $request->file('vendor_csv')->storeAs('csv_vendors', $fileName, 'public');
+                $csv_vendor_import->name = $fileName;
+                $csv_vendor_import->path = '/storage/' . $filePath;
+                $csv_vendor_import->status = 1;
+                $csv_vendor_import->save();
+            }
     
-            //     $fileModel->name = $fileName;
-            //     $fileModel->path = '/storage/' . $filePath;
-            //     $fileModel->status = 1;
-            //     $fileModel->save();
-            // }
-    
-            $data = Excel::import(new VendorImport, $request->file('vendor_csv'));
-    
-            // dd("Done");
-            
+            $data = Excel::import(new VendorImport($csv_vendor_import->id), $request->file('vendor_csv'));
             return response()->json([
                 'status' => 'success',
                 'message' => 'Uploading!'
