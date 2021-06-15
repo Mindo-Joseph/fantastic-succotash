@@ -120,12 +120,11 @@
                             <div class="front">
                                 <a href="{{route('vendorDetail', $vendor->id)}}"><img
                                         class="img-fluid blur-up lazyload bg-img" alt=""
-                                        src="{{$vendor->logo['proxy_url'] . '300/300' . $vendor->logo['image_path']}}"></a>
+                                        src="{{$vendor->logo['proxy_url'] . '500/500' . $vendor->logo['image_path']}}"></a>
                             </div>
                             <div class="back">
-                                <a href="{{route('vendorDetail', $vendor->id)}}"><img
-                                        class="img-fluid blur-up lazyload bg-img" alt=""
-                                        src="{{$vendor->logo['proxy_url'] . '300/300' . $vendor->logo['image_path']}}"></a>
+                                <a href="{{route('vendorDetail', $vendor->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt=""
+                                        src="{{$vendor->logo['proxy_url'] . '500/500' . $vendor->logo['image_path']}}"></a>
                             </div>
                         </div>
                         <div class="product-detail">
