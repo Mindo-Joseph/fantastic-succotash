@@ -102,7 +102,11 @@
         @endforeach
     </div>
 </section>
+<<<<<<< HEAD
+<section class="section-b-space p-t-0 pb-0 pt-5 ratio_asos">
+=======
 <section class="section-b-space p-t-0 pt-5 ratio_asos pb-0">
+>>>>>>> ab958dcea28cef611a43d561bb589fdb249048c0
     <div class="container">
         <div class="row">
         <div class="col-12 text-center mb-4">
