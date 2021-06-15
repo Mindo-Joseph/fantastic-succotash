@@ -124,22 +124,17 @@
                             <div class="front">
                                 <a href="{{route('vendorDetail', $vendor->id)}}"><img
                                         class="img-fluid blur-up lazyload bg-img" alt=""
-                                        src="{{$vendor->logo['proxy_url'] . '300/300' . $vendor->logo['image_path']}}"></a>
+                                        src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}"></a>
                             </div>
                             <div class="back">
-                                <a href="{{route('vendorDetail', $vendor->id)}}"><img
-                                        class="img-fluid blur-up lazyload bg-img" alt=""
-                                        src="{{$vendor->logo['proxy_url'] . '300/300' . $vendor->logo['image_path']}}"></a>
+                                <a href="{{route('vendorDetail', $vendor->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt=""
+                                        src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}"></a>
                             </div>
                         </div>
                         <div class="product-detail">
                              <a href="#">
                                 <h6>{{$vendor->name}}</h6>
                             </a>
-                            <!-- <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-                                    class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                            </div> -->
-                            
                         </div>
                     </div>
                     @endforeach
