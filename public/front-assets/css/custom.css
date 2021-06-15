@@ -1601,7 +1601,7 @@ label{
 }
 
 .brand-logo img.img-fluid {
-    height: 50px;
+    height: 40px;
 }
 
 .sp-colorize-container {
@@ -1659,13 +1659,15 @@ button.btn.btn-solid {
     font-size: 30px;
 }
 
-
+.brand-logo .blur-up.lazyloaded {
+    background-color: transparent !important;
+}
 
 
 
 
 /* Responsiveness Css Start From Here */
-@media (max-width: 1367px){
+@media (max-width: 1920px){
     .brand-logo img.img-fluid {
         height: 30px;
     }
@@ -1674,6 +1676,9 @@ button.btn.btn-solid {
     }
     .pixelstrap a {
         font-size: 13px;
+    }
+    .pixelstrap a .sub-arrow{
+        right: 5px;
     }
 }
 
