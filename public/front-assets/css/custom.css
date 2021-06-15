@@ -1765,11 +1765,17 @@ div#test {
     font-weight: 700;
     color: rgb(0 0 0 / 68%);
     font-size: 18px;
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .inner_spacing h3 + p {
     font-size: 14px;
     margin: 10px 0 0;
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .inner_spacing h4 {
@@ -1815,8 +1821,10 @@ div#test {
     color: #ff4c3b !important;
 }
 
-.product-box .img-wrapper, .product-wrap .img-wrapper{
+.product-box .img-wrapper, .product-wrap .img-wrapper {
     border-radius: 50%;
+    box-shadow: 0 1px 29px #ddd;
+    margin-top: 15px;
 }
 
 
