@@ -46,8 +46,8 @@
                             <div class="address-input-field d-flex align-items-center justify-content-between">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
                                 <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{$deliveryAddress}}">
-                                <input type="hidden" name="address_latitude" id="address-latitude" value="0" />
-                                <input type="hidden" name="address_longitude" id="address-longitude" value="0" />
+                                <input type="hidden" name="address_latitude" id="address-latitude" value="{{$latitude}}" />
+                                <input type="hidden" name="address_longitude" id="address-longitude" value="{{$longitude}}" />
                             </div>
                             <!--<div class="edit-area">
                                 <input class="form-control" type="text" placeholder="Complete Address *" name="complete_address" id="complete_address">
