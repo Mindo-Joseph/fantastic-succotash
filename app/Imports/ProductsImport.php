@@ -312,6 +312,13 @@ class ProductsImport implements ToCollection{
                             $proVariantSet->save();
                         }
                     }
+                    else{
+                        $proVariant = new ProductVariant();
+                        $proVariant->sku = $da[0];
+                        $proVariant->product_id = $product;
+                        $proVariant->barcode = $this->generateBarcodeNumber();
+                        $proVariant->save();
+                    }
                 }
                 else{
                     $product_id = Product::where('sku', $da[0])->first();
