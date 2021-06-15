@@ -69,13 +69,16 @@ class UserhomeController extends FrontController
 
         $fp = $this->productList($vends, $langId, $curId, 'is_featured');
         $np = $this->productList($vends, $langId, $curId, 'is_new');
-        
         $onSP = $this->productList($vends, $langId, 'USD');
         $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
+<<<<<<< HEAD
 
         return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'brands' => $brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress, 'latitude'=>$latitude, 'longitude'=>$longitude]);
+=======
+        return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'brands' => $brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress]);
+>>>>>>> f71c1b11bc6a380692d657ce4b1f9e3a36a4a028
     }
 
     public function homepage(Request $request)

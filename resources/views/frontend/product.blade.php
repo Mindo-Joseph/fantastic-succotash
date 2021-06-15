@@ -324,7 +324,7 @@
                                         <p>{!! (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''!!}</p>
                                     </div>
                                     <div class="tab-pane fade" id="top-profile" role="tabpanel" aria-labelledby="profile-top-tab">
-                                        <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''}}</p>
+                                        <p>{!! (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''!!}</p>
                                     </div>
                                     <!-- <div class="tab-pane fade" id="top-contact" role="tabpanel"
                                         aria-labelledby="contact-top-tab">
@@ -334,11 +334,6 @@
                                                 allow="autoplay; encrypted-media" allowfullscreen></iframe>
                                         </div>
                                     </div> -->
-                                    @if(Auth::user())
-                                    <p>logged in</p>
-                                    @else
-                                    <p>not logged in</p>
-                                    @endif
                                     <div class="tab-pane fade" id="top-review" role="tabpanel" aria-labelledby="review-top-tab">
                                         <form class="theme-form">
                                             <div class="form-row">
