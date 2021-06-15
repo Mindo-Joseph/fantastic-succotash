@@ -469,11 +469,7 @@
         }else{
             $('#order_palced_btn').prop('disabled', true);
         }
-        $("input:radio[name='address_id']").change(function() {
-            if($(this).val()){
-                $('#order_palced_btn').prop('disabled', false);
-            }
-        });
+        
         $("form").submit(function(e){
             let address_id = $("input:radio[name='address_id']").is(":checked");
             if(!address_id){

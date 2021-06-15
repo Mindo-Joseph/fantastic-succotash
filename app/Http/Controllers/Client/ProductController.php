@@ -219,6 +219,7 @@ class ProductController extends BaseController
         foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live', 'brand_id') as $k => $val) {
             $product->{$k} = $val;
         }
+        $product->category_id = $request->category_id;
         $product->tax_category_id = $request->tax_category;
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
         $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;
@@ -723,16 +724,16 @@ class ProductController extends BaseController
     public function importCsv(Request $request)
     {
         $vendor_id = $request->vendor_id;
-        // $fileModel = new CsvProductImport;
-        // if($request->file('product_excel')) {
-        //     $fileName = time().'_'.$request->file('product_excel')->getClientOriginalName();
-        //     $filePath = $request->file('product_excel')->storeAs('csv_products', $fileName, 'public');
-        //     $fileModel->vendor_id = $request->vendor_id;
-        //     $fileModel->name = $fileName;
-        //     $fileModel->path = '/storage/' . $filePath;
-        //     $fileModel->status = 1;
-        //     $fileModel->save();
-        // }
+        $fileModel = new CsvProductImport;
+        if($request->file('product_excel')) {
+            $fileName = time().'_'.$request->file('product_excel')->getClientOriginalName();
+            $filePath = $request->file('product_excel')->storeAs('csv_products', $fileName, 'public');
+            $fileModel->vendor_id = $request->vendor_id;
+            $fileModel->name = $fileName;
+            $fileModel->path = '/storage/' . $filePath;
+            $fileModel->status = 1;
+            $fileModel->save();
+        }
         $data = Excel::import(new ProductsImport($vendor_id), $request->file('product_excel'));
 
         return response()->json([

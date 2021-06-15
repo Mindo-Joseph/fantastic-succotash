@@ -1609,7 +1609,7 @@ label{
     background: rgb(74, 129, 212);
 }
 
-.blur-up.lazyloaded{
+.home-slider .blur-up.lazyloaded,.product-box .blur-up.lazyloaded{
     background-size: contain !important;
     background-repeat: no-repeat !important;
     background-color: rgb(150 139 139 / 12%) !important;
@@ -1676,18 +1676,155 @@ button.btn.btn-solid {
     background-color: transparent !important;
 }
 
+.starrate span.ctrl {
+    position: absolute;
+    z-index: 2;
+}
+.starrate {
+    color: #6c757d;
+    cursor: pointer;
+}
+.starrate.saved {
+    color: #fd7e14;
+}
+.starrate:hover {
+    color: #fd7e14;
+}
+.starrate.saved:hover {
+    color: #fd7e14;
+}
+
+div#test {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.theme-card  .product-image{
+    height: 170px;
+    width: 100%;
+    margin: auto;
+    padding: 16px;
+}
+.theme-card  .product-image img{
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 6px;
+}
+
+.product-detail {
+    text-align: center;
+}
+
+.product-detail h6 {
+    font-weight: 700;
+    font-size: 18px !important;
+    color: #000;
+}
+
+.new_vendor{
+    border-radius: 50%;
+    background: red;
+    color: #fff;
+    width: 100px;
+    height: 100px;
+    font-size: 14px;
+    text-align: center;
+    display: block;
+}
+
+.common_card .card {
+    box-shadow: 0px 0px 15px #ddd;
+    width: calc(100% - 50px);
+    margin: 10px auto 30px;
+}
+
+.common_card .card .media-body {
+    padding: 0 !important;
+    width: 100%;
+}
+
+.common_card .card .media-body .btn  {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 5px 0;
+    letter-spacing: 0.8px;
+}
+
+.inner_spacing{
+    padding: 0 10px 10px;
+}
+
+.inner_spacing h3 {
+    margin: 0;
+    font-weight: 700;
+    color: rgb(0 0 0 / 68%);
+    font-size: 18px;
+}
+
+.inner_spacing h3 + p {
+    font-size: 14px;
+    margin: 10px 0 0;
+}
+
+.inner_spacing h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: rgb(0 0 0 / 41%);
+    line-height: 50px;
+    margin: 0;
+}
+
+.common_card .card:hover .btn-solid {
+    background-position: 100%;
+    color: #000000 !important;
+    background-color: #ffffff;
+}
+
+.rating i.fa.fa-star {
+    font-size: 10px;
+    padding: 0;
+}
+
+.logo-block {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: auto;
+}
+
+.logo-block img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+
+.bg-orange {
+    background: #ff4c3b !important;
+}
+
+
+.bg-orange button#mc-submit {
+    background: #fff;
+    color: #ff4c3b !important;
+}
+
+
+
 
 
 
 /* Responsiveness Css Start From Here */
-@media (max-width: 1920px){
+@media (max-width: 1919px){
     .brand-logo img.img-fluid {
         height: 30px;
     }
     .pixelstrap a, .pixelstrap a:hover, .pixelstrap a:active {
         padding: 0 25px 0 0; 
     }
-    .pixelstrap a {
+    .pixelstrap a,.pixelstrap a:hover, .pixelstrap a:active {
         font-size: 13px;
     }
     .pixelstrap a .sub-arrow{

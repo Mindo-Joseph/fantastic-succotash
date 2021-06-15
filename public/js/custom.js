@@ -41,6 +41,13 @@ $(document).ready(function() {
             }
         });
     }
+    
+    $(document).on("change","input:radio[name='address_id']",function() {
+        if($(this).val()){
+            $('#order_palced_btn').prop('disabled', false);
+            cartHeader();
+        }
+    });
     $(document).on("click","#order_palced_btn",function() {
         $.ajax({
             data: {},

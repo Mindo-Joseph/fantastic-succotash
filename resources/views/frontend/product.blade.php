@@ -391,7 +391,20 @@
     <div class="container">
         <div class="row">
             <div class="col-12 product-related">
-                <h2>Related products</h2>
+                <h2>Related products</h2>    
+                
+                <div id="starrate" class="starrate mt-3 d-flex align-items-center" data-val="2.5" data-max="5">
+                    <span class="ctrl"></span>
+                    <span class="cont m-1">
+                        <i class="fa fa-star-o" aria-hidden="true"></i>
+                        <i class="fa fa-star-o" aria-hidden="true"></i>
+                        <i class="fa fa-star-o" aria-hidden="true"></i>
+                        <i class="fa fa-star-o" aria-hidden="true"></i>
+                        <i class="fa fa-star-o" aria-hidden="true"></i>
+                    </span>
+                    <div id="test" class="col-3 mr-auto display-4">2.5</div>                    
+                </div>
+                
             </div>
         </div>
         <div class="row search-product">
@@ -409,7 +422,12 @@
                         </div>
                     </div>
                     <div class="product-detail">
-                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i> 
+                            <i class="fa fa-star"></i> 
+                            <i class="fa fa-star"></i> 
+                            <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
+                        
                         <a href="product-page(no-sidebar).html">
                             <h6>Slim Fit Cotton Shirt</h6>
                         </a>
@@ -428,6 +446,55 @@
 @endsection
 
 @section('script')
+
+
+<script>
+    var valueHover = 0;
+		function calcSliderPos(e,maxV) {
+    			return (e.offsetX / e.target.clientWidth) *  parseInt(maxV,10);
+			}
+			
+		$(".starrate").on("click",function(){
+			$(this).data('val',valueHover);
+			$(this).addClass('saved')
+			});
+			
+		$(".starrate").on("mouseout",function(){
+			upStars($(this).data('val'));
+			});	
+
+			
+		$(".starrate span.ctrl").on("mousemove",function(e) { 
+			var maxV = parseInt($(this).parent("div").data('max'))
+			valueHover = Math.ceil(calcSliderPos(e,maxV)*2)/2;
+			upStars(valueHover);
+			});
+	
+
+function upStars(val) {
+	
+	var val = parseFloat(val);
+	$("#test").html( val.toFixed(1) );
+	
+	var full = Number.isInteger(val);
+	val = parseInt(val);
+	var stars = $("#starrate i");
+	
+	stars.slice(0,val).attr("class" , "fa fa-star" );
+	if(!full)  { stars.slice(val,val+1).attr("class" , "fa fa-star-half-o" ); val++ }
+	stars.slice(val,5).attr("class" , "fa fa-star-o" );
+	
+	
+
+	
+	}	
+	
+			
+			$(document).ready(function() {
+			$(".starrate span.ctrl").width($(".starrate span.cont").width());
+			$(".starrate span.ctrl").height($(".starrate span.cont").height());
+			});
+</script>
 
 <script type="text/javascript">
     var ajaxCall = 'ToCancelPrevReq';
@@ -488,4 +555,5 @@ var addonoptids = [];
         });
     });
 </script>
+
 @endsection

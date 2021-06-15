@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor,CartCoupon};
 use Illuminate\Http\Request;
 use Session;
 use Auth;
@@ -314,9 +314,9 @@ class CartController extends FrontController
                     }else{
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
-                    if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1){   
-                        Log::info($prod->product);
-                        $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
+                    if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1)
+                    {   
+                        // $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                     }
                     if(empty($deliver_charge))
                     $deliver_charge = 0;
@@ -436,19 +436,16 @@ class CartController extends FrontController
     # get delivery fee from dispatcher 
     public function getDeliveryFeeDispatcher($vendor_id){
         try {
-                 $dispatch_domain = $this->checkIfLastMileOn();
+                $dispatch_domain = $this->checkIfLastMileOn();
                 if ($dispatch_domain && $dispatch_domain != false) {
                     $customer = User::find(Auth::id());
                     $cus_address = UserAddress::where('user_id',Auth::id())->orderBy('is_primary','desc')->first();
                     if($cus_address){
-                        Log::info($vendor_id);
                         $tasks = array();
                         $vendor_details = Vendor::find($vendor_id);
-    
                             $location[] = array('latitude' => $vendor_details->latitude??30.71728880,
                                                 'longitude' => $vendor_details->longitude??76.80350870
                                                 );
-                                            
                             $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
                                               'longitude' => $cus_address->longitude??76.803508700000
                                             );
@@ -462,8 +459,6 @@ class CartController extends FrontController
                             $res = $client->post($url.'/api/get-delivery-fee',
                                 ['form_params' => ($postdata)]
                             );
-
-                            //$result = file_get_contents($res);
                             $response = json_decode($res->getBody(), true);
                             if($response && $response['message'] == 'success'){
                                 return $response['total'];
@@ -476,7 +471,8 @@ class CartController extends FrontController
             }    
             catch(\Exception $e)
             {
-                 dd($e->getMessage());
+                 print_r($e->getMessage());
+                 die;
                         
             }
            
