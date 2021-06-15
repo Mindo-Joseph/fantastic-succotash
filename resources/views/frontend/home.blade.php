@@ -146,7 +146,6 @@
 </section>
 <section class="section-b-space">
     <div class="container">
-        
         <div class="row">
             <div class="col-12 text-center">
                 <div class="title1">
@@ -155,272 +154,169 @@
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card">
+                    @foreach($newProducts as $newProduct)
+                    @foreach($newProduct as $product)
+                    @php
+                        $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
+                        $body_html = !empty($product['body_html']) ? $product['translation'][0]['body_html'] : '';
+                        $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
+                        foreach ($product['media'] as $k => $v) {
+                            $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
+                        }
+                    @endphp
                     <div>
-                        <a class="card text-center" href="#">
+                        <a class="card text-center" href="{{route('productDetail', $product['sku'])}}">
                             <div class="product-image">
-                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
+                                <img src="{{$imagePath}}" alt="">
                             </div>    
                             <div class="media-body align-self-center px-3">
                                 <div class="inner_spacing">
-                                    <h3>Pizza</h3>
-                                    <p>Interested in selling this item? List the sale price.</p>
-                                    <h4>$100</h4>
+                                    <h3>{{ Str::limit($title, 20, '..')}}</h3>
+                                    <p>{!! $body_html !!}</p>
+                                    <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
                                     <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                            @endfor
+                                        @for($i = 1; $i < 6; $i++) 
+                                            <i class="fa fa-star"></i>
+                                        @endfor
                                     </div>
                                 </div>
-                                <p class="btn btn-solid w-100">View Details</p>
                             </div>
                         </a>
                     </div>
-                    <div>
-                        <a class="card text-center" href="#">
-                            <div class="product-image">
-                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
-                            </div>    
-                            <div class="media-body align-self-center px-3">
-                                <div class="inner_spacing">
-                                    <h3>Pizza</h3>
-                                    <p>Interested in selling this item? List the sale price.</p>
-                                    <h4>$100</h4>
-                                    <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                            @endfor
-                                    </div>
-                                </div>
-                                <p class="btn btn-solid w-100">View Details</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div>
-                        <a class="card text-center" href="#">
-                            <div class="product-image">
-                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
-                            </div>    
-                            <div class="media-body align-self-center px-3">
-                                <div class="inner_spacing">
-                                    <h3>Pizza</h3>
-                                    <p>Interested in selling this item? List the sale price.</p>
-                                    <h4>$100</h4>
-                                    <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                            @endfor
-                                    </div>
-                                </div>
-                                <p class="btn btn-solid w-100">View Details</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div>
-                        <a class="card text-center" href="#">
-                            <div class="product-image">
-                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
-                            </div>    
-                            <div class="media-body align-self-center px-3">
-                                <div class="inner_spacing">
-                                    <h3>Pizza</h3>
-                                    <p>Interested in selling this item? List the sale price.</p>
-                                    <h4>$100</h4>
-                                    <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                            @endfor
-                                    </div>
-                                </div>
-                                <p class="btn btn-solid w-100">View Details</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div>
-                        <a class="card text-center" href="#">
-                            <div class="product-image">
-                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
-                            </div>    
-                            <div class="media-body align-self-center px-3">
-                                <div class="inner_spacing">
-                                    <h3>Pizza</h3>
-                                    <p>Interested in selling this item? List the sale price.</p>
-                                    <h4>$100</h4>
-                                    <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                            @endfor
-                                    </div>
-                                </div>
-                                <p class="btn btn-solid w-100">View Details</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div>
-                        <a class="card text-center" href="#">
-                            <div class="product-image">
-                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
-                            </div>    
-                            <div class="media-body align-self-center px-3">
-                                <div class="inner_spacing">
-                                    <h3>Pizza</h3>
-                                    <p>Interested in selling this item? List the sale price.</p>
-                                    <h4>$100</h4>
-                                    <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                            @endfor
-                                    </div>
-                                </div>
-                                <p class="btn btn-solid w-100">View Details</p>
-                            </div>
-                        </a>
-                    </div>
-                    
+                    @endforeach
+                    @endforeach
                 </div>
             </div>
         </div>
-
-        <div class="row multiple-slider">
-
-            <div class="col-lg-3 col-sm-6">
-                <div class="theme-card">
-                    <h5 class="title-border">New Products</h5>
-                    <div class="offer-slider slide-1">
-                        @foreach($newProducts as $newProduct)
-                        <div>
-                            @foreach($newProduct as $product)
-                            <?php $imagePath = '';
-                                    foreach ($product['media'] as $k => $v) {
-                                        $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
-                                    } ?>
-                            <div class="media">
-                                <a href="{{route('productDetail', $product['sku'])}}"><img style="max-width: 200px;"
-                                        src="{{$imagePath}}" alt=""></a>
-                                <div class="media-body align-self-center">
-                                    <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                            @endfor
-                                    </div>
-                                    <a href="{{route('productDetail', $product['sku'])}}">
-                                        <h6>{{ !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku']}}
-                                        </h6>
-                                    </a>
-                                    <h4>
-                                        <?php $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier']; ?>
-                                        {{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}
-                                    </h4>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                        @endforeach
-                    </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="title1">
+                    <h2 class="title-inner1">Feature Product</h2>
                 </div>
             </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="theme-card">
-                    <h5 class="title-border">feature product</h5>
-                    <div class="offer-slider slide-1">
-                        @foreach($featuredProducts as $featuredProduct)
-                        <div>
-                            @foreach($featuredProduct as $product)
-                            <?php $imagePath = '';
-                                    foreach ($product['media'] as $k => $v) {
-                                        $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
-                                    } ?>
-                            <div class="media">
-                                <a href="{{route('productDetail', $product['sku'])}} "><img style="max-width: 200px;"
-                                        src="{{$imagePath}}" alt=""></a>
-                                <div class="media-body align-self-center">
+            <div class="col-12 theme-card">                
+                <div class="vendor-product common_card">
+                    @foreach($featuredProducts as $featuredProduct)
+                    @foreach($featuredProduct as $product)
+                    @php
+                        $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
+                        $body_html = !empty($product['body_html']) ? $product['translation'][0]['body_html'] : '';
+                        $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
+                        foreach ($product['media'] as $k => $v) {
+                            $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
+                        }
+                    @endphp
+                    <div>
+                        <a class="card text-center" href="{{route('productDetail', $product['sku'])}}">
+                            <div class="product-image">
+                                <img src="{{$imagePath}}" alt="">
+                            </div>    
+                            <div class="media-body align-self-center px-3">
+                                <div class="inner_spacing">
+                                    <h3>{{ Str::limit($title, 20, '..')}}</h3>
+                                    <p>{!! $body_html !!}</p>
+                                    <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
                                     <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                            @endfor
+                                        @for($i = 1; $i < 6; $i++) 
+                                            <i class="fa fa-star"></i>
+                                        @endfor
                                     </div>
-                                    <a href="{{route('productDetail', $product['sku'])}}">
-                                        <h6>{{ !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku']}}
-                                        </h6>
-                                    </a>
-                                    <h4>
-                                        <?php $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier']; ?>
-                                        {{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}
-                                    </h4>
                                 </div>
                             </div>
-                            @endforeach
-                        </div>
-                        @endforeach
+                        </a>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="theme-card">
-                    <h5 class="title-border">best seller</h5>
-                    <div class="offer-slider slide-1">
-                        @foreach($newProducts as $newProduct)
-                        <div>
-                            @foreach($newProduct as $product)
-                            <?php $imagePath = '';
-                                    foreach ($product['media'] as $k => $v) {
-                                        $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
-                                    } ?>
-                            <div class="media">
-                                <a href="{{route('productDetail', $product['sku'])}} "><img style="max-width: 200px;"
-                                        src="{{$imagePath}}" alt=""></a>
-                                <div class="media-body align-self-center">
-                                    <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                            @endfor
-                                    </div>
-                                    <a href="{{route('productDetail', $product['sku'])}}">
-                                        <h6>{{ !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku']}}
-                                        </h6>
-                                    </a>
-                                    <h4>
-                                        <?php $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier']; ?>
-                                        {{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}
-                                    </h4>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="theme-card">
-                    <h5 class="title-border">on sale</h5>
-                    <div class="offer-slider slide-1">
-                        @foreach($onSaleProducts as $onSaleProduct)
-                        <div>
-                            @foreach($onSaleProduct as $product)
-                            <?php $imagePath = '';
-                                    foreach ($product['media'] as $k => $v) {
-                                        $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
-                                    } ?>
-                            <div class="media">
-                                <a href="{{route('productDetail', $product['sku'])}} "><img style="max-width: 200px;"
-                                        src="{{$imagePath}}" alt=""></a>
-                                <div class="media-body align-self-center">
-                                    <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                            @endfor
-                                    </div>
-                                    <a href="{{route('productDetail', $product['sku'])}}">
-                                        <h6>{{ !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku']}}
-                                        </h6>
-                                    </a>
-                                    <h4>
-                                        <?php $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier']; ?>
-                                        {{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}
-                                    </h4>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                        @endforeach
-                    </div>
+                    @endforeach
+                    @endforeach
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="title1">
+                    <h2 class="title-inner1">Best Seller</h2>
+                </div>
+            </div>
+            <div class="col-12 theme-card">                
+                <div class="vendor-product common_card">
+                    @foreach($newProducts as $newProduct)
+                    @foreach($newProduct as $product)
+                    @php
+                        $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
+                        $body_html = !empty($product['body_html']) ? $product['translation'][0]['body_html'] : '';
+                        $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
+                        foreach ($product['media'] as $k => $v) {
+                            $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
+                        }
+                    @endphp
+                    <div>
+                        <a class="card text-center" href="{{route('productDetail', $product['sku'])}}">
+                            <div class="product-image">
+                                <img src="{{$imagePath}}" alt="">
+                            </div>    
+                            <div class="media-body align-self-center px-3">
+                                <div class="inner_spacing">
+                                    <h3>{{ Str::limit($title, 20, '..')}}</h3>
+                                    <p>{!! $body_html !!}</p>
+                                    <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
+                                    <div class="rating">
+                                        @for($i = 1; $i < 6; $i++) 
+                                            <i class="fa fa-star"></i>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    @endforeach
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="title1">
+                    <h2 class="title-inner1">On Sale</h2>
+                </div>
+            </div>
+            <div class="col-12 theme-card">                
+                <div class="vendor-product common_card">
+                    @foreach($onSaleProducts as $onSaleProduct)
+                    @foreach($onSaleProduct as $product)
+                    @php
+                        $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
+                        $body_html = !empty($product['body_html']) ? $product['translation'][0]['body_html'] : '';
+                        $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
+                        foreach ($product['media'] as $k => $v) {
+                            $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
+                        }
+                    @endphp
+                    <div>
+                        <a class="card text-center" href="{{route('productDetail', $product['sku'])}}">
+                            <div class="product-image">
+                                <img src="{{$imagePath}}" alt="">
+                            </div>    
+                            <div class="media-body align-self-center px-3">
+                                <div class="inner_spacing">
+                                    <h3>{{ Str::limit($title, 20, '..')}}</h3>
+                                    <p>{!! $body_html !!}</p>
+                                    <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
+                                    <div class="rating">
+                                        @for($i = 1; $i < 6; $i++) 
+                                            <i class="fa fa-star"></i>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    @endforeach
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        
     </div>
 </section>
-
-<!--  logo section -->
 <section class="section-b-space">
     <div class="container">
         <div class="title1">
@@ -432,9 +328,9 @@
                     @foreach($brands as $brand)
                     <div>
                         <div class="logo-block">
-                            <a href="{{route('brandDetail', $brand->id)}}"><img
-                                    src="{{$brand->image['image_fit'] . '120/120' . $brand->image['image_path']}}"
-                                    alt=""></a>
+                            <a href="{{route('brandDetail', $brand->id)}}">
+                                <img src="{{$brand->image['image_fit'] . '120/120' . $brand->image['image_path']}}" alt="">
+                            </a>
                         </div>
                     </div>
                     @endforeach
@@ -443,7 +339,6 @@
         </div>
     </div>
 </section>
-
 <!-- Address Edit Modal Start Form Here -->
 <div class="modal fade edit_address" id="edit-address" tabindex="-1" aria-labelledby="edit-addressLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -458,7 +353,6 @@
 @endsection
 
 @section('script')
-
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
 <script src="{{asset('front-assets/js/fly-cart.js')}}"></script>
 <script type="text/javascript">
