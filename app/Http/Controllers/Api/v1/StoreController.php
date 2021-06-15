@@ -18,6 +18,7 @@ class StoreController extends Controller{
     		$is_selected_vendor_id = 0;
             $paginate = $request->has('limit') ? $request->limit : 12;
             $selected_vendor_id = $request->has('selected_vendor_id') ? $request->selected_vendor_id : '';
+            $selected_category_id = $request->has('selected_category_id') ? $request->selected_category_id : '';
 			$user_vendor_ids = UserVendor::where('user_id', $user->id)->pluck('vendor_id');
 			if($user_vendor_ids){
 				$is_selected_vendor_id = $selected_vendor_id ? $selected_vendor_id : $user_vendor_ids->first();
@@ -27,7 +28,11 @@ class StoreController extends Controller{
 				$vendor->is_selected = ($is_selected_vendor_id == $vendor->id) ? true : false;
 			}
 			$vendor_categories = VendorCategory::where('vendor_id', $is_selected_vendor_id)->get('category_id');
-			$selected_category_id = $vendor_categories->first()->category_id;
+			$vendor_category_id = 0;
+			if($vendor_categories->count()){
+				$vendor_category_id = $vendor_categories->first();
+			}
+			$is_selected_category_id = $selected_category_id ? $selected_category_id : $vendor_category_id;
 			foreach ($vendor_categories as $vendor_category) {
 				$category_list []= array(
 					'id' => $vendor_category->category->id,
