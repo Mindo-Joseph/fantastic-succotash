@@ -28,6 +28,7 @@ class UserhomeController extends FrontController
         //$clientLanguage = ClientLanguage::where('is_primary', 1)->first();
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
+        $deliveryAddress = Session::get('deliveryAddress');
         $vends = array();
 
         $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
@@ -66,19 +67,18 @@ class UserhomeController extends FrontController
 
         $fp = $this->productList($vends, $langId, $curId, 'is_featured');
         $np = $this->productList($vends, $langId, $curId, 'is_new');
-        
         $onSP = $this->productList($vends, $langId, 'USD');
         $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
-
-        return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'brands' => $brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds]);
+        return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'brands' => $brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress]);
     }
 
     public function homepage(Request $request)
     {
         try{
             $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
+            Session::put('deliveryAddress', $request->selectedAddress);
             $lats = $request->latitude;
             $longs = $request->longitude;
             $user_geo[] = $lats;

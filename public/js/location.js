@@ -1,23 +1,27 @@
 $(document).ready(function() {
-    $(".select_address").click(function () {
+    /*$(".select_address").click(function () {
         addressInputDisplay(".select_address", ".address-input-field", "#address-input");
     });
 
     $(document).delegate("#address-input", "focusout", function(){
         addressInputHide(".select_address", ".address-input-field", "#address-input");
+    });*/
+
+    $(document).on('click', '#location_search_wrapper .dropdown-menu', function (e) {
+        e.stopPropagation();
     });
 
     $(document).delegate(".confirm_address_btn", "click", function(){
         let latitude = $("#address-latitude").val();
         let longitude = $("#address-longitude").val();
-        let selected_loc = $("#address-input").val();
-        $(".homepage-address span").text(selected_loc).attr({"tile": selected_loc, "data-original-title": selected_loc});
-        $("#edit-address").modal("hide");
+        let selected_address = $("#address-input").val();
+        $("#location_search_wrapper .homepage-address span").text(selected_address).attr({"title": selected_address, "data-original-title": selected_address});
+        $("#location_search_wrapper .dropdown-menu").removeClass('show');
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: homepage_url,
-            data: {"latitude": latitude, "longitude": longitude},
+            data: {"latitude": latitude, "longitude": longitude, 'selectedAddress': selected_address},
             success: function(response) {
                 if(response.status == 'Success'){
                     $('.product-4').slick('destroy');
@@ -107,7 +111,7 @@ function initialize() {
                     const lat = results[0].geometry.location.lat();
                     const lng = results[0].geometry.location.lng();
                     $(".location-area span").text(place.formatted_address);
-                    addressInputHide(".select_address", ".address-input-field", "#address-input");
+                    // addressInputHide(".select_address", ".address-input-field", "#address-input");
                     setLocationCoordinates(autocomplete.key, lat, lng);
                 }
             });
