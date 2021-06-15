@@ -260,10 +260,10 @@ class OrderController extends FrontController{
                                                         'post_code' => $cus_address->pincode??'',
                                                         'barcode' => '',
                                                         );
-                                                        $data['order_id'] = $order->id; 
-                                                        $data['vendor_details'] = $vendor_details; 
-                                                        $data['call_back_url'] = $call_back_url;  
-                                                        $meta_data = json_encode($data);                              
+                        $data['order_id'] = $order->id; 
+                        $data['vendor_details'] = $vendor_details; 
+                        $data['call_back_url'] = $call_back_url;  
+                        $meta_data = json_encode($data);                              
                                    
                         $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
                                                         'customer_phone_number' => $customer->phone_number ?? '+919041969648',

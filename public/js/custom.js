@@ -290,7 +290,7 @@ $(document).ready(function() {
         }
     }
     function cartHeader(address_id) {
-        $(".shopping-cart").html(" ");
+        $(".shopping-cart").html("");
         $.ajax({
             data: {address_id:address_id},
             type: "get",
