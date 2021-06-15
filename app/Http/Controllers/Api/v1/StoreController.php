@@ -33,12 +33,12 @@ class StoreController extends Controller{
     				$order_item_count += $product->quantity;
 				}
 				$order->item_count = $order_item_count;
-				unset($order->payment_option_id);
+				unset($order->user);
 				unset($order->products);
 				unset($order->paymentOption);
-				unset($order->user);
+				unset($order->payment_option_id);
 			}
-			$vendor_list = Vendor::whereIn('id', $user_vendor_ids)->get(['id','name']);
+			$vendor_list = Vendor::whereIn('id', $user_vendor_ids)->get(['id','name','logo']);
 			foreach ($vendor_list as $vendor) {
 				$vendor->is_selected = ($selected_vendor_id == $vendor->id) ? true : false;
 			}
