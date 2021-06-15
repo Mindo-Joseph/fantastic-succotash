@@ -79,6 +79,7 @@ class UserhomeController extends FrontController
     {
         try{
             $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
+            Session::put('deliveryAddress', $request->selectedAddress);
             $lats = $request->latitude;
             $longs = $request->longitude;
             $user_geo[] = $lats;

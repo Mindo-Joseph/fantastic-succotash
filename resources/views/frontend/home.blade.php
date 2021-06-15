@@ -15,15 +15,70 @@
 </header>
 <div class="find_location">
     <div class="container px-0">
-        <div class="row no-gutters">
+        <div class="row no-gutters" id="location_search_wrapper">
             <div class="col-lg-3 col-md-4 col">
-                <div class="d-flex align-items-center justify-content-between px-3" data-toggle="modal" data-target="#edit-address" href="javascript:void(0)">
-                    <div class="map-icon"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                <div class="d-flex align-items-center justify-content-start px-3 dropdown-toggle" id="dropdownLocationButton" data-toggle="dropdown" aria-haspopup="true" 
+                  aria-expanded="false">
+                    <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
                     <div class="homepage-address">
                         <h2><span data-placement="top" data-toggle="tooltip" title="Sector 28C, Chandigarh, India">Sector 28C, Chandigarh, India</span></h2>
                     </div>
                     <div class="down-icon">
                         <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="dropdown-menu" aria-labelledby="dropdownLocationButton" style="max-width:400px;width:100%">
+                    <div id="address-map-container">
+                        <div id="address-map"></div>
+                    </div>
+                    <div class="delivery_address p-2 position-relative">
+                        <div class="modal-title">Set your delivery location</div>
+                        <button type="button" class="close edit-close position-absolute" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="form-group">
+                            <label class="delivery-head">DELIVERY AREA</label>
+                            <!--<div class="select_address border d-flex align-items-center justify-content-between ">
+                                <div class="location-area">
+                                    <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                                    <span>Sector 28 C, Chandigarh, India</span>
+                                </div>   
+                                <label class="m-0 text-uppercase">Change</label>
+                            </div>-->
+                            <div class="address-input-field d-flex align-items-center justify-content-between">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input">
+                                <input type="hidden" name="address_latitude" id="address-latitude" value="0" />
+                                <input type="hidden" name="address_longitude" id="address-longitude" value="0" />
+                            </div>
+                            <!--<div class="edit-area">
+                                <input class="form-control" type="text" placeholder="Complete Address *" name="complete_address" id="complete_address">
+                                <input class="form-control" type="text" placeholder="Floor (Optional)" name="floor" id="floor">
+                                <input class="form-control" type="text" placeholder="How to reach (Optional)" name="address_hint" id="address_hint">
+                            </div>
+                            <div class="mt-2 mb-2">
+                                <div class="address_type">
+                                    <label class="radio d-inline-block m-0">Home
+                                        <input type="radio" name="address_type" checked="checked" value="home">
+                                        <span class="checkround"></span>
+                                    </label>
+                                    <label class="radio d-inline-block m-0">Office
+                                        <input type="radio" name="address_type" value="office">
+                                        <span class="checkround"></span>
+                                    </label>
+                                    <label class="radio other_address d-inline-block m-0">Other
+                                        <input type="radio" name="address_type" value="other">
+                                        <span class="checkround"></span>
+                                    </label>   
+                                </div>
+                                <div class="other-address-input d-none">
+                                    <label class="d-inline-block m-0">
+                                        <input type="text" name="other_address">
+                                    </label>
+                                </div>                      
+                            </div>-->
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-solid ml-auto confirm_address_btn">Confirm And Proceed</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -257,60 +312,8 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body p-0">
-            <div id="address-map-container" style="width:100%;height:400px; ">
-                <div style="width: 100%; height: 100%" id="address-map"></div>
-            </div>
-            <div id="step_one">
-                <div class="delivery_address p-3 position-relative">
-                    <div class="modal-title">Set your delivery location</div>
-                    <button type="button" class="close edit-close position-absolute" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <div class="form-group">
-                        <label class="delivery-head">DELIVERY AREA</label>
-                        <div class="select_address border d-flex align-items-center justify-content-between ">
-                            <div class="location-area">
-                                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
-                                <span>Sector 28 C, Chandigarh, India</span>
-                            </div>   
-                            <label class="m-0 text-uppercase">Change</label>
-                        </div>
-                        <div class="address-input-field d-none align-items-center justify-content-between">
-                            <i class="fa fa-map-marker" aria-hidden="true"></i>
-                            <input class="form-control border-0 map-input" type="text" name="" id="address-input">
-                            <input type="hidden" name="address_latitude" id="address-latitude" value="0" />
-                            <input type="hidden" name="address_longitude" id="address-longitude" value="0" />
-                        </div>
-                        <div class="edit-area">
-                            <input class="form-control" type="text" placeholder="Complete Address *" name="complete_address" id="complete_address">
-                            <input class="form-control" type="text" placeholder="Floor (Optional)" name="floor" id="floor">
-                            <input class="form-control" type="text" placeholder="How to reach (Optional)" name="address_hint" id="address_hint">
-                        </div>
-                        <div class="mt-2 mb-2">
-                            <div class="address_type">
-                                <label class="radio d-inline-block m-0">Home
-                                    <input type="radio" name="address_type" checked="checked" value="home">
-                                    <span class="checkround"></span>
-                                </label>
-                                <label class="radio d-inline-block m-0">Office
-                                    <input type="radio" name="address_type" value="office">
-                                    <span class="checkround"></span>
-                                </label>
-                                <label class="radio other_address d-inline-block m-0">Other
-                                    <input type="radio" name="address_type" value="other">
-                                    <span class="checkround"></span>
-                                </label>   
-                            </div>
-                            <div class="other-address-input d-none">
-                                <label class="d-inline-block m-0">
-                                    <input type="text" name="other_address">
-                                </label>
-                            </div>                      
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <button type="button" class="btn btn-solid ml-auto confirm_address_btn">Confirm And Proceed</button>
-                    </div>
-                </div>
-            </div>            
+            
+                        
         </div>
     </div>
   </div>
