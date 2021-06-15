@@ -187,7 +187,7 @@ return [
         SocialiteProviders\Manager\ServiceProvider::class,
         AWT\Providers\ApiLogServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
-
+        Spatie\Geocoder\GeocoderServiceProvider::class,
     ],
 
     /*
@@ -243,7 +243,7 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'ConvertCurrency' => AkibTanjim\Currency\Facades\CurrencyConverter::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        
+        'Geocoder' => Spatie\Geocoder\Facades\Geocoder::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],

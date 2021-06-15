@@ -20,16 +20,23 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-body">
+            <form method="post" enctype="multipart/form-data" id="save_fonts">
+                @csrf
                 <h4 class="header-title">Font Styles</h4>
                 <p class="sub-header">Examples of Spectrum Fonts.</p>
                 <div class="mb-3">
                     <label class="form-label">Selecting multiple dates</label>
-                    <select class="form-control">
+                    <select class="form-control" name="fonts" onchange="submitFontForm()">
                         @foreach($font_options as $font)
+                        @if($font->is_selected == 1)
+                        <option value="{{$font->id}}" selected>{{$font->name}}</option>
+                        @else
                         <option value="{{$font->id}}">{{$font->name}}</option>
+                        @endif
                         @endforeach
                     </select>
                 </div>
+            </form>
             </div>
         </div>
     </div>
@@ -43,7 +50,7 @@
                
                             <div class="form-group mb-3">
                                 <label for="secondary_color">Simple input field</label>
-                                <input type="text" id="secondary_color" name="secondary_color" class="form-control" value="{{ old('secondary_color', $preference->secondary_color ?? 'cccccc')}}" >
+                                <input type="text" id="secondary_color" name="secondary_color" class="form-control" value="{{ old('secondary_color', $color_options->id ?? 'cccccc')}}" >
                             </div>
 
                     <!-- <label class="form-label">Simple input field</label>
@@ -64,13 +71,18 @@
                 <div class="row">
                     @foreach($tab_style_options as $tab_style)
                     <div class="col-lg-4">
-                        <div class="card mb-0">
-                            <img class="card-img-top img-fluid" src="{{$tab_style->image}}" alt="Card image cap">
+                        <div class="card mb-0">                            
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-sm-12 custom-control custom-radio">
-                                        <input type="radio" value="{{$tab_style->id}}" id="{{$tab_style->id}}" name="web_template_id" class="custom-control-input" }}>
-                                        <label class="custom-control-label" for="{{$tab_style->id}}">Select Image</label>
+                                    <div class="col-sm-12 custom-control custom-radio radio_new p-0">
+                                        @if($tab_style->is_selected == 1)
+                                        <input type="radio" checked value="{{$tab_style->id}}" id="{{$tab_style->id}}" name="web_template_id1" class="custom-control-input" }}>
+                                        @else
+                                        <input type="radio" value="{{$tab_style->id}}" id="{{$tab_style->id}}" name="web_template_id1" class="custom-control-input" }}>
+                                        @endif                                        
+                                        <label class="custom-control-label" for="{{$tab_style->id}}">
+                                        <img class="card-img-top img-fluid" src="{{$tab_style->image}}" alt="Card image cap">
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -93,8 +105,12 @@
                         <div class="card mb-0">                            
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-sm-12 custom-control custom-radio radio_new">
+                                    <div class="col-sm-12 custom-control custom-radio radio_new p-0">
+                                        @if($homepage_style->is_selected == 1)
+                                        <input type="radio" checked value="{{$homepage_style->id}}" id="{{$homepage_style->id}}" name="web_template_id2" class="custom-control-input" }}>
+                                        @else
                                         <input type="radio" value="{{$homepage_style->id}}" id="{{$homepage_style->id}}" name="web_template_id2" class="custom-control-input" }}>
+                                        @endif
                                         <label class="custom-control-label" for="{{$homepage_style->id}}">
                                             <img class="card-img-top img-fluid" src="{{$homepage_style->image}}" alt="Card image cap">
                                         </label>
@@ -122,6 +138,48 @@ var options = {
 $(document).ready(function(){
     var color2 = new jscolor('#secondary_color', options); 
 });
+
+function submitFontForm(){ 
+        //console.log("fg4rg");
+        // e.preventDefault();
+        var form =  document.getElementById('save_fonts');
+        var formData = new FormData(form);
+        var data_uri = "{{route('styling.updateFont')}}";
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: data_uri,
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+
+                if (response.status == 'success') {
+                    $(".modal .close").click();
+                    location.reload(); 
+                } else {
+                    $(".show_all_error.invalid-feedback").show();
+                    $(".show_all_error.invalid-feedback").text(response.message);
+                }
+                return response;
+            },
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            complete: function(){
+                $(".loader_box").hide();
+            }
+        });
+    }
 
 </script>
 

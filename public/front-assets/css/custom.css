@@ -1611,8 +1611,58 @@ label{
 .blur-up.lazyloaded{
     background-size: contain !important;
     background-repeat: no-repeat !important;
+    background-color: rgb(150 139 139 / 12%) !important;
 }
 
+
+/* Home Location Search Bar Css */
+.find_location {
+    margin: 0 0 25px;
+}
+.find_location .container {
+    background: #fff;
+    /* margin-top: -64px; */
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 1px 8px 0 rgb(0 0 0 / 12%);
+    border-radius: 5px;
+}
+.address{
+    width: 80%;
+}
+
+.address h2 {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 15px;
+    line-height: 50px;
+    margin: 0px;
+    cursor: pointer !important;
+}
+.search_form,.search_form 
+input.form-control,.search_form 
+button.btn.btn-solid {
+    height: 100%;
+}
+.search_form 
+ input.form-control {
+    font-size: 18px;
+ }
+
+.search_form 
+ button.btn.btn-solid {
+     
+}
+
+.map-icon .fa.fa-map-marker {
+    color: #000;
+}
+
+.down-icon .fa.fa-angle-down {
+    color: #ff4c3b;
+    font-size: 30px;
+}
 
 
 

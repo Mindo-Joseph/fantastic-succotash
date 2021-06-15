@@ -40,6 +40,7 @@
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "rivalex/laravel-intl": "^1.1",
         "socialiteproviders/apple": "^5.0",
+        "spatie/geocoder": "^3.10",
         "staudenmeir/laravel-adjacency-list": "^1.0",
         "twilio/sdk": "^6.13",
         "webpatser/laravel-uuid": "^4.0"
