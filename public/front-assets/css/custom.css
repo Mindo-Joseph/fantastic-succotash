@@ -1636,7 +1636,7 @@ label{
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 50px;
     margin: 0px;
     cursor: pointer !important;
@@ -1650,7 +1650,9 @@ button.btn.btn-solid {
  input.form-control {
     font-size: 18px;
  }
-
+#location_search_wrapper .dropdown-toggle:after{
+    display: none;
+}
 .map-icon .fa.fa-map-marker {
     color: #000;
 }
@@ -1660,6 +1662,14 @@ button.btn.btn-solid {
 .down-icon .fa.fa-angle-down {
     color: #ff4c3b;
     font-size: 30px;
+}
+#address-map-container{
+    width:100%;
+    height:250px;
+}
+#address-map-container #address-map{
+    width: 100%;
+    height: 100%;
 }
 
 .brand-logo .blur-up.lazyloaded {

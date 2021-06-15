@@ -9,7 +9,6 @@ class VendorCategory extends Model
 {
     use HasFactory;
     protected $fillable = ['status','vendor_id', 'category_id'];
-    
     public function category(){
   	    return $this->hasOne('App\Models\Category', 'id', 'category_id'); 
   	}
