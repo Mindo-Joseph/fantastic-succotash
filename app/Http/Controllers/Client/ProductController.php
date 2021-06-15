@@ -86,6 +86,7 @@ class ProductController extends BaseController
 
         $validation  = Validator::make($request->all(), $rule);
 
+        // dd($request->category);
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
@@ -94,6 +95,7 @@ class ProductController extends BaseController
         $product->sku = $request->sku;
         $product->url_slug = empty($request->url_slug) ? $request->sku : $request->url_slug;
         $product->type_id = $request->type_id;
+        $product->category_id = $request->category;
         $product->vendor_id = $request->vendor_id;
 
         $client_lang = ClientLanguage::where('is_primary', 1)->first();
@@ -103,15 +105,15 @@ class ProductController extends BaseController
         $product->save();
         if ($product->id > 0) {
 
-            if ($request->has('category') && count($request->category) > 0) {
-                foreach ($request->category as $key => $value) {
-                    $cat[] = [
-                        'product_id' => $product->id,
-                        'Category_id' => $value
-                    ];
-                }
-                ProductCategory::insert($cat);
-            }
+            // if ($request->has('category') && count($request->category) > 0) {
+            //     foreach ($request->category as $key => $value) {
+            //         $cat[] = [
+            //             'product_id' => $product->id,
+            //             'Category_id' => $value
+            //         ];
+            //     }
+            //     ProductCategory::insert($cat);
+            // }
 
             $datatrans[] = [
                 'title' => '',
@@ -217,6 +219,7 @@ class ProductController extends BaseController
         foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live', 'brand_id') as $k => $val) {
             $product->{$k} = $val;
         }
+        $product->category_id = $request->category_id;
         $product->tax_category_id = $request->tax_category;
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
         $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;

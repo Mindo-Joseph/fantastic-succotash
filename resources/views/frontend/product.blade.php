@@ -334,6 +334,11 @@
                                                 allow="autoplay; encrypted-media" allowfullscreen></iframe>
                                         </div>
                                     </div> -->
+                                    @if(Auth::user())
+                                    <p>logged in</p>
+                                    @else
+                                    <p>not logged in</p>
+                                    @endif
                                     <div class="tab-pane fade" id="top-review" role="tabpanel" aria-labelledby="review-top-tab">
                                         <form class="theme-form">
                                             <div class="form-row">

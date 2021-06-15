@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0e26b2ce0ddc7b5317a1d6bceb1cc70d",
+    "content-hash": "b1c17a50ef82d30b3225d57764a4a1ca",
     "packages": [
         {
             "name": "99designs/phumbor",
@@ -668,6 +668,52 @@
                 }
             ],
             "time": "2021-05-24T07:46:03+00:00"
+        },
+        {
+            "name": "darvinstudio/omnipay-telr",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DarvinStudio/omnipay-telr.git",
+                "reference": "fe4e6d45a7d52569655fafe553955cf282fff99b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DarvinStudio/omnipay-telr/zipball/fe4e6d45a7d52569655fafe553955cf282fff99b",
+                "reference": "fe4e6d45a7d52569655fafe553955cf282fff99b",
+                "shasum": ""
+            },
+            "require": {
+                "league/omnipay": "^3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Darvin\\OmnipayTelr\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lev Semin",
+                    "email": "lev@darvin-studio.ru",
+                    "homepage": "https://www.darvin-studio.ru"
+                }
+            ],
+            "description": "Omnipay gate way for Telr.com",
+            "homepage": "https://github.com/darvinstudio/omnipay-telr",
+            "keywords": [
+                "omnipay",
+                "telr"
+            ],
+            "support": {
+                "issues": "https://github.com/DarvinStudio/omnipay-telr/issues",
+                "source": "https://github.com/DarvinStudio/omnipay-telr/tree/1.0.1"
+            },
+            "time": "2018-07-09T09:56:29+00:00"
         },
         {
             "name": "doctrine/cache",

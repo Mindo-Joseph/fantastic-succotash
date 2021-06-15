@@ -43,6 +43,7 @@
 <script src="{{asset('front-assets/js/sweetalert2.min.js')}}"></script>
 <script src="{{asset('front-assets/js/script.js')}}"></script>
 <script src="{{asset('js/custom.js')}}"></script>
+<script src="{{asset('js/location.js')}}"></script>
 <script>
     /*$(window).on('load', function () {
         setTimeout(function () {

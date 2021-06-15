@@ -22,5 +22,7 @@ class Order extends Model{
 	public function address(){
 	    return $this->hasOne('App\Models\UserAddress' , 'id', 'address_id'); 
 	}
-
+	public function paymentOption(){
+	    return $this->hasOne('App\Models\PaymentOption' , 'id', 'payment_option_id'); 
+	}
 }
