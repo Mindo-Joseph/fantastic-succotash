@@ -217,6 +217,7 @@ class ProductController extends BaseController
         foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live', 'brand_id') as $k => $val) {
             $product->{$k} = $val;
         }
+        $product->category_id = $request->category_id;
         $product->tax_category_id = $request->tax_category;
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
         $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;

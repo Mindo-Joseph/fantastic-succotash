@@ -38,6 +38,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('user/address/{id?}', 'Api\v1\AddressController@postSaveAddress');
         Route::get('delete/address/{id}', 'Api\v1\AddressController@postDeleteAddress');
         Route::get('wishlist/update/{pid?}', 'Api\v1\ProfileController@updateWishlist');
+        Route::get('mystore/product/list', 'Api\v1\StoreController@getMyStoreProductList');
         Route::get('primary/address/{id}', 'Api\v1\AddressController@postUpdatePrimaryAddress');
     });
 });
