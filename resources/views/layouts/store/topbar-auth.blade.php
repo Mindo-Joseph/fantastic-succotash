@@ -13,11 +13,9 @@
                 <!-- <ul>
                   <li class="text-center"><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
                 </ul> -->
+                @if( (session('deliveryAddress')) && (Route::currentRouteName() != 'userHome') )
                 <div class="row no-gutters" id="location_search_wrapper">
                     <div class="col-lg-12 col-md-12 col">
-                    
-                    @if(session('deliveryAddress'))
-                
                         <div class="d-flex align-items-center justify-content-start px-3 dropdown-toggle" id="dropdownLocationButton" data-toggle="dropdown" aria-haspopup="true" 
                         aria-expanded="false">
                             <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
@@ -46,7 +44,7 @@
                                     </div>-->
                                     <div class="address-input-field d-flex align-items-center justify-content-between">
                                         <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input">
+                                        <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{session('deliveryAddress')}}">
                                         <input type="hidden" name="address_latitude" id="address-latitude" value="0" />
                                         <input type="hidden" name="address_longitude" id="address-longitude" value="0" />
                                     </div>
@@ -82,11 +80,9 @@
                                 </div>
                             </div>
                         </div>
-                        
-                    @endif
-
                     </div>
                 </div>
+                @endif
             </div>
             <div class="col-lg-4 text-right">
                 <ul class="header-dropdown">

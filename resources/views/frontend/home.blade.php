@@ -21,7 +21,7 @@
                   aria-expanded="false">
                     <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
                     <div class="homepage-address">
-                        <h2><span data-placement="top" data-toggle="tooltip" title="Sector 28C, Chandigarh, India">Sector 28C, Chandigarh, India</span></h2>
+                        <h2><span data-placement="top" data-toggle="tooltip" title="{{$deliveryAddress}}">{{$deliveryAddress}}</span></h2>
                     </div>
                     <div class="down-icon">
                         <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -45,7 +45,7 @@
                             </div>-->
                             <div class="address-input-field d-flex align-items-center justify-content-between">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input">
+                                <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{$deliveryAddress}}">
                                 <input type="hidden" name="address_latitude" id="address-latitude" value="0" />
                                 <input type="hidden" name="address_longitude" id="address-longitude" value="0" />
                             </div>

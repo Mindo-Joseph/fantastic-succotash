@@ -16,7 +16,7 @@ $(document).ready(function() {
         let longitude = $("#address-longitude").val();
         let selected_address = $("#address-input").val();
         $("#location_search_wrapper .homepage-address span").text(selected_address).attr({"title": selected_address, "data-original-title": selected_address});
-        $("#location_search_wrapper .dropdown-menu").toggleClass('show');
+        $("#location_search_wrapper .dropdown-menu").removeClass('show');
         $.ajax({
             type: "POST",
             dataType: 'json',
