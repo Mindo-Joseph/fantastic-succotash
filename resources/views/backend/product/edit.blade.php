@@ -131,6 +131,7 @@
                         <div class="col-md-3" style="cursor: not-allowed;">
                             {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
                             {!! Form::text('category', $product->category->cat->slug, ['class'=>'form-control', 'id' => 'url_slug', 'style' => 'pointer-events:none;']) !!}
+                            <input type="hidden" name="category_id" value="{{$product->category->cat->id}}">
                         </div>
                     </div>
                 </div>

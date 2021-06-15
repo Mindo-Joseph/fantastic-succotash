@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency};
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference};
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redis;
+use App\Http\Traits\ApiResponser;
 
 class UserhomeController extends FrontController
 {
+    use ApiResponser;
     private $field_status = 2;
     /**
      * Display a listing of the resource.
@@ -70,6 +73,61 @@ class UserhomeController extends FrontController
         $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
 
         return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'brands' => $brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds]);
+    }
+
+    public function homepage(Request $request)
+    {
+        try{
+            $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
+            $lats = $request->latitude;
+            $longs = $request->longitude;
+            $user_geo[] = $lats;
+            $user_geo[] = $longs;
+            $vends = array();
+            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
+            if($preferences->is_hyperlocal == 1){
+                $vendorData = $vendorData->whereHas('serviceArea', function($query) use($lats, $longs){
+                        $query->select('vendor_id')
+                        ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$lats." ".$longs.")'))");
+                });
+            }
+            $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
+            
+            $isVendorArea = 0;
+            $langId = Auth::user()->language;
+            $homeData = array();
+            $categories = $this->categoryNav($langId);
+            $homeData['reqData'] = $request->all();
+            $homeData['categories'] = $categories;
+            $homeData['vendors'] = $vendorData;
+            $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
+                            $q->select('brand_id', 'title')->where('language_id', $langId);
+                            }])->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
+            $vendorsHtml = '';
+            foreach($vendorData as $key => $data){
+                $vends[] = $data->id;
+                $vendorsHtml .= '<div class="product-box">
+                    <div class="img-wrapper">
+                        <div class="front">
+                            <a href="'.route('vendorDetail', $data->id).'"><img class="img-fluid blur-up lazyload bg-img" alt="" src="'.$data->logo['proxy_url'] . '300/300' . $data->logo['image_path'].'"></a>
+                        </div>
+                        <div class="back">
+                            <a href="'.route('vendorDetail', $data->id).'"><img class="img-fluid blur-up lazyload bg-img" alt="" src="'.$data->logo['proxy_url'] . '300/300' . $data->logo['image_path'].'"></a>
+                        </div>
+                    </div>
+            
+                    <div class="product-detail">
+                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
+                        <a href="#"><h6>'.$data->name.'</h6></a>
+                    </div>
+                </div>';
+            }
+            $homeData['vendorsHtml'] = $vendorsHtml;
+
+            return $this->successResponse($homeData);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
     }
 
     public function changePrimaryData(Request $request)
