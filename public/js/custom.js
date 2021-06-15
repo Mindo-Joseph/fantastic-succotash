@@ -45,7 +45,7 @@ $(document).ready(function() {
     $(document).on("change","input:radio[name='address_id']",function() {
         if($(this).val()){
             $('#order_palced_btn').prop('disabled', false);
-            cartHeader();
+            cartHeader($(this).val());
         }
     });
     $(document).on("click","#order_palced_btn",function() {
@@ -244,7 +244,7 @@ $(document).ready(function() {
     function capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
-    /*function initialize() {
+    function initialize() {
       var input = document.getElementById('address');
       var autocomplete = new google.maps.places.Autocomplete(input);
       google.maps.event.addListener(autocomplete, 'place_changed', function () {
@@ -275,7 +275,7 @@ $(document).ready(function() {
         }
       });
     }
-    google.maps.event.addDomListener(window, 'load', initialize);*/
+    google.maps.event.addDomListener(window, 'load', initialize);
     function cartTotalProductCount(){
         let cart_qty_total = 0;
         $(".shopping-cart li" ).each(function( index ) {
@@ -289,10 +289,10 @@ $(document).ready(function() {
             $('#cart_qty_span').html(cart_qty_total).hide();
         }
     }
-    function cartHeader() {
+    function cartHeader(address_id) {
         $(".shopping-cart").html(" ");
         $.ajax({
-            data: '',
+            data: {address_id:address_id},
             type: "get",
             dataType: 'json',
             url: cart_product_url,

@@ -10,7 +10,7 @@ use Auth;
 use GuzzleHttp\Client;
 use Log;
 class CartController extends FrontController
-{
+{ 
     private function randomString()
     {
         $random_string = substr(md5(microtime()), 0, 32);
@@ -316,7 +316,7 @@ class CartController extends FrontController
                     }
                     if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1)
                     {   
-                        // $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
+                         $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                     }
                     if(empty($deliver_charge))
                     $deliver_charge = 0;
@@ -426,6 +426,12 @@ class CartController extends FrontController
         }else{
             $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
+        if(isset($request->address_id) && !empty($request->address_id)){
+            $address = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
+            $address = UserAddress::where('user_id', Auth::user()->id)->where('id', $request->address_id)->update(['is_primary' => 1]);
+        }
+       
+   
         if($cart){
             $cart_details = $this->getCart($cart);
         }

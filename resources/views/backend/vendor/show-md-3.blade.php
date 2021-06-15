@@ -198,67 +198,29 @@
         </div>
     </div>
 </div>
-<!-- <div class="card-box">
+ 
+@if(count($vendor->permissionToUser))
+ <div class="card-box">
     <h4 class="header-title mb-3">Users</h4>
     <div class="inbox-widget" data-simplebar style="max-height: 350px;">
+        @foreach($vendor->permissionToUser as $users)
         <div class="inbox-item">
-            <div class="inbox-item-img"><img src="{{asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt=""></div>
-            <p class="inbox-item-author">Tomaslau</p>
-            <p class="inbox-item-text">I've finished it! See you so...</p>
+            <div class="inbox-item-img">
+                <img src="{{$users->user->image['proxy_url'].'40/40'.$users->user->image['image_path']}}" class="rounded-circle" alt="" >
+                                
+                {{-- <img src="{{asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt=""> --}}
+            </div>
+            <p class="inbox-item-author">{{ $users->user->name??'' }}</p>
+            {{-- <p class="inbox-item-text">I've finished it! See you so...</p>
             <p class="inbox-item-date">
                 <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
-            </p>
+            </p> --}}
         </div>
-        <div class="inbox-item">
-            <div class="inbox-item-img"><img src="{{asset('assets/images/users/user-3.jpg')}}" class="rounded-circle" alt=""></div>
-            <p class="inbox-item-author">Stillnotdavid</p>
-            <p class="inbox-item-text">This theme is awesome!</p>
-            <p class="inbox-item-date">
-                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
-            </p>
-        </div>
-        <div class="inbox-item">
-            <div class="inbox-item-img"><img src="{{asset('assets/images/users/user-4.jpg')}}" class="rounded-circle" alt=""></div>
-            <p class="inbox-item-author">Kurafire</p>
-            <p class="inbox-item-text">Nice to meet you</p>
-            <p class="inbox-item-date">
-                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
-            </p>
-        </div>
-        <div class="inbox-item">
-            <div class="inbox-item-img"><img src="{{asset('assets/images/users/user-5.jpg')}}" class="rounded-circle" alt=""></div>
-            <p class="inbox-item-author">Shahedk</p>
-            <p class="inbox-item-text">Hey! there I'm available...</p>
-            <p class="inbox-item-date">
-                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
-            </p>
-        </div>
-        <div class="inbox-item">
-            <div class="inbox-item-img"><img src="{{asset('assets/images/users/user-6.jpg')}}" class="rounded-circle" alt=""></div>
-            <p class="inbox-item-author">Adhamdannaway</p>
-            <p class="inbox-item-text">This theme is awesome!</p>
-            <p class="inbox-item-date">
-                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
-            </p>
-        </div>
-        <div class="inbox-item">
-            <div class="inbox-item-img"><img src="{{asset('assets/images/users/user-3.jpg')}}" class="rounded-circle" alt=""></div>
-            <p class="inbox-item-author">Stillnotdavid</p>
-            <p class="inbox-item-text">This theme is awesome!</p>
-            <p class="inbox-item-date">
-                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
-            </p>
-        </div>
-        <div class="inbox-item">
-            <div class="inbox-item-img"><img src="{{asset('assets/images/users/user-4.jpg')}}" class="rounded-circle" alt=""></div>
-            <p class="inbox-item-author">Kurafire</p>
-            <p class="inbox-item-text">Nice to meet you</p>
-            <p class="inbox-item-date">
-                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
-            </p>
-        </div>
+        @endforeach
     </div>
-</div> -->
+</div> 
+@endif
+
 <script type="text/javascript">
     $( document ).ready(function() {
     $.ajaxSetup({
