@@ -190,6 +190,7 @@
             </div>
         </div>
         @endif
+        @if(count($featuredProducts) > 0)
         <div class="row">
             <div class="col-12 text-center">
                 <div class="title1">
@@ -232,6 +233,8 @@
                 </div>
             </div>
         </div>
+        @endif
+        @if(count($newProducts) > 0)
         <div class="row">
             <div class="col-12 text-center">
                 <div class="title1">
@@ -274,6 +277,8 @@
                 </div>
             </div>
         </div>
+        @endif
+        @if(count($onSaleProducts) > 0)
         <div class="row">
             <div class="col-12 text-center">
                 <div class="title1">
@@ -316,7 +321,7 @@
                 </div>
             </div>
         </div>
-        
+        @endif
     </div>
 </section>
 <section class="section-b-space">
