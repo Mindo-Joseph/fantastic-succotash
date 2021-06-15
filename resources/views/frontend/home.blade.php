@@ -102,7 +102,7 @@
         @endforeach
     </div>
 </section>
-<section class="section-b-space p-t-0 pt-5 ratio_asos">
+<section class="section-b-space p-t-0 pt-5 ratio_asos pb-0">
     <div class="container">
         <div class="row">
         <div class="col-12 text-center mb-4">
