@@ -41,7 +41,7 @@ class StoreController extends Controller{
 			}
 			$vendor_list = Vendor::whereIn('id', $user_vendor_ids)->get(['id','name','logo']);
 			foreach ($vendor_list as $vendor) {
-				$vendor->is_selected_vendor_id = ($is_selected_vendor_id == $vendor->id) ? true : false;
+				$vendor->is_selected = ($is_selected_vendor_id == $vendor->id) ? true : false;
 			}
 			$data = ['order_list' => $order_list, 'vendor_list' => $vendor_list];
             return $this->successResponse($data, '', 200);
