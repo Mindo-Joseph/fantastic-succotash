@@ -8739,10 +8739,6 @@ header.stickycls {
   padding: 0 38px 0 0;
   letter-spacing: 0.07em; }
 
-.pixelstrap li:last-child a {
-    padding-right: 10px;
-}
-
 .pixelstrap a:hover {
   color: var(--theme-deafult); }
 
@@ -9212,9 +9208,9 @@ header.stickycls {
   .pixelstrap .full-mega-menu.layout-3 {
     width: 1079px !important; }
   .pixelstrap a {
-    font-size: 14px; }
+    font-size: 12px; }
     .pixelstrap a:hover, .pixelstrap a:active {
-      font-size: 14px; } }
+      font-size: 12px; } }
 
 @media (max-width: 1199px) {
   .mega-box .link-section .demo ul li a span img {

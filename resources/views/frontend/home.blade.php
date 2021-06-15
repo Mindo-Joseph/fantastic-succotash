@@ -16,7 +16,7 @@
 <div class="find_location">
     <div class="container px-0">
         <div class="row no-gutters">
-            <div class="col-lg-3 col-md-4">
+            <div class="col-lg-3 col-md-4 col">
                 <div class="d-flex align-items-center justify-content-between px-3" data-toggle="modal" data-target="#edit-address" href="javascript:void(0)">
                     <div class="map-icon"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
                     <div class="address">
@@ -27,10 +27,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-9 col-md-8">
+            <div class="col-lg-9 col-md-8 col">
                 <form class="search_form d-flex align-items-center justify-content-between" action="">
                     <input class="form-control border-0" type="text" placeholder="Search">
-                    <button class="btn btn-solid"><i class="fa fa-search mr-1" aria-hidden="true"></i><span class="search-text">Search</span></button>
+                    <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i><!--span class="search-text">Search</span--></button>
                 </form>
             </div>
         </div>
