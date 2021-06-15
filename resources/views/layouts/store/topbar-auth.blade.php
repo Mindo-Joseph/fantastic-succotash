@@ -13,7 +13,6 @@
                 <ul>
                   <li class="text-center"><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
                 </ul>
-                <input type="text" class="form-control" name="current_loc" id="current_location" value="">
             </div>
             <div class="col-lg-5 text-right">
                 <ul class="header-dropdown">
