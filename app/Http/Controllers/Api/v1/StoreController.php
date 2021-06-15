@@ -37,7 +37,7 @@ class StoreController extends Controller{
 				$category_list []= array(
 					'id' => $vendor_category->category->id,
 					'name' => $vendor_category->category->slug,
-					'is_selected' => $selected_category_id == $vendor_category->category_id ? true : false
+					'is_selected' => $is_selected_category_id == $vendor_category->category_id ? true : false
 				);
 			}
 			$products = Product::select('id', 'sku', 'url_slug','is_live','category_id')->has('vendor')
