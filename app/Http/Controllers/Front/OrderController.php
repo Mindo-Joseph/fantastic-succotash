@@ -34,6 +34,7 @@ class OrderController extends FrontController{
     public function orderSave($request, $paymentStatus, $paymentMethod){
         try {
            DB::beginTransaction();
+            $delivery_on_vendors = array();
             $user = Auth::user();
             $loyalty_amount_saved = '';
             $redeem_points_per_primary_currency = '';
@@ -83,9 +84,10 @@ class OrderController extends FrontController{
                         $product_taxable_amount += $product_tax;
                         $payable_amount = $payable_amount + $product_tax;
                     }
-                    if(!empty($vendor_cart_product->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1)
+                    if(!empty($vendor_cart_product->product->Requires_last_mile) && $vendor_cart_product->product->Requires_last_mile == 1)
                     {   
-                        Log::info($vendor_cart_product->product);
+                        $delivery_on_vendors [] = $vendor_cart_product->vendor_id;
+                       // Log::info($vendor_cart_product->product);
                        // $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                     }
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
@@ -167,8 +169,6 @@ class OrderController extends FrontController{
             CartCoupon::where('cart_id', $cart->id)->delete();
             CartProduct::where('cart_id', $cart->id)->delete();
           
-            dd($cart_products);
-
             if($request->payment_option_id == 4){
                 Payment::insert([
                     'date' => date('Y-m-d'),
@@ -177,7 +177,8 @@ class OrderController extends FrontController{
                     'balance_transaction' => $order->payable_amount,
                 ]);
             }
-            $order_dispatch = $this->placeRequestToDispatch($order,$cart_products,$request);
+            if(count($delivery_on_vendors))
+            $order_dispatch = $this->placeRequestToDispatch($order,$delivery_on_vendors,$request);
             DB::commit();
             return $order; 
         } catch (Exception $e) {
@@ -224,25 +225,24 @@ class OrderController extends FrontController{
 
 
 
-    public function placeRequestToDispatch($order,$cart_products,$request){
-        try {
+    public function placeRequestToDispatch($order,$delivery_on_vendors,$request){
+        try {   
+                $call_back_url = $request->getSchemeAndHttpHost();
                 $dispatch_domain = $this->getDispatchDomain();
                 if ($dispatch_domain && $dispatch_domain != false) {
                     $customer = User::find(Auth::id());
                     $cus_address = UserAddress::find($request->address_id);
-                    $vendor_ids = array_column($cart_products->toArray(), 'vendor_id');
-                    $vendor_ids = array_unique($vendor_ids);
+                    $vendor_ids = array_unique($delivery_on_vendors);
                     $tasks = array();
-                                
                     if ($request->input("payment-group") == 2) {
                         $cash_to_be_collected = 'Yes';
                     } else {
                         $cash_to_be_collected = 'No';
                     }
                     foreach ($vendor_ids as $key => $vendor) {
-                        $vendor_details = Vendor::find($vendor);
+                        $vendor_details = Vendor::where('id',$vendor)->select('id','name','latitude','longitude','address')->first();
                         $tasks = array();
-
+                        $meta_data = '';
                         $tasks[] = array('task_type_id' => 1,
                                                         'latitude' => $vendor_details->latitude??'',
                                                         'longitude' => $vendor_details->longitude??'',
@@ -260,28 +260,28 @@ class OrderController extends FrontController{
                                                         'post_code' => $cus_address->pincode??'',
                                                         'barcode' => '',
                                                         );
+
+                        $meta_data = "{'order_id' => $order->id,'vendor_details' => $vendor_details,'call_back_url' => $call_back_url}";  
+                                                                      
                                     
                         $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
                                                         'customer_phone_number' => $customer->phone_number ?? '+919041969648',
                                                         'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
                                                         'recipient_phone' => $customer->phone_number ?? '+919041969648',
                                                         'recipient_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
-                                                        'task_description' => 'Order from:'.$vendor_details->name??null,
-                                                        'allocation_type' => 'a',
+                                                        'task_description' => $meta_data??null,
+                                                        'allocation_type' => 'u',
                                                         'task_type' => 'now',
                                                         'cash_to_be_collected' => $cash_to_be_collected,
                                                         'barcode' => '',
                                                         'task' => $tasks
                                                         ];
 
-                        $client = new Client(['headers' => ['client' => 'newclient1',
-                                                    'content-type' => ' multipart/form-data']
-                                                        ]);
-                        
+                      
                         $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
                                                         'shortcode' => $dispatch_domain->delivery_service_key_code,
                                                         'content-type' => 'application/json']
-                                                            ]);                                
+                                                            ]);                               
                                                 
                         $url = $dispatch_domain->delivery_service_key_url;                      
                         $res = $client->post($url.'/api/task/create',
@@ -289,12 +289,14 @@ class OrderController extends FrontController{
                                                         $postdata
                                                     )]
                         );
+                        $response = json_decode($res->getBody(), true);
+                        Log::info($response);
                     }
                 }
             }    
             catch(\Exception $e)
             {
-                // dd($e->getMessage());
+                 dd($e->getMessage());
                         
             }
            
