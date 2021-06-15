@@ -27,7 +27,9 @@ class StoreController extends Controller{
 			foreach ($vendor_list as $vendor) {
 				$vendor->is_selected = ($is_selected_vendor_id == $vendor->id) ? true : false;
 			}
-			$vendor_categories = VendorCategory::where('vendor_id', $is_selected_vendor_id)->get('category_id');
+			$vendor_categories = VendorCategory::where('vendor_id', $is_selected_vendor_id)->whereHas('category', function($query) {
+						   $query->whereIn('type_id', [1]);
+						})->get('category_id');
 			$vendor_category_id = 0;
 			if($vendor_categories->count()){
 				$vendor_category_id = $vendor_categories->first()->category_id;
@@ -37,6 +39,7 @@ class StoreController extends Controller{
 				$category_list []= array(
 					'id' => $vendor_category->category->id,
 					'name' => $vendor_category->category->slug,
+					'type_id' => $vendor_category->category->type_id,
 					'is_selected' => $is_selected_category_id == $vendor_category->category_id ? true : false
 				);
 			}
