@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90f6b75f53f7a1b1bb46b92b0c0859f0",
+    "content-hash": "2bd1efd1f4433761e494535c35396ff5",
     "packages": [
         {
             "name": "99designs/phumbor",
@@ -293,16 +293,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.184.1",
+            "version": "3.184.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "2450c0568aae59842b5e4cdf50a12c213ed9640e"
+                "reference": "78fe691ab466fecf195209672f6c00c5d4ed219a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2450c0568aae59842b5e4cdf50a12c213ed9640e",
-                "reference": "2450c0568aae59842b5e4cdf50a12c213ed9640e",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/78fe691ab466fecf195209672f6c00c5d4ed219a",
+                "reference": "78fe691ab466fecf195209672f6c00c5d4ed219a",
                 "shasum": ""
             },
             "require": {
@@ -377,9 +377,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.184.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.184.2"
             },
-            "time": "2021-06-10T18:19:17+00:00"
+            "time": "2021-06-11T18:20:15+00:00"
         },
         {
             "name": "awt/apilogger",
@@ -668,6 +668,52 @@
                 }
             ],
             "time": "2021-05-24T07:46:03+00:00"
+        },
+        {
+            "name": "darvinstudio/omnipay-telr",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DarvinStudio/omnipay-telr.git",
+                "reference": "fe4e6d45a7d52569655fafe553955cf282fff99b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DarvinStudio/omnipay-telr/zipball/fe4e6d45a7d52569655fafe553955cf282fff99b",
+                "reference": "fe4e6d45a7d52569655fafe553955cf282fff99b",
+                "shasum": ""
+            },
+            "require": {
+                "league/omnipay": "^3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Darvin\\OmnipayTelr\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lev Semin",
+                    "email": "lev@darvin-studio.ru",
+                    "homepage": "https://www.darvin-studio.ru"
+                }
+            ],
+            "description": "Omnipay gate way for Telr.com",
+            "homepage": "https://github.com/darvinstudio/omnipay-telr",
+            "keywords": [
+                "omnipay",
+                "telr"
+            ],
+            "support": {
+                "issues": "https://github.com/DarvinStudio/omnipay-telr/issues",
+                "source": "https://github.com/DarvinStudio/omnipay-telr/tree/1.0.1"
+            },
+            "time": "2018-07-09T09:56:29+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -2727,41 +2773,43 @@
         },
         {
             "name": "lcobucci/jwt",
-            "version": "4.1.4",
+            "version": "4.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lcobucci/jwt.git",
-                "reference": "71cf170102c8371ccd933fa4df6252086d144de6"
+                "reference": "ae4165a76848e070fdac691e773243d10cd06ce1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/71cf170102c8371ccd933fa4df6252086d144de6",
-                "reference": "71cf170102c8371ccd933fa4df6252086d144de6",
+                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/ae4165a76848e070fdac691e773243d10cd06ce1",
+                "reference": "ae4165a76848e070fdac691e773243d10cd06ce1",
                 "shasum": ""
             },
             "require": {
-                "ext-hash": "*",
-                "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-openssl": "*",
-                "ext-sodium": "*",
                 "lcobucci/clock": "^2.0",
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "infection/infection": "^0.21",
+                "infection/infection": "^0.20",
                 "lcobucci/coding-standard": "^6.0",
-                "mikey179/vfsstream": "^1.6.7",
-                "phpbench/phpbench": "^1.0@alpha",
+                "mikey179/vfsstream": "^1.6",
+                "phpbench/phpbench": "^0.17",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.12",
                 "phpstan/phpstan-deprecation-rules": "^0.12",
                 "phpstan/phpstan-phpunit": "^0.12",
                 "phpstan/phpstan-strict-rules": "^0.12",
                 "phpunit/php-invoker": "^3.1",
-                "phpunit/phpunit": "^9.5"
+                "phpunit/phpunit": "^9.4"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.0-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Lcobucci\\JWT\\": "src"
@@ -2785,7 +2833,7 @@
             ],
             "support": {
                 "issues": "https://github.com/lcobucci/jwt/issues",
-                "source": "https://github.com/lcobucci/jwt/tree/4.1.4"
+                "source": "https://github.com/lcobucci/jwt/tree/4.0.3"
             },
             "funding": [
                 {
@@ -2797,7 +2845,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-03-23T23:53:08+00:00"
+            "time": "2021-03-23T23:47:22+00:00"
         },
         {
             "name": "league/commonmark",
@@ -5559,84 +5607,6 @@
                 "source": "https://github.com/bobthecow/psysh/tree/v0.10.8"
             },
             "time": "2021-04-10T16:23:39+00:00"
-        },
-        {
-            "name": "punic/punic",
-            "version": "3.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/punic/punic.git",
-                "reference": "1b99a1f0d45e2a6109870fde7a3977d9da68940f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/1b99a1f0d45e2a6109870fde7a3977d9da68940f",
-                "reference": "1b99a1f0d45e2a6109870fde7a3977d9da68940f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "replace": {
-                "punic/calendar": "*",
-                "punic/common": "*"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "2.2.*",
-                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.4"
-            },
-            "bin": [
-                "bin/punic-data"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Punic\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michele Locati",
-                    "email": "mlocati@gmail.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Remo Laubacher",
-                    "email": "remo.laubacher@gmail.com",
-                    "role": "Collaborator, motivator and perfectionist supporter"
-                },
-                {
-                    "name": "Christian Schmidt",
-                    "email": "github@chsc.dk",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP-Unicode CLDR",
-            "homepage": "https://github.com/punic/punic",
-            "keywords": [
-                "calendar",
-                "cldr",
-                "date",
-                "date-time",
-                "i18n",
-                "internationalization",
-                "l10n",
-                "localization",
-                "php",
-                "time",
-                "translate",
-                "translations",
-                "unicode"
-            ],
-            "support": {
-                "issues": "https://github.com/punic/punic/issues",
-                "source": "https://github.com/punic/punic/tree/3.5.1"
-            },
-            "time": "2020-01-24T13:04:16+00:00"
         },
         {
             "name": "punic/punic",
@@ -11200,16 +11170,16 @@
         },
         {
             "name": "sebastian/global-state",
-            "version": "5.0.2",
+            "version": "5.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/global-state.git",
-                "reference": "a90ccbddffa067b51f574dea6eb25d5680839455"
+                "reference": "23bd5951f7ff26f12d4e3242864df3e08dec4e49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/a90ccbddffa067b51f574dea6eb25d5680839455",
-                "reference": "a90ccbddffa067b51f574dea6eb25d5680839455",
+                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/23bd5951f7ff26f12d4e3242864df3e08dec4e49",
+                "reference": "23bd5951f7ff26f12d4e3242864df3e08dec4e49",
                 "shasum": ""
             },
             "require": {
@@ -11252,7 +11222,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/global-state/issues",
-                "source": "https://github.com/sebastianbergmann/global-state/tree/5.0.2"
+                "source": "https://github.com/sebastianbergmann/global-state/tree/5.0.3"
             },
             "funding": [
                 {
@@ -11260,7 +11230,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-26T15:55:19+00:00"
+            "time": "2021-06-11T13:31:12+00:00"
         },
         {
             "name": "sebastian/lines-of-code",
@@ -11789,5 +11759,5 @@
         "php": "^7.4.0|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
