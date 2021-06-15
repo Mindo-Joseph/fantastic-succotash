@@ -22,7 +22,6 @@ class ProductsImport implements ToCollection{
         $variant_exist = 0;
         foreach ($rows as $row) {
             $checker = 0;
-            $row = $row->toArray();
             if ($row[0] != "Handle") { //header of excel check              
 
                 if ($row[0] == "") { //if sku or handle is empty

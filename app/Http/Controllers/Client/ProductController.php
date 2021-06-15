@@ -86,6 +86,7 @@ class ProductController extends BaseController
 
         $validation  = Validator::make($request->all(), $rule);
 
+        // dd($request->category);
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
@@ -94,6 +95,7 @@ class ProductController extends BaseController
         $product->sku = $request->sku;
         $product->url_slug = empty($request->url_slug) ? $request->sku : $request->url_slug;
         $product->type_id = $request->type_id;
+        $product->category_id = $request->category;
         $product->vendor_id = $request->vendor_id;
 
         $client_lang = ClientLanguage::where('is_primary', 1)->first();
@@ -103,15 +105,15 @@ class ProductController extends BaseController
         $product->save();
         if ($product->id > 0) {
 
-            if ($request->has('category') && count($request->category) > 0) {
-                foreach ($request->category as $key => $value) {
-                    $cat[] = [
-                        'product_id' => $product->id,
-                        'Category_id' => $value
-                    ];
-                }
-                ProductCategory::insert($cat);
-            }
+            // if ($request->has('category') && count($request->category) > 0) {
+            //     foreach ($request->category as $key => $value) {
+            //         $cat[] = [
+            //             'product_id' => $product->id,
+            //             'Category_id' => $value
+            //         ];
+            //     }
+            //     ProductCategory::insert($cat);
+            // }
 
             $datatrans[] = [
                 'title' => '',
@@ -721,16 +723,16 @@ class ProductController extends BaseController
     public function importCsv(Request $request)
     {
         $vendor_id = $request->vendor_id;
-        $fileModel = new CsvProductImport;
-        if($request->file('product_excel')) {
-            $fileName = time().'_'.$request->file('product_excel')->getClientOriginalName();
-            $filePath = $request->file('product_excel')->storeAs('csv_products', $fileName, 'public');
-            $fileModel->vendor_id = $request->vendor_id;
-            $fileModel->name = $fileName;
-            $fileModel->path = '/storage/' . $filePath;
-            $fileModel->status = 1;
-            $fileModel->save();
-        }
+        // $fileModel = new CsvProductImport;
+        // if($request->file('product_excel')) {
+        //     $fileName = time().'_'.$request->file('product_excel')->getClientOriginalName();
+        //     $filePath = $request->file('product_excel')->storeAs('csv_products', $fileName, 'public');
+        //     $fileModel->vendor_id = $request->vendor_id;
+        //     $fileModel->name = $fileName;
+        //     $fileModel->path = '/storage/' . $filePath;
+        //     $fileModel->status = 1;
+        //     $fileModel->save();
+        // }
         $data = Excel::import(new ProductsImport($vendor_id), $request->file('product_excel'));
 
         return response()->json([
