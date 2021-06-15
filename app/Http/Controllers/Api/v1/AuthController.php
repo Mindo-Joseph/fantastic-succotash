@@ -105,6 +105,7 @@ class AuthController extends BaseController{
         $data['email'] = $user->email;
         $data['auth_token'] =  $token;
         $data['verify_details'] = $verified;
+        $data['is_admin'] = $user->is_admin;
         $data['client_preference'] = $prefer;
         $data['phone_number'] = $user->phone_number;
         $data['cca2'] = $user->country ? $user->country->code : '';
