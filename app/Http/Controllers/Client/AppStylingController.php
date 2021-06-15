@@ -113,5 +113,66 @@ class AppStylingController extends BaseController
     public function updateFont(Request $request)
     {
         $font = AppStylingOption::where('id', $request->fonts)->first();
+        $option_change = AppStylingOption::where('app_styling_id', '=', $font->app_styling_id)->update(array('is_selected' => 0));
+        $font->is_selected = 1;
+        $font->save();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Updated successfully!'
+        ]);
+    }
+
+     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateColor(Request $request)
+    {
+        $app_styling = AppStyling::where('name', 'Color')->first();
+        $app_styling_option = AppStylingOption::where('app_styling_id', $app_styling->id)->first();
+        $app_styling_option->name = $request->secondary_color;
+        $app_styling_option->save();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Updated successfully!'
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateTabBar(Request $request)
+    {
+        $font = AppStylingOption::where('id', $request->tab_bars)->first();
+        $option_change = AppStylingOption::where('app_styling_id', '=', $font->app_styling_id)->update(array('is_selected' => 0));
+        $font->is_selected = 1;
+        $font->save();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Updated successfully!'
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateHomePage(Request $request)
+    {
+        $font = AppStylingOption::where('id', $request->home_styles)->first();
+        $option_change = AppStylingOption::where('app_styling_id', '=', $font->app_styling_id)->update(array('is_selected' => 0));
+        $font->is_selected = 1;
+        $font->save();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Updated successfully!'
+        ]);
     }
 }

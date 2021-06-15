@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use App\Models\{Category, ClientLanguage, CsvProductImport, Product, ProductCategory, ProductTranslation, ProductVariant, ProductVariantSet, Variant, VariantOption, VendorCategory, VendorMedia};
+use App\Models\{Brand, Category, ClientLanguage, CsvProductImport, Product, ProductCategory, ProductTranslation, ProductVariant, ProductVariantSet, TaxCategory, Variant, VariantOption, VendorCategory, VendorMedia};
 
 class ProductsImport implements ToCollection{
     private $folderName = 'prods';
@@ -23,7 +23,8 @@ class ProductsImport implements ToCollection{
         foreach ($rows as $row) {
             $checker = 0;
             $row = $row->toArray();
-            if ($row[0] != "Handle") { //header of excel check
+            if ($row[0] != "Handle") { //header of excel check              
+
                 if ($row[0] == "") { //if sku or handle is empty
                     $error[] = "Row " . $i . " : handle is empty";
                     $checker = 1;
@@ -164,6 +165,22 @@ class ProductsImport implements ToCollection{
                     }
                 }
 
+                if($row[23] != ""){
+                    $brand = Brand::where('title', "LIKE", $row[23])->first();
+                    if(!$brand){
+                        $error[] = "Row " . $i . " : Brand doesn't exist";
+                        $checker = 1;
+                    }
+                }
+
+                if($row[24] != ""){
+                    $tax_category = TaxCategory::where('title', "LIKE", $row[24])->first();
+                    if(!$tax_category){
+                        $error[] = "Row " . $i . " : Tax Category doesn't exist";
+                        $checker = 1;
+                    }
+                }
+
                 if ($checker == 0) {
                     $data[] = $row;
                 }
@@ -174,12 +191,33 @@ class ProductsImport implements ToCollection{
             foreach ($data as $da) {
 
                 if (!Product::where('sku', $da[0])->exists()) {
+
+                    if($da[23] != ""){
+                        $brand = Brand::where('title', "LIKE", $da[23])->first();
+                        if($brand){
+                            $brand_id = $brand->id;
+                        }
+                    }
+                    else{
+                        $brand_id = null;
+                    }
+
+                    if($da[24] != ""){
+                        $tax_category = TaxCategory::where('title', "LIKE", $da[24])->first();
+                        if($tax_category){
+                            $tax_category_id = $tax_category->id;
+                        }
+                    }
+                    else{
+                        $tax_category_id = null;
+                    }
+
                     // insert product
                     $product = Product::insertGetId([
                         'sku' => $da[0],
                         'url_slug' => $da[0],
-                        'title' => ($da[1] == "") ? "NULL" : $da[1],
-                        'body_html' => ($da[2] == "") ? "NULL" : $da[2],
+                        'title' => ($da[1] == "") ? "" : $da[1],
+                        'body_html' => ($da[2] == "") ? "" : $da[2],
                         'vendor_id' => $this->vendor_id,
                         'type_id' => 1,
                         'is_new' => 1,
@@ -190,6 +228,8 @@ class ProductsImport implements ToCollection{
                         'sell_when_out_of_stock' => 0,
                         'requires_shipping' => 0,
                         'Requires_last_mile' => 0,
+                        'brand_id' => $brand_id,
+                        'tax_category_id' => $tax_category_id,
                     ]);
 
                     //insertion into product category
@@ -208,8 +248,8 @@ class ProductsImport implements ToCollection{
 
                     //insertion into product translations
                     $datatrans[] = [
-                        'title' => ($da[1] == "") ? "NULL" : $da[1],
-                        'body_html' => ($da[2] == "") ? "NULL" : $da[2],
+                        'title' => ($da[1] == "") ? "" : $da[1],
+                        'body_html' => ($da[2] == "") ? "" : $da[2],
                         'meta_title' => '',
                         'meta_keyword' => '',
                         'meta_description' => '',
