@@ -50,7 +50,14 @@
 <section class="section-b-space p-t-0 pt-5 ratio_asos">
     <div class="container">
         <div class="row">
-            <div class="col">
+        <div class="col-12 text-center mb-4">
+                <div class="title1">
+                    <h2 class="title-inner1">Our Vendors</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
                 <div class="product-4 product-m no-arrow">
                     @foreach($vendors as $vendor)
                     <div class="product-box">
@@ -67,12 +74,13 @@
                             </div>
                         </div>
                         <div class="product-detail">
-                            <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-                                    class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                            </div>
-                            <a href="#">
+                             <a href="#">
                                 <h6>{{$vendor->name}}</h6>
                             </a>
+                            <!-- <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+                                    class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
+                            </div> -->
+                            
                         </div>
                     </div>
                     @endforeach
@@ -83,7 +91,136 @@
 </section>
 <section class="section-b-space">
     <div class="container">
+        
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="title1">
+                    <h2 class="title-inner1">New Products</h2>
+                </div>
+            </div>
+            <div class="col-12 theme-card">                
+                <div class="vendor-product common_card">
+                    <div>
+                        <a class="card text-center" href="#">
+                            <div class="product-image">
+                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
+                            </div>    
+                            <div class="media-body align-self-center px-3">
+                                <div class="inner_spacing">
+                                    <h3>Pizza</h3>
+                                    <p>Interested in selling this item? List the sale price.</p>
+                                    <h4>$100</h4>
+                                    <div class="rating">
+                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
+                                            @endfor
+                                    </div>
+                                </div>
+                                <p class="btn btn-solid w-100">View Details</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div>
+                        <a class="card text-center" href="#">
+                            <div class="product-image">
+                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
+                            </div>    
+                            <div class="media-body align-self-center px-3">
+                                <div class="inner_spacing">
+                                    <h3>Pizza</h3>
+                                    <p>Interested in selling this item? List the sale price.</p>
+                                    <h4>$100</h4>
+                                    <div class="rating">
+                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
+                                            @endfor
+                                    </div>
+                                </div>
+                                <p class="btn btn-solid w-100">View Details</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div>
+                        <a class="card text-center" href="#">
+                            <div class="product-image">
+                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
+                            </div>    
+                            <div class="media-body align-self-center px-3">
+                                <div class="inner_spacing">
+                                    <h3>Pizza</h3>
+                                    <p>Interested in selling this item? List the sale price.</p>
+                                    <h4>$100</h4>
+                                    <div class="rating">
+                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
+                                            @endfor
+                                    </div>
+                                </div>
+                                <p class="btn btn-solid w-100">View Details</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div>
+                        <a class="card text-center" href="#">
+                            <div class="product-image">
+                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
+                            </div>    
+                            <div class="media-body align-self-center px-3">
+                                <div class="inner_spacing">
+                                    <h3>Pizza</h3>
+                                    <p>Interested in selling this item? List the sale price.</p>
+                                    <h4>$100</h4>
+                                    <div class="rating">
+                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
+                                            @endfor
+                                    </div>
+                                </div>
+                                <p class="btn btn-solid w-100">View Details</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div>
+                        <a class="card text-center" href="#">
+                            <div class="product-image">
+                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
+                            </div>    
+                            <div class="media-body align-self-center px-3">
+                                <div class="inner_spacing">
+                                    <h3>Pizza</h3>
+                                    <p>Interested in selling this item? List the sale price.</p>
+                                    <h4>$100</h4>
+                                    <div class="rating">
+                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
+                                            @endfor
+                                    </div>
+                                </div>
+                                <p class="btn btn-solid w-100">View Details</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div>
+                        <a class="card text-center" href="#">
+                            <div class="product-image">
+                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
+                            </div>    
+                            <div class="media-body align-self-center px-3">
+                                <div class="inner_spacing">
+                                    <h3>Pizza</h3>
+                                    <p>Interested in selling this item? List the sale price.</p>
+                                    <h4>$100</h4>
+                                    <div class="rating">
+                                        @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
+                                            @endfor
+                                    </div>
+                                </div>
+                                <p class="btn btn-solid w-100">View Details</p>
+                            </div>
+                        </a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
         <div class="row multiple-slider">
+
             <div class="col-lg-3 col-sm-6">
                 <div class="theme-card">
                     <h5 class="title-border">New Products</h5>
@@ -410,6 +547,33 @@
             jQuery("#step-three").show();
             jQuery("#step_one").hide();
         });
+    });
+</script>
+
+<script>
+     $('.vendor-product').slick({
+        infinite: true,
+        speed: 300,
+        arrows: false,
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 5000,
+        responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+        ]
     });
 </script>
 
