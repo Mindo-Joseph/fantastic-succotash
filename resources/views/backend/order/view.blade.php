@@ -42,11 +42,11 @@
                                         <h5 class="mt-0 mb-1">Placed</h5>
                                         <p class="text-muted">April 21 2019 <small class="text-muted">07:22 AM</small> </p>
                                     </li>
-                                    <li>
+                                    <li class="completed">
                                         <h5 class="mt-0 mb-1">Accepted</h5>
                                         <p class="text-muted"><small class="text-muted">...</small></p>
                                     </li>
-                                    <li>
+                                    <li class="completed">
                                         <span class="active-dot dot"></span>
                                         <h5 class="mt-0 mb-1">Processing</h5>
                                         <p class="text-muted"><small class="text-muted">...</small></p>

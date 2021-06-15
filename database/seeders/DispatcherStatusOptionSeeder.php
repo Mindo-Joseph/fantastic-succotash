@@ -1,10 +1,11 @@
 <?php
 
 namespace Database\Seeders;
-use App\Models\OrderStatusOption;
-use Illuminate\Database\Seeder;
 
-class OrderStatusSeeder extends Seeder
+use Illuminate\Database\Seeder;
+use App\Models\DispatcherStatusOption;
+
+class DispatcherStatusOptionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,10 +14,11 @@ class OrderStatusSeeder extends Seeder
      */
     public function run()
     {
-        $statuses = ['Placed', 'Accepted', 'Processing', 'Out For Delivery', 'Delivered'];
+        //
+        $statuses = ['Created', 'Assigned', 'Started', 'Arrived', 'Completed'];
         // OrderStatusOption::truncate();
         foreach ($statuses as $status) {
-	        OrderStatusOption::create(['title' => $status, 'status' => 1, 'type' => 1]);
+	        DispatcherStatusOption::create(['title' => $status, 'status' => 1, 'type' => 1]);
         }
     }
 }

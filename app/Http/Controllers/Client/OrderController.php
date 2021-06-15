@@ -42,6 +42,7 @@ class OrderController extends BaseController{
                 'vendors.products' => function($query) use ($vendor_id){
                     $query->where('vendor_id', $vendor_id);
                 }))->findOrFail($order_id);
+
         return view('backend.order.view', compact('order'));
     }
 }
