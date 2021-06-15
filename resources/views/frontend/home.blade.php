@@ -157,6 +157,7 @@
                         $body_html = !empty($product['translation']) ? $product['translation'][0]['body_html'] : '';
                         $description = strip_tags($body_html);
                         $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
+                        $imagePath = '';
                         foreach ($product['media'] as $k => $v) {
                             $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                         }
@@ -202,6 +203,7 @@
                         $body_html = !empty($product['translation']) ? $product['translation'][0]['body_html'] : '';
                         $description = strip_tags($body_html);
                         $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
+                        $imagePath = '';
                         foreach ($product['media'] as $k => $v) {
                             $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                         }
@@ -246,7 +248,7 @@
                         $title = !empty($new_product['translation']) ? $new_product['translation'][0]['title'] : $product['sku'];
                         $body_html = !empty($new_product['translation']) ? $new_product['translation'][0]['body_html'] : '';
                         $description = strip_tags($body_html);
-                        
+                        $imagePath = '';
                         $multiply = (empty($new_product['variant'][0]['multiplier'])) ? 1 : $new_product['variant'][0]['multiplier'];
                         foreach ($new_product['media'] as $k => $v) {
                             $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
@@ -293,6 +295,7 @@
                         $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
                         $description = strip_tags($body_html);
                         $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
+                        $imagePath = '';
                         foreach ($product['media'] as $k => $v) {
                             $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                         }
