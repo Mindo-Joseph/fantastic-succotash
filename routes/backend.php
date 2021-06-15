@@ -32,6 +32,9 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
 
     Route::get('app-styling', 'Client\AppStylingController@index')->name('styling.index');
     Route::post('app-styling/updatefont', 'Client\AppStylingController@updateFont')->name('styling.updateFont');
+    Route::post('app-styling/updateColor', 'Client\AppStylingController@updateColor')->name('styling.updateColor');
+    Route::post('app-styling/updateTabBar', 'Client\AppStylingController@updateTabBar')->name('styling.updateTabBar');
+    Route::post('app-styling/updateHomePage', 'Client\AppStylingController@updateHomePage')->name('styling.updateHomePage');
 
     Route::resource('category', 'Client\CategoryController');
     Route::post('categoryOrder', 'Client\CategoryController@updateOrder')->name('category.order');

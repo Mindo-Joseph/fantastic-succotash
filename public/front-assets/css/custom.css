@@ -1602,7 +1602,7 @@ label{
 }
 
 .brand-logo img.img-fluid {
-    height: 50px;
+    height: 40px;
 }
 
 .sp-colorize-container {
@@ -1651,11 +1651,6 @@ button.btn.btn-solid {
     font-size: 18px;
  }
 
-.search_form 
- button.btn.btn-solid {
-     
-}
-
 .map-icon .fa.fa-map-marker {
     color: #000;
 }
@@ -1667,10 +1662,29 @@ button.btn.btn-solid {
     font-size: 30px;
 }
 
+.brand-logo .blur-up.lazyloaded {
+    background-color: transparent !important;
+}
+
 
 
 
 /* Responsiveness Css Start From Here */
+@media (max-width: 1920px){
+    .brand-logo img.img-fluid {
+        height: 30px;
+    }
+    .pixelstrap a, .pixelstrap a:hover, .pixelstrap a:active {
+        padding: 0 25px 0 0; 
+    }
+    .pixelstrap a {
+        font-size: 13px;
+    }
+    .pixelstrap a .sub-arrow{
+        right: 5px;
+    }
+}
+
 @media(max-width:991px){
     .wrapper-main .border-right,.wrapper-main .border-left{
         border: 0 !important;
