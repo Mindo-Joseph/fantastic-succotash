@@ -171,7 +171,7 @@
                             </div>    
                             <div class="media-body align-self-center px-3">
                                 <div class="inner_spacing">
-                                    <h3>{{ Str::limit($title, 20, '..')}}</h3>
+                                    <h3>{{ Str::limit($title, 18, '..')}}</h3>
                                     <p>{!! $body_html !!}</p>
                                     <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
                                     <div class="rating">
@@ -255,7 +255,7 @@
                             </div>    
                             <div class="media-body align-self-center px-3">
                                 <div class="inner_spacing">
-                                    <h3>{{ Str::limit($title, 20, '..')}}</h3>
+                                    <h3>{{ Str::limit($title, 18, '..')}}</h3>
                                     <p>{!! $body_html !!}</p>
                                     <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
                                     <div class="rating">
@@ -297,7 +297,7 @@
                             </div>    
                             <div class="media-body align-self-center px-3">
                                 <div class="inner_spacing">
-                                    <h3>{{ Str::limit($title, 20, '..')}}</h3>
+                                    <h3>{{ Str::limit($title, 18, '..')}}</h3>
                                     <p>{!! $body_html !!}</p>
                                     <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
                                     <div class="rating">
