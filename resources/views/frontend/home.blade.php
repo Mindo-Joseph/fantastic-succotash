@@ -324,7 +324,7 @@
         @endif
     </div>
 </section>
-<section class="section-b-space">
+<section class="section-b-space pt-0">
     <div class="container">
         <div class="title1">
             <h2 class="title-inner1">Brands</h2>
