@@ -1608,8 +1608,12 @@ label{
 .sp-colorize-container {
     background: rgb(74, 129, 212);
 }
+.home-slider .blur-up.lazyloaded{
+    background-repeat: no-repeat !important;
+    background-color: rgb(150 139 139 / 12%) !important;
 
-.home-slider .blur-up.lazyloaded,.product-box .blur-up.lazyloaded{
+}
+.product-box .blur-up.lazyloaded{
     background-size: contain !important;
     background-repeat: no-repeat !important;
     background-color: rgb(150 139 139 / 12%) !important;
@@ -1801,7 +1805,9 @@ div#test {
     color: #ff4c3b !important;
 }
 
-
+.product-box .img-wrapper, .product-wrap .img-wrapper{
+    border-radius: 50%;
+}
 
 
 
