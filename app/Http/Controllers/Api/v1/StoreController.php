@@ -47,7 +47,7 @@ class StoreController extends Controller{
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                     	},
-                    ])->where('category_id', $selected_category_id)->where('is_live', 1)->paginate($paginate);
+                    ])->where('category_id', $is_selected_category_id)->where('is_live', 1)->paginate($paginate);
 			$data = ['vendor_list' => $vendor_list,'category_list' => $category_list,'products'=> $products];
             return $this->successResponse($data, '', 200);
     	} catch (Exception $e) {
