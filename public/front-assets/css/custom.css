@@ -1601,7 +1601,7 @@ label{
 }
 
 .brand-logo img.img-fluid {
-    height: 50px;
+    height: 40px;
 }
 
 .sp-colorize-container {
@@ -1659,10 +1659,6 @@ button.btn.btn-solid {
     font-size: 30px;
 }
 
-.header-contact{
-    display: none !important;
-}
-
 .brand-logo .blur-up.lazyloaded {
     background-color: transparent !important;
 }
@@ -1671,7 +1667,7 @@ button.btn.btn-solid {
 
 
 /* Responsiveness Css Start From Here */
-@media (max-width: 1367px){
+@media (max-width: 1920px){
     .brand-logo img.img-fluid {
         height: 30px;
     }

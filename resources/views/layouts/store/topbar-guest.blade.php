@@ -10,9 +10,9 @@
                 </div>
             </div>
             <div class="col-lg-2 header-contact text-center">
-                <ul>
+                <!-- <ul>
                   <li class="text-center"><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
-                </ul>
+                </ul> -->
             </div>
             <div class="col-lg-5 text-right">
                 <ul class="header-dropdown">
