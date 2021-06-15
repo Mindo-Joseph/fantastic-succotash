@@ -1,13 +1,13 @@
 <footer class="footer-light">
-    <div class="light-layout">
+    <div class="light-layout bg-orange">
         <div class="container">
             <section class="small-section border-section border-top-0">
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="subscribe">
                             <div>
-                                <h4>KNOW IT ALL FIRST!</h4>
-                                <p>Never Miss Anything From Us By Signing Up To Our Newsletter.</p>
+                                <h4 class="text-white">KNOW IT ALL FIRST!</h4>
+                                <p class="text-white">Never Miss Anything From Us By Signing Up To Our Newsletter.</p>
                             </div>
                         </div>
                     </div>
