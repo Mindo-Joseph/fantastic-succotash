@@ -146,6 +146,7 @@
 </section>
 <section class="section-b-space">
     <div class="container">
+        @if(count($newProducts) > 0)
         <div class="row">
             <div class="col-12 text-center">
                 <div class="title1">
@@ -188,6 +189,7 @@
                 </div>
             </div>
         </div>
+        @endif
         <div class="row">
             <div class="col-12 text-center">
                 <div class="title1">
