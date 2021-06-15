@@ -30,7 +30,7 @@ class StoreController extends Controller{
 			$vendor_categories = VendorCategory::where('vendor_id', $is_selected_vendor_id)->get('category_id');
 			$vendor_category_id = 0;
 			if($vendor_categories->count()){
-				$vendor_category_id = $vendor_categories->first();
+				$vendor_category_id = $vendor_categories->first()->category_id;
 			}
 			$is_selected_category_id = $selected_category_id ? $selected_category_id : $vendor_category_id;
 			foreach ($vendor_categories as $vendor_category) {
