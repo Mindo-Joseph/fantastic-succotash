@@ -3058,19 +3058,20 @@ button.btn.btn-solid:active, button.btn.btn-outline:active {
       bottom: 0; }
 
 .cart_qty_cls {
-  position: absolute;
-  background: var(--theme-deafult);
-  width: 20px;
-  height: 20px;
-  color: #fff;
-  border-radius: 20px;
-  text-align: center;
-  font-size: 12px;
-  line-height: 14px;
-  font-weight: 600;
-  top: 20%;
-  right: -8px;
-  padding: 3px; }
+    position: absolute;
+    background: var(--theme-deafult);
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 600;
+    top: -7px;
+    right: -10px;
+    padding: 3px;
+}
 
 .addcart_btm_popup {
   position: fixed;
@@ -8735,12 +8736,8 @@ header.stickycls {
   line-height: 23px;
   text-decoration: none;
   text-transform: uppercase;
-  padding: 0 38px 0 0;
+  padding: 0 30px 0 0;
   letter-spacing: 0.07em; }
-
-.pixelstrap li:last-child a {
-    padding-right: 10px;
-}
 
 .pixelstrap a:hover {
   color: var(--theme-deafult); }
@@ -8754,7 +8751,7 @@ header.stickycls {
     transform: translateY(-50%);
     margin-top: 0;
     left: auto;
-    right: 19px;
+    right: 5px;
     width: 34px;
     height: 34px;
     overflow: hidden;
@@ -9211,9 +9208,9 @@ header.stickycls {
   .pixelstrap .full-mega-menu.layout-3 {
     width: 1079px !important; }
   .pixelstrap a {
-    font-size: 14px; }
+    font-size: 12px; }
     .pixelstrap a:hover, .pixelstrap a:active {
-      font-size: 14px; } }
+      font-size: 12px; } }
 
 @media (max-width: 1199px) {
   .mega-box .link-section .demo ul li a span img {

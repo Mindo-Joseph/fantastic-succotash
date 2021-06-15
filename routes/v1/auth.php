@@ -27,6 +27,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('orders', 'Api\v1\OrderController@getOrdersList');
         Route::get('wishlists', 'Api\v1\ProfileController@wishlists');
         Route::get('newsLetter', 'Api\v1\ProfileController@newsLetter');
+        Route::get('myStore', 'Api\v1\StoreController@getMyStoreDetails');
         Route::post('place/order', 'Api\v1\OrderController@postPlaceOrder');
         Route::post('update/image', 'Api\v1\ProfileController@updateAvatar');
         Route::post('user/getAddress', 'Api\v1\ProfileController@getAddress');

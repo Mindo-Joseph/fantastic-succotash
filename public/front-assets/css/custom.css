@@ -1601,7 +1601,7 @@ label{
 }
 
 .brand-logo img.img-fluid {
-    height: 50px;
+    height: 40px;
 }
 
 .sp-colorize-container {
@@ -1611,13 +1611,77 @@ label{
 .blur-up.lazyloaded{
     background-size: contain !important;
     background-repeat: no-repeat !important;
+    background-color: rgb(150 139 139 / 12%) !important;
+}
+
+
+/* Home Location Search Bar Css */
+.find_location {
+    margin: 0 0 25px;
+}
+.find_location .container {
+    background: #fff;
+    /* margin-top: -64px; */
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 1px 8px 0 rgb(0 0 0 / 12%);
+    border-radius: 5px;
+}
+.address{
+    width: 80%;
+}
+
+.address h2 {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 15px;
+    line-height: 50px;
+    margin: 0px;
+    cursor: pointer !important;
+}
+.search_form,.search_form 
+input.form-control,.search_form 
+button.btn.btn-solid {
+    height: 100%;
+}
+.search_form 
+ input.form-control {
+    font-size: 18px;
+ }
+
+.map-icon .fa.fa-map-marker {
+    color: #000;
+}
+
+.down-icon .fa.fa-angle-down {
+    color: #ff4c3b;
+    font-size: 30px;
+}
+
+.brand-logo .blur-up.lazyloaded {
+    background-color: transparent !important;
 }
 
 
 
 
-
 /* Responsiveness Css Start From Here */
+@media (max-width: 1920px){
+    .brand-logo img.img-fluid {
+        height: 30px;
+    }
+    .pixelstrap a, .pixelstrap a:hover, .pixelstrap a:active {
+        padding: 0 25px 0 0; 
+    }
+    .pixelstrap a {
+        font-size: 13px;
+    }
+    .pixelstrap a .sub-arrow{
+        right: 5px;
+    }
+}
+
 @media(max-width:991px){
     .wrapper-main .border-right,.wrapper-main .border-left{
         border: 0 !important;
