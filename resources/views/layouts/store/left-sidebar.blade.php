@@ -76,6 +76,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     </li>
                                 </ul> -->
                                 <ul id="main-menu" class="sm pixelstrap sm-horizontal">
+                                    <li>
+                                        <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
+                                    </li>
                                 @foreach($navCategories as $cate)
                                     <li>
                                         <a href="{{route('categoryDetail', $cate['id'])}}">{{$cate['name']}}</a>
