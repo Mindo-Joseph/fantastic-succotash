@@ -1107,6 +1107,7 @@ h1,h2,h3,h4,h5,h6{
     border-radius: 8px;
     cursor: pointer;
     padding: 7px 10px;
+    font-size: 14px;
 }
 
 .location-area i {
@@ -1627,11 +1628,11 @@ label{
     box-shadow: 0 1px 8px 0 rgb(0 0 0 / 12%);
     border-radius: 5px;
 }
-.address{
+.homepage-address{
     width: 80%;
 }
 
-.address h2 {
+.homepage-address h2 {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -1653,7 +1654,9 @@ button.btn.btn-solid {
 .map-icon .fa.fa-map-marker {
     color: #000;
 }
-
+.pac-container{
+    z-index: 9999;
+}
 .down-icon .fa.fa-angle-down {
     color: #ff4c3b;
     font-size: 30px;

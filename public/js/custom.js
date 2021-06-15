@@ -244,11 +244,12 @@ $(document).ready(function() {
     function capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
-    function initialize() {
+    /*function initialize() {
       var input = document.getElementById('address');
       var autocomplete = new google.maps.places.Autocomplete(input);
       google.maps.event.addListener(autocomplete, 'place_changed', function () {
         var place = autocomplete.getPlace();
+        console.log(place.name);
         document.getElementById('city').value = place.name;
         document.getElementById('longitude').value = place.geometry.location.lng()
         document.getElementById('latitude').value = place.geometry.location.lat()
@@ -274,7 +275,7 @@ $(document).ready(function() {
         }
       });
     }
-    google.maps.event.addDomListener(window, 'load', initialize);
+    google.maps.event.addDomListener(window, 'load', initialize);*/
     function cartTotalProductCount(){
         let cart_qty_total = 0;
         $(".shopping-cart li" ).each(function( index ) {
