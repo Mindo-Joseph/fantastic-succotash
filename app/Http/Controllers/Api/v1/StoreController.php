@@ -35,14 +35,14 @@ class StoreController extends Controller{
 					'is_selected' => $selected_category_id == $vendor_category->category_id ? true : false
 				);
 			}
-			$products = Product::has('vendor')->with(['media.image', 'translation' => function($q) use($langId){
+			$products = Product::select('id', 'sku', 'url_slug','is_live','category_id')->has('vendor')
+						->with(['media.image', 'translation' => function($q) use($langId){
                         	$q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                     	},'variant' => function($q) use($langId){
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                     	},
-                    ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('category_id', $selected_category_id)->where('products.is_live', 1)->paginate($paginate);
+                    ])->where('category_id', $selected_category_id)->where('is_live', 1)->paginate($paginate);
 			$data = ['vendor_list' => $vendor_list,'category_list' => $category_list,'products'=> $products];
             return $this->successResponse($data, '', 200);
     	} catch (Exception $e) {
