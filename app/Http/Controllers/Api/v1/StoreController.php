@@ -13,15 +13,16 @@ class StoreController extends Controller{
     public function getMyStoreDetails(Request $request){
     	try {
     		$user = Auth::user();
-    		$selected_vendor_id = 0;
+    		$is_selected_vendor_id = 0;
             $paginate = $request->has('limit') ? $request->limit : 12;
+            $selected_vendor_id = $request->has('selected_vendor_id') ? $request->selected_vendor_id : '';
 			$user_vendor_ids = UserVendor::where('user_id', $user->id)->pluck('vendor_id');
 			if($user_vendor_ids){
-				$selected_vendor_id = $user_vendor_ids->first();
+				$is_selected_vendor_id = $selected_vendor_id ? $selected_vendor_id : $user_vendor_ids->first();
 			}
 			$order_list = Order::select('id','order_number','payable_amount','payment_option_id','user_id')
-						->whereHas('vendors', function($query) use ($selected_vendor_id){
-						   $query->where('vendor_id', $selected_vendor_id);
+						->whereHas('vendors', function($query) use ($is_selected_vendor_id){
+						   $query->where('vendor_id', $is_selected_vendor_id);
 						})->paginate($paginate);
 			foreach ($order_list as $key => $order) {
 				$order_item_count = 0;
@@ -40,7 +41,7 @@ class StoreController extends Controller{
 			}
 			$vendor_list = Vendor::whereIn('id', $user_vendor_ids)->get(['id','name','logo']);
 			foreach ($vendor_list as $vendor) {
-				$vendor->is_selected = ($selected_vendor_id == $vendor->id) ? true : false;
+				$vendor->is_selected_vendor_id = ($is_selected_vendor_id == $vendor->id) ? true : false;
 			}
 			$data = ['order_list' => $order_list, 'vendor_list' => $vendor_list];
             return $this->successResponse($data, '', 200);
