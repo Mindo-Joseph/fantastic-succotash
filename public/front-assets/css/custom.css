@@ -1836,6 +1836,9 @@ div#test {
     .pixelstrap a .sub-arrow{
         right: 5px;
     }
+    .common_card .card {
+        width: calc(100% - 20px);
+    }
 }
 
 @media(max-width:991px){
