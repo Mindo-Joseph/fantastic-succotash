@@ -158,7 +158,8 @@
                     @foreach($newProduct as $product)
                     @php
                         $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
-                        $body_html = !empty($product['body_html']) ? $product['translation'][0]['body_html'] : '';
+                        $body_html = !empty($product['translation']) ? $product['translation'][0]['body_html'] : '';
+                        $description = strip_tags($body_html);
                         $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
                         foreach ($product['media'] as $k => $v) {
                             $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
@@ -172,7 +173,7 @@
                             <div class="media-body align-self-center px-3">
                                 <div class="inner_spacing">
                                     <h3>{{ Str::limit($title, 18, '..')}}</h3>
-                                    <p>{!! $body_html !!}</p>
+                                    <p>{!! Str::limit($description, 25, '..') !!}</p>
                                     <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
                                     <div class="rating">
                                         @for($i = 1; $i < 6; $i++) 
