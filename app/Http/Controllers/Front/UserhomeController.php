@@ -29,6 +29,8 @@ class UserhomeController extends FrontController
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $deliveryAddress = Session::get('deliveryAddress');
+        $latitude = Session::get('latitude');
+        $longitude = Session::get('longitude');
         $vends = array();
 
         $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
@@ -73,7 +75,7 @@ class UserhomeController extends FrontController
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
 
-        return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'brands' => $brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress]);
+        return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'brands' => $brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress, 'latitude'=>$latitude, 'longitude'=>$longitude]);
     }
 
     public function homepage(Request $request)
@@ -81,6 +83,8 @@ class UserhomeController extends FrontController
         try{
             $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
             Session::put('deliveryAddress', $request->selectedAddress);
+            Session::put('latitude', $request->latitude);
+            Session::put('longitude', $request->longitude);
             $lats = $request->latitude;
             $longs = $request->longitude;
             $user_geo[] = $lats;
