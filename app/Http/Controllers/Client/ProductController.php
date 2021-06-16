@@ -740,8 +740,5 @@ class ProductController extends BaseController
             'status' => 'success',
             'message' => 'Product image deleted successfully!'
         ]);
-
-        // return redirect()->back()->with('success', 'Product image deleted successfully!');
     }
-
 }
