@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor, UserAddress,Vendor,CartCoupon, LoyaltyCard, OrderStatus};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor, UserAddress,Vendor,CartCoupon, LoyaltyCard, VendorOrderStatus};
 use App\Models\ClientPreference;
 use GuzzleHttp\Client;
 use Log;
@@ -150,6 +150,12 @@ class OrderController extends FrontController{
                 $OrderVendor->payable_amount= $vendor_payable_amount;
                 $OrderVendor->discount_amount= $vendor_discount_amount;
                 $OrderVendor->save();
+
+                $order_status = new VendorOrderStatus();
+                $order_status->order_id = $order->id;
+                $order_status->order_status_option_id = 1;
+                $order_status->vendor_id = $vendor_id;
+                $order_status->save();
             }
             $loyalty_points_earned = LoyaltyCard::getLoyaltyPoint($loyalty_points_used, $payable_amount);
             $order->total_amount = $total_amount;
@@ -178,11 +184,6 @@ class OrderController extends FrontController{
                     'balance_transaction' => $order->payable_amount,
                 ]);
             }
-
-            $order_status = new OrderStatus();
-            $order_status->order_id = $order->id;
-            $order_status->order_status_option_id = 1;
-            $order_status->save();
 
             if(count($delivery_on_vendors))
             $order_dispatch = $this->placeRequestToDispatch($order,$delivery_on_vendors,$request);
