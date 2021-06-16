@@ -57,7 +57,7 @@ class ProductController extends BaseController
     {
         $rules = array(
             'sku' => 'required|unique:products',
-            'category.*' => 'required',
+            'category' => 'required',
         );
         $validation = Validator::make($request->all(), $rules)->validate();
 
