@@ -13,7 +13,7 @@ class DropWalletsTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::dropIfExists('wallet_histories');
         Schema::dropIfExists('wallets');
     }
 

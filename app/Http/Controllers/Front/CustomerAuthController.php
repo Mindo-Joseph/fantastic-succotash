@@ -144,35 +144,38 @@ class CustomerAuthController extends FrontController{
             $user->email_token_valid_till = $sendTime;
             $user->password = Hash::make($req->password);
             $user->save();
-            $userRefferal = new UserRefferal();
-            $userRefferal->refferal_code = $this->randomData("user_refferals", 8, 'refferal_code');
-            if($req->refferal_code != null){
-                $userRefferal->reffered_by = $req->refferal_code;
-            }
-            $userRefferal->user_id = $user->id;
-            $userRefferal->save();
+            $wallet = $user->wallet;
+            $wallet->deposit(100);
+            $wallet->balance;
+            // $userRefferal = new UserRefferal();
+            // $userRefferal->refferal_code = $this->randomData("user_refferals", 8, 'refferal_code');
+            // if($req->refferal_code != null){
+            //     $userRefferal->reffered_by = $req->refferal_code;
+            // }
+            // $userRefferal->user_id = $user->id;
+            // $userRefferal->save();
             if ($user->id > 0) {
-                $userCustomData = $this->userMetaData($user->id, 'web', 'web');
-                $rae = ReferAndEarn::first();
-                if($rae){
-                    $userReff_by = UserRefferal::where('refferal_code', $req->refferal_code)->first();
-                    $wallet_by = Wallet::where('user_id' , $userReff_by->user_id)->first();
-                    $wallet_to = Wallet::where('user_id' , $user->id)->first();
-                    if($rae->reffered_by_amount != null){
-                        $wallet_history = new WalletHistory();
-                        $wallet_history->user_id = $userReff_by->user_id;
-                        $wallet_history->wallet_id = $wallet_by->id;
-                        $wallet_history->amount = $rae->reffered_by_amount;
-                        $wallet_history->save();
-                    }
-                    if($rae->reffered_to_amount != null){
-                        $wallet_history = new WalletHistory();
-                        $wallet_history->user_id = $user->id;
-                        $wallet_history->wallet_id = $wallet_to->id;
-                        $wallet_history->amount = $rae->reffered_to_amount;
-                        $wallet_history->save();
-                    }
-                }
+                // $userCustomData = $this->userMetaData($user->id, 'web', 'web');
+                // $rae = ReferAndEarn::first();
+                // if($rae){
+                //     $userReff_by = UserRefferal::where('refferal_code', $req->refferal_code)->first();
+                //     // $wallet_by = Wallet::where('user_id' , $userReff_by->user_id)->first();
+                //     // $wallet_to = Wallet::where('user_id' , $user->id)->first();
+                //     // if($rae->reffered_by_amount != null){
+                //     //     $wallet_history = new WalletHistory();
+                //     //     $wallet_history->user_id = $userReff_by->user_id;
+                //     //     $wallet_history->wallet_id = $wallet_by->id;
+                //     //     $wallet_history->amount = $rae->reffered_by_amount;
+                //     //     $wallet_history->save();
+                //     // }
+                //     // if($rae->reffered_to_amount != null){
+                //     //     $wallet_history = new WalletHistory();
+                //     //     $wallet_history->user_id = $user->id;
+                //     //     $wallet_history->wallet_id = $wallet_to->id;
+                //     //     $wallet_history->amount = $rae->reffered_to_amount;
+                //     //     $wallet_history->save();
+                //     // }
+                // }
                 Auth::login($user);
                 $this->checkCookies($user->id);
                 return redirect()->route('user.verify');
