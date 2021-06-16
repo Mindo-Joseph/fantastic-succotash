@@ -16,8 +16,7 @@ class OrderController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $orders = Order::with(['vendors','vendors.products', 'address','user'])->orderBy('id', 'DESC');
-        
+        $orders = Order::with(['vendors', 'address','user'])->orderBy('id', 'DESC');
         if (Auth::user()->is_superadmin == 0) {
             $orders = $orders->whereHas('vendors.vendor.permissionToUser', function ($query) {
                 $query->where('user_id', Auth::user()->id);
