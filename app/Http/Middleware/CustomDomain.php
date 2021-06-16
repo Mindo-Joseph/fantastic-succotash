@@ -44,34 +44,6 @@ class CustomDomain
 
         $existRedis = Redis::get($domain);
       }
-
-      if(strpos($path, 'vendor/') !== false){
-        $idFromRoute = $request->route('id');
-        if(Session::has('vendors')){
-          $vendors = Session::get('vendors');
-          if(!in_array($idFromRoute, $vendors)){
-            return redirect()->route('error_404');
-          }
-        }else{
-          return redirect()->route('error_404');
-        }
-      }
-      if(strpos($path, 'product/') !== false){
-        $skuFromRoute = $request->route('id');
-        $product = Product::where('sku', $skuFromRoute)->firstOrFail();
-        if($product){
-          $productVendorId = $product->vendor_id;
-          if(Session::has('vendors')){
-            $vendors = Session::get('vendors');
-            if(!in_array($productVendorId, $vendors)){
-              return redirect()->route('error_404');
-            }
-          }else{
-            return redirect()->route('error_404');
-          }
-        }
-      }
-
       $callback = '';
       $redisData = json_decode($existRedis);
       //echo '<pre>';print_r($redisData);
