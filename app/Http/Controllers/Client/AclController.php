@@ -83,8 +83,6 @@ class AclController extends BaseController
         
         DB::commit();
         return redirect()->route('acl.index')->with('success', 'Manager Added successfully!');
-       
-            // all good
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->route('acl.index')->with('error', $e->getMessage());
@@ -174,17 +172,6 @@ class AclController extends BaseController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($domain = '', $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -201,7 +188,6 @@ class AclController extends BaseController
 
     protected function updateValidator(array $data, $id)
     {
-        //print_r($data); die;
         return Validator::make($data, [
 
             'name' => ['required', 'string', 'max:255'],
@@ -220,7 +206,6 @@ class AclController extends BaseController
     public function update(Request $request, $domain = '', $id)
     {
         $validator = $this->updateValidator($request->all(), $id)->validate();
-        
         $data = [
             'name' => $request->name,
             'email' => $request->email,
@@ -232,9 +217,7 @@ class AclController extends BaseController
         if ($request->password!="") {
             $data['password'] = Hash::make($request->password);
         }
-                
         $client = User::where('id', $id)->update($data);
-
         //for updating permissions
         if ($request->permissions) {
             $userpermissions = $request->permissions;
@@ -245,23 +228,6 @@ class AclController extends BaseController
             }
             UserPermissions::insert($addpermission);
         }
-
-        
-        
         return redirect()->route('acl.index')->with('success', 'Manager Updated successfully!');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($domain = '', $id)
-    {
-        // $getSubadmin = Client::where('id', $id)->delete();
-        // $removepermissions = SubAdminPermissions::where('sub_admin_id', $id)->delete();
-        // $removeteampermissions = SubAdminTeamPermissions::where('sub_admin_id', $id)->delete();
-        // return redirect()->back()->with('success', 'Subadmin deleted successfully!');
     }
 }

@@ -56,7 +56,7 @@ $timezone = Auth::user()->timezone;
                             @endphp
                                 <div class="row  {{$k ==0 ? 'mt-3' : ''}}">
                                     <div class="col-12">
-                                        <a href="{{route('order.show.detail', [$order->id, $k])}}" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters">
+                                        <a href="{{route('order.show.detail', [$order->id, $vendor->vendor_id])}}" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters">
                                             <span class="left_arrow pulse"></span>
                                             <div class="col-5 col-sm-3">
                                                 <h4 class="m-0">{{ $vendor->name }}</h4>
@@ -67,19 +67,20 @@ $timezone = Auth::user()->timezone;
                                             </div>
                                             <div class="col-7 col-sm-4">
                                                 <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
-                                                    {{$vendor->products->count()}}
                                                     @foreach($vendor->products as $product)
-                                                        <li class="text-center">
-                                                            <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path']}}" alt="">
-                                                            <span class="item_no position-absolute">x{{$product->quantity}}</span>
-                                                            <label class="items_price">$@money($product->price)</label>
-                                                        </li>
-                                                        @php
-                                                            $product_total_count += $product->quantity * $product->price;
-                                                            $product_taxable_amount += $product->taxable_amount;
-                                                            $total_tax_order_price += $product->taxable_amount;
-                                                            $total_order_price += ($product->quantity * $product->price);
-                                                        @endphp
+                                                        @if($vendor->vendor_id == $product->vendor_id)
+                                                            <li class="text-center">
+                                                                <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path']}}" alt="">
+                                                                <span class="item_no position-absolute">x{{$product->quantity}}</span>
+                                                                <label class="items_price">$@money($product->price)</label>
+                                                            </li>
+                                                            @php
+                                                                $product_total_count += $product->quantity * $product->price;
+                                                                $product_taxable_amount += $product->taxable_amount;
+                                                                $total_tax_order_price += $product->taxable_amount;
+                                                                $total_order_price += ($product->quantity * $product->price);
+                                                            @endphp
+                                                        @endif
                                                     @endforeach                                    
                                                 </ul>
                                             </div>

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Client;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Client\BaseController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency};
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Client\BaseController;
+use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency};
 
 class ClientPreferenceController extends BaseController
 {
@@ -39,15 +39,10 @@ class ClientPreferenceController extends BaseController
     {
         $webTemplates = Template::where('for', '1')->get();
         $appTemplates = Template::where('for', '2')->get();
-        
         $curArray = array();
         $primaryCurrency = ClientCurrency::where('is_primary', 1)->first();
-
         $currencies = Currency::where('id', '>', '0')->get();
-
         $curtableData = array_chunk($currencies->toArray(), 2);
-        //dd($currencies);
-
         $languages = Language::where('id', '>', '0')->get(); /*  cprimary - currency primary*/
         $preference = ClientPreference::with('language', 'primarylang', 'domain', 'currency.currency', 'primary.currency')->select('client_code', 'theme_admin', 'distance_unit', 'date_format', 'time_format', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'verify_email', 'verify_phone', 'web_template_id', 'app_template_id', 'primary_color', 'secondary_color')
                         ->where('client_code', Auth::user()->code)->first();
@@ -235,21 +230,8 @@ class ClientPreferenceController extends BaseController
             return redirect()->back()->withInput()->withErrors($validation);
         }
         $client = Client::where('code', Auth::user()->code)->first();
-        //dd($client->toArray());
         $client->custom_domain = $request->custom_domain;
         $client->save();
         return redirect()->route('configure.customize')->with('success', 'Client customize data updated successfully!');
-    }
-    
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\ClientPreference  $clientPreference
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ClientPreference $clientPreference)
-    {
-        //
     }
 }

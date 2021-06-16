@@ -9,48 +9,6 @@ use Illuminate\Http\Request;
 class VendorSlotController extends BaseController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\VendorSlot  $vendorSlot
-     * @return \Illuminate\Http\Response
-     */
-    public function show(VendorSlot $vendorSlot)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\VendorSlot  $vendorSlot
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(VendorSlot $vendorSlot)
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -256,7 +214,6 @@ class VendorSlotController extends BaseController
                         $showData[$count]['type_id'] = $v->id;
                         $showData[$count]['slot_id'] = $v->slot_id;
                         $count++;
-                        //$showData[$count]['color'] = 'bl';
                     }
                 }
             } 

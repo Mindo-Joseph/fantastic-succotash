@@ -2,67 +2,55 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Http\Controllers\Client\BaseController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country,User};
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Config;
 use DB;
+use Session;
+use \DateTimeZone;
+use App\Jobs\UpdateClient;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Jobs\ProcessClientDatabase;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
-use Session;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use App\Jobs\UpdateClient;
-use \DateTimeZone;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Client\BaseController;
+use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country,User};
 
-class DashBoardController extends BaseController
-{
+class DashBoardController extends BaseController{
+
     private $folderName = 'Clientlogo';
-    public function __construct(){
-        
-    }
     /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
-    {   
+    public function index(){   
         return view('backend/dashboard');
     }
 
-    public function profile()
-    {
+    public function profile(){
         $countries = Country::all();
         $client = Client::where('code', Auth::user()->code)->first();
         $tzlist = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
         return view('backend/setting/profile')->with(['client' => $client, 'countries'=> $countries,'tzlist'=>$tzlist]);
     }
 
-    public function changePassword(Request $request)
-    {
+    public function changePassword(Request $request){
         $client = User::where('id', Auth::id())->first();
-
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
             'password' => 'required|confirmed|min:6',
         ]);
-
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
-
         if (Hash::check($request->old_password, $client->password)) {
-
             $client->password = Hash::make($request->password);
             $client->save();
-            
             $clientData = 'empty';
-        //    $this->dispatchNow(new UpdateClient($clientData, $client->password));
             return redirect()->back()->with('success', 'Password Changed successfully!');
         } else {
             $request->session()->flash('error', 'Wrong Old Password');
@@ -106,17 +94,12 @@ class DashBoardController extends BaseController
         }else{
              $data['logo'] = $client->getRawOriginal('logo');
         }
-
         $client = Client::where('code', Auth::user()->code)->update($data);
-
         $userdata = array();
         foreach ($request->only('name','phone_number') as $key => $value) {
             $userdata[$key] = $value;
         }
-
         $user = User::where('id', Auth::id())->update($userdata);
-        //$this->dispatchNow(new UpdateClient($data, $pass = ''));
-
         return redirect()->back()->with('success', 'Client Updated successfully!');
     }
 }

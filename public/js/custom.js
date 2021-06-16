@@ -45,7 +45,7 @@ $(document).ready(function() {
     $(document).on("change","input:radio[name='address_id']",function() {
         if($(this).val()){
             $('#order_palced_btn').prop('disabled', false);
-            cartHeader();
+            cartHeader($(this).val());
         }
     });
     $(document).on("click","#order_palced_btn",function() {
@@ -289,10 +289,10 @@ $(document).ready(function() {
             $('#cart_qty_span').html(cart_qty_total).hide();
         }
     }
-    function cartHeader() {
-        $(".shopping-cart").html(" ");
+    function cartHeader(address_id) {
+        $(".shopping-cart").html("");
         $.ajax({
-            data: '',
+            data: {address_id:address_id},
             type: "get",
             dataType: 'json',
             url: cart_product_url,

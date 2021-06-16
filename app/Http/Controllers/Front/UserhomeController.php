@@ -20,38 +20,29 @@ class UserhomeController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $home = array();
-        $client_config = Session::get('client_config');
-        $preferences = Session::get('preferences');
-        //$clientLanguage = ClientLanguage::where('is_primary', 1)->first();
-        $langId = Session::get('customerLanguage');
-        $curId = Session::get('customerCurrency');
-        $deliveryAddress = Session::get('deliveryAddress');
+        $vendor_ids = array();
         $latitude = Session::get('latitude');
         $longitude = Session::get('longitude');
-        $vends = array();
-
+        $curId = Session::get('customerCurrency');
+        $preferences = Session::get('preferences');
+        $langId = Session::get('customerLanguage');
+        $client_config = Session::get('client_config');
+        $deliveryAddress = Session::get('deliveryAddress');
+        $navCategories = $this->categoryNav($langId);
+        Session::put('navCategories', $navCategories); 
         $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
-
         if($preferences->is_hyperlocal == 1){
-            /*$vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
-                    $query->select('vendor_id')
-                    ->from(with(new ServiceArea)->getTable())
-                    ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
-            });*/
             $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
                 $query->select('vendor_id')
                 ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
             });
         }
         $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
-
         foreach ($vendorData as $key => $value) {
-            $vends[] = $value->id;
+            $vendor_ids[] = $value->id;
         }
-
         $banners = Banner::where('status', 1)->where('validity_on', 1)
                     ->where(function($q){
                         $q->whereNull('start_date_time')->orWhere(function($q2){
@@ -60,20 +51,15 @@ class UserhomeController extends FrontController
                         });
                     })
                     ->orderBy('sorting', 'asc')->get();
-
-        $navCategories = $this->categoryNav($langId);
-
-        Session::put('navCategories', $navCategories);
         $brands = Brand::with(['translation' => function($q) use($langId){
                         $q->select('brand_id', 'title')->where('language_id', $langId);
                         }])
                     ->select('id', 'image')
                     ->where('status', '!=', $this->field_status)
                     ->orderBy('position', 'asc')->get();
-
-        $fp = $this->productList($vends, $langId, $curId, 'is_featured');
-        $np = $this->productList($vends, $langId, $curId, 'is_new');
-        $onSP = $this->productList($vends, $langId, 'USD');
+        $fp = $this->productList($vendor_ids, $langId, $curId, 'is_featured');
+        $np = $this->productList($vendor_ids, $langId, $curId, 'is_new');
+        $onSP = $this->productList($vendor_ids, $langId, 'USD');
         $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
