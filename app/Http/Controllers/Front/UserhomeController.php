@@ -35,17 +35,17 @@ class UserhomeController extends FrontController
 
         $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
 
-        if($preferences->is_hyperlocal == 1){
-            /*$vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
-                    $query->select('vendor_id')
-                    ->from(with(new ServiceArea)->getTable())
-                    ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
-            });*/
-            $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                $query->select('vendor_id');
-                // ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-            });
-        }
+        // if($preferences->is_hyperlocal == 1){
+        //     $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
+        //             $query->select('vendor_id')
+        //             ->from(with(new ServiceArea)->getTable())
+        //             ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
+        //     });
+        //     $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
+        //         $query->select('vendor_id');
+        //         // ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+        //     });
+        // }
         $vendorData = $vendorData->get();
 
         foreach ($vendorData as $key => $value) {
