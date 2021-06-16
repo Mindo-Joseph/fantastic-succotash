@@ -7,6 +7,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Client\BaseController;
+use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus};
 use Auth;
 class OrderController extends BaseController{
     /**
@@ -43,6 +44,12 @@ class OrderController extends BaseController{
                     $query->where('vendor_id', $vendor_id);
                 }))->findOrFail($order_id);
 
-        return view('backend.order.view', compact('order'));
+        $order_status_option = OrderStatusOption::all();
+
+        $dispatcher_status_option = DispatcherStatusOption::all();
+
+        $order_status = VendorOrderStatus::where('order_id', $order_id)->get();
+
+        return view('backend.order.view')->with(['order' => $order,'order_status' => $order_status,'order_status_option' => $order_status_option, 'dispatcher_status_option' => $dispatcher_status_option ]);
     }
 }

@@ -38,7 +38,28 @@
                         <div class="row track-order-list">
                             <div class="col-lg-6">
                                 <ul class="list-unstyled">
+                                @foreach($order_status_option as $o_status)
+                                <?php $check=0; ?>
+                                    @foreach($order_status as $os)
+                                    @if($os->order_status_option_id == $o_status->id)
+                                    <?php $check=1; $time=$os->created_at; ?>
+                                    @endif
+                                    @endforeach
+
+                                    @if($check == 1)
                                     <li class="completed">
+                                        <h5 class="mt-0 mb-1">{{$o_status->title}}</h5>
+                                        <p class="text-muted"><small class="text-muted">{{$time}}</small></p>
+                                    </li>
+                                    @else
+                                    <li>
+                                        <h5 class="mt-0 mb-1">{{$o_status->title}}</h5>
+                                        <p class="text-muted"><small class="text-muted">...</small></p>
+                                    </li>
+                                    @endif
+
+                                @endforeach
+                                    <!-- <li class="completed">
                                         <h5 class="mt-0 mb-1">Placed</h5>
                                         <p class="text-muted">April 21 2019 <small class="text-muted">07:22 AM</small> </p>
                                     </li>
@@ -58,19 +79,25 @@
                                      <li>
                                         <h5 class="mt-0 mb-1">Delivered</h5>
                                         <p class="text-muted">....</p>
-                                    </li>
+                                    </li> -->
                                 </ul>
-                                 <div class="text-center mt-2">
+                                 <!-- <div class="text-center mt-2">
                                     <a href="#" class="btn btn-primary">Update Status</a>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="col-lg-6">
                                 <ul class="list-unstyled">
-                                    <li class="completed">
+                                @foreach($dispatcher_status_option as $d_status)
+                                    <li>
+                                            <h5 class="mt-0 mb-1">{{$d_status->title}}</h5>
+                                            <p class="text-muted"><small class="text-muted">...</small></p>
+                                    </li>
+                                @endforeach
+                                    <!-- <li class="completed">
                                         <h5 class="mt-0 mb-1">Created</h5>
                                         <p class="text-muted">April 21 2019 <small class="text-muted">07:22 AM</small> </p>
                                     </li>
-                                    <li class="completed">
+                                    <li>
                                         <h5 class="mt-0 mb-1">Assigned</h5>
                                         <p class="text-muted">April 22 2019 <small class="text-muted">12:16 AM</small></p>
                                     </li>
@@ -86,11 +113,11 @@
                                      <li>
                                         <h5 class="mt-0 mb-1">Completed</h5>
                                         <p class="text-muted">....</p>
-                                    </li>
+                                    </li> -->
                                 </ul>
-                                 <div class="text-center mt-2">
+                                 <!-- <div class="text-center mt-2">
                                     <a href="#" class="btn btn-primary">Update Status</a>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
