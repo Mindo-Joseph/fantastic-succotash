@@ -184,7 +184,8 @@ $timezone = Auth::user()->timezone;
 @section('script')
 <script>
     $("#order_statuses li").click(function() {
-        let that = $(this);
+        if(confirm("Are you Sure?")){
+            let that = $(this);
         var status_option_id = that.data("status_option_id");
         $.ajax({
             url: "{{ route('order.changeStatus') }}",
@@ -200,6 +201,7 @@ $timezone = Auth::user()->timezone;
                 $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
             },
         });
+        }
     });
 </script>
 @endsection
