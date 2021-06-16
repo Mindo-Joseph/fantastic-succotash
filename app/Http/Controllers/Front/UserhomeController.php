@@ -87,11 +87,12 @@ class UserhomeController extends FrontController
             Session::put('deliveryAddress', $request->selectedAddress);
             Session::put('latitude', $request->latitude);
             Session::put('longitude', $request->longitude);
+            $curId = Session::get('customerCurrency');
             $lats = $request->latitude;
             $longs = $request->longitude;
             $user_geo[] = $lats;
             $user_geo[] = $longs;
-            $vends = array();
+            $vendors = array();
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
             if($preferences->is_hyperlocal == 1){
                 $vendorData = $vendorData->whereHas('serviceArea', function($query) use($lats, $longs){
@@ -111,26 +112,17 @@ class UserhomeController extends FrontController
             $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
                             $q->select('brand_id', 'title')->where('language_id', $langId);
                             }])->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
-            $vendorsHtml = '';
             foreach($vendorData as $key => $data){
-                $vends[] = $data->id;
-                $vendorsHtml .= '<div class="product-box">
-                    <div class="img-wrapper">
-                        <div class="front">
-                            <a href="'.route('vendorDetail', $data->id).'"><img class="img-fluid blur-up lazyload bg-img" alt="" src="'.$data->logo['proxy_url'] . '300/300' . $data->logo['image_path'].'"></a>
-                        </div>
-                        <div class="back">
-                            <a href="'.route('vendorDetail', $data->id).'"><img class="img-fluid blur-up lazyload bg-img" alt="" src="'.$data->logo['proxy_url'] . '300/300' . $data->logo['image_path'].'"></a>
-                        </div>
-                    </div>
-                    <div class="product-detail">
-                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-                        <a href="#"><h6>'.$data->name.'</h6></a>
-                    </div>
-                </div>';
+                $vendors[] = $data->id;
             }
-            Session::put('vendors', $vends);
-            $homeData['vendorsHtml'] = $vendorsHtml;
+            Session::put('vendors', $vendors);
+            
+            $fp = $this->productList($vendors, $langId, $curId, 'is_featured');
+            $np = $this->productList($vendors, $langId, $curId, 'is_new');
+            $onSP = $this->productList($vendors, $langId, 'USD');
+            $homeData['featuredProducts'] = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
+            $homeData['newProducts'] = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
+            $homeData['onSaleProducts'] = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
 
             return $this->successResponse($homeData);
         } catch (Exception $e) {
