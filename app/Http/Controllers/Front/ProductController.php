@@ -26,7 +26,7 @@ class ProductController extends FrontController
         $navCategories = $this->categoryNav($langId);
         $product = Product::select('vendor_id')->where('sku', $sku)->firstOrFail();
 
-        if($preferences->is_hyperlocal == 1){
+        /*if($preferences->is_hyperlocal == 1){
             if($product){
                 $productVendorId = $product->vendor_id;
                 if(Session::has('vendors')){
@@ -38,7 +38,7 @@ class ProductController extends FrontController
                     return redirect()->route('error_404');
                 }
             }
-        }
+        }*/
 
         $p_id = $product->id;
         $product = Product::with([

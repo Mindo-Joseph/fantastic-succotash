@@ -8,13 +8,6 @@ $timezone = Auth::user()->timezone;
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
-                            <li class="breadcrumb-item active">Order Detail</li>
-                        </ol>
-                    </div>
                     <h4 class="page-title">Order Detail</h4>
                 </div>
             </div>
@@ -34,7 +27,7 @@ $timezone = Auth::user()->timezone;
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <h5 class="mt-0">Tracking ID:</h5>
-                                    <p>894152012012</p>
+                                    <p>----</p>
                                 </div>
                             </div>
                         </div>
@@ -50,7 +43,7 @@ $timezone = Auth::user()->timezone;
                                             <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
                                             <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
                                                 @if($date)
-                                                    <small class="text-muted">{{convertDateTimeInTimeZone($order_status_option->created_at, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                                    <small class="text-muted">{{convertDateTimeInTimeZone($date, $timezone, 'l, F d, Y, H:i A')}}</small>
                                                 @endif
                                             </p>
                                         </li>
