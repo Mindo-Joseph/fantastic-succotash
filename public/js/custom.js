@@ -72,11 +72,12 @@ $(document).ready(function() {
         });
     });
     function paymentViaStripe(stripe_token, address_id, payment_option_id){
+        let cart_total_amount = $("input[name='cart_total_payable_amount']").val();
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: payment_stripe_url,
-            data: {'stripe_token' : stripe_token ,'amount': 0.25},
+            data: {'stripe_token' : stripe_token ,'amount': cart_total_amount},
             success: function (resp) {
                 if(resp.status == 'Success'){
                     placeOrder(address_id, payment_option_id, resp.data.response.id);
@@ -85,11 +86,12 @@ $(document).ready(function() {
         });
     }
     function paymentViaPaypal(){
+        let cart_total_amount = $("input[name='cart_total_payable_amount']").val();
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: payment_paypal_url,
-            data: {'amount': 0.05},
+            data: {'amount': cart_total_amount},
             success: function (response) {
                 if(response.status == "Success"){
                     window.location.href = response.data.response;
@@ -110,12 +112,13 @@ $(document).ready(function() {
         $('#order_palced_btn').trigger('click');
         $('#v-pills-paypal-tab').trigger('click');
         $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
+        let cart_total_amount = $("input[name='cart_total_payable_amount']").val();
         let address_id = $("input:radio[name='address_id']:checked").val();
         $.ajax({
             type: "GET",
             dataType: 'json',
             url: payment_success_paypal_url,
-            data: {'amount': 0.05, 'token': token, 'PayerID': payer_id},
+            data: {'amount': cart_total_amount, 'token': token, 'PayerID': payer_id},
             success: function (response) {
                 if(response.status == "Success"){
                     placeOrder(address_id, 3, response.data.id);

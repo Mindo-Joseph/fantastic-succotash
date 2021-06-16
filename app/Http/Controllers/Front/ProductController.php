@@ -20,10 +20,26 @@ class ProductController extends FrontController
      */
     public function index(Request $request, $domain = '', $sku)
     {
+        $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-        $product = Product::select('id')->where('sku', $sku)->firstOrFail();
+        $product = Product::select('vendor_id')->where('sku', $sku)->firstOrFail();
+
+        if($preferences->is_hyperlocal == 1){
+            if($product){
+                $productVendorId = $product->vendor_id;
+                if(Session::has('vendors')){
+                    $vendors = Session::get('vendors');
+                    if(!in_array($productVendorId, $vendors)){
+                        return redirect()->route('error_404');
+                    }
+                }else{
+                    return redirect()->route('error_404');
+                }
+            }
+        }
+
         $p_id = $product->id;
         $product = Product::with([
             'variant' => function ($sel) {
