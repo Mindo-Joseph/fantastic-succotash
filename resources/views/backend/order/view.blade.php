@@ -44,11 +44,14 @@ $timezone = Auth::user()->timezone;
                                     @foreach($order_status_options as $order_status_option)
                                     @php
                                         $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'completed disabled': '';
+                                        $date = isset($vendor_order_status_created_dates[$order_status_option->id]) ? $vendor_order_status_created_dates[$order_status_option->id] : '';
                                     @endphp
                                         <li class="{{$class}}" data-status_option_id="{{$order_status_option->id}}">
                                             <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
-                                            <p class="text-muted">
-                                                <small class="text-muted">{{convertDateTimeInTimeZone($order_status_option->created_at, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                            <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
+                                                @if($date)
+                                                    <small class="text-muted">{{convertDateTimeInTimeZone($order_status_option->created_at, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                                @endif
                                             </p>
                                         </li>
                                     @endforeach
@@ -198,6 +201,7 @@ $timezone = Auth::user()->timezone;
             },
             success: function(response) {
                 that.addClass("completed");
+                $('#text_muted_'+status_option_id).html('<small class="text-muted">'+response.created_date+'</small>');
                 $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
             },
         });
