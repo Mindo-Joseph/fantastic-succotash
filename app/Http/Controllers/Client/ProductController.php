@@ -372,21 +372,15 @@ class ProductController extends BaseController
         $multiArray = array();
         $variantNames = array();
         $product = Product::where('id', $request->pid)->firstOrFail();
-
         $msgRes = 'Please check variants to create variant set.';
         if (!$request->has('optionIds') || !$request->has('variantIds')) {
             return response()->json(array('success' => 'false', 'msg' => $msgRes));
         }
-        //dd($request->all());
-
         foreach ($request->optionIds as $key => $value) {
-
             $name = explode(';', $request->variantIds[$key]);
-
             if (!in_array($name[1], $variantNames)) {
                 $variantNames[] = $name[1];
             }
-
             $multiArray[$request->variantIds[$key]][] = $value;
         }
 

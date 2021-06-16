@@ -41,7 +41,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('paginateValue', 'Front\UserhomeController@changePaginate')->name('changePaginate');
 	Route::get('/product/{id?}','Front\ProductController@index')->name('productDetail');
 	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
-	Route::post('/product/cart','Front\CartController@postAddToCart')->name('addToCart');
+	Route::post('add/product/cart','Front\CartController@postAddToCart')->name('addToCart');
 	Route::get('cartProducts','Front\CartController@getCartData')->name('getCartProducts');
 	Route::post('/product/updateCartQuantity','Front\CartController@updateQuantity')->name('updateQuantity');
 	Route::post('/product/deletecartproduct','Front\CartController@deleteCartProduct')->name('deleteCartProduct');
