@@ -1854,6 +1854,16 @@ header{
     width: 100%;
 }
 
+#stripe-card-element{
+    flex:1;
+    padding:0 15px;
+    background:transparent;
+    font-weight:400;
+    color:#000;
+    outline:none;
+    cursor:text;
+    padding:0;
+}
 
 
 
