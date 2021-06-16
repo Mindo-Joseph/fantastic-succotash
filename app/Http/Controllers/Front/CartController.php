@@ -477,8 +477,8 @@ class CartController extends FrontController
             }    
             catch(\Exception $e)
             {
-                 print_r($e->getMessage());
-                 die;
+                // print_r($e->getMessage());
+               //  die;
                         
             }
            
