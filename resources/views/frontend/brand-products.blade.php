@@ -147,7 +147,7 @@
                                 <div class="top-banner-wrapper text-center">
                                     
                                     @if(!empty($brand->image))
-                                      <a href="#"><img alt="" src="{{$brand->image['proxy_url'] . '1000/400' . $brand->image['image_path']}}" class="img-fluid blur-up lazyload" style="max-height: 400px;overflow: hidden;"></a>
+                                      <a href="#"><img alt="" src="{{$brand->image['proxy_url'] . '1000/200' . $brand->image['image_path']}}" class="img-fluid blur-up lazyload" style="max-height: 200px;overflow: hidden;"></a>
                                     @endif
 
                                         

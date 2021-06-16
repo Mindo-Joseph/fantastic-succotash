@@ -1827,6 +1827,65 @@ div#test {
     margin-top: 15px;
 }
 
+header{
+    position: relative;
+}
+
+.search_warpper {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: #f8f8f8;
+    z-index: 1;
+    left: 0;
+    top: 100%;
+    padding: 10px 0;
+}
+
+#location_search_wrapper h2 {
+    line-height: normal;
+}
+
+.search_btn {
+    cursor: pointer;
+}
+
+.top-banner-wrapper .img-fluid {
+    width: 100%;
+}
+
+#stripe-card-element{
+    flex:1;
+    padding:0 15px;
+    background:transparent;
+    font-weight:400;
+    color:#000;
+    outline:none;
+    cursor:text;
+    padding:0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
