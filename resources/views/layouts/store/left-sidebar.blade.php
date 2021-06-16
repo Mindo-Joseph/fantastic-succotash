@@ -246,7 +246,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     @endif
 
     <div class="search_warpper">
-
+        <div class="container">
+            
+        </div>
     </div>
 </header>
 <script type="text/javascript">
