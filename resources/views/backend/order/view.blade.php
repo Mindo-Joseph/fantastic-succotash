@@ -41,37 +41,28 @@ $timezone = Auth::user()->timezone;
                         <div class="row track-order-list">
                             <div class="col-lg-6">
                                 <ul class="list-unstyled" id="order_statuses">
-                                    @foreach($order_status_option as $o_status)
-                                    <?php $check = 0; ?>
-                                    @foreach($order_status as $os)
-                                    @if($os->order_status_option_id == $o_status->id)
-                                    <?php $check = 1;
-                                    $time = $os->created_at; ?>
-                                    @endif
-                                    @endforeach
-
-                                    @if($check == 1)
-                                    <li class="completed">
-                                        <h5 class="mt-0 mb-1">{{$o_status->title}}</h5>
-                                        <p class="text-muted"><small class="text-muted">{{convertDateTimeInTimeZone($time, $timezone, 'd-m-Y, H:i A')}}</small></p>
-                                    </li>
-                                    @else
-                                    <li id="{{$o_status->id}}">
-                                        <h5 class="mt-0 mb-1">{{$o_status->title}}</h5>
-                                        <p class="text-muted"><small class="text-muted">...</small></p>
-                                    </li>
-                                    @endif
-
+                                    @foreach($order_status_options as $order_status_option)
+                                    @php
+                                        $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'completed': '';
+                                    @endphp
+                                        <li class="{{$class}}" data-status_option_id="{{$order_status_option->id}}">
+                                            <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
+                                            <p class="text-muted">
+                                                <small class="text-muted">{{convertDateTimeInTimeZone($order_status_option->created_at, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                            </p>
+                                        </li>
                                     @endforeach
                                 </ul>
                             </div>
                             <div class="col-lg-6">
                                 <ul class="list-unstyled">
-                                    @foreach($dispatcher_status_option as $d_status)
-                                    <li>
-                                        <h5 class="mt-0 mb-1">{{$d_status->title}}</h5>
-                                        <p class="text-muted"><small class="text-muted">...</small></p>
-                                    </li>
+                                    @foreach($dispatcher_status_options as $dispatcher_status_option)
+                                        <li>
+                                            <h5 class="mt-0 mb-1">{{$dispatcher_status_option->title}}</h5>
+                                            <p class="text-muted">
+                                                <small class="text-muted">...</small>
+                                            </p>
+                                        </li>
                                     @endforeach
                                 </ul>
                             </div>
@@ -190,27 +181,27 @@ $timezone = Auth::user()->timezone;
     </div>
 </div>
 @endsection
-
 @section('script')
 <script>
     $("#order_statuses li").click(function() {
-        console.log("def");
-        console.log($(this).attr("bid"));
-        var bid = $(this).attr("bid");
+        if(confirm("Are you Sure?")){
+            let that = $(this);
+        var status_option_id = that.data("status_option_id");
         $.ajax({
             url: "{{ route('order.changeStatus') }}",
             type: "POST",
             data: {
-                "_token": "{{ csrf_token() }}",
-                status_option_id: this.id,
+                order_id: "{{$order->id}}",
                 vendor_id: "{{$vendor_id}}",
-                order_id: "{{$order->id}}"
+                "_token": "{{ csrf_token() }}",
+                status_option_id: status_option_id,
             },
             success: function(response) {
-                $("#order_statuses #"+this.id).addClass("completed");
+                that.addClass("completed");
                 $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
             },
         });
+        }
     });
 </script>
 @endsection
