@@ -28,7 +28,7 @@
     <section class="section-b-space light-layout">
         <div class="container">
             <div class="row footer-theme partition-f">
-                <!-- <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-6">
                     <div class="footer-title footer-mobile-title">
                         <h4>about</h4>
                     </div>
@@ -50,8 +50,8 @@
                             </ul>
                         </div>
                     </div>
-                </div> -->
-                <div class="col-lg-2 col-md-6 mb-md-0 mb-3">
+                </div>
+                <div class="col offset-xl-1">
                     <div class="sub-title">
                         <div class="footer-title">
                             <h4>my account</h4>
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-md-0 mb-3 pl-lg-5">
+                <div class="col">
                     <div class="sub-title">
                         <div class="footer-title">
                             <h4>why we choose</h4>
@@ -83,45 +83,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 mb-md-0 mb-3 pl-lg-5">
-                    <div class="sub-title">
-                        <div class="footer-title">
-                            <h4>Connect</h4>
-                        </div>
-                    </div>
-                    <div class="footer-contant">
-                        <div class="footer-social">
-                            <ul>
-                                <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-rss" aria-hidden="true"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-md-0 mb-3">
-                    <div class="sub-title">
-                        <div class="footer-title">
-                            <h4>Subscribe to our Newsletter</h4>
-                        </div>
-                    </div>
-                    <form class="card bg-transparent">
-                        <div class="card-body row no-gutters align-items-center p-0">
-                            <div class="col">
-                                <input class="form-control bg-transparent border-0" type="search" placeholder="Your Emaill">
-                            </div>
-                            <!--end of col-->
-                            <div class="col-auto">
-                                <button class="btn submit_btn" type="submit">Submit</button>
-                            </div>
-                            <!--end of col-->
-                        </div>
-                    </form>
-                    <h6 class="mt-3"><a class="" href="blog.html">Check Out Our Blog</a></h6>
-                </div>
-                <!-- <div class="col">
+                <div class="col">
                     <div class="sub-title">
                         <div class="footer-title">
                             <h4>store information</h4>
@@ -136,7 +98,7 @@
                             </ul>
                         </div>
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
     </section>
