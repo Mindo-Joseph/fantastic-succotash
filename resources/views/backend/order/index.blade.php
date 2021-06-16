@@ -24,16 +24,16 @@ $timezone = Auth::user()->timezone;
         </div>     
         <div class="row">    
             @foreach($orders as $order)
-                <div class="col-xl-6">
+                <div class="col-xl-6 mb-3">
                     <div class="row no-gutters order_head">
                         <div class="col-md-3"><h4>Order Id</h4></div>
                         <div class="col-md-3"><h4>Date & Time</h4></div>
                         <div class="col-md-3"><h4>Customer Name</h4></div>
                         <div class="col-md-3"><h4>Address</h4></div>
                     </div>
-                    <div class="row no-gutters order_data mb-lg-3">
+                    <div class="row no-gutters order_data mb-lg-0">
                         <div class="col-md-3">#{{$order->order_number}}</div>
-                        <div class="col-md-3">{{ convertDateTimeInTimeZone($order->created_at, $timezone, 'l, F d, Y, H:i A')}}</div>
+                        <div class="col-md-3">{{ convertDateTimeInTimeZone($order->created_at, $timezone, 'd-m-Y, H:i A')}}</div>
                         <div class="col-md-3">
                            <a href="#">{{$order->user->name}}</a>
                         </div>
@@ -54,9 +54,9 @@ $timezone = Auth::user()->timezone;
                                 $product_total_count = 0;
                                 $product_taxable_amount = 0;
                             @endphp
-                                <div class="row  {{$k ==0 ? 'mt-3' : ''}}">
+                                <div class="row  {{$k ==0 ? 'mt-0' : ''}}">
                                     <div class="col-12">
-                                        <a href="{{route('order.show.detail', [$order->id, $vendor->vendor_id])}}" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters">
+                                        <a href="{{route('order.show.detail', [$order->id, $vendor->vendor_id])}}" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters h-100">
                                             <span class="left_arrow pulse"></span>
                                             <div class="col-5 col-sm-3">
                                                 <h4 class="m-0">{{ $vendor->name }}</h4>
@@ -110,7 +110,7 @@ $timezone = Auth::user()->timezone;
                             @endforeach
                         </div>   
                         <div class="col-md-3">
-                            <div class="card-box p-2">
+                            <div class="card-box h-100 p-2">
                                 <ul class="price_box_bottom m-0 pl-0 pt-1">
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">Sub Total</label>

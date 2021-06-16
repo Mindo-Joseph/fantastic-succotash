@@ -53,7 +53,7 @@ $timezone = Auth::user()->timezone;
                                     @if($check == 1)
                                     <li class="completed">
                                         <h5 class="mt-0 mb-1">{{$o_status->title}}</h5>
-                                        <p class="text-muted"><small class="text-muted">{{convertDateTimeInTimeZone($time, $timezone, 'l, F d, Y, H:i A')}}</small></p>
+                                        <p class="text-muted"><small class="text-muted">{{convertDateTimeInTimeZone($time, $timezone, 'd-m-Y, H:i A')}}</small></p>
                                     </li>
                                     @else
                                     <li id="{{$o_status->id}}">

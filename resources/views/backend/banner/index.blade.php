@@ -74,7 +74,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                                     <td> {{ $ban->name }} </td> 
                                     <td> <span class="text-center d-inline-block">
                                         @if(isset($ban->start_date_time) && isset($ban->end_date_time))
-                                        {{ convertDateTimeInTimeZone($ban->start_date_time, $timezone, 'l, F d, Y, H:i A')}} <br/> to <br/> {{convertDateTimeInTimeZone($ban->end_date_time, $timezone, 'l, F d, Y, H:i A')}} 
+                                        {{ convertDateTimeInTimeZone($ban->start_date_time, $timezone, 'd-M-Y, H:i A')}} <br/> to <br/> {{convertDateTimeInTimeZone($ban->end_date_time, $timezone, 'd-m-Y, H:i A')}} 
                                         @else
                                         -
                                         @endif

@@ -61,13 +61,13 @@
                                     <th>Name</th>
                                     <th>Address</th>
                                     <th>Offers</th>
-                                    <th>Can Add Category</th>
-                                    <th>Commission Percentage</th>
-                                    <th>Commission Fixed per Order</th>
-                                    <th>Commission Monthly</th>
+                                    <th>Can Add <br> Category</th>
+                                    <th>Commission <br> Percentage</th>
+                                    <th>Commission <br> Fixed per Order</th>
+                                    <th>Commission <br> Monthly</th>
                                     <th>Products</th>
                                     <th>Orders</th>
-                                    <th>Active Orders</th>
+                                    <th>Active <br> Orders</th>
                                     <th></th>
                                     <!-- <th>Latitude</th>
                                     <th>Longitude</th> -->
@@ -81,7 +81,7 @@
                                         <a class="round_img_box" href="{{ route('vendor.show', $vendor->id) }}"><img class="rounded-circle" src="{{$vendor->logo['proxy_url'].'90/90'.$vendor->logo['image_path']}}" alt="{{$vendor->id}}"></a>
                                     </td>
                                     <td><a href="{{ route('vendor.show', $vendor->id) }}">{{ $vendor->name }}</a> </td>
-                                    <td> {{ $vendor->address }}</td>
+                                    <td class="address_txt"> <p class="ellips_txt" data-toggle="tooltip" data-placement="top" title="{{ $vendor->address }}">{{ $vendor->address }}</p></td>
 
                                         <td>
                                             @if($vendor->dine_in == 1)

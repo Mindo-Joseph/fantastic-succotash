@@ -77,7 +77,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                                     <td>{{$promo->short_desc}}</td>
                                     <td>{{$promo->type->title}}</td>
                                     <td>{{$promo->amount}}</td>
-                                    <td>{{convertDateTimeInTimeZone($promo->expiry_date, $timezone, 'l, F d, Y, H:i A')}}</td>
+                                    <td>{{convertDateTimeInTimeZone($promo->expiry_date, $timezone, 'd-m-Y, H:i A')}}</td>
                                     <td>{{$promo->minimum_spend}}</td>
                                     <td>{{$promo->maximum_spend}}</td>
                                     <td>{{$promo->limit_per_user}}</td>
