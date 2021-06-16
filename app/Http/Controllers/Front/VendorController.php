@@ -23,8 +23,7 @@ class VendorController extends FrontController
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
-        $vendor = Vendor::select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery')
-                ->where('id', $vid)->firstOrFail();
+        $vendor = Vendor::select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery')->where('id', $vid)->where('status', 1)->firstOrFail();
         $brands = Product::with(['brand.translation'=> function($q) use($langId){
                     $q->select('title', 'brand_id')->where('brand_translations.language_id', $langId);
                 }])->select('brand_id')->where('vendor_id', $vid)
@@ -39,7 +38,6 @@ class VendorController extends FrontController
                         },
                     ])->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating')
                     ->where('is_live', 1)->where('vendor_id', $vid)->paginate(8);
-
         if(!empty($listData)){
             foreach ($listData as $key => $value) {
                 foreach ($value->variant as $k => $v) {
@@ -69,7 +67,6 @@ class VendorController extends FrontController
         $vendorIds[] = $vid;
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-
         return view('frontend/vendor-products')->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
     }
 
@@ -79,15 +76,13 @@ class VendorController extends FrontController
      */
     public function vendorFilters(Request $request, $domain = '', $vid = 0)
     {
+        $setArray = $optionArray = array();
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
-        $setArray = $optionArray = array();
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
-
         if($request->has('variants') && !empty($request->variants)){
             $setArray = array_unique($request->variants);
         }
-
         $startRange = 0; $endRange = 20000;
         if($request->has('range') && !empty($request->range)){
             $range = explode(';', $request->range);
@@ -95,16 +90,13 @@ class VendorController extends FrontController
             $startRange = $range[0] * $clientCurrency->doller_compare;
             $endRange = $range[1] * $clientCurrency->doller_compare;
         }
-
         $multiArray = array();
         if($request->has('options') && !empty($request->options)){
             foreach ($request->options as $key => $value) {
                 $multiArray[$request->variants[$key]][] = $value;
             }
         }
-
         $variantIds = $productIds = array();
-
         if(!empty($multiArray)){
             foreach ($multiArray as $key => $value) {
                 $new_pIds = $new_vIds = array();
@@ -128,7 +120,6 @@ class VendorController extends FrontController
             }
         }
         $order_type = $request->has('order_type') ? $request->order_type : '';
-
         $products = Product::with(['media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
@@ -153,11 +144,9 @@ class VendorController extends FrontController
                             ->where('price',  '>=', $startRange)
                             ->where('price',  '<=', $endRange);
                         });
-
         if(!empty($productIds)){
             $products = $products->whereIn('id', $productIds);
         }
-
         if($request->has('brands') && !empty($request->brands)){
             $products = $products->whereIn('brand_id', $request->brands);
         }
