@@ -2,7 +2,6 @@
 
 @section('css')
 <style>
-    // workaround
     .intl-tel-input {
         display: table-cell;
     }

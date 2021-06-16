@@ -1827,6 +1827,21 @@ div#test {
     margin-top: 15px;
 }
 
+header{
+    position: relative;
+}
+
+.search_warpper {
+    height: 120px;
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: #fff;
+    z-index: 1;
+    left: 0;
+    top: 100%;
+}
+
 
 
 

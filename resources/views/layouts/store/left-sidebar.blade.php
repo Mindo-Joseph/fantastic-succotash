@@ -112,7 +112,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
                                 </form>
                                 <ul>
-                                    <li class="onhover-div mobile-search">
+                                    <!-- <li class="onhover-div mobile-search">
                                         <div><img src="{{asset('front-assets/images/icon/search.png')}}" onclick="openSearch()" class="img-fluid blur-up lazyload" alt=""> <i class="ti-search" onclick="openSearch()"></i></div>
                                         <div id="search-overlay" class="search-overlay">
                                             <div> <span class="closebtn" onclick="closeSearch()" title="Close Overlay">×</span>
@@ -132,6 +132,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                 </div>
                                             </div>
                                         </div>
+                                    </li> -->
+                                    <li>
+                                        <i class="search_btn fa fa-search"></i>
                                     </li>
                                     <li class="onhover-div mobile-setting">
                                         <div><img src="{{asset('front-assets/images/icon/setting.png')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-settings"></i></div>
@@ -241,6 +244,10 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </div>
     </div> -->
     @endif
+
+    <div class="search_warpper">
+
+    </div>
 </header>
 <script type="text/javascript">
     var show_cart_url = "{{ route('showCart') }}";
@@ -251,5 +258,16 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         headers: {
             'X-CSRF-TOKEN': jQuery('meta[name="_token"]').attr('content')
         }
+    });
+</script>
+<script>
+    jQuery(document).ready(function(){
+        jQuery(".search_btn").click(function () {
+            jQuery(".search_warpper").slideToggle("slow");
+        });
+
+        jQuery(".close_btn").click(function () {
+            jQuery(".search_warpper").slideUp("slow");
+        });
     });
 </script>

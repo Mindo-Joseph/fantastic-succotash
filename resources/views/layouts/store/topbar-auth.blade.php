@@ -23,7 +23,7 @@
                                 <i class="fa fa-angle-down" aria-hidden="true"></i>
                             </div>
                         </div>
-                        <div class="dropdown-menu" aria-labelledby="dropdownLocationButton" style="max-width:400px;width:100%">
+                        <div class="dropdown-menu p-0" aria-labelledby="dropdownLocationButton" style="max-width:400px;width:100%">
                             <div id="address-map-container">
                                 <div id="address-map"></div>
                             </div>
@@ -40,7 +40,7 @@
                                     </div>
                                 </div>
                                 <div class="text-center">
-                                    <button type="button" class="btn btn-solid ml-auto confirm_address_btn">Confirm And Proceed</button>
+                                    <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100">Confirm And Proceed</button>
                                 </div>
                             </div>
                         </div>
