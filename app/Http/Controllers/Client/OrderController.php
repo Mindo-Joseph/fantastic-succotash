@@ -8,7 +8,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus};
+use App\Models\{OrderStatusOption,DispatcherStatusOption, Vendor, VendorOrderStatus};
 class OrderController extends BaseController{
     /**
      * Display a listing of the resource.
@@ -56,15 +56,18 @@ class OrderController extends BaseController{
     public function changeStatus(Request $request, $domain = '')
     {
         try{
-            $vendor_order_status = new VendorOrderStatus();
-            $vendor_order_status->order_id = $request->order_id;
-            $vendor_order_status->order_status_option_id = $request->status_option_id;
-            $vendor_order_status->vendor_id = $request->vendor_id;
-            $vendor_order_status->save();
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Updated Successfully'
-            ]);
+            $vendor_order_status_check = VendorOrderStatus::where('order_id', $request->order_id)->where('vendor_id', $request->vendor_id)->where('order_status_option_id', $request->status_option_id)->first();
+            if(!$vendor_order_status_check){
+                $vendor_order_status = new VendorOrderStatus();
+                $vendor_order_status->order_id = $request->order_id;
+                $vendor_order_status->order_status_option_id = $request->status_option_id;
+                $vendor_order_status->vendor_id = $request->vendor_id;
+                $vendor_order_status->save();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Updated Successfully'
+                ]);
+            }
         }catch(Exception $e){
             return response()->json([
                 'status' => 'error',
