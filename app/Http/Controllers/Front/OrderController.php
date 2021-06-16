@@ -87,7 +87,7 @@ class OrderController extends FrontController{
                     }
                     if(!empty($vendor_cart_product->product->Requires_last_mile) && $vendor_cart_product->product->Requires_last_mile == 1)
                     {   
-                        $delivery_on_vendors [] = $vendor_cart_product->vendor_id;
+                       // $delivery_on_vendors [] = $vendor_cart_product->vendor_id;
                        // Log::info($vendor_cart_product->product);
                        // $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                     }
@@ -185,8 +185,9 @@ class OrderController extends FrontController{
                 ]);
             }
 
-            if(count($delivery_on_vendors))
-            $order_dispatch = $this->placeRequestToDispatch($order,$delivery_on_vendors,$request);
+          //  if(count($delivery_on_vendors))
+         //   $order_dispatch = $this->placeRequestToDispatch($order,$delivery_on_vendors,$request);
+
             DB::commit();
             return $order; 
         } catch (Exception $e) {

@@ -22,9 +22,9 @@ class DispatcherController extends FrontController
         try {
             DB::beginTransaction();
             $update = VendorOrderDispatcherStatus::Create(['dispatcher_id' => null,
-    'order_id' =>  $request->order_id,
-    'dispatcher_status_option_id ' =>  $request->dispatcher_status_option_id,
-    'vendor_id' =>  $request->vendor_id ]);
+            'order_id' =>  $request->order_id,
+            'dispatcher_status_option_id ' =>  $request->dispatcher_status_option_id,
+            'vendor_id' =>  $request->vendor_id ]);
     
             DB::commit();
             return response()->json([
@@ -34,9 +34,9 @@ class DispatcherController extends FrontController
         } catch (Exception $e) {
             DB::rollback();
             return response()->json([
-        'status' => 400,
-        'message' => $e->getMessage()
-    ], 400);
+                'status' => 400,
+                'message' => $e->getMessage()
+            ], 400);
         }
     }
 }

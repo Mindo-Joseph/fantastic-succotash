@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Client;
 
 use App\Models\Tax;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus};
-use Auth;
+use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus,ClientPreference,OrderVendorProduct,OrderVendor,UserAddress,Vendor};
+use Auth,DB;
+use GuzzleHttp\Client;
 class OrderController extends BaseController{
     /**
      * Display a listing of the resource.
@@ -46,7 +48,7 @@ class OrderController extends BaseController{
         $dispatcher_status_option = DispatcherStatusOption::all();
 
         $order_status = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->get();
-
+                
         return view('backend.order.view')->with(['vendor_id' => $vendor_id, 'order' => $order, 'order_status' => $order_status,'order_status_option' => $order_status_option, 'dispatcher_status_option' => $dispatcher_status_option ]);
     }
 
@@ -58,15 +60,126 @@ class OrderController extends BaseController{
      */
     public function changeStatus(Request $request, $domain = '')
     {
-        $vendor_order_status = new VendorOrderStatus();
-        $vendor_order_status->order_id = $request->order_id;
-        $vendor_order_status->order_status_option_id = $request->status_option_id;
-        $vendor_order_status->vendor_id = $request->vendor_id;
-        $vendor_order_status->save();
+        try {
+            DB::beginTransaction();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Updated Successfully'
-        ]);
+                $vendor_order_status = new VendorOrderStatus();
+                $vendor_order_status->order_id = $request->order_id;
+                $vendor_order_status->order_status_option_id = $request->status_option_id;
+                $vendor_order_status->vendor_id = $request->vendor_id;
+                $vendor_order_status->save();
+                if($request->status_option_id == 2)
+                $order_dispatch = $this->checkIfanyProductLastMileon($request);
+                DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Updated Successfully'
+            ]);
+        } catch(\Exception $e){
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+           
+        }
+        
+    }
+
+
+    // check If any Product Last Mile on
+    public function checkIfanyProductLastMileon($request)
+    {
+        $dispatch_domain = $this->getDispatchDomain();
+        if ($dispatch_domain && $dispatch_domain != false) {
+            $checkdeliveryFeeAdded = OrderVendor::where(['order_id' => $request->order_id,'vendor_id' => $request->vendor_id])->first();
+            if($checkdeliveryFeeAdded && $checkdeliveryFeeAdded->delivery_fee > 0.00)
+            $order_dispatch = $this->placeRequestToDispatch($request->order_id,$request->vendor_id,$dispatch_domain);
+        }
+    }
+    // place Request To Dispatch
+    public function placeRequestToDispatch($order,$vendor,$dispatch_domain){
+        try {       
+            
+                    $order = Order::find($order);
+                    $customer = User::find($order->user_id);
+                    $cus_address = UserAddress::find($order->address_id);
+                    $tasks = array();
+                    if ($order->payment_method == 2) {
+                        $cash_to_be_collected = 'Yes';
+                        $payable_amount = $order->payable_amount;
+                    } else {
+                        $cash_to_be_collected = 'No';
+                        $payable_amount = 0.00;
+                    }
+                    
+                        $call_back_url = route('dispatch-order-update', ['vendor_id' => $vendor,'order_id' => $order->id,'dispatcher_status_option_id' => '']);
+                        $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
+                        $tasks = array();
+                        $meta_data = '';
+                        $tasks[] = array('task_type_id' => 1,
+                                                        'latitude' => $vendor_details->latitude??'',
+                                                        'longitude' => $vendor_details->longitude??'',
+                                                        'short_name' => '',
+                                                        'address' => $vendor_details->address??'',
+                                                        'post_code' => '',
+                                                        'barcode' => '',
+                                                        );
+                                        
+                        $tasks[] = array('task_type_id' => 2,
+                                                        'latitude' => $cus_address->latitude??'',
+                                                        'longitude' => $cus_address->longitude??'',
+                                                        'short_name' => '',
+                                                        'address' => $cus_address->address??'',
+                                                        'post_code' => $cus_address->pincode??'',
+                                                        'barcode' => '',
+                                                        );
+                                   
+                        $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
+                                                        'customer_phone_number' => $customer->phone_number ?? '+919041969648',
+                                                        'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
+                                                        'recipient_phone' => $customer->phone_number ?? '+919041969648',
+                                                        'recipient_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
+                                                        'task_description' => "Order From :".$vendor_details->name,
+                                                        'allocation_type' => 'u',
+                                                        'task_type' => 'now',
+                                                        'cash_to_be_collected' => $payable_amount??0.00,
+                                                        'barcode' => '',
+                                                        'call_back_url' => $call_back_url??null,
+                                                        'task' => $tasks
+                                                        ];
+
+                      
+                        $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
+                                                        'shortcode' => $dispatch_domain->delivery_service_key_code,
+                                                        'content-type' => 'application/json']
+                                                            ]);
+                                                
+                        $url = $dispatch_domain->delivery_service_key_url;
+                        $res = $client->post(
+                            $url.'/api/task/create',
+                            ['form_params' => (
+                                $postdata
+                            )]
+                        );
+                        $response = json_decode($res->getBody(), true);
+                       
+            }    
+            catch(\Exception $e)
+            {
+                // dd($e->getMessage());
+                        
+            }
+           
+           
+    }
+     
+    # get prefereance if last mile on or off and all details updated in config
+    public function getDispatchDomain(){
+        $preference = ClientPreference::first();
+        if($preference->need_delivery_service == 1 && !empty($preference->delivery_service_key) && !empty($preference->delivery_service_key_code) && !empty($preference->delivery_service_key_url))
+            return $preference;
+        else
+            return false;
     }
 }
