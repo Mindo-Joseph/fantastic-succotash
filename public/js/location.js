@@ -30,9 +30,9 @@ $(document).ready(function() {
         displayLocation(lat,long);
     }
 
-    $(document).on('click', '#location_search_wrapper .dropdown-menu', function (e) {
-        e.stopPropagation();
-    });
+    // $(document).on('click', '#location_search_wrapper .dropdown-menu', function (e) {
+    //     e.stopPropagation();
+    // });
 
     $(document).delegate(".confirm_address_btn", "click", function(){
         let latitude = $("#address-latitude").val();
@@ -43,7 +43,8 @@ $(document).ready(function() {
     function setDeliveryAddress(latitude, longitude){
         let selected_address = $("#address-input").val();
         $("#location_search_wrapper .homepage-address span").text(selected_address).attr({"title": selected_address, "data-original-title": selected_address});
-        $("#location_search_wrapper .dropdown-menu").removeClass('show');
+        // $("#location_search_wrapper .dropdown-menu").removeClass('show');
+        $("#edit-address").modal('hide');
         $.ajax({
             type: "POST",
             dataType: 'json',

@@ -893,8 +893,8 @@ label.file-input.uploadImages {
 
 .round_img_box{
     display: block;
-    height: 90px;
-    width: 90px;
+    height: 30px;
+    width: 30px;
     border-radius: 50%;
     border: 1px solid #dddd;
 }
@@ -907,8 +907,8 @@ label.file-input.uploadImages {
 }
 
 #banner-datatable img.rounded-circle {
-    width: 90px;
-    height: 90px;
+    width: 30px;
+    height: 30px;
 }
 
 #promo-datatable .promo_img {

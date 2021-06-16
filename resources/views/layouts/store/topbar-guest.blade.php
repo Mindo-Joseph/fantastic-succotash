@@ -10,6 +10,7 @@
                 </div>
             </div>
             <div class="col-lg-4 header-contact text-center">
+                <?php /* ?>
                 @if( (session('deliveryAddress')) && (Route::currentRouteName() != 'userHome') )
                 <div class="row no-gutters" id="location_search_wrapper">
                     <div class="col-lg-12 col-md-12 col">
@@ -47,6 +48,7 @@
                     </div>
                 </div>
                 @endif
+                <?php */ ?>
             </div>
             <div class="col-lg-4 text-right">
                 <ul class="header-dropdown">
