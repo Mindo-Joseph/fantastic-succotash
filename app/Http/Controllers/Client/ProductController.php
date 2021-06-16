@@ -697,5 +697,4 @@ class ProductController extends BaseController
             'message' => 'Product image deleted successfully!'
         ]);
     }
-
 }

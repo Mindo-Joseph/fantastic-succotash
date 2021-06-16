@@ -18,6 +18,7 @@ class AppStylingController extends BaseController
         $font_options =[];
         $tab_style_options =[];
         $homepage_style_options =[];
+        $color_options = [];
         $fonts = AppStyling::where('name', 'Fonts')->first();
         if($fonts){
             $font_options = AppStylingOption::where('app_styling_id', $fonts->id)->get();

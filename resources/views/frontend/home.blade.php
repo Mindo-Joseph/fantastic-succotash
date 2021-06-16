@@ -102,6 +102,24 @@
         @endforeach
     </div>
 </section>
+<script type="text/template" id="vendors_template">
+    <% _.each(vendor_options, function(vendor, k){%>
+        <div class="product-box">
+            <div class="img-wrapper">
+                <div class="front">
+                    <a href="{{route('vendorDetail')}}/<%= vendor.id %>"><img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo['proxy_url'] %>300/300<%= vendor.logo['image_path'] %>"></a>
+                </div>
+                <div class="back">
+                    <a href="{{route('vendorDetail')}}/<%= vendor.id %>"><img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo['proxy_url'] %>300/300<%= vendor.logo['image_path'] %>"></a>
+                </div>
+            </div>
+            <div class="product-detail">
+                <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
+                <a href="#"><h6><%= vendor.name %></h6></a>
+            </div>
+        </div>
+    <% }); %>
+</script>
 <section class="section-b-space p-t-0 pt-5 ratio_asos pb-0">
     <div class="container">
         <div class="row">
@@ -140,10 +158,102 @@
         </div>
     </div>
 </section>
+<script type="text/template" id="new_products_template">
+    <% _.each(new_product_options, function(product, k){ %>
+        <div>
+            <a class="card text-center" href="{{route('productDetail')}}/<%= product.sku %>">
+                <div class="product-image">
+                    <img src="<%= product.imagePath %>" alt="">
+                </div>    
+                <div class="media-body align-self-center px-3">
+                    <div class="inner_spacing">
+                        <h3><%= product.title %></h3>
+                        <p><%= product.description %></p>
+                        <h4>{{ Session::get('currencySymbol') }} <%= (product.price * product.multiply) %></h4>
+                        <div class="rating">
+                            @for($i = 1; $i < 6; $i++) 
+                                <i class="fa fa-star"></i>
+                            @endfor
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    <% }); %>
+</script>
+<script type="text/template" id="featured_products_template">
+    <% _.each(featured_product_options, function(product, k){ %>
+        <div>
+            <a class="card text-center" href="{{route('productDetail')}}/<%= product.sku %>">
+                <div class="product-image">
+                    <img src="<%= product.imagePath %>" alt="">
+                </div>    
+                <div class="media-body align-self-center px-3">
+                    <div class="inner_spacing">
+                        <h3><%= product.title %></h3>
+                        <p><%= product.description %></p>
+                        <h4>{{ Session::get('currencySymbol') }} <%= (product.price * product.multiply) %></h4>
+                        <div class="rating">
+                            @for($i = 1; $i < 6; $i++) 
+                                <i class="fa fa-star"></i>
+                            @endfor
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    <% }); %>
+</script>
+<script type="text/template" id="bestseller_products_template">
+    <% _.each(bestseller_product_options, function(product, k){ %>
+        <div>
+            <a class="card text-center" href="{{route('productDetail')}}/<%= product.sku %>")}}">
+                <div class="product-image">
+                    <img src="<%= product.imagePath %>" alt="">
+                </div>    
+                <div class="media-body align-self-center px-3">
+                    <div class="inner_spacing">
+                        <h3><%= product.title %></h3>
+                        <p><%= product.description %></p>
+                        <h4>{{ Session::get('currencySymbol') }} <%= (product.price * product.multiply) %></h4>
+                        <div class="rating">
+                            @for($i = 1; $i < 6; $i++) 
+                                <i class="fa fa-star"></i>
+                            @endfor
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    <% }); %>
+</script>
+<script type="text/template" id="onsale_products_template">
+    <% _.each(onsale_product_options, function(product, k){ %>
+        <div>
+            <a class="card text-center" href="{{route('productDetail')}}/<%= product.sku %>")}}">
+                <div class="product-image">
+                    <img src="<%= product.imagePath %>" alt="">
+                </div>    
+                <div class="media-body align-self-center px-3">
+                    <div class="inner_spacing">
+                        <h3><%= product.title %></h3>
+                        <p><%= product.description %></p>
+                        <h4>{{ Session::get('currencySymbol') }} <%= (product.price * product.multiply) %></h4>
+                        <div class="rating">
+                            @for($i = 1; $i < 6; $i++) 
+                                <i class="fa fa-star"></i>
+                            @endfor
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    <% }); %>
+</script>
 <section class="section-b-space">
     <div class="container">
         @if(count($newProducts) > 0)
-        <div class="row">
+        <div class="row" id="new_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">New Products</h2>
@@ -189,7 +299,7 @@
         </div>
         @endif
         @if(count($featuredProducts) > 0)
-        <div class="row">
+        <div class="row" id="featured_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">Feature Product</h2>
@@ -235,7 +345,7 @@
         </div>
         @endif
         @if(count($newProducts) > 0)
-        <div class="row">
+        <div class="row" id="bestseller_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">Best Seller</h2>
@@ -281,7 +391,7 @@
         </div>
         @endif
         @if(count($onSaleProducts) > 0)
-        <div class="row">
+        <div class="row" id="onsale_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">On Sale</h2>

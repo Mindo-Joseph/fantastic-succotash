@@ -96,7 +96,7 @@ class DashBoardController extends BaseController{
         }
         $client = Client::where('code', Auth::user()->code)->update($data);
         $userdata = array();
-        foreach ($request->only('name','phone_number') as $key => $value) {
+        foreach ($request->only('name','phone_number','timezone') as $key => $value) {
             $userdata[$key] = $value;
         }
         $user = User::where('id', Auth::id())->update($userdata);
