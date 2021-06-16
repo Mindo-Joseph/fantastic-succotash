@@ -194,23 +194,28 @@ $timezone = Auth::user()->timezone;
 @section('script')
 <script>
     $("#order_statuses li").click(function() {
-        console.log("def");
-        console.log($(this).attr("bid"));
-        var bid = $(this).attr("bid");
-        $.ajax({
-            url: "{{ route('order.changeStatus') }}",
-            type: "POST",
-            data: {
-                "_token": "{{ csrf_token() }}",
-                status_option_id: this.id,
-                vendor_id: "{{$vendor_id}}",
-                order_id: "{{$order->id}}"
-            },
-            success: function(response) {
-                $("#order_statuses #"+this.id).addClass("completed");
-                $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-            },
-        });
+        alert(this.id);
+        // if (confirm("Are you sure?")) {
+        //     var bid = $(this).attr("bid");
+        //     $.ajax({
+        //         url: "{{ route('order.changeStatus') }}",
+        //         type: "POST",
+        //         data: {
+        //             "_token": "{{ csrf_token() }}",
+        //             status_option_id: this.id,
+        //             vendor_id: "{{$vendor_id}}",
+        //             order_id: "{{$order->id}}"
+        //         },
+        //         success: function(response) {
+        //             $("#order_statuses #" + this.id).addClass("completed");
+        //             $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+        //         },
+        //         error: function(response) {
+        //         console.log(response.message);
+        //         }
+        //     });
+        // } else { 
+        // }
     });
 </script>
 @endsection
