@@ -56,7 +56,7 @@ $timezone = Auth::user()->timezone;
                             @endphp
                                 <div class="row  {{$k ==0 ? 'mt-3' : ''}}">
                                     <div class="col-12">
-                                        <a href="{{route('order.show.detail', [$order->id, $k])}}" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters">
+                                        <a href="{{route('order.show.detail', [$order->id, $vendor->vendor_id])}}" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters">
                                             <span class="left_arrow pulse"></span>
                                             <div class="col-5 col-sm-3">
                                                 <h4 class="m-0">{{ $vendor->name }}</h4>

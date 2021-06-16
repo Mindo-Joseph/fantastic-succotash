@@ -23,7 +23,6 @@ class OrderController extends BaseController{
                 $query->where('user_id', Auth::user()->id);
             });
         }
-        
         $orders = $orders->paginate(10);
         return view('backend.order.index', compact('orders'));
     }
@@ -43,7 +42,6 @@ class OrderController extends BaseController{
                 'vendors.products' => function($query) use ($vendor_id){
                     $query->where('vendor_id', $vendor_id);
                 }))->findOrFail($order_id);
-
         $order_status_option = OrderStatusOption::all();
 
         $dispatcher_status_option = DispatcherStatusOption::all();
