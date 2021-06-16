@@ -1608,8 +1608,12 @@ label{
 .sp-colorize-container {
     background: rgb(74, 129, 212);
 }
+.home-slider .blur-up.lazyloaded{
+    background-repeat: no-repeat !important;
+    background-color: rgb(150 139 139 / 12%) !important;
 
-.home-slider .blur-up.lazyloaded,.product-box .blur-up.lazyloaded{
+}
+.product-box .blur-up.lazyloaded{
     background-size: contain !important;
     background-repeat: no-repeat !important;
     background-color: rgb(150 139 139 / 12%) !important;
@@ -1761,11 +1765,17 @@ div#test {
     font-weight: 700;
     color: rgb(0 0 0 / 68%);
     font-size: 18px;
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .inner_spacing h3 + p {
     font-size: 14px;
     margin: 10px 0 0;
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .inner_spacing h4 {
@@ -1811,7 +1821,11 @@ div#test {
     color: #ff4c3b !important;
 }
 
-
+.product-box .img-wrapper, .product-wrap .img-wrapper {
+    border-radius: 50%;
+    box-shadow: 0 1px 29px #ddd;
+    margin-top: 15px;
+}
 
 
 
@@ -1829,6 +1843,9 @@ div#test {
     }
     .pixelstrap a .sub-arrow{
         right: 5px;
+    }
+    .common_card .card {
+        width: calc(100% - 20px);
     }
 }
 

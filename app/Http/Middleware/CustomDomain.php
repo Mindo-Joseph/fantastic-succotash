@@ -23,6 +23,7 @@ class CustomDomain
      */
     public function handle($request, Closure $next)
     {
+      $path = $request->path();
       $domain = $request->getHost();
       $domain = str_replace(array('http://', '.test.com/login'), '', $domain);
       $subDomain = explode('.', $domain);
@@ -43,8 +44,20 @@ class CustomDomain
 
         $existRedis = Redis::get($domain);
       }
-      $callback = '';
 
+      if(strpos($path, 'vendor/') !== false){
+        $vendorIdFromRoute = $request->route('id');
+        if(Session::has('vendors')){
+          $vendors = Session::get('vendors');
+          if(!in_array($vendorIdFromRoute, $vendors)){
+            return redirect()->route('error_404');
+          }
+        }else{
+          return redirect()->route('error_404');
+        }
+      }
+
+      $callback = '';
       $redisData = json_decode($existRedis);
       //echo '<pre>';print_r($redisData);
 

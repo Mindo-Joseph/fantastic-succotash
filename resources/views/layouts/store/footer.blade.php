@@ -50,6 +50,12 @@
             $('#exampleModal').modal('show');
         }, 2500);
     });*/
+    @if(Session::has('deliveryAddress'))
+        let delivery_address = 1;
+    @else
+        let delivery_address = 0;
+    @endif;
+
     $('.customerLang').click(function(){
         var changLang = $(this).attr('langId');
         settingData('language', changLang);

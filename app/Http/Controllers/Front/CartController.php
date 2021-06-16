@@ -316,7 +316,7 @@ class CartController extends FrontController
                     }
                     if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1)
                     {   
-                         $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
+                        $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                     }
                     if(empty($deliver_charge))
                     $deliver_charge = 0;

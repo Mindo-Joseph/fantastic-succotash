@@ -24,21 +24,27 @@ class UserhomeController extends FrontController
     {
         $home = array();
         $client_config = Session::get('client_config');
-        $value = Session::get('preferences');
+        $preferences = Session::get('preferences');
         //$clientLanguage = ClientLanguage::where('is_primary', 1)->first();
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $deliveryAddress = Session::get('deliveryAddress');
+        $latitude = Session::get('latitude');
+        $longitude = Session::get('longitude');
         $vends = array();
 
         $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
 
-        if(session('preferences.is_hyperlocal') == 1){
+        if($preferences->is_hyperlocal == 1){
             /*$vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
                     $query->select('vendor_id')
                     ->from(with(new ServiceArea)->getTable())
                     ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
             });*/
+            $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
+                $query->select('vendor_id')
+                ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+            });
         }
         $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
 
@@ -71,7 +77,7 @@ class UserhomeController extends FrontController
         $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
-        return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'brands' => $brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress]);
+        return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'brands' => $brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
     }
 
     public function homepage(Request $request)
@@ -79,6 +85,8 @@ class UserhomeController extends FrontController
         try{
             $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
             Session::put('deliveryAddress', $request->selectedAddress);
+            Session::put('latitude', $request->latitude);
+            Session::put('longitude', $request->longitude);
             $lats = $request->latitude;
             $longs = $request->longitude;
             $user_geo[] = $lats;
@@ -94,7 +102,7 @@ class UserhomeController extends FrontController
             $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
             
             $isVendorArea = 0;
-            $langId = Auth::user()->language;
+            $langId = (isset(Auth::user()->language)) ? Auth::user()->language : Session::get('customerLanguage');
             $homeData = array();
             $categories = $this->categoryNav($langId);
             $homeData['reqData'] = $request->all();
@@ -115,13 +123,13 @@ class UserhomeController extends FrontController
                             <a href="'.route('vendorDetail', $data->id).'"><img class="img-fluid blur-up lazyload bg-img" alt="" src="'.$data->logo['proxy_url'] . '300/300' . $data->logo['image_path'].'"></a>
                         </div>
                     </div>
-            
                     <div class="product-detail">
                         <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
                         <a href="#"><h6>'.$data->name.'</h6></a>
                     </div>
                 </div>';
             }
+            Session::put('vendors', $vends);
             $homeData['vendorsHtml'] = $vendorsHtml;
 
             return $this->successResponse($homeData);

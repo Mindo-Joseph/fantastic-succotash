@@ -46,8 +46,8 @@
                             <div class="address-input-field d-flex align-items-center justify-content-between">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
                                 <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{$deliveryAddress}}">
-                                <input type="hidden" name="address_latitude" id="address-latitude" value="0" />
-                                <input type="hidden" name="address_longitude" id="address-longitude" value="0" />
+                                <input type="hidden" name="address_latitude" id="address-latitude" value="{{$latitude}}" />
+                                <input type="hidden" name="address_longitude" id="address-longitude" value="{{$longitude}}" />
                             </div>
                             <!--<div class="edit-area">
                                 <input class="form-control" type="text" placeholder="Complete Address *" name="complete_address" id="complete_address">
@@ -118,13 +118,14 @@
                     <div class="product-box">
                         <div class="img-wrapper">
                             <div class="front">
-                                <a href="{{route('vendorDetail', $vendor->id)}}"><img
-                                        class="img-fluid blur-up lazyload bg-img" alt=""
-                                        src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}"></a>
+                                <a href="{{route('vendorDetail', $vendor->id)}}">
+                                    <img class="img-fluid blur-up lazyload bg-img" src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}">
+                                </a>
                             </div>
                             <div class="back">
-                                <a href="{{route('vendorDetail', $vendor->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt=""
-                                        src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}"></a>
+                                <a href="{{route('vendorDetail', $vendor->id)}}">
+                                    <img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}">
+                                </a>
                             </div>
                         </div>
                         <div class="product-detail">
@@ -154,8 +155,10 @@
                     @foreach($newProduct as $product)
                     @php
                         $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
-                        $body_html = !empty($product['body_html']) ? $product['translation'][0]['body_html'] : '';
+                        $body_html = !empty($product['translation']) ? $product['translation'][0]['body_html'] : '';
+                        $description = strip_tags($body_html);
                         $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
+                        $imagePath = '';
                         foreach ($product['media'] as $k => $v) {
                             $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                         }
@@ -168,7 +171,7 @@
                             <div class="media-body align-self-center px-3">
                                 <div class="inner_spacing">
                                     <h3>{{ Str::limit($title, 18, '..')}}</h3>
-                                    <p>{!! $body_html !!}</p>
+                                    <p>{!! Str::limit($description, 25, '..') !!}</p>
                                     <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
                                     <div class="rating">
                                         @for($i = 1; $i < 6; $i++) 
@@ -198,8 +201,10 @@
                     @foreach($featuredProduct as $product)
                     @php
                         $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
-                        $body_html = !empty($product['body_html']) ? $product['translation'][0]['body_html'] : '';
+                        $body_html = !empty($product['translation']) ? $product['translation'][0]['body_html'] : '';
+                        $description = strip_tags($body_html);
                         $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
+                        $imagePath = '';
                         foreach ($product['media'] as $k => $v) {
                             $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                         }
@@ -212,7 +217,7 @@
                             <div class="media-body align-self-center px-3">
                                 <div class="inner_spacing">
                                     <h3>{{ Str::limit($title, 18, '..')}}</h3>
-                                    <p>{!! $body_html !!}</p>
+                                    <p>{!! Str::limit($description, 25, '..') !!}</p>
                                     <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
                                     <div class="rating">
                                         @for($i = 1; $i < 6; $i++) 
@@ -239,12 +244,14 @@
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card">
                     @foreach($newProducts as $newProduct)
-                    @foreach($newProduct as $product)
+                    @foreach($newProduct as $new_product)
                     @php
-                        $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
-                        $body_html = !empty($product['body_html']) ? $product['translation'][0]['body_html'] : '';
-                        $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
-                        foreach ($product['media'] as $k => $v) {
+                        $title = !empty($new_product['translation']) ? $new_product['translation'][0]['title'] : $product['sku'];
+                        $body_html = !empty($new_product['translation']) ? $new_product['translation'][0]['body_html'] : '';
+                        $description = strip_tags($body_html);
+                        $imagePath = '';
+                        $multiply = (empty($new_product['variant'][0]['multiplier'])) ? 1 : $new_product['variant'][0]['multiplier'];
+                        foreach ($new_product['media'] as $k => $v) {
                             $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                         }
                     @endphp
@@ -256,8 +263,8 @@
                             <div class="media-body align-self-center px-3">
                                 <div class="inner_spacing">
                                     <h3>{{ Str::limit($title, 18, '..')}}</h3>
-                                    <p>{!! $body_html !!}</p>
-                                    <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
+                                    <p>{!! Str::limit($description, 25, '..') !!}</p>
+                                    <h4>{{ Session::get('currencySymbol').' '.($new_product['variant'][0]['price'] * $multiply)}}</h4>
                                     <div class="rating">
                                         @for($i = 1; $i < 6; $i++) 
                                             <i class="fa fa-star"></i>
@@ -285,9 +292,11 @@
                     @foreach($onSaleProducts as $onSaleProduct)
                     @foreach($onSaleProduct as $product)
                     @php
+                        $body_html = !empty($product['translation']) ? $product['translation'][0]['body_html'] : '';
                         $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
-                        $body_html = !empty($product['body_html']) ? $product['translation'][0]['body_html'] : '';
+                        $description = strip_tags($body_html);
                         $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
+                        $imagePath = '';
                         foreach ($product['media'] as $k => $v) {
                             $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                         }
@@ -300,7 +309,7 @@
                             <div class="media-body align-self-center px-3">
                                 <div class="inner_spacing">
                                     <h3>{{ Str::limit($title, 18, '..')}}</h3>
-                                    <p>{!! $body_html !!}</p>
+                                    <p>{!! Str::limit($description, 25, '..') !!}</p>
                                     <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
                                     <div class="rating">
                                         @for($i = 1; $i < 6; $i++) 
