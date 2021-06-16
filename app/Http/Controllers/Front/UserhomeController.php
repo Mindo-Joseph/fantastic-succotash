@@ -46,7 +46,7 @@ class UserhomeController extends FrontController
                 // ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
             });
         }
-        $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
+        $vendorData = $vendorData->get();
 
         foreach ($vendorData as $key => $value) {
             $vends[] = $value->id;
