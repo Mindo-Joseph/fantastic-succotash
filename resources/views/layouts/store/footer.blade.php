@@ -55,6 +55,8 @@
     @else
         let delivery_address = 0;
     @endif;
+    
+    let empty_cart_url = "{{route('emptyCartData')}}";
 
     $('.customerLang').click(function(){
         var changLang = $(this).attr('langId');
@@ -145,5 +147,9 @@
         document.documentElement.style.setProperty('--theme-deafult', color_picker1);
         $('body').addClass("{{$darkMode}}");
     })
+
+    function emptyCart(){
+        
+    }
 
 </script>
