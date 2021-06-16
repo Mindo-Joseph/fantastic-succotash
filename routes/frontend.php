@@ -42,7 +42,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('user/resetPassword','Front\CustomerAuthController@resetPassword')->name('customer.resetPass');
 	Route::post('primaryData', 'Front\UserhomeController@changePrimaryData')->name('changePrimaryData');
 	Route::post('paginateValue', 'Front\UserhomeController@changePaginate')->name('changePaginate');
-	Route::get('/product/{id}','Front\ProductController@index')->name('productDetail');
+	Route::get('/product/{id?}','Front\ProductController@index')->name('productDetail');
 	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
 	Route::post('/product/cart','Front\CartController@postAddToCart')->name('addToCart');
 	Route::get('cartProducts','Front\CartController@getCartData')->name('getCartProducts');

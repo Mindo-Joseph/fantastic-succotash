@@ -26,28 +26,6 @@ class TaxCategoryController extends BaseController
         
         return view('backend/tax/index')->with(['taxCates' => $taxCates, 'taxRates' => $taxRates]);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\TaxCategory  $taxCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function show(TaxCategory $taxCategory)
-    {
-        //
-    }
-
     /**
      * Show the form for editing the specified resource.
      *

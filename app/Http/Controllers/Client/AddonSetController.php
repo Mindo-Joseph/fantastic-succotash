@@ -11,26 +11,6 @@ use Illuminate\Support\Facades\Storage;
 class AddonSetController extends BaseController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -92,17 +72,6 @@ class AddonSetController extends BaseController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\AddonOption  $addonOption
-     * @return \Illuminate\Http\Response
-     */
-    public function show(AddonOption $addonOption)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\AddonOption  $addonOption
@@ -136,15 +105,12 @@ class AddonSetController extends BaseController
      */
     public function update(Request $request, $domain = '', $id)
     {
-        //dd($request->all());
         $count = count($request->price);
         $min = ($request->min_select < 1) ? 0 : $request->min_select;
         $max = ($request->max_select < 1) ? 1 : $request->max_select;
-
         $min = ($min > $count) ? $count : $min;
         $max = ($max > $count) ? $count : $max;
         $max = ($max < $min) ? $min : $max;
-
         $addon = AddonSet::where('id', $id)->firstOrFail();
         $addon->title = $request->title[0];
         $addon->min_select = $min;
@@ -208,7 +174,6 @@ class AddonSetController extends BaseController
                 }
             }
         }
-        //$delOpt = AddonOption::whereNotIN('id', $exist_options)->where('addon_id', $addon->id)->delete();
         return redirect()->back()->with('success', 'Addon set updated successfully!');
     }
 
@@ -218,8 +183,7 @@ class AddonSetController extends BaseController
      * @param  \App\AddonOption  $addonOption
      * @return \Illuminate\Http\Response
      */
-    public function destroy($domain = '', $id)
-    {
+    public function destroy($domain = '', $id){
         $aos = AddonSet::where('id', $id)->first();
         $aos->status = 2;
         $aos->save();

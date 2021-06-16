@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\View;
-use App\Models\{Client, ClientPreference, ClientLanguage, ClientCurrency};
+use App\Models\{Client, ClientPreference, ClientLanguage, ClientCurrency, Product};
 use Config;
 use Cache;
 use Session;
@@ -46,14 +46,29 @@ class CustomDomain
       }
 
       if(strpos($path, 'vendor/') !== false){
-        $vendorIdFromRoute = $request->route('id');
+        $idFromRoute = $request->route('id');
         if(Session::has('vendors')){
           $vendors = Session::get('vendors');
-          if(!in_array($vendorIdFromRoute, $vendors)){
+          if(!in_array($idFromRoute, $vendors)){
             return redirect()->route('error_404');
           }
         }else{
           return redirect()->route('error_404');
+        }
+      }
+      if(strpos($path, 'product/') !== false){
+        $skuFromRoute = $request->route('id');
+        $product = Product::where('sku', $skuFromRoute)->firstOrFail();
+        if($product){
+          $productVendorId = $product->vendor_id;
+          if(Session::has('vendors')){
+            $vendors = Session::get('vendors');
+            if(!in_array($productVendorId, $vendors)){
+              return redirect()->route('error_404');
+            }
+          }else{
+            return redirect()->route('error_404');
+          }
         }
       }
 

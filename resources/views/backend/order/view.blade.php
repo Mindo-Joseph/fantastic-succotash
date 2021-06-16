@@ -1,5 +1,8 @@
 @extends('layouts.vertical', ['title' => 'Order Detail'])
-@section('content') 
+@section('content')
+@php
+$timezone = Auth::user()->timezone;
+@endphp
 <div class="content">
     <div class="container-fluid">
         <div class="row">
@@ -15,7 +18,7 @@
                     <h4 class="page-title">Order Detail</h4>
                 </div>
             </div>
-        </div>     
+        </div>
         <div class="row">
             <div class="col-lg-4">
                 <div class="card">
@@ -37,87 +40,40 @@
                         </div>
                         <div class="row track-order-list">
                             <div class="col-lg-6">
-                                <ul class="list-unstyled">
-                                @foreach($order_status_option as $o_status)
-                                <?php $check=0; ?>
+                                <ul class="list-unstyled" id="order_statuses">
+                                    @foreach($order_status_option as $o_status)
+                                    <?php $check = 0; ?>
                                     @foreach($order_status as $os)
                                     @if($os->order_status_option_id == $o_status->id)
-                                    <?php $check=1; $time=$os->created_at; ?>
+                                    <?php $check = 1;
+                                    $time = $os->created_at; ?>
                                     @endif
                                     @endforeach
 
                                     @if($check == 1)
                                     <li class="completed">
                                         <h5 class="mt-0 mb-1">{{$o_status->title}}</h5>
-                                        <p class="text-muted"><small class="text-muted">{{$time}}</small></p>
+                                        <p class="text-muted"><small class="text-muted">{{convertDateTimeInTimeZone($time, $timezone, 'l, F d, Y, H:i A')}}</small></p>
                                     </li>
                                     @else
-                                    <li>
+                                    <li id="{{$o_status->id}}">
                                         <h5 class="mt-0 mb-1">{{$o_status->title}}</h5>
                                         <p class="text-muted"><small class="text-muted">...</small></p>
                                     </li>
                                     @endif
 
-                                @endforeach
-                                    <!-- <li class="completed">
-                                        <h5 class="mt-0 mb-1">Placed</h5>
-                                        <p class="text-muted">April 21 2019 <small class="text-muted">07:22 AM</small> </p>
-                                    </li>
-                                    <li class="completed">
-                                        <h5 class="mt-0 mb-1">Accepted</h5>
-                                        <p class="text-muted"><small class="text-muted">...</small></p>
-                                    </li>
-                                    <li class="completed">
-                                        <span class="active-dot dot"></span>
-                                        <h5 class="mt-0 mb-1">Processing</h5>
-                                        <p class="text-muted"><small class="text-muted">...</small></p>
-                                    </li>
-                                    <li>
-                                        <h5 class="mt-0 mb-1"> Out For Delivery</h5>
-                                        <p class="text-muted">...</p>
-                                    </li>
-                                     <li>
-                                        <h5 class="mt-0 mb-1">Delivered</h5>
-                                        <p class="text-muted">....</p>
-                                    </li> -->
+                                    @endforeach
                                 </ul>
-                                 <!-- <div class="text-center mt-2">
-                                    <a href="#" class="btn btn-primary">Update Status</a>
-                                </div> -->
                             </div>
                             <div class="col-lg-6">
                                 <ul class="list-unstyled">
-                                @foreach($dispatcher_status_option as $d_status)
+                                    @foreach($dispatcher_status_option as $d_status)
                                     <li>
-                                            <h5 class="mt-0 mb-1">{{$d_status->title}}</h5>
-                                            <p class="text-muted"><small class="text-muted">...</small></p>
+                                        <h5 class="mt-0 mb-1">{{$d_status->title}}</h5>
+                                        <p class="text-muted"><small class="text-muted">...</small></p>
                                     </li>
-                                @endforeach
-                                    <!-- <li class="completed">
-                                        <h5 class="mt-0 mb-1">Created</h5>
-                                        <p class="text-muted">April 21 2019 <small class="text-muted">07:22 AM</small> </p>
-                                    </li>
-                                    <li>
-                                        <h5 class="mt-0 mb-1">Assigned</h5>
-                                        <p class="text-muted">April 22 2019 <small class="text-muted">12:16 AM</small></p>
-                                    </li>
-                                    <li>
-                                        <span class="active-dot dot"></span>
-                                        <h5 class="mt-0 mb-1">Started</h5>
-                                        <p class="text-muted">April 22 2019 <small class="text-muted">05:16 PM</small></p>
-                                    </li>
-                                    <li>
-                                        <h5 class="mt-0 mb-1">Arrived</h5>
-                                        <p class="text-muted">Estimated delivery within 3 days</p>
-                                    </li>
-                                     <li>
-                                        <h5 class="mt-0 mb-1">Completed</h5>
-                                        <p class="text-muted">....</p>
-                                    </li> -->
+                                    @endforeach
                                 </ul>
-                                 <!-- <div class="text-center mt-2">
-                                    <a href="#" class="btn btn-primary">Update Status</a>
-                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -141,13 +97,13 @@
                                 @foreach($order->vendors as $vendor)
                                 <tbody>
                                     @php
-                                        $sub_total = 0;
-                                        $taxable_amount = 0;
+                                    $sub_total = 0;
+                                    $taxable_amount = 0;
                                     @endphp
                                     @foreach($vendor->products as $product)
                                     @php
-                                        $taxable_amount += $product->taxable_amount;
-                                        $sub_total += $product->quantity * $product->price;
+                                    $taxable_amount += $product->taxable_amount;
+                                    $sub_total += $product->quantity * $product->price;
                                     @endphp
                                     <tr>
                                         <th scope="row">{{$product->product_name}}</th>
@@ -161,7 +117,9 @@
                                     @endforeach
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Sub Total :</th>
-                                        <td><div class="fw-bold">$@money($sub_total)</div></td>
+                                        <td>
+                                            <div class="fw-bold">$@money($sub_total)</div>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Total Discount :</th>
@@ -173,7 +131,9 @@
                                     </tr>
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Total :</th>
-                                        <td><div class="fw-bold">$@money($vendor->payable_amount)</div></td>
+                                        <td>
+                                            <div class="fw-bold">$@money($vendor->payable_amount)</div>
+                                        </td>
                                     </tr>
                                 </tbody>
                                 @endforeach
@@ -193,7 +153,7 @@
                         <p class="mb-0"><span class="fw-semibold me-2">Mobile:</span> {{$order->user->phone_number}}</p>
                     </div>
                 </div>
-            </div> 
+            </div>
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
@@ -221,7 +181,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body" id="AddCardBox">
-                
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-info waves-effect waves-light submitAddForm">Submit</button>
@@ -229,4 +189,28 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<script>
+    $("#order_statuses li").click(function() {
+        console.log("def");
+        console.log($(this).attr("bid"));
+        var bid = $(this).attr("bid");
+        $.ajax({
+            url: "{{ route('order.changeStatus') }}",
+            type: "POST",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                status_option_id: this.id,
+                vendor_id: "{{$vendor_id}}",
+                order_id: "{{$order->id}}"
+            },
+            success: function(response) {
+                $("#order_statuses #"+this.id).addClass("completed");
+                $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+            },
+        });
+    });
+</script>
 @endsection

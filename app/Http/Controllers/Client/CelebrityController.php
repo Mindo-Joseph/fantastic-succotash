@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Client;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Client\BaseController;
-use App\Models\{LoyaltyCard, Celebrity, Product, Brand, Country};
 use Dotenv\Loader\Loader;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Client\BaseController;
+use App\Models\{LoyaltyCard, Celebrity, Product, Brand, Country};
 
 class CelebrityController extends BaseController
 {
@@ -16,23 +16,11 @@ class CelebrityController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $brands = Brand::all();
         $countries = Country::all();
         $celebrities = Celebrity::with('country', 'brands')->where('status', '!=', '3')->get();
-
         return view('backend/celebrity/index')->with(['celebrities' => $celebrities, 'brands' => $brands, 'countries' => $countries]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -41,34 +29,26 @@ class CelebrityController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $rules = array(
             'name' => 'required|string|max:150',
-            //'address' => 'required',
         );
-
-        if ($request->hasFile('image')) {    /* upload logo file */
+        /* upload logo file */
+        if ($request->hasFile('image')) {    
             $rules['image'] =  'image|mimes:jpeg,png,jpg,gif';
         }
-
         $validation  = Validator::make($request->all(), $rules)->validate();
-
         $celebrity = new Celebrity();
+        $celebrity->status = '1';
         $celebrity->name = $request->name;
         $celebrity->country_id = $request->countries;
         $celebrity->description = $request->description;
-        $celebrity->status = '1';
-
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $images = Storage::disk('s3')->put('/celebrity', $file, 'public');
             $celebrity->avatar = $images;
         }
-
         $celebrity->save();
-
-        //$celebrity->brands()->sync($request->brands);
         if ($celebrity->id > 0) {
             return response()->json([
                 'status' => 'success',
@@ -76,17 +56,6 @@ class CelebrityController extends BaseController
                 'data' => $celebrity
             ]);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -123,16 +92,12 @@ class CelebrityController extends BaseController
         if ($request->hasFile('image')) {
             $rules['image'] =  'image|mimes:jpeg,png,jpg,gif';
         }
-
         $validation  = Validator::make($request->all(), $rules)->validate();
-
         $celebrity = Celebrity::where('id', $id)->firstOrFail();;
         $celebrity->name = $request->input('name');
         $celebrity->country_id = $request->input('countries');
         $celebrity->description = $request->description;
-        //$celebrity->address = $request->input('address');
         $celebrity->status = '1';
-
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $images = Storage::disk('s3')->put('/celebrity', $file, 'public');
@@ -153,8 +118,7 @@ class CelebrityController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($domain = '', $id)
-    {
+    public function destroy($domain = '', $id){
         Celebrity::where('id', $id)->delete();
         return redirect()->back()->with('success', 'Celebrity deleted successfully!');
     }
@@ -165,8 +129,7 @@ class CelebrityController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function changeStatus(Request $request, $domain = '')
-    {
+    public function changeStatus(Request $request, $domain = ''){
         $loyaltyCard = Celebrity::find($request->id);
         $loyaltyCard->status = $request->status;
         $loyaltyCard->save();
@@ -178,8 +141,7 @@ class CelebrityController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getBrandList($domain = '')
-    {
+    public function getBrandList($domain = ''){
         $brands = Brand::all();
         return response()->json(['brands' => $brands]);
     }

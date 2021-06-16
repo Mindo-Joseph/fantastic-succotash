@@ -57,7 +57,7 @@ class ProductController extends BaseController
     {
         $rules = array(
             'sku' => 'required|unique:products',
-            'category.*' => 'required',
+            'category' => 'required',
         );
         $validation = Validator::make($request->all(), $rules)->validate();
 
@@ -104,17 +104,6 @@ class ProductController extends BaseController
         }
         $product->save();
         if ($product->id > 0) {
-
-            // if ($request->has('category') && count($request->category) > 0) {
-            //     foreach ($request->category as $key => $value) {
-            //         $cat[] = [
-            //             'product_id' => $product->id,
-            //             'Category_id' => $value
-            //         ];
-            //     }
-            //     ProductCategory::insert($cat);
-            // }
-
             $datatrans[] = [
                 'title' => '',
                 'body_html' => '',
@@ -402,7 +391,6 @@ class ProductController extends BaseController
         }
 
         $combination = $this->array_combinations($multiArray);
-        //echo '<pre>'; print_r($combination); echo '</pre>';
         $new_combination = array();
         $edit = 0;
 
@@ -551,8 +539,6 @@ class ProductController extends BaseController
     private function generateBarcodeNumber()
     {
         $random_string = substr(md5(microtime()), 0, 14);
-        // $number = mt_rand(1000000000, 9999999999);
-
         while (ProductVariant::where('barcode', $random_string)->exists()) {
             $random_string = substr(md5(microtime()), 0, 14);
         }
@@ -570,9 +556,7 @@ class ProductController extends BaseController
         return response()->json(array('success' => true, 'msg' => 'Product variant deleted successfully.'));
     }
 
-    public function translation(Request $request)
-    {
-
+    public function translation(Request $request){
         $data = ProductTranslation::where('product_id', $request->prod_id)->where('language_id', $request->lang_id)->first();
         $response = array('title' => '', 'body_html' => '', 'meta_title' => '', 'meta_keyword' => '', 'meta_description' => '');
         if ($data) {
@@ -591,40 +575,27 @@ class ProductController extends BaseController
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function images(Request $request)
-    {
+    public function images(Request $request){
         $resp = '';
         $product = Product::findOrFail($request->prodId);
-
         if ($request->has('file')) {
-
             $imageId = '';
             $files = $request->file('file');
             if (is_array($files)) {
                 foreach ($files as $file) {
-
                     $img = new VendorMedia();
                     $img->media_type = 1;
                     $img->vendor_id = $product->vendor_id;
-
-                    //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-                    //$img->path = $file->storeAs('/prods', $file_name, 'public');
                     $img->path = Storage::disk('s3')->put($this->folderName, $file, 'public');
-
                     $img->save();
                     $path1 = $img->path['proxy_url'] . '40/40' . $img->path['image_path'];
-
                     if ($img->id > 0) {
                         $imageId = $img->id;
                         $image = new ProductImage();
                         $image->product_id = $product->id;
                         $image->is_default = 1;
-                        if ($request->has('variantId')) {
-                            //$image->product_variant_id = $request->variantId;
-                        }
                         $image->media_id = $img->id;
                         $image->save();
-
                         if ($request->has('variantId')) {
                             $resp .= '<div class="col-md-3 col-sm-4 col-12 mb-3">
                                         <div class="product-img-box">
@@ -641,13 +612,10 @@ class ProductController extends BaseController
                 }
                 return response()->json(['htmlData' => $resp]);
             } else {
-
                 $img = new VendorMedia();
                 $img->media_type = 1;
                 $img->vendor_id = $product->vendor_id;
-                //$file_name = uniqid() .'.'.  $files->getClientOriginalExtension();
                 $img->path = Storage::disk('s3')->put($this->folderName, $files, 'public');
-                //$img->path = $files->storeAs('/prods', $file_name, 'public');
                 $img->save();
                 $imageId = $img->id;
             }
@@ -663,12 +631,9 @@ class ProductController extends BaseController
      * @param  \App\Cms  $cms
      * @return \Illuminate\Http\Response
      */
-    public function getImages(Request $request)
-    {
+    public function getImages(Request $request){
         $product = Product::where('id', $request->prod_id)->firstOrFail();
-
         $variId = ($request->has('variant_id') && $request->variant_id > 0) ? $request->variant_id : 0;
-
         $images = ProductImage::with('image')->where('product_images.product_id', $product->id)->get();
         $variantImages = array();
         if ($variId > 0) {
@@ -679,16 +644,12 @@ class ProductController extends BaseController
                 }
             }
         }
-
         $returnHTML = view('backend.product.imageUpload')->with(['images' => $images, 'variant_id' => $variId, 'productId' => $product->id, 'variantImages' => $variantImages])->render();
         return response()->json(array('success' => true, 'htmlData' => $returnHTML));
     }
 
-    public function updateVariantImage(Request $request)
-    {
-
+    public function updateVariantImage(Request $request){
         $product = Product::where('id', $request->prod_id)->firstOrFail();
-
         $saveImage = array();
         if ($request->has('image_id')) {
             $deleteVarImg = ProductVariantImage::where('product_variant_id', $request->variant_id)->delete();
@@ -705,12 +666,9 @@ class ProductController extends BaseController
         return response()->json(array('success' => 'false', 'msg' => 'Something went wrong!'));
     }
 
-    public function deleteImage(Request $request, $domain = '', $pid = 0, $imgId = 0)
-    {
-
+    public function deleteImage(Request $request, $domain = '', $pid = 0, $imgId = 0){
         $product = Product::findOrfail($pid);
         $img = VendorMedia::findOrfail($imgId);
-
         $img->delete();
         return redirect()->back()->with('success', 'Product image deleted successfully!');
     }
@@ -721,8 +679,7 @@ class ProductController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function importCsv(Request $request)
-    {
+    public function importCsv(Request $request){
         $vendor_id = $request->vendor_id;
         $fileModel = new CsvProductImport;
         if($request->file('product_excel')) {
@@ -735,13 +692,9 @@ class ProductController extends BaseController
             $fileModel->save();
         }
         $data = Excel::import(new ProductsImport($vendor_id), $request->file('product_excel'));
-
         return response()->json([
             'status' => 'success',
             'message' => 'Product image deleted successfully!'
         ]);
-
-        // return redirect()->back()->with('success', 'Product image deleted successfully!');
     }
-
 }

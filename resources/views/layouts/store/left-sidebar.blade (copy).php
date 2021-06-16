@@ -61,78 +61,64 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     </div>
                 </div>
                 <div class="menu-right pull-right">
-                    <div>
-                        <nav id="main-nav">
-                            <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
-                            <ul id="main-menu" class="sm pixelstrap sm-horizontal">
-                                <li>
-                                    <div class="mobile-back text-right">Back<i class="fa fa-angle-right pl-2" aria-hidden="true"></i></div>
-                                </li>
-                                <li>
-                                    <a href="{{route('userHome')}}">Home</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div>
-                        <div class="icon-nav">
-                            <form name="filterData" id="filterData" action="{{route('changePrimaryData')}}">
-                                @csrf
-                                <input type="hidden" id="cliLang" name="cliLang" value="{{session('customerLanguage')}}">
-                                <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
-                            </form>
-                            <ul>
-                                <li class="onhover-div mobile-search">
-                                    <div><img src="{{asset('front-assets/images/icon/search.png')}}" onclick="openSearch()" class="img-fluid blur-up lazyload" alt=""> <i class="ti-search" onclick="openSearch()"></i></div>
-                                    <div id="search-overlay" class="search-overlay">
-                                        <div> <span class="closebtn" onclick="closeSearch()" title="Close Overlay">×</span>
-                                            <div class="overlay-content">
-                                                <div class="container">
-                                                    <div class="row">
-                                                        <div class="col-xl-12">
-                                                            <form action="/search" method="GET">
-                                                                <div class="form-group">
-                                                                    <input type="text" class="form-control" id="exampleInputPassword1" name="query" placeholder="Search a Product">
-                                                                </div>
-                                                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
+                    <nav id="main-nav">
+                        <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
+                        <ul id="main-menu" class="sm pixelstrap sm-horizontal">
+                            <li>
+                                <div class="mobile-back text-right">Back<i class="fa fa-angle-right pl-2" aria-hidden="true"></i></div>
+                            </li>
+                            <li>
+                                <a href="{{route('userHome')}}">Home</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <ul class="icon-nav">
+                        <li> 
+                            <!-- <span class="closebtn" onclick="closeSearch()" title="Close Overlay">×</span>
+                            <div class="overlay-content">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <form action="/search" method="GET">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="exampleInputPassword1" name="query" placeholder="Search a Product">
                                                 </div>
-                                            </div>
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                                            </form>
                                         </div>
                                     </div>
-                                </li>
-                                <li class="onhover-div mobile-setting">
-                                    <div><img src="{{asset('front-assets/images/icon/setting.png')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-settings"></i></div>
-                                    <div class="show-div setting">
-                                        <h6>language</h6>
-                                        <ul>
-                                            @foreach($languageList as $key => $listl)
-                                            <li><a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a></li>
-                                            @endforeach
-                                        </ul>
-                                        <h6>currency</h6>
-                                        <ul class="list-inline">
-                                            @foreach($currencyList as $key => $listc)
-                                            <li><a href="javascript:void(0)" currId="{{$listc->currency_id}}" class="customerCurr" currSymbol="{{$listc->currency->symbol}}">{{$listc->currency->iso_code}}</a></li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="onhover-div mobile-cart">
-                                    <div>
-                                        <img src="{{asset('front-assets/images/icon/cart.png')}}" class="img-fluid blur-up lazyload" alt=""> 
-                                        <i class="ti-shopping-cart"></i>
-                                    </div>
-                                    <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span>
-                                    <ul class="show-div shopping-cart">
+                                </div>
+                            </div> -->
+                            <i class="fa fa-search"></i>
+                        </li>
+                        <li class="onhover-div mobile-setting">
+                            <div><img src="{{asset('front-assets/images/icon/setting.png')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-settings"></i></div>
+                            <div class="show-div setting">
+                                <h6>language</h6>
+                                <ul>
+                                    @foreach($languageList as $key => $listl)
+                                    <li><a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a></li>
+                                    @endforeach
+                                </ul>
+                                <h6>currency</h6>
+                                <ul class="list-inline">
+                                    @foreach($currencyList as $key => $listc)
+                                    <li><a href="javascript:void(0)" currId="{{$listc->currency_id}}" class="customerCurr" currSymbol="{{$listc->currency->symbol}}">{{$listc->currency->iso_code}}</a></li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="onhover-div mobile-cart">
+                            <div>
+                                <img src="{{asset('front-assets/images/icon/cart.png')}}" class="img-fluid blur-up lazyload" alt=""> 
+                                <i class="ti-shopping-cart"></i>
+                            </div>
+                            <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span>
+                            <ul class="show-div shopping-cart">
 
-                                    </ul>
-                                </li>
                             </ul>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

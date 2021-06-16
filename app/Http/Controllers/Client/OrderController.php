@@ -45,8 +45,28 @@ class OrderController extends BaseController{
 
         $dispatcher_status_option = DispatcherStatusOption::all();
 
-        $order_status = VendorOrderStatus::where('order_id', $order_id)->get();
+        $order_status = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->get();
 
-        return view('backend.order.view')->with(['order' => $order,'order_status' => $order_status,'order_status_option' => $order_status_option, 'dispatcher_status_option' => $dispatcher_status_option ]);
+        return view('backend.order.view')->with(['vendor_id' => $vendor_id, 'order' => $order, 'order_status' => $order_status,'order_status_option' => $order_status_option, 'dispatcher_status_option' => $dispatcher_status_option ]);
+    }
+
+     /**
+     * Change the status of order
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function changeStatus(Request $request, $domain = '')
+    {
+        $vendor_order_status = new VendorOrderStatus();
+        $vendor_order_status->order_id = $request->order_id;
+        $vendor_order_status->order_status_option_id = $request->status_option_id;
+        $vendor_order_status->vendor_id = $request->vendor_id;
+        $vendor_order_status->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Updated Successfully'
+        ]);
     }
 }

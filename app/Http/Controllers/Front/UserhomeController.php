@@ -20,38 +20,29 @@ class UserhomeController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $home = array();
-        $client_config = Session::get('client_config');
-        $preferences = Session::get('preferences');
-        //$clientLanguage = ClientLanguage::where('is_primary', 1)->first();
-        $langId = Session::get('customerLanguage');
-        $curId = Session::get('customerCurrency');
-        $deliveryAddress = Session::get('deliveryAddress');
+        $vendor_ids = array();
         $latitude = Session::get('latitude');
         $longitude = Session::get('longitude');
-        $vends = array();
-
+        $curId = Session::get('customerCurrency');
+        $preferences = Session::get('preferences');
+        $langId = Session::get('customerLanguage');
+        $client_config = Session::get('client_config');
+        $deliveryAddress = Session::get('deliveryAddress');
+        $navCategories = $this->categoryNav($langId);
+        Session::put('navCategories', $navCategories); 
         $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
-
-        // if($preferences->is_hyperlocal == 1){
-        //     $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
-        //             $query->select('vendor_id')
-        //             ->from(with(new ServiceArea)->getTable())
-        //             ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
-        //     });
-        //     $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
-        //         $query->select('vendor_id');
-        //         // ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-        //     });
-        // }
-        $vendorData = $vendorData->get();
-
-        foreach ($vendorData as $key => $value) {
-            $vends[] = $value->id;
+        if($preferences->is_hyperlocal == 1){
+            $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
+                $query->select('vendor_id')
+                ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+            });
         }
-
+        $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
+        foreach ($vendorData as $key => $value) {
+            $vendor_ids[] = $value->id;
+        }
         $banners = Banner::where('status', 1)->where('validity_on', 1)
                     ->where(function($q){
                         $q->whereNull('start_date_time')->orWhere(function($q2){
@@ -60,20 +51,15 @@ class UserhomeController extends FrontController
                         });
                     })
                     ->orderBy('sorting', 'asc')->get();
-
-        $navCategories = $this->categoryNav($langId);
-
-        Session::put('navCategories', $navCategories);
         $brands = Brand::with(['translation' => function($q) use($langId){
                         $q->select('brand_id', 'title')->where('language_id', $langId);
                         }])
                     ->select('id', 'image')
                     ->where('status', '!=', $this->field_status)
                     ->orderBy('position', 'asc')->get();
-
-        $fp = $this->productList($vends, $langId, $curId, 'is_featured');
-        $np = $this->productList($vends, $langId, $curId, 'is_new');
-        $onSP = $this->productList($vends, $langId, 'USD');
+        $fp = $this->productList($vendor_ids, $langId, $curId, 'is_featured');
+        $np = $this->productList($vendor_ids, $langId, $curId, 'is_new');
+        $onSP = $this->productList($vendor_ids, $langId, 'USD');
         $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
@@ -87,11 +73,12 @@ class UserhomeController extends FrontController
             Session::put('deliveryAddress', $request->selectedAddress);
             Session::put('latitude', $request->latitude);
             Session::put('longitude', $request->longitude);
+            $curId = Session::get('customerCurrency');
             $lats = $request->latitude;
             $longs = $request->longitude;
             $user_geo[] = $lats;
             $user_geo[] = $longs;
-            $vends = array();
+            $vendors = array();
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
             if($preferences->is_hyperlocal == 1){
                 $vendorData = $vendorData->whereHas('serviceArea', function($query) use($lats, $longs){
@@ -111,26 +98,17 @@ class UserhomeController extends FrontController
             $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
                             $q->select('brand_id', 'title')->where('language_id', $langId);
                             }])->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
-            $vendorsHtml = '';
             foreach($vendorData as $key => $data){
-                $vends[] = $data->id;
-                $vendorsHtml .= '<div class="product-box">
-                    <div class="img-wrapper">
-                        <div class="front">
-                            <a href="'.route('vendorDetail', $data->id).'"><img class="img-fluid blur-up lazyload bg-img" alt="" src="'.$data->logo['proxy_url'] . '300/300' . $data->logo['image_path'].'"></a>
-                        </div>
-                        <div class="back">
-                            <a href="'.route('vendorDetail', $data->id).'"><img class="img-fluid blur-up lazyload bg-img" alt="" src="'.$data->logo['proxy_url'] . '300/300' . $data->logo['image_path'].'"></a>
-                        </div>
-                    </div>
-                    <div class="product-detail">
-                        <div class="rating"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-                        <a href="#"><h6>'.$data->name.'</h6></a>
-                    </div>
-                </div>';
+                $vendors[] = $data->id;
             }
-            Session::put('vendors', $vends);
-            $homeData['vendorsHtml'] = $vendorsHtml;
+            Session::put('vendors', $vendors);
+            
+            $fp = $this->productList($vendors, $langId, $curId, 'is_featured');
+            $np = $this->productList($vendors, $langId, $curId, 'is_new');
+            $onSP = $this->productList($vendors, $langId, 'USD');
+            $homeData['featuredProducts'] = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
+            $homeData['newProducts'] = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
+            $homeData['onSaleProducts'] = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
 
             return $this->successResponse($homeData);
         } catch (Exception $e) {

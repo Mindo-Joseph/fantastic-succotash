@@ -194,7 +194,6 @@ class CategoryController extends BaseController{
         $cate->is_visible = ($request->has('is_visible') && $request->is_visible == 'on') ? 1 : 0;
         $cate->show_wishlist = ($request->has('show_wishlist') && $request->show_wishlist == 'on') ? 1 : 0;
         $cate->can_add_products = ($request->has('can_add_products') && $request->can_add_products == 'on' && $request->type_id == 1) ? 1 : 0;
-
         if($request->has('parent_cate') && $request->parent_cate > 0){
             $cate->parent_id = $request->parent_cate;
         }else{
@@ -210,7 +209,6 @@ class CategoryController extends BaseController{
             }
             $cate->status = 1;
             $cate->position = 1;
-            
             $cate->client_code = (!empty(Auth::user()->code)) ? Auth::user()->code : '';
         }
 
@@ -223,9 +221,7 @@ class CategoryController extends BaseController{
             $cate->image = Storage::disk('s3')->put('/category/image', $file,'public');
         }
         $cate->save();
-
         $tagDelete = CategoryTag::where('category_id', $cate->id)->delete();
-
         if($request->has('tags') && !empty($request->tags)){
             $tagArray = array();
             $tags = explode(',', $request->tags);
@@ -238,17 +234,6 @@ class CategoryController extends BaseController{
             CategoryTag::insert($tagArray);
         }
         return $cate->id;
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Category_translation  $category_translation
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category_translation $category_translation)
-    {
-        //
     }
 
     /**

@@ -1,5 +1,5 @@
 <footer class="footer-light">
-    <div class="light-layout bg-orange">
+    <div class="light-layout bg-orange d-none">
         <div class="container">
             <section class="small-section border-section border-top-0">
                 <div class="row">
