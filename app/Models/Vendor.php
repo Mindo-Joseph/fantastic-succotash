@@ -56,5 +56,5 @@ class Vendor extends Model{
 
     public function permissionToUser(){
       return $this->hasMany('App\Models\UserVendor');
-  }
+    }
 }
