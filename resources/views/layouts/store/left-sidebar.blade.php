@@ -249,7 +249,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         <div class="container">
             @if( (session('deliveryAddress')) && (Route::currentRouteName() != 'userHome') )
                 <div class="row no-gutters" id="location_search_wrapper">
-                    <div class="col-lg-12 col-md-12 col">
+                    <div class="col-lg-3 col-md-4 col">
                         <div class="d-flex align-items-center justify-content-start px-3 dropdown-toggle" href="#edit-address" data-toggle="modal">
                             <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
                             <div class="homepage-address text-left">
@@ -259,6 +259,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <i class="fa fa-angle-down" aria-hidden="true"></i>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-lg-9 col-md-8 col">
+                        <form class="search_form d-flex align-items-center justify-content-between" action="">
+                            <input class="form-control border-0" type="text" placeholder="Search">
+                            <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i><!--span class="search-text">Search</span--></button>
+                        </form>
                     </div>
                 </div>
             @endif
