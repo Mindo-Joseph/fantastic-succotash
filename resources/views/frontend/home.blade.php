@@ -118,13 +118,14 @@
                     <div class="product-box">
                         <div class="img-wrapper">
                             <div class="front">
-                                <a href="{{route('vendorDetail', $vendor->id)}}"><img
-                                        class="img-fluid blur-up lazyload bg-img" alt=""
-                                        src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}"></a>
+                                <a href="{{route('vendorDetail', $vendor->id)}}">
+                                    <img class="img-fluid blur-up lazyload bg-img" src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}">
+                                </a>
                             </div>
                             <div class="back">
-                                <a href="{{route('vendorDetail', $vendor->id)}}"><img class="img-fluid blur-up lazyload bg-img" alt=""
-                                        src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}"></a>
+                                <a href="{{route('vendorDetail', $vendor->id)}}">
+                                    <img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}">
+                                </a>
                             </div>
                         </div>
                         <div class="product-detail">
