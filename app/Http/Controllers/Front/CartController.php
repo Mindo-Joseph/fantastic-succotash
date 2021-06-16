@@ -31,9 +31,7 @@ class CartController extends FrontController
             $addresses = [];
         }
         $countries = Country::get();
-        if($cart){
-            $cartData = $this->getCart($cart);
-        }
+        $cartData = CartProduct::where('status', [0,1])->where('cart_id', $cart->id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         $navCategories = $this->categoryNav($langId);
         return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries]);
     }
@@ -455,7 +453,6 @@ class CartController extends FrontController
                             $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
                                               'longitude' => $cus_address->longitude??76.803508700000
                                             );
-                                        
                             $postdata =  ['locations' => $location];
                             $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
                                                         'shortcode' => $dispatch_domain->delivery_service_key_code,
