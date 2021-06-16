@@ -43,7 +43,7 @@ $timezone = Auth::user()->timezone;
                                 <ul class="list-unstyled" id="order_statuses">
                                     @foreach($order_status_options as $order_status_option)
                                     @php
-                                        $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'completed': '';
+                                        $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'completed disabled': '';
                                     @endphp
                                         <li class="{{$class}}" data-status_option_id="{{$order_status_option->id}}">
                                             <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
