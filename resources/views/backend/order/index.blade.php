@@ -67,19 +67,20 @@ $timezone = Auth::user()->timezone;
                                             </div>
                                             <div class="col-7 col-sm-4">
                                                 <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
-                                                    {{$vendor->products->count()}}
                                                     @foreach($vendor->products as $product)
-                                                        <li class="text-center">
-                                                            <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path']}}" alt="">
-                                                            <span class="item_no position-absolute">x{{$product->quantity}}</span>
-                                                            <label class="items_price">$@money($product->price)</label>
-                                                        </li>
-                                                        @php
-                                                            $product_total_count += $product->quantity * $product->price;
-                                                            $product_taxable_amount += $product->taxable_amount;
-                                                            $total_tax_order_price += $product->taxable_amount;
-                                                            $total_order_price += ($product->quantity * $product->price);
-                                                        @endphp
+                                                        @if($vendor->vendor_id == $product->vendor_id)
+                                                            <li class="text-center">
+                                                                <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path']}}" alt="">
+                                                                <span class="item_no position-absolute">x{{$product->quantity}}</span>
+                                                                <label class="items_price">$@money($product->price)</label>
+                                                            </li>
+                                                            @php
+                                                                $product_total_count += $product->quantity * $product->price;
+                                                                $product_taxable_amount += $product->taxable_amount;
+                                                                $total_tax_order_price += $product->taxable_amount;
+                                                                $total_order_price += ($product->quantity * $product->price);
+                                                            @endphp
+                                                        @endif
                                                     @endforeach                                    
                                                 </ul>
                                             </div>
