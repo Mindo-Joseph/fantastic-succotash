@@ -42,8 +42,8 @@ class UserhomeController extends FrontController
                     ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
             });*/
             $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                $query->select('vendor_id')
-                ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+                $query->select('vendor_id');
+                // ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
             });
         }
         $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
