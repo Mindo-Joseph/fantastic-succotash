@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Http\Controllers\Client\BaseController;
-use App\Models\{Promocode, Product, Vendor, PromoType, Category, PromocodeUser, PromocodeProduct, PromocodeRestriction,PromoCodeDetail};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Client\BaseController;
+use App\Models\{Promocode, Product, Vendor, PromoType, Category, PromocodeUser, PromocodeProduct, PromocodeRestriction,PromoCodeDetail};
 
 class PromocodeController extends BaseController
 {

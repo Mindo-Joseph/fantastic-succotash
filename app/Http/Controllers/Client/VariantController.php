@@ -12,15 +12,6 @@ use Illuminate\Support\Facades\Validator;
 class VariantController extends BaseController
 {
     private $blockdata = 2;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -51,25 +42,19 @@ class VariantController extends BaseController
     public function store(Request $request)
     {
         $v_pos = Variant::select('id','position')->where('position', \DB::raw("(select max(`position`) from variants)"))->first();
-        
         $variant = new Variant();
         $variant->title = (!empty($request->title[0])) ? $request->title[0] : '';
         $variant->type = $request->type;
-
         $variant->position = 1;
         if($v_pos){
             $variant->position = $v_pos->position + 1;
         }
         $variant->save();
-
         $data = $data_cate = array();
-
         if($variant->id > 0){
-
             $data_cate['variant_id'] = $variant->id;
             $data_cate['category_id'] = $request->cate_id;
             VariantCategory::insert($data_cate);
-
             foreach ($request->title as $key => $value) {
                 $varTrans = new VariantTranslation();
                 $varTrans->title = $request->title[$key];
@@ -87,35 +72,16 @@ class VariantController extends BaseController
                 $varOpt->save();
 
                 foreach($request->language_id as $k => $v) {
-
-                    /*$varOptTrans = new VariantOptionTranslation();
-                    $varOptTrans->title = $request->opt_color[$k][$key];
-                    $varOptTrans->variant_option_id = $varOpt->id;
-                    $varOptTrans->language_id = $v;
-                    $varOptTrans->save();*/
-
                     $data[] = [
                         'title' => $request->opt_color[$k][$key],
                         'variant_option_id' => $varOpt->id,
                         'language_id' => $v
                     ];
-                    
                 }
             }
             VariantOptionTranslation::insert($data);
         }
         return redirect()->back()->with('success', 'Variant added successfully!');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Variant  $variant
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Variant $variant)
-    {
-        //
     }
 
     /**
@@ -133,42 +99,12 @@ class VariantController extends BaseController
                         ->where('status', '!=', $this->blockdata)
                         ->orderBy('parent_id', 'asc')
                         ->orderBy('position', 'asc')->get();
-
         $langs = ClientLanguage::with(['language', 'variantTrans' => function($query) use ($id) {
                         $query->where('variant_id', $id);
                       }])
                     ->select('language_id', 'is_primary', 'is_active')
                     ->where('is_active', 1)
                     ->orderBy('is_primary', 'desc')->get();
-
-                    //dd($variant->toArray());
-/*[ 'subitems']
-
-'translation' => function($q) use($langId){
-                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
-                        $q->where('language_id', $langId);
-                    }*/
-
-
-
-        //dd($langs->toArray());
-        /*$langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-                    ->leftjoin('variant_translations as vt', 'vt.language_id', 'client_languages.language_id')
-                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary', 'vt.title')
-                    ->where('client_languages.client_code', Auth::user()->code)
-                    ->where('client_languages.client_code', Auth::user()->code)
-                    ->where('client_languages.is_active', 1)
-                    ->orderBy('client_languages.is_primary', 'desc')->get();*/
-        //dd($langs->toArray);
-        /*$langIds = array(); , 'langIds' => $langIds, 'existlangs' => $existlangs
-        foreach ($langs as $key => $value) {
-            $langIds[] = $langs[$key]->langId;
-        }
-        $existlangs = array();
-        foreach ($variant->translation as $key => $value) {
-            $existlangs[] = $value->language_id;
-        }*/
-
         $submitUrl = route('variant.update', $id);
 
         $returnHTML = view('backend.catalog.edit-variant')->with(['categories' => $categories,  'languages' => $langs, 'variant' => $variant])->render();
@@ -256,10 +192,7 @@ class VariantController extends BaseController
                 }
             }
         }
-
-       // $delOpt = VariantOption::whereNotIN('id', $exist_options)->where('variant_id', $variant->id)->delete();
         return redirect()->back()->with('success', 'Variant updated successfully!');
-
     }
 
     /**

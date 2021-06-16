@@ -147,9 +147,6 @@ class BannerController extends BaseController
 
         if ($request->hasFile('image')) {    /* upload logo file */
             $file = $request->file('image');
-            //$file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            //$banner->image = $request->file('image')->storeAs('/banner', $file_name, 'public');
-
             $banner->image = Storage::disk('s3')->put('/banner', $file,'public');
         }
         $banner->save();
@@ -197,10 +194,7 @@ class BannerController extends BaseController
             'status'=>'success',
             'message' => 'Banner order updated Successfully!',
         ]);
-
     }
-
-    
     /**
      * update the validity of banner.
      *

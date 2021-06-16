@@ -45,11 +45,6 @@ class BaseController extends Controller
                 $this->htmlData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node["slug"].'<span class="inner-div text-right">';
 
                 if(!in_array($node["id"], $blockedCategory)){
-                    /*if($node["status"] == 2){
-                        $askMessage = "return confirm('Are you sure? You want to unblock category.')";
-                        $status = 1; $icon = 'mdi-lock'; 
-                        $title = 'Unblock';
-                    }*/
                     $status = 2; //$icon = 'mdi-lock-open-variant';
                     $title = 'Delete'; $icon = 'mdi-delete';
                     $askMessage = "return confirm('Are you sure? You want to delete category.')";
@@ -171,10 +166,8 @@ class BaseController extends Controller
                 'user_id' => $userid,
                 'points' => 0
             ];
-
             UserLoyaltyPoint::insert($loyalty);
         }
-
         $wallet = Wallet::where('user_id', $userid)->first();
         if(!$wallet){
             $walletData[] = [
@@ -185,7 +178,6 @@ class BaseController extends Controller
                 'card_qr_code' => $this->randomBarcode('wallets'),
                 'meta_field' => '',
             ];
-
             Wallet::insert($walletData);
         }
         return 1;
@@ -195,7 +187,6 @@ class BaseController extends Controller
     public function randomData($table, $digit, $where){
         $random_string = substr(md5(microtime()), 0, $digit);
         // after creating, check if string is already used
-
         while(\DB::table($table)->where($where, $random_string)->exists()){
             $random_string = substr(md5(microtime()), 0, $digit);
         }
@@ -204,8 +195,6 @@ class BaseController extends Controller
 
     public function randomBarcode($table){
         $barCode = substr(md5(microtime()), 0, 14);
-        // $number = mt_rand(1000000000, 9999999999);
-
         while( \DB::table($table)->where('card_qr_code', $barCode)->exists()){
             $barCode = substr(md5(microtime()), 0, 14);
         }
