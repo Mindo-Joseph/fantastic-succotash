@@ -1832,15 +1832,49 @@ header{
 }
 
 .search_warpper {
-    height: 120px;
     display: none;
     position: absolute;
     width: 100%;
-    background: #fff;
+    background: #f8f8f8;
     z-index: 1;
     left: 0;
     top: 100%;
+    padding: 10px 0;
 }
+
+#location_search_wrapper h2 {
+    line-height: normal;
+}
+
+.search_btn {
+    cursor: pointer;
+}
+
+.top-banner-wrapper .img-fluid {
+    width: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
