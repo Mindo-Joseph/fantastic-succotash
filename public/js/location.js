@@ -30,9 +30,9 @@ $(document).ready(function() {
         displayLocation(lat,long);
     }
 
-    $(document).on('click', '#location_search_wrapper .dropdown-menu', function (e) {
-        e.stopPropagation();
-    });
+    // $(document).on('click', '#location_search_wrapper .dropdown-menu', function (e) {
+    //     e.stopPropagation();
+    // });
 
     $(document).delegate(".confirm_address_btn", "click", function(){
         let latitude = $("#address-latitude").val();
@@ -43,7 +43,8 @@ $(document).ready(function() {
     function setDeliveryAddress(latitude, longitude){
         let selected_address = $("#address-input").val();
         $("#location_search_wrapper .homepage-address span").text(selected_address).attr({"title": selected_address, "data-original-title": selected_address});
-        $("#location_search_wrapper .dropdown-menu").removeClass('show');
+        // $("#location_search_wrapper .dropdown-menu").removeClass('show');
+        $("#edit-address").modal('hide');
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -51,135 +52,141 @@ $(document).ready(function() {
             data: {"latitude": latitude, "longitude": longitude, 'selectedAddress': selected_address},
             success: function(response) {
                 if(response.status == 'Success'){
-                    $('.product-4').slick('destroy');
-                    $(".product-4").html('');
-                    let vendors_template = _.template($('#vendors_template').html());
-                    $(".product-4").append(vendors_template({vendor_options: response.data.vendors}));
-                    $('.product-4').slick({
-                        infinite: true,
-                        speed: 300,
-                        slidesToShow: 5,
-                        slidesToScroll: 1,
-                        autoplay: true,
-                        autoplaySpeed: 3000,
-                        responsive: [{
-                                breakpoint: 1200,
-                                settings: {
-                                    slidesToShow: 3,
-                                    slidesToScroll: 3
+                    var path = window.location.pathname;
+                    if(path == '/'){
+                        $('.product-4').slick('destroy');
+                        $(".product-4").html('');
+                        let vendors_template = _.template($('#vendors_template').html());
+                        $(".product-4").append(vendors_template({vendor_options: response.data.vendors}));
+                        $('.product-4').slick({
+                            infinite: true,
+                            speed: 300,
+                            slidesToShow: 5,
+                            slidesToScroll: 1,
+                            autoplay: true,
+                            autoplaySpeed: 3000,
+                            responsive: [{
+                                    breakpoint: 1200,
+                                    settings: {
+                                        slidesToShow: 3,
+                                        slidesToScroll: 3
+                                    }
+                                },
+                                {
+                                    breakpoint: 991,
+                                    settings: {
+                                        slidesToShow: 2,
+                                        slidesToScroll: 2
+                                    }
                                 }
-                            },
-                            {
-                                breakpoint: 991,
-                                settings: {
-                                    slidesToShow: 2,
-                                    slidesToScroll: 2
-                                }
-                            }
-                        ]
-                    });
-                    
-                    var slickOptions = {
-                        infinite: true,
-                        speed: 300,
-                        arrows: false,
-                        slidesToShow: 5,
-                        slidesToScroll: 1,
-                        autoplay: true,
-                        autoplaySpeed: 5000,
-                        responsive: [{
-                                breakpoint: 1200,
-                                settings: {
-                                    slidesToShow: 2,
-                                    slidesToScroll: 2
-                                }
-                            },
-                            {
-                                breakpoint: 767,
-                                settings: {
-                                    slidesToShow: 1,
-                                    slidesToScroll: 1
-                                }
-                            }
-                        ]
-                    };
-
-                    var newProducts = response.data.newProducts;
-                    $('#new_products_wrapper .vendor-product').slick('destroy');
-                    $("#new_products_wrapper .vendor-product").html('');
-                    $('#bestseller_products_wrapper .vendor-product').slick('destroy');
-                    $("#bestseller_products_wrapper .vendor-product").html('');
-                    var newProductsArray = [];
-                    newProducts.forEach(function(new_product, i, arr1){
-                        new_product.forEach(function(product, j, arr2){
-                            product.title = product['translation'] ? product['translation'][0]['title'] : product['sku'];
-                            product.title = product.title.slice(0, 18)+'..';
-                            product.body_html = product['translation'] ? product['translation'][0]['body_html'] : '';
-                            product.description = product.body_html.replace(/(<([^>]+)>)/ig, '');
-                            product.description = product.description.slice(0, 25)+'..';
-                            product.price = product['variant'][0]['price'];
-                            product.multiply = product['variant'][0]['multiplier'] ? 1 : product['variant'][0]['multiplier'];
-                            product.imagePath = '';
-                            product['media'].forEach(function(item, index, arr3){
-                                product.imagePath = item['image']['path']['proxy_url']+'300/300'+item['image']['path']['image_path'];
-                            });
-                            newProductsArray.push(product);
+                            ]
                         });
-                    });
-                    let new_products_template = _.template($('#new_products_template').html());
-                    $("#new_products_wrapper .vendor-product").append(new_products_template({new_product_options: newProductsArray}));
-                    let bestseller_products_template = _.template($('#bestseller_products_template').html());
-                    $("#bestseller_products_wrapper .vendor-product").append(bestseller_products_template({bestseller_product_options: newProductsArray}));
-                    $('#new_products_wrapper .vendor-product').slick(slickOptions);
-                    $('#bestseller_products_wrapper .vendor-product').slick(slickOptions);
 
-                    var featuredProducts = response.data.featuredProducts;
-                    $('#featured_products_wrapper .vendor-product').slick('destroy');
-                    $("#featured_products_wrapper .vendor-product").html('');
-                    var featuredProductsArray = [];
-                    featuredProducts.forEach(function(featured_product, i, arr1){
-                        featured_product.forEach(function(product, j, arr2){
-                            product.title = product['translation'] ? product['translation'][0]['title'] : product['sku'];
-                            product.title = product.title.slice(0, 18)+'..';
-                            product.body_html = product['translation'] ? product['translation'][0]['body_html'] : '';
-                            product.description = product.body_html.replace(/(<([^>]+)>)/ig, '');
-                            product.description = product.description.slice(0, 25)+'..';
-                            product.price = product['variant'][0]['price'];
-                            product.multiply = product['variant'][0]['multiplier'] ? 1 : product['variant'][0]['multiplier'];
-                            product.imagePath = '';
-                            product['media'].forEach(function(item, index, arr3){
-                                product.imagePath = item['image']['path']['proxy_url']+'300/300'+item['image']['path']['image_path'];
-                            });
-                            featuredProductsArray.push(product);
-                        });
-                    });
-                    let featured_products_template = _.template($('#featured_products_template').html());
-                    $("#featured_products_wrapper .vendor-product").append(featured_products_template({featured_product_options: featuredProductsArray}));
-                    $('#featured_products_wrapper .vendor-product').slick(slickOptions);
+                        var slickOptions = {
+                            infinite: true,
+                            speed: 300,
+                            arrows: false,
+                            slidesToShow: 5,
+                            slidesToScroll: 1,
+                            autoplay: true,
+                            autoplaySpeed: 5000,
+                            responsive: [{
+                                    breakpoint: 1200,
+                                    settings: {
+                                        slidesToShow: 2,
+                                        slidesToScroll: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 767,
+                                    settings: {
+                                        slidesToShow: 1,
+                                        slidesToScroll: 1
+                                    }
+                                }
+                            ]
+                        };
 
-                    var onSaleProducts = response.data.onSaleProducts;
-                    $('#onsale_products_wrapper .vendor-product').slick('destroy');
-                    $("#onsale_products_wrapper .vendor-product").html('');
-                    var onSaleProductsArray = [];
-                    onSaleProducts.forEach(function(onsale_product, i, arr1){
-                        onsale_product.forEach(function(product, j, arr2){
-                            product.title = product['translation'] ? product['translation'][0]['title'] : product['sku'];
-                            product.title = product.title.slice(0, 18)+'..';
-                            product.body_html = product['translation'] ? product['translation'][0]['body_html'] : '';
-                            product.description = product.body_html.replace(/(<([^>]+)>)/ig, '');
-                            product.description = product.description.slice(0, 25)+'..';
-                            product.price = product['variant'][0]['price'];
-                            product.multiply = product['variant'][0]['multiplier'] ? 1 : product['variant'][0]['multiplier'];
-                            product.imagePath = '';
-                            product['media'].forEach(function(item, index, arr3){
-                                product.imagePath = item['image']['path']['proxy_url']+'300/300'+item['image']['path']['image_path'];
+                        var newProducts = response.data.newProducts;
+                        $('#new_products_wrapper .vendor-product').slick('destroy');
+                        $("#new_products_wrapper .vendor-product").html('');
+                        $('#bestseller_products_wrapper .vendor-product').slick('destroy');
+                        $("#bestseller_products_wrapper .vendor-product").html('');
+                        var newProductsArray = [];
+                        newProducts.forEach(function(new_product, i, arr1){
+                            new_product.forEach(function(product, j, arr2){
+                                product.title = product['translation'] ? product['translation'][0]['title'] : product['sku'];
+                                product.title = product.title.slice(0, 18)+'..';
+                                product.body_html = product['translation'] ? product['translation'][0]['body_html'] : '';
+                                product.description = product.body_html.replace(/(<([^>]+)>)/ig, '');
+                                product.description = product.description.slice(0, 25)+'..';
+                                product.price = product['variant'][0]['price'];
+                                product.multiply = product['variant'][0]['multiplier'] ? 1 : product['variant'][0]['multiplier'];
+                                product.imagePath = '';
+                                product['media'].forEach(function(item, index, arr3){
+                                    product.imagePath = item['image']['path']['proxy_url']+'300/300'+item['image']['path']['image_path'];
+                                });
+                                newProductsArray.push(product);
                             });
-                            onSaleProductsArray.push(product);
                         });
-                    });
-                    let onsale_products_template = _.template($('#onsale_products_template').html());
-                    $("#onsale_products_wrapper .vendor-product").append(onsale_products_template({onsale_product_options: onSaleProductsArray}));
-                    $('#onsale_products_wrapper .vendor-product').slick(slickOptions);
+                        let new_products_template = _.template($('#new_products_template').html());
+                        $("#new_products_wrapper .vendor-product").append(new_products_template({new_product_options: newProductsArray}));
+                        let bestseller_products_template = _.template($('#bestseller_products_template').html());
+                        $("#bestseller_products_wrapper .vendor-product").append(bestseller_products_template({bestseller_product_options: newProductsArray}));
+                        $('#new_products_wrapper .vendor-product').slick(slickOptions);
+                        $('#bestseller_products_wrapper .vendor-product').slick(slickOptions);
+
+                        var featuredProducts = response.data.featuredProducts;
+                        $('#featured_products_wrapper .vendor-product').slick('destroy');
+                        $("#featured_products_wrapper .vendor-product").html('');
+                        var featuredProductsArray = [];
+                        featuredProducts.forEach(function(featured_product, i, arr1){
+                            featured_product.forEach(function(product, j, arr2){
+                                product.title = product['translation'] ? product['translation'][0]['title'] : product['sku'];
+                                product.title = product.title.slice(0, 18)+'..';
+                                product.body_html = product['translation'] ? product['translation'][0]['body_html'] : '';
+                                product.description = product.body_html.replace(/(<([^>]+)>)/ig, '');
+                                product.description = product.description.slice(0, 25)+'..';
+                                product.price = product['variant'][0]['price'];
+                                product.multiply = product['variant'][0]['multiplier'] ? 1 : product['variant'][0]['multiplier'];
+                                product.imagePath = '';
+                                product['media'].forEach(function(item, index, arr3){
+                                    product.imagePath = item['image']['path']['proxy_url']+'300/300'+item['image']['path']['image_path'];
+                                });
+                                featuredProductsArray.push(product);
+                            });
+                        });
+                        let featured_products_template = _.template($('#featured_products_template').html());
+                        $("#featured_products_wrapper .vendor-product").append(featured_products_template({featured_product_options: featuredProductsArray}));
+                        $('#featured_products_wrapper .vendor-product').slick(slickOptions);
+
+                        var onSaleProducts = response.data.onSaleProducts;
+                        $('#onsale_products_wrapper .vendor-product').slick('destroy');
+                        $("#onsale_products_wrapper .vendor-product").html('');
+                        var onSaleProductsArray = [];
+                        onSaleProducts.forEach(function(onsale_product, i, arr1){
+                            onsale_product.forEach(function(product, j, arr2){
+                                product.title = product['translation'] ? product['translation'][0]['title'] : product['sku'];
+                                product.title = product.title.slice(0, 18)+'..';
+                                product.body_html = product['translation'] ? product['translation'][0]['body_html'] : '';
+                                product.description = product.body_html.replace(/(<([^>]+)>)/ig, '');
+                                product.description = product.description.slice(0, 25)+'..';
+                                product.price = product['variant'][0]['price'];
+                                product.multiply = product['variant'][0]['multiplier'] ? 1 : product['variant'][0]['multiplier'];
+                                product.imagePath = '';
+                                product['media'].forEach(function(item, index, arr3){
+                                    product.imagePath = item['image']['path']['proxy_url']+'300/300'+item['image']['path']['image_path'];
+                                });
+                                onSaleProductsArray.push(product);
+                            });
+                        });
+                        let onsale_products_template = _.template($('#onsale_products_template').html());
+                        $("#onsale_products_wrapper .vendor-product").append(onsale_products_template({onsale_product_options: onSaleProductsArray}));
+                        $('#onsale_products_wrapper .vendor-product').slick(slickOptions);
+                    }
+                    else{
+                        window.location.reload();
+                    }
                 }
             }
         });

@@ -17,6 +17,16 @@
     <div class="container px-0">
         <div class="row no-gutters" id="location_search_wrapper">
             <div class="col-lg-3 col-md-4 col">
+                <div class="d-flex align-items-center justify-content-start px-3" href="#edit-address" data-toggle="modal">
+                    <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                    <div class="homepage-address">
+                        <h2><span data-placement="top" data-toggle="tooltip" title="{{$deliveryAddress}}">{{$deliveryAddress}}</span></h2>
+                    </div>
+                    <div class="down-icon">
+                        <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <?php /* ?>
                 <div class="d-flex align-items-center justify-content-start px-3 dropdown-toggle" id="dropdownLocationButton" data-toggle="dropdown" aria-haspopup="true" 
                   aria-expanded="false">
                     <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
@@ -81,6 +91,7 @@
                         </div>
                     </div>
                 </div>
+                <?php */ ?>
             </div>
             <div class="col-lg-9 col-md-8 col">
                 <form class="search_form d-flex align-items-center justify-content-between" action="">
@@ -460,17 +471,6 @@
         </div>
     </div>
 </section>
-<!-- Address Edit Modal Start Form Here -->
-<div class="modal fade edit_address" id="edit-address" tabindex="-1" aria-labelledby="edit-addressLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-body p-0">
-            
-                        
-        </div>
-    </div>
-  </div>
-</div>
 @endsection
 
 @section('script')
