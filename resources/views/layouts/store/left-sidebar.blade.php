@@ -21,33 +21,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <div>
                             <nav id="main-nav">
                                 <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
-                                <ul id="main-menu" class="sm pixelstrap sm-horizontal">
-                                    <li>
-                                        <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
-                                    </li>
-                                @foreach($navCategories as $cate)
-                                    <li>
-                                        <a href="{{route('categoryDetail', $cate['id'])}}">{{$cate['name']}}</a>
-                                        @if(!empty($cate['children']))
-                                            
-                                            <ul>
-                                                @foreach($cate['children'] as $childs)
-                                                <li>
-                                                    <a href="{{route('categoryDetail', $childs['id'])}}"><span class="new-tag">{{$childs['name']}}</span></a>
-                                                    @if(!empty($childs['children']))
-                                                    <ul>
-                                                      @foreach($childs['children'] as $chld)
-                                                        <li><a href="{{route('categoryDetail', $chld['id'])}}">{{$chld['name']}}</a></li>
-                                                      @endforeach
-                                                    </ul>
-                                                    @endif
-                                                </li>
-                                                @endforeach
-                                            </ul>
-                                        @endif
-                                    </li>
-                                @endforeach
-                                </ul>
                             </nav>
                         </div>
                         <div>
@@ -58,11 +31,11 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
                                 </form>
                                 <ul>
-                                    <li>
-                                        <i class="search_btn fa fa-search"></i>
+                                    <li class="search_btn">
+                                        <img src="{{asset('front-assets/images/icon/search.svg')}}" class="img-fluid blur-up lazyload" alt="">
                                     </li>
                                     <li class="onhover-div mobile-setting">
-                                        <div><img src="{{asset('front-assets/images/icon/setting.png')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-settings"></i></div>
+                                        <div><img src="{{asset('front-assets/images/icon/setting.svg')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-settings"></i></div>
                                         <div class="show-div setting">
                                             <h6>language</h6>
                                             <ul>
@@ -80,7 +53,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     </li>
                                     <li class="onhover-div mobile-cart">
                                         <div>
-                                            <img src="{{asset('front-assets/images/icon/cart.png')}}" class="img-fluid blur-up lazyload" alt=""> 
+                                            <img src="{{asset('front-assets/images/icon/cart.svg')}}" class="img-fluid blur-up lazyload" alt=""> 
                                             <i class="ti-shopping-cart"></i>
                                         </div>
                                         <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span>
@@ -124,6 +97,36 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="col-12 mt-2">
+                <ul id="main-menu" class="sm pixelstrap sm-horizontal">
+                    <li>
+                        <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
+                    </li>
+                    @foreach($navCategories as $cate)
+                    <li>
+                        <a href="{{route('categoryDetail', $cate['id'])}}">{{$cate['name']}}</a>
+                        @if(!empty($cate['children']))
+                            
+                            <ul>
+                                @foreach($cate['children'] as $childs)
+                                <li>
+                                    <a href="{{route('categoryDetail', $childs['id'])}}"><span class="new-tag">{{$childs['name']}}</span></a>
+                                    @if(!empty($childs['children']))
+                                    <ul>
+                                        @foreach($childs['children'] as $chld)
+                                        <li><a href="{{route('categoryDetail', $chld['id'])}}">{{$chld['name']}}</a></li>
+                                        @endforeach
+                                    </ul>
+                                    @endif
+                                </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </li>
+                    @endforeach
+                </ul>
             </div>
         </div>
     </div>
