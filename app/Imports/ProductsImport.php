@@ -41,7 +41,7 @@ class ProductsImport implements ToCollection{
                     $checker = 1;
                 }
                 if ($row[4] != "") {
-                    $category_check = Category::where('slug', $row[4])->first();
+                    $category_check = Category::where('slug', "LIKE", $row[4])->first();
                     if (!$category_check) { //check if category doesn't exist
                         $error[] = "Row " . $i . " : Category doesn't exist";
                         $checker = 1;
