@@ -32,10 +32,10 @@ class ProductController extends FrontController
                 if(Session::has('vendors')){
                     $vendors = Session::get('vendors');
                     if(!in_array($productVendorId, $vendors)){
-                        return redirect()->route('error_404');
+                        abort(404);
                     }
                 }else{
-                    return redirect()->route('error_404');
+                    // abort(404);
                 }
             }
         }

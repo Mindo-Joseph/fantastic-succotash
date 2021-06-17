@@ -17,7 +17,7 @@ class DispatcherController extends FrontController
    
    
     /******************    ---- order status update from dispatch (Need to dispatcher_status_option_id ) -----   ******************/
-    public function dispatchOrderStatusUpdate(DispatchOrderStatusUpdateRequest $request,$web_hook_code)
+    public function dispatchOrderStatusUpdate(DispatchOrderStatusUpdateRequest $request, $domain = '', $web_hook_code)
     {
         try {
             DB::beginTransaction();
@@ -35,7 +35,7 @@ class DispatcherController extends FrontController
             }else{
                 DB::rollback();
                 $message = "Invalid Order Token";
-                return $this->errorResponse($message, $e->getCode());
+                return $this->errorResponse($message, 400);
                }
             
         } catch (Exception $e) {

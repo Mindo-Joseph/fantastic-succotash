@@ -18,16 +18,17 @@ $(document).ready(function() {
     function showPosition(position) {
         let lat = position.coords.latitude;
         let long = position.coords.longitude;
-        setDeliveryAddress(lat,long);
         displayLocation(lat,long);
     }
 
-    if(!delivery_address){
-        getLocation();
-    }else{
-        let lat = $("#address-latitude").val();
-        let long = $("#address-longitude").val();
-        displayLocation(lat,long);
+    if(is_hyperlocal){
+        if(!delivery_address){
+            getLocation();
+        }else{
+            let lat = $("#address-latitude").val();
+            let long = $("#address-longitude").val();
+            displayLocation(lat,long);
+        }
     }
 
     // $(document).on('click', '#location_search_wrapper .dropdown-menu', function (e) {
@@ -54,34 +55,6 @@ $(document).ready(function() {
                 if(response.status == 'Success'){
                     var path = window.location.pathname;
                     if(path == '/'){
-                        $('.product-4').slick('destroy');
-                        $(".product-4").html('');
-                        let vendors_template = _.template($('#vendors_template').html());
-                        $(".product-4").append(vendors_template({vendor_options: response.data.vendors}));
-                        $('.product-4').slick({
-                            infinite: true,
-                            speed: 300,
-                            slidesToShow: 5,
-                            slidesToScroll: 1,
-                            autoplay: true,
-                            autoplaySpeed: 3000,
-                            responsive: [{
-                                    breakpoint: 1200,
-                                    settings: {
-                                        slidesToShow: 3,
-                                        slidesToScroll: 3
-                                    }
-                                },
-                                {
-                                    breakpoint: 991,
-                                    settings: {
-                                        slidesToShow: 2,
-                                        slidesToScroll: 2
-                                    }
-                                }
-                            ]
-                        });
-
                         var slickOptions = {
                             infinite: true,
                             speed: 300,
@@ -107,6 +80,39 @@ $(document).ready(function() {
                             ]
                         };
 
+                        if(response.data.vendors == ''){
+                            $(".product-4").html('<h4 class="text-center">No vendor exists nearby your location</h4>');
+                        }
+                        else{
+                            $('.product-4').slick('destroy');
+                            $(".product-4").html('');
+                            let vendors_template = _.template($('#vendors_template').html());
+                            $(".product-4").append(vendors_template({vendor_options: response.data.vendors}));
+                            $('.product-4').slick({
+                                infinite: true,
+                                speed: 300,
+                                slidesToShow: 5,
+                                slidesToScroll: 1,
+                                autoplay: true,
+                                autoplaySpeed: 3000,
+                                responsive: [{
+                                        breakpoint: 1200,
+                                        settings: {
+                                            slidesToShow: 3,
+                                            slidesToScroll: 3
+                                        }
+                                    },
+                                    {
+                                        breakpoint: 991,
+                                        settings: {
+                                            slidesToShow: 2,
+                                            slidesToScroll: 2
+                                        }
+                                    }
+                                ]
+                            });
+                        }
+                        
                         var newProducts = response.data.newProducts;
                         $('#new_products_wrapper .vendor-product').slick('destroy');
                         $("#new_products_wrapper .vendor-product").html('');
@@ -115,26 +121,38 @@ $(document).ready(function() {
                         var newProductsArray = [];
                         newProducts.forEach(function(new_product, i, arr1){
                             new_product.forEach(function(product, j, arr2){
-                                product.title = product['translation'] ? product['translation'][0]['title'] : product['sku'];
-                                product.title = product.title.slice(0, 18)+'..';
-                                product.body_html = product['translation'] ? product['translation'][0]['body_html'] : '';
-                                product.description = product.body_html.replace(/(<([^>]+)>)/ig, '');
-                                product.description = product.description.slice(0, 25)+'..';
-                                product.price = product['variant'][0]['price'];
-                                product.multiply = product['variant'][0]['multiplier'] ? 1 : product['variant'][0]['multiplier'];
-                                product.imagePath = '';
+                                product.title = product.description = product.imagePath = '';
+                                product.price = product.multiply = 0;
+                                product['translation'].forEach(function(item, index, arr3){
+                                    product.title = (item['title'] != null) ? item['title'] : item['sku'];
+                                    product.title = product.title.slice(0, 18)+'..';
+                                    product.description = (item['body_html'] != null) ? item['body_html'] : '';
+                                    product.description = product.description.replace(/(<([^>]+)>)/ig, '');
+                                    product.description = product.description.slice(0, 25)+'..';
+                                });
+                                product['variant'].forEach(function(item, index, arr3){
+                                    product.price = item['price'];
+                                    product.multiply = (item['multiplier'] != null) ? 1 : item['multiplier'];
+                                });
                                 product['media'].forEach(function(item, index, arr3){
                                     product.imagePath = item['image']['path']['proxy_url']+'300/300'+item['image']['path']['image_path'];
                                 });
                                 newProductsArray.push(product);
                             });
                         });
-                        let new_products_template = _.template($('#new_products_template').html());
-                        $("#new_products_wrapper .vendor-product").append(new_products_template({new_product_options: newProductsArray}));
-                        let bestseller_products_template = _.template($('#bestseller_products_template').html());
-                        $("#bestseller_products_wrapper .vendor-product").append(bestseller_products_template({bestseller_product_options: newProductsArray}));
-                        $('#new_products_wrapper .vendor-product').slick(slickOptions);
-                        $('#bestseller_products_wrapper .vendor-product').slick(slickOptions);
+                        if(newProductsArray == ''){
+                            $("#new_products_wrapper, #bestseller_products_wrapper").addClass("d-none");
+                            $("#new_products_wrapper .vendor-product, #bestseller_products_wrapper .vendor-product").html('');
+                        }
+                        else{
+                            $("#new_products_wrapper, #featured_products_wrapper").removeClass("d-none");
+                            let new_products_template = _.template($('#new_products_template').html());
+                            $("#new_products_wrapper .vendor-product").append(new_products_template({new_product_options: newProductsArray}));
+                            let bestseller_products_template = _.template($('#bestseller_products_template').html());
+                            $("#bestseller_products_wrapper .vendor-product").append(bestseller_products_template({bestseller_product_options: newProductsArray}));
+                            $('#new_products_wrapper .vendor-product').slick(slickOptions);
+                            $('#bestseller_products_wrapper .vendor-product').slick(slickOptions);
+                        } 
 
                         var featuredProducts = response.data.featuredProducts;
                         $('#featured_products_wrapper .vendor-product').slick('destroy');
@@ -142,23 +160,35 @@ $(document).ready(function() {
                         var featuredProductsArray = [];
                         featuredProducts.forEach(function(featured_product, i, arr1){
                             featured_product.forEach(function(product, j, arr2){
-                                product.title = product['translation'] ? product['translation'][0]['title'] : product['sku'];
-                                product.title = product.title.slice(0, 18)+'..';
-                                product.body_html = product['translation'] ? product['translation'][0]['body_html'] : '';
-                                product.description = product.body_html.replace(/(<([^>]+)>)/ig, '');
-                                product.description = product.description.slice(0, 25)+'..';
-                                product.price = product['variant'][0]['price'];
-                                product.multiply = product['variant'][0]['multiplier'] ? 1 : product['variant'][0]['multiplier'];
-                                product.imagePath = '';
+                                product.title = product.description = product.imagePath = '';
+                                product.price = product.multiply = 0;
+                                product['translation'].forEach(function(item, index, arr3){
+                                    product.title = (item['title'] != null) ? item['title'] : item['sku'];
+                                    product.title = product.title.slice(0, 18)+'..';
+                                    product.description = (item['body_html'] != null) ? item['body_html'] : '';
+                                    product.description = product.description.replace(/(<([^>]+)>)/ig, '');
+                                    product.description = product.description.slice(0, 25)+'..';
+                                });
+                                product['variant'].forEach(function(item, index, arr3){
+                                    product.price = item['price'];
+                                    product.multiply = (item['multiplier'] != null) ? 1 : item['multiplier'];
+                                });
                                 product['media'].forEach(function(item, index, arr3){
                                     product.imagePath = item['image']['path']['proxy_url']+'300/300'+item['image']['path']['image_path'];
                                 });
                                 featuredProductsArray.push(product);
                             });
                         });
-                        let featured_products_template = _.template($('#featured_products_template').html());
-                        $("#featured_products_wrapper .vendor-product").append(featured_products_template({featured_product_options: featuredProductsArray}));
-                        $('#featured_products_wrapper .vendor-product').slick(slickOptions);
+                        if(featuredProductsArray == ''){
+                            $("#featured_products_wrapper").addClass("d-none");
+                            $("#featured_products_wrapper .vendor-product").html('');
+                        }
+                        else{
+                            $("#featured_products_wrapper").removeClass("d-none");
+                            let featured_products_template = _.template($('#featured_products_template').html());
+                            $("#featured_products_wrapper .vendor-product").append(featured_products_template({featured_product_options: featuredProductsArray}));
+                            $('#featured_products_wrapper .vendor-product').slick(slickOptions);
+                        }
 
                         var onSaleProducts = response.data.onSaleProducts;
                         $('#onsale_products_wrapper .vendor-product').slick('destroy');
@@ -166,23 +196,35 @@ $(document).ready(function() {
                         var onSaleProductsArray = [];
                         onSaleProducts.forEach(function(onsale_product, i, arr1){
                             onsale_product.forEach(function(product, j, arr2){
-                                product.title = product['translation'] ? product['translation'][0]['title'] : product['sku'];
-                                product.title = product.title.slice(0, 18)+'..';
-                                product.body_html = product['translation'] ? product['translation'][0]['body_html'] : '';
-                                product.description = product.body_html.replace(/(<([^>]+)>)/ig, '');
-                                product.description = product.description.slice(0, 25)+'..';
-                                product.price = product['variant'][0]['price'];
-                                product.multiply = product['variant'][0]['multiplier'] ? 1 : product['variant'][0]['multiplier'];
-                                product.imagePath = '';
+                                product.title = product.description = product.imagePath = '';
+                                product.price = product.multiply = 0;
+                                product['translation'].forEach(function(item, index, arr3){
+                                    product.title = (item['title'] != null) ? item['title'] : item['sku'];
+                                    product.title = product.title.slice(0, 18)+'..';
+                                    product.description = (item['body_html'] != null) ? item['body_html'] : '';
+                                    product.description = product.description.replace(/(<([^>]+)>)/ig, '');
+                                    product.description = product.description.slice(0, 25)+'..';
+                                });
+                                product['variant'].forEach(function(item, index, arr3){
+                                    product.price = item['price'];
+                                    product.multiply = (item['multiplier'] != null) ? 1 : item['multiplier'];
+                                });
                                 product['media'].forEach(function(item, index, arr3){
                                     product.imagePath = item['image']['path']['proxy_url']+'300/300'+item['image']['path']['image_path'];
                                 });
                                 onSaleProductsArray.push(product);
                             });
                         });
-                        let onsale_products_template = _.template($('#onsale_products_template').html());
-                        $("#onsale_products_wrapper .vendor-product").append(onsale_products_template({onsale_product_options: onSaleProductsArray}));
-                        $('#onsale_products_wrapper .vendor-product').slick(slickOptions);
+                        if(onSaleProductsArray == ''){
+                            $("#onsale_products_wrapper").addClass("d-none");
+                            $("#onsale_products_wrapper .vendor-product").html('');
+                        }
+                        else{
+                            $("#onsale_products_wrapper").removeClass("d-none");
+                            let onsale_products_template = _.template($('#onsale_products_template').html());
+                            $("#onsale_products_wrapper .vendor-product").append(onsale_products_template({onsale_product_options: onSaleProductsArray}));
+                            $('#onsale_products_wrapper .vendor-product').slick(slickOptions);
+                        }
                     }
                     else{
                         window.location.reload();
@@ -191,48 +233,51 @@ $(document).ready(function() {
             }
         });
     }
+
+    function displayLocation(latitude,longitude){
+        var geocoder;
+        geocoder = new google.maps.Geocoder();
+        var latlng = new google.maps.LatLng(latitude, longitude);
+    
+        const map = new google.maps.Map(document.getElementById('address-map'), {
+            center: {lat: latitude, lng: longitude},
+            zoom: 13
+        });
+    
+        const marker = new google.maps.Marker({
+            map: map,
+            position: {lat: latitude, lng: longitude},
+        });
+    
+        geocoder.geocode(
+            {'latLng': latlng}, 
+            function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[0]) {
+                        var add= results[0].formatted_address ;
+                        var  value=add.split(",");
+    
+                        count=value.length;
+                        country=value[count-1];
+                        state=value[count-2];
+                        city=value[count-3];
+                        $("#address-input").val(value);
+                        $("#location_search_wrapper .homepage-address span").text(value).attr({"title": value, "data-original-title": value});
+                        if(!delivery_address){
+                            setDeliveryAddress(latitude, longitude);
+                        }
+                    }
+                    else  {
+                        // $("#address-input").val("address not found");
+                    }
+                }
+                else {
+                    $("#address-input").val("Geocoder failed due to: " + status);
+                }
+            }
+        );
+    }
 });
-
-function displayLocation(latitude,longitude){
-    var geocoder;
-    geocoder = new google.maps.Geocoder();
-    var latlng = new google.maps.LatLng(latitude, longitude);
-
-    const map = new google.maps.Map(document.getElementById('address-map'), {
-        center: {lat: latitude, lng: longitude},
-        zoom: 13
-    });
-
-    const marker = new google.maps.Marker({
-        map: map,
-        position: {lat: latitude, lng: longitude},
-    });
-
-    geocoder.geocode(
-        {'latLng': latlng}, 
-        function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                if (results[0]) {
-                    var add= results[0].formatted_address ;
-                    var  value=add.split(",");
-
-                    count=value.length;
-                    country=value[count-1];
-                    state=value[count-2];
-                    city=value[count-3];
-                    $("#address-input").val(value);
-                    $("#location_search_wrapper .homepage-address span").text(value).attr({"title": value, "data-original-title": value});
-                }
-                else  {
-                    $("#address-input").val("address not found");
-                }
-            }
-            else {
-                $("#address-input").val("Geocoder failed due to: " + status);
-            }
-        }
-    );
-}
 
 function addressInputDisplay(locationWrapper, inputWrapper, input){
     $(inputWrapper).removeClass("d-none").addClass("d-flex");

@@ -1,14 +1,16 @@
 <?php
 
 namespace App\Models;
-
+use Bavix\Wallet\Traits\HasWallet;
+use Bavix\Wallet\Interfaces\Wallet;
+use App\Notifications\PasswordReset;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use App\Notifications\PasswordReset; 
 
 class User extends Authenticatable
 {
+    use HasWallet;
     use Notifiable;
 
     /**

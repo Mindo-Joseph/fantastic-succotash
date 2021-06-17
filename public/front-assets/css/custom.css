@@ -1865,8 +1865,52 @@ header{
     padding:0;
 }
 
+.footer-theme .sub-title li:first-child {
+    padding-top: 0;
+}
 
+footer h6 a{
+    color: #000;
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: 32px;
+    margin: 0 0 3px;
+    font-weight: 700;
+}
 
+footer .card {
+    border-bottom: 1px solid rgb(0 0 0 / 100%);
+    border-radius: 0;
+}
+
+footer .card .card-body {
+    padding-bottom: 10px !important;
+}
+
+footer .form-control {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 24px;
+    padding: 0;
+}
+
+.submit_btn {
+    border: 1px solid #000000;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 24px;
+    padding: 3.5px 12.6px;
+}
+
+.submit_btn:hover {
+    background-color: rgb(0, 0, 0);
+    color: #000;
+    border-color: #000;
+}
 
 
 

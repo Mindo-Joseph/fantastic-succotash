@@ -3577,6 +3577,7 @@ body.authentication-bg-pattern {
   padding: 3px;
   margin-top: 3px;
 }
+
 .product-thumb.active {
   background-color: #6c757d !important;
 }
@@ -3585,6 +3586,8 @@ body.authentication-bg-pattern {
   position: relative;
   border-left: 2px solid #dee2e6;
   padding: 0px 0px 14px 21px;
+  height: 70px;
+  cursor: pointer;
 }
 .track-order-list ul li:first-child {
   padding-top: 0px;

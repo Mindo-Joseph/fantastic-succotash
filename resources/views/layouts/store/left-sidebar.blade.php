@@ -247,8 +247,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
     <div class="search_warpper">
         <div class="container">
-            @if( (session('deliveryAddress')) && (Route::currentRouteName() != 'userHome') )
-                <div class="row no-gutters" id="location_search_wrapper">
+            <div class="row no-gutters" id="location_search_wrapper">
+                @if( (Session::has('preferences')) && (Session::get('preferences')->is_hyperlocal == 1) )
                     <div class="col-lg-3 col-md-4 col">
                         <div class="d-flex align-items-center justify-content-start px-3 dropdown-toggle" href="#edit-address" data-toggle="modal">
                             <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
@@ -266,9 +266,16 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i><!--span class="search-text">Search</span--></button>
                         </form>
                     </div>
-                </div>
-            @endif
-        </dv>
+                @else
+                    <div class="col-lg-12 col-md-12 col">
+                        <form class="search_form d-flex align-items-center justify-content-between" action="">
+                            <input class="form-control border-0" type="text" placeholder="Search">
+                            <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i><!--span class="search-text">Search</span--></button>
+                        </form>
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
 </header>
 
@@ -325,7 +332,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 </div><?php */ ?>
             </div>
             <div class="text-center">
-                <button type="button" class="btn btn-solid ml-auto confirm_address_btn">Confirm And Proceed</button>
+                <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100">Confirm And Proceed</button>
             </div>
         </div>
       </div>

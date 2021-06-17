@@ -906,7 +906,7 @@ label.file-input.uploadImages {
     object-position: center;
 }
 
-#banner-datatable img.rounded-circle {
+.table-responsive img.rounded-circle {
     width: 30px;
     height: 30px;
 }
@@ -1292,4 +1292,22 @@ i.mdi.mdi-exclamation-thick {
 
 .custom-radio.radio_new .custom-control-input:checked ~ .custom-control-label::after {
     opacity: 1;
+}
+
+.address_txt {
+    width: 120px !important;
+}
+
+.ellips_txt {
+    margin: 0;
+    display: block;
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.disabled {
+    opacity: 0.7;
+    pointer-events: none;
 }

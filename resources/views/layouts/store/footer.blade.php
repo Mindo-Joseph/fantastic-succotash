@@ -56,6 +56,14 @@
         let delivery_address = 0;
     @endif;
 
+    @if( (Session::has('preferences')) && (Session::get('preferences')->is_hyperlocal == 1) )
+        let is_hyperlocal = 1;
+    @else
+        let is_hyperlocal = 0;
+    @endif;
+    
+    let empty_cart_url = "{{route('emptyCartData')}}";
+
     $('.customerLang').click(function(){
         var changLang = $(this).attr('langId');
         settingData('language', changLang);
@@ -145,5 +153,9 @@
         document.documentElement.style.setProperty('--theme-deafult', color_picker1);
         $('body').addClass("{{$darkMode}}");
     })
+
+    function emptyCart(){
+        
+    }
 
 </script>

@@ -410,6 +410,18 @@ class CartController extends FrontController
     }
 
     /**
+     * Empty Cart
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function emptyCartData($domain = '', Request $request){
+        CartProduct::where('id', $request->cartproduct_id)->delete();
+        CartCoupon::where('vendor_id', $request->vendor_id)->delete();
+        CartAddon::where('cart_product_id', $request->cartproduct_id)->delete();
+        return response()->json(['status' => 'success', 'message' => 'Cart deleted successfully.']);
+    }
+
+    /**
      * Delete Cart Product
      *
      * @return \Illuminate\Http\Response
