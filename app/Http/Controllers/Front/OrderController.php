@@ -87,7 +87,7 @@ class OrderController extends FrontController{
                     }
                     if(!empty($vendor_cart_product->product->Requires_last_mile) && $vendor_cart_product->product->Requires_last_mile == 1)
                     {   
-                        $delivery_on_vendors [] = $vendor_cart_product->vendor_id;
+                       // $delivery_on_vendors [] = $vendor_cart_product->vendor_id;
                        // Log::info($vendor_cart_product->product);
                        // $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                     }
@@ -185,8 +185,9 @@ class OrderController extends FrontController{
                 ]);
             }
 
-            if(count($delivery_on_vendors))
-            $order_dispatch = $this->placeRequestToDispatch($order,$delivery_on_vendors,$request);
+          //  if(count($delivery_on_vendors))
+         //   $order_dispatch = $this->placeRequestToDispatch($order,$delivery_on_vendors,$request);
+
             DB::commit();
             return $order; 
         } catch (Exception $e) {
@@ -235,7 +236,7 @@ class OrderController extends FrontController{
 
     public function placeRequestToDispatch($order,$delivery_on_vendors,$request){
         try {   
-                $call_back_url = $request->getSchemeAndHttpHost();
+              
                 $dispatch_domain = $this->getDispatchDomain();
                 if ($dispatch_domain && $dispatch_domain != false) {
                     $customer = User::find(Auth::id());
@@ -244,10 +245,13 @@ class OrderController extends FrontController{
                     $tasks = array();
                     if ($request->input("payment-group") == 2) {
                         $cash_to_be_collected = 'Yes';
+                        $payable_amount = $order->payable_amount;
                     } else {
                         $cash_to_be_collected = 'No';
+                        $payable_amount = 0.00;
                     }
                     foreach ($vendor_ids as $key => $vendor) {
+                        $call_back_url = route('dispatch-order-update', ['vendor_id' => $vendor,'order_id' => $order->id,'dispatcher_status_option_id' => '']);
                         $vendor_details = Vendor::where('id',$vendor)->select('id','name','latitude','longitude','address')->first();
                         $tasks = array();
                         $meta_data = '';
@@ -268,21 +272,18 @@ class OrderController extends FrontController{
                                                         'post_code' => $cus_address->pincode??'',
                                                         'barcode' => '',
                                                         );
-                        $data['order_id'] = $order->id; 
-                        $data['vendor_details'] = $vendor_details; 
-                        $data['call_back_url'] = $call_back_url;  
-                        $meta_data = json_encode($data);                              
                                    
                         $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
                                                         'customer_phone_number' => $customer->phone_number ?? '+919041969648',
                                                         'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
                                                         'recipient_phone' => $customer->phone_number ?? '+919041969648',
                                                         'recipient_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
-                                                        'task_description' => $meta_data??null,
+                                                        'task_description' => "Order From :".$vendor_details->name,
                                                         'allocation_type' => 'u',
                                                         'task_type' => 'now',
-                                                        'cash_to_be_collected' => $cash_to_be_collected,
+                                                        'cash_to_be_collected' => $payable_amount??0.00,
                                                         'barcode' => '',
+                                                        'call_back_url' => $call_back_url??null,
                                                         'task' => $tasks
                                                         ];
 

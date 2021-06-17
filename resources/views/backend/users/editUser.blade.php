@@ -109,7 +109,7 @@
                                             @foreach($permissions as $singlepermission)
                                             <tr>
                                                 <td>
-                                                    <h5 class="m-0 font-weight-normal">{{ $singlepermission->name }}</h5>
+                                                    <h5 class="m-0 font-weight-normal">{{ ucwords(strtolower($singlepermission->name)) }}</h5>
                                                 </td>
         
                                                 <td>
