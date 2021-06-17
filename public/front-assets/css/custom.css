@@ -1969,8 +1969,22 @@ footer .form-control {
     color: #000;
 }
 
+.contact_link li a{
+    color: #777;
+}
 
+.contact_link i {
+    font-size: 22px;
+    vertical-align: middle;
+}
 
+.footer-theme .sub-title .contact_link li:hover a,.contact_link i:hover {
+    color: #ff4c3b;
+}
+
+.footer-theme .sub-title .contact_link li a:before{
+    content: none;
+}
 
 
 

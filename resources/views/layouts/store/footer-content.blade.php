@@ -80,24 +80,25 @@
                 <div class="col-lg-3 col-md-6 mb-md-0 mb-3">
                     <div class="sub-title">
                         <div class="footer-title">
-                            <h4>Subscribe to our Newsletter</h4>
+                            <h4>Contact Us</h4>
                         </div>
-                    </div>
                     <div class="footer-contant">
-                        <ul>
+                        <ul class="contact_link">
                             <li>
-                                <a href="#"><span></span></a>
+                                <a href="https://hmoobhub.royoorders.com/"><i class="fa fa-globe mr-1" aria-hidden="true"></i><span>https://hmoobhub.royoorders.com/</span></a>
                             </li>
                             <li>
-                                <a href="#"><span></span></a>
+                                <a href="tel:+234-803-531-4802"><i class="fa fa-phone mr-1" aria-hidden="true"></i><span>+234-803-531-4802</span></a>
                             </li>
                             <li>
-                                <a href="#"><span></span></a>
+                                <a href="mailto:info@pearwheel.com"><i class="fa fa-envelope-o mr-1" aria-hidden="true"></i><span>info@pearwheel.com</span></a>
                             </li>
                             <li>
                                 <a href="#"><span></span></a>
                             </li>
                         </ul>
+                    </div>
+                    
                     </div>
                     <!-- <form class="card bg-transparent">
                         <div class="card-body row no-gutters align-items-center p-0">
@@ -117,7 +118,7 @@
     <div class="sub-footer">
         <div class="container">
             <div class="row">
-                <div class="col-xl-6 col-md-6 col-sm-12">
+                <div class="col-sm-12 text-center">
                     <div class="footer-end">
                         <p><i class="fa fa-copyright" aria-hidden="true"></i> 2021-2022 Royoorders</p>
                     </div>

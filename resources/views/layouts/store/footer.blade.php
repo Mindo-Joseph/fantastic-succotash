@@ -31,6 +31,7 @@
 <script src="{{asset('js/location.js')}}"></script>
 <script type="text/javascript">
     var is_hyperlocal = 0;
+    var delivery_address = 0;
     var show_cart_url = "{{ route('showCart') }}";
     var home_page_url = "{{ route('homePageData') }}";
     let empty_cart_url = "{{route('emptyCartData')}}";
@@ -40,15 +41,12 @@
     var cart_product_url= "{{ route('getCartProducts') }}";
     var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
     @if(Session::has('deliveryAddress'))
-        let delivery_address = 1;
-    @else
-        let delivery_address = 0;
-    @endif;
+        delivery_address = 1;
+    @endif
+
     @if( Session::get('preferences') )
-        @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) ) 
+        @if( Session::get('preferences')->is_hyperlocal == 1 ) 
             is_hyperlocal = 1;
-        @else
-            is_hyperlocal = 0;
         @endif;
     @endif;
 </script>
