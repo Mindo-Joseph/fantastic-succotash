@@ -391,8 +391,6 @@
 </section>
 @endsection
 
-
-
 @section('script')
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
 <script src="{{asset('front-assets/js/fly-cart.js')}}"></script>
@@ -408,18 +406,7 @@
     });
 </script>
 
-<script>
-        jQuery(document).ready(function(){
-            jQuery(".input-field").hide();
-            jQuery("#show_input").click(function(){
-                jQuery(".input-field").slideDown("slow");
-            });
-            jQuery(".hide_input").click(function(){
-                jQuery(".input-field").slideUp("slow");
-            });
-        });
-        
-</script>
+
 
 @if( (count($newProducts) > 0) || (count($featuredProducts) > 0) || (count($onSaleProducts) > 0) )
 <script>

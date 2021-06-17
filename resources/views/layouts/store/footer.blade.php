@@ -56,10 +56,12 @@
         let delivery_address = 0;
     @endif;
 
-    @if( (Session::has('preferences')) && (Session::get('preferences')->is_hyperlocal == 1) )
+    @if( (Session::get('preferences')))
+    @if(Session::get('preferences')->is_hyperlocal == 1) 
         let is_hyperlocal = 1;
     @else
         let is_hyperlocal = 0;
+    @endif;
     @endif;
     
     let empty_cart_url = "{{route('emptyCartData')}}";
