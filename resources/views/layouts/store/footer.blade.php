@@ -44,18 +44,18 @@
     });
 </script>
 <script>
-    var is_hyperlocal = 0;
+    let is_hyperlocal = 0;
+    let delivery_address = 0;
     @if(Session::has('deliveryAddress'))
-        let delivery_address = 1;
-    @else
-        let delivery_address = 0;
-    @endif;
+        delivery_address = 1;
+    @endif
+
     @if( Session::get('preferences') )
-        @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) ) 
-            let is_hyperlocal = 1;
-        @else
-            let is_hyperlocal = 0;
-        @endif;
-    @endif;
+        @if( Session::get('preferences')->is_hyperlocal == 1 ) 
+            is_hyperlocal = 1;
+        @endif
+    @else
+        
+    @endif
     let empty_cart_url = "{{route('emptyCartData')}}";
 </script>
