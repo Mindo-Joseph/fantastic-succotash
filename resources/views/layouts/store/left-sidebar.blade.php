@@ -7,58 +7,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 @endphp
 <header class="header-2 header-6">
     <div class="mobile-fix-option"></div>
-    
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
                 <div class="main-menu border-section border-top-0">
                     <div class="menu-left">
-                        <!-- <div class="navbar">
-                            <a href="javascript:void(0)" onclick="openNav()">
-                                <div class="bar-style"><i class="fa fa-bars sidebar-bar" aria-hidden="true"></i>
-                                </div>
-                            </a>
-                            <div id="mySidenav" class="sidenav">
-                                <a href="javascript:void(0)" class="sidebar-overlay" onclick="closeNav()"></a>
-                                <nav>
-                                    <div onclick="closeNav()">
-                                        <div class="sidebar-back text-left"><i class="fa fa-angle-left pr-2" aria-hidden="true"></i> Back</div>
-                                    </div>
-                                    @if($navCategories && !empty($navCategories))
-                                    <ul id="sub-menu" class="sm pixelstrap sm-vertical">
-                                        @foreach($navCategories as $cate)
-                                        <li> <a href="{{route('categoryDetail', $cate['id'])}}">{{$cate['name']}}</a>
-
-                                            @if(!empty($cate['children']))
-                                            <ul class="mega-menu clothing-menu">
-                                                <div class="row m-0">
-                                                    @foreach($cate['children'] as $childs)
-                                                    <li class="col-xl-4">
-
-                                                        <div class="link-section">
-                                                            <a href="{{route('categoryDetail', $childs['id'])}}">
-                                                                <h5>{{$childs['name']}}</h5>
-                                                            </a>
-                                                            @if(!empty($childs['children']))
-                                                            <ul>
-                                                                @foreach($childs['children'] as $chld)
-                                                                <li><a href="{{route('categoryDetail', $chld['id'])}}">{{$chld['name']}}</a></li>
-                                                                @endforeach
-                                                            </ul>
-                                                            @endif
-                                                        </div>
-                                                    </li>
-                                                    @endforeach
-                                                </div>
-                                            </ul>
-                                            @endif
-                                        </li>
-                                        @endforeach
-                                    </ul>
-                                    @endif
-                                </nav>
-                            </div>
-                        </div> -->
+                        
                         <div class="brand-logo">
                             <a href="{{ route('userHome') }}"><img class="img-fluid blur-up lazyload" alt="" src="{{$clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path']}}" ></a>
                         </div>
@@ -67,14 +21,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <div>
                             <nav id="main-nav">
                                 <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
-                                <!-- 
-                                    <li>
-                                        <div class="mobile-back text-right">Back<i class="fa fa-angle-right pl-2" aria-hidden="true"></i></div>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('userHome')}}">Home</a>
-                                    </li>
-                                </ul> -->
                                 <ul id="main-menu" class="sm pixelstrap sm-horizontal">
                                     <li>
                                         <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
@@ -112,27 +58,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
                                 </form>
                                 <ul>
-                                    <!-- <li class="onhover-div mobile-search">
-                                        <div><img src="{{asset('front-assets/images/icon/search.png')}}" onclick="openSearch()" class="img-fluid blur-up lazyload" alt=""> <i class="ti-search" onclick="openSearch()"></i></div>
-                                        <div id="search-overlay" class="search-overlay">
-                                            <div> <span class="closebtn" onclick="closeSearch()" title="Close Overlay">×</span>
-                                                <div class="overlay-content">
-                                                    <div class="container">
-                                                        <div class="row">
-                                                            <div class="col-xl-12">
-                                                                <form action="/search" method="GET">
-                                                                    <div class="form-group">
-                                                                        <input type="text" class="form-control" id="exampleInputPassword1" name="query" placeholder="Search a Product">
-                                                                    </div>
-                                                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li> -->
                                     <li>
                                         <i class="search_btn fa fa-search"></i>
                                     </li>
@@ -202,49 +127,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             </div>
         </div>
     </div>
-    
-    @if($navCategories && !empty($navCategories))
-    <!-- <div class="container">
-        <div class="row ">
-            <div class="col-lg-12">
-                <div class="main-nav-center">
-                    <nav id="main-nav">
-                        <div class="toggle-nav">
-                            <i class="fa fa-bars sidebar-bar"></i>
-                        </div>
-                        <ul id="main-menu" class="sm pixelstrap sm-horizontal">
-                            <li>
-                                <div class="mobile-back text-right">Back<i class="fa fa-angle-right pl-2" aria-hidden="true"></i></div>
-                            </li>
-                            @foreach($navCategories as $cate)
-                            <li>
-                                <a href="{{route('categoryDetail', $cate['id'])}}">{{$cate['name']}}</a>
-                                @if(!empty($cate['children']))
-                                    
-                                    <ul>
-                                        @foreach($cate['children'] as $childs)
-                                        <li>
-                                            <a href="{{route('categoryDetail', $childs['id'])}}"><span class="new-tag">{{$childs['name']}}</span></a>
-                                            @if(!empty($childs['children']))
-                                            <ul>
-                                              @foreach($childs['children'] as $chld)
-                                                <li><a href="{{route('categoryDetail', $chld['id'])}}">{{$chld['name']}}</a></li>
-                                              @endforeach
-                                            </ul>
-                                            @endif
-                                        </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            @endforeach
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    @endif
-
     <div class="search_warpper">
         <div class="container">
             <div class="row no-gutters" id="location_search_wrapper">
@@ -264,14 +146,14 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="col-lg-9 col-md-8 col">
                         <form class="search_form d-flex align-items-center justify-content-between" action="">
                             <input class="form-control border-0" type="text" placeholder="Search">
-                            <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i><!--span class="search-text">Search</span--></button>
+                            <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i></button>
                         </form>
                     </div>
                 @else
                     <div class="col-lg-12 col-md-12 col">
                         <form class="search_form d-flex align-items-center justify-content-between" action="">
                             <input class="form-control border-0" type="text" placeholder="Search">
-                            <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i><!--span class="search-text">Search</span--></button>
+                            <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i></button>
                         </form>
                     </div>
                 @endif
@@ -280,7 +162,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </div>
     </div>
 </header>
-
 <div class="modal fade edit_address" id="edit-address" tabindex="-1" aria-labelledby="edit-addressLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -289,49 +170,15 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             <div id="address-map"></div>
         </div>
         <div class="delivery_address p-2 mb-2 position-relative">
-            <?php /* ?><div class="modal-title">Select your location</div><?php */ ?>
             <button type="button" class="close edit-close position-absolute" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <div class="form-group">
                 <label class="delivery-head mb-2">SELECT YOUR LOCATION</label>
-                <?php /* ?><div class="select_address border d-flex align-items-center justify-content-between ">
-                    <div class="location-area">
-                        <i class="fa fa-check-circle-o" aria-hidden="true"></i>
-                        <span>Sector 28 C, Chandigarh, India</span>
-                    </div>   
-                    <label class="m-0 text-uppercase">Change</label>
-                </div><?php */ ?>
                 <div class="address-input-field d-flex align-items-center justify-content-between">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
                     <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{session('deliveryAddress')}}">
                     <input type="hidden" name="address_latitude" id="address-latitude" value="{{session('latitude')}}" />
                     <input type="hidden" name="address_longitude" id="address-longitude" value="{{session('longitude')}}" />
                 </div>
-                <?php /* ?><div class="edit-area">
-                    <input class="form-control" type="text" placeholder="Complete Address *" name="complete_address" id="complete_address">
-                    <input class="form-control" type="text" placeholder="Floor (Optional)" name="floor" id="floor">
-                    <input class="form-control" type="text" placeholder="How to reach (Optional)" name="address_hint" id="address_hint">
-                </div>
-                <div class="mt-2 mb-2">
-                    <div class="address_type">
-                        <label class="radio d-inline-block m-0">Home
-                            <input type="radio" name="address_type" checked="checked" value="home">
-                            <span class="checkround"></span>
-                        </label>
-                        <label class="radio d-inline-block m-0">Office
-                            <input type="radio" name="address_type" value="office">
-                            <span class="checkround"></span>
-                        </label>
-                        <label class="radio other_address d-inline-block m-0">Other
-                            <input type="radio" name="address_type" value="other">
-                            <span class="checkround"></span>
-                        </label>   
-                    </div>
-                    <div class="other-address-input d-none">
-                        <label class="d-inline-block m-0">
-                            <input type="text" name="other_address">
-                        </label>
-                    </div>                      
-                </div><?php */ ?>
             </div>
             <div class="text-center">
                 <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100">Confirm And Proceed</button>
@@ -341,7 +188,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     </div>
   </div>
 </div>
-
 <div class="modal fade remove-cart-modal" id="remove_cart_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_cartLabel" style="background-color: rgba(0,0,0,0.8);">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -363,28 +209,3 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     </div>
   </div>
 </div>
-
-<script type="text/javascript">
-    var show_cart_url = "{{ route('showCart') }}";
-    var cart_details_url = "{{ route('cartDetails') }}";
-    var user_checkout_url= "{{ route('user.checkout') }}";
-    var cart_product_url= "{{ route('getCartProducts') }}";
-    var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
-    var delete_cart_url = "{{ route('emptyCartData') }}";
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': jQuery('meta[name="_token"]').attr('content')
-        }
-    });
-</script>
-<script>
-    jQuery(document).ready(function(){
-        jQuery(".search_btn").click(function () {
-            jQuery(".search_warpper").slideToggle("slow");
-        });
-
-        jQuery(".close_btn").click(function () {
-            jQuery(".search_warpper").slideUp("slow");
-        });
-    });
-</script>
