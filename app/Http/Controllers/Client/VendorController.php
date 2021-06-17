@@ -15,7 +15,7 @@ use App\Http\Traits\ApiResponser;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\VendorImport;
 use App\Models\UserVendor;
-
+use Redirect;
 class VendorController extends BaseController
 {
     use ToasterResponser;
@@ -35,6 +35,9 @@ class VendorController extends BaseController
             });
         }
         $vendors = $vendors->get();
+        if(count($vendors) == 1)
+        return Redirect::route('vendor.show', $vendors->first()->id);
+
         return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
     }
 

@@ -209,8 +209,10 @@
                                         <select class="form-control selectizeInput" id="category_list" name="category">
                                             <option value="">Select Category...</option>
                                             @foreach($product_categories as $product_category)
-                                            @if($product_category->category->type_id == 1)
-                                            <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
+                                            @if($product_category->category)
+                                                @if($product_category->category->type_id == 1)
+                                                    <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
+                                                @endif
                                             @endif
                                             @endforeach
                                         </select>
