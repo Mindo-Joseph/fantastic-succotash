@@ -97,4 +97,5 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::post('payment/option/list', 'Front\PaymentController@index')->name('payment.option.list');
 	Route::get('user/setPrimaryAddress/{id}', 'Front\AddressController@setPrimaryAddress')->name('setPrimaryAddress');
 	Route::post('user/submitPassword','Front\ProfileController@submitChangePassword')->name('user.submitChangePassword');
+	Route::get('user/wallethistory','Front\WalletController@index')->name('user.wallet');
 });

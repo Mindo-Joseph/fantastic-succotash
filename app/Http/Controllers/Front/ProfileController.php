@@ -88,7 +88,7 @@ class ProfileController extends FrontController
                         'code_text' => 'Register yourself using this refferal code below to get bonus offer',
                         'code' => $otp,
                         'logo' => $client->logo['original'],
-                        'link' => "http://local.myorder.com/user/register"
+                        'link' => "http://local.myorder.com/user/register?refferal_code=".$otp,
                     ],
                     function ($message) use ($sendto, $client_name, $mail_from) {
                         $message->from($mail_from, $client_name);

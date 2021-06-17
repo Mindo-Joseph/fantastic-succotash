@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b1c17a50ef82d30b3225d57764a4a1ca",
+    "content-hash": "e7185d6dcb74f598bc4156fc417a90b9",
     "packages": [
         {
             "name": "99designs/phumbor",
@@ -293,16 +293,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.184.3",
+            "version": "3.184.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "2e1e8544258ea1a8f6c6ccaf651c8b5830a03a03"
+                "reference": "c833d965cb5f5241a04748b313953335409d0f06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2e1e8544258ea1a8f6c6ccaf651c8b5830a03a03",
-                "reference": "2e1e8544258ea1a8f6c6ccaf651c8b5830a03a03",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/c833d965cb5f5241a04748b313953335409d0f06",
+                "reference": "c833d965cb5f5241a04748b313953335409d0f06",
                 "shasum": ""
             },
             "require": {
@@ -377,9 +377,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.184.3"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.184.5"
             },
-            "time": "2021-06-14T18:18:58+00:00"
+            "time": "2021-06-16T18:13:45+00:00"
         },
         {
             "name": "awt/apilogger",
@@ -425,6 +425,87 @@
                 "source": "https://github.com/aungwinthant/apilogger/tree/master"
             },
             "time": "2020-03-23T09:24:55+00:00"
+        },
+        {
+            "name": "bavix/laravel-wallet",
+            "version": "6.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bavix/laravel-wallet.git",
+                "reference": "ffc0e8b87c587a2c81721ce50725b919b3d63ced"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bavix/laravel-wallet/zipball/ffc0e8b87c587a2c81721ce50725b919b3d63ced",
+                "reference": "ffc0e8b87c587a2c81721ce50725b919b3d63ced",
+                "shasum": ""
+            },
+            "require": {
+                "brick/math": "~0.8",
+                "doctrine/dbal": "^2.8|^3.0",
+                "ext-pdo": "*",
+                "illuminate/database": "^6.0|^7.0|^8.0",
+                "php": "^7.3|^8.0",
+                "ramsey/uuid": "^3.0|^4.0"
+            },
+            "require-dev": {
+                "brianium/paratest": "^6.2",
+                "cknow/laravel-money": "^6.1",
+                "infection/infection": "~0.17",
+                "laravel/cashier": "^12.5",
+                "nunomaduro/collision": "^5.4",
+                "orchestra/testbench": "^6.4",
+                "phpmetrics/phpmetrics": "^v2.7",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^9.4",
+                "psalm/plugin-laravel": "^1.4",
+                "vimeo/psalm": "^4.1"
+            },
+            "suggest": {
+                "bavix/laravel-wallet-swap": "Addition to the laravel-wallet library for quick setting of exchange rates",
+                "bavix/laravel-wallet-vacuum": "Addition to the laravel-wallet library for quick fix race condition"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Bavix\\Wallet\\WalletServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Bavix\\Wallet\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Babichev Maxim",
+                    "email": "info@babichev.net"
+                }
+            ],
+            "description": "Easy work with virtual wallet.",
+            "homepage": "https://bavix.github.io/laravel-wallet/",
+            "keywords": [
+                "bavix",
+                "credits",
+                "currency",
+                "laravel",
+                "laravel-package",
+                "laravel-wallet",
+                "payments",
+                "virtual",
+                "wallet"
+            ],
+            "support": {
+                "issues": "https://github.com/bavix/laravel-wallet/issues",
+                "source": "https://github.com/bavix/laravel-wallet/tree/6.1.0"
+            },
+            "time": "2021-04-17T21:00:05+00:00"
         },
         {
             "name": "brick/math",
@@ -2205,16 +2286,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.46.0",
+            "version": "v8.47.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "a18266c612e0e6aba5e0174b3c873d2d217dccfb"
+                "reference": "93db226946453f4285558b7c3166ddb6e7ea5400"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/a18266c612e0e6aba5e0174b3c873d2d217dccfb",
-                "reference": "a18266c612e0e6aba5e0174b3c873d2d217dccfb",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/93db226946453f4285558b7c3166ddb6e7ea5400",
+                "reference": "93db226946453f4285558b7c3166ddb6e7ea5400",
                 "shasum": ""
             },
             "require": {
@@ -2369,20 +2450,20 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-06-08T13:36:46+00:00"
+            "time": "2021-06-15T14:00:32+00:00"
         },
         {
             "name": "laravel/scout",
-            "version": "v9.1.1",
+            "version": "v9.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/scout.git",
-                "reference": "ce621bee3c41aad981cde75adcf751d4cea69646"
+                "reference": "ccd34d0efd99489059e3e2bcd223aaa360af62cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/scout/zipball/ce621bee3c41aad981cde75adcf751d4cea69646",
-                "reference": "ce621bee3c41aad981cde75adcf751d4cea69646",
+                "url": "https://api.github.com/repos/laravel/scout/zipball/ccd34d0efd99489059e3e2bcd223aaa360af62cf",
+                "reference": "ccd34d0efd99489059e3e2bcd223aaa360af62cf",
                 "shasum": ""
             },
             "require": {
@@ -2441,7 +2522,7 @@
                 "issues": "https://github.com/laravel/scout/issues",
                 "source": "https://github.com/laravel/scout"
             },
-            "time": "2021-06-08T14:48:33+00:00"
+            "time": "2021-06-15T16:00:14+00:00"
         },
         {
             "name": "laravel/socialite",
@@ -2773,43 +2854,41 @@
         },
         {
             "name": "lcobucci/jwt",
-            "version": "4.0.3",
+            "version": "4.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lcobucci/jwt.git",
-                "reference": "ae4165a76848e070fdac691e773243d10cd06ce1"
+                "reference": "71cf170102c8371ccd933fa4df6252086d144de6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/ae4165a76848e070fdac691e773243d10cd06ce1",
-                "reference": "ae4165a76848e070fdac691e773243d10cd06ce1",
+                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/71cf170102c8371ccd933fa4df6252086d144de6",
+                "reference": "71cf170102c8371ccd933fa4df6252086d144de6",
                 "shasum": ""
             },
             "require": {
+                "ext-hash": "*",
+                "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-openssl": "*",
+                "ext-sodium": "*",
                 "lcobucci/clock": "^2.0",
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "infection/infection": "^0.20",
+                "infection/infection": "^0.21",
                 "lcobucci/coding-standard": "^6.0",
-                "mikey179/vfsstream": "^1.6",
-                "phpbench/phpbench": "^0.17",
+                "mikey179/vfsstream": "^1.6.7",
+                "phpbench/phpbench": "^1.0@alpha",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.12",
                 "phpstan/phpstan-deprecation-rules": "^0.12",
                 "phpstan/phpstan-phpunit": "^0.12",
                 "phpstan/phpstan-strict-rules": "^0.12",
                 "phpunit/php-invoker": "^3.1",
-                "phpunit/phpunit": "^9.4"
+                "phpunit/phpunit": "^9.5"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.0-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Lcobucci\\JWT\\": "src"
@@ -2833,7 +2912,7 @@
             ],
             "support": {
                 "issues": "https://github.com/lcobucci/jwt/issues",
-                "source": "https://github.com/lcobucci/jwt/tree/4.0.3"
+                "source": "https://github.com/lcobucci/jwt/tree/4.1.4"
             },
             "funding": [
                 {
@@ -2845,7 +2924,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-03-23T23:47:22+00:00"
+            "time": "2021-03-23T23:53:08+00:00"
         },
         {
             "name": "league/commonmark",
@@ -8753,16 +8832,16 @@
         },
         {
             "name": "twilio/sdk",
-            "version": "6.24.1",
+            "version": "6.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twilio/twilio-php.git",
-                "reference": "3438bcdb42a8fabcfaa081670d5924b868016148"
+                "reference": "95a8fcb82d2be26da01102f4c9498b7c1ea07cef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/3438bcdb42a8fabcfaa081670d5924b868016148",
-                "reference": "3438bcdb42a8fabcfaa081670d5924b868016148",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/95a8fcb82d2be26da01102f4c9498b7c1ea07cef",
+                "reference": "95a8fcb82d2be26da01102f4c9498b7c1ea07cef",
                 "shasum": ""
             },
             "require": {
@@ -8801,9 +8880,9 @@
             ],
             "support": {
                 "issues": "https://github.com/twilio/twilio-php/issues",
-                "source": "https://github.com/twilio/twilio-php/tree/6.24.1"
+                "source": "https://github.com/twilio/twilio-php/tree/6.25.0"
             },
-            "time": "2021-06-02T20:26:58+00:00"
+            "time": "2021-06-16T19:21:16+00:00"
         },
         {
             "name": "umpirsky/country-list",
@@ -11591,16 +11670,16 @@
         },
         {
             "name": "sebastian/type",
-            "version": "2.3.2",
+            "version": "2.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/type.git",
-                "reference": "0d1c587401514d17e8f9258a27e23527cb1b06c1"
+                "reference": "b8cd8a1c753c90bc1a0f5372170e3e489136f914"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/0d1c587401514d17e8f9258a27e23527cb1b06c1",
-                "reference": "0d1c587401514d17e8f9258a27e23527cb1b06c1",
+                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/b8cd8a1c753c90bc1a0f5372170e3e489136f914",
+                "reference": "b8cd8a1c753c90bc1a0f5372170e3e489136f914",
                 "shasum": ""
             },
             "require": {
@@ -11635,7 +11714,7 @@
             "homepage": "https://github.com/sebastianbergmann/type",
             "support": {
                 "issues": "https://github.com/sebastianbergmann/type/issues",
-                "source": "https://github.com/sebastianbergmann/type/tree/2.3.2"
+                "source": "https://github.com/sebastianbergmann/type/tree/2.3.4"
             },
             "funding": [
                 {
@@ -11643,7 +11722,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-06-04T13:02:07+00:00"
+            "time": "2021-06-15T12:49:02+00:00"
         },
         {
             "name": "sebastian/version",
