@@ -10,45 +10,7 @@
                 </div>
             </div>
             <div class="col-lg-4 header-contact text-center">
-                <?php /* ?>
-                @if( (session('deliveryAddress')) && (Route::currentRouteName() != 'userHome') )
-                <div class="row no-gutters" id="location_search_wrapper">
-                    <div class="col-lg-12 col-md-12 col">
-                        <div class="d-flex align-items-center justify-content-start px-3 dropdown-toggle" id="dropdownLocationButton" data-toggle="dropdown" aria-haspopup="true" 
-                        aria-expanded="false">
-                            <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-                            <div class="homepage-address text-left">
-                                <h2><span data-placement="top" data-toggle="tooltip" title="{{session('deliveryAddress')}}">{{session('deliveryAddress')}}</span></h2>
-                            </div>
-                            <div class="down-icon">
-                                <i class="fa fa-angle-down" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                        <div class="dropdown-menu p-0" aria-labelledby="dropdownLocationButton" style="max-width:400px;width:100%">
-                            <div id="address-map-container">
-                                <div id="address-map"></div>
-                            </div>
-                            <div class="delivery_address p-2 position-relative">
-                                <div class="modal-title">Set your delivery location</div>
-                                <button type="button" class="close edit-close position-absolute" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <div class="form-group">
-                                    <label class="delivery-head">DELIVERY AREA</label>
-                                    <div class="address-input-field d-flex align-items-center justify-content-between">
-                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{session('deliveryAddress')}}">
-                                        <input type="hidden" name="address_latitude" id="address-latitude" value="{{session('latitude')}}" />
-                                        <input type="hidden" name="address_longitude" id="address-longitude" value="{{session('longitude')}}" />
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100">Confirm And Proceed</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif
-                <?php */ ?>
+                
             </div>
             <div class="col-lg-4 text-right">
                 <ul class="header-dropdown">

@@ -18,16 +18,17 @@ $(document).ready(function() {
     function showPosition(position) {
         let lat = position.coords.latitude;
         let long = position.coords.longitude;
-        setDeliveryAddress(lat,long);
         displayLocation(lat,long);
     }
 
-    if(!delivery_address){
-        getLocation();
-    }else{
-        let lat = $("#address-latitude").val();
-        let long = $("#address-longitude").val();
-        displayLocation(lat,long);
+    if(is_hyperlocal){
+        if(!delivery_address){
+            getLocation();
+        }else{
+            let lat = $("#address-latitude").val();
+            let long = $("#address-longitude").val();
+            displayLocation(lat,long);
+        }
     }
 
     // $(document).on('click', '#location_search_wrapper .dropdown-menu', function (e) {
@@ -185,54 +186,57 @@ $(document).ready(function() {
                         $('#onsale_products_wrapper .vendor-product').slick(slickOptions);
                     }
                     else{
-                        // window.location.reload();
+                        window.location.reload();
                     }
                 }
             }
         });
     }
+
+    function displayLocation(latitude,longitude){
+        var geocoder;
+        geocoder = new google.maps.Geocoder();
+        var latlng = new google.maps.LatLng(latitude, longitude);
+    
+        const map = new google.maps.Map(document.getElementById('address-map'), {
+            center: {lat: latitude, lng: longitude},
+            zoom: 13
+        });
+    
+        const marker = new google.maps.Marker({
+            map: map,
+            position: {lat: latitude, lng: longitude},
+        });
+    
+        geocoder.geocode(
+            {'latLng': latlng}, 
+            function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[0]) {
+                        var add= results[0].formatted_address ;
+                        var  value=add.split(",");
+    
+                        count=value.length;
+                        country=value[count-1];
+                        state=value[count-2];
+                        city=value[count-3];
+                        $("#address-input").val(value);
+                        $("#location_search_wrapper .homepage-address span").text(value).attr({"title": value, "data-original-title": value});
+                        if(!delivery_address){
+                            setDeliveryAddress(latitude, longitude);
+                        }
+                    }
+                    else  {
+                        // $("#address-input").val("address not found");
+                    }
+                }
+                else {
+                    $("#address-input").val("Geocoder failed due to: " + status);
+                }
+            }
+        );
+    }
 });
-
-function displayLocation(latitude,longitude){
-    var geocoder;
-    geocoder = new google.maps.Geocoder();
-    var latlng = new google.maps.LatLng(latitude, longitude);
-
-    const map = new google.maps.Map(document.getElementById('address-map'), {
-        center: {lat: latitude, lng: longitude},
-        zoom: 13
-    });
-
-    const marker = new google.maps.Marker({
-        map: map,
-        position: {lat: latitude, lng: longitude},
-    });
-
-    geocoder.geocode(
-        {'latLng': latlng}, 
-        function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                if (results[0]) {
-                    var add= results[0].formatted_address ;
-                    var  value=add.split(",");
-
-                    count=value.length;
-                    country=value[count-1];
-                    state=value[count-2];
-                    city=value[count-3];
-                    $("#address-input").val(value);
-                    $("#location_search_wrapper .homepage-address span").text(value).attr({"title": value, "data-original-title": value});
-                }
-                else  {
-                    $("#address-input").val("address not found");
-                }
-            }
-            else {
-                $("#address-input").val("Geocoder failed due to: " + status);
-            }
-        }
-    );
-}
 
 function addressInputDisplay(locationWrapper, inputWrapper, input){
     $(inputWrapper).removeClass("d-none").addClass("d-flex");

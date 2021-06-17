@@ -248,7 +248,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <div class="search_warpper">
         <div class="container">
             <div class="row no-gutters" id="location_search_wrapper">
-                @if( (session('deliveryAddress')) && (Session::has('preferences')) && (Session::get('preferences')->is_hyperlocal == 1) )
+                @if( (Session::has('preferences')) && (Session::get('preferences')->is_hyperlocal == 1) )
                     <div class="col-lg-3 col-md-4 col">
                         <div class="d-flex align-items-center justify-content-start px-3 dropdown-toggle" href="#edit-address" data-toggle="modal">
                             <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
