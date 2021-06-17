@@ -215,6 +215,7 @@ class ProductsImport implements ToCollection{
                     $product = Product::insertGetId([
                         'sku' => $da[0],
                         'url_slug' => $da[0],
+                        'category_id' => $da[4],
                         'title' => ($da[1] == "") ? "" : $da[1],
                         'body_html' => ($da[2] == "") ? "" : $da[2],
                         'vendor_id' => $this->vendor_id,
