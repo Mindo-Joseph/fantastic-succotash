@@ -33,7 +33,7 @@ class UserhomeController extends FrontController
         $navCategories = $this->categoryNav($langId);
         Session::put('navCategories', $navCategories); 
         $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
-        if($preferences->is_hyperlocal == 1){
+        if( ($preferences->is_hyperlocal == 1) && (!empty($latitude)) && (!empty($longitude)) ){
             $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
                 $query->select('vendor_id')
                 ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
@@ -74,16 +74,16 @@ class UserhomeController extends FrontController
             Session::put('latitude', $request->latitude);
             Session::put('longitude', $request->longitude);
             $curId = Session::get('customerCurrency');
-            $lats = $request->latitude;
-            $longs = $request->longitude;
-            $user_geo[] = $lats;
-            $user_geo[] = $longs;
+            $latitude = $request->latitude;
+            $longitude = $request->longitude;
+            $user_geo[] = $latitude;
+            $user_geo[] = $longitude;
             $vendors = array();
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
-            if($preferences->is_hyperlocal == 1){
-                $vendorData = $vendorData->whereHas('serviceArea', function($query) use($lats, $longs){
+            if( ($preferences->is_hyperlocal == 1) && (!empty($latitude)) && (!empty($longitude)) ){
+                $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
                         $query->select('vendor_id')
-                        ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$lats." ".$longs.")'))");
+                        ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
                 });
             }
             $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
