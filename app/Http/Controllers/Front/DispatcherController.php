@@ -23,7 +23,7 @@ class DispatcherController extends FrontController
             DB::beginTransaction();
             $checkiftokenExist = OrderVendor::where('web_hook_code',$web_hook_code)->first();
             if($checkiftokenExist){
-                $update = VendorOrderDispatcherStatus::Create(['dispatcher_id' => null,
+                $update = VendorOrderDispatcherStatus::updateOrCreate(['dispatcher_id' => null,
                     'order_id' =>  $checkiftokenExist->order_id,
                     'dispatcher_status_option_id' =>  $request->dispatcher_status_option_id,
                     'vendor_id' =>  $checkiftokenExist->vendor_id ]);
