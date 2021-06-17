@@ -38,8 +38,50 @@ $(document).ready(function() {
     $(document).delegate(".confirm_address_btn", "click", function(){
         let latitude = $("#address-latitude").val();
         let longitude = $("#address-longitude").val();
-        setDeliveryAddress(latitude, longitude);
+
+        $.ajax({
+            type: "get",
+            dataType: 'json',
+            url: cart_details_url,
+            success: function(response) {
+                if(response.data != ""){
+                    let cartProducts = response.data.products;
+                    if(cartProducts != ""){
+                        $("#remove_cart_modal").modal('show');
+                        $("#remove_cart_modal #remove_cart_button").attr("data-cart_id", response.data.id);
+                    }else{
+                        setDeliveryAddress(latitude, longitude);
+                    }
+                }else{
+                    setDeliveryAddress(latitude, longitude);
+                }
+            }
+        });
+
+        // setDeliveryAddress(latitude, longitude);
     });
+
+    $(document).delegate("#remove_cart_button", "click", function(){
+        let cart_id = $(this).attr("data-cart_id");
+        $("#remove_cart_modal").modal('hide');
+        removeCartData(cart_id);
+    });
+
+    function removeCartData(cart_id){
+        $.ajax({
+            type: "post",
+            dataType: 'json',
+            url: delete_cart_url,
+            data: {'cart_id': cart_id},
+            success: function(response) {
+                if(response.status == 'success'){
+                    let latitude = $("#address-latitude").val();
+                    let longitude = $("#address-longitude").val();
+                    setDeliveryAddress(latitude, longitude);
+                }
+            }
+        });
+    }
 
     function setDeliveryAddress(latitude, longitude){
         let selected_address = $("#address-input").val();
