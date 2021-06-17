@@ -39,11 +39,11 @@ class OrderController extends Controller {
     		$order_id = $request->order_id;
             $vendor_id = $request->vendor_id;
             if($vendor_id){
-	       	   $order = Order::with(['vendors' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+	       	   $order = Order::with(['vendors.vendor' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
             }else{
-                $order = Order::with(['vendors.vendor','vendors' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+                $order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
             }
-            if($order){
+            if($order->vendors){
                 $order->user_name = $order->user->name;
                 $order->user_image = $order->user->image;
     	    	foreach ($order->vendors as $vendor) {
@@ -76,8 +76,8 @@ class OrderController extends Controller {
                         $product->product_addons = $product_addons;
         			}
         		}
-    		    $order->order_item_count = $order_item_count;
             }
+    		$order->order_item_count = $order_item_count;
 	    	return $this->successResponse($order, null, 201);
     	} catch (Exception $e) {
     		return $this->errorResponse($e->getMessage(), $e->getCode());
