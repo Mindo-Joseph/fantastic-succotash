@@ -54,6 +54,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="product-4 product-m no-arrow">
+                @if(count($vendors) > 0)
                     @foreach($vendors as $vendor)
                     <div class="product-box">
                         <div class="img-wrapper">
@@ -75,6 +76,9 @@
                         </div>
                     </div>
                     @endforeach
+                @else
+                    <h4 class="text-center">No vendor exists nearby your location</h4>
+                @endif
                 </div>
             </div>
         </div>
@@ -174,8 +178,7 @@
 </script>
 <section class="section-b-space">
     <div class="container">
-        @if(count($newProducts) > 0)
-        <div class="row" id="new_products_wrapper">
+        <div class="row @if (count($onSaleProducts) < 1) d-none @endif" id="new_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">New Products</h2>
@@ -183,6 +186,7 @@
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card">
+                @if(count($newProducts) > 0)
                     @foreach($newProducts as $newProduct)
                     @foreach($newProduct as $product)
                     @php
@@ -216,12 +220,12 @@
                     </div>
                     @endforeach
                     @endforeach
+                @endif
                 </div>
             </div>
         </div>
-        @endif
-        @if(count($featuredProducts) > 0)
-        <div class="row" id="featured_products_wrapper">
+        
+        <div class="row @if (count($featuredProducts) < 1) d-none @endif" id="featured_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">Feature Product</h2>
@@ -229,6 +233,7 @@
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card">
+                @if(count($featuredProducts) > 0)
                     @foreach($featuredProducts as $featuredProduct)
                     @foreach($featuredProduct as $product)
                     @php
@@ -262,12 +267,12 @@
                     </div>
                     @endforeach
                     @endforeach
+                @endif
                 </div>
             </div>
         </div>
-        @endif
-        @if(count($newProducts) > 0)
-        <div class="row" id="bestseller_products_wrapper">
+        
+        <div class="row @if (count($newProducts) < 1) d-none @endif" id="bestseller_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">Best Seller</h2>
@@ -275,6 +280,7 @@
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card">
+                @if(count($newProducts) > 0)
                     @foreach($newProducts as $newProduct)
                     @foreach($newProduct as $new_product)
                     @php
@@ -308,12 +314,12 @@
                     </div>
                     @endforeach
                     @endforeach
+                @endif
                 </div>
             </div>
         </div>
-        @endif
-        @if(count($onSaleProducts) > 0)
-        <div class="row" id="onsale_products_wrapper">
+        
+        <div class="row @if (count($onSaleProducts) < 1) d-none @endif" id="onsale_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">On Sale</h2>
@@ -321,6 +327,7 @@
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card">
+                @if(count($onSaleProducts) > 0)
                     @foreach($onSaleProducts as $onSaleProduct)
                     @foreach($onSaleProduct as $product)
                     @php
@@ -354,10 +361,10 @@
                     </div>
                     @endforeach
                     @endforeach
+                @endif
                 </div>
             </div>
         </div>
-        @endif
     </div>
 </section>
 <section class="section-b-space pt-0">
@@ -399,6 +406,7 @@
     });
 </script>
 
+@if( (count($newProducts) > 0) || (count($featuredProducts) > 0) || (count($onSaleProducts) > 0) )
 <script>
      $('.vendor-product').slick({
         infinite: true,
@@ -425,5 +433,10 @@
         ]
     });
 </script>
+@endif
+
+@if( count($vendors) < 1 )
+    <script>$(".product-4").slick('destroy');</script>
+@endif
 
 @endsection
