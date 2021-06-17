@@ -26,7 +26,7 @@ class ProductController extends FrontController
         $navCategories = $this->categoryNav($langId);
         $product = Product::select('vendor_id')->where('sku', $sku)->firstOrFail();
 
-        if($preferences->is_hyperlocal == 1){
+        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if($product){
                 $productVendorId = $product->vendor_id;
                 if(Session::has('vendors')){
