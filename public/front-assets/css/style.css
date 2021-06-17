@@ -3057,21 +3057,21 @@ button.btn.btn-solid:active, button.btn.btn-outline:active {
     .add_to_cart.bottom.open-side {
       bottom: 0; }
 
-.cart_qty_cls {
-    position: absolute;
-    background: var(--theme-deafult);
-    width: 20px;
-    height: 20px;
-    color: #fff;
-    border-radius: 20px;
-    text-align: center;
-    font-size: 12px;
-    line-height: 14px;
-    font-weight: 600;
-    top: -7px;
-    right: -10px;
-    padding: 3px;
-}
+    .cart_qty_cls {
+        position: absolute;
+        background: var(--theme-deafult);
+        width: 22px;
+        height: 22px;
+        color: #fff;
+        border-radius: 20px;
+        text-align: center;
+        font-size: 10px;
+        line-height: 15px;
+        font-weight: 600;
+        top: -6px;
+        right: -10px;
+        padding: 3px;
+    }
 
 .addcart_btm_popup {
   position: fixed;

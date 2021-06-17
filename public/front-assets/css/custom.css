@@ -1912,11 +1912,22 @@ footer .form-control {
     border-color: #000;
 }
 
+.page-title-box .page-title {
+    font-size: 1.25rem;
+    margin: 0;
+    line-height: 75px;
+    color: #323a46;
+    font-weight: 700;
+    text-transform: uppercase;
+}
 
+#placeorder_form .card-box {
+    box-shadow: 0 0 6rem rgb(56 65 74 / 3%);
+}
 
-
-
-
+.vertical-top td{
+    vertical-align: top !important;
+}
 
 
 
