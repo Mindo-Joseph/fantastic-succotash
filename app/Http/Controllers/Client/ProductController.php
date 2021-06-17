@@ -119,7 +119,7 @@ class ProductController extends BaseController
             $product_category->product_id = $product->id;
             $product_category->category_id = $request->category;
             $product_category->save();
-            
+
             $proVariant = new ProductVariant();
             $proVariant->sku = $request->sku;
             $proVariant->product_id = $product->id;
@@ -209,6 +209,13 @@ class ProductController extends BaseController
     public function update(Request $request, $domain = '', $id)
     {
         $product = Product::where('id', $id)->firstOrFail();
+        $product_category = ProductCategory::where('product_id', $id)->where('category_id', $request->category_id)->first();
+        if(!$product_category){
+            $product_category = new ProductCategory();
+            $product_category->product_id = $id;
+            $product_category->category_id = $request->category_id;
+            $product_category->save();
+        }
         if ($product->is_live == 0) {
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
         }
