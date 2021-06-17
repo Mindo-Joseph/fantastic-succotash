@@ -20,7 +20,7 @@ class UserhomeController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(){
+    public function index(Request $request){
         $home = array();
         $vendor_ids = array();
         $latitude = Session::get('latitude');
@@ -53,19 +53,15 @@ class UserhomeController extends FrontController
                         });
                     })
                     ->orderBy('sorting', 'asc')->get();
-        $brands = Brand::with(['translation' => function($q) use($langId){
-                        $q->select('brand_id', 'title')->where('language_id', $langId);
-                        }])
-                    ->select('id', 'image')
-                    ->where('status', '!=', $this->field_status)
-                    ->orderBy('position', 'asc')->get();
+        
         $fp = $this->vendorProducts($vendor_ids, $langId, $curId, 'is_featured');
         $np = $this->vendorProducts($vendor_ids, $langId, $curId, 'is_new');
         $onSP = $this->vendorProducts($vendor_ids, $langId, 'USD');
         $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
-        return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'brands' => $brands, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
+        
+        return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
     }
 
     public function homepage(Request $request)

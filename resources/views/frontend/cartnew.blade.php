@@ -409,17 +409,12 @@
 <script type="text/template" id="payment_method_tab_pane_template">
     <% _.each(payment_options, function(payment_option, k){%>
         <div class="tab-pane fade <%= payment_option.slug == 'cash_on_delivery' ? 'active show': ''%>" id="v-pills-<%= payment_option.slug %>" role="tabpanel" aria-labelledby="v-pills-<%= payment_option.slug %>-tab">
-        <% if(payment_option.slug == 'stripe') { %>
-            <form method="POST" id="stripe-payment-form">
-        <% } else if(payment_option.slug == 'paypal') { %>
-            <form method="POST" id="paypal-payment-form">
-        <% } else { %>
-            <form method="POST">
-        <% } %>
-
+            <form method="POST" id="<%= payment_option.slug %>-payment-form">
             @csrf
             @method('POST')
-                <div class="payment_resp" role="alert"></div>
+                <div class="payment_response mb-3">
+                    <div class="alert p-0" role="alert"></div>
+                </div>
                 <div class="form_fields">
                     <div class="row">
                         <div class="col-md-12">

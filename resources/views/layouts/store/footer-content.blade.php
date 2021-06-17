@@ -127,16 +127,3 @@
         </div>
     </div>
 </footer>
-<script type="text/javascript">
-    var show_cart_url = "{{ route('showCart') }}";
-    var cart_details_url = "{{ route('cartDetails') }}";
-    var user_checkout_url= "{{ route('user.checkout') }}";
-    var cart_product_url= "{{ route('getCartProducts') }}";
-    var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
-    var delete_cart_url = "{{ route('emptyCartData') }}";
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-        }
-    });
-</script>

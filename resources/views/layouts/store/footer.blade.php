@@ -29,18 +29,24 @@
 <script src="{{asset('front-assets/js/script.js')}}"></script>
 <script src="{{asset('js/custom.js')}}"></script>
 <script src="{{asset('js/location.js')}}"></script>
-<script>
+<script type="text/javascript">
+    var is_hyperlocal = 0;
+    var delivery_address = 0;
+    var show_cart_url = "{{ route('showCart') }}";
+    var home_page_url = "{{ route('userHome') }}";
+    let empty_cart_url = "{{route('emptyCartData')}}";
+    var cart_details_url = "{{ route('cartDetails') }}";
+    var delete_cart_url = "{{ route('emptyCartData') }}";
+    var user_checkout_url= "{{ route('user.checkout') }}";
+    var cart_product_url= "{{ route('getCartProducts') }}";
+    var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
     @if(Session::has('deliveryAddress'))
-        let delivery_address = 1;
-    @else
-        let delivery_address = 0;
-    @endif;
-    @if( (Session::get('preferences')))
-        @if(Session::get('preferences')->is_hyperlocal == 1) 
-            let is_hyperlocal = 1;
-        @else
-            let is_hyperlocal = 0;
+        delivery_address = 1;
+    @endif
+
+    @if( Session::get('preferences') )
+        @if( Session::get('preferences')->is_hyperlocal == 1 ) 
+            is_hyperlocal = 1;
         @endif;
     @endif;
-    let empty_cart_url = "{{route('emptyCartData')}}";
 </script>

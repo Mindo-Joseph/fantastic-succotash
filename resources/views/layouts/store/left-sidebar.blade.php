@@ -201,8 +201,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </button>
       </div>
       <div class="modal-body">
-        <input type="hidden" id="vendor_id" value="1">
-        <input type="hidden" id="cartproduct_id" value="52">
         <h6 class="m-0">Change in location will remove all your cart products. Do you really want to continue ?</h6>
       </div>
       <div class="modal-footer flex-nowrap justify-content-center align-items-center">

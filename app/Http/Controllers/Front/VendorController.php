@@ -20,8 +20,8 @@ class VendorController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function vendorProducts(Request $request, $domain = '', $vid = 0){
-        $prefrences = Session::get('preferences');
-        if($prefrences->is_hyperlocal == 1){
+        $preferences = Session::get('preferences');
+        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');
                 if(!in_array($vid, $vendors)){
