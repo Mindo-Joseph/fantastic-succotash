@@ -37,6 +37,7 @@ class OrderController extends BaseController{
      */
 
     public function getOrderDetail($domain = '', $order_id, $vendor_id){
+        $vendor_order_status_option_ids = [];
         $vendor_order_status_created_dates = [];
         $order = Order::with(array(
                 'vendors' => function($query) use ($vendor_id){
