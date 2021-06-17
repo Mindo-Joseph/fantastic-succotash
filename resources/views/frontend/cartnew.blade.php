@@ -164,6 +164,7 @@
             <td colspan="2" class="pt-0 pl-0 text-right">
                 <hr class="mt-0 mb-2">
                 <p class="total_amt m-0" id="cart_total_payable_amount">$<%= cart_details.total_payable_amount %></p>
+                <div><input type="hidden" name="cart_total_payable_amount" value="<%= cart_details.total_payable_amount %>"></div>
             </td>
         </tr>
     </tfoot>
@@ -408,7 +409,11 @@
                     <div class="row">
                         <div class="col-md-12">
                             <% if(payment_option.slug == 'stripe') { %>
-                                <div id="stripe-card-element"></div>
+                                <div class="form-control">
+                                    <label class="d-flex flex-row pt-1 pb-1 mb-0">
+                                        <div id="stripe-card-element"></div>
+                                    </label>
+                                </div>
                                 <span class="error text-danger" id="stripe_card_error"></span>
                             <% } %>
                         </div>

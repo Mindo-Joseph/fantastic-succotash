@@ -24,6 +24,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('configure', 'Client\ClientPreferenceController@index')->name('configure.index');
     Route::get('customize', 'Client\ClientPreferenceController@customize')->name('configure.customize');
     Route::post('configUpdate/{code}', 'Client\ClientPreferenceController@update')->name('configure.update');
+    Route::post('referandearnUpdate/{code}', 'Client\ClientPreferenceController@referandearnUpdate')->name('referandearn.update');
     Route::post('updateDomain/{code}', 'Client\ClientPreferenceController@updateDomain')->name('client.updateDomain');
     Route::resource('banner', 'Client\BannerController');
     Route::post('banner/saveOrder', 'Client\BannerController@saveOrder');
@@ -105,10 +106,6 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('celebrity/getBrands', 'Client\CelebrityController@getBrandList')->name('celebrity.getBrands');
 
     Route::resource('wallet', 'Client\WalletController');
-
-    Route::resource('referandearn', 'Client\ReferAndEarnController');
-    Route::post('updateRefferby', 'Client\ReferAndEarnController@updateRefferby')->name('referandearn.reffered_by_amount');
-    Route::post('updateRefferto', 'Client\ReferAndEarnController@updateRefferto')->name('referandearn.reffered_to_amount');
 
     Route::resource('promocode', 'Client\PromocodeController');
     // Route::get('stripe/showForm', 'Client\PaymentController@showForm')->name('stripe.form');

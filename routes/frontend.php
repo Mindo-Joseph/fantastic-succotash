@@ -7,7 +7,7 @@ Route::domain('{subdomain}.myorder.com')->middleware(['subdomain', 'domain'])->g
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
 Route::group(['middleware' => ['domain']], function () {
-	Route::get('order-status-update', 'Front\DispatcherController@dispatchOrderStatusUpdate')->name('dispatch-order-update'); // Order Status update Dispatch
+	Route::get('dispatch-order-status-update/{}', 'Front\DispatcherController@dispatchOrderStatusUpdate')->name('dispatch-order-update'); // Order Status update Dispatch
 	
 	Route::get('demo', [
 		'as' => 'customer.login',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use Auth;
 use App\Models\Tax;
 use App\Models\Order;
 use App\Models\User;
@@ -9,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus,ClientPreference,OrderVendorProduct,OrderVendor,UserAddress,Vendor};
-use Auth,DB;
+use DB;
 use GuzzleHttp\Client;
 class OrderController extends BaseController{
     /**
@@ -43,13 +44,10 @@ class OrderController extends BaseController{
                 'vendors.products' => function($query) use ($vendor_id){
                     $query->where('vendor_id', $vendor_id);
                 }))->findOrFail($order_id);
-        $order_status_option = OrderStatusOption::all();
-
-        $dispatcher_status_option = DispatcherStatusOption::all();
-
-        $order_status = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->get();
-                
-        return view('backend.order.view')->with(['vendor_id' => $vendor_id, 'order' => $order, 'order_status' => $order_status,'order_status_option' => $order_status_option, 'dispatcher_status_option' => $dispatcher_status_option ]);
+        $order_status_options = OrderStatusOption::all();
+        $dispatcher_status_options = DispatcherStatusOption::all();
+        $vendor_order_status_option_ids = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->pluck('order_status_option_id')->toArray();
+        return view('backend.order.view')->with(['vendor_id' => $vendor_id, 'order' => $order, 'vendor_order_status_option_ids' => $vendor_order_status_option_ids,'order_status_options' => $order_status_options, 'dispatcher_status_options' => $dispatcher_status_options]);
     }
 
      /**
@@ -71,10 +69,10 @@ class OrderController extends BaseController{
                 if($request->status_option_id == 2)
                 $order_dispatch = $this->checkIfanyProductLastMileon($request);
                 DB::commit();
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Updated Successfully'
-            ]);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Updated Successfully'
+                ]);
         } catch(\Exception $e){
             DB::rollback();
             return response()->json([
@@ -112,8 +110,9 @@ class OrderController extends BaseController{
                         $cash_to_be_collected = 'No';
                         $payable_amount = 0.00;
                     }
-                    
-                        $call_back_url = route('dispatch-order-update', ['vendor_id' => $vendor,'order_id' => $order->id,'dispatcher_status_option_id' => '']);
+                        $dynamic = uniqid($order->id.$vendor);
+                        $call_back_url = route('dispatch-order-update',$dynamic);
+
                         $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
                         $tasks = array();
                         $meta_data = '';
@@ -163,11 +162,20 @@ class OrderController extends BaseController{
                             )]
                         );
                         $response = json_decode($res->getBody(), true);
-                       
+                        if($response && $response['task_id'] > 0){
+                            $up_web_hook_code = OrderVendor::where(['order_id' => $order->id,'vendor_id' => $vendor])
+                                    ->update(['web_hook_code' => $dynamic]);
+                                     
+                        }
+                        
+                        
             }    
             catch(\Exception $e)
             {
-                // dd($e->getMessage());
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $e->getMessage()
+                ]);
                         
             }
            

@@ -20,6 +20,19 @@ class VendorController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function vendorProducts(Request $request, $domain = '', $vid = 0){
+        $prefrences = Session::get('preferences');
+        if($prefrences->is_hyperlocal == 1){
+            if(Session::has('vendors')){
+                $vendors = Session::get('vendors');
+                if(!in_array($vid, $vendors)){
+                    return redirect()->route('error_404');
+                }
+            }
+            else{
+                return redirect()->route('error_404');
+            }
+        }
+
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();

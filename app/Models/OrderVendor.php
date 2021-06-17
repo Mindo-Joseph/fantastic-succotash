@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderVendor extends Model{
 
     use HasFactory;
+	protected $fillable = ['web_hook_code'];
     public function vendor(){
 	    return $this->hasOne('App\Models\Vendor' , 'id', 'vendor_id'); 
 	}

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Models\{VendorOrderDispatcherStatus};
+use App\Models\{VendorOrderDispatcherStatus,OrderVendor};
 use Illuminate\Http\Request;
 use App\Http\Requests\DispatchOrderStatusUpdateRequest;
 use App\Http\Controllers\Front\FrontController;
@@ -10,33 +10,38 @@ use Carbon\Carbon;
 use Auth;
 use Session;
 use DB;
-
+use App\Http\Traits\ApiResponser;
 class DispatcherController extends FrontController
 {
+    use ApiResponser;
    
    
-   
-    /******************    ---- order status update from dispatch (Need to pass all latitude / longitude of pickup & drop ) -----   ******************/
-    public function dispatchOrderStatusUpdate(DispatchOrderStatusUpdateRequest $request)
+    /******************    ---- order status update from dispatch (Need to dispatcher_status_option_id ) -----   ******************/
+    public function dispatchOrderStatusUpdate(DispatchOrderStatusUpdateRequest $request,$web_hook_code)
     {
         try {
             DB::beginTransaction();
-            $update = VendorOrderDispatcherStatus::Create(['dispatcher_id' => null,
-            'order_id' =>  $request->order_id,
-            'dispatcher_status_option_id ' =>  $request->dispatcher_status_option_id,
-            'vendor_id' =>  $request->vendor_id ]);
-    
-            DB::commit();
-            return response()->json([
-            'status' => 200,
-            'message' => 'Order status updated.'
-        ], 200);
+            $checkiftokenExist = OrderVendor::where('web_hook_code',$web_hook_code)->first();
+            if($checkiftokenExist){
+                $update = VendorOrderDispatcherStatus::Create(['dispatcher_id' => null,
+                    'order_id' =>  $request->order_id,
+                    'dispatcher_status_option_id ' =>  $request->dispatcher_status_option_id,
+                    'vendor_id' =>  $request->vendor_id ]);
+            
+                    DB::commit();
+                    $message = "Order status updated.";
+                    return $this->successResponse($update, $message);
+                   
+            }else{
+                DB::rollback();
+                $message = "Invalid Order Token";
+                return $this->errorResponse($message, $e->getCode());
+               }
+            
         } catch (Exception $e) {
             DB::rollback();
-            return response()->json([
-                'status' => 400,
-                'message' => $e->getMessage()
-            ], 400);
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+            
         }
     }
 }

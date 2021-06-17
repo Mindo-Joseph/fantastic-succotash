@@ -21,20 +21,14 @@ class DispatchOrderStatusUpdateRequest extends FormRequest{
      */
     public function rules(){
         return [
-            'order_id' => 'required:exists:user_addresses,id',
             'dispatcher_status_option_id' => 'required:exists:user_addresses,id',
-            'vendor_id' => 'required:exists:user_addresses,id',
         ];
     }
     public function messages(){
         return [
-            'order_id.required' => 'Invalid Order',
-            'order_id.exists' => 'Invalid Order',
             'dispatcher_status_option_id.required' => 'Invalid status option',
             'dispatcher_status_option_id.exists' =>  'Invalid status option',
-            'vendor_id.required' => 'Invalid Vendor',
-            'vendor_id.exists' => 'Invalid Vendor'
-        ];
+            ];
     }
 
     /**

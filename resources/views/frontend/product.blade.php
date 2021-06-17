@@ -12,7 +12,10 @@
 @endsection
 
 @section('content')
-
+<div class="added-notification">
+        <img src="../assets/images/fashion/pro/1.jpg" class="img-fluid" alt="">
+        <h3>added to cart</h3>
+    </div>
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
