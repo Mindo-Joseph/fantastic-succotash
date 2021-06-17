@@ -4,13 +4,26 @@ $(document).ready(function() {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
         }
     });
+    let address_checked = $("input:radio[name='address_id']").is(":checked");
+    if(address_checked){
+        $('#order_palced_btn').prop('disabled', false);
+    }else{
+        $('#order_palced_btn').prop('disabled', true);
+    }
+    $("form").submit(function(e){
+        let address_id = $("input:radio[name='address_id']").is(":checked");
+        if(!address_id){
+            alert('Address field required.');
+            return false;
+        }
+    });
     var card = '';
     var stripe = '';
     getHomePage();
     function getHomePage(){
         $.ajax({
             data: {},
-            type: "GET",
+            type: "POST",
             dataType: 'json',
             url: home_page_url,
             success: function (response) {
