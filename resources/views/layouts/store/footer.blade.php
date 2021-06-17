@@ -41,11 +41,15 @@
 <script src="{{asset('front-assets/js/jquery.elevatezoom.js')}}"></script>
 <script src="{{asset('front-assets/js/underscore.min.js')}}"></script>
 <script src="{{asset('front-assets/js/sweetalert2.min.js')}}"></script>
-<script src="{{asset('front-assets/js/script.js')}}"></script>
+<!-- <script src="{{asset('front-assets/js/script.js')}}"></script> -->
 <script src="{{asset('js/custom.js')}}"></script>
 <script src="{{asset('js/location.js')}}"></script>
 <script>
-    
+    /*$(window).on('load', function () {
+        setTimeout(function () {
+            $('#exampleModal').modal('show');
+        }, 2500);
+    });*/
     @if(Session::has('deliveryAddress'))
         let delivery_address = 1;
     @else
@@ -138,15 +142,20 @@
             },
         });
     });
-    // function openSearch() {
-    //     document.getElementById("search-overlay").style.display = "block";
-    // }
-    // function closeSearch() {
-    //     document.getElementById("search-overlay").style.display = "none";
-    // }
+    function openSearch() {
+        document.getElementById("search-overlay").style.display = "block";
+    }
+    function closeSearch() {
+        document.getElementById("search-overlay").style.display = "none";
+    }
     $('document').ready(function(){
         var color_picker1 = '{{$webColor}}';
         document.documentElement.style.setProperty('--theme-deafult', color_picker1);
         $('body').addClass("{{$darkMode}}");
     })
+
+    function emptyCart(){
+        
+    }
+
 </script>
