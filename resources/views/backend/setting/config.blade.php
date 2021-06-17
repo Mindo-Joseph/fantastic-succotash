@@ -660,7 +660,7 @@
       @csrf
       <div class="row">
          <div class="col-md-5">
-            <div class="card-box h-100">
+            <div class="card-box">
                <div class="row align-items-center">
                   <div class="col-md-4">
                      <div class="form-group mb-0 switchery-demo">
@@ -683,7 +683,7 @@
             </div>
          </div>
          <div class="col-md-7">
-            <div class="card-box h-100">
+            <div class="card-box">
                <div class="row align-items-center">
                   <div class="col-md-8">
                      <div class="form-group mb-0">
@@ -707,7 +707,7 @@
          @csrf
          <div class="row">
             <div class="col-xl-11 col-md-offset-1">
-               <div class="card-box h-100">
+               <div class="card-box">
                   <h4 class="header-title text-uppercase">Email</h4>
                   <p class="sub-header">
                      Choose Email paid plan to whitelable "From email address" and "Sender Name" in the Email sent

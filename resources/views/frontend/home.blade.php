@@ -391,6 +391,8 @@
 </section>
 @endsection
 
+
+
 @section('script')
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
 <script src="{{asset('front-assets/js/fly-cart.js')}}"></script>
@@ -406,13 +408,26 @@
     });
 </script>
 
+<script>
+        jQuery(document).ready(function(){
+            jQuery(".input-field").hide();
+            jQuery("#show_input").click(function(){
+                jQuery(".input-field").slideDown("slow");
+            });
+            jQuery(".hide_input").click(function(){
+                jQuery(".input-field").slideUp("slow");
+            });
+        });
+        
+</script>
+
 @if( (count($newProducts) > 0) || (count($featuredProducts) > 0) || (count($onSaleProducts) > 0) )
 <script>
      $('.vendor-product').slick({
         infinite: true,
         speed: 300,
         arrows: false,
-        slidesToShow: 5,
+        slidesToShow: 6,
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 5000,

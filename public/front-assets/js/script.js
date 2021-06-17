@@ -48,9 +48,9 @@
             });
         }, 500);
         $('.loader_skeleton').remove('slow');
-        $('body').css({
-            'overflow': 'hidden'
-        });
+        // $('body').css({
+        //     'overflow': 'hidden'
+        // });
     });
     $('#preloader').fadeOut('slow', function() {
         $(this).remove();

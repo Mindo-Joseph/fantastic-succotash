@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon};
 
-class OrderController extends Controller{
+class OrderController extends Controller {
+
     use ApiResponser;
 
     /**
@@ -38,9 +39,9 @@ class OrderController extends Controller{
     		$order_id = $request->order_id;
             $vendor_id = $request->vendor_id;
             if($vendor_id){
-	       	   $order = Order::with(['vendors.vendor','vendors.products' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+	       	   $order = Order::with(['vendors.vendor','vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
             }else{
-                $order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+                $order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
             }
             if($order->vendors){
                 $order->user_name = $order->user->name;
@@ -75,8 +76,8 @@ class OrderController extends Controller{
                         $product->product_addons = $product_addons;
         			}
         		}
+    		    $order->order_item_count = $order_item_count;
             }
-    		$order->order_item_count = $order_item_count;
 	    	return $this->successResponse($order, null, 201);
     	} catch (Exception $e) {
     		return $this->errorResponse($e->getMessage(), $e->getCode());
@@ -85,6 +86,10 @@ class OrderController extends Controller{
 
     public function postPlaceOrder(OrderStoreRequest $request){
     	try {
+            $total_amount = 0;
+            $total_discount = 0;
+            $taxable_amount = 0;
+            $payable_amount = 0;
     		$user = Auth::user();
     		if($user){
     			DB::beginTransaction();
@@ -113,10 +118,6 @@ class OrderController extends Controller{
                     $order->save();
                     $clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
                     $cart_products = CartProduct::with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon', 'product.addon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
-                    $total_amount = 0;
-                    $total_discount = 0;
-                    $taxable_amount = 0;
-                    $payable_amount = 0;
                     foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                         $vendor_payable_amount = 0;
                         $vendor_discount_amount = 0;
@@ -205,8 +206,8 @@ class OrderController extends Controller{
                     $order->taxable_amount = $taxable_amount;
                     $order->payable_amount = $payable_amount -  $total_discount;
                     $order->save();
-                    CartProduct::where('cart_id', $cart->id)->delete();
                     CartCoupon::where('cart_id', $cart->id)->delete();
+                    CartProduct::where('cart_id', $cart->id)->delete();
                     DB::commit();
                     return $this->successResponse($order, 'Order placed successfully.', 201);
                     }
@@ -218,4 +219,5 @@ class OrderController extends Controller{
             return $this->errorResponse($e->getMessage(), $e->getCode());
     	}
     }
+
 }
