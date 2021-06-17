@@ -117,7 +117,7 @@ class CategoryController extends FrontController
             if(!empty($products)){
                 foreach ($products as $key => $value) {
                     foreach ($value->variant as $k => $v) {
-                        $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                        $value->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     }
                 }
             }
@@ -132,12 +132,6 @@ class CategoryController extends FrontController
      */
     public function categoryFilters(Request $request, $domain = '', $cid = 0)
     {
-        /*$products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
-                    ->with('variant1.vset')
-                    ->select('id as pro_id', 'sku')
-                    ->where('pc.category_id', $cid)->get();
-        dd($products->toArray());*/
-
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $setArray = $optionArray = array();
@@ -161,18 +155,6 @@ class CategoryController extends FrontController
                 $multiArray[$request->variants[$key]][] = $value;
             }
         }
-
-        //$combinations = $this->array_combinations($multiArray);
-        //$variantSetData = ProductVariantSet::select('product_id', 'product_variant_id');
-        /*if(!empty($multiArray)){
-            foreach ($multiArray as $key => $value) {
-                $variantSetData = $variantSetData->whereIn('product_variant_id', function($qry) use($key, $value){ 
-                        $qry->select('product_variant_id')->from('product_variant_sets')
-                            ->whereIn('variant_type_id', $key)
-                            ->whereIn('variant_option_id', $value);
-                        })
-            }
-        }*/
         $variantIds = $productIds = array();
 
         if(!empty($multiArray)){

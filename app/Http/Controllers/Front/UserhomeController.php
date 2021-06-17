@@ -60,19 +60,7 @@ class UserhomeController extends FrontController
         $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
-        if($request->ajax()){
-            $brands = Brand::with(['translation' => function($q) use($langId){
-                        $q->select('brand_id', 'title')->where('language_id', $langId);
-                    }])->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
-            foreach ($brands as $brand) {
-                $brand->redirect_url = route('brandDetail', $brand->id);
-            }
-            foreach ($brands as $brand) {
-                $brand->redirect_url = route('brandDetail', $brand->id);
-            }
-            $data = ['brands' => $brands, 'vendors' => $vendorData];
-            return $this->successResponse($data);
-        }
+        
         return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
     }
 
