@@ -49,7 +49,9 @@ class OrderController extends FrontController{
             $order_loyalty_points_earned_detail = Order::where('user_id', $user->id)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
             if($order_loyalty_points_earned_detail){
                 $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
-                $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
+                if($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0){
+                    $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
+                }
             }
             $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
             $order = new Order;

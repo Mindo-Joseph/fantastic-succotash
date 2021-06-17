@@ -142,12 +142,12 @@
             },
         });
     });
-    function openSearch() {
-        document.getElementById("search-overlay").style.display = "block";
-    }
-    function closeSearch() {
-        document.getElementById("search-overlay").style.display = "none";
-    }
+    // function openSearch() {
+    //     document.getElementById("search-overlay").style.display = "block";
+    // }
+    // function closeSearch() {
+    //     document.getElementById("search-overlay").style.display = "none";
+    // }
     $('document').ready(function(){
         var color_picker1 = '{{$webColor}}';
         document.documentElement.style.setProperty('--theme-deafult', color_picker1);
