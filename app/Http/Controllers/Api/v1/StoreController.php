@@ -77,9 +77,16 @@ class StoreController extends Controller{
 				$order->user_image = $order->user->image;
 				$order->date_time = convertDateTimeInTimeZone($order->created_at, $user->timezone);
 				$order->payment_option_title = $order->paymentOption->title;
+				$product_details = [];
 				foreach ($order->products as $product) {
     				$order_item_count += $product->quantity;
+    				$product_details[]= array(
+    					'image' => $product->image,
+    					'price' => $product->price,
+    					'qty' => $product->quantity,
+    				);
 				}
+				$order->product_details = $product_details;
 				$order->item_count = $order_item_count;
 				unset($order->user);
 				unset($order->products);

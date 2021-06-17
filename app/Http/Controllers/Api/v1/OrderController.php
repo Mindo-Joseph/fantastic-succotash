@@ -49,7 +49,6 @@ class OrderController extends Controller{
                         $product_addons = [];
                         $variant_options = [];
     	    			$order_item_count += $product->quantity;
-                        
                         if($product->pvariant){
                             foreach ($product->pvariant->vset as $variant_set_option) {
                                 $variant_options [] = array(
