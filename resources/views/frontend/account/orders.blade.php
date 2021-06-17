@@ -71,7 +71,7 @@
                             <li><a href="{{route('user.addressBook')}}">Address Book</a></li>
                             <li class="active"><a href="{{route('user.orders')}}">My Orders</a></li>
                             <li><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
-                            <li><a href="{{route('user.account')}}">My Account</a></li>
+                            <li><a href="{{route('user.account')}}">My Wallet</a></li>
                             <li><a href="{{route('user.changePassword')}}">Change Password</a></li>
                             <li class="last"><a href="{{route('user.logout')}}" >Log Out</a></li>
                         </ul>
@@ -100,7 +100,7 @@
                                         <div class="col-md-3"><h4>Customer Name</h4></div>
                                         <div class="col-md-3"><h4>Address</h4></div>
                                     </div>
-                                    <div class="row no-gutters order_data mb-lg-3">
+                                    <div class="row no-gutters order_data mb-lg-2">
                                         <div class="col-md-3">#3215412</div>
                                         <div class="col-md-3">Monday, May 24, 2021, 13:22 PM</div>
                                         <div class="col-md-3">

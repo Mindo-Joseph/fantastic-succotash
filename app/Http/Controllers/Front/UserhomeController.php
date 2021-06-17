@@ -33,11 +33,13 @@ class UserhomeController extends FrontController
         $navCategories = $this->categoryNav($langId);
         Session::put('navCategories', $navCategories); 
         $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
-        if( ($preferences->is_hyperlocal == 1) && (!empty($latitude)) && (!empty($longitude)) ){
-            $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                $query->select('vendor_id')
-                ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-            });
+        if($preferences){
+            if(($preferences->is_hyperlocal == 1) && (!empty($latitude)) && (!empty($longitude)) ){
+                $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
+                    $query->select('vendor_id')
+                    ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+                });
+            }
         }
         $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
         foreach ($vendorData as $key => $value) {

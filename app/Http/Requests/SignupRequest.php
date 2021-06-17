@@ -27,6 +27,7 @@ class SignupRequest extends FormRequest{
             'phone_number' => 'required|string|min:10|max:15|unique:users',
             'device_type' => 'required|string',
             'device_token' => 'required|string',
+            'refferal_code' => 'exists:user_refferals,refferal_code',
         ];
     }
 }

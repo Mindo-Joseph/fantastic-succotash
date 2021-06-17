@@ -72,7 +72,7 @@
                             <li><a href="{{route('user.addressBook')}}">Address Book</a></li>
                             <li><a href="{{route('user.orders')}}">My Orders</a></li>
                             <li class="active"><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
-                            <li><a href="{{route('user.account')}}">My Account</a></li>
+                            <li><a href="{{route('user.account')}}">My Wallet</a></li>
                             <li><a href="{{route('user.changePassword')}}">Change Password</a></li>
                             <li class="last"><a href="{{route('user.logout')}}" >Log Out</a></li>
                         </ul>
@@ -92,7 +92,7 @@
                         <div class="box-account box-info mt-3">
                             <div class="row">
                                 <div class="col-sm-12 table-responsive table-responsive-xs">
-                                    <table class="table cart-table">
+                                    <table class="table cart-table border">
                                         <thead>
                                             <tr class="table-head">
                                                 <th scope="col">
@@ -251,23 +251,10 @@
                                             </tr>
                                         @endforeach -->
                                         </tbody>
-                                        <tfoot class="border-bottom">
+                                        <tfoot class="border-top border-bottom">
                                             <tr>
-                                                <td colspan="2">
-                                                    <select class="form-control" name="" id="">
-                                                        <option value="">Actions</option>
-                                                        <option value="">Actions</option>
-                                                        <option value="">Actions</option>
-                                                        <option value="">Actions</option>
-                                                        <option value="">Actions</option>
-                                                        <option value="">Actions</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <a class="btn btn-solid" href="">Apply Actions  </a>
-                                                </td>
-                                                <td colspan="4" class="text-center">
-                                                    <a class="btn btn-solid float-right" href="">Add All to Cart</a>
+                                                <td colspan="7" class="text-center pt-2">
+                                                    <a class="btn btn-solid float-left" href="">Add All to Cart</a>
                                                     <a class="btn btn-solid float-right mr-2" href="">Add Selected to Cart</a>
                                                 </td>
                                             </tr>
