@@ -46,9 +46,9 @@
     @endif;
     @if( Session::get('preferences') )
         @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) ) 
-            let is_hyperlocal = 1;
+            is_hyperlocal = 1;
         @else
-            let is_hyperlocal = 0;
+            is_hyperlocal = 0;
         @endif;
     @endif;
 </script>
