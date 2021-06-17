@@ -124,7 +124,6 @@ $(document).ready(function() {
         };
         card = elements.create('card', {hidePostalCode: true, style: style});
         card.mount('#stripe-card-element');
-        var form = document.getElementById('stripe-payment-form');
     }
     function productRemove(cartproduct_id, vendor_id){
         $.ajax({
@@ -195,8 +194,16 @@ $(document).ready(function() {
             data: {'stripe_token' : stripe_token ,'amount': cart_total_amount},
             success: function (resp) {
                 if(resp.status == 'Success'){
-                    placeOrder(address_id, payment_option_id, resp.data.response.id);
+                    placeOrder(address_id, payment_option_id, resp.data.id);
+                }else{
+                    success_error_alert('error', resp.message, "#stripe-payment-form .payment_response");
+                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
                 }
+            },
+            error: function(error){
+                var response = $.parseJSON(error.responseText);
+                success_error_alert('error', response.message, "#stripe-payment-form .payment_response");
+                $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
             }
         });
     }
@@ -209,10 +216,16 @@ $(document).ready(function() {
             data: {'amount': cart_total_amount},
             success: function (response) {
                 if(response.status == "Success"){
-                    window.location.href = response.data.response;
+                    window.location.href = response.data;
                 }else{
-                    alert(response.message);
+                    success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
                 }
+            },
+            error: function(error){
+                var response = $.parseJSON(error.responseText);
+                success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
             }
         });
     }
@@ -236,11 +249,16 @@ $(document).ready(function() {
             data: {'amount': cart_total_amount, 'token': token, 'PayerID': payer_id},
             success: function (response) {
                 if(response.status == "Success"){
-                    placeOrder(address_id, 3, response.data.id);
+                    placeOrder(address_id, 3, response.data);
                 }else{
-                    alert(response.message);
-                    $("#order_palced_btn, .proceed_to_pay").attr("disabled", false);
+                    success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
                 }
+            },
+            error: function(error){
+                var response = $.parseJSON(error.responseText);
+                success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
             }
         });
     }
@@ -256,6 +274,11 @@ $(document).ready(function() {
                 }else{
                     $("#order_palced_btn, .proceed_to_pay").attr("disabled", false);
                 }
+            },
+            error: function(error){
+                var response = $.parseJSON(error.responseText);
+                success_error_alert('error', response.message, ".payment_response");
+                $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
             }
         });
     }
@@ -367,7 +390,7 @@ $(document).ready(function() {
       var autocomplete = new google.maps.places.Autocomplete(input);
       google.maps.event.addListener(autocomplete, 'place_changed', function () {
         var place = autocomplete.getPlace();
-        console.log(place.name);
+        // console.log(place.name);
         document.getElementById('city').value = place.name;
         document.getElementById('longitude').value = place.geometry.location.lng()
         document.getElementById('latitude').value = place.geometry.location.lat()
@@ -563,4 +586,16 @@ $(document).ready(function() {
             $('.quantity_count').val(res)
         }
     });
+
+    function success_error_alert(responseClass, message, element){
+        $(element).find(".alert").html('');
+        if(responseClass == 'success'){
+            $(element).find(".alert").html("<div class='alert-success p-1'>"+message+"</div>").show();
+        }else if(responseClass == 'error'){
+            $(element).find(".alert").html("<div class='alert-danger p-1'>"+message+"</div>").show();
+        }
+        setTimeout(function(){
+            $(element).find(".alert").hide();
+        }, 5000);
+    }
 });

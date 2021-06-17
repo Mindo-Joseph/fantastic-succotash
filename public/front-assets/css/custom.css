@@ -1929,11 +1929,45 @@ footer .form-control {
     vertical-align: top !important;
 }
 
+.text-17 {
+    opacity: 0.8;
+    color: #1F2431;
+    font-size: 17px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 24px;
+}
 
+.text-36 {
+    color: #1F2431;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 24px;
+}
 
+.box-info table tr:first-child td {
+    border-top: 0;
+    padding-top: 0;
+}
 
+.card-box + h6 {
+    opacity: 0.8;
+    color: #1F2431;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 60px;
+    margin: 0;
+}
 
+.wallet-tarnsaction td:last-child b {
+    color: #000;
+}
 
+.wallet-tarnsaction td:last-child b {
+    color: #000;
+}
 
 
 
