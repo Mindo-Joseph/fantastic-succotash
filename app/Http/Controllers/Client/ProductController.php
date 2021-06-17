@@ -82,6 +82,7 @@ class ProductController extends BaseController
     {
         $rule = array(
             'sku' => 'required|unique:products',
+            'category' => 'required',
         );
 
         $validation  = Validator::make($request->all(), $rule);
@@ -114,6 +115,11 @@ class ProductController extends BaseController
                 'language_id' => $client_lang->language_id
             ];
 
+            $product_category = new ProductCategory();
+            $product_category->product_id = $product->id;
+            $product_category->category_id = $request->category;
+            $product_category->save();
+            
             $proVariant = new ProductVariant();
             $proVariant->sku = $request->sku;
             $proVariant->product_id = $product->id;
@@ -134,6 +140,7 @@ class ProductController extends BaseController
      */
     public function edit($domain = '', $id)
     {
+        
         $product = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related', 'upSell', 'crossSell', 'celebrities')->where('id', $id)->firstOrFail();
         $type = Type::all();
         $countries = Country::all();
