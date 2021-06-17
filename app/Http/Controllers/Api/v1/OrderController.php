@@ -41,10 +41,9 @@ class OrderController extends Controller {
             if($vendor_id){
 	       	   $order = Order::with(['vendors.vendor','vendors' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
             }else{
-                $order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+                $order = Order::with(['vendors.vendor','vendors' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
             }
-            pr($order->toArray());die;
-            if($order->vendors){
+            if($order){
                 $order->user_name = $order->user->name;
                 $order->user_image = $order->user->image;
     	    	foreach ($order->vendors as $vendor) {
