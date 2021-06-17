@@ -29,7 +29,7 @@ class VendorController extends FrontController
                 }
             }
             else{
-                abort(404);
+                // abort(404);
             }
         }
 
