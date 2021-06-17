@@ -25,7 +25,7 @@
             </section>
         </div>
     </div>
-    <section class="section-b-space light-layout">
+    <section class="section-b-space light-layout py-4">
         <div class="container">
             <div class="row footer-theme partition-f">
                 <div class="col-lg-2 col-md-6 mb-md-0 mb-3">
@@ -73,7 +73,6 @@
                                 <li><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
                                 <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
                                 <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-rss" aria-hidden="true"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -84,7 +83,23 @@
                             <h4>Subscribe to our Newsletter</h4>
                         </div>
                     </div>
-                    <form class="card bg-transparent">
+                    <div class="footer-contant">
+                        <ul>
+                            <li>
+                                <a href="#"><span></span></a>
+                            </li>
+                            <li>
+                                <a href="#"><span></span></a>
+                            </li>
+                            <li>
+                                <a href="#"><span></span></a>
+                            </li>
+                            <li>
+                                <a href="#"><span></span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- <form class="card bg-transparent">
                         <div class="card-body row no-gutters align-items-center p-0">
                             <div class="col">
                                 <input class="form-control bg-transparent border-0" type="search" placeholder="Your Emaill">
@@ -94,7 +109,7 @@
                             </div>
                         </div>
                     </form>
-                    <h6 class="mt-3"><a class="" href="blog.html">Check Out Our Blog</a></h6>
+                    <h6 class="mt-3"><a class="" href="blog.html">Check Out Our Blog</a></h6> -->
                 </div>
             </div>
         </div>
