@@ -45,11 +45,7 @@
 <script src="{{asset('js/custom.js')}}"></script>
 <script src="{{asset('js/location.js')}}"></script>
 <script>
-    /*$(window).on('load', function () {
-        setTimeout(function () {
-            $('#exampleModal').modal('show');
-        }, 2500);
-    });*/
+    
     @if(Session::has('deliveryAddress'))
         let delivery_address = 1;
     @else
@@ -153,9 +149,4 @@
         document.documentElement.style.setProperty('--theme-deafult', color_picker1);
         $('body').addClass("{{$darkMode}}");
     })
-
-    function emptyCart(){
-        
-    }
-
 </script>

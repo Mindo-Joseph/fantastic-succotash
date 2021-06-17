@@ -37,7 +37,7 @@ class OrderController extends FrontController{
            DB::beginTransaction();
             $delivery_on_vendors = array();
             $user = Auth::user();
-            $loyalty_amount_saved = '';
+            $loyalty_amount_saved = 0;
             $redeem_points_per_primary_currency = '';
             $loyalty_card = LoyaltyCard::where('status', '0')->first();
             if($loyalty_card){
