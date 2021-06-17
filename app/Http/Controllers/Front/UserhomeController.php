@@ -57,9 +57,9 @@ class UserhomeController extends FrontController
                     ->select('id', 'image')
                     ->where('status', '!=', $this->field_status)
                     ->orderBy('position', 'asc')->get();
-        $fp = $this->productList($vendor_ids, $langId, $curId, 'is_featured');
-        $np = $this->productList($vendor_ids, $langId, $curId, 'is_new');
-        $onSP = $this->productList($vendor_ids, $langId, 'USD');
+        $fp = $this->vendorProducts($vendor_ids, $langId, $curId, 'is_featured');
+        $np = $this->vendorProducts($vendor_ids, $langId, $curId, 'is_new');
+        $onSP = $this->vendorProducts($vendor_ids, $langId, 'USD');
         $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
@@ -103,9 +103,9 @@ class UserhomeController extends FrontController
             }
             Session::put('vendors', $vendors);
             
-            $fp = $this->productList($vendors, $langId, $curId, 'is_featured');
-            $np = $this->productList($vendors, $langId, $curId, 'is_new');
-            $onSP = $this->productList($vendors, $langId, 'USD');
+            $fp = $this->vendorProducts($vendors, $langId, $curId, 'is_featured');
+            $np = $this->vendorProducts($vendors, $langId, $curId, 'is_new');
+            $onSP = $this->vendorProducts($vendors, $langId, 'USD');
             $homeData['featuredProducts'] = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
             $homeData['newProducts'] = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
             $homeData['onSaleProducts'] = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
@@ -114,6 +114,38 @@ class UserhomeController extends FrontController
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }
+    }
+
+    public function vendorProducts($venderIds, $langId, $currency = 'USD', $where = '')
+    {
+        $products = Product::with(['media' => function($q){
+                            $q->groupBy('product_id');
+                        }, 'media.image',
+                        'translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                        },
+                        'variant' => function($q) use($langId){
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->groupBy('product_id');
+                        },
+                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating');
+        
+                    if($where !== ''){
+            $products = $products->where($where, 1);
+        }
+        if(is_array($venderIds)){
+            $products = $products->whereIn('vendor_id', $venderIds);
+        }
+        $products = $products->where('is_live', 1)->take(6)->get();
+
+        if(!empty($products)){
+            foreach ($products as $key => $value) {
+                foreach ($value->variant as $k => $v) {
+                    $value->variant[$k]->multiplier = Session::get('currencyMultiplier');
+                }
+            }
+        }
+        return $products;
     }
 
     public function changePrimaryData(Request $request)
