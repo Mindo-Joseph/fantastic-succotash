@@ -219,14 +219,14 @@ class CartController extends FrontController
         if($cart){
             $cart_details = $this->getCart($cart);
         }
-        if($cartData && !empty($cartData)){
+        if($cart_details && !empty($cart_details)){
             return response()->json([
                 'data' => $cart_details,
             ]);
         }
         return response()->json([
             'message' => "No product found in cart",
-            'data' => $cartData,
+            'data' => $cart_details,
         ]);
     }
 
@@ -415,10 +415,16 @@ class CartController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function emptyCartData($domain = '', Request $request){
-        CartProduct::where('id', $request->cartproduct_id)->delete();
-        CartCoupon::where('vendor_id', $request->vendor_id)->delete();
-        CartAddon::where('cart_product_id', $request->cartproduct_id)->delete();
-        return response()->json(['status' => 'success', 'message' => 'Cart deleted successfully.']);
+        $cart_id = $request->cart_id;
+        if( ($cart_id != '') && ($cart_id > 0) ){
+            // Cart::where('id', $cart_id)->delete();
+            CartProduct::where('cart_id', $cart_id)->delete();
+            CartCoupon::where('cart_id', $cart_id)->delete();
+            CartAddon::where('cart_id', $cart_id)->delete();
+            return response()->json(['status' => 'success', 'message' => 'Cart has been deleted successfully.']);
+        }else{
+            return response()->json(['status' => 'error', 'message' => 'Cart cannot be deleted.']);
+        }
     }
 
     /**

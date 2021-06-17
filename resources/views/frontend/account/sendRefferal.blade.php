@@ -84,7 +84,7 @@
                                             @endif
                                         </div>
                                         <div class="col-md-12">
-                                            <button type="submit" class="btn btn-solid mt-3">Create Account</button>
+                                            <button type="submit" class="btn btn-solid mt-3">Send Email</button>
                                         </div>
                                     </div>
                                 </form>

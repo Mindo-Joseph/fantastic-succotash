@@ -114,7 +114,7 @@
                             <div class="row form-group mb-0 align-items-end">
                                 <div class="col-md-6 mb-3">
                                     <label for="">Referral Code</label>
-                                    <input type="text" class="form-control" id="refferal_code" placeholder="Refferal Code" name="refferal_code" value="{{ old('refferal_code')}}">
+                                    <input type="text" class="form-control" id="refferal_code" placeholder="Refferal Code" name="refferal_code" value="{{ old('refferal_code', $code ?? '')}}">
                                     @if($errors->first('refferal_code'))
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('refferal_code') }}</strong>

@@ -47,7 +47,7 @@
                         <td style="text-align: left;padding: 0 30px;">
                             <p style="font-size: 14px; margin-bottom: 15px;"><b> {{'Hi '.$customer_name.','}} </b></p>
                             <p style="width: 85%;max-width: 100%; font-size: 14px;line-height: 30px; margin-bottom: 15px;">{{$code_text}}</p>
-                            <p style="width: 85%;max-width: 100%; font-size: 14px;line-height: 30px; margin-bottom: 15px;">{{$code}}</p>
+                            <!-- <p style="width: 85%;max-width: 100%; font-size: 14px;line-height: 30px; margin-bottom: 15px;">{{$code}}</p> -->
                             <a href="{{$link}}" style="width: 85%;max-width: 100%; font-size: 14px;line-height: 30px; margin-bottom: 15px;">Click here</a>
                         </td>
                     </tr>
