@@ -28,9 +28,9 @@
       @csrf
       <div class="row">
          <div class="col-md-6">
-            <div class="row">
+            <div class="row h-100">
                <div class="col-12">
-                  <div class="card-box">
+                  <div class="card-box h-100">
                      <div class="d-flex align-items-center justify-content-between mb-2">
                         <h4 class="header-title text-uppercase mb-0">Hyperlocal</h4>
                         <button class="btn btn-info d-block" type="submit"> Save </button>
@@ -97,7 +97,7 @@
             </div>
          </div>
          <div class="col-md-3">
-            <div class="card-box">
+            <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
                   <h4 class="header-title text-uppercase mb-0">Last Mile Delivery</h4>
                   <button class="btn btn-info d-block" type="submit"> Save </button>
@@ -147,7 +147,7 @@
             </div>
          </div>
          <div class="col-md-3">
-            <div class="card-box">
+            <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
                   <h4 class="header-title text-uppercase mb-0">Pickup & Delivery</h4>
                   <button class="btn btn-info d-block" type="submit"> Save </button>
@@ -191,7 +191,7 @@
       @csrf
       <div class="row">
          <div class="col-lg-3 col-md-6 mb-lg-0 mb-md-3">
-            <div class="card-box">
+            <div class="card-box h-100">
                <div class="row">
                   <div class="col-12">
                      <div class="form-group mb-0 switchery-demo">
@@ -245,7 +245,7 @@
             </div>
          </div>
          <div class="col-lg-3 col-md-6 mb-lg-0 mb-md-3">
-            <div class="card-box">
+            <div class="card-box h-100">
                <div class="row">
                   <div class="col-12">
                      <div class="form-group mb-0 switchery-demo">
@@ -300,7 +300,7 @@
             </div>
          </div>
          <div class="col-lg-3 col-md-6 mb-lg-0 mb-md-3">
-            <div class="card-box">
+            <div class="card-box h-100">
                <div class="row">
                   <div class="col-12">
                      <div class="form-group mb-0 switchery-demo">
@@ -354,7 +354,7 @@
             </div>
          </div>
          <div class="col-lg-3 col-md-6 mb-lg-0 mb-md-3">
-            <div class="card-box">
+            <div class="card-box h-100">
                <div class="row">
                   <div class="col-12">
                      <div class="form-group mb-0 switchery-demo">
@@ -422,7 +422,7 @@
       <div class="col-xl-3 mb-3">
          <form class="h-100" method="POST" action="{{route('configure.update', Auth::user()->code)}}">
             @csrf
-            <div class="card-box h-100">
+            <div class="card-box h-100 h-100">
                <h4 class="header-title text-uppercase text-uppercase">Map Configuration</h4>
                <p class="sub-header">
                   View and update your Map type and it's API key.
@@ -467,7 +467,7 @@
       <div class="col-xl-3 mb-3">
          <form class="h-100" method="POST" action="{{route('configure.update', Auth::user()->code)}}">
             @csrf
-            <div class="card-box h-100">
+            <div class="card-box h-100 h-100">
                <h4 class="header-title text-uppercase">SMS Configuration</h4>
                <p class="sub-header">View and update your SMS Gateway and it's API keys.</p>
                <div class="row mb-0">
@@ -534,7 +534,7 @@
       <div class="col-xl-6 mb-3">
          <form method="POST" action="{{route('configure.update', Auth::user()->code)}}" class="h-100">
             @csrf
-            <div class="card-box h-100">
+            <div class="card-box h-100 h-100">
                <h4 class="header-title text-uppercase">Mail Configuration</h4>
                <p class="sub-header"> View and update your SMTP credentials.</p>
                <div class="row mb-2">
@@ -660,7 +660,7 @@
       @csrf
       <div class="row">
          <div class="col-md-5">
-            <div class="card-box">
+            <div class="card-box h-100">
                <div class="row align-items-center">
                   <div class="col-md-4">
                      <div class="form-group mb-0 switchery-demo">
@@ -683,7 +683,7 @@
             </div>
          </div>
          <div class="col-md-7">
-            <div class="card-box">
+            <div class="card-box h-100">
                <div class="row align-items-center">
                   <div class="col-md-8">
                      <div class="form-group mb-0">
@@ -707,7 +707,7 @@
          @csrf
          <div class="row">
             <div class="col-xl-11 col-md-offset-1">
-               <div class="card-box">
+               <div class="card-box h-100">
                   <h4 class="header-title text-uppercase">Email</h4>
                   <p class="sub-header">
                      Choose Email paid plan to whitelable "From email address" and "Sender Name" in the Email sent
@@ -772,7 +772,7 @@
       @csrf
       <div class="row">
          <div class="col-xl-11 col-md-offset-1">
-            <div class="card-box">
+            <div class="card-box h-100">
                <h4 class="header-title text-uppercase">Personal Access Token</h4>
                <p class="sub-header">
                   View and Generate API keys.

@@ -13,7 +13,7 @@
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-<div class="find_location">
+<div class="find_location d-none">
     <div class="container px-0">
         <?php /* ?>
         <div class="row no-gutters" id="location_search_wrapper">
@@ -88,7 +88,7 @@
                             </div>-->
                         </div>
                         <div class="text-center">
-                            <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100 w-100">Confirm And Proceed</button>
+                            <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100">Confirm And Proceed</button>
                         </div>
                     </div>
                 </div>
