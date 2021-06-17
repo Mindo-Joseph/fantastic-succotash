@@ -24,9 +24,9 @@ class DispatcherController extends FrontController
             $checkiftokenExist = OrderVendor::where('web_hook_code',$web_hook_code)->first();
             if($checkiftokenExist){
                 $update = VendorOrderDispatcherStatus::Create(['dispatcher_id' => null,
-                    'order_id' =>  $request->order_id,
-                    'dispatcher_status_option_id ' =>  $request->dispatcher_status_option_id,
-                    'vendor_id' =>  $request->vendor_id ]);
+                    'order_id' =>  $checkiftokenExist->order_id,
+                    'dispatcher_status_option_id' =>  $request->dispatcher_status_option_id,
+                    'vendor_id' =>  $checkiftokenExist->vendor_id ]);
             
                     DB::commit();
                     $message = "Order status updated.";
