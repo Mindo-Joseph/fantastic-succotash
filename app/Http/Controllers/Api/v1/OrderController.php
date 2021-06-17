@@ -76,8 +76,8 @@ class OrderController extends Controller {
                         $product->product_addons = $product_addons;
         			}
         		}
+    		    $order->order_item_count = $order_item_count;
             }
-    		$order->order_item_count = $order_item_count;
 	    	return $this->successResponse($order, null, 201);
     	} catch (Exception $e) {
     		return $this->errorResponse($e->getMessage(), $e->getCode());
