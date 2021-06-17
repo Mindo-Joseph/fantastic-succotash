@@ -110,10 +110,10 @@
                 <div class="dashboard-right">
                     <div class="dashboard">
                         <div class="page-title">
-                            <h3 class="mt-0">My Account</h3>
+                            <h3 class="mt-0">My Wallet</h3>
                         </div>
 
-                        <div class="box-account box-info">
+                        <div class="box-account box-info 12">
 
                             <div class="card-box">
                                 <form>
