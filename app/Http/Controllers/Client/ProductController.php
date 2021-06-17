@@ -119,7 +119,7 @@ class ProductController extends BaseController
             $product_category->product_id = $product->id;
             $product_category->category_id = $request->category;
             $product_category->save();
-            
+
             $proVariant = new ProductVariant();
             $proVariant->sku = $request->sku;
             $proVariant->product_id = $product->id;
@@ -140,7 +140,6 @@ class ProductController extends BaseController
      */
     public function edit($domain = '', $id)
     {
-        
         $product = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related', 'upSell', 'crossSell', 'celebrities')->where('id', $id)->firstOrFail();
         $type = Type::all();
         $countries = Country::all();
@@ -150,7 +149,7 @@ class ProductController extends BaseController
             ->orderBy('position', 'asc')->get();
         $brands = Brand::join('brand_categories as bc', 'bc.brand_id', 'brands.id')
             ->select('brands.id', 'brands.title', 'brands.image')
-            ->where('bc.category_id', $product->category->category_id)->get();
+            ->where('bc.category_id', $product->category_id)->get();
         $clientLanguages = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
             ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.is_primary')
             ->where('client_languages.client_code', Auth::user()->code)
@@ -161,7 +160,7 @@ class ProductController extends BaseController
         $productVariants = Variant::with('option', 'varcategory.cate.primary')
             ->select('variants.*')
             ->join('variant_categories', 'variant_categories.variant_id', 'variants.id')
-            ->where('variant_categories.category_id', $product->category->category_id)
+            ->where('variant_categories.category_id', $product->category_id)
             ->where('variants.status', '!=', 2)
             ->orderBy('position', 'asc')->get();
 
@@ -209,6 +208,13 @@ class ProductController extends BaseController
     public function update(Request $request, $domain = '', $id)
     {
         $product = Product::where('id', $id)->firstOrFail();
+        $product_category = ProductCategory::where('product_id', $id)->where('category_id', $request->category_id)->first();
+        if(!$product_category){
+            $product_category = new ProductCategory();
+            $product_category->product_id = $id;
+            $product_category->category_id = $request->category_id;
+            $product_category->save();
+        }
         if ($product->is_live == 0) {
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
         }
