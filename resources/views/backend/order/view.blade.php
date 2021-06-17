@@ -53,10 +53,20 @@ $timezone = Auth::user()->timezone;
                             <div class="col-lg-6">
                                 <ul class="list-unstyled">
                                     @foreach($dispatcher_status_options as $dispatcher_status_option)
-                                        <li>
+                                    @php
+                                    if($dispatcher_status_option->vendorOrderDispatcherStatus && $dispatcher_status_option->id == $dispatcher_status_option->vendorOrderDispatcherStatus->dispatcher_status_option_id??'')
+                                    $class = 'completed disabled';
+                                    else {
+                                        $class = '';
+                                    }
+                                    $date = isset($dispatcher_status_option->vendorOrderDispatcherStatus) ? $dispatcher_status_option->vendorOrderDispatcherStatus->created_at : '';
+                                    @endphp
+                                        <li class="{{$class}}" data-status_option_id="{{$dispatcher_status_option->id}}">
                                             <h5 class="mt-0 mb-1">{{$dispatcher_status_option->title}}</h5>
-                                            <p class="text-muted">
-                                                <small class="text-muted">...</small>
+                                            <p class="text-muted" id="dispatch_text_muted_{{$dispatcher_status_option->id}}">
+                                                @if($date)
+                                                <small class="text-muted">{{convertDateTimeInTimeZone($date, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                                @endif
                                             </p>
                                         </li>
                                     @endforeach
@@ -195,6 +205,8 @@ $timezone = Auth::user()->timezone;
             success: function(response) {
                 that.addClass("completed");
                 $('#text_muted_'+status_option_id).html('<small class="text-muted">'+response.created_date+'</small>');
+                if(status_option_id == 2)
+                $('#dispatch_text_muted_1').html('<small class="text-muted">'+response.created_date+'</small>');
                 $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
             },
         });
