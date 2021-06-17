@@ -29,7 +29,22 @@
 <script src="{{asset('front-assets/js/script.js')}}"></script>
 <script src="{{asset('js/custom.js')}}"></script>
 <script src="{{asset('js/location.js')}}"></script>
+<script type="text/javascript">
+    var show_cart_url = "{{ route('showCart') }}";
+    var home_page_url = "{{ route('userHome') }}";
+    var cart_details_url = "{{ route('cartDetails') }}";
+    var user_checkout_url= "{{ route('user.checkout') }}";
+    var cart_product_url= "{{ route('getCartProducts') }}";
+    var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
+    var delete_cart_url = "{{ route('emptyCartData') }}";
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+        }
+    });
+</script>
 <script>
+    var is_hyperlocal = 0;
     @if(Session::has('deliveryAddress'))
         let delivery_address = 1;
     @else

@@ -249,7 +249,6 @@
                 </div>
             </div>
         </div>
-        
         <div class="row @if (count($onSaleProducts) < 1) d-none @endif" id="onsale_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
@@ -298,6 +297,17 @@
         </div>
     </div>
 </section>
+<script type="text/template" id="banner_template">
+     <% _.each(brands, function(brand, k){%>
+        <div>
+            <div class="logo-block">
+                <a href="<%= brand.redirect_url %>">
+                    <img src="<%= brand.image.image_fit %>120/120<%= brand.image.image_path %>" alt="">
+                </a>
+            </div>
+        </div>
+    <% }); %>
+</script>
 <section class="section-b-space pt-0">
     <div class="container">
         <div class="title1">
@@ -305,16 +315,8 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="slide-6 no-arrow">
-                    @foreach($brands as $brand)
-                    <div>
-                        <div class="logo-block">
-                            <a href="{{route('brandDetail', $brand->id)}}">
-                                <img src="{{$brand->image['image_fit'] . '120/120' . $brand->image['image_path']}}" alt="">
-                            </a>
-                        </div>
-                    </div>
-                    @endforeach
+                <div class="slide-6 no-arrow" id="brand_main_div">
+                    
                 </div>
             </div>
         </div>

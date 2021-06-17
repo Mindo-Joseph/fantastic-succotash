@@ -1,6 +1,38 @@
 $(document).ready(function() {
     var card = '';
     var stripe = '';
+    getHomePage();
+    function getHomePage(){
+        $.ajax({
+            data: {},
+            type: "GET",
+            dataType: 'json',
+            url: home_page_url,
+            success: function (response) {
+                if(response.status == "Success"){
+                    $(".slide-6").slick('unslick');
+                    let vendors_template = _.template($('#vendors_template').html());
+                    let banner_template = _.template($('#banner_template').html());
+                    $("#brand_main_div").append(banner_template({brands: response.data.brands}));
+                    // $("#vendor_main_div").append(vendors_template({vendors: response.data.vendors}));
+                    $(".slide-6").slick({
+                        dots: !1,
+                        infinite: !0,
+                        speed: 300,
+                        slidesToShow: 6,
+                        slidesToScroll: 6,
+                        responsive: [
+                            { breakpoint: 1367, settings: { slidesToShow: 5, slidesToScroll: 5, infinite: !0 } },
+                            { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
+                            { breakpoint: 767, settings: { slidesToShow: 3, slidesToScroll: 3, infinite: !0 } },
+                            { breakpoint: 480, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+                        ],
+                    });
+                }else{
+                }
+            }
+        });
+    }
     $(".search_btn").click(function () {
         $(".search_warpper").slideToggle("slow");
     });
@@ -47,9 +79,7 @@ $(document).ready(function() {
             },
             success: function(response) {
 
-            },
-            error: function (data) {
-            },
+            }
         });
     });
     $('.customerLang').click(function(){
