@@ -43,6 +43,8 @@ class OrderController extends Controller{
                 $order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
             }
             if($order->vendors){
+                $order->user_name = $order->user->name;
+                $order->user_image = $order->user->image;
     	    	foreach ($order->vendors as $vendor) {
     				$couponData = [];
     				$payable_amount = 0;
