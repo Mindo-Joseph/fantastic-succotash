@@ -39,7 +39,7 @@ class OrderController extends Controller {
     		$order_id = $request->order_id;
             $vendor_id = $request->vendor_id;
             if($vendor_id){
-	       	   $order = Order::with(['vendors.vendor' => function($q) use($vendor_id){$q->where('id', $vendor_id);},'vendors.products' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('id', $order_id)->first();
+	       	   $order = Order::with(['vendors' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('id', $order_id)->first();
             }else{
                 $order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
             }
@@ -51,6 +51,7 @@ class OrderController extends Controller {
     				$payable_amount = 0;
         			$discount_amount = 0;
     				$product_addons = [];
+                    $vendor->vendor_name = $vendor->vendor->name;
         			foreach ($vendor->products as  $product) {
                         $product_addons = [];
                         $variant_options = [];
