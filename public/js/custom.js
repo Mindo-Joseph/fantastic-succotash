@@ -10,7 +10,7 @@ $(document).ready(function() {
     function getHomePage(){
         $.ajax({
             data: {},
-            type: "GET",
+            type: "POST",
             dataType: 'json',
             url: home_page_url,
             success: function (response) {
