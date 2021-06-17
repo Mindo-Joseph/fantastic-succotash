@@ -185,7 +185,7 @@ $(document).ready(function() {
                         $('#onsale_products_wrapper .vendor-product').slick(slickOptions);
                     }
                     else{
-                        window.location.reload();
+                        // window.location.reload();
                     }
                 }
             }
