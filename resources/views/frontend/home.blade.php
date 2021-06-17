@@ -13,97 +13,6 @@
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-<div class="find_location">
-    <div class="container px-0">
-        <?php /* ?>
-        <div class="row no-gutters" id="location_search_wrapper">
-            <div class="col-lg-3 col-md-4 col">
-                <div class="d-flex align-items-center justify-content-start px-3" href="#edit-address" data-toggle="modal">
-                    <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-                    <div class="homepage-address">
-                        <h2><span data-placement="top" data-toggle="tooltip" title="{{$deliveryAddress}}">{{$deliveryAddress}}</span></h2>
-                    </div>
-                    <div class="down-icon">
-                        <i class="fa fa-angle-down" aria-hidden="true"></i>
-                    </div>
-                </div>
-                
-                <div class="d-flex align-items-center justify-content-start px-3 dropdown-toggle" id="dropdownLocationButton" data-toggle="dropdown" aria-haspopup="true" 
-                  aria-expanded="false">
-                    <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-                    <div class="homepage-address">
-                        <h2><span data-placement="top" data-toggle="tooltip" title="{{$deliveryAddress}}">{{$deliveryAddress}}</span></h2>
-                    </div>
-                    <div class="down-icon">
-                        <i class="fa fa-angle-down" aria-hidden="true"></i>
-                    </div>
-                </div>
-                <div class="dropdown-menu p-0" aria-labelledby="dropdownLocationButton" style="max-width:400px;width:100%">
-                    <div id="address-map-container">
-                        <div id="address-map"></div>
-                    </div>
-                    <div class="delivery_address p-2 position-relative">
-                        <div class="modal-title">Set your delivery location</div>
-                        <button type="button" class="close edit-close position-absolute" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <div class="form-group">
-                            <label class="delivery-head">DELIVERY AREA</label>
-                            <!--<div class="select_address border d-flex align-items-center justify-content-between ">
-                                <div class="location-area">
-                                    <i class="fa fa-check-circle-o" aria-hidden="true"></i>
-                                    <span>Sector 28 C, Chandigarh, India</span>
-                                </div>   
-                                <label class="m-0 text-uppercase">Change</label>
-                            </div>-->
-                            <div class="address-input-field d-flex align-items-center justify-content-between">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{$deliveryAddress}}">
-                                <input type="hidden" name="address_latitude" id="address-latitude" value="{{$latitude}}" />
-                                <input type="hidden" name="address_longitude" id="address-longitude" value="{{$longitude}}" />
-                            </div>
-                            <!--<div class="edit-area">
-                                <input class="form-control" type="text" placeholder="Complete Address *" name="complete_address" id="complete_address">
-                                <input class="form-control" type="text" placeholder="Floor (Optional)" name="floor" id="floor">
-                                <input class="form-control" type="text" placeholder="How to reach (Optional)" name="address_hint" id="address_hint">
-                            </div>
-                            <div class="mt-2 mb-2">
-                                <div class="address_type">
-                                    <label class="radio d-inline-block m-0">Home
-                                        <input type="radio" name="address_type" checked="checked" value="home">
-                                        <span class="checkround"></span>
-                                    </label>
-                                    <label class="radio d-inline-block m-0">Office
-                                        <input type="radio" name="address_type" value="office">
-                                        <span class="checkround"></span>
-                                    </label>
-                                    <label class="radio other_address d-inline-block m-0">Other
-                                        <input type="radio" name="address_type" value="other">
-                                        <span class="checkround"></span>
-                                    </label>   
-                                </div>
-                                <div class="other-address-input d-none">
-                                    <label class="d-inline-block m-0">
-                                        <input type="text" name="other_address">
-                                    </label>
-                                </div>                      
-                            </div>-->
-                        </div>
-                        <div class="text-center">
-                            <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100 w-100">Confirm And Proceed</button>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-            <div class="col-lg-9 col-md-8 col">
-                <form class="search_form d-flex align-items-center justify-content-between" action="">
-                    <input class="form-control border-0" type="text" placeholder="Search">
-                    <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i><!--span class="search-text">Search</span--></button>
-                </form>
-            </div>
-        </div>
-        <?php */ ?>
-    </div>
-</div>
 <section class="p-0 small-slider">
     <div class="slide-1 home-slider">
         @foreach($banners as $banner)
@@ -145,6 +54,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="product-4 product-m no-arrow">
+                @if(count($vendors) > 0)
                     @foreach($vendors as $vendor)
                     <div class="product-box">
                         <div class="img-wrapper">
@@ -166,6 +76,9 @@
                         </div>
                     </div>
                     @endforeach
+                @else
+                    <h4 class="text-center">No vendor exists nearby your location</h4>
+                @endif
                 </div>
             </div>
         </div>
@@ -265,8 +178,7 @@
 </script>
 <section class="section-b-space">
     <div class="container">
-        @if(count($newProducts) > 0)
-        <div class="row" id="new_products_wrapper">
+        <div class="row @if (count($onSaleProducts) < 1) d-none @endif" id="new_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">New Products</h2>
@@ -274,6 +186,7 @@
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card">
+                @if(count($newProducts) > 0)
                     @foreach($newProducts as $newProduct)
                     @foreach($newProduct as $product)
                     @php
@@ -307,12 +220,12 @@
                     </div>
                     @endforeach
                     @endforeach
+                @endif
                 </div>
             </div>
         </div>
-        @endif
-        @if(count($featuredProducts) > 0)
-        <div class="row" id="featured_products_wrapper">
+        
+        <div class="row @if (count($featuredProducts) < 1) d-none @endif" id="featured_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">Feature Product</h2>
@@ -320,6 +233,7 @@
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card">
+                @if(count($featuredProducts) > 0)
                     @foreach($featuredProducts as $featuredProduct)
                     @foreach($featuredProduct as $product)
                     @php
@@ -353,12 +267,12 @@
                     </div>
                     @endforeach
                     @endforeach
+                @endif
                 </div>
             </div>
         </div>
-        @endif
-        @if(count($newProducts) > 0)
-        <div class="row" id="bestseller_products_wrapper">
+        
+        <div class="row @if (count($newProducts) < 1) d-none @endif" id="bestseller_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">Best Seller</h2>
@@ -366,6 +280,7 @@
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card">
+                @if(count($newProducts) > 0)
                     @foreach($newProducts as $newProduct)
                     @foreach($newProduct as $new_product)
                     @php
@@ -399,12 +314,12 @@
                     </div>
                     @endforeach
                     @endforeach
+                @endif
                 </div>
             </div>
         </div>
-        @endif
-        @if(count($onSaleProducts) > 0)
-        <div class="row" id="onsale_products_wrapper">
+        
+        <div class="row @if (count($onSaleProducts) < 1) d-none @endif" id="onsale_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">On Sale</h2>
@@ -412,6 +327,7 @@
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card">
+                @if(count($onSaleProducts) > 0)
                     @foreach($onSaleProducts as $onSaleProduct)
                     @foreach($onSaleProduct as $product)
                     @php
@@ -445,10 +361,10 @@
                     </div>
                     @endforeach
                     @endforeach
+                @endif
                 </div>
             </div>
         </div>
-        @endif
     </div>
 </section>
 <section class="section-b-space pt-0">
@@ -475,6 +391,8 @@
 </section>
 @endsection
 
+
+
 @section('script')
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
 <script src="{{asset('front-assets/js/fly-cart.js')}}"></script>
@@ -491,11 +409,25 @@
 </script>
 
 <script>
+        jQuery(document).ready(function(){
+            jQuery(".input-field").hide();
+            jQuery("#show_input").click(function(){
+                jQuery(".input-field").slideDown("slow");
+            });
+            jQuery(".hide_input").click(function(){
+                jQuery(".input-field").slideUp("slow");
+            });
+        });
+        
+</script>
+
+@if( (count($newProducts) > 0) || (count($featuredProducts) > 0) || (count($onSaleProducts) > 0) )
+<script>
      $('.vendor-product').slick({
         infinite: true,
         speed: 300,
         arrows: false,
-        slidesToShow: 5,
+        slidesToShow: 6,
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 5000,
@@ -516,5 +448,10 @@
         ]
     });
 </script>
+@endif
+
+@if( count($vendors) < 1 )
+    <script>$(".product-4").slick('destroy');</script>
+@endif
 
 @endsection

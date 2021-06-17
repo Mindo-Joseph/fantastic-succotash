@@ -211,10 +211,8 @@
                 {{-- <img src="{{asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt=""> --}}
             </div>
             <p class="inbox-item-author">{{ $users->user->name??'' }}</p>
-            {{-- <p class="inbox-item-text">I've finished it! See you so...</p>
-            <p class="inbox-item-date">
-                <a href="javascript:(0);" class="btn btn-sm btn-link text-info font-13"> Reply </a>
-            </p> --}}
+            <p class="inbox-item-text"><i class="fa fa-envelope" aria-hidden="true"> {{ $users->user->email??'' }}</i> <i class="fa fa-phone" aria-hidden="true"> {{ $users->user->phone_number??'' }}</i></p>
+           
         </div>
         @endforeach
     </div>

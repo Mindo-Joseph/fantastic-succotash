@@ -248,7 +248,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <div class="search_warpper">
         <div class="container">
             <div class="row no-gutters" id="location_search_wrapper">
-                @if( (session('deliveryAddress')) && (Session::has('preferences')) && (Session::get('preferences')->is_hyperlocal == 1) )
+                @if( (Session::has('preferences')) && (Session::get('preferences')->is_hyperlocal == 1) )
                     <div class="col-lg-3 col-md-4 col">
                         <div class="d-flex align-items-center justify-content-start px-3 dropdown-toggle" href="#edit-address" data-toggle="modal">
                             <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
@@ -286,11 +286,11 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         <div id="address-map-container">
             <div id="address-map"></div>
         </div>
-        <div class="delivery_address p-2 position-relative">
-            <div class="modal-title">Set your delivery location</div>
+        <div class="delivery_address p-2 mb-2 position-relative">
+            <?php /* ?><div class="modal-title">Select your location</div><?php */ ?>
             <button type="button" class="close edit-close position-absolute" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <div class="form-group">
-                <label class="delivery-head">DELIVERY AREA</label>
+                <label class="delivery-head mb-2">SELECT YOUR LOCATION</label>
                 <?php /* ?><div class="select_address border d-flex align-items-center justify-content-between ">
                     <div class="location-area">
                         <i class="fa fa-check-circle-o" aria-hidden="true"></i>
@@ -332,7 +332,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 </div><?php */ ?>
             </div>
             <div class="text-center">
-                <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100 w-100">Confirm And Proceed</button>
+                <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100">Confirm And Proceed</button>
             </div>
         </div>
       </div>
@@ -340,11 +340,35 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
   </div>
 </div>
 
+<div class="modal fade remove-cart-modal" id="remove_cart_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_cartLabel" style="background-color: rgba(0,0,0,0.8);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="remove_cartLabel">Remove Cart</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="vendor_id" value="1">
+        <input type="hidden" id="cartproduct_id" value="52">
+        <h6 class="m-0">Change in location will remove all your cart products. Do you really want to continue ?</h6>
+      </div>
+      <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-solid" id="remove_cart_button" data-cart_id="">Remove</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
     var show_cart_url = "{{ route('showCart') }}";
+    var cart_details_url = "{{ route('cartDetails') }}";
     var user_checkout_url= "{{ route('user.checkout') }}";
     var cart_product_url= "{{ route('getCartProducts') }}";
     var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
+    var delete_cart_url = "{{ route('emptyCartData') }}";
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': jQuery('meta[name="_token"]').attr('content')

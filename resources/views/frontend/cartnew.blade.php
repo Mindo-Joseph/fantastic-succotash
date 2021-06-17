@@ -34,13 +34,25 @@
         </div>
     </div>
 </script>
-<h1></h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+            <h4 class="page-title text-uppercase">Cart</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/template" id="cart_template">
     <% _.each(cart_details.products, function(product, key){%>
-        <tbody id="tbody_<%= product.vendor.id %>">
+        <thead>
             <tr>
-                <td colspan="6"><%= product.vendor.name %></td>
+                <th colspan="6" style="background-color: #f3f7f9"><%= product.vendor.name %></th>
             </tr>
+        </thead>
+        <tbody id="tbody_<%= product.vendor.id %>">
             <% _.each(product.vendor_products, function(vendor_product, vp){%>
                 <tr class="padding-bottom vendor_products_tr" id="tr_vendor_products_<%= vendor_product.id %>">
                     <td style="width:100px" <%= vendor_product.length > 0 ? 'rowspan=2' : '' %>>
@@ -66,13 +78,13 @@
                             <span class="minus qty-minus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
                                 <i class="fa fa-minus" aria-hidden="true"></i>
                             </span>
-                            <input style="text-align:center;width: 40px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="number" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>">
+                            <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="number" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>">
                             <span class="plus qty-plus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                             </span>
                         </div>
                     </td>
-                    <td class="text-right">
+                    <td class="text-center">
                         <a  class="action-icon d-block mb-3 remove_product_via_cart" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                         </a>
@@ -107,7 +119,7 @@
                         <% }); %>
                 <% } %>
             <% }); %>
-            <tr>
+            <tr class="vertical-top">
                 <td colspan="2">
                     <div class="d-flex w-100 ">
                     <div class="coupon_box d-flex w-50 align-items-center">
@@ -122,9 +134,12 @@
                         <% } %>
                         </div>
                 </td> 
-                <td colspan="3"></td>
+                <td colspan="2"></td>
+                <td class="text-center">
+                    <p class="total_amt m-0">Delivery Fee :</p>
+                </td>
                 <td class="text-right pl-lg-2">
-                    <p class="total_amt m-0">Delivery Fee : $ <%= product.delivery_fee_charges %></p>
+                    <p class="total_amt mb-1">$ <%= product.delivery_fee_charges %></p>
                     <p class="total_amt m-0">$ <%= product.product_total_amount %></p>
                 </td>
             </tr>
@@ -133,18 +148,18 @@
     <tfoot>
         <tr>
             <td colspan="3"></td>
-            <td class="pr-0">
+            <td class="pr-0 pb-0">
                <p class="mb-1"></p> Sub Total  
                <!-- <p class="mb-1"></p> Wallet  -->
                <!-- <p class="mb-1"></p> Loyalty (500 pts)  -->
-               <hr class="my-2">
+               <hr class="mt-2 mb-0">
                <!-- <p class="total_amt m-0">Total Amount</p> -->
             </td>
-            <td class="text-right pl-0" colspan="3">
+            <td class="text-right pl-0 pb-0" colspan="3">
                <p class="mb-1"></p> $<%= cart_details.gross_amount %>
                <!-- <p class="mb-1"></p> -$60.00 -->
                <!-- <p class="mb-1"></p> -$10.00 -->
-               <hr class="my-2">
+               <hr class="mt-2 mb-0">
                <!-- <p class="total_amt m-0">$<%= cart_details.gross_amount %></p> -->
             </td>
         </tr>
@@ -224,14 +239,14 @@
                                     </div>
                                 </div>
                             @empty
-                                <div class="address-no-found">
+                                <div class="col-12 address-no-found">
                                     <p>Address not available.</p>
                                 </div>
                             @endforelse
                         </div>
                         <div class="row">
                             <div class="col-12 mt-4 text-center" id="add_new_address_btn">
-                                <a class="btn btn-solid w-100 m-auto" >
+                                <a class="btn btn-solid w-100 mx-auto mb-4" >
                                     <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address
                                 </a>
                             </div>
@@ -318,7 +333,7 @@
                     </div>
                     <div class="col-8">
                         <div class="table-responsive">
-                            <table class="table table-centered table-nowrap table-striped" id="cart_table"></table>
+                            <table class="table table-centered table-nowrap border" id="cart_table"></table>
                         </div>
                     </div>
                 </div>

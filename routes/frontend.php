@@ -5,7 +5,9 @@ Route::domain('{subdomain}.myorder.com')->middleware(['subdomain', 'domain'])->g
     Route::get('/productDetail/{id}','Front\ProductPageController@index')->name('productDetail');
 });*/
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+
 Route::group(['middleware' => ['domain']], function () {
+	Route::get('dispatch-order-status-update/{id?}', 'Front\DispatcherController@dispatchOrderStatusUpdate')->name('dispatch-order-update'); // Order Status update Dispatch
 	Route::get('demo', [
 		'as' => 'customer.login',
 		'uses' => 'Front\CustomerAuthController@getTestHtmlPage'
@@ -43,7 +45,8 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
 	Route::post('add/product/cart','Front\CartController@postAddToCart')->name('addToCart');
 	Route::get('cartProducts','Front\CartController@getCartData')->name('getCartProducts');
-	Route::get('cartDelete','Front\CartController@emptyCartData')->name('emptyCartData');
+	Route::get('cartDetails','Front\CartController@getCartProducts')->name('cartDetails');
+	Route::post('cartDelete','Front\CartController@emptyCartData')->name('emptyCartData');
 	Route::post('/product/updateCartQuantity','Front\CartController@updateQuantity')->name('updateQuantity');
 	Route::post('/product/deletecartproduct','Front\CartController@deleteCartProduct')->name('deleteCartProduct');
 	Route::get('userAddress','Front\UserController@getUserAddress')->name('getUserAddress');
