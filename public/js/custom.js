@@ -1,6 +1,91 @@
 $(document).ready(function() {
-    var stripe = '';
     var card = '';
+    var stripe = '';
+    $(".search_btn").click(function () {
+        $(".search_warpper").slideToggle("slow");
+    });
+
+    $(".close_btn").click(function () {
+        $(".search_warpper").slideUp("slow");
+    });
+    function settingData(type = '', v1 = '', v2 = '') {
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ route('changePrimaryData') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "type": type,
+                "value1": v1, 
+                "value2": v2
+            },
+            success: function(response) {
+                location.reload();
+            },
+            error: function (data) {
+                location.reload();
+            },
+        });
+    }
+    function isNumberKey(evt){
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        console.log(charCode);
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)){
+            return false;
+        }
+        return true;
+    }
+    $('.addWishList').click(function(){
+        var sku = $(this).attr('proSku');
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ route('addWishlist') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "sku": sku
+            },
+            success: function(response) {
+
+            },
+            error: function (data) {
+            },
+        });
+    });
+    $('.customerLang').click(function(){
+        var changLang = $(this).attr('langId');
+        settingData('language', changLang);
+    });
+
+    $('.customerCurr').click(function(){
+        var changcurrId = $(this).attr('currId');
+        var changSymbol = $(this).attr('currSymbol');
+        settingData('currency', changcurrId, changSymbol);
+    });
+    $('.vendor-product').slick({
+        infinite: true,
+        speed: 300,
+        arrows: false,
+        slidesToShow: 6,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 5000,
+        responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+        ]
+    });
     function stripeInitialize(){
         stripe = Stripe('pk_test_51J0nVZSBx0AFwevbSTIDlYAaLjdsg4V4yoHpSo4BCZqGBzzGeU8Mnw1o0spfOYfMtyCXC11wEn6vBqbJeSNnAkw600U6jkzS3R');
         var elements = stripe.elements();

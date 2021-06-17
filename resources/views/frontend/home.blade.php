@@ -16,11 +16,11 @@
 <section class="p-0 small-slider">
     <div class="slide-1 home-slider">
         @foreach($banners as $banner)
-        <div>
-            <div class="home  text-center">
-                <img src="{{$banner->image['proxy_url'] . '1500/600' . $banner->image['image_path']}}" class="bg-img blur-up lazyload" alt="">
+            <div>
+                <div class="home text-center">
+                    <img src="{{$banner->image['proxy_url'] . '1500/600' . $banner->image['image_path']}}" class="bg-img blur-up lazyload" alt="">
+                </div>
             </div>
-        </div>
         @endforeach
     </div>
 </section>
@@ -54,31 +54,31 @@
         <div class="row">
             <div class="col-12">
                 <div class="product-4 product-m no-arrow">
-                @if(count($vendors) > 0)
-                    @foreach($vendors as $vendor)
-                    <div class="product-box">
-                        <div class="img-wrapper">
-                            <div class="front">
-                                <a href="{{route('vendorDetail', $vendor->id)}}">
-                                    <img class="img-fluid blur-up lazyload bg-img" src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}">
-                                </a>
+                    @if(count($vendors) > 0)
+                        @foreach($vendors as $vendor)
+                        <div class="product-box">
+                            <div class="img-wrapper">
+                                <div class="front">
+                                    <a href="{{route('vendorDetail', $vendor->id)}}">
+                                        <img class="img-fluid blur-up lazyload bg-img" src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}">
+                                    </a>
+                                </div>
+                                <div class="back">
+                                    <a href="{{route('vendorDetail', $vendor->id)}}">
+                                        <img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}">
+                                    </a>
+                                </div>
                             </div>
-                            <div class="back">
-                                <a href="{{route('vendorDetail', $vendor->id)}}">
-                                    <img class="img-fluid blur-up lazyload bg-img" alt="" src="{{$vendor->logo['proxy_url'] . '1000/1000' . $vendor->logo['image_path']}}">
+                            <div class="product-detail">
+                                 <a href="#">
+                                    <h6>{{$vendor->name}}</h6>
                                 </a>
                             </div>
                         </div>
-                        <div class="product-detail">
-                             <a href="#">
-                                <h6>{{$vendor->name}}</h6>
-                            </a>
-                        </div>
-                    </div>
-                    @endforeach
-                @else
-                    <h4 class="text-center">No vendor exists nearby your location</h4>
-                @endif
+                        @endforeach
+                    @else
+                        <h4 class="text-center">No vendor exists nearby your location</h4>
+                    @endif
                 </div>
             </div>
         </div>
@@ -88,75 +88,6 @@
     <% _.each(new_product_options, function(product, k){ %>
         <div>
             <a class="card text-center" href="{{route('productDetail')}}/<%= product.sku %>">
-                <div class="product-image">
-                    <img src="<%= product.imagePath %>" alt="">
-                </div>    
-                <div class="media-body align-self-center px-3">
-                    <div class="inner_spacing">
-                        <h3><%= product.title %></h3>
-                        <p><%= product.description %></p>
-                        <h4>{{ Session::get('currencySymbol') }} <%= (product.price * product.multiply) %></h4>
-                        <div class="rating">
-                            @for($i = 1; $i < 6; $i++) 
-                                <i class="fa fa-star"></i>
-                            @endfor
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-    <% }); %>
-</script>
-<script type="text/template" id="featured_products_template">
-    <% _.each(featured_product_options, function(product, k){ %>
-        <div>
-            <a class="card text-center" href="{{route('productDetail')}}/<%= product.sku %>">
-                <div class="product-image">
-                    <img src="<%= product.imagePath %>" alt="">
-                </div>    
-                <div class="media-body align-self-center px-3">
-                    <div class="inner_spacing">
-                        <h3><%= product.title %></h3>
-                        <p><%= product.description %></p>
-                        <h4>{{ Session::get('currencySymbol') }} <%= (product.price * product.multiply) %></h4>
-                        <div class="rating">
-                            @for($i = 1; $i < 6; $i++) 
-                                <i class="fa fa-star"></i>
-                            @endfor
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-    <% }); %>
-</script>
-<script type="text/template" id="bestseller_products_template">
-    <% _.each(bestseller_product_options, function(product, k){ %>
-        <div>
-            <a class="card text-center" href="{{route('productDetail')}}/<%= product.sku %>")}}">
-                <div class="product-image">
-                    <img src="<%= product.imagePath %>" alt="">
-                </div>    
-                <div class="media-body align-self-center px-3">
-                    <div class="inner_spacing">
-                        <h3><%= product.title %></h3>
-                        <p><%= product.description %></p>
-                        <h4>{{ Session::get('currencySymbol') }} <%= (product.price * product.multiply) %></h4>
-                        <div class="rating">
-                            @for($i = 1; $i < 6; $i++) 
-                                <i class="fa fa-star"></i>
-                            @endfor
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-    <% }); %>
-</script>
-<script type="text/template" id="onsale_products_template">
-    <% _.each(onsale_product_options, function(product, k){ %>
-        <div>
-            <a class="card text-center" href="{{route('productDetail')}}/<%= product.sku %>")}}">
                 <div class="product-image">
                     <img src="<%= product.imagePath %>" alt="">
                 </div>    
@@ -390,55 +321,10 @@
     </div>
 </section>
 @endsection
-
 @section('script')
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
 <script src="{{asset('front-assets/js/fly-cart.js')}}"></script>
-<script type="text/javascript">
-    var homepage_url = "{{route('homepage')}}";
-    jQuery('.home_slider').slick({
-        dots: true,
-        arrows: false,
-        infinite: true,
-        speed: 300,
-        slidesToShow: 1,
-        adaptiveHeight: true
-    });
-</script>
-
-
-
-@if( (count($newProducts) > 0) || (count($featuredProducts) > 0) || (count($onSaleProducts) > 0) )
-<script>
-     $('.vendor-product').slick({
-        infinite: true,
-        speed: 300,
-        arrows: false,
-        slidesToShow: 6,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 5000,
-        responsive: [{
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
-                }
-            },
-            {
-                breakpoint: 767,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            }
-        ]
-    });
-</script>
-@endif
-
 @if( count($vendors) < 1 )
     <script>$(".product-4").slick('destroy');</script>
 @endif
-
 @endsection
