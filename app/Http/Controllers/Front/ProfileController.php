@@ -159,11 +159,9 @@ class ProfileController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function addresBook(Request $request, $domain = '')
-    {
+    public function addresBook(Request $request, $domain = ''){
         $langId = Session::get('customerLanguage');
         $useraddress = UserAddress::where('user_id', Auth::user()->id)->with('country')->get();
-        // dd($useraddress[0]->country->toArray());
         $navCategories = $this->categoryNav($langId);
         return view('frontend/account/addressbook')->with(['useraddress' => $useraddress, 'navCategories' => $navCategories]);
     }
@@ -173,20 +171,10 @@ class ProfileController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function orders(Request $request, $domain = '')
-    {
+    public function orders(Request $request, $domain = ''){
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
        return view('frontend/account/orders')->with(['navCategories' => $navCategories]);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function newsLetter(Request $request, $domain = '')
-    {
     }
 
     /**
@@ -245,25 +233,13 @@ class ProfileController extends FrontController
         return redirect()->route('user.profile');
     }
 
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function logout(Request $request, $domain = '')
-    {
-    }
-
     /** User account information        */
-    public function walletInformation(Request $request, $domain = '')
-    {
+    public function walletInformation(Request $request, $domain = ''){
         $langId = Session::get('customerLanguage');
         $user = User::with('country')->find(Auth::user()->id);
         $navCategories = $this->categoryNav($langId);
         $auth_user = Auth::user();
         $user_transactions = Transaction::where('payable_id', $auth_user->id)->get();
-
         return view('frontend/account/wallet')->with(['user' => $user, 'navCategories' => $navCategories, 'user_transactions' => $user_transactions]);
     }
 
