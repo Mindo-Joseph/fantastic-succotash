@@ -34,7 +34,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     <li class="search_btn">
                                         <img src="{{asset('front-assets/images/icon/search.svg')}}" class="img-fluid blur-up lazyload" alt="">
                                     </li>
-                                    <li class="onhover-div mobile-setting">
+                                    <?php /* ?><li class="onhover-div mobile-setting">
                                         <div><img src="{{asset('front-assets/images/icon/setting.svg')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-settings"></i></div>
                                         <div class="show-div setting">
                                             <h6>language</h6>
@@ -50,7 +50,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                 @endforeach
                                             </ul>
                                         </div>
-                                    </li>
+                                    </li><?php */ ?>
                                     <li class="onhover-div mobile-cart">
                                         <div>
                                             <img src="{{asset('front-assets/images/icon/cart.svg')}}" class="img-fluid blur-up lazyload" alt=""> 
