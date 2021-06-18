@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\{SendReferralRequest};
-use App\Models\{User, UserRefferal, ClientPreference, Client};
+use App\Models\{User, UserRefferal, ClientPreference, Client,UserWishlist};
 
 class ProfileController extends BaseController{
 
