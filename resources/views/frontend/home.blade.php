@@ -64,10 +64,10 @@
                 </a>
             </div>
         </div>
-    <% }); %>
-</script>
-<script type="text/template" id="new_products_template">
-    <% _.each(products, function(product, k){ %>
+    </div>
+</section>
+<script type="text/template" id="products_template">
+    <% _.each(product_options, function(product, k){ %>
         <div>
             <a class="card text-center" href="{{route('productDetail')}}/<%= product.title %>">
                 <div class="product-image">
