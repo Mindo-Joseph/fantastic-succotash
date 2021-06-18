@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\{SendReferralRequest};
-use App\Models\{User, UserRefferal, ClientPreference, Client,UserWishlist};
+use App\Models\{User, UserRefferal, ClientPreference, Client,UserWishlist,ClientCurrency};
 
 class ProfileController extends BaseController{
 
@@ -105,9 +105,7 @@ class ProfileController extends BaseController{
         if(!$product){
             return response()->json(['error' => 'No record found.'], 404);
         }
-
         $exist = UserWishlist::where('user_id', Auth::user()->id)->where('product_id', $product->id)->first();
-
         if($exist){
             $exist->delete();
             return response()->json([
@@ -120,7 +118,6 @@ class ProfileController extends BaseController{
         $wishlist->product_id = $product->id;
         $wishlist->added_on = Carbon::now();
         $wishlist->save();
-
         return response()->json([
         	'data' => $product->id,
             'message' => 'Product has been added in wishlist.',
