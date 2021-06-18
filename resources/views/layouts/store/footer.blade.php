@@ -17,7 +17,6 @@
 <script src="https://maps.googleapis.com/maps/api/js?key={{$mapKey}}&v=3.exp&libraries=places,drawing"></script>
 <script src="{{asset('front-assets/js/jquery-3.3.1.min.js')}}"></script>
 <script src="{{asset('front-assets/js/jquery-ui.min.js')}}"></script>
-<script src="{{asset('front-assets/js/popper.min.js')}}"></script>
 <script src="{{asset('front-assets/js/slick.js')}}"></script>
 <script src="{{asset('front-assets/js/menu.js')}}"></script>
 <script src="{{asset('front-assets/js/lazysizes.min.js')}}"></script>
