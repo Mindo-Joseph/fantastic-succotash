@@ -12,8 +12,9 @@ use App\Models\{Brand, Category, ClientLanguage, CsvProductImport, Product, Prod
 class ProductsImport implements ToCollection{
     private $folderName = 'prods';
     
-    public function  __construct($vendor_id){
+    public function  __construct($vendor_id ,$csv_product_import_id){
         $this->vendor_id= $vendor_id;
+        $this->csv_product_import_id = $csv_product_import_id;
     }
     public function collection(Collection $rows){
         $i = 0;
@@ -377,18 +378,14 @@ class ProductsImport implements ToCollection{
                 }
             }
         } 
-
+        $vendor_csv = CsvProductImport::where('vendor_id', $this->vendor_id)->where('id', $this->csv_product_import_id)->first();
         if (!empty($error)) {
-            $vendor_csv = CsvProductImport::where('vendor_id', $this->vendor_id)->first();
             $vendor_csv->status = 3;
             $vendor_csv->error = json_encode($error);
-            $vendor_csv->save();
-        }
-        else{
-            $vendor_csv = CsvProductImport::where('vendor_id', $this->vendor_id)->first();
+        }else{
             $vendor_csv->status = 2;
-            $vendor_csv->save();
         }
+        $vendor_csv->save();
     }
     private function generateBarcodeNumber(){
         $random_string = substr(md5(microtime()), 0, 14);
