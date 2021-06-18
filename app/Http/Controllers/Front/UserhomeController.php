@@ -52,8 +52,19 @@ class UserhomeController extends FrontController
         $new_products = [];
         $feature_products = [];
         $on_sale_products = [];
-        $latitude = Session::get('latitude');
-        $longitude = Session::get('longitude');
+        if($request->has('latitude')) {
+            $latitude = $request->latitude;
+            Session::put('latitude', $latitude);
+        }else{
+            $latitude = Session::get('latitude');
+        }
+        if($request->has('longitude')) {
+            $longitude = $request->longitude;
+            Session::put('longitude', $longitude);
+        }else{
+            $longitude = Session::get('longitude');
+        }
+        $selectedAddress = ($request->has('selectedAddress')) ? Session::put('selectedAddress', $request->selectedAddress) : Session::get('selectedAddress');
         $preferences = Session::get('preferences');
         $currency_id = Session::get('customerCurrency');
         $language_id = Session::get('customerLanguage');
@@ -63,7 +74,7 @@ class UserhomeController extends FrontController
         }
         $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
         if($preferences){
-            if(($preferences->is_hyperlocal == 1) && (!empty($latitude)) && (!empty($longitude)) ){
+            if(($preferences->is_hyperlocal == 1) && ($latitude) && ($longitude) ){
                 $vendors = $vendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
                     $query->select('vendor_id')
                     ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
@@ -113,10 +124,14 @@ class UserhomeController extends FrontController
                 'price' => Session::get('currencySymbol').' '.($on_sale_product_detail->variant->first()->price * $multiply),
             );
         }
+        $navCategories = $this->categoryNav($language_id);
+        Session::put('navCategories', $navCategories);
+        Session::put('vendors', $vendor_ids);
         $data = [
             'brands' => $brands, 
             'vendors' => $vendors,
             'new_products' => $new_products, 
+            'navCategories' => $navCategories,
             'feature_products' => $feature_products,
             'on_sale_products' => $on_sale_products, 
         ];
