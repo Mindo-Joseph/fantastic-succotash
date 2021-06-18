@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\{LoginRequest, SignupRequest};
-use App\Models\{User, Client, ClientPreference, BlockedToken, Otp, Country, UserDevice, UserVerification, ClientLanguage, CartProduct, Cart};
+use App\Models\{User, Client, ClientPreference, BlockedToken, Otp, Country, UserDevice, UserVerification, ClientLanguage, CartProduct, Cart, UserRefferal};
 
 class AuthController extends BaseController{
     /**
@@ -69,6 +69,7 @@ class AuthController extends BaseController{
         } catch (\Exception $e) {
 
         }
+        $user_refferal = UserRefferal::where('user_id', $user->id)->first();
         $device = UserDevice::where('user_id', $user->id)->first();
         if(!$device){
             $device = new UserDevice();
@@ -110,6 +111,7 @@ class AuthController extends BaseController{
         $data['phone_number'] = $user->phone_number;
         $data['cca2'] = $user->country ? $user->country->code : '';
         $data['callingCode'] = $user->country ? $user->country->phonecode : '';
+        $data['refferal_code'] = $user_refferal ? $user_refferal->refferal_code: '';
         return response()->json(['data' => $data]);
     }
 
