@@ -17,17 +17,6 @@ class WalletController extends FrontController
      */
     public function index()
     {
-        $user_id = Auth::user()->id;
-        $users = User::where('id', $user_id)->with('wallet')->get();
-
-        foreach ($users as $user) {
-            pr($user->balance);
-        }
-
-        dd("ewgwe");
-        $auth_user = Auth::user();
-        $user_transactions = Transaction::where('payable_id', Auth::user()->id)->get();
-        // $auth_user->with('wallets');
-        dd($user_transactions);
+        
     }
 }
