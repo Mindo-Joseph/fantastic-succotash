@@ -7,6 +7,136 @@ $(document).ready(function() {
         addressInputHide(".select_address", ".address-input-field", "#address-input");
     });*/
 
+    getHomePage();
+    function initializeSlider(){
+        $(".slide-6").slick({
+            dots: !1,
+            infinite: !0,
+            speed: 300,
+            slidesToShow: 6,
+            slidesToScroll: 6,
+            responsive: [
+                { breakpoint: 1367, settings: { slidesToShow: 5, slidesToScroll: 5, infinite: !0 } },
+                { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
+                { breakpoint: 767, settings: { slidesToShow: 3, slidesToScroll: 3, infinite: !0 } },
+                { breakpoint: 480, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+            ],
+        });
+        $(".product-4").slick({
+        arrows: !0,
+        dots: !1,
+        infinite: !1,
+        speed: 300,
+        slidesToShow: 6,
+        slidesToScroll: 1,
+        responsive: [
+            { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
+            { breakpoint: 991, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+            { breakpoint: 420, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+        ],
+        });
+        $('.vendor-product').slick({
+            infinite: true,
+            speed: 300,
+            arrows: false,
+            dots: false,
+            slidesToShow: 6,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 5000,
+            responsive: [{
+                    breakpoint: 1200,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 767,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        });
+    }
+    function getHomePage(latitude, longitude){
+        let selected_address = $("#address-input").val();
+        $("#location_search_wrapper .homepage-address span").text(selected_address).attr({"title": selected_address, "data-original-title": selected_address});
+        $("#edit-address").modal('hide');
+        let ajaxData = {};
+        if( (latitude) && (longitude) && (selected_address) ){
+            ajaxData = {"latitude": latitude, "longitude": longitude, 'selectedAddress': selected_address};
+        }
+        $.ajax({
+            data: ajaxData,
+            type: "POST",
+            dataType: 'json',
+            url: home_page_data_url,
+            success: function (response) {
+                if(response.status == "Success"){
+                    $("#main-menu").html('');
+                    let nav_categories_template = _.template($('#nav_categories_template').html());
+                    $("#main-menu").append(nav_categories_template({nav_categories: response.data.navCategories}));
+                    $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
+                    var path = window.location.pathname;
+                    if(path == '/'){
+                        $(".slide-6").slick('destroy');
+                        $(".product-4").slick('destroy');
+                        if($('.vendor-product').html() != ''){
+                            $('.vendor-product').slick('destroy');
+                        }
+                        $(".slide-6").html('');
+                        $(".product-4").html('');
+                        $('.vendor-product').html('');
+                        $("#new_product_main_div").html('');
+                        $("#best_seller_main_div").html('');
+                        $("#feature_product_main_div").html('');
+                        $("#on_sale_product_main_div").html('');
+                        let vendors = response.data.vendors;
+                        let banner_template = _.template($('#banner_template').html());
+                        let vendors_template = _.template($('#vendors_template').html());
+                        let products_template = _.template($('#products_template').html());
+                        $("#brand_main_div").append(banner_template({brands: response.data.brands}));
+                        $("#vendor_main_div").append(vendors_template({vendors: response.data.vendors}));
+                        $("#new_product_main_div").append(products_template({products: response.data.new_products}));
+                        $("#best_seller_main_div").append(products_template({products: response.data.new_products}));
+                        $("#feature_product_main_div").append(products_template({products: response.data.feature_products}));
+                        $("#on_sale_product_main_div").append(products_template({products: response.data.on_sale_products}));
+                        if(response.data.new_products.length > 0){
+                            $('#new_products_wrapper, #bestseller_products_wrapper').removeClass('d-none');
+                        }else{
+                            $('#new_products_wrapper, #bestseller_products_wrapper').addClass('d-none');
+                        }
+                        if(response.data.on_sale_products.length > 0){
+                            $('#onsale_products_wrapper').removeClass('d-none');
+                        }else{
+                            $('#onsale_products_wrapper, #bestseller_products_wrapper').addClass('d-none');
+                        }
+                        if(response.data.feature_products.length > 0){
+                            $('#featured_products_wrapper').removeClass('d-none');
+                        }else{
+                            $('#featured_products_wrapper, #bestseller_products_wrapper').addClass('d-none');
+                        }
+                        if(vendors.length > 0){
+                            $('#our_vendor_main_div').removeClass('d-none');
+                        }else{
+                            $('#our_vendor_main_div, #bestseller_products_wrapper').addClass('d-none');
+                        }
+                        initializeSlider();
+                    }
+                    else{
+                        if( (latitude) && (longitude) && (selected_address) ){
+                            window.location.href = home_page_url;
+                        }
+                    }
+                }else{
+                }
+            }
+        });
+    }
+
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition, null);
@@ -22,7 +152,7 @@ $(document).ready(function() {
     }
 
     if(is_hyperlocal){
-        if(!delivery_address){
+        if(!selected_address){
             getLocation();
         }else{
             let lat = $("#address-latitude").val();
@@ -50,10 +180,10 @@ $(document).ready(function() {
                         $("#remove_cart_modal").modal('show');
                         $("#remove_cart_modal #remove_cart_button").attr("data-cart_id", response.data.id);
                     }else{
-                        setDeliveryAddress(latitude, longitude);
+                        getHomePage(latitude, longitude);
                     }
                 }else{
-                    setDeliveryAddress(latitude, longitude);
+                    getHomePage(latitude, longitude);
                 }
             }
         });
@@ -77,7 +207,7 @@ $(document).ready(function() {
                 if(response.status == 'success'){
                     let latitude = $("#address-latitude").val();
                     let longitude = $("#address-longitude").val();
-                    setDeliveryAddress(latitude, longitude);
+                    getHomePage(latitude, longitude);
                 }
             }
         });
@@ -309,8 +439,8 @@ $(document).ready(function() {
                         city=value[count-3];
                         $("#address-input").val(value);
                         $("#location_search_wrapper .homepage-address span").text(value).attr({"title": value, "data-original-title": value});
-                        if(!delivery_address){
-                            setDeliveryAddress(latitude, longitude);
+                        if(!selected_address){
+                            getHomePage(latitude, longitude);
                         }
                     }
                     else  {
