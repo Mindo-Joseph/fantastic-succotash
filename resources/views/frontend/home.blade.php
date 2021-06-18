@@ -84,8 +84,8 @@
         </div>
     </div>
 </section>
-<script type="text/template" id="new_products_template">
-    <% _.each(new_product_options, function(product, k){ %>
+<script type="text/template" id="products_template">
+    <% _.each(product_options, function(product, k){ %>
         <div>
             <a class="card text-center" href="{{route('productDetail')}}/<%= product.sku %>">
                 <div class="product-image">

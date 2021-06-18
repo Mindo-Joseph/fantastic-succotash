@@ -162,6 +162,32 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </div>
     </div>
 </header>
+<script type="text/template" id="nav_categories_template">
+    <li>
+        <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
+    </li>
+    <% _.each(nav_categories, function(category, key){ %>
+        <li>
+            <a href="{{route('categoryDetail')}}/<%= category.id %>"><%= category.name %></a>
+            <% if(category.children) { %>
+                <ul>
+                <% _.each(category.children, function(childs, key1){ %>
+                    <li>
+                        <a href="{{route('categoryDetail')}}/<%= childs.id %>"><span class="new-tag"><%= childs.name %></span></a>
+                        <% if(childs.children) { %>
+                        <ul>
+                            <% _.each(childs.children, function(chld, key2){ %>
+                                <li><a href="{{route('categoryDetail')}}/<%= chld.id %>"><%= chld.name %></a></li>
+                            <% }); %>
+                        </ul>
+                        <% } %>
+                    </li>
+                <% }); %>
+                </ul>
+            <% } %>
+        </li>
+    <% }); %>
+</script>
 <div class="modal fade edit_address" id="edit-address" tabindex="-1" aria-labelledby="edit-addressLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">

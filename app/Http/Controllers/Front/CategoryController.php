@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ProductVariantSet};
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet};
 use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
@@ -21,8 +21,34 @@ class CategoryController extends FrontController
      */
     public function categoryProduct(Request $request, $domain = '', $cid = 0)
     {
+        $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
+
+        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+            if(Session::has('vendors')){
+                $vendors = Session::get('vendors');
+                $category_vendors = VendorCategory::select('vendor_id')->where('category_id', $cid)->where('status', 1)->get();
+                if(!$category_vendors->isEmpty()){
+                    $index = 1;
+                    foreach($category_vendors as $key => $value){
+                        if(in_array($value->vendor_id, $vendors)){
+                            break;
+                        }
+                        elseif(count($category_vendors) == $index){
+                            abort(404);
+                        }
+                        $index++;
+                    }
+                }
+                else{
+                    abort(404);
+                }
+            }else{
+                // abort(404);
+            }
+        }
+
         $category = Category::with(['tags', 'brands.translation' => function($q) use($langId){
                         $q->where('brand_translations.language_id', $langId);
                     },

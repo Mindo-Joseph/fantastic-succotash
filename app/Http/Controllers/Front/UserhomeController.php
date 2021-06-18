@@ -31,7 +31,7 @@ class UserhomeController extends FrontController
         $client_config = Session::get('client_config');
         $deliveryAddress = Session::get('deliveryAddress');
         $navCategories = $this->categoryNav($langId);
-        Session::put('navCategories', $navCategories); 
+        Session::put('navCategories', $navCategories);
         $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
         if($preferences){
             if(($preferences->is_hyperlocal == 1) && (!empty($latitude)) && (!empty($longitude)) ){
@@ -89,9 +89,7 @@ class UserhomeController extends FrontController
             $isVendorArea = 0;
             $langId = (isset(Auth::user()->language)) ? Auth::user()->language : Session::get('customerLanguage');
             $homeData = array();
-            $categories = $this->categoryNav($langId);
             $homeData['reqData'] = $request->all();
-            $homeData['categories'] = $categories;
             $homeData['vendors'] = $vendorData;
             $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
                             $q->select('brand_id', 'title')->where('language_id', $langId);
@@ -100,7 +98,9 @@ class UserhomeController extends FrontController
                 $vendors[] = $data->id;
             }
             Session::put('vendors', $vendors);
-            
+            $navCategories = $this->categoryNav($langId);
+            Session::put('navCategories', $navCategories);
+            $homeData['navCategories'] = $navCategories;
             $fp = $this->vendorProducts($vendors, $langId, $curId, 'is_featured');
             $np = $this->vendorProducts($vendors, $langId, $curId, 'is_new');
             $onSP = $this->vendorProducts($vendors, $langId, 'USD');
