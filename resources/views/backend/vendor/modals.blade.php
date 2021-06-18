@@ -158,8 +158,8 @@
                                 <tbody id="post_list">
                                     @foreach($csvVendors as $csv)
                                     <tr data-row-id="{{$csv->id}}">
-                                        <td> {{ $csv->id }}</td>
-                                        <td> {{ $csv->name }}</td>
+                                        <td> {{ $loop->iteration }} </td>
+                                        <td> {{ $csv->name }} </td>
                                         @if($csv->status == 1)
                                         <td>Pending</td>
                                         <td></td>
