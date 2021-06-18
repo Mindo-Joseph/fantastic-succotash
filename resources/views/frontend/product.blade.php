@@ -100,7 +100,12 @@
                                     </div>
                                     <input type="hidden" name="variant_id" id="prod_variant_id" value="{{$product->variant[0]->id}}">
                                     <!--<h4><del>$459.00</del><span>55% off</span></h4> -->
-                                    <h3 id="productPriceValue" class="mb-md-3"><span class="org_price">$99.99</span> <b>{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</b></h3>
+                                    <h3 id="productPriceValue" class="mb-md-3">
+                                        @if($product->variant[0]->compare_at_price > 0 )
+                                            <span class="org_price">{{Session::get('currencySymbol').($product->variant[0]->compare_at_price * $product->variant[0]->multiplier)}}</span>
+                                        @endif
+                                        <b>{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</b>
+                                    </h3>
                                     
                                     @if(!empty($product->variantSet))
                                     @php 

@@ -95,7 +95,6 @@ $(document).ready(function() {
             data: {"latitude": latitude, "longitude": longitude, 'selectedAddress': selected_address},
             success: function(response) {
                 if(response.status == 'Success'){
-                    console.log(response.data.navCategories);
                     $("#main-nav #main-menu").html('');
                     let nav_categories_template = _.template($('#nav_categories_template').html());
                     $("#main-nav #main-menu").append(nav_categories_template({nav_categories: response.data.navCategories}));
