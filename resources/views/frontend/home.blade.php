@@ -119,11 +119,12 @@
                 <div class="vendor-product common_card" id="new_product_main_div"></div>
             </div>
         </div>
-        <div class="row d-none" id="featured_products_wrapper">
-            <div class="col-12 text-center">
+        <div class="row d-none mt-4" id="featured_products_wrapper">
+            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                 <div class="title1">
-                    <h2 class="title-inner1">Feature Product</h2>
+                    <h2 class="title-inner1 mb-0">Feature Product</h2>
                 </div>
+                <a class="view_more_items" href="#">View More</a>
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card" id="feature_product_main_div"></div>
@@ -144,11 +145,12 @@
             </div>
         </div>
         
-        <div class="row d-none" id="onsale_products_wrapper">
-            <div class="col-12 text-center">
+        <div class="row d-none mt-4" id="onsale_products_wrapper">
+            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                 <div class="title1">
-                    <h2 class="title-inner1">On Sale</h2>
+                    <h2 class="title-inner1 mb-0">On Sale</h2>
                 </div>
+                <a class="view_more_items" href="#">View More</a>
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card" id="on_sale_product_main_div"></div>
