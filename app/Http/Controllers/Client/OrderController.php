@@ -6,6 +6,7 @@ use Auth;
 use App\Models\Tax;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\VendorOrderDispatcherStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Client\BaseController;
@@ -47,13 +48,19 @@ class OrderController extends BaseController{
                     $query->where('vendor_id', $vendor_id);
                 }))->findOrFail($order_id);
         $order_status_options = OrderStatusOption::all();
-        $dispatcher_status_options = DispatcherStatusOption::all();
+        $dispatcher_status_options = DispatcherStatusOption::with(['vendorOrderDispatcherStatus' => function ($q) use($order_id,$vendor_id){
+            $q->where(['order_id' => $order_id,'vendor_id' => $vendor_id]);
+        }])->get();
         $vendor_order_statuses = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->get();
         foreach ($vendor_order_statuses as $vendor_order_status) {
             $vendor_order_status_created_dates[$vendor_order_status->order_status_option_id]= $vendor_order_status->created_at;
             $vendor_order_status_option_ids[]= $vendor_order_status->order_status_option_id;
         }
-        return view('backend.order.view')->with(['vendor_id' => $vendor_id, 'order' => $order, 'vendor_order_status_option_ids' => $vendor_order_status_option_ids,'order_status_options' => $order_status_options, 'dispatcher_status_options' => $dispatcher_status_options, 'vendor_order_status_created_dates'=> $vendor_order_status_created_dates]);
+         return view('backend.order.view')->with(['vendor_id' => $vendor_id, 'order' => $order, 
+        'vendor_order_status_option_ids' => $vendor_order_status_option_ids,
+        'order_status_options' => $order_status_options, 
+        'dispatcher_status_options' => $dispatcher_status_options, 
+        'vendor_order_status_created_dates'=> $vendor_order_status_created_dates]);
     }
 
      /**
@@ -76,6 +83,8 @@ class OrderController extends BaseController{
                 $vendor_order_status->save();
                 if ($request->status_option_id == 2) {
                     $order_dispatch = $this->checkIfanyProductLastMileon($request);
+                    if($order_dispatch && $order_dispatch == 1)
+                    $stats = $this->insertInVendorOrderDispatchStatus($request);
                 }
                 DB::commit();
                 return response()->json([
@@ -94,17 +103,28 @@ class OrderController extends BaseController{
         }
         
     }
-
-
-    // check If any Product Last Mile on
-    public function checkIfanyProductLastMileon($request)
+    /// ******************   insert In Vendor Order Dispatch Status   ************************ ///////////////
+    public function insertInVendorOrderDispatchStatus($request)
     {
+        $update = VendorOrderDispatcherStatus::updateOrCreate(['dispatcher_id' => null,
+        'order_id' =>  $request->order_id,
+        'dispatcher_status_option_id' => 1,
+        'vendor_id' =>  $request->vendor_id]);
+    }
+
+    /// ******************  check If any Product Last Mile on   ************************ ///////////////
+    public function checkIfanyProductLastMileon($request)
+    {   
+        $order_dispatchs = 2;
         $dispatch_domain = $this->getDispatchDomain();
         if ($dispatch_domain && $dispatch_domain != false) {
             $checkdeliveryFeeAdded = OrderVendor::where(['order_id' => $request->order_id,'vendor_id' => $request->vendor_id])->first();
             if($checkdeliveryFeeAdded && $checkdeliveryFeeAdded->delivery_fee > 0.00)
-            $order_dispatch = $this->placeRequestToDispatch($request->order_id,$request->vendor_id,$dispatch_domain);
+            $order_dispatchs = $this->placeRequestToDispatch($request->order_id,$request->vendor_id,$dispatch_domain);
+            if($order_dispatchs && $order_dispatchs == 1)
+            return 1;
         }
+        return 2;
     }
     // place Request To Dispatch
     public function placeRequestToDispatch($order,$vendor,$dispatch_domain){
@@ -176,13 +196,14 @@ class OrderController extends BaseController{
                         if($response && $response['task_id'] > 0){
                             $up_web_hook_code = OrderVendor::where(['order_id' => $order->id,'vendor_id' => $vendor])
                                     ->update(['web_hook_code' => $dynamic]);
-                                     
+                            return 1;
                         }
-                        
+                        return 2;
                         
             }    
             catch(\Exception $e)
             {
+                return 2;
                 return response()->json([
                     'status' => 'error',
                     'message' => $e->getMessage()

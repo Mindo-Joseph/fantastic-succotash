@@ -35,7 +35,9 @@ class ClientAuth{
                                
                                    
                                 if (Auth::user()->is_superadmin == 0) {
-                                    if ($currentPath == "client/profile") {
+                                    if ($route_name == 'customer.edit') {
+                                        return Redirect::route('client.profile');
+                                    }elseif ($currentPath == "client/profile") {
                                     }elseif($route_name == 'vendor.show'){
                                         $vendor_id = end($per_url);
                                         $user_vendors = UserVendor::where(['user_id'=> Auth::id(),
@@ -43,7 +45,7 @@ class ClientAuth{
                                         if($user_vendors == 0)
                                         return Redirect::route('client.profile');
                                     }
-                                     else {
+                                    else {
                                         $sub_admin_per = false;
                                         $permission_exist = false;
                                         $url_path = $per_url[1];
