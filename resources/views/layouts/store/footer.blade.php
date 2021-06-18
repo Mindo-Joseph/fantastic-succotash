@@ -29,7 +29,7 @@
 <script src="{{asset('js/location.js')}}"></script>
 <script type="text/javascript">
     var is_hyperlocal = 0;
-    var delivery_address = 0;
+    var selected_address = 0;
     var show_cart_url = "{{ route('showCart') }}";
     var home_page_url = "{{ route('homePageData') }}";
     let empty_cart_url = "{{route('emptyCartData')}}";
@@ -39,7 +39,7 @@
     var cart_product_url= "{{ route('getCartProducts') }}";
     var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
     @if(Session::has('deliveryAddress'))
-        delivery_address = 1;
+        selected_address = 1;
     @endif
 
     @if( Session::get('preferences') )
