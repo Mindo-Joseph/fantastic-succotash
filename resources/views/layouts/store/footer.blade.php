@@ -22,10 +22,8 @@
 <script src="{{asset('front-assets/js/menu.js')}}"></script>
 <script src="{{asset('front-assets/js/lazysizes.min.js')}}"></script>
 <script src="{{asset('front-assets/js/bootstrap.js')}}"></script>
-<script src="{{asset('front-assets/js/bootstrap-notify.min.js')}}"></script>
 <script src="{{asset('front-assets/js/jquery.elevatezoom.js')}}"></script>
 <script src="{{asset('front-assets/js/underscore.min.js')}}"></script>
-<script src="{{asset('front-assets/js/sweetalert2.min.js')}}"></script>
 <script src="{{asset('front-assets/js/script.js')}}"></script>
 <script src="{{asset('js/custom.js')}}"></script>
 <script src="{{asset('js/location.js')}}"></script>
