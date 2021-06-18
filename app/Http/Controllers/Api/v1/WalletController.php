@@ -5,7 +5,6 @@ use Auth;
 use Session;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\Request;
 use App\Models\{User, Transaction};
 use App\Http\Controllers\Controller;
 
