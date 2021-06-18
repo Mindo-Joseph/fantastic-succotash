@@ -221,7 +221,7 @@ class BaseController extends Controller{
     public function randomData($table){
         $random_string = substr(md5(microtime()), 0, 6);
         // after creating, check if string is already used
-        while(\DB::table($table)->where('card_id', $random_string)->exists()){
+        while(\DB::table($table)->where('refferal_code', $random_string)->exists()){
             $random_string = substr(md5(microtime()), 0, 6);
         }
         return $random_string;

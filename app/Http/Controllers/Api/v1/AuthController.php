@@ -157,6 +157,14 @@ class AuthController extends BaseController{
         $user->phone_token_valid_till = $sendTime;
         $user->email_token_valid_till = $sendTime;
         $user->save();
+        $wallet = $user->wallet;
+        $userRefferal = new UserRefferal();
+        $userRefferal->refferal_code = $this->randomData("user_refferals", 8, 'refferal_code');
+        if($signReq->refferal_code != null){
+            $userRefferal->reffered_by = $signReq->refferal_code;
+        }
+        $userRefferal->user_id = $user->id;
+        $userRefferal->save();
         $user_cart = Cart::where('user_id', $user->id)->first();
         if($user_cart){
             $unique_identifier_cart = Cart::where('unique_identifier', $signReq->device_token)->first();

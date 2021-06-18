@@ -107,7 +107,7 @@
 </section>
 <section class="section-b-space">
     <div class="container">
-        <div class="row @if (count($onSaleProducts) < 1) d-none @endif" id="new_products_wrapper">
+        <div class="row d-none" id="new_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">New Products</h2>
