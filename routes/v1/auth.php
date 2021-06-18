@@ -10,7 +10,6 @@ Route::group(['prefix' => 'v1/auth'], function () {
     Route::group(['middleware' => ['dbCheck', 'apilogger']], function() {
         Route::post('login', 'Api\v1\AuthController@login');
         Route::post('register', 'Api\v1\AuthController@signup');
-        Route::post('register', 'Api\v1\AuthController@signup');
         Route::post('resetPassword', 'Api\v1\AuthController@resetPassword');
         Route::post('forgotPassword', 'Api\v1\AuthController@forgotPassword');
     });
@@ -33,9 +32,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('user/getAddress', 'Api\v1\ProfileController@getAddress');
         Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');
+        Route::get('myWallet', 'Api\v1\WalletController@getFindMyWalletDetails');
         Route::post('changePassword', 'Api\v1\ProfileController@changePassword');
         Route::get('addressBook/{id?}', 'Api\v1\AddressController@getAddressList');
         Route::post('user/address/{id?}', 'Api\v1\AddressController@postSaveAddress');
+        Route::post('send/referralcode', 'Api\v1\ProfileController@postSendReffralCode');
         Route::get('delete/address/{id}', 'Api\v1\AddressController@postDeleteAddress');
         Route::get('wishlist/update/{pid?}', 'Api\v1\ProfileController@updateWishlist');
         Route::get('mystore/product/list', 'Api\v1\StoreController@getMyStoreProductList');

@@ -55,95 +55,8 @@
 <section class="section-b-space">
     <div class="collection-wrapper">
         <div class="container">
-            <div class="row">
-                <div class="col-sm-3 collection-filter">
-                    <div class="collection-filter-block">
-                        <div class="collection-mobile-back">
-                            <span class="filter-back">
-                                <i class="fa fa-angle-left" aria-hidden="true"></i>
-                                back
-                            </span>
-                        </div>
-                        <div class="collection-collapse-block border-0 open">
-                            <h3 class="collapse-block-title">brand</h3>
-                            <div class="collection-collapse-block-content">
-                                <div class="collection-brand-filter">
-                                    <ul class="category-list">
-                                        <li><a href="#">clothing</a></li>
-                                        <li><a href="#">bags</a></li>
-                                        <li><a href="#">footwear</a></li>
-                                        <li><a href="#">watches</a></li>
-                                        <li><a href="#">accessories</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="collection-filter-block">
-                        <div class="product-service">
-                            <div class="media">
-                                <div class="media-body">
-                                    <h4>free shipping</h4>
-                                    <p>free shipping world wide</p>
-                                </div>
-                            </div>
-                            <div class="media">
-
-                                <div class="media-body">
-                                    <h4>24 X 7 service</h4>
-                                    <p>online service for new customer</p>
-                                </div>
-                            </div>
-                            <div class="media">
-
-                                <div class="media-body">
-                                    <h4>festival offer</h4>
-                                    <p>new online special festival offer</p>
-                                </div>
-                            </div>
-                            <div class="media border-0 m-0">
-
-                                <div class="media-body">
-                                    <h4>online payment</h4>
-                                    <p>Contrary to popular belief.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- side-bar single product slider start -->
-                    <div class="theme-card">
-                        <h5 class="title-border">new product</h5>
-                        <div class="offer-slider slide-1">
-                            @foreach($newProducts as $newProds)
-                            <div>
-                                @foreach($newProds as $new)
-                                <?php $imagePath = '';
-                                foreach ($new['media'] as $k => $v) {
-                                    $imagePath = $v['image']['path']['proxy_url'] . '300/300' . $v['image']['path']['image_path'];
-                                } ?>
-                                <div class="media">
-                                    <a href="{{route('productDetail', $new['sku'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt=""></a>
-                                    <div class="media-body align-self-center">
-                                        <div class="rating">
-                                            @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                                @endfor
-                                        </div>
-                                        <a href="{{route('productDetail', $new['sku'])}}">
-                                            <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
-                                        </a>
-                                        <h4>
-                                            <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                            {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}}
-                                        </h4>
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-9 col-sm-12 col-xs-12">
+            <div class="row">                
+                <div class="col-sm-12">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-xl-12">
@@ -173,10 +86,21 @@
                             </div>
                             <div class="col-lg-6 rtl-text">
                                 <div class="product-right">
-                                    <h2>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}</h2>
+                                    <h2 class="mb-0">{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}</h2>
+                                    <div class="rating">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i> 
+                                        <i class="fa fa-star"></i> 
+                                        <i class="fa fa-star"></i> 
+                                        <i class="fa fa-star"></i>
+                                        <a href="#"></a>
+                                    </div>
+                                    <div class="description_txt my-3">
+                                        <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                                    </div>
                                     <input type="hidden" name="variant_id" id="prod_variant_id" value="{{$product->variant[0]->id}}">
                                     <!--<h4><del>$459.00</del><span>55% off</span></h4> -->
-                                    <h3 id="productPriceValue">{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</h3>
+                                    <h3 id="productPriceValue" class="mb-md-3"><span class="org_price">$99.99</span> <b>{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</b></h3>
                                     
                                     @if(!empty($product->variantSet))
                                     @php 
@@ -229,7 +153,7 @@
                                     @endif
 
                                     <div class="product-description border-product">
-                                        <h6 class="product-title">quantity: <span id="instock" style="color: green;">In Stock ({{$product->variant[0]->quantity}})</span></h6>
+                                        <h6 class="product-title mt-0">quantity: <span id="instock" style="color: green;">In Stock ({{$product->variant[0]->quantity}})</span></h6>
                                         <div class="qty-box">
                                             <div class="input-group">
                                                 <span class="input-group-prepend"><button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i></button> </span>

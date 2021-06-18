@@ -120,21 +120,21 @@
                 <% } %>
             <% }); %>
             <tr class="vertical-top">
-                <td colspan="2">
+                <td colspan="3">
                     <div class="d-flex w-100 ">
-                    <div class="coupon_box d-flex w-50 align-items-center">
+                    <div class="coupon_box d-flex w-75 align-items-center">
                         <img src="{{ asset('assets/images/discount_icon.svg') }}">
                         <label class="mb-0 ml-2"><%= product.coupon ? product.coupon.promo.name : '' %></label>
                         
                     </div>
                     <% if(!product.coupon) { %>
-                            <a class="btn btn-outline-info promo_code_list_btn" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_total_amount %>">Apply</a>
+                            <a class="btn btn-solid promo_code_list_btn" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_total_amount %>">Apply</a>
                         <% }else{ %>
                         <i class="fa fa-times ml-4 remove_promo_code_btn" data-coupon_id="<%= product.coupon ? product.coupon.promo.id : '' %>" data-cart_id="<%= cart_details.id %>"></i>
                         <% } %>
                         </div>
                 </td> 
-                <td colspan="2"></td>
+                <td colspan="1"></td>
                 <td class="text-center">
                     <p class="total_amt m-0">Delivery Fee :</p>
                 </td>
@@ -186,7 +186,7 @@
 </script>
 <script type="text/template" id="promo_code_template">
     <% _.each(promo_codes, function(promo_code, key){%>
-        <div class="col-lg-6">
+        <div class="col-lg-6 mt-3">
             <div class="coupon-code mt-0">
                 <div class="p-2">
                     <img src="<%= promo_code.image.proxy_url %>100/35<%= promo_code.image.image_path %>" alt="">
@@ -227,7 +227,7 @@
                         <div class="row mb-4" id="address_template_main_div">
                             @forelse($addresses as $k => $address)
                                 <div class="col-md-12">
-                                    <div class="delivery_box">
+                                    <div class="delivery_box px-0">
                                         <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}} 
                                             @if($address->is_primary)
                                                 <input type="radio" name="address_id" value="{{$address->id}}"  checked="checked">
@@ -333,7 +333,7 @@
                     </div>
                     <div class="col-8">
                         <div class="table-responsive">
-                            <table class="table table-centered table-nowrap border" id="cart_table"></table>
+                            <table class="table table-centered table-nowrap" id="cart_table"></table>
                         </div>
                     </div>
                 </div>
@@ -409,17 +409,12 @@
 <script type="text/template" id="payment_method_tab_pane_template">
     <% _.each(payment_options, function(payment_option, k){%>
         <div class="tab-pane fade <%= payment_option.slug == 'cash_on_delivery' ? 'active show': ''%>" id="v-pills-<%= payment_option.slug %>" role="tabpanel" aria-labelledby="v-pills-<%= payment_option.slug %>-tab">
-        <% if(payment_option.slug == 'stripe') { %>
-            <form method="POST" id="stripe-payment-form">
-        <% } else if(payment_option.slug == 'paypal') { %>
-            <form method="POST" id="paypal-payment-form">
-        <% } else { %>
-            <form method="POST">
-        <% } %>
-
+            <form method="POST" id="<%= payment_option.slug %>-payment-form">
             @csrf
             @method('POST')
-                <div class="payment_resp" role="alert"></div>
+                <div class="payment_response mb-3">
+                    <div class="alert p-0" role="alert"></div>
+                </div>
                 <div class="form_fields">
                     <div class="row">
                         <div class="col-md-12">
@@ -473,28 +468,12 @@
     var place_order_url = "{{route('user.placeorder')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
     var payment_paypal_url = "{{route('payment.paypal')}}";
-    var payment_success_paypal_url = "{{route('payment.paypalSuccess')}}";
     var user_store_address_url = "{{route('address.store')}}";
     var promo_code_remove_url = "{{ route('remove.promocode') }}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
     var payment_option_list_url = "{{route('payment.option.list')}}";
     var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
-    $( document ).ready(function() {
-        let address_checked = $("input:radio[name='address_id']").is(":checked");
-        if(address_checked){
-            $('#order_palced_btn').prop('disabled', false);
-        }else{
-            $('#order_palced_btn').prop('disabled', true);
-        }
-        
-        $("form").submit(function(e){
-            let address_id = $("input:radio[name='address_id']").is(":checked");
-            if(!address_id){
-                alert('Address field required.');
-                return false;
-            }
-        });
-    });
+    var payment_success_paypal_url = "{{route('payment.paypalSuccess')}}";
 </script>
 @endsection

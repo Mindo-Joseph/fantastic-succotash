@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ProductVariantSet};
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet};
 use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
@@ -21,8 +21,34 @@ class CategoryController extends FrontController
      */
     public function categoryProduct(Request $request, $domain = '', $cid = 0)
     {
+        $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
+
+        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+            if(Session::has('vendors')){
+                $vendors = Session::get('vendors');
+                $category_vendors = VendorCategory::select('vendor_id')->where('category_id', $cid)->where('status', 1)->get();
+                if(!$category_vendors->isEmpty()){
+                    $index = 1;
+                    foreach($category_vendors as $key => $value){
+                        if(in_array($value->vendor_id, $vendors)){
+                            break;
+                        }
+                        elseif(count($category_vendors) == $index){
+                            abort(404);
+                        }
+                        $index++;
+                    }
+                }
+                else{
+                    abort(404);
+                }
+            }else{
+                // abort(404);
+            }
+        }
+
         $category = Category::with(['tags', 'brands.translation' => function($q) use($langId){
                         $q->where('brand_translations.language_id', $langId);
                     },
@@ -117,7 +143,7 @@ class CategoryController extends FrontController
             if(!empty($products)){
                 foreach ($products as $key => $value) {
                     foreach ($value->variant as $k => $v) {
-                        $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                        $value->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     }
                 }
             }
@@ -132,12 +158,6 @@ class CategoryController extends FrontController
      */
     public function categoryFilters(Request $request, $domain = '', $cid = 0)
     {
-        /*$products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
-                    ->with('variant1.vset')
-                    ->select('id as pro_id', 'sku')
-                    ->where('pc.category_id', $cid)->get();
-        dd($products->toArray());*/
-
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $setArray = $optionArray = array();
@@ -161,18 +181,6 @@ class CategoryController extends FrontController
                 $multiArray[$request->variants[$key]][] = $value;
             }
         }
-
-        //$combinations = $this->array_combinations($multiArray);
-        //$variantSetData = ProductVariantSet::select('product_id', 'product_variant_id');
-        /*if(!empty($multiArray)){
-            foreach ($multiArray as $key => $value) {
-                $variantSetData = $variantSetData->whereIn('product_variant_id', function($qry) use($key, $value){ 
-                        $qry->select('product_variant_id')->from('product_variant_sets')
-                            ->whereIn('variant_type_id', $key)
-                            ->whereIn('variant_option_id', $value);
-                        })
-            }
-        }*/
         $variantIds = $productIds = array();
 
         if(!empty($multiArray)){

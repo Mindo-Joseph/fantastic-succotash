@@ -34,11 +34,16 @@ class CustomerAuthController extends FrontController{
         return view('frontend.account.loginnew')->with(['navCategories' => $navCategories]);
     }
 
-    public function registerForm($domain = ''){
+    public function registerForm($domain = '', Request $request){
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-        return view('frontend.account.registernew')->with(['navCategories' => $navCategories]);
+        if($request->refferal_code == null){
+            return view('frontend.account.registernew')->with(['navCategories' => $navCategories]);
+        }
+        else{
+            return view('frontend.account.registernew')->with(['navCategories' => $navCategories,'code' => $request->refferal_code]);
+        }
     }
 
     /**     * Display forgotPassword Form     */
@@ -145,37 +150,33 @@ class CustomerAuthController extends FrontController{
             $user->password = Hash::make($req->password);
             $user->save();
             $wallet = $user->wallet;
-            $wallet->deposit(100);
-            $wallet->balance;
-            // $userRefferal = new UserRefferal();
-            // $userRefferal->refferal_code = $this->randomData("user_refferals", 8, 'refferal_code');
-            // if($req->refferal_code != null){
-            //     $userRefferal->reffered_by = $req->refferal_code;
-            // }
-            // $userRefferal->user_id = $user->id;
-            // $userRefferal->save();
+            $userRefferal = new UserRefferal();
+            $userRefferal->refferal_code = $this->randomData("user_refferals", 8, 'refferal_code');
+            if($req->refferal_code != null){
+                $userRefferal->reffered_by = $req->refferal_code;
+            }
+            $userRefferal->user_id = $user->id;
+            $userRefferal->save();
             if ($user->id > 0) {
-                // $userCustomData = $this->userMetaData($user->id, 'web', 'web');
-                // $rae = ReferAndEarn::first();
-                // if($rae){
-                //     $userReff_by = UserRefferal::where('refferal_code', $req->refferal_code)->first();
-                //     // $wallet_by = Wallet::where('user_id' , $userReff_by->user_id)->first();
-                //     // $wallet_to = Wallet::where('user_id' , $user->id)->first();
-                //     // if($rae->reffered_by_amount != null){
-                //     //     $wallet_history = new WalletHistory();
-                //     //     $wallet_history->user_id = $userReff_by->user_id;
-                //     //     $wallet_history->wallet_id = $wallet_by->id;
-                //     //     $wallet_history->amount = $rae->reffered_by_amount;
-                //     //     $wallet_history->save();
-                //     // }
-                //     // if($rae->reffered_to_amount != null){
-                //     //     $wallet_history = new WalletHistory();
-                //     //     $wallet_history->user_id = $user->id;
-                //     //     $wallet_history->wallet_id = $wallet_to->id;
-                //     //     $wallet_history->amount = $rae->reffered_to_amount;
-                //     //     $wallet_history->save();
-                //     // }
-                // }
+                if($req->refferal_code != null){
+                    $refferal_amounts = ClientPreference::first();
+                    if($refferal_amounts){
+                        if($refferal_amounts->reffered_by_amount != null && $refferal_amounts->reffered_to_amount != null){
+                            $reffered_by = UserRefferal::where('refferal_code', $req->refferal_code)->first();
+                                $user_refferd_by = $reffered_by->user_id;
+                                $user_refferd_by = User::where('id', $reffered_by->user_id)->first();
+                                if($user_refferd_by){
+                                    //user reffered by amount
+                                    $wallet_user_reffered_by = $user_refferd_by->wallet;
+                                    $wallet_user_reffered_by->deposit($refferal_amounts->reffered_by_amount, ['Referral code used by <b>'.$req->name.'</b>']);
+                                    $wallet_user_reffered_by->balance;
+                                    //user reffered to amount
+                                    $wallet->deposit($refferal_amounts->reffered_to_amount, ['You used refferal code of <b>'.$user_refferd_by->name.'</b>']);
+                                    $wallet->balance;
+                            }
+                        }
+                    }
+                }
                 Auth::login($user);
                 $this->checkCookies($user->id);
                 return redirect()->route('user.verify');

@@ -9,6 +9,7 @@
             <div class="row">
                 <div class="col-lg-6 mb-lg-0 mb-3 text-center border-right pb-4">
                     <h3 class="mb-2">Login to Your Account</h3>
+                    @if(session('preferences'))
                     @if(session('preferences')->fb_login == 1 || session('preferences')->twitter_login == 1 || session('preferences')->google_login == 1 || session('preferences')->apple_login == 1)
                     <ul class="social-links d-flex align-items-center mx-auto mb-4 mt-3">
                         @if(session('preferences')->google_login == 1)
@@ -39,6 +40,7 @@
                     <div class="divider_line m-auto">
                         <span>OR</span>
                     </div>
+                    @endif
                     @endif
                     <div class="row mt-3">
                         <div class="offset-xl-2 col-xl-8 text-left">

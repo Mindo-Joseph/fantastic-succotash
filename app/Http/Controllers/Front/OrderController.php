@@ -14,6 +14,19 @@ use GuzzleHttp\Client;
 use Log;
 class OrderController extends FrontController{
     use ApiResponser;
+
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function orders(Request $request, $domain = '')
+    {
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+       return view('frontend/account/orders')->with(['navCategories' => $navCategories]);
+    }
+    
     public function getOrderSuccessPage(Request $request){
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
@@ -37,7 +50,7 @@ class OrderController extends FrontController{
            DB::beginTransaction();
             $delivery_on_vendors = array();
             $user = Auth::user();
-            $loyalty_amount_saved = '';
+            $loyalty_amount_saved = 0;
             $redeem_points_per_primary_currency = '';
             $loyalty_card = LoyaltyCard::where('status', '0')->first();
             if($loyalty_card){
@@ -49,7 +62,9 @@ class OrderController extends FrontController{
             $order_loyalty_points_earned_detail = Order::where('user_id', $user->id)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
             if($order_loyalty_points_earned_detail){
                 $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
-                $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
+                if($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0){
+                    $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
+                }
             }
             $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
             $order = new Order;

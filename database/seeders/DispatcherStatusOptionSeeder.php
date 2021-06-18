@@ -14,7 +14,6 @@ class DispatcherStatusOptionSeeder extends Seeder
      */
     public function run()
     {
-        //
         $statuses = ['Created', 'Assigned', 'Started', 'Arrived', 'Completed'];
         // OrderStatusOption::truncate();
         foreach ($statuses as $status) {
