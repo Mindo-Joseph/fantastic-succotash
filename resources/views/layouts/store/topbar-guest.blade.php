@@ -11,7 +11,15 @@
             </div>
             <div class="col-lg-5 text-right">
                 <ul class="header-dropdown">
-                    <li class="mobile-wishlist"><a href="#"><i class="fa fa-heart 21" aria-hidden="true"></i></a>
+                    <li class="onhover-dropdown change-language">
+                        <a href="#"><i class="fa fa-language" aria-hidden="true"></i><!--span>Change Language</span--> </a>
+                        <ul class="onhover-show-div">                            
+                        </ul>
+                    </li>
+                    <li class="onhover-dropdown change-currency">
+                        <a href="#"><i class="fa fa-money" aria-hidden="true"></i><!--span>Change Currency</span--></a>
+                        <ul class="onhover-show-div">
+                        </ul>
                     </li>
                     <li class="onhover-dropdown mobile-account"> <i class="fa fa-user" aria-hidden="true"></i>
                         Account

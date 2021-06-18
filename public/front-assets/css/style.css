@@ -1741,7 +1741,7 @@ button.btn.btn-solid:active, button.btn.btn-outline:active {
       content: "";
       left: 0;
       right: 0;
-      margin: 0 auto;
+      margin: 0;
       bottom: 0; }
   .title1.title-gradient .title-inner1:after {
     background: var(--theme-deafult);

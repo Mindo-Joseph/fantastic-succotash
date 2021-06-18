@@ -92,10 +92,11 @@
 <section class="section-b-space p-t-0 pt-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
     <div class="container">
         <div class="row">
-        <div class="col-12 text-center mb-4">
+            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                 <div class="title1">
-                    <h2 class="title-inner1">Our Vendors</h2>
+                    <h2 class="title-inner1 mb-0">Our Vendors</h2>
                 </div>
+                <a class="view_more_items" href="#">View More</a>
             </div>
         </div>
         <div class="row">
@@ -108,10 +109,11 @@
 <section class="section-b-space">
     <div class="container">
         <div class="row d-none" id="new_products_wrapper">
-            <div class="col-12 text-center">
+            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                 <div class="title1">
-                    <h2 class="title-inner1">New Products</h2>
+                    <h2 class="title-inner1 mb-0">New Products</h2>
                 </div>
+                <a class="view_more_items" href="#">View More</a>
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card" id="new_product_main_div"></div>
@@ -128,11 +130,12 @@
             </div>
         </div>
         
-        <div class="row d-none" id="bestseller_products_wrapper">
-            <div class="col-12 text-center">
+        <div class="row d-none mt-md-5 mt-4" id="bestseller_products_wrapper">
+            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                 <div class="title1">
-                    <h2 class="title-inner1">Best Seller</h2>
+                    <h2 class="title-inner1 mb-0">Best Seller</h2>
                 </div>
+                <a class="view_more_items" href="#">View More</a>
             </div>
             <div class="col-12 theme-card">                
                 <div class="vendor-product common_card" id="best_seller_main_div">
@@ -155,10 +158,13 @@
 </section>
 <section class="section-b-space pt-0">
     <div class="container">
-        <div class="title1">
-            <h2 class="title-inner1">Brands</h2>
-        </div>
         <div class="row">
+            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
+                <div class="title1">
+                    <h2 class="title-inner1 mb-0">Brands</h2>
+                </div>
+                <a class="view_more_items" href="#">View More</a>
+            </div>
             <div class="col-md-12">
                 <div class="slide-6 no-arrow" id="brand_main_div">
                     
