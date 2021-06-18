@@ -186,8 +186,7 @@ class ProfileController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function updateProfile(Request $request)
-    {
+    public function updateProfile(Request $request){
         $usr = Auth::user()->id; 
         $validator = Validator::make($request->all(), [
             'country_code'  => 'required|string',
@@ -268,6 +267,42 @@ class ProfileController extends BaseController
             'message' => 'Profile updated successfully.'
         ]);
     }
-
+    public function postSendReffralCode(Request $request){
+        try {
+            $user = Auth::user()
+            $client = Client::first();
+            $client_preference_detail = ClientPreference::first();
+            $user_refferal_detail = UserRefferal::where('user_id', $user->id)->first();
+            $refferal_code = $user_refferal_details->refferal_code;
+            if($client_preference_detail){
+                if ($client_preference_detail->mail_driver && $client_preference_detail->mail_host && $client_preference_detail->mail_port && $client_preference_detail->mail_port && $client_preference_detail->mail_password && $client_preference_detail->mail_encryption) {
+                    $confirured = $this->setMailDetail($client_preference_detail->mail_driver, $client_preference_detail->mail_host, $client_preference_detail->mail_port, $client_preference_detail->mail_username, $client_preference_detail->mail_password, $client_preference_detail->mail_encryption);
+                    $sendto = $request->email;
+                    $client_name = $client->name;
+                    $mail_from = $client_preference_detail->mail_from;
+                    try {
+                        Mail::send(
+                            'email.verify',
+                            [
+                                'code' => $refferal_code,
+                                'logo' => $client->logo['original'],
+                                'customer_name' => "Link from ".$user->name,
+                                'code_text' => 'Register yourself using this refferal code below to get bonus offer',
+                                'link' => "http://local.myorder.com/user/register?refferal_code=".$refferal_code,
+                            ],
+                            function ($message) use ($sendto, $client_name, $mail_from) {
+                                $message->from($mail_from, $client_name);
+                                $message->to($sendto)->subject('OTP to verify account');
+                            }
+                        );
+                    } catch (\Exception $e) {
+                    }
+                }
+                return response()->json(array('success' => true, 'message' => 'Send Successfully'));
+            }
+        } catch (Exception $e) {
+            
+        }
+    }
     
 }

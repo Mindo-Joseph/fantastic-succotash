@@ -68,7 +68,31 @@ class ProfileController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function profile(Request $request, $domain = ''){
+    public function addresBook(Request $request, $domain = ''){
+        $langId = Session::get('customerLanguage');
+        $useraddress = UserAddress::where('user_id', Auth::user()->id)->with('country')->get();
+        $navCategories = $this->categoryNav($langId);
+        return view('frontend/account/addressbook')->with(['useraddress' => $useraddress, 'navCategories' => $navCategories]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function orders(Request $request, $domain = ''){
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+       return view('frontend/account/orders')->with(['navCategories' => $navCategories]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function profile(Request $request, $domain = '')
+    {
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $user = User::with('country', 'address')->select('name', 'email', 'phone_number', 'type', 'country_id')
@@ -116,11 +140,16 @@ class ProfileController extends FrontController
         return redirect()->route('user.profile');
     }
 
+    /** User account information        */
+    public function walletInformation(Request $request, $domain = ''){
+        $langId = Session::get('customerLanguage');
+        $user = User::with('country')->find(Auth::user()->id);
+        $navCategories = $this->categoryNav($langId);
+        $auth_user = Auth::user();
+        $user_transactions = Transaction::where('payable_id', $auth_user->id)->get();
+        return view('frontend/account/wallet')->with(['user' => $user, 'navCategories' => $navCategories, 'user_transactions' => $user_transactions]);
+    }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function logout(Request $request, $domain = ''){}
+    
+
 }
