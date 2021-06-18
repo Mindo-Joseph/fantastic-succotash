@@ -35,18 +35,6 @@ class UserhomeController extends FrontController
             $deliveryAddress = Session::get('deliveryAddress');
             $navCategories = $this->categoryNav($langId);
             Session::put('navCategories', $navCategories);
-            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
-            if($preferences){
-                if(($preferences->is_hyperlocal == 1) && (!empty($latitude)) && (!empty($longitude)) ){
-                    $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                        $query->select('vendor_id')->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-                    });
-                }
-            }
-            $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
-            foreach ($vendorData as $key => $value) {
-                $vendor_ids[] = $value->id;
-            }
             $banners = Banner::where('status', 1)->where('validity_on', 1)
                         ->where(function($q){
                             $q->whereNull('start_date_time')->orWhere(function($q2){
