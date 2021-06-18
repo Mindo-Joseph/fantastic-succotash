@@ -85,7 +85,8 @@
                     <div class="footer-contant">
                         <ul class="contact_link">
                             <li>
-                                <a href="https://hmoobhub.royoorders.com/"><i class="fa fa-globe mr-1" aria-hidden="true"></i><span>https://hmoobhub.royoorders.com/</span></a>
+                                Level- 26, Dubai World Trade Centre Tower,
+                                Sheikh Rashid Tower, Sheikh Zayed Rd, Dubai, UAE
                             </li>
                             <li>
                                 <a href="tel:+234-803-531-4802"><i class="fa fa-phone mr-1" aria-hidden="true"></i><span>+234-803-531-4802</span></a>

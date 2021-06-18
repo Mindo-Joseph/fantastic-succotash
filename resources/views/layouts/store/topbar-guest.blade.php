@@ -1,7 +1,7 @@
 <div class="top-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-7">
                 <div class="header-contact">
                     <ul>
                         <li>Welcome to Our store {{session('client_config') ? session('client_config')->company_name : ''}}</li>
@@ -9,12 +9,9 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-lg-4 header-contact text-center">
-                
-            </div>
-            <div class="col-lg-4 text-right">
+            <div class="col-lg-5 text-right">
                 <ul class="header-dropdown">
-                    <li class="mobile-wishlist"><a href="#"><i class="fa fa-heart" aria-hidden="true"></i></a>
+                    <li class="mobile-wishlist"><a href="#"><i class="fa fa-heart 21" aria-hidden="true"></i></a>
                     </li>
                     <li class="onhover-dropdown mobile-account"> <i class="fa fa-user" aria-hidden="true"></i>
                         Account

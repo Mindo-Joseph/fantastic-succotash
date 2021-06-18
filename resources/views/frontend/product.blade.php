@@ -86,10 +86,21 @@
                             </div>
                             <div class="col-lg-6 rtl-text">
                                 <div class="product-right">
-                                    <h2>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}</h2>
+                                    <h2 class="mb-0">{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}</h2>
+                                    <div class="rating">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i> 
+                                        <i class="fa fa-star"></i> 
+                                        <i class="fa fa-star"></i> 
+                                        <i class="fa fa-star"></i>
+                                        <a href="#"></a>
+                                    </div>
+                                    <div class="description_txt my-3">
+                                        <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                                    </div>
                                     <input type="hidden" name="variant_id" id="prod_variant_id" value="{{$product->variant[0]->id}}">
                                     <!--<h4><del>$459.00</del><span>55% off</span></h4> -->
-                                    <h3 id="productPriceValue">{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</h3>
+                                    <h3 id="productPriceValue" class="mb-md-3"><span class="org_price">$99.99</span> <b>{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</b></h3>
                                     
                                     @if(!empty($product->variantSet))
                                     @php 
@@ -142,7 +153,7 @@
                                     @endif
 
                                     <div class="product-description border-product">
-                                        <h6 class="product-title">quantity: <span id="instock" style="color: green;">In Stock ({{$product->variant[0]->quantity}})</span></h6>
+                                        <h6 class="product-title mt-0">quantity: <span id="instock" style="color: green;">In Stock ({{$product->variant[0]->quantity}})</span></h6>
                                         <div class="qty-box">
                                             <div class="input-group">
                                                 <span class="input-group-prepend"><button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i></button> </span>

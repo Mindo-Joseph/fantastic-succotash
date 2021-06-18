@@ -6689,7 +6689,7 @@ header {
   position: relative;
   font-size: 14px; }
   .onhover-dropdown .onhover-show-div {
-    top: 50px;
+    top: 100%;
     position: absolute;
     z-index: 10;
     background-color: #ffffff;
@@ -6704,14 +6704,14 @@ header {
     opacity: 0;
     visibility: hidden;
     right: 0;
-    padding: 15px 20px;
+    padding: 0;
     border-radius: 0 !important; }
     .onhover-dropdown .onhover-show-div.product-page-full {
       z-index: 99999; }
   .onhover-dropdown:hover .onhover-show-div {
     opacity: 1;
-    -webkit-transform: translateY(0px);
-            transform: translateY(0px);
+    -webkit-transform: translateY(10px);
+            transform: translateY(10px);
     visibility: visible; }
 
 .onhover-div {
@@ -6825,11 +6825,11 @@ header {
   .top-header .header-dropdown li {
     cursor: pointer;
     color: #999999;
-    padding: 5px 25px;
+    padding: 5px 25px 0 0;
     /* padding-right: 0;  */
   }
-    .top-header .header-dropdown li:first-child {
-      padding-right: 0; }
+    /* .top-header .header-dropdown li:last-child {
+      padding-right: 0; } */
     .top-header .header-dropdown li a {
       text-transform: capitalize;
       color: #999999; }
@@ -6858,11 +6858,24 @@ header {
     display: -ms-flexbox;
     display: flex;
     font-size: 15px;
-    padding-bottom: 5px; }
-    .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:last-child {
-      padding-bottom: 0; }
+    padding:0; }
     .top-header .header-dropdown .onhover-dropdown .onhover-show-div li a {
-      color: #333333; }
+      color: #333333;
+      display: block;
+      width: 100%;
+      border-left: 3px solid transparent;
+      -webkit-transition: all 0.5s;
+      -moz-transition: all 0.5s;
+      transition: all 0.5s;
+      padding: 5px 15px; }
+      .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:first-child a{
+        margin-top: 5px; }
+      .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:last-child a{
+        margin-bottom: 5px; }
+      .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:hover a {
+        border-color: #ff4c3b;
+        background: linear-gradient(270deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
+      }
   .top-header.top-header-dark {
     background-color: #222222; }
     .top-header.top-header-dark .header-contact li {
