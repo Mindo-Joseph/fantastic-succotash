@@ -212,32 +212,31 @@ class ProductsImport implements ToCollection{
                     }
 
                     // insert product
+                    $category = Category::where('slug', $da[4])->first();
                     $product = Product::insertGetId([
-                        'sku' => $da[0],
-                        'url_slug' => $da[0],
-                        'category_id' => $da[4],
-                        'title' => ($da[1] == "") ? "" : $da[1],
-                        'body_html' => ($da[2] == "") ? "" : $da[2],
-                        'vendor_id' => $this->vendor_id,
-                        'type_id' => 1,
                         'is_new' => 1,
+                        'type_id' => 1,
+                        'sku' => $da[0],
                         'is_featured' => 0,
-                        'is_live' => ($da[3] == 'TRUE') ? 1 : 0,
                         'is_physical' => 0,
                         'has_inventory' => 0,
-                        'sell_when_out_of_stock' => 0,
+                        'url_slug' => $da[0],
+                        'brand_id' => $brand_id,
                         'requires_shipping' => 0,
                         'Requires_last_mile' => 0,
-                        'brand_id' => $brand_id,
+                        'sell_when_out_of_stock' => 0,
+                        'vendor_id' => $this->vendor_id,
+                        'category_id' => $category->id,
                         'tax_category_id' => $tax_category_id,
+                        'title' => ($da[1] == "") ? "" : $da[1],
+                        'is_live' => ($da[3] == 'TRUE') ? 1 : 0,
+                        'body_html' => ($da[2] == "") ? "" : $da[2],
                     ]);
 
                     //insertion into product category
-                    $category_check = Category::where('slug', $da[4])->first();
-                    $category_id = $category_check->id;
                     $cat[] = [
                         'product_id' => $product,
-                        'Category_id' => $category_id,
+                        'Category_id' => $category->id,
                     ];
                     ProductCategory::insert($cat);
 
@@ -324,11 +323,9 @@ class ProductsImport implements ToCollection{
                 else{
                     $product_id = Product::where('sku', $da[0])->first();
                     if ($da[5] != "" || $da[7] != "" || $da[9] != "") {
-
                         $product_hasvariant = Product::where('id', $product_id->id)->first();
                         $product_hasvariant->has_variant = 1;
                         $product_hasvariant->save();
-
                         //inserting product variant
                         $proVariant = ProductVariant::insertGetId([
                             'sku' => $da[11],
@@ -393,7 +390,6 @@ class ProductsImport implements ToCollection{
             $vendor_csv->save();
         }
     }
-
     private function generateBarcodeNumber(){
         $random_string = substr(md5(microtime()), 0, 14);
         while (ProductVariant::where('barcode', $random_string)->exists()) {
