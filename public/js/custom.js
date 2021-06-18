@@ -272,20 +272,19 @@ $(document).ready(function() {
     let queryString = window.location.search;
     let urlParams = new URLSearchParams(queryString);
     if( (urlParams.has('PayerID')) && (urlParams.has('token')) ){
-        paymentSuccessViaPaypal(urlParams.get('token'), urlParams.get('PayerID'));
+        paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'));
     }
 
-    function paymentSuccessViaPaypal(token, payer_id){
+    function paymentSuccessViaPaypal(amount, token, payer_id){
         $('#order_palced_btn').trigger('click');
         $('#v-pills-paypal-tab').trigger('click');
         $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
-        let cart_total_amount = $("input[name='cart_total_payable_amount']").val();
         let address_id = $("input:radio[name='address_id']:checked").val();
         $.ajax({
             type: "GET",
             dataType: 'json',
             url: payment_success_paypal_url,
-            data: {'amount': cart_total_amount, 'token': token, 'PayerID': payer_id},
+            data: {'amount': amount, 'token': token, 'PayerID': payer_id},
             success: function (response) {
                 if(response.status == "Success"){
                     placeOrder(address_id, 3, response.data);
