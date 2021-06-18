@@ -51,28 +51,44 @@ class UserhomeController extends FrontController
                             $q2->whereDate('start_date_time', '<=', Carbon::now())
                                 ->whereDate('end_date_time', '>=', Carbon::now());
                         });
-                    })
-                    ->orderBy('sorting', 'asc')->get();
-        
+                    })->orderBy('sorting', 'asc')->get();
         $fp = $this->vendorProducts($vendor_ids, $langId, $curId, 'is_featured');
         $np = $this->vendorProducts($vendor_ids, $langId, $curId, 'is_new');
         $onSP = $this->vendorProducts($vendor_ids, $langId, 'USD');
         $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
-        
-        return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'vendors' => $vendorData, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
+        return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
     }
     public function postHomePageData(Request $request){
-            $language_id = Session::get('customerLanguage');
-            $brands = Brand::with(['translation' => function($q) use($language_id){
-                        $q->select('brand_id', 'title')->where('language_id', $language_id);
-                    }])->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
-            foreach ($brands as $brand) {
-                $brand->redirect_url = route('brandDetail', $brand->id);
+        $vendor_ids = [];
+        $sale_product_details = [];
+        $latitude = Session::get('latitude');
+        $longitude = Session::get('longitude');
+        $langId = Session::get('customerLanguage');
+        $preferences = Session::get('preferences');
+        $language_id = Session::get('customerLanguage');
+        $brands = Brand::with(['translation' => function($q) use($language_id){
+                    $q->select('brand_id', 'title')->where('language_id', $language_id);
+                }])->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
+        foreach ($brands as $brand) {
+            $brand->redirect_url = route('brandDetail', $brand->id);
+        }
+        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
+        if($preferences){
+            if(($preferences->is_hyperlocal == 1) && (!empty($latitude)) && (!empty($longitude)) ){
+                $vendors = $vendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
+                    $query->select('vendor_id')
+                    ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+                });
             }
-            $data = ['brands' => $brands];
-            return $this->successResponse($data);
+        }
+        $vendors = $vendors->where('status', '!=', $this->field_status)->get();
+        foreach ($vendors as $key => $value) {
+            $vendor_ids[] = $value->id;
+        }
+        $data = ['brands' => $brands, 'vendors' => $vendors];
+        return $this->successResponse($data);
     }
     public function homepage(Request $request)
     {

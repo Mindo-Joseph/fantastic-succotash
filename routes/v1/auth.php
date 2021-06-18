@@ -10,7 +10,6 @@ Route::group(['prefix' => 'v1/auth'], function () {
     Route::group(['middleware' => ['dbCheck', 'apilogger']], function() {
         Route::post('login', 'Api\v1\AuthController@login');
         Route::post('register', 'Api\v1\AuthController@signup');
-        Route::post('register', 'Api\v1\AuthController@signup');
         Route::post('resetPassword', 'Api\v1\AuthController@resetPassword');
         Route::post('forgotPassword', 'Api\v1\AuthController@forgotPassword');
     });

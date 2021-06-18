@@ -1,20 +1,19 @@
 <?php
 namespace App\Http\Middleware;
-
+use Auth;
+use Config;
+use Request;
 use Closure;
+use Session;
+use Redirect;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
-use App\Models\{Client, ClientPreference, ClientLanguage, ClientCurrency,Permissions,UserVendor};
-use Request;
-use Config;
-use Session;
-use Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
-use Redirect;
-class ClientAuth
-{
+use App\Models\{Client, ClientPreference, ClientLanguage, ClientCurrency,Permissions,UserVendor};
+
+class ClientAuth{
     /**
      * Handle an incoming request.
      *
