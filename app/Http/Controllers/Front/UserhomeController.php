@@ -39,8 +39,7 @@ class UserhomeController extends FrontController
             if($preferences){
                 if(($preferences->is_hyperlocal == 1) && (!empty($latitude)) && (!empty($longitude)) ){
                     $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                        $query->select('vendor_id')
-                        ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+                        $query->select('vendor_id')->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
                     });
                 }
             }

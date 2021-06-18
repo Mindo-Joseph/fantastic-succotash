@@ -34,7 +34,9 @@ class FrontController extends Controller
                         ->where('cts.language_id', $lang_id);
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             $vendors = Session::get('vendors');
-            $categories = $categories->join('vendor_categories as vct', 'categories.id', 'vct.category_id')->whereIn('vct.vendor_id', $vendors)->where('vct.status', 1);
+            if($vendors){
+                $categories = $categories->join('vendor_categories as vct', 'categories.id', 'vct.category_id')->whereIn('vct.vendor_id', $vendors)->where('vct.status', 1);
+            }
         }
         $categories = $categories->orderBy('categories.position', 'asc')
                         ->orderBy('categories.id', 'asc')
