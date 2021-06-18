@@ -333,7 +333,7 @@
                     </div>
                     <div class="col-8">
                         <div class="table-responsive">
-                            <table class="table table-centered table-nowrap border" id="cart_table"></table>
+                            <table class="table table-centered table-nowrap" id="cart_table"></table>
                         </div>
                     </div>
                 </div>

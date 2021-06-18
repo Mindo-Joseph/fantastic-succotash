@@ -168,7 +168,7 @@ class CustomerAuthController extends FrontController{
                                 if($user_refferd_by){
                                     //user reffered by amount
                                     $wallet_user_reffered_by = $user_refferd_by->wallet;
-                                    $wallet_user_reffered_by->deposit($refferal_amounts->reffered_by_amount);
+                                    $wallet_user_reffered_by->deposit($refferal_amounts->reffered_by_amount, ['refer_used_by:'.$user->id]);
                                     $wallet_user_reffered_by->balance;
                                     //user reffered to amount
                                     $wallet->deposit($refferal_amounts->reffered_to_amount);

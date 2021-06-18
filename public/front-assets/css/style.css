@@ -6974,7 +6974,7 @@ header {
       .main-menu .menu-right .icon-nav li {
         padding-left: 20px; }
       .main-menu .menu-right .icon-nav .onhover-div .show-div.shopping-cart {
-        padding: 15px;
+        padding: 0;
         min-width: 270px;
         left: unset;
         right: 0; }
