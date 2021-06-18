@@ -120,21 +120,21 @@
                 <% } %>
             <% }); %>
             <tr class="vertical-top">
-                <td colspan="2">
+                <td colspan="3">
                     <div class="d-flex w-100 ">
-                    <div class="coupon_box d-flex w-50 align-items-center">
+                    <div class="coupon_box d-flex w-75 align-items-center">
                         <img src="{{ asset('assets/images/discount_icon.svg') }}">
                         <label class="mb-0 ml-2"><%= product.coupon ? product.coupon.promo.name : '' %></label>
                         
                     </div>
                     <% if(!product.coupon) { %>
-                            <a class="btn btn-outline-info promo_code_list_btn" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_total_amount %>">Apply</a>
+                            <a class="btn btn-solid promo_code_list_btn" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_total_amount %>">Apply</a>
                         <% }else{ %>
                         <i class="fa fa-times ml-4 remove_promo_code_btn" data-coupon_id="<%= product.coupon ? product.coupon.promo.id : '' %>" data-cart_id="<%= cart_details.id %>"></i>
                         <% } %>
                         </div>
                 </td> 
-                <td colspan="2"></td>
+                <td colspan="1"></td>
                 <td class="text-center">
                     <p class="total_amt m-0">Delivery Fee :</p>
                 </td>
@@ -186,7 +186,7 @@
 </script>
 <script type="text/template" id="promo_code_template">
     <% _.each(promo_codes, function(promo_code, key){%>
-        <div class="col-lg-6">
+        <div class="col-lg-6 mt-3">
             <div class="coupon-code mt-0">
                 <div class="p-2">
                     <img src="<%= promo_code.image.proxy_url %>100/35<%= promo_code.image.image_path %>" alt="">

@@ -9033,9 +9033,13 @@ header.stickycls {
   .pixelstrap ul {
     position: absolute;
     width: 16em !important; }
+    ul.sm.pixelstrap.sm-horizontal{
+      text-align: center;
+    }
   .pixelstrap li {
     position: relative;
-    float: left; }
+    float: none;
+  display: inline-block; }
   .pixelstrap.sm-rtl li {
     float: right; }
   .pixelstrap ul li, .pixelstrap.sm-rtl ul li, .pixelstrap.sm-vertical li {
