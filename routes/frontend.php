@@ -33,6 +33,7 @@ Route::group(['middleware' => ['domain']], function () {
 	]);
 	Route::get('/search','Front\SearchController@search');
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
+	Route::post('/homePageData','Front\UserhomeController@postHomePageData')->name('homePageData');
 	Route::post('/homepage','Front\UserhomeController@homepage')->name('homepage');
 	Route::post('validateEmail','Front\CustomerAuthController@validateEmail')->name('validateEmail');
 	Route::post('user/loginData','Front\CustomerAuthController@login')->name('customer.loginData');
@@ -84,7 +85,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::post('wishlist/update', 'Front\ProfileController@updateWishlist')->name('addWishlist');
 	Route::post('verifTokenProcess', 'Front\UserController@verifyToken')->name('user.verifyToken');
     Route::get('user/addressBook', 'Front\ProfileController@addresBook')->name('user.addressBook');
-	Route::get('user/account', 'Front\ProfileController@accountInformation')->name('user.account');
+	Route::get('user/wallet', 'Front\ProfileController@walletInformation')->name('user.account');
 	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
     Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
 	Route::get('user/sendRefferal', 'Front\ProfileController@showRefferal')->name('user.sendRefferal');

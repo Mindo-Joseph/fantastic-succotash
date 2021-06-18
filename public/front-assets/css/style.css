@@ -3057,7 +3057,7 @@ button.btn.btn-solid:active, button.btn.btn-outline:active {
     .add_to_cart.bottom.open-side {
       bottom: 0; }
 
-    .cart_qty_cls {
+      .cart_qty_cls {
         position: absolute;
         background: var(--theme-deafult);
         width: 22px;
@@ -3068,8 +3068,8 @@ button.btn.btn-solid:active, button.btn.btn-outline:active {
         font-size: 10px;
         line-height: 15px;
         font-weight: 600;
-        top: -6px;
-        right: -10px;
+        top: -9px;
+        right: -11px;
         padding: 3px;
     }
 
@@ -5792,7 +5792,7 @@ footer {
   .sub-footer p {
     color: #777777;
     margin-bottom: 0;
-    padding: 20px 0; }
+    padding: 5px 0; }
   .sub-footer .payment-card-bottom {
     height: 100%;
     display: -webkit-box;
@@ -6974,7 +6974,7 @@ header {
       .main-menu .menu-right .icon-nav li {
         padding-left: 20px; }
       .main-menu .menu-right .icon-nav .onhover-div .show-div.shopping-cart {
-        padding: 15px;
+        padding: 0;
         min-width: 270px;
         left: unset;
         right: 0; }
@@ -9033,9 +9033,13 @@ header.stickycls {
   .pixelstrap ul {
     position: absolute;
     width: 16em !important; }
+    ul.sm.pixelstrap.sm-horizontal{
+      text-align: center;
+    }
   .pixelstrap li {
     position: relative;
-    float: left; }
+    float: none;
+  display: inline-block; }
   .pixelstrap.sm-rtl li {
     float: right; }
   .pixelstrap ul li, .pixelstrap.sm-rtl ul li, .pixelstrap.sm-vertical li {

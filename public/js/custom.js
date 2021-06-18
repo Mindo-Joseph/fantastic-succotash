@@ -4,22 +4,43 @@ $(document).ready(function() {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
         }
     });
+    if($('#cart_main_page').length > 0){
+        let address_checked = $("input:radio[name='address_id']").is(":checked");
+        if(address_checked){
+            $('#order_palced_btn').prop('disabled', false);
+        }else{
+            $('#order_palced_btn').prop('disabled', true);
+        }
+        $("form").submit(function(e){
+            let address_id = $("input:radio[name='address_id']").is(":checked");
+            if(!address_id){
+                alert('Address field required.');
+                return false;
+            }
+        });
+    }
     var card = '';
     var stripe = '';
     getHomePage();
     function getHomePage(){
         $.ajax({
             data: {},
-            type: "GET",
+            type: "POST",
             dataType: 'json',
             url: home_page_url,
             success: function (response) {
                 if(response.status == "Success"){
                     $(".slide-6").slick('unslick');
-                    let vendors_template = _.template($('#vendors_template').html());
+                    $(".product-4").slick('unslick');
                     let banner_template = _.template($('#banner_template').html());
+                    let vendors_template = _.template($('#vendors_template').html());
+                    let new_products_template = _.template($('#new_products_template').html());
                     $("#brand_main_div").append(banner_template({brands: response.data.brands}));
-                    // $("#vendor_main_div").append(vendors_template({vendors: response.data.vendors}));
+                    $("#vendor_main_div").append(vendors_template({vendors: response.data.vendors}));
+                    $("#new_product_main_div").append(new_products_template({products: response.data.new_products}));
+                    $("#best_seller_main_div").append(new_products_template({products: response.data.new_products}));
+                    $("#feature_product_main_div").append(new_products_template({products: response.data.feature_products}));
+                    $("#on_sale_product_main_div").append(new_products_template({products: response.data.on_sale_products}));
                     $(".slide-6").slick({
                         dots: !1,
                         infinite: !0,
@@ -32,6 +53,43 @@ $(document).ready(function() {
                             { breakpoint: 767, settings: { slidesToShow: 3, slidesToScroll: 3, infinite: !0 } },
                             { breakpoint: 480, settings: { slidesToShow: 2, slidesToScroll: 2 } },
                         ],
+                    });
+                    $(".product-4").slick({
+                    arrows: !0,
+                    dots: !1,
+                    infinite: !1,
+                    speed: 300,
+                    slidesToShow: 6,
+                    slidesToScroll: 1,
+                    responsive: [
+                        { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
+                        { breakpoint: 991, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+                        { breakpoint: 420, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+                    ],
+                    });
+                    $('.vendor-product').slick({
+                        infinite: true,
+                        speed: 300,
+                        arrows: false,
+                        slidesToShow: 6,
+                        slidesToScroll: 1,
+                        autoplay: true,
+                        autoplaySpeed: 5000,
+                        responsive: [{
+                                breakpoint: 1200,
+                                settings: {
+                                    slidesToShow: 2,
+                                    slidesToScroll: 2
+                                }
+                            },
+                            {
+                                breakpoint: 767,
+                                settings: {
+                                    slidesToShow: 1,
+                                    slidesToScroll: 1
+                                }
+                            }
+                        ]
                     });
                 }else{
                 }
@@ -96,30 +154,6 @@ $(document).ready(function() {
         var changcurrId = $(this).attr('currId');
         var changSymbol = $(this).attr('currSymbol');
         settingData('currency', changcurrId, changSymbol);
-    });
-    $('.vendor-product').slick({
-        infinite: true,
-        speed: 300,
-        arrows: false,
-        slidesToShow: 6,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 5000,
-        responsive: [{
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
-                }
-            },
-            {
-                breakpoint: 767,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            }
-        ]
     });
     function stripeInitialize(){
         stripe = Stripe('pk_test_51J0nVZSBx0AFwevbSTIDlYAaLjdsg4V4yoHpSo4BCZqGBzzGeU8Mnw1o0spfOYfMtyCXC11wEn6vBqbJeSNnAkw600U6jkzS3R');

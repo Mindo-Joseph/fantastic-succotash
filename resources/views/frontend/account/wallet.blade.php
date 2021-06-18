@@ -12,7 +12,9 @@
 @endsection
 
 @section('content')
-
+@php
+$timezone = Auth::user()->timezone;
+@endphp
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -66,29 +68,12 @@
                     Profile</a>
             </div>
         </div>
-
         <div class="row">
             <div class="col-lg-3 profile-sidebar">
-
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-12">
-                        <!-- <div class='file file--upload'>
-                            <label for='input-file'>
-                                <span class="update_pic">
-                                    <img src="{{asset('assets/images/products/product-1.png')}}" alt="" id="output">
-                                </span>
-                                <span class="plus_icon"><span class="img-txt">Change Picture <i class="fa fa-camera ml-1" aria-hidden="true"></i></span> </span>
-                            </label>
-                            <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
-
-                            <div class="name_location">
-                                <h5 class="mt-0 mb-1">CM Azad</h5>
-                                <p class="m-0"><i class="fa fa-map-marker mr-1" aria-hidden="true"></i> Chandigarh</p>
-                            </div>    
-                        </div> -->
                     </div>
-                </div>
-
+                </div> -->
                 <div class="account-sidebar"><a class="popup-btn">my account</a></div>
                 <div class="dashboard-left">
                     <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left"
@@ -112,127 +97,39 @@
                         <div class="page-title">
                             <h3 class="mt-0">My Wallet</h3>
                         </div>
-
                         <div class="box-account box-info">
-
                             <div class="card-box mb-0">
                                 <div class="row align-items-center">
                                     <div class="col-sm-9 text-sm-left text-center mb-md-0 mb-4">
                                         <h5 class="text-17 mb-2">Available Balance</h5>
-                                        <div class="text-36">$0</div>
+                                        <div class="text-36">${{Auth::user()->balance}}</div>
                                     </div>
                                     <div class="col-sm-3 text-sm-right text-center">
                                         <a class="btn btn-solid" href="#" data-toggle="modal" data-target="#add-money">Payout</a>
                                     </div>
                                 </div>
                             </div>
-
                             <h6>Transaction History</h6>
-
                             <div class="card-box">
                               <div class="table-responsive">
                                   <table class="table wallet-tarnsaction w-100">
                                       <tbody>
+                                      @foreach($user_transactions as $ut)
+                                      <?php $reason = json_decode($ut->meta) ?>
                                           <tr>
-                                              <td>Aug 12, 2021   09:20 am</td>
-                                              <td>Recieved from Shane colin</td>
-                                              <td class="text-right"><b>+$50.00</b></td>
+                                              <td>{{convertDateTimeInTimeZone($ut->created_at, $timezone, 'l, F d, Y, H:i A')}}</td>
+                                              <td  class="name_">{!!$reason[0]!!}</td>
+                                              <td class="text-right"><b>+${{$ut->amount}}</b></td>
                                           </tr>
-                                          <tr>
-                                              <td>Aug 12, 2021   09:20 am</td>
-                                              <td>Recieved from Shane colin</td>
-                                              <td class="text-right"><b>+$50.00</b></td>
-                                          </tr>
-                                          <tr>
-                                              <td>Aug 12, 2021   09:20 am</td>
-                                              <td>Recieved from Shane colin</td>
-                                              <td class="text-right"><b>+$50.00</b></td>
-                                          </tr>
-                                          <tr>
-                                              <td>Aug 12, 2021   09:20 am</td>
-                                              <td>Recieved from Shane colin</td>
-                                              <td class="text-right"><b>+$50.00</b></td>
-                                          </tr>
-                                          
+                                         @endforeach 
                                       </tbody>
                                   </table>
                               </div>
                           </div>
-                            <!-- <div class="box-head">
-                                <h2>Account Information</h2>
-                            </div> -->
-
-                            
-
-                            <!-- <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="box">
-                                        <div class="box-title">
-                                            <h3>Contact Information</h3><a href="#">Edit</a>
-                                        </div>
-                                        <div class="box-content">
-                                            <h6>{{ucwords(Auth::user()->name)}}</h6>
-                                            <h6>{{Auth::user()->email}}</h6>
-                                            <h6>{{Auth::user()->phone_number}}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="box">
-                                        <div class="box-title">
-                                            <h3>Newsletters</h3><a href="#">Edit</a>
-                                        </div>
-                                        <div class="box-content">
-                                            <p>You are currently not subscribed to any newsletter.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="box">
-                                    <div class="box-title">
-                                        <h3>Address Book</h3><a href="#">Manage Addresses</a>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <h6>Default Billing Address</h6>
-                                            <address>You have not set a default billing address.<br><a href="#">Edit
-                                                    Address</a></address>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <h6>Default Shipping Address</h6>
-                                            <address>You have not set a default shipping address.<br><a href="#">Edit Address</a></address>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-lg-3">            
-                <div class="page-title">
-                    <h3 class="mt-0">Connected accounts</h3>
-                </div>
-                <div class="outer-box social-handler">
-                    <form action="">
-                        <div class="form-group">
-                            <label for="">Facebook</label>
-                            <a class="social-btn facebook-btn" href="#">
-                                <i class="fa fa-facebook" aria-hidden="true"></i>
-                                <span class="text-uppercase">Connected with facebook</span>
-                            </a>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Twitter</label>
-                            <a class="social-btn twitter-btn" href="#">
-                                <i class="fa fa-twitter" aria-hidden="true"></i>
-                                <span class="text-uppercase">Connected with twitter</span>
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            </div> -->
         </div>
     </div>
 </section>

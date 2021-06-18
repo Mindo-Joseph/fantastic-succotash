@@ -33,7 +33,7 @@
     var is_hyperlocal = 0;
     var delivery_address = 0;
     var show_cart_url = "{{ route('showCart') }}";
-    var home_page_url = "{{ route('userHome') }}";
+    var home_page_url = "{{ route('homePageData') }}";
     let empty_cart_url = "{{route('emptyCartData')}}";
     var cart_details_url = "{{ route('cartDetails') }}";
     var delete_cart_url = "{{ route('emptyCartData') }}";

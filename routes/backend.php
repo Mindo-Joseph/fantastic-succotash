@@ -5,9 +5,7 @@ use App\Http\Controllers\Client\DownloadFileController;
 
 
 
-Route::get('admin/login', function () {
-    return view('auth/login');
-})->name('admin.login')->middleware('domain');
+Route::get('admin/login', 'Auth\LoginController@getClientLogin')->name('admin.login')->middleware('domain');
 Route::get('file-download/{filename}', [DownloadFileController::class, 'index'])->name('file.download.index');
 Route::post('admin/login/client', 'Auth\LoginController@clientLogin')->name('client.login');
 Route::get('admin/wrong/url', 'Auth\LoginController@wrongurl')->name('wrong.client');

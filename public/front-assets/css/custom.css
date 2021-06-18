@@ -1441,7 +1441,7 @@ label{
 }
 
 .coupon-box {
-    height: calc(100vh - 510px);
+    height: calc(100vh - 570px);
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -1617,6 +1617,8 @@ label{
     background-size: contain !important;
     background-repeat: no-repeat !important;
     background-color: rgb(150 139 139 / 12%) !important;
+    width: 210px;
+    height: 210px;
 }
 
 
@@ -1822,7 +1824,7 @@ div#test {
 }
 
 .product-box .img-wrapper, .product-wrap .img-wrapper {
-    border-radius: 50%;
+    border-radius: 12px;
     box-shadow: 0 1px 29px #ddd;
     margin-top: 15px;
 }
@@ -1969,6 +1971,71 @@ footer .form-control {
     color: #000;
 }
 
+.contact_link li a{
+    color: #777;
+}
+
+.contact_link i {
+    font-size: 22px;
+    vertical-align: middle;
+}
+
+.footer-theme .sub-title .contact_link li:hover a,.contact_link i:hover {
+    color: #ff4c3b;
+}
+
+.footer-theme .sub-title .contact_link li a:before{
+    content: none;
+}
+
+.btn.disabled, .btn:disabled {
+    pointer-events: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2017,3 +2084,6 @@ footer .form-control {
     }
 }
 
+.box-info .name_ b {
+    color:#000000;
+}
