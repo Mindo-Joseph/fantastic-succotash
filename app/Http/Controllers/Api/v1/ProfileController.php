@@ -11,14 +11,15 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\{SendReferralRequest};
-use App\Models\{User, Category, Brand, Client, ClientPreference, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency, UserWishlist, UserAddress};
+use App\Models\{User, UserRefferal, ClientPreference, Client};
 
 class ProfileController extends BaseController{
-    
+
     use ApiResponser;
     private $curLang = 0; 
     private $field_status = 2;
