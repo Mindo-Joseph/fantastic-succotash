@@ -1850,6 +1850,10 @@ div#test {
     align-items: center;
 }
 
+.product-box .img-wrapper img {
+    border-radius: 12px;
+}
+
 header{
     position: relative;
 }
