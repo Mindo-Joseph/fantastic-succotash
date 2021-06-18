@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DropRefferedByFromUserRefferalsTable extends Migration
+class DropReffredByUserReffralsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,8 @@ class DropRefferedByFromUserRefferalsTable extends Migration
     public function up()
     {
         Schema::table('user_refferals', function (Blueprint $table) {
-            //
-            Schema::dropIfExists('refferal_code');
-            Schema::dropIfExists('reffered_by');
+            $table->string('refferal_code',15)->after('id')->nullable();
+            $table->bigInteger('reffered_by')->after('refferal_code')->unsigned()->nullable();
         });
     }
 
@@ -27,9 +26,6 @@ class DropRefferedByFromUserRefferalsTable extends Migration
      */
     public function down()
     {
-        Schema::table('user_refferals', function (Blueprint $table) {
-            $table->string('refferal_code')->nullable();
-            $table->string('reffered_by')->nullable();
-        });
+        //
     }
 }

@@ -54,12 +54,6 @@ class UserhomeController extends FrontController
                                     ->whereDate('end_date_time', '>=', Carbon::now());
                             });
                         })->orderBy('sorting', 'asc')->get();
-            $fp = $this->vendorProducts($vendor_ids, $langId, $curId, 'is_featured');
-            $np = $this->vendorProducts($vendor_ids, $langId, $curId, 'is_new');
-            $onSP = $this->vendorProducts($vendor_ids, $langId, 'USD');
-            $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
-            $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-            $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
             return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
         } catch (Exception $e) {
             pr($e->getCode());die;
