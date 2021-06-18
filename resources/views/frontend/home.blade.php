@@ -30,12 +30,12 @@
             <div class="img-wrapper">
                 <div class="front">
                     <a href="{{route('vendorDetail')}}/<%= vendor.id %>">
-                        <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.proxy_url %>300/300<%= vendor.logo['image_path'] %>">
+                        <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>">
                     </a>
                 </div>
                 <div class="back">
                     <a href="{{route('vendorDetail')}}/<%= vendor.id %>">
-                        <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.proxy_url %>300/300<%= vendor.logo.image_path %>">
+                        <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo.image_path %>">
                     </a>
                 </div>
             </div>
@@ -66,7 +66,7 @@
         </div>
     <% }); %>
 </script>
-<script type="text/template" id="new_products_template">
+<script type="text/template" id="products_template">
     <% _.each(products, function(product, k){ %>
         <div>
             <a class="card text-center" href="{{route('productDetail')}}/<%= product.sku %>">
