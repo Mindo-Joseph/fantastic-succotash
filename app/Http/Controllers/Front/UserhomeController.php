@@ -98,6 +98,7 @@ class UserhomeController extends FrontController
             $image_url = $new_product_detail->media->first() ? $new_product_detail->media->first()->image->path['proxy_url'].'300/300'.$new_product_detail->media->first()->image->path['image_path'] : '';
             $new_products[]=array(
                 'image_url' => $image_url,
+                'sku' => $new_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
                 'vendor_name' => $new_product_detail->vendor ? $new_product_detail->vendor->name : '',
                 'price' => Session::get('currencySymbol').' '.($new_product_detail->variant->first()->price * $multiply),
@@ -109,6 +110,7 @@ class UserhomeController extends FrontController
             $image_url = $feature_product_detail->media->first() ? $feature_product_detail->media->first()->image->path['proxy_url'].'300/300'.$feature_product_detail->media->first()->image->path['image_path'] : '';
             $feature_products[]=array(
                 'image_url' => $image_url,
+                'sku' => $feature_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
                 'vendor_name' => $feature_product_detail->vendor ? $feature_product_detail->vendor->name : '',
                 'price' => Session::get('currencySymbol').' '.($feature_product_detail->variant->first()->price * $multiply),
@@ -120,6 +122,7 @@ class UserhomeController extends FrontController
             $image_url = $on_sale_product_detail->media->first() ? $on_sale_product_detail->media->first()->image->path['proxy_url'].'300/300'.$on_sale_product_detail->media->first()->image->path['image_path'] : '';
             $on_sale_products[]=array(
                 'image_url' => $image_url,
+                'sku' => $on_sale_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
                 'vendor_name' => $on_sale_product_detail->vendor ? $on_sale_product_detail->vendor->name : '',
                 'price' => Session::get('currencySymbol').' '.($on_sale_product_detail->variant->first()->price * $multiply),
