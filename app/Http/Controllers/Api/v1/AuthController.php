@@ -125,7 +125,8 @@ class AuthController extends BaseController{
             'name'          => 'required|string|min:3|max:50',
             'password'      => 'required|string|min:6|max:50',
             'email'         => 'required|email|max:50||unique:users',
-            'phone_number'  => 'required|string|min:10|max:15|unique:users'
+            'phone_number'  => 'required|string|min:10|max:15|unique:users',
+            'refferal_code' => 'nullable|exists:user_refferals,refferal_code',
         ]);
         if($validator->fails()){
             foreach($validator->errors()->toArray() as $error_key => $error_value){
@@ -187,6 +188,25 @@ class AuthController extends BaseController{
         $user->auth_token = $token;
         $user->save();
         if($user->id > 0){
+            if($signReq->refferal_code != null){
+                $refferal_amounts = ClientPreference::first();
+                if($refferal_amounts){
+                    if($refferal_amounts->reffered_by_amount != null && $refferal_amounts->reffered_to_amount != null){
+                        $reffered_by = UserRefferal::where('refferal_code', $signReq->refferal_code)->first();
+                            $user_refferd_by = $reffered_by->user_id;
+                            $user_refferd_by = User::where('id', $reffered_by->user_id)->first();
+                            if($user_refferd_by){
+                                //user reffered by amount
+                                $wallet_user_reffered_by = $user_refferd_by->wallet;
+                                $wallet_user_reffered_by->deposit($refferal_amounts->reffered_by_amount, ['refer_used_by:'.$user->id]);
+                                $wallet_user_reffered_by->balance;
+                                //user reffered to amount
+                                $wallet->deposit($refferal_amounts->reffered_to_amount);
+                                $wallet->balance;
+                        }
+                    }
+                }
+            }
             $checkSystemUser = $this->checkCookies($user->id);
             $response['status'] = 'Success';
             $response['auth_token'] =  $token;
@@ -224,7 +244,6 @@ class AuthController extends BaseController{
                 $body = "Dear ".ucwords($user->name).", Please enter OTP ".$phoneCode." to verify your account.";
                 $send = $this->sendSms($provider, $prefer->sms_key, $prefer->sms_secret, $prefer->sms_from, $to, $body);
             }
-
             if(!empty($prefer->mail_driver) && !empty($prefer->mail_host) && !empty($prefer->mail_port) && !empty($prefer->mail_port) && !empty($prefer->mail_password) && !empty($prefer->mail_encryption)){
                 $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
                 $confirured = $this->setMailDetail($prefer->mail_driver, $prefer->mail_host, $prefer->mail_port, $prefer->mail_username, $prefer->mail_password, $prefer->mail_encryption);
