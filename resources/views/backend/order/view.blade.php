@@ -24,12 +24,20 @@ $timezone = Auth::user()->timezone;
                                     <p>#{{$order->order_number}}</p>
                                 </div>
                             </div>
+                            @if(isset($order->vendors) && $order->vendors->first()->dispatch_traking_url !=null)
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <h5 class="mt-0">Tracking ID:</h5>
-                                    <p>----</p>
+                                    <p>
+                                        @php 
+                                        $track = explode('/',$order->vendors->first()->dispatch_traking_url);
+                                        $track_code = end($track);
+                                        @endphp
+                                        <a href="{{$order->vendors->first()->dispatch_traking_url}}" target="_blank">#{{ $track_code }}</a>
+                                    </p>
                                 </div>
                             </div>
+                            @endif
                         </div>
                         <div class="row track-order-list">
                             <div class="col-lg-6">
@@ -50,28 +58,32 @@ $timezone = Auth::user()->timezone;
                                     @endforeach
                                 </ul>
                             </div>
-                            <div class="col-lg-6">
-                                <ul class="list-unstyled">
-                                    @foreach($dispatcher_status_options as $dispatcher_status_option)
-                                    @php
-                                    if($dispatcher_status_option->vendorOrderDispatcherStatus && $dispatcher_status_option->id == $dispatcher_status_option->vendorOrderDispatcherStatus->dispatcher_status_option_id??'')
-                                    $class = 'completed disabled';
-                                    else {
-                                        $class = '';
-                                    }
-                                    $date = isset($dispatcher_status_option->vendorOrderDispatcherStatus) ? $dispatcher_status_option->vendorOrderDispatcherStatus->created_at : '';
-                                    @endphp
-                                        <li class="{{$class}}" data-status_option_id="{{$dispatcher_status_option->id}}">
-                                            <h5 class="mt-0 mb-1">{{$dispatcher_status_option->title}}</h5>
-                                            <p class="text-muted" id="dispatch_text_muted_{{$dispatcher_status_option->id}}">
-                                                @if($date)
-                                                <small class="text-muted">{{convertDateTimeInTimeZone($date, $timezone, 'l, F d, Y, H:i A')}}</small>
-                                                @endif
-                                            </p>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
+                            @if(isset($order->vendors) && $order->vendors->first()->delivery_fee > 0.00)
+                                <div class="col-lg-6">
+                                    <ul class="list-unstyled">
+                                        @foreach($dispatcher_status_options as $dispatcher_status_option)
+                                        @php
+                                        if($dispatcher_status_option->vendorOrderDispatcherStatus && $dispatcher_status_option->id == $dispatcher_status_option->vendorOrderDispatcherStatus->dispatcher_status_option_id??'')
+                                        $class = 'completed disabled';
+                                        else {
+                                            $class = '';
+                                        }
+                                        $date = isset($dispatcher_status_option->vendorOrderDispatcherStatus) ? $dispatcher_status_option->vendorOrderDispatcherStatus->created_at : '';
+                                        @endphp
+                                            <li class="{{$class}}" data-status_option_id="{{$dispatcher_status_option->id}}">
+                                                <h5 class="mt-0 mb-1">{{$dispatcher_status_option->title}}</h5>
+                                                <p class="text-muted" id="dispatch_text_muted_{{$dispatcher_status_option->id}}">
+                                                    @if($date)
+                                                    <small class="text-muted">{{convertDateTimeInTimeZone($date, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                                    @endif
+                                                </p>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                            
+
                         </div>
                     </div>
                 </div>
