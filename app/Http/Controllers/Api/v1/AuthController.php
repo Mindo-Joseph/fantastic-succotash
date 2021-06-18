@@ -160,8 +160,8 @@ class AuthController extends BaseController{
         $wallet = $user->wallet;
         $userRefferal = new UserRefferal();
         $userRefferal->refferal_code = $this->randomData("user_refferals", 8, 'refferal_code');
-        if($req->refferal_code != null){
-            $userRefferal->reffered_by = $req->refferal_code;
+        if($signReq->refferal_code != null){
+            $userRefferal->reffered_by = $signReq->refferal_code;
         }
         $userRefferal->user_id = $user->id;
         $userRefferal->save();
