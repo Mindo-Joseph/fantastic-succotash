@@ -1373,7 +1373,7 @@ h1,h2,h3,h4,h5,h6{
 
 .grand_total label,
 .grand_total span {
-    font-weight: 900;
+    font-weight: 700;
     color: #000;
 }
 
@@ -1441,7 +1441,7 @@ label{
 }
 
 .coupon-box {
-    height: calc(100vh - 570px);
+    height: 440px;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -1617,8 +1617,6 @@ label{
     background-size: contain !important;
     background-repeat: no-repeat !important;
     background-color: rgb(150 139 139 / 12%) !important;
-    width: 210px;
-    height: 210px;
 }
 
 
@@ -1687,7 +1685,7 @@ button.btn.btn-solid {
     z-index: 2;
 }
 .starrate {
-    color: #6c757d;
+    color: #fd7e14;
     cursor: pointer;
 }
 .starrate.saved {
@@ -1825,8 +1823,8 @@ div#test {
 
 .product-box .img-wrapper, .product-wrap .img-wrapper {
     border-radius: 12px;
-    box-shadow: 0 1px 29px #ddd;
     margin-top: 15px;
+    /* box-shadow: 0 1px 10px #ddd; */
 }
 
 header{
@@ -1976,11 +1974,12 @@ footer .form-control {
 }
 
 .contact_link i {
-    font-size: 22px;
+    font-size: 20px;
     vertical-align: middle;
+    color: #000;
 }
 
-.footer-theme .sub-title .contact_link li:hover a,.contact_link i:hover {
+.footer-theme .sub-title .contact_link li:hover a,.contact_link li:hover i {
     color: #ff4c3b;
 }
 
@@ -1992,10 +1991,26 @@ footer .form-control {
     pointer-events: none;
 }
 
+.org_price {
+    text-decoration: line-through;
+    font-weight: 900;
+    color: #000;
+    opacity: 0.3;
+    margin-right: 10px;
+}
 
+.org_price + b {
+    font-weight: 900;
+    color: var(--theme-deafult);
+}
 
+.box-info .name_ b {
+    color:#000000;
+}
 
-
+.change-language:before,.change-currency:before {
+    content: none;
+}
 
 
 
@@ -2067,6 +2082,10 @@ footer .form-control {
     .dashboard-right .dashboard{
         padding: 0;
     }
+    .product-box .blur-up.lazyloaded {
+        height: 300px;
+        margin: auto;
+    }
 }
 
 @media(min-width:576px){
@@ -2084,6 +2103,8 @@ footer .form-control {
     }
 }
 
-.box-info .name_ b {
-    color:#000000;
+@media(max-width:767px){    
+    .product-box .blur-up.lazyloaded {
+        height: 200px;
+    }
 }
