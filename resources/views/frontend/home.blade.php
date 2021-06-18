@@ -89,7 +89,7 @@
         </div>
     <% }); %>
 </script>
-<section class="section-b-space p-t-0 pt-5 ratio_asos pb-0">
+<section class="section-b-space p-t-0 pt-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
     <div class="container">
         <div class="row">
         <div class="col-12 text-center mb-4">

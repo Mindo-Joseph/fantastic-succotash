@@ -17,10 +17,11 @@ use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\{SendReferralRequest};
 use App\Models\{User, Category, Brand, Client, ClientPreference, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency, UserWishlist, UserAddress};
 
-class ProfileController extends BaseController
-{
+class ProfileController extends BaseController{
+    
+    use ApiResponser;
+    private $curLang = 0; 
     private $field_status = 2;
-    private $curLang = 0; use ApiResponser;
 
      public function postSendReffralCode(SendReferralRequest $SendReferralRequest){
         try {
