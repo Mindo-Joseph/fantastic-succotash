@@ -64,10 +64,10 @@
                 </a>
             </div>
         </div>
-    </div>
-</section>
-<script type="text/template" id="products_template">
-    <% _.each(product_options, function(product, k){ %>
+    <% }); %>
+</script>
+<script type="text/template" id="new_products_template">
+    <% _.each(products, function(product, k){ %>
         <div>
             <a class="card text-center" href="{{route('productDetail')}}/<%= product.title %>">
                 <div class="product-image">
@@ -117,7 +117,7 @@
                 <div class="vendor-product common_card" id="new_product_main_div"></div>
             </div>
         </div>
-        <div class="row @if (count($featuredProducts) < 1) d-none @endif" id="featured_products_wrapper">
+        <div class="row d-none" id="featured_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">Feature Product</h2>
@@ -128,7 +128,7 @@
             </div>
         </div>
         
-        <div class="row @if (count($newProducts) < 1) d-none @endif" id="bestseller_products_wrapper">
+        <div class="row d-none" id="bestseller_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">Best Seller</h2>
@@ -141,7 +141,7 @@
             </div>
         </div>
         
-        <div class="row @if (count($onSaleProducts) < 1) d-none @endif" id="onsale_products_wrapper">
+        <div class="row d-none" id="onsale_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">On Sale</h2>

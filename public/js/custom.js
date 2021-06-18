@@ -35,15 +35,23 @@ $(document).ready(function() {
                     let banner_template = _.template($('#banner_template').html());
                     let vendors_template = _.template($('#vendors_template').html());
                     let new_products_template = _.template($('#new_products_template').html());
-                    if(response.data.new_products.length > 0){
-                        
-                    }
+
                     $("#brand_main_div").append(banner_template({brands: response.data.brands}));
                     $("#vendor_main_div").append(vendors_template({vendors: response.data.vendors}));
                     $("#new_product_main_div").append(new_products_template({products: response.data.new_products}));
                     $("#best_seller_main_div").append(new_products_template({products: response.data.new_products}));
                     $("#feature_product_main_div").append(new_products_template({products: response.data.feature_products}));
                     $("#on_sale_product_main_div").append(new_products_template({products: response.data.on_sale_products}));
+                    if(response.data.new_products.length > 0){
+                        $('#new_products_wrapper').removeClass('d-none');
+                        $('#bestseller_products_wrapper').removeClass('d-none');
+                    }
+                    if(response.data.on_sale_products > 0){
+                        $('#onsale_products_wrapper').removeClass('d-none');
+                    }
+                    if(response.data.feature_products > 0){
+                        $('#featured_products_wrapper').removeClass('d-none');
+                    }
                     $(".slide-6").slick({
                         dots: !1,
                         infinite: !0,

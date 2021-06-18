@@ -24,7 +24,7 @@ class ProfileController extends BaseController
 
      public function postSendReffralCode(SendReferralRequest $SendReferralRequest){
         try {
-            $user = Auth::user()
+            $user = Auth::user();
             $client = Client::first();
             $client_preference_detail = ClientPreference::first();
             $user_refferal_detail = UserRefferal::where('user_id', $user->id)->first();
