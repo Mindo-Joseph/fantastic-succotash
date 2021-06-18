@@ -64,7 +64,8 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('vendor/deleteSlot/{id}', 'Client\VendorSlotController@destroy')->name('vendor.deleteSlot');
 
     Route::post('vendor/importCSV', 'Client\VendorController@importCsv')->name('vendor.import');
-
+    // Route::get('vendor/donwloadCSV', 'Client\VendorController@downloadSampleFile')->name('vendor.downloadCSV');
+    
     Route::post('vendor/serviceArea/{vid}', 'Client\ServiceAreaController@store')->name('vendor.serviceArea');
     Route::post('vendor/editArea/{vid}', 'Client\ServiceAreaController@edit')->name('vendor.serviceArea.edit');
     Route::post('vendor/updateArea/{id}', 'Client\ServiceAreaController@update');
