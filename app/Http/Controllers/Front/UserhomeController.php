@@ -35,18 +35,6 @@ class UserhomeController extends FrontController
             $deliveryAddress = Session::get('deliveryAddress');
             $navCategories = $this->categoryNav($langId);
             Session::put('navCategories', $navCategories);
-            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
-            if($preferences){
-                if(($preferences->is_hyperlocal == 1) && (!empty($latitude)) && (!empty($longitude)) ){
-                    $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                        $query->select('vendor_id')->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-                    });
-                }
-            }
-            $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
-            foreach ($vendorData as $key => $value) {
-                $vendor_ids[] = $value->id;
-            }
             $banners = Banner::where('status', 1)->where('validity_on', 1)
                         ->where(function($q){
                             $q->whereNull('start_date_time')->orWhere(function($q2){
@@ -54,13 +42,7 @@ class UserhomeController extends FrontController
                                     ->whereDate('end_date_time', '>=', Carbon::now());
                             });
                         })->orderBy('sorting', 'asc')->get();
-            $fp = $this->vendorProducts($vendor_ids, $langId, $curId, 'is_featured');
-            $np = $this->vendorProducts($vendor_ids, $langId, $curId, 'is_new');
-            $onSP = $this->vendorProducts($vendor_ids, $langId, 'USD');
-            $featuredPro = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
-            $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-            $onSaleProds = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
-            return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'featuredProducts' => $featuredPro, 'newProducts' => $newProducts, 'onSaleProducts' => $onSaleProds, 'deliveryAddress' => $deliveryAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
+            return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'deliveryAddress' => $deliveryAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
         } catch (Exception $e) {
             pr($e->getCode());die;
         }
