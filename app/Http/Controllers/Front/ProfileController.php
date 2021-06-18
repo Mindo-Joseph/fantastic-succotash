@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Models\{UserWishlist, User, Product, UserAddress, UserRefferal, ClientPreference, Client, Order};
+use App\Models\{UserWishlist, User, Product, UserAddress, UserRefferal, ClientPreference, Client, Order, Transaction};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Front\FrontController;
 use Carbon\Carbon;
@@ -256,13 +256,15 @@ class ProfileController extends FrontController
     }
 
     /** User account information        */
-    public function accountInformation(Request $request, $domain = '')
+    public function walletInformation(Request $request, $domain = '')
     {
         $langId = Session::get('customerLanguage');
         $user = User::with('country')->find(Auth::user()->id);
-        // dd($useraddress[0]->country->toArray());
         $navCategories = $this->categoryNav($langId);
-        return view('frontend/account/accountInformation')->with(['user' => $user, 'navCategories' => $navCategories]);
+        $auth_user = Auth::user();
+        $user_transactions = Transaction::where('payable_id', $auth_user->id)->get();
+
+        return view('frontend/account/wallet')->with(['user' => $user, 'navCategories' => $navCategories, 'user_transactions' => $user_transactions]);
     }
 
     

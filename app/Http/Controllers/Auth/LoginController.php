@@ -43,7 +43,9 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
+    public function getClientLogin(){
+        return view('auth.login');
+    }
     public function clientLogin(Request $request)
     {
         $this->validate($request, [
@@ -66,27 +68,21 @@ class LoginController extends Controller
                 Auth::logout();
                 return redirect()->back()->with('Error', 'You are unauthorized user.');
             }
-            
-            
         }
         return redirect()->back()->with('Error', 'Invalid Credentials');
     }
 
-    public function Logout()
-    {   
-        
+    public function Logout(){   
         Auth::guard('client')->logout();
         Auth::logout();
         return redirect()->route('admin.login');
     }
 
-    public function wrongurl()
-    {
+    public function wrongurl(){
         return redirect()->route('wrong.client');
     }
 
-    public function showLoginForm()
-    {
+    public function showLoginForm(){
         return redirect()->to('/');
     }
 }
