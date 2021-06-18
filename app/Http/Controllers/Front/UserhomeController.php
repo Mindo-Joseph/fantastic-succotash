@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference};
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Http\Traits\ApiResponser;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
+use App\Http\Controllers\Front\FrontController;
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference};
+
 
 class UserhomeController extends FrontController
 {
@@ -62,15 +64,15 @@ class UserhomeController extends FrontController
     }
     public function postHomePageData(Request $request){
         $vendor_ids = [];
-        $sale_product_details = [];
+        $new_products = [];
+        $feature_products = [];
+        $on_sale_products = [];
         $latitude = Session::get('latitude');
         $longitude = Session::get('longitude');
-        $langId = Session::get('customerLanguage');
         $preferences = Session::get('preferences');
+        $currency_id = Session::get('customerCurrency');
         $language_id = Session::get('customerLanguage');
-        $brands = Brand::with(['translation' => function($q) use($language_id){
-                    $q->select('brand_id', 'title')->where('language_id', $language_id);
-                }])->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
+        $brands = Brand::select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
         foreach ($brands as $brand) {
             $brand->redirect_url = route('brandDetail', $brand->id);
         }
@@ -87,7 +89,49 @@ class UserhomeController extends FrontController
         foreach ($vendors as $key => $value) {
             $vendor_ids[] = $value->id;
         }
-        $data = ['brands' => $brands, 'vendors' => $vendors];
+        $on_sale_product_details = $this->vendorProducts($vendor_ids, $language_id, 'USD');
+        $new_product_details = $this->vendorProducts($vendor_ids, $language_id, $currency_id, 'is_new');
+        $feature_product_details = $this->vendorProducts($vendor_ids, $language_id, $currency_id, 'is_featured');
+        foreach ($new_product_details as  $new_product_detail) {
+            $multiply = $new_product_detail->variant->first() ? $new_product_detail->variant->first()->multiplier : 1;
+            $title = $new_product_detail->translation ? $new_product_detail->translation->first()->title : $on_sale_product_detail->sku;
+            $image_url = $new_product_detail->media->first() ? $new_product_detail->media->first()->image->path['proxy_url'].'300/300'.$new_product_detail->media->first()->image->path['image_path'] : '';
+            $new_products[]=array(
+                'image_url' => $image_url,
+                'title' => Str::limit($title, 18, '..'),
+                'vendor_name' => $new_product_detail->vendor ? $new_product_detail->vendor->name : '',
+                'price' => Session::get('currencySymbol').' '.($new_product_detail->variant->first()->price * $multiply),
+            );
+        }
+        foreach ($feature_product_details as  $feature_product_detail) {
+            $multiply = $feature_product_detail->variant->first() ? $feature_product_detail->variant->first()->multiplier : 1;
+            $title = $feature_product_detail->translation ? $feature_product_detail->translation->first()->title : $on_sale_product_detail->sku;
+            $image_url = $feature_product_detail->media->first() ? $feature_product_detail->media->first()->image->path['proxy_url'].'300/300'.$feature_product_detail->media->first()->image->path['image_path'] : '';
+            $feature_products[]=array(
+                'image_url' => $image_url,
+                'title' => Str::limit($title, 18, '..'),
+                'vendor_name' => $feature_product_detail->vendor ? $feature_product_detail->vendor->name : '',
+                'price' => Session::get('currencySymbol').' '.($feature_product_detail->variant->first()->price * $multiply),
+            );
+        }
+        foreach ($on_sale_product_details as  $on_sale_product_detail) {
+            $multiply = $on_sale_product_detail->variant->first() ? $on_sale_product_detail->variant->first()->multiplier : 1;
+            $title = $on_sale_product_detail->translation ? $on_sale_product_detail->translation->first()->title : $on_sale_product_detail->sku;
+            $image_url = $on_sale_product_detail->media->first() ? $on_sale_product_detail->media->first()->image->path['proxy_url'].'300/300'.$on_sale_product_detail->media->first()->image->path['image_path'] : '';
+            $on_sale_products[]=array(
+                'image_url' => $image_url,
+                'title' => Str::limit($title, 18, '..'),
+                'vendor_name' => $on_sale_product_detail->vendor ? $on_sale_product_detail->vendor->name : '',
+                'price' => Session::get('currencySymbol').' '.($on_sale_product_detail->variant->first()->price * $multiply),
+            );
+        }
+        $data = [
+            'brands' => $brands, 
+            'vendors' => $vendors,
+            'new_products' => $new_products, 
+            'feature_products' => $feature_products,
+            'on_sale_products' => $on_sale_products, 
+        ];
         return $this->successResponse($data);
     }
     public function homepage(Request $request)
@@ -142,7 +186,7 @@ class UserhomeController extends FrontController
 
     public function vendorProducts($venderIds, $langId, $currency = 'USD', $where = '')
     {
-        $products = Product::with(['media' => function($q){
+        $products = Product::with(['vendor','media' => function($q){
                             $q->groupBy('product_id');
                         }, 'media.image',
                         'translation' => function($q) use($langId){
