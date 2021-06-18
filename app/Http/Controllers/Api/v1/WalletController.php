@@ -14,7 +14,7 @@ class WalletController extends Controller{
     	$user = Auth::user();
         $user = User::with('country')->find($user->id);
         $paginate = $request->has('limit') ? $request->limit : 12;
-        $transactions = Transaction::where('payable_id', $user->id)->get($paginate);
+        $transactions = Transaction::where('payable_id', $user->id)->paginate($paginate);
         $data = ['wallet_amount' => $user->balance, 'transactions' => $transactions];
         return $this->successResponse($data, '', 200);
     }
