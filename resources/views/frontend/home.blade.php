@@ -55,36 +55,29 @@
         </div>
     <% }); %>
 </script>
-<section class="section-b-space p-t-0 pt-5 ratio_asos pb-0">
-    <div class="container">
-        <div class="row">
-        <div class="col-12 text-center mb-4">
-                <div class="title1">
-                    <h2 class="title-inner1">Our Vendors</h2>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="product-4 product-m no-arrow" id="vendor_main_div">
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<script type="text/template" id="new_products_template">
-    <% _.each(new_product_options, function(product, k){ %>
+<script type="text/template" id="banner_template">
+    <% _.each(brands, function(brand, k){%>
         <div>
-            <a class="card text-center" href="{{route('productDetail')}}/<%= product.sku %>">
+            <div class="logo-block">
+                <a href="<%= brand.redirect_url %>">
+                    <img src="<%= brand.image.image_fit %>120/120<%= brand.image.image_path %>" alt="">
+                </a>
+            </div>
+        </div>
+    <% }); %>
+</script>
+<script type="text/template" id="new_products_template">
+    <% _.each(products, function(product, k){ %>
+        <div>
+            <a class="card text-center" href="{{route('productDetail')}}/<%= product.title %>">
                 <div class="product-image">
-                    <img src="<%= product.imagePath %>" alt="">
+                    <img src="<%= product.image_url %>" alt="">
                 </div>    
                 <div class="media-body align-self-center px-3">
                     <div class="inner_spacing">
                         <h3><%= product.title %></h3>
-                        <p><%= product.description %></p>
-                        <h4>{{ Session::get('currencySymbol') }} <%= (product.price * product.multiply) %></h4>
+                        <p><%= product.vendor_name %></p>
+                        <h4><%= product.price %></h4>
                         <div class="rating">
                             @for($i = 1; $i < 6; $i++) 
                                 <i class="fa fa-star"></i>
@@ -96,206 +89,70 @@
         </div>
     <% }); %>
 </script>
+<section class="section-b-space p-t-0 pt-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
+    <div class="container">
+        <div class="row">
+        <div class="col-12 text-center mb-4">
+                <div class="title1">
+                    <h2 class="title-inner1">Our Vendors</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="product-4 product-m no-arrow" id="vendor_main_div"></div>
+            </div>
+        </div>
+    </div>
+</section>
 <section class="section-b-space">
     <div class="container">
-        <div class="row @if (count($onSaleProducts) < 1) d-none @endif" id="new_products_wrapper">
+        <div class="row d-none" id="new_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">New Products</h2>
                 </div>
             </div>
             <div class="col-12 theme-card">                
-                <div class="vendor-product common_card">
-                @if(count($newProducts) > 0)
-                    @foreach($newProducts as $newProduct)
-                    @foreach($newProduct as $product)
-                    @php
-                        $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
-                        $body_html = !empty($product['translation']) ? $product['translation'][0]['body_html'] : '';
-                        $description = strip_tags($body_html);
-                        $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
-                        $imagePath = '';
-                        foreach ($product['media'] as $k => $v) {
-                            $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
-                        }
-                    @endphp
-                    <div>
-                        <a class="card text-center" href="{{route('productDetail', $product['sku'])}}">
-                            <div class="product-image">
-                                <img src="{{$imagePath}}" alt="">
-                            </div>    
-                            <div class="media-body align-self-center px-3">
-                                <div class="inner_spacing">
-                                    <h3>{{ Str::limit($title, 18, '..')}}</h3>
-                                    <p>{!! Str::limit($description, 25, '..') !!}</p>
-                                    <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
-                                    <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) 
-                                            <i class="fa fa-star"></i>
-                                        @endfor
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    @endforeach
-                    @endforeach
-                @endif
-                </div>
+                <div class="vendor-product common_card" id="new_product_main_div"></div>
             </div>
         </div>
-        <div class="row @if (count($featuredProducts) < 1) d-none @endif" id="featured_products_wrapper">
+        <div class="row d-none" id="featured_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">Feature Product</h2>
                 </div>
             </div>
             <div class="col-12 theme-card">                
-                <div class="vendor-product common_card">
-                @if(count($featuredProducts) > 0)
-                    @foreach($featuredProducts as $featuredProduct)
-                    @foreach($featuredProduct as $product)
-                    @php
-                        $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
-                        $body_html = !empty($product['translation']) ? $product['translation'][0]['body_html'] : '';
-                        $description = strip_tags($body_html);
-                        $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
-                        $imagePath = '';
-                        foreach ($product['media'] as $k => $v) {
-                            $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
-                        }
-                    @endphp
-                    <div>
-                        <a class="card text-center" href="{{route('productDetail', $product['sku'])}}">
-                            <div class="product-image">
-                                <img src="{{$imagePath}}" alt="">
-                            </div>    
-                            <div class="media-body align-self-center px-3">
-                                <div class="inner_spacing">
-                                    <h3>{{ Str::limit($title, 18, '..')}}</h3>
-                                    <p>{!! Str::limit($description, 25, '..') !!}</p>
-                                    <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
-                                    <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) 
-                                            <i class="fa fa-star"></i>
-                                        @endfor
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    @endforeach
-                    @endforeach
-                @endif
-                </div>
+                <div class="vendor-product common_card" id="feature_product_main_div"></div>
             </div>
         </div>
         
-        <div class="row @if (count($newProducts) < 1) d-none @endif" id="bestseller_products_wrapper">
+        <div class="row d-none" id="bestseller_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">Best Seller</h2>
                 </div>
             </div>
             <div class="col-12 theme-card">                
-                <div class="vendor-product common_card">
-                @if(count($newProducts) > 0)
-                    @foreach($newProducts as $newProduct)
-                    @foreach($newProduct as $new_product)
-                    @php
-                        $title = !empty($new_product['translation']) ? $new_product['translation'][0]['title'] : $product['sku'];
-                        $body_html = !empty($new_product['translation']) ? $new_product['translation'][0]['body_html'] : '';
-                        $description = strip_tags($body_html);
-                        $imagePath = '';
-                        $multiply = (empty($new_product['variant'][0]['multiplier'])) ? 1 : $new_product['variant'][0]['multiplier'];
-                        foreach ($new_product['media'] as $k => $v) {
-                            $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
-                        }
-                    @endphp
-                    <div>
-                        <a class="card text-center" href="{{route('productDetail', $product['sku'])}}">
-                            <div class="product-image">
-                                <img src="{{$imagePath}}" alt="">
-                            </div>    
-                            <div class="media-body align-self-center px-3">
-                                <div class="inner_spacing">
-                                    <h3>{{ Str::limit($title, 18, '..')}}</h3>
-                                    <p>{!! Str::limit($description, 25, '..') !!}</p>
-                                    <h4>{{ Session::get('currencySymbol').' '.($new_product['variant'][0]['price'] * $multiply)}}</h4>
-                                    <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) 
-                                            <i class="fa fa-star"></i>
-                                        @endfor
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    @endforeach
-                    @endforeach
-                @endif
+                <div class="vendor-product common_card" id="best_seller_main_div">
+                
                 </div>
             </div>
         </div>
-        <div class="row @if (count($onSaleProducts) < 1) d-none @endif" id="onsale_products_wrapper">
+        
+        <div class="row d-none" id="onsale_products_wrapper">
             <div class="col-12 text-center">
                 <div class="title1">
                     <h2 class="title-inner1">On Sale</h2>
                 </div>
             </div>
             <div class="col-12 theme-card">                
-                <div class="vendor-product common_card">
-                @if(count($onSaleProducts) > 0)
-                    @foreach($onSaleProducts as $onSaleProduct)
-                    @foreach($onSaleProduct as $product)
-                    @php
-                        $body_html = !empty($product['translation']) ? $product['translation'][0]['body_html'] : '';
-                        $title = !empty($product['translation']) ? $product['translation'][0]['title'] : $product['sku'];
-                        $description = strip_tags($body_html);
-                        $multiply = (empty($product['variant'][0]['multiplier'])) ? 1 : $product['variant'][0]['multiplier'];
-                        $imagePath = '';
-                        foreach ($product['media'] as $k => $v) {
-                            $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
-                        }
-                    @endphp
-                    <div>
-                        <a class="card text-center" href="{{route('productDetail', $product['sku'])}}">
-                            <div class="product-image">
-                                <img src="{{$imagePath}}" alt="">
-                            </div>    
-                            <div class="media-body align-self-center px-3">
-                                <div class="inner_spacing">
-                                    <h3>{{ Str::limit($title, 18, '..')}}</h3>
-                                    <p>{!! Str::limit($description, 25, '..') !!}</p>
-                                    <h4>{{ Session::get('currencySymbol').' '.($product['variant'][0]['price'] * $multiply)}}</h4>
-                                    <div class="rating">
-                                        @for($i = 1; $i < 6; $i++) 
-                                            <i class="fa fa-star"></i>
-                                        @endfor
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    @endforeach
-                    @endforeach
-                @endif
-                </div>
+                <div class="vendor-product common_card" id="on_sale_product_main_div"></div>
             </div>
         </div>
     </div>
 </section>
-<script type="text/template" id="banner_template">
-     <% _.each(brands, function(brand, k){%>
-        <div>
-            <div class="logo-block">
-                <a href="<%= brand.redirect_url %>">
-                    <img src="<%= brand.image.image_fit %>120/120<%= brand.image.image_path %>" alt="">
-                </a>
-            </div>
-        </div>
-    <% }); %>
-</script>
 <section class="section-b-space pt-0">
     <div class="container">
         <div class="title1">

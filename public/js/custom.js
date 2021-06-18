@@ -22,6 +22,58 @@ $(document).ready(function() {
     var card = '';
     var stripe = '';
     getHomePage();
+    function initializeSlider(){
+        $(".slide-6").slick({
+            dots: !1,
+            infinite: !0,
+            speed: 300,
+            slidesToShow: 6,
+            slidesToScroll: 6,
+            responsive: [
+                { breakpoint: 1367, settings: { slidesToShow: 5, slidesToScroll: 5, infinite: !0 } },
+                { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
+                { breakpoint: 767, settings: { slidesToShow: 3, slidesToScroll: 3, infinite: !0 } },
+                { breakpoint: 480, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+            ],
+        });
+        $(".product-4").slick({
+        arrows: !0,
+        dots: !1,
+        infinite: !1,
+        speed: 300,
+        slidesToShow: 6,
+        slidesToScroll: 1,
+        responsive: [
+            { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
+            { breakpoint: 991, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+            { breakpoint: 420, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+        ],
+        });
+        $('.vendor-product').slick({
+            infinite: true,
+            speed: 300,
+            arrows: false,
+            slidesToShow: 6,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 5000,
+            responsive: [{
+                    breakpoint: 1200,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 767,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        });
+    }
     function getHomePage(){
         $.ajax({
             data: {},
@@ -32,36 +84,30 @@ $(document).ready(function() {
                 if(response.status == "Success"){
                     $(".slide-6").slick('unslick');
                     $(".product-4").slick('unslick');
+                    let vendors = response.data.vendors;
                     let banner_template = _.template($('#banner_template').html());
                     let vendors_template = _.template($('#vendors_template').html());
+                    let new_products_template = _.template($('#new_products_template').html());
                     $("#brand_main_div").append(banner_template({brands: response.data.brands}));
                     $("#vendor_main_div").append(vendors_template({vendors: response.data.vendors}));
-                    $(".slide-6").slick({
-                        dots: !1,
-                        infinite: !0,
-                        speed: 300,
-                        slidesToShow: 6,
-                        slidesToScroll: 6,
-                        responsive: [
-                            { breakpoint: 1367, settings: { slidesToShow: 5, slidesToScroll: 5, infinite: !0 } },
-                            { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
-                            { breakpoint: 767, settings: { slidesToShow: 3, slidesToScroll: 3, infinite: !0 } },
-                            { breakpoint: 480, settings: { slidesToShow: 2, slidesToScroll: 2 } },
-                        ],
-                    });
-                    $(".product-4").slick({
-                    arrows: !0,
-                    dots: !1,
-                    infinite: !1,
-                    speed: 300,
-                    slidesToShow: 6,
-                    slidesToScroll: 1,
-                    responsive: [
-                        { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
-                        { breakpoint: 991, settings: { slidesToShow: 2, slidesToScroll: 2 } },
-                        { breakpoint: 420, settings: { slidesToShow: 1, slidesToScroll: 1 } },
-                    ],
-                    });
+                    $("#new_product_main_div").append(new_products_template({products: response.data.new_products}));
+                    $("#best_seller_main_div").append(new_products_template({products: response.data.new_products}));
+                    $("#feature_product_main_div").append(new_products_template({products: response.data.feature_products}));
+                    $("#on_sale_product_main_div").append(new_products_template({products: response.data.on_sale_products}));
+                    if(response.data.new_products.length > 0){
+                        $('#new_products_wrapper').removeClass('d-none');
+                        $('#bestseller_products_wrapper').removeClass('d-none');
+                    }
+                    if(response.data.on_sale_products > 0){
+                        $('#onsale_products_wrapper').removeClass('d-none');
+                    }
+                    if(response.data.feature_products > 0){
+                        $('#featured_products_wrapper').removeClass('d-none');
+                    }
+                    if(vendors.length > 0){
+                        $('#our_vendor_main_div').removeClass('d-none');
+                    }
+                    initializeSlider();
                 }else{
                 }
             }
@@ -125,30 +171,6 @@ $(document).ready(function() {
         var changcurrId = $(this).attr('currId');
         var changSymbol = $(this).attr('currSymbol');
         settingData('currency', changcurrId, changSymbol);
-    });
-    $('.vendor-product').slick({
-        infinite: true,
-        speed: 300,
-        arrows: false,
-        slidesToShow: 6,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 5000,
-        responsive: [{
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
-                }
-            },
-            {
-                breakpoint: 767,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            }
-        ]
     });
     function stripeInitialize(){
         stripe = Stripe('pk_test_51J0nVZSBx0AFwevbSTIDlYAaLjdsg4V4yoHpSo4BCZqGBzzGeU8Mnw1o0spfOYfMtyCXC11wEn6vBqbJeSNnAkw600U6jkzS3R');
@@ -267,20 +289,19 @@ $(document).ready(function() {
     let queryString = window.location.search;
     let urlParams = new URLSearchParams(queryString);
     if( (urlParams.has('PayerID')) && (urlParams.has('token')) ){
-        paymentSuccessViaPaypal(urlParams.get('token'), urlParams.get('PayerID'));
+        paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'));
     }
 
-    function paymentSuccessViaPaypal(token, payer_id){
+    function paymentSuccessViaPaypal(amount, token, payer_id){
         $('#order_palced_btn').trigger('click');
         $('#v-pills-paypal-tab').trigger('click');
         $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
-        let cart_total_amount = $("input[name='cart_total_payable_amount']").val();
         let address_id = $("input:radio[name='address_id']:checked").val();
         $.ajax({
             type: "GET",
             dataType: 'json',
             url: payment_success_paypal_url,
-            data: {'amount': cart_total_amount, 'token': token, 'PayerID': payer_id},
+            data: {'amount': amount, 'token': token, 'PayerID': payer_id},
             success: function (response) {
                 if(response.status == "Success"){
                     placeOrder(address_id, 3, response.data);
@@ -485,9 +506,11 @@ $(document).ready(function() {
                             }
                             cartTotalProductCount();
                         }else{
-                            $('#cart_main_page').html('');
-                            let empty_cart_template = _.template($('#empty_cart_template').html());
-                            $("#cart_main_page").append(empty_cart_template());
+                            if($('#cart_main_page').length != 0){
+                                $('#cart_main_page').html('');
+                                let empty_cart_template = _.template($('#empty_cart_template').html());
+                                $("#cart_main_page").append(empty_cart_template());
+                            }
                         }
                     }
                 }

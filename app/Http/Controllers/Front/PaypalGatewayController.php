@@ -36,7 +36,7 @@ class PaypalGatewayController extends Controller
             $response = $this->gateway->purchase([
                 'amount' => $request->input('amount'),
                 'currency' => 'USD',
-                'returnUrl' => url('/viewcart'),
+                'returnUrl' => url('/viewcart?amount='.$request->input('amount')),
                 'cancelUrl' => url('/viewcart')
             ])->send();
             if ($response->isSuccessful()) {

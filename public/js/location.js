@@ -95,6 +95,11 @@ $(document).ready(function() {
             data: {"latitude": latitude, "longitude": longitude, 'selectedAddress': selected_address},
             success: function(response) {
                 if(response.status == 'Success'){
+                    console.log(response.data.navCategories);
+                    $("#main-nav #main-menu").html('');
+                    let nav_categories_template = _.template($('#nav_categories_template').html());
+                    $("#main-nav #main-menu").append(nav_categories_template({nav_categories: response.data.navCategories}));
+                    $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
                     var path = window.location.pathname;
                     if(path == '/'){
                         var slickOptions = {
@@ -188,10 +193,10 @@ $(document).ready(function() {
                         }
                         else{
                             $("#new_products_wrapper, #featured_products_wrapper").removeClass("d-none");
-                            let new_products_template = _.template($('#new_products_template').html());
-                            $("#new_products_wrapper .vendor-product").append(new_products_template({new_product_options: newProductsArray}));
-                            let bestseller_products_template = _.template($('#bestseller_products_template').html());
-                            $("#bestseller_products_wrapper .vendor-product").append(bestseller_products_template({bestseller_product_options: newProductsArray}));
+                            let new_products_template = _.template($('#products_template').html());
+                            $("#new_products_wrapper .vendor-product").append(new_products_template({product_options: newProductsArray}));
+                            let bestseller_products_template = _.template($('#products_template').html());
+                            $("#bestseller_products_wrapper .vendor-product").append(bestseller_products_template({product_options: newProductsArray}));
                             $('#new_products_wrapper .vendor-product').slick(slickOptions);
                             $('#bestseller_products_wrapper .vendor-product').slick(slickOptions);
                         } 
@@ -227,8 +232,8 @@ $(document).ready(function() {
                         }
                         else{
                             $("#featured_products_wrapper").removeClass("d-none");
-                            let featured_products_template = _.template($('#featured_products_template').html());
-                            $("#featured_products_wrapper .vendor-product").append(featured_products_template({featured_product_options: featuredProductsArray}));
+                            let featured_products_template = _.template($('#products_template').html());
+                            $("#featured_products_wrapper .vendor-product").append(featured_products_template({product_options: featuredProductsArray}));
                             $('#featured_products_wrapper .vendor-product').slick(slickOptions);
                         }
 
@@ -263,8 +268,8 @@ $(document).ready(function() {
                         }
                         else{
                             $("#onsale_products_wrapper").removeClass("d-none");
-                            let onsale_products_template = _.template($('#onsale_products_template').html());
-                            $("#onsale_products_wrapper .vendor-product").append(onsale_products_template({onsale_product_options: onSaleProductsArray}));
+                            let onsale_products_template = _.template($('#products_template').html());
+                            $("#onsale_products_wrapper .vendor-product").append(onsale_products_template({product_options: onSaleProductsArray}));
                             $('#onsale_products_wrapper .vendor-product').slick(slickOptions);
                         }
                     }
@@ -282,13 +287,13 @@ $(document).ready(function() {
         var latlng = new google.maps.LatLng(latitude, longitude);
     
         const map = new google.maps.Map(document.getElementById('address-map'), {
-            center: {lat: latitude, lng: longitude},
+            center: {lat: parseFloat(latitude), lng: parseFloat(longitude)},
             zoom: 13
         });
     
         const marker = new google.maps.Marker({
             map: map,
-            position: {lat: latitude, lng: longitude},
+            position: {lat: parseFloat(latitude), lng: parseFloat(longitude)},
         });
     
         geocoder.geocode(

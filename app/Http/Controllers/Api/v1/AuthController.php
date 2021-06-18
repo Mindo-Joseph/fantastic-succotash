@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\{LoginRequest, SignupRequest};
-use App\Models\{User, Client, ClientPreference, BlockedToken, Otp, Country, UserDevice, UserVerification, ClientLanguage, CartProduct, Cart};
+use App\Models\{User, Client, ClientPreference, BlockedToken, Otp, Country, UserDevice, UserVerification, ClientLanguage, CartProduct, Cart, UserRefferal};
 
 class AuthController extends BaseController{
     /**
@@ -69,6 +69,7 @@ class AuthController extends BaseController{
         } catch (\Exception $e) {
 
         }
+        $user_refferal = UserRefferal::where('user_id', $user->id)->first();
         $device = UserDevice::where('user_id', $user->id)->first();
         if(!$device){
             $device = new UserDevice();
@@ -110,6 +111,7 @@ class AuthController extends BaseController{
         $data['phone_number'] = $user->phone_number;
         $data['cca2'] = $user->country ? $user->country->code : '';
         $data['callingCode'] = $user->country ? $user->country->phonecode : '';
+        $data['refferal_code'] = $user_refferal ? $user_refferal->refferal_code: '';
         return response()->json(['data' => $data]);
     }
 
@@ -125,7 +127,8 @@ class AuthController extends BaseController{
             'name'          => 'required|string|min:3|max:50',
             'password'      => 'required|string|min:6|max:50',
             'email'         => 'required|email|max:50||unique:users',
-            'phone_number'  => 'required|string|min:10|max:15|unique:users'
+            'phone_number'  => 'required|string|min:10|max:15|unique:users',
+            'refferal_code' => 'nullable|exists:user_refferals,refferal_code',
         ]);
         if($validator->fails()){
             foreach($validator->errors()->toArray() as $error_key => $error_value){
@@ -154,6 +157,14 @@ class AuthController extends BaseController{
         $user->phone_token_valid_till = $sendTime;
         $user->email_token_valid_till = $sendTime;
         $user->save();
+        $wallet = $user->wallet;
+        $userRefferal = new UserRefferal();
+        $userRefferal->refferal_code = $this->randomData("user_refferals", 8, 'refferal_code');
+        if($signReq->refferal_code != null){
+            $userRefferal->reffered_by = $signReq->refferal_code;
+        }
+        $userRefferal->user_id = $user->id;
+        $userRefferal->save();
         $user_cart = Cart::where('user_id', $user->id)->first();
         if($user_cart){
             $unique_identifier_cart = Cart::where('unique_identifier', $signReq->device_token)->first();
@@ -187,6 +198,25 @@ class AuthController extends BaseController{
         $user->auth_token = $token;
         $user->save();
         if($user->id > 0){
+            if($signReq->refferal_code != null){
+                $refferal_amounts = ClientPreference::first();
+                if($refferal_amounts){
+                    if($refferal_amounts->reffered_by_amount != null && $refferal_amounts->reffered_to_amount != null){
+                        $reffered_by = UserRefferal::where('refferal_code', $signReq->refferal_code)->first();
+                            $user_refferd_by = $reffered_by->user_id;
+                            $user_refferd_by = User::where('id', $reffered_by->user_id)->first();
+                            if($user_refferd_by){
+                                //user reffered by amount
+                                $wallet_user_reffered_by = $user_refferd_by->wallet;
+                                $wallet_user_reffered_by->deposit($refferal_amounts->reffered_by_amount, ['refer_used_by:'.$user->id]);
+                                $wallet_user_reffered_by->balance;
+                                //user reffered to amount
+                                $wallet->deposit($refferal_amounts->reffered_to_amount);
+                                $wallet->balance;
+                        }
+                    }
+                }
+            }
             $checkSystemUser = $this->checkCookies($user->id);
             $response['status'] = 'Success';
             $response['auth_token'] =  $token;
@@ -224,7 +254,6 @@ class AuthController extends BaseController{
                 $body = "Dear ".ucwords($user->name).", Please enter OTP ".$phoneCode." to verify your account.";
                 $send = $this->sendSms($provider, $prefer->sms_key, $prefer->sms_secret, $prefer->sms_from, $to, $body);
             }
-
             if(!empty($prefer->mail_driver) && !empty($prefer->mail_host) && !empty($prefer->mail_port) && !empty($prefer->mail_port) && !empty($prefer->mail_password) && !empty($prefer->mail_encryption)){
                 $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
                 $confirured = $this->setMailDetail($prefer->mail_driver, $prefer->mail_host, $prefer->mail_port, $prefer->mail_username, $prefer->mail_password, $prefer->mail_encryption);
