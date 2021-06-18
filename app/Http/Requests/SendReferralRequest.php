@@ -11,7 +11,7 @@ class SendReferralRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize() 
     {
         return Auth::check();
     }
