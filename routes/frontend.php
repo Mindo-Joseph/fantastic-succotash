@@ -67,7 +67,7 @@ Route::group(['middleware' => ['domain']], function () {
 
 Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('viewcart','Front\CartController@showCart')->name('showCart');
-	Route::get('user/orders', 'Front\ProfileController@orders')->name('user.orders');
+	Route::get('user/orders', 'Front\OrderController@orders')->name('user.orders');
 	Route::post('user/store', 'Front\AddressController@store')->name('address.store');
 	Route::get('user/addAddress', 'Front\AddressController@add')->name('addNewAddress');
 	Route::get('user/checkout', 'Front\UserController@checkout')->name('user.checkout');
@@ -76,20 +76,20 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
 	Route::get('user/editAddress/{id}', 'Front\AddressController@edit')->name('editAddress');
 	Route::post('user/update/{id}', 'Front\AddressController@update')->name('address.update');
-    Route::get('user/wishlists', 'Front\ProfileController@wishlists')->name('user.wishlists');
+    Route::get('user/wishlists', 'Front\WishlistController@wishlists')->name('user.wishlists');
 	Route::post('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
     Route::post('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInformation');
 	Route::post('user/placeorder', 'Front\OrderController@placeOrder')->name('user.placeorder');
     Route::get('user/newsLetter', 'Front\ProfileController@newsLetter')->name('user.newsLetter');
     Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
-    Route::post('wishlist/update', 'Front\ProfileController@updateWishlist')->name('addWishlist');
+    Route::post('wishlist/update', 'Front\WishlistController@updateWishlist')->name('addWishlist');
 	Route::post('verifTokenProcess', 'Front\UserController@verifyToken')->name('user.verifyToken');
-    Route::get('user/addressBook', 'Front\ProfileController@addresBook')->name('user.addressBook');
-	Route::get('user/wallet', 'Front\ProfileController@walletInformation')->name('user.account');
+    Route::get('user/addressBook', 'Front\AddressController@index')->name('user.addressBook');
+	Route::get('user/wallet', 'Front\WalletController@index')->name('user.account');
 	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
     Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
 	Route::get('user/sendRefferal', 'Front\ProfileController@showRefferal')->name('user.sendRefferal');
-    Route::get('wishlist/remove/{sku}', 'Front\ProfileController@removeWishlist')->name('removeWishlist');
+    Route::get('wishlist/remove/{sku}', 'Front\WishlistController@removeWishlist')->name('removeWishlist');
     Route::get('user/changePassword', 'Front\ProfileController@changePassword')->name('user.changePassword');
     Route::post('user/placeorder/make', 'Front\OrderController@makePayment')->name('placeorder.makePayment');
     Route::post('user/sendRefferalCode', 'Front\ProfileController@sendRefferalCode')->name('user.sendEmail');

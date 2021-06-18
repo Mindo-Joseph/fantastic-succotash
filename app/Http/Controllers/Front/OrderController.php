@@ -14,6 +14,19 @@ use GuzzleHttp\Client;
 use Log;
 class OrderController extends FrontController{
     use ApiResponser;
+
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function orders(Request $request, $domain = '')
+    {
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+       return view('frontend/account/orders')->with(['navCategories' => $navCategories]);
+    }
+    
     public function getOrderSuccessPage(Request $request){
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
