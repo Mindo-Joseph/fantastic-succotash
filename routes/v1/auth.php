@@ -36,7 +36,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('changePassword', 'Api\v1\ProfileController@changePassword');
         Route::get('addressBook/{id?}', 'Api\v1\AddressController@getAddressList');
         Route::post('user/address/{id?}', 'Api\v1\AddressController@postSaveAddress');
-        Route::post('send/reffralcode', 'Api\v1\ProfileController@postSendReffralCode');
+        Route::post('send/referralcode', 'Api\v1\ProfileController@postSendReffralCode');
         Route::get('delete/address/{id}', 'Api\v1\AddressController@postDeleteAddress');
         Route::get('wishlist/update/{pid?}', 'Api\v1\ProfileController@updateWishlist');
         Route::get('mystore/product/list', 'Api\v1\StoreController@getMyStoreProductList');
