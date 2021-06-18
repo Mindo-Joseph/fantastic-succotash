@@ -73,7 +73,7 @@ $(document).ready(function() {
             data: ajaxData,
             type: "POST",
             dataType: 'json',
-            url: home_page_url,
+            url: home_page_data_url,
             success: function (response) {
                 if(response.status == "Success"){
                     $("#main-menu").html('');
@@ -127,7 +127,9 @@ $(document).ready(function() {
                         initializeSlider();
                     }
                     else{
-                        // window.location.reload();
+                        if( (latitude) && (longitude) && (selected_address) ){
+                            window.location.href = home_page_url;
+                        }
                     }
                 }else{
                 }

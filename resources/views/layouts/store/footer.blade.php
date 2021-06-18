@@ -29,8 +29,9 @@
 <script type="text/javascript">
     var is_hyperlocal = 0;
     var selected_address = 0;
+    var home_page_url = "{{ route('userHome') }}";
     var show_cart_url = "{{ route('showCart') }}";
-    var home_page_url = "{{ route('homePageData') }}";
+    var home_page_data_url = "{{ route('homePageData') }}";
     let empty_cart_url = "{{route('emptyCartData')}}";
     var cart_details_url = "{{ route('cartDetails') }}";
     var delete_cart_url = "{{ route('emptyCartData') }}";
