@@ -697,11 +697,11 @@ class ProductController extends BaseController
             $fileModel->path = '/storage/' . $filePath;
             $fileModel->status = 1;
             $fileModel->save();
+            $data = Excel::import(new ProductsImport($vendor_id, $fileModel->id), $request->file('product_excel'));
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Product image deleted successfully!'
+            ]);
         }
-        $data = Excel::import(new ProductsImport($vendor_id), $request->file('product_excel'));
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Product image deleted successfully!'
-        ]);
     }
 }
