@@ -32,21 +32,9 @@ class OrderController extends Controller {
             $order->payment_option_title = $order->paymentOption->title;
             $product_details = [];
             foreach ($order->products as $product) {
-                $image = [];
-                foreach ($product->variant as $key => $variant) {
-                    if($variant->media){
-                        foreach ($variant->media as $media_value) {
-                            $image = $variant->pimage->image;
-                        }
-                    }else{
-                        foreach ($variant->media as $media_value) {
-                            $image = $variant->image;
-                        }
-                    }
-                }
                 $order_item_count += $product->quantity;
                 $product_details[]= array(
-                    'image' => $image,
+                    'image' => $product->media->first() ? $product->media->first()->image->path : '',
                     'price' => $product->price,
                     'qty' => $product->quantity,
                 );
@@ -96,6 +84,7 @@ class OrderController extends Controller {
         			$discount_amount = 0;
     				$product_addons = [];
                     $vendor->vendor_name = $vendor->vendor->name;
+                    $product->image_path = $product->media->first() ? $product->media->first()->image->path : $product->image;
         			foreach ($vendor->products as  $product) {
                         $product_addons = [];
                         $variant_options = [];
