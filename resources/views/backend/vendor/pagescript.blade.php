@@ -39,7 +39,7 @@
 
     function loadMap(autocompletesWraps){
 
-        console.log(autocompletesWraps);
+        // console.log(autocompletesWraps);
         $.each(autocompletesWraps, function(index, name) {
             const geocoder = new google.maps.Geocoder;
 

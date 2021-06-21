@@ -377,7 +377,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
+        /*var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
             headerToolbar: {
                 left: 'prev,next',
@@ -440,7 +440,7 @@
                 document.getElementById('edit_day').value = day + 1;
                 document.getElementById('edit_type_id').value = ev.event.extendedProps.type_id;
 
-                /*      Delete Slot Form      */
+                // Delete Slot Form
                 document.getElementById('deleteSlotDayid').value = ev.event.extendedProps.type_id;
                 document.getElementById('deleteSlotId').value = ev.event.extendedProps.slot_id;
                 document.getElementById('deleteSlotType').value = ev.event.extendedProps.type;
@@ -462,7 +462,7 @@
             }
         });
 
-        calendar.render();
+        calendar.render();*/
 
     });
         

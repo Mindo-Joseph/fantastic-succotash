@@ -14,6 +14,7 @@ class AppStylingSeeder extends Seeder
      */
     public function run()
     {
+        
         $app_styling = AppStyling::insertGetId([
             'name' => 'Fonts',
             'type' => '2'
