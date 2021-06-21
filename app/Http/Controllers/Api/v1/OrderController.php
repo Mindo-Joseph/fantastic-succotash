@@ -228,6 +228,7 @@ class OrderController extends Controller {
                         }
                         $order_vendor = new OrderVendor;
                         $order_vendor->status = 0;
+                        $order_vendor->user_id= $user->id;
                         $order_vendor->order_id= $order->id;
                         $order_vendor->vendor_id= $vendor_id;
                         $order_vendor->payable_amount= $vendor_payable_amount;
