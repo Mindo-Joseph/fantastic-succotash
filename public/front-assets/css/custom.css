@@ -2115,7 +2115,20 @@ footer .form-control {
     color: #999999;
 }   
 
+.pixelstrap ul a:before {
+    content: none !important;
+}
 
+.pixelstrap ul a:hover {
+    border-color: #ff4c3b !important;
+    background: linear-gradient(
+270deg
+, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
+}
+
+.pixelstrap ul a {
+    border-left: 2px solid transparent !important;
+}
 
 
 

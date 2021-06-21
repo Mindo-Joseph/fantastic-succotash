@@ -8817,7 +8817,7 @@ header.stickycls {
   line-height: 23px;
   text-decoration: none;
   text-transform: uppercase;
-  padding: 0 30px 0 0;
+  padding: 15px 30px 15px 0;
   letter-spacing: 0.07em; }
 
 /* .pixelstrap a:hover {
@@ -9197,7 +9197,7 @@ header.stickycls {
         background-color: var(--theme-deafult);
         -webkit-transition: 0.5s ease;
         transition: 0.5s ease; }
-      .pixelstrap ul a, .pixelstrap ul a:hover, .pixelstrap ul a:focus, .pixelstrap ul a:active, .pixelstrap ul a.highlighted {
+      /* .pixelstrap ul a, .pixelstrap ul a:hover, .pixelstrap ul a:focus, .pixelstrap ul a:active, .pixelstrap ul a.highlighted {
         border: 0 !important;
         background: transparent;
         color: #222222;
@@ -9205,7 +9205,7 @@ header.stickycls {
         font-size: 14px;
         font-weight: 400;
         text-transform: capitalize;
-        padding: 5px 35px; }
+        padding: 5px 20px; } */
         .pixelstrap ul a:hover:before, .pixelstrap ul a:hover:hover:before, .pixelstrap ul a:focus:hover:before, .pixelstrap ul a:active:hover:before, .pixelstrap ul a.highlighted:hover:before {
           width: 50px;
           height: 2px;
