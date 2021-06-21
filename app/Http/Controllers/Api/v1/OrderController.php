@@ -34,6 +34,7 @@ class OrderController extends Controller {
             foreach ($order->products as $product) {
                 $order_item_count += $product->quantity;
                 $product_details[]= array(
+                    'media' => $product->media->first(),
                     'image' => $product->image,
                     'price' => $product->price,
                     'qty' => $product->quantity,
