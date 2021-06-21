@@ -30,9 +30,9 @@ class OrderProduct extends Model{
     }
     public function translation($langId = 0){
       if($langId > 0){
-        return $this->hasMany('App\Models\ProductTranslation')->where('language_id', $langId); 
+        return $this->hasMany('App\Models\ProductTranslation','product_id', 'product_id')->where('language_id', $langId); 
       }else{
-        return $this->hasMany('App\Models\ProductTranslation'); 
+        return $this->hasMany('App\Models\ProductTranslation', 'product_id', 'product_id'); 
       }
     }
     public function getImageAttribute($value){
