@@ -83,10 +83,17 @@ class AppStylingController extends BaseController
      */
     public function updateColor(Request $request)
     {
-        dd($request->all());
-        $app_styling = AppStyling::where('name', 'Color')->first();
+        $app_styling = AppStyling::where('name', $request->color_type.' Color')->first();
         $app_styling_option = AppStylingOption::where('app_styling_id', $app_styling->id)->first();
-        $app_styling_option->name = $request->secondary_color;
+        if($request->color_type == "Primary"){
+            $app_styling_option->name = $request->primary_color;
+        }
+        else if($request->color_type == "Secondary"){
+            $app_styling_option->name = $request->secondary_color;
+        }
+        else if($request->color_type == "Tertiary"){
+            $app_styling_option->name = $request->tertiary_color;
+        }
         $app_styling_option->save();
         return response()->json([
             'status' => 'success',
