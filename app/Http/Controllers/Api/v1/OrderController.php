@@ -84,11 +84,11 @@ class OrderController extends Controller {
         			$discount_amount = 0;
     				$product_addons = [];
                     $vendor->vendor_name = $vendor->vendor->name;
-                    $product->image_path = $product->media->first() ? $product->media->first()->image->path : $product->image;
         			foreach ($vendor->products as  $product) {
                         $product_addons = [];
                         $variant_options = [];
     	    			$order_item_count += $product->quantity;
+                        $product->image_path = $product->media->first() ? $product->media->first()->image->path : $product->image;
                         if($product->pvariant){
                             foreach ($product->pvariant->vset as $variant_set_option) {
                                 $variant_options [] = array(
