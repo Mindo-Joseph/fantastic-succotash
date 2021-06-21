@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\{VendorSlotDate, Vendor, VendorSlot, SlotDay, ServiceArea};
 
@@ -15,6 +16,19 @@ class ServiceAreaController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, $domain = '', $vendor_id){
+        $rules = array(
+            'name' => 'required',
+            'latlongs' => 'required'
+        );
+        $messages = array(
+            'name.required' => 'Area name is required',
+            'latlongs.required' => 'Service area is required',
+        );
+        $validation  = Validator::make($request->all(), $rules, $messages);
+
+        if ($validation->fails()) {
+            return redirect()->back()->withInput()->withErrors($validation);
+        }
         $vendor = Vendor::where('id', $vendor_id)->firstOrFail();
         $area = new ServiceArea();
         if($request->has('area_id')){
