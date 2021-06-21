@@ -22,14 +22,31 @@ class OrderController extends Controller {
 
     public function getOrdersList(Request $request){
     	$user = Auth::user();
-    	$orders = Order::with('products')->where('user_id', $user->id)->orderBy('id', 'DESC')->paginate(10);
-    	foreach ($orders as $order) {
-    		$order_item_count = 0;
-    		foreach ($order->products as $product) {
-    			$order_item_count += $product->quantity;
-    		}
-    		$order->order_item_count = $order_item_count;
-    	}
+        $orders = Order::select('id','order_number','payable_amount','payment_option_id','user_id')->where('user_id', $user->id)->paginate($paginate);
+        foreach ($orders as $order) {
+            $order_item_count = 0;
+            $order->user_name = $order->user->name;
+            $order->user_image = $order->user->image;
+            $order->date_time = convertDateTimeInTimeZone($order->created_at, $user->timezone);
+            $order->payment_option_title = $order->paymentOption->title;
+            $product_details = [];
+            foreach ($order->products as $product) {
+                $order_item_count += $product->quantity;
+                if($is_selected_vendor_id == $product->vendor_id){
+                    $product_details[]= array(
+                        'image' => $product->image,
+                        'price' => $product->price,
+                        'qty' => $product->quantity,
+                    );
+                }
+            }
+            $order->product_details = $product_details;
+            $order->item_count = $order_item_count;
+            unset($order->user);
+            unset($order->products);
+            unset($order->paymentOption);
+            unset($order->payment_option_id);
+        }
     	return $this->successResponse($orders, 'Order placed successfully.', 201);
     }
 
