@@ -80,6 +80,7 @@ class OrderController extends FrontController{
             $taxable_amount = 0;
             $payable_amount = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
+                $delivery_fee = 0;
                 $vendor_payable_amount = 0;
                 $vendor_discount_amount = 0;
                 $product_taxable_amount = 0;
@@ -100,11 +101,8 @@ class OrderController extends FrontController{
                         $product_taxable_amount += $product_tax;
                         $payable_amount = $payable_amount + $product_tax;
                     }
-                    if(!empty($vendor_cart_product->product->Requires_last_mile) && $vendor_cart_product->product->Requires_last_mile == 1)
-                    {   
-                       // $delivery_on_vendors [] = $vendor_cart_product->vendor_id;
-                       // Log::info($vendor_cart_product->product);
-                       // $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
+                    if(!empty($vendor_cart_product->product->Requires_last_mile) && $vendor_cart_product->product->Requires_last_mile == 1){   
+                      $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id);
                     }
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
@@ -162,8 +160,10 @@ class OrderController extends FrontController{
                 $OrderVendor->status = 0;
                 $OrderVendor->order_id= $order->id;
                 $OrderVendor->vendor_id= $vendor_id;
-                $OrderVendor->payable_amount= $vendor_payable_amount;
+                $OrderVendor->delivery_fee= $delivery_fee;
                 $OrderVendor->discount_amount= $vendor_discount_amount;
+                $OrderVendor->payable_amount= $vendor_payable_amount + $delivery_fee;
+                $OrderVendor->discount_amount= $this->getDeliveryFeeDispatcher($vendor_id);
                 $OrderVendor->save();
 
                 $order_status = new VendorOrderStatus();
@@ -184,7 +184,7 @@ class OrderController extends FrontController{
             }
             $order->loyalty_points_used = $loyalty_points_used;
             $order->loyalty_amount_saved = $loyalty_amount_saved;
-            $order->payable_amount = $payable_amount - $total_discount - $loyalty_amount_saved;
+            $order->payable_amount = $delivery_fee + $payable_amount - $total_discount - $loyalty_amount_saved;
             $order->loyalty_points_earned = $loyalty_points_earned;
             $order->save();
             CartAddon::where('cart_id', $cart->id)->delete();

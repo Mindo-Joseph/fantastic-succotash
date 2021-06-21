@@ -37,10 +37,9 @@ class OrderController extends Controller {
     	try {
     		$user = Auth::user();
     		$order_item_count = 0;
+            $language_id = $user->language;
     		$order_id = $request->order_id;
             $vendor_id = $request->vendor_id;
-            $user = Auth::user();
-            $language_id = $user->language;
             if($vendor_id){
 	       	   $order = Order::with([
                 'vendors' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},
@@ -49,8 +48,8 @@ class OrderController extends Controller {
                     $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                     $q->where('language_id', $language_id);
                 },
-                'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address']
-                )->where('id', $order_id)->first();
+                'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'
+            ])->where('id', $order_id)->first();
             }else{
                 $order = Order::with(['vendors.vendor',
                     'vendors.products.translation' => function($q) use($language_id){
