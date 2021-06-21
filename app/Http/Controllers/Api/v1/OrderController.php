@@ -21,13 +21,13 @@ class OrderController extends Controller {
     public function getOrdersList(Request $request){
     	$user = Auth::user();
         $paginate = $request->has('limit') ? $request->limit : 12;
-        $orders = Order::select('id','order_number','payable_amount','payment_option_id','user_id')->where('user_id', $user->id)->paginate($paginate);
+        $orders = OrderVendor::select('id','order_number','payable_amount','payment_option_id','user_id')->where('user_id', $user->id)->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
             $order->user_name = $order->user->name;
             $order->user_image = $order->user->image;
-            $order->date_time = convertDateTimeInTimeZone($order->created_at, $user->timezone);
-            $order->payment_option_title = $order->paymentOption->title;
+            $order->date_time = convertDateTimeInTimeZone($order->orderDetail->created_at, $user->timezone);
+            $order->payment_option_title = $order->orderDetail->paymentOption->title;
             $product_details = [];
             foreach ($order->products as $product) {
                 $order_item_count += $product->quantity;
