@@ -8785,7 +8785,7 @@ header.stickycls {
 
 .new-tag {
   padding-left: 3px;
-  color: var(--theme-deafult);
+  color: #222222;
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 700; }
@@ -9197,15 +9197,15 @@ header.stickycls {
         background-color: var(--theme-deafult);
         -webkit-transition: 0.5s ease;
         transition: 0.5s ease; }
-      /* .pixelstrap ul a, .pixelstrap ul a:hover, .pixelstrap ul a:focus, .pixelstrap ul a:active, .pixelstrap ul a.highlighted {
-        border: 0 !important;
+      .pixelstrap ul a, .pixelstrap ul a:hover, .pixelstrap ul a:focus, .pixelstrap ul a:active, .pixelstrap ul a.highlighted {
+        border-left: 2px solid transparent !important;
         background: transparent;
         color: #222222;
         border-radius: 0 !important;
         font-size: 14px;
         font-weight: 400;
         text-transform: capitalize;
-        padding: 5px 20px; } */
+        padding: 5px 20px !important; }
         .pixelstrap ul a:hover:before, .pixelstrap ul a:hover:hover:before, .pixelstrap ul a:focus:hover:before, .pixelstrap ul a:active:hover:before, .pixelstrap ul a.highlighted:hover:before {
           width: 50px;
           height: 2px;
