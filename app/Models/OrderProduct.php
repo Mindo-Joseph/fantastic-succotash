@@ -26,7 +26,7 @@ class OrderProduct extends Model{
       return $this->belongsTo('App\Models\ProductVariant', 'variant_id', 'id')->select('id', 'sku', 'product_id', 'title', 'price', 'tax_category_id', 'barcode');
     }
     public function media(){
-        return $this->hasMany('App\Models\ProductImage')->select('product_id', 'media_id', 'is_default');
+        return $this->hasMany('App\Models\ProductImage', 'product_id', 'product_id')->select('product_id', 'media_id', 'is_default');
     }
     public function vendorProducts(){
       return $this->hasMany(OrderProduct::class, 'vendor_id', 'vendor_id')->orderBy('order_vendor_products.created_at', 'asc')->orderBy('order_vendor_products.vendor_id', 'asc');
