@@ -21,13 +21,14 @@ class OrderController extends Controller {
     public function getOrdersList(Request $request){
     	$user = Auth::user();
         $paginate = $request->has('limit') ? $request->limit : 12;
-        $orders = Order::select('id','order_number','payable_amount','payment_option_id','user_id')->where('user_id', $user->id)->paginate($paginate);
+        $orders = OrderVendor::where('user_id', $user->id)->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
-            $order->user_name = $order->user->name;
-            $order->user_image = $order->user->image;
-            $order->date_time = convertDateTimeInTimeZone($order->created_at, $user->timezone);
-            $order->payment_option_title = $order->paymentOption->title;
+            $order->user_name = $user->name;
+            $order->user_image = $user->image;
+            $order->date_time = convertDateTimeInTimeZone($order->orderDetail->created_at, $user->timezone);
+            $order->payment_option_title = $order->orderDetail->paymentOption->title;
+            $order->order_number = $order->orderDetail->order_number;
             $product_details = [];
             foreach ($order->products as $product) {
                 $order_item_count += $product->quantity;
@@ -43,6 +44,7 @@ class OrderController extends Controller {
             unset($order->products);
             unset($order->paymentOption);
             unset($order->payment_option_id);
+            unset($order->orderDetail);
         }
     	return $this->successResponse($orders, 'Order placed successfully.', 201);
     }
@@ -228,6 +230,7 @@ class OrderController extends Controller {
                         }
                         $order_vendor = new OrderVendor;
                         $order_vendor->status = 0;
+                        $order_vendor->user_id= $user->id;
                         $order_vendor->order_id= $order->id;
                         $order_vendor->vendor_id= $vendor_id;
                         $order_vendor->payable_amount= $vendor_payable_amount;
