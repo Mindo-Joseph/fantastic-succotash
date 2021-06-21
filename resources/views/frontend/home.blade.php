@@ -47,10 +47,9 @@
                     <i class="fa fa-star"></i> 
                     <i class="fa fa-star"></i>
                 </div>
-                <a href="#">
-                    <h6>
-                    <%= vendor.name %>
-                </h6></a>
+                <a href="{{route('vendorDetail')}}/<%= vendor.id %>">
+                    <h6><%= vendor.name %></h6>
+                </a>
             </div>
         </div>
     <% }); %>
