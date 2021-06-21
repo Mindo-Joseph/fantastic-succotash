@@ -32,10 +32,19 @@ class OrderController extends Controller {
             $order->payment_option_title = $order->paymentOption->title;
             $product_details = [];
             foreach ($order->products as $product) {
+                $image = [];
+                if($product->media){
+                    foreach ($product->media as $media_value) {
+                        $image = $media_value->pimage->image;
+                    }
+                }else{
+                    foreach ($product->media as $media_value) {
+                        $image = $media_value->image;
+                    }
+                }
                 $order_item_count += $product->quantity;
                 $product_details[]= array(
-                    'media' => $product->media ? $product->media->pimage->image: '',
-                    'image' => $product->image,
+                    'image' => $image,
                     'price' => $product->price,
                     'qty' => $product->quantity,
                 );
