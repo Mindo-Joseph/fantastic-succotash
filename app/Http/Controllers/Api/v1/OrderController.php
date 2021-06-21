@@ -33,13 +33,11 @@ class OrderController extends Controller {
             $product_details = [];
             foreach ($order->products as $product) {
                 $order_item_count += $product->quantity;
-                if($is_selected_vendor_id == $product->vendor_id){
-                    $product_details[]= array(
-                        'image' => $product->image,
-                        'price' => $product->price,
-                        'qty' => $product->quantity,
-                    );
-                }
+                $product_details[]= array(
+                    'image' => $product->image,
+                    'price' => $product->price,
+                    'qty' => $product->quantity,
+                );
             }
             $order->product_details = $product_details;
             $order->item_count = $order_item_count;
