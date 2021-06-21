@@ -1645,10 +1645,10 @@ label{
     margin: 0px;
     cursor: pointer !important;
 }
-.search_form,.search_form 
-input.form-control,.search_form 
-button.btn.btn-solid {
+.search_form, .search_form input.form-control, .search_form button.btn.btn-solid {
     height: 100%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 .search_form 
  input.form-control {
@@ -2051,19 +2051,69 @@ footer .form-control {
 }
 
 
+.dropdown-menu-category > li > a:after {
+    position: absolute;
+    display: block;
+    content: '\f105';
+    font-family: 'FontAwesome';
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    opacity: 0.6;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+    filter: alpha(opacity=60);
+}
 
+.navbar ul.navbar-nav.pixelstrap li .dropdown-menu li a {
+    border-left: 2px solid transparent !important;
+}
 
+.navbar ul.navbar-nav.pixelstrap li .dropdown-menu li:hover a {
+    border-color: #ff4c3b !important;
+    background: linear-gradient(270deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
+}
 
+.navbar ul.navbar-nav.pixelstrap li .dropdown-menu li a::before{
+    content: none;
+}
 
+.navbar ul.navbar-nav.pixelstrap li .dropdown-menu li a i{
+    margin-right: 8px;
+}
 
+.navbar ul.navbar-nav.pixelstrap li .dropdown-menu li {
+    border-top: 1px solid #ddd;
+    transition: all 0.5s;
+}
 
+.navbar ul.navbar-nav.pixelstrap li .dropdown-menu li:first-child {
+    border-top: 2px solid #ff4c3b !important;
+}
 
+.navbar ul.navbar-nav.pixelstrap li .dropdown-menu li:hover{
+    border-color: transparent;
+}
 
+.navbar ul.navbar-nav.pixelstrap > li:hover > a {
+    background: #ff4c3b;
+    color: #fff;
+}
 
+#location_search_wrapper {
+    box-shadow: 0px 0px 2px #ddd;
+}
 
+.menu-navigation {
+    background: #f8f8f8;
+}
 
-
-
+.icon-nav i {
+    font-size: 26px;
+    color: #999999;
+}   
 
 
 
