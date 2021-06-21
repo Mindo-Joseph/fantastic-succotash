@@ -82,7 +82,7 @@ class StoreController extends Controller{
     				$order_item_count += $product->quantity;
     				if($is_selected_vendor_id == $product->vendor_id){
 	    				$product_details[]= array(
-	    					'image' => $product->image,
+	    					'image_path' => $product->media->first() ? $product->media->first()->image->path : $product->image,
 	    					'price' => $product->price,
 	    					'qty' => $product->quantity,
 	    				);
