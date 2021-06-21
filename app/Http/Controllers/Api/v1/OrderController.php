@@ -22,14 +22,30 @@ class OrderController extends Controller {
 
     public function getOrdersList(Request $request){
     	$user = Auth::user();
-    	$orders = Order::with('products')->where('user_id', $user->id)->orderBy('id', 'DESC')->paginate(10);
-    	foreach ($orders as $order) {
-    		$order_item_count = 0;
-    		foreach ($order->products as $product) {
-    			$order_item_count += $product->quantity;
-    		}
-    		$order->order_item_count = $order_item_count;
-    	}
+        $paginate = $request->has('limit') ? $request->limit : 12;
+        $orders = Order::select('id','order_number','payable_amount','payment_option_id','user_id')->where('user_id', $user->id)->paginate($paginate);
+        foreach ($orders as $order) {
+            $order_item_count = 0;
+            $order->user_name = $order->user->name;
+            $order->user_image = $order->user->image;
+            $order->date_time = convertDateTimeInTimeZone($order->created_at, $user->timezone);
+            $order->payment_option_title = $order->paymentOption->title;
+            $product_details = [];
+            foreach ($order->products as $product) {
+                $order_item_count += $product->quantity;
+                $product_details[]= array(
+                    'image' => $product->media->first() ? $product->media->first()->image->path : '',
+                    'price' => $product->price,
+                    'qty' => $product->quantity,
+                );
+            }
+            $order->product_details = $product_details;
+            $order->item_count = $order_item_count;
+            unset($order->user);
+            unset($order->products);
+            unset($order->paymentOption);
+            unset($order->payment_option_id);
+        }
     	return $this->successResponse($orders, 'Order placed successfully.', 201);
     }
 
@@ -37,12 +53,27 @@ class OrderController extends Controller {
     	try {
     		$user = Auth::user();
     		$order_item_count = 0;
+            $language_id = $user->language;
     		$order_id = $request->order_id;
             $vendor_id = $request->vendor_id;
             if($vendor_id){
-	       	   $order = Order::with(['vendors' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('id', $order_id)->first();
+	       	   $order = Order::with([
+                'vendors' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},
+                'vendors.products' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},
+                'vendors.products.translation' => function($q) use($language_id){
+                    $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                    $q->where('language_id', $language_id);
+                },
+                'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'
+            ])->where('id', $order_id)->first();
             }else{
-                $order = Order::with(['vendors.vendor','vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('user_id', $user->id)->where('id', $order_id)->first();
+                $order = Order::with(['vendors.vendor',
+                    'vendors.products.translation' => function($q) use($language_id){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                        $q->where('language_id', $language_id);
+                    },
+                    'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address']
+                )->where('user_id', $user->id)->where('id', $order_id)->first();
             }
             if($order->vendors){
                 $order->user_name = $order->user->name;
@@ -57,6 +88,7 @@ class OrderController extends Controller {
                         $product_addons = [];
                         $variant_options = [];
     	    			$order_item_count += $product->quantity;
+                        $product->image_path = $product->media->first() ? $product->media->first()->image->path : $product->image;
                         if($product->pvariant){
                             foreach ($product->pvariant->vset as $variant_set_option) {
                                 $variant_options [] = array(

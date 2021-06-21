@@ -95,7 +95,7 @@ $timezone = Auth::user()->timezone;
                                     <tr>
                                         <th scope="row">{{$product->product_name}}</th>
                                         <td>
-                                            <img src="{{$product->image['proxy_url'].'32/32'.$product->image['image_path']}}" alt="product-img" height="32">
+                                            <img src="{{$product->image_path['proxy_url'].'32/32'.$product->image_path['image_path']}}" alt="product-img" height="32">
                                         </td>
                                         <td>{{ $product->quantity }}</td>
                                         <td>$@money($product->price)</td>

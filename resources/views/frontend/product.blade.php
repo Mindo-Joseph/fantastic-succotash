@@ -68,7 +68,7 @@
                                 <div class="product-slick">
                                     @if(!empty($product->media))
                                     @foreach($product->media as $k => $img)
-                                    <div class="image_mask"><img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" alt="" src="{{$img->image->path['proxy_url'].'600/800'.$img->image->path['image_path']}}"></div>
+                                        <div class="image_mask"><img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" alt="" src="{{$img->image->path['proxy_url'].'600/800'.$img->image->path['image_path']}}"></div>
                                     @endforeach
                                     @endif
                                 </div>

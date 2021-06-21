@@ -282,7 +282,8 @@ class VendorController extends BaseController
             ->orderBy('id', 'asc')
             ->orderBy('parent_id', 'asc')->get();
 
-        $csvProducts = CsvProductImport::where('vendor_id', $id)->orderBy('id', 'DESC')->get();
+        $csvProducts = CsvProductImport::where('vendor_id', $id)->orderBy('id','DESC')->get();
+        $csvVendors = CsvVendorImport::all();
         /*    get active category list also with parent     */
         foreach ($categories as $category) {
             if (in_array($category->id, $VendorCategory) && $category->parent_id == 1) {
@@ -298,7 +299,7 @@ class VendorController extends BaseController
         }
         $product_categories = VendorCategory::with('category')->where('status', 1)->where('vendor_id', $id)->get();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend.vendor.vendorCatalog')->with(['vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
+        return view('backend.vendor.vendorCatalog')->with(['vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
     }
 
     /**       delete vendor       */

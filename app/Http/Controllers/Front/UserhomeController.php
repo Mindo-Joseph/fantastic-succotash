@@ -85,6 +85,11 @@ class UserhomeController extends FrontController
         foreach ($vendors as $key => $value) {
             $vendor_ids[] = $value->id;
         }
+        if($request->has(['latitude', 'longitude'])) {
+            Session::put('vendors', $vendor_ids);
+        }
+        $navCategories = $this->categoryNav($language_id);
+        Session::put('navCategories', $navCategories);
         $on_sale_product_details = $this->vendorProducts($vendor_ids, $language_id, 'USD');
         $new_product_details = $this->vendorProducts($vendor_ids, $language_id, $currency_id, 'is_new');
         $feature_product_details = $this->vendorProducts($vendor_ids, $language_id, $currency_id, 'is_featured');
@@ -124,9 +129,6 @@ class UserhomeController extends FrontController
                 'price' => Session::get('currencySymbol').' '.($on_sale_product_detail->variant->first()->price * $multiply),
             );
         }
-        $navCategories = $this->categoryNav($language_id);
-        Session::put('navCategories', $navCategories);
-        Session::put('vendors', $vendor_ids);
         $data = [
             'brands' => $brands, 
             'vendors' => $vendors,

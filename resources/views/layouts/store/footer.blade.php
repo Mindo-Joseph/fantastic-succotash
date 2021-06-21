@@ -17,6 +17,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key={{$mapKey}}&v=3.exp&libraries=places,drawing"></script>
 <script src="{{asset('front-assets/js/jquery-3.3.1.min.js')}}"></script>
 <script src="{{asset('front-assets/js/jquery-ui.min.js')}}"></script>
+<script src="{{asset('front-assets/js/popper.min.js')}}"></script>
 <script src="{{asset('front-assets/js/slick.js')}}"></script>
 <script src="{{asset('front-assets/js/menu.js')}}"></script>
 <script src="{{asset('front-assets/js/lazysizes.min.js')}}"></script>
@@ -38,7 +39,7 @@
     var user_checkout_url= "{{ route('user.checkout') }}";
     var cart_product_url= "{{ route('getCartProducts') }}";
     var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
-    @if(Session::has('deliveryAddress'))
+    @if(Session::has('selectedAddress'))
         selected_address = 1;
     @endif
 
