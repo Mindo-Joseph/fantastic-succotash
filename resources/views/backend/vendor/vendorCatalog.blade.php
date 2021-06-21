@@ -210,7 +210,7 @@
                                             <option value="">Select Category...</option>
                                             @foreach($product_categories as $product_category)
                                             @if($product_category->category)
-                                                @if($product_category->category->type_id == 1)
+                                                @if( ($product_category->category->type_id == 1) || ($product_category->category->type_id == 3) )
                                                     <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
                                                 @endif
                                             @endif
