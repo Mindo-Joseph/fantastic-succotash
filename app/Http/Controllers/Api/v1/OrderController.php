@@ -8,12 +8,10 @@ use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus};
 
 class OrderController extends Controller {
-
     use ApiResponser;
-
     /**
      * Display a listing of the resource.
      *
@@ -235,6 +233,11 @@ class OrderController extends Controller {
                         $order_vendor->payable_amount= $vendor_payable_amount;
                         $order_vendor->discount_amount= $vendor_discount_amount;
                         $order_vendor->save();
+                        $order_status = new VendorOrderStatus();
+                        $order_status->order_id = $order->id;
+                        $order_status->order_status_option_id = 1;
+                        $order_status->vendor_id = $vendor_id;
+                        $order_status->save();
                     }
                     $order->total_amount = $total_amount;
                     $order->total_discount = $total_discount;

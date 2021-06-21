@@ -68,11 +68,10 @@ class ProfileController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function profile(Request $request, $domain = '')
-    {
+    public function profile(Request $request, $domain = ''){
         $timezone_list = Timezonelist::create('timezone', null, [
             'id'    => 'timezone',
-            'class' => 'styled',
+            'class' => 'styled form-control',
         ]);
         $curId = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');

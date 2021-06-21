@@ -208,6 +208,13 @@ class ProductController extends BaseController
     public function update(Request $request, $domain = '', $id)
     {
         $product = Product::where('id', $id)->firstOrFail();
+        $rule = array(
+            'sku' => 'required|unique:products,sku,'.$product->id,
+        );
+        $validation  = Validator::make($request->all(), $rule);
+        if ($validation->fails()) {
+            return redirect()->back()->withInput()->withErrors($validation);
+        }
         $product_category = ProductCategory::where('product_id', $id)->where('category_id', $request->category_id)->first();
         if(!$product_category){
             $product_category = new ProductCategory();
@@ -221,6 +228,8 @@ class ProductController extends BaseController
         foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live', 'brand_id') as $k => $val) {
             $product->{$k} = $val;
         }
+        $product->sku = $request->sku;
+        $product->url_slug = $request->url_slug;
         $product->category_id = $request->category_id;
         $product->tax_category_id = $request->tax_category;
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;

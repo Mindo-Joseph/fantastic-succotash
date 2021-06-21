@@ -114,7 +114,7 @@
                         <div class="col-md-5 mb-2" style="cursor: not-allowed;">
                             {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
-                            {!! Form::text('sku', $product->sku, ['class'=>'form-control','id' => 'sku', 'style' => 'pointer-events:none;']) !!}
+                            {!! Form::text('sku', $product->sku, ['class'=>'form-control','id' => 'sku', 'onkeypress' => "return alplaNumeric(event)",'name' => 'sku']) !!}
 
                             @if($errors->has('sku'))
                                 <span class="text-danger" role="alert">
@@ -588,7 +588,7 @@
             return false;
         }
         var n1 = document.getElementById('sku');
-        var n2 = document.getElementById('product_url');
+        var n2 = document.getElementById('url_slug');
         n2.value = n1.value+charCode;
         return true;
     }
