@@ -437,7 +437,7 @@ $(document).ready(function() {
                         country=value[count-1];
                         state=value[count-2];
                         city=value[count-3];
-                        $("#address-input").val(value);
+                        $("#address-input").val(add);
                         $("#location_search_wrapper .homepage-address span").text(value).attr({"title": value, "data-original-title": value});
                         if(!selected_address){
                             getHomePage(latitude, longitude);
@@ -512,7 +512,6 @@ function initMap() {
                     const lat = results[0].geometry.location.lat();
                     const lng = results[0].geometry.location.lng();
                     $(".location-area span").text(place.formatted_address);
-                    // addressInputHide(".select_address", ".address-input-field", "#address-input");
                     setLocationCoordinates(autocomplete.key, lat, lng);
                 }
             });
