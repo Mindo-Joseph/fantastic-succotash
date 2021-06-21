@@ -30,12 +30,12 @@
             <div class="img-wrapper">
                 <div class="front">
                     <a href="{{route('vendorDetail')}}/<%= vendor.id %>">
-                        <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>">
+                        <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
                     </a>
                 </div>
                 <div class="back">
                     <a href="{{route('vendorDetail')}}/<%= vendor.id %>">
-                        <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo.image_path %>">
+                        <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo.image_path %>">
                     </a>
                 </div>
             </div>
@@ -165,7 +165,7 @@
                 <div class="title1">
                     <h2 class="title-inner1 mb-0">Brands</h2>
                 </div>
-                <a class="view_more_items" href="#">View More</a>
+                <!-- <a class="view_more_items" href="#">View More</a> -->
             </div>
             <div class="col-md-12">
                 <div class="slide-6 no-arrow" id="brand_main_div">

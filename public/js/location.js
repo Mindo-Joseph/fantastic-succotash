@@ -112,17 +112,17 @@ $(document).ready(function() {
                         if(response.data.on_sale_products.length > 0){
                             $('#onsale_products_wrapper').removeClass('d-none');
                         }else{
-                            $('#onsale_products_wrapper, #bestseller_products_wrapper').addClass('d-none');
+                            $('#onsale_products_wrapper').addClass('d-none');
                         }
                         if(response.data.feature_products.length > 0){
                             $('#featured_products_wrapper').removeClass('d-none');
                         }else{
-                            $('#featured_products_wrapper, #bestseller_products_wrapper').addClass('d-none');
+                            $('#featured_products_wrapper').addClass('d-none');
                         }
                         if(vendors.length > 0){
                             $('#our_vendor_main_div').removeClass('d-none');
                         }else{
-                            $('#our_vendor_main_div, #bestseller_products_wrapper').addClass('d-none');
+                            $('#our_vendor_main_div').addClass('d-none');
                         }
                         initializeSlider();
                     }

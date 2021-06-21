@@ -265,7 +265,7 @@
                                 <tbody id="post_list">
                                     @foreach($csvProducts as $csv)
                                     <tr data-row-id="{{$csv->id}}">
-                                        <td> {{ $csv->id }}</td>
+                                        <td> {{ $loop->iteration }}</td>
                                         <td> {{ $csv->name }}</td>
                                         
                                         @if($csv->status == 1)

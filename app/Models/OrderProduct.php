@@ -28,6 +28,9 @@ class OrderProduct extends Model{
     public function vendorProducts(){
       return $this->hasMany(OrderProduct::class, 'vendor_id', 'vendor_id')->orderBy('order_vendor_products.created_at', 'asc')->orderBy('order_vendor_products.vendor_id', 'asc');
     }
+    public function translation(){
+      return $this->hasOne('App\Models\ProductTranslation','product_id', 'product_id'); 
+    }
     public function getImageAttribute($value){
       $values = array();
       $img = 'default/default_image.png';

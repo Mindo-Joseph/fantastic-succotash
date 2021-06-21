@@ -35,10 +35,16 @@ class VendorController extends BaseController
             });
         }
         $vendors = $vendors->get();
-        if(count($vendors) == 1)
-        return Redirect::route('vendor.show', $vendors->first()->id);
+        if(count($vendors) == 1){
+            if (Auth::user()->is_superadmin == 1) {
+                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
+            }else{
+                return Redirect::route('vendor.show', $vendors->first()->id);
+            }
+        }else{
+            return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
+        }
 
-        return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
     }
 
     /**
