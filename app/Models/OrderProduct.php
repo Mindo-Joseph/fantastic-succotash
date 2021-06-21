@@ -30,7 +30,7 @@ class OrderProduct extends Model{
     }
     public function translation($langId = 0){
       if($langId > 0){
-        return $this->hasMany('App\Models\ProductTranslation','product_id', 'product_id')->where('language_id', $langId); 
+        return $this->hasOne('App\Models\ProductTranslation','product_id', 'product_id')->where('language_id', $langId); 
       }else{
         return $this->hasMany('App\Models\ProductTranslation', 'product_id', 'product_id'); 
       }
