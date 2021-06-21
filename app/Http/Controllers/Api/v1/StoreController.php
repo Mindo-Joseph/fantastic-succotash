@@ -67,7 +67,7 @@ class StoreController extends Controller{
 			if($user_vendor_ids){
 				$is_selected_vendor_id = $selected_vendor_id ? $selected_vendor_id : $user_vendor_ids->first();
 			}
-			$order_list = Order::select('id','order_number','payable_amount','payment_option_id','user_id')
+			$order_list = Order::select('id','order_number','payable_amount','payment_option_id','user_id','vendor_id')
 						->whereHas('vendors', function($query) use ($is_selected_vendor_id){
 						   $query->where('vendor_id', $is_selected_vendor_id);
 						})->paginate($paginate);
