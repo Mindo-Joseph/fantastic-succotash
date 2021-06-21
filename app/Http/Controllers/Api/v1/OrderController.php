@@ -33,13 +33,15 @@ class OrderController extends Controller {
             $product_details = [];
             foreach ($order->products as $product) {
                 $image = [];
-                if($product->media){
-                    foreach ($product->media as $media_value) {
-                        $image = $media_value->pimage->image;
-                    }
-                }else{
-                    foreach ($product->media as $media_value) {
-                        $image = $media_value->image;
+                foreach ($product->variant as $key => $variant) {
+                    if($variant->media){
+                        foreach ($variant->media as $media_value) {
+                            $image = $variant->pimage->image;
+                        }
+                    }else{
+                        foreach ($variant->media as $media_value) {
+                            $image = $variant->image;
+                        }
                     }
                 }
                 $order_item_count += $product->quantity;
