@@ -34,7 +34,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     <li class="search_btn">
                                         <img src="{{asset('front-assets/images/icon/search.svg')}}" class="img-fluid blur-up lazyload" alt="">
                                     </li>
-                                    <li class="onhover-div mobile-setting">
+                                    <?php /* ?><li class="onhover-div mobile-setting">
                                         <div><img src="{{asset('front-assets/images/icon/setting.svg')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-settings"></i></div>
                                         <div class="show-div setting">
                                             <h6>language</h6>
@@ -50,7 +50,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                 @endforeach
                                             </ul>
                                         </div>
-                                    </li>
+                                    </li><?php */ ?>
                                     <li class="onhover-div mobile-cart">
                                         <div>
                                             <img src="{{asset('front-assets/images/icon/cart.svg')}}" class="img-fluid blur-up lazyload" alt=""> 
@@ -139,7 +139,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <div class="d-flex align-items-center justify-content-start px-3 dropdown-toggle" href="#edit-address" data-toggle="modal">
                             <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
                             <div class="homepage-address text-left">
-                                <h2><span data-placement="top" data-toggle="tooltip" title="{{session('deliveryAddress')}}">{{session('deliveryAddress')}}</span></h2>
+                                <h2><span data-placement="top" data-toggle="tooltip" title="{{session('selectedAddress')}}">{{session('selectedAddress')}}</span></h2>
                             </div>
                             <div class="down-icon">
                                 <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -204,7 +204,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <label class="delivery-head mb-2">SELECT YOUR LOCATION</label>
                 <div class="address-input-field d-flex align-items-center justify-content-between">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{session('deliveryAddress')}}">
+                    <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{session('selectedAddress')}}">
                     <input type="hidden" name="address_latitude" id="address-latitude" value="{{session('latitude')}}" />
                     <input type="hidden" name="address_longitude" id="address-longitude" value="{{session('longitude')}}" />
                 </div>

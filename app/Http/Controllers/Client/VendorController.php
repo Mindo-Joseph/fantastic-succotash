@@ -35,10 +35,16 @@ class VendorController extends BaseController
             });
         }
         $vendors = $vendors->get();
-        if(count($vendors) == 1)
-        return Redirect::route('vendor.show', $vendors->first()->id);
+        if(count($vendors) == 1){
+            if (Auth::user()->is_superadmin == 1) {
+                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
+            }else{
+                return Redirect::route('vendor.show', $vendors->first()->id);
+            }
+        }else{
+            return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
+        }
 
-        return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
     }
 
     /**
@@ -276,7 +282,7 @@ class VendorController extends BaseController
             ->orderBy('id', 'asc')
             ->orderBy('parent_id', 'asc')->get();
 
-        $csvProducts = CsvProductImport::where('vendor_id', $id)->get();
+        $csvProducts = CsvProductImport::where('vendor_id', $id)->orderBy('id','DESC')->get();
         $csvVendors = CsvVendorImport::all();
         /*    get active category list also with parent     */
         foreach ($categories as $category) {
@@ -403,5 +409,9 @@ class VendorController extends BaseController
                 'message' => 'Uploading!'
             ]);
         }
+    }
+
+    public function downloadSampleFile($domain = ''){
+        dd("reached!");
     }
 }

@@ -1,3 +1,10 @@
+@php
+$clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
+
+$urlImg = $clientData->logo['proxy_url'].'200/80'.$clientData->logo['image_path'];
+$languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
+$currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
+@endphp
 <div class="top-header">
     <div class="container">
         <div class="row">
@@ -13,12 +20,18 @@
                 <ul class="header-dropdown">
                     <li class="onhover-dropdown change-language">
                         <a href="#"><i class="fa fa-language" aria-hidden="true"></i><!--span>Change Language</span--> </a>
-                        <ul class="onhover-show-div">                            
+                        <ul class="onhover-show-div">
+                            @foreach($languageList as $key => $listl)
+                            <li><a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a></li>
+                            @endforeach
                         </ul>
                     </li>
                     <li class="onhover-dropdown change-currency">
                         <a href="#"><i class="fa fa-money" aria-hidden="true"></i><!--span>Change Currency</span--></a>
                         <ul class="onhover-show-div">
+                            @foreach($currencyList as $key => $listc)
+                            <li><a href="javascript:void(0)" currId="{{$listc->currency_id}}" class="customerCurr" currSymbol="{{$listc->currency->symbol}}">{{$listc->currency->iso_code}}</a></li>
+                            @endforeach
                         </ul>
                     </li>
                     <li class="onhover-dropdown mobile-account"> <i class="fa fa-user" aria-hidden="true"></i>

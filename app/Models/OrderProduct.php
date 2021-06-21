@@ -25,8 +25,14 @@ class OrderProduct extends Model{
     public function pvariant(){
       return $this->belongsTo('App\Models\ProductVariant', 'variant_id', 'id')->select('id', 'sku', 'product_id', 'title', 'price', 'tax_category_id', 'barcode');
     }
+    public function media(){
+        return $this->hasMany('App\Models\ProductImage', 'product_id', 'product_id')->select('product_id', 'media_id', 'is_default');
+    }
     public function vendorProducts(){
       return $this->hasMany(OrderProduct::class, 'vendor_id', 'vendor_id')->orderBy('order_vendor_products.created_at', 'asc')->orderBy('order_vendor_products.vendor_id', 'asc');
+    }
+    public function translation(){
+      return $this->hasOne('App\Models\ProductTranslation','product_id', 'product_id'); 
     }
     public function getImageAttribute($value){
       $values = array();

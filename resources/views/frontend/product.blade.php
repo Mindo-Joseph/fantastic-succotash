@@ -98,18 +98,7 @@
                                     <div class="description_txt my-3">
                                         <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
                                     </div>
-                                    <div class="border-product">
-                                        <h6 class="product-title">share it</h6>
-                                        <div class="product-icon">
-                                            <ul class="product-social">
-                                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-rss"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                   
                                     <input type="hidden" name="variant_id" id="prod_variant_id" value="{{$product->variant[0]->id}}">
                                     <!--<h4><del>$459.00</del><span>55% off</span></h4> -->
                                     <h3 id="productPriceValue" class="mb-md-3">
@@ -210,6 +199,18 @@
                                     <div class="border-product">
                                         <h6 class="product-title">product details</h6>
                                         <p>{!!(!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->body_html : ''!!}</p>
+                                    </div>
+
+                                    <div class="border-product">
+                                        <h6 class="product-title">share it</h6>
+                                        <div class="product-icon w-100">
+                                            <ul class="product-social">
+                                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                     <!--<div class="border-product">
                                         <h6 class="product-title">share it</h6>
