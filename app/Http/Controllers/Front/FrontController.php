@@ -27,7 +27,7 @@ class FrontController extends Controller
     public function categoryNav($lang_id) {
         $preferences = Session::get('preferences');
         $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
-                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name');
+                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')->distinct('categories.id');
         if($preferences){
             if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
                 $vendors = (Session::has('vendors')) ? Session::get('vendors') : array();
