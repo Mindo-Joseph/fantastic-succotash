@@ -28,6 +28,9 @@ class OrderProduct extends Model{
     public function media(){
         return $this->hasMany('App\Models\ProductImage', 'product_id', 'product_id')->select('product_id', 'media_id', 'is_default');
     }
+    public function pimage(){
+        return $this->hasMany('App\Models\ProductImage', 'product_id', 'product_id')->select('product_images.product_id', 'product_images.media_id', 'product_images.is_default', 'vendor_media.media_type', 'vendor_media.path')->join('vendor_media', 'vendor_media.id', 'product_images.media_id')->limit(1);
+    }
     public function vendorProducts(){
       return $this->hasMany(OrderProduct::class, 'vendor_id', 'vendor_id')->orderBy('order_vendor_products.created_at', 'asc')->orderBy('order_vendor_products.vendor_id', 'asc');
     }
