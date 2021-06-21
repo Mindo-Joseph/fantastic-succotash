@@ -53,8 +53,6 @@ class OrderController extends Controller {
                 )->where('id', $order_id)->first();
             }else{
                 $order = Order::with(['vendors.vendor',
-                    'vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},
-                    'vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},
                     'vendors.products.translation' => function($q) use($language_id){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $language_id);
