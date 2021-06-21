@@ -67,11 +67,16 @@ class CategoryController extends FrontController
                     ->where('id', $cid)->firstOrFail();
 
         $navCategories = $this->categoryNav($langId);
-        $vendorIds = array();
-        $vendorList = Vendor::select('id', 'name')->where('status', '!=', $this->field_status)->get();
-        if(!empty($vendorList)){
-            foreach ($vendorList as $key => $value) {
-                $vendorIds[] = $value->id;
+        
+        if(isset($vendors)){
+            $vendorIds = $vendors;
+        }else{
+            $vendorIds = array();
+            $vendorList = Vendor::select('id', 'name')->where('status', '!=', $this->field_status)->get();
+            if(!empty($vendorList)){
+                foreach ($vendorList as $key => $value) {
+                    $vendorIds[] = $value->id;
+                }
             }
         }
 
@@ -127,7 +132,10 @@ class CategoryController extends FrontController
         //}elseif($tpye == 'product' || $tpye == 'Product'){
             }else{
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
-
+            $vendors = array();
+            if(Session::has('vendors')){
+                $vendors = Session::get('vendors');
+            }
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
                     ->with(['media.image',
                         'translation' => function($q) use($langId){
@@ -138,7 +146,7 @@ class CategoryController extends FrontController
                             $q->groupBy('product_id');
                         },
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->paginate($pagiNate);
+                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->whereIn('products.vendor_id', $vendors)->paginate($pagiNate);
 
             if(!empty($products)){
                 foreach ($products as $key => $value) {
