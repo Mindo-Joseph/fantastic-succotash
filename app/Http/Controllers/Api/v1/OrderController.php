@@ -92,9 +92,6 @@ class OrderController extends Controller {
                                 );
                             }
                         }
-                        if($product->translation){
-                            $product->translation = $product->translation;
-                        }
                         $product->product_addons = $product_addons;
         			}
         		}
