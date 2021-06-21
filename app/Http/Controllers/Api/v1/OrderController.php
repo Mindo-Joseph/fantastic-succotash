@@ -55,7 +55,8 @@ class OrderController extends Controller {
                 $order = Order::with(['vendors.vendor',
                     'vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},
                     'vendors.products' => function($q) use($order_id){$q->where('order_id', $order_id);},
-                    'vendors.products.translation' => function($q) use($language_id){$q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                    'vendors.products.translation' => function($q) use($language_id){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $language_id);
                     },
                     'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address']
