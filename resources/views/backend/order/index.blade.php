@@ -62,7 +62,7 @@ $timezone = Auth::user()->timezone;
                                                 <h4 class="m-0">{{ $vendor->name }}</h4>
                                                 <ul class="status_box mt-3 pl-0">
                                                     <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Accepted</label></li>
-                                                    <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Assigned</label></li>
+                                                    <li><img src="{{ asset('assmailtrapmailtrapets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Assigned</label></li>
                                                 </ul>
                                             </div>
                                             <div class="col-7 col-sm-4">
