@@ -32,9 +32,9 @@ class FrontController extends Controller
                         ->where('categories.is_visible', 1)
                         ->where('categories.status', '!=', $this->field_status)
                         ->where('cts.language_id', $lang_id);
-        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
-            $vendors = Session::get('vendors');
-            if($vendors){
+        if($preferences){
+            if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+                $vendors = (Session::has('vendors')) ? Session::get('vendors') : array();
                 $categories = $categories->join('vendor_categories as vct', 'categories.id', 'vct.category_id')->whereIn('vct.vendor_id', $vendors)->where('vct.status', 1);
             }
         }
