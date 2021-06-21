@@ -245,95 +245,55 @@ class OrderController extends FrontController{
             exit($response->getMessage());
         }
     }
-
-
-
-
-    public function placeRequestToDispatch($order,$delivery_on_vendors,$request){
-        try {   
-              
-                $dispatch_domain = $this->getDispatchDomain();
+    public function getDeliveryFeeDispatcher($vendor_id){
+        try {
+                $dispatch_domain = $this->checkIfLastMileOn();
                 if ($dispatch_domain && $dispatch_domain != false) {
                     $customer = User::find(Auth::id());
-                    $cus_address = UserAddress::find($request->address_id);
-                    $vendor_ids = array_unique($delivery_on_vendors);
-                    $tasks = array();
-                    if ($request->input("payment-group") == 2) {
-                        $cash_to_be_collected = 'Yes';
-                        $payable_amount = $order->payable_amount;
-                    } else {
-                        $cash_to_be_collected = 'No';
-                        $payable_amount = 0.00;
-                    }
-                    foreach ($vendor_ids as $key => $vendor) {
-                        $call_back_url = route('dispatch-order-update', ['vendor_id' => $vendor,'order_id' => $order->id,'dispatcher_status_option_id' => '']);
-                        $vendor_details = Vendor::where('id',$vendor)->select('id','name','latitude','longitude','address')->first();
+                    $cus_address = UserAddress::where('user_id',Auth::id())->orderBy('is_primary','desc')->first();
+                    if($cus_address){
                         $tasks = array();
-                        $meta_data = '';
-                        $tasks[] = array('task_type_id' => 1,
-                                                        'latitude' => $vendor_details->latitude??'',
-                                                        'longitude' => $vendor_details->longitude??'',
-                                                        'short_name' => '',
-                                                        'address' => $vendor_details->address??'',
-                                                        'post_code' => '',
-                                                        'barcode' => '',
-                                                        );
-                                        
-                        $tasks[] = array('task_type_id' => 2,
-                                                        'latitude' => $cus_address->latitude??'',
-                                                        'longitude' => $cus_address->longitude??'',
-                                                        'short_name' => '',
-                                                        'address' => $cus_address->address??'',
-                                                        'post_code' => $cus_address->pincode??'',
-                                                        'barcode' => '',
-                                                        );
-                                   
-                        $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
-                                                        'customer_phone_number' => $customer->phone_number ?? '+919041969648',
-                                                        'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
-                                                        'recipient_phone' => $customer->phone_number ?? '+919041969648',
-                                                        'recipient_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
-                                                        'task_description' => "Order From :".$vendor_details->name,
-                                                        'allocation_type' => 'u',
-                                                        'task_type' => 'now',
-                                                        'cash_to_be_collected' => $payable_amount??0.00,
-                                                        'barcode' => '',
-                                                        'call_back_url' => $call_back_url??null,
-                                                        'task' => $tasks
-                                                        ];
-
-                      
-                        $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
+                        $vendor_details = Vendor::find($vendor_id);
+                            $location[] = array('latitude' => $vendor_details->latitude??30.71728880,
+                                                'longitude' => $vendor_details->longitude??76.80350870
+                                                );
+                            $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
+                                              'longitude' => $cus_address->longitude??76.803508700000
+                                            );
+                            $postdata =  ['locations' => $location];
+                            $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
                                                         'shortcode' => $dispatch_domain->delivery_service_key_code,
                                                         'content-type' => 'application/json']
-                                                            ]);                               
-                                                
-                        $url = $dispatch_domain->delivery_service_key_url;                      
-                        $res = $client->post($url.'/api/task/create',
-                            ['form_params' => (
-                                                        $postdata
-                                                    )]
-                        );
-                        $response = json_decode($res->getBody(), true);
-                        Log::info($response);
+                                                            ]);
+                            $url = $dispatch_domain->delivery_service_key_url;                      
+                            $res = $client->post($url.'/api/get-delivery-fee',
+                                ['form_params' => ($postdata)]
+                            );
+                            $response = json_decode($res->getBody(), true);
+                            if($response && $response['message'] == 'success'){
+                                return $response['total'];
+                            }
+                           
+                        
                     }
+                   
                 }
             }    
             catch(\Exception $e)
             {
-                 dd($e->getMessage());
+                // print_r($e->getMessage());
+               //  die;
                         
             }
            
            
     }
-     
-    public function getDispatchDomain(){
+    # check if last mile delivery on 
+    public function checkIfLastMileOn(){
         $preference = ClientPreference::first();
         if($preference->need_delivery_service == 1 && !empty($preference->delivery_service_key) && !empty($preference->delivery_service_key_code) && !empty($preference->delivery_service_key_url))
             return $preference;
         else
             return false;
-    }
-      
+    } 
 }
