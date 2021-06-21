@@ -227,19 +227,20 @@ class AuthController extends BaseController{
             $verified['is_phone_verified'] = 0;
             $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
                         'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
+            $response['verify_details'] = $verified;
+            $preferData['map_key'] = $prefer->map_key;
             $preferData['theme_admin'] = $prefer->theme_admin;
-            $preferData['distance_unit'] = $prefer->distance_unit;
-            $preferData['map_provider'] = $prefer->map_provider;
             $preferData['date_format'] = $prefer->date_format;
             $preferData['time_format'] = $prefer->time_format;
-            $preferData['map_key'] = $prefer->map_key;
+            $preferData['map_provider'] = $prefer->map_provider;
             $preferData['sms_provider'] = $prefer->sms_provider;
             $preferData['verify_email'] = $prefer->verify_email;
             $preferData['verify_phone'] = $prefer->verify_phone;
+            $preferData['distance_unit'] = $prefer->distance_unit;
             $preferData['app_template_id'] = $prefer->app_template_id;
             $preferData['web_template_id'] = $prefer->web_template_id;
             $response['client_preference'] = $preferData;
-            $response['verify_details'] = $verified;
+            $response['refferal_code'] = $userRefferal ? $userRefferal->refferal_code: '';
             $user_device[] = [
                 'access_token' => '',
                 'user_id' => $user->id,
