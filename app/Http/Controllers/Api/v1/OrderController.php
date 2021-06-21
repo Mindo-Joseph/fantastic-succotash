@@ -39,6 +39,10 @@ class OrderController extends Controller {
     		$order_item_count = 0;
     		$order_id = $request->order_id;
             $vendor_id = $request->vendor_id;
+            'vendorProducts.product.translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                        $q->where('language_id', $langId);
+                    },
             if($vendor_id){
 	       	   $order = Order::with(['vendors' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products' => function($q) use($vendor_id){$q->where('vendor_id', $vendor_id);},'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'])->where('id', $order_id)->first();
             }else{
@@ -74,6 +78,9 @@ class OrderController extends Controller {
                                     'option_title' =>  $addon->option->title,
                                 );
                             }
+                        }
+                        if($product->translation){
+                            $product->translation = $product->translation;
                         }
                         $product->product_addons = $product_addons;
         			}
