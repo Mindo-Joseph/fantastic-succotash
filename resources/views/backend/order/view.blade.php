@@ -119,7 +119,7 @@ $timezone = Auth::user()->timezone;
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Total :</th>
                                         <td>
-                                            <div class="fw-bold">$@money($vendor->payable_amount)</div>
+                                            <div class="fw-bold">$@money($vendor->payable_amount+$taxable_amount)</div>
                                         </td>
                                     </tr>
                                 </tbody>
