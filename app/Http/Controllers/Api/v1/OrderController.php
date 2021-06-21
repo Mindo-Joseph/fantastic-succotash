@@ -75,9 +75,10 @@ class OrderController extends Controller {
                     'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address']
                 )->where('user_id', $user->id)->where('id', $order_id)->first();
             }
-            if($order->vendors){
+            if($order){
                 $order->user_name = $order->user->name;
                 $order->user_image = $order->user->image;
+                $order->payment_option_title = $order->paymentOption->title;
     	    	foreach ($order->vendors as $vendor) {
     				$couponData = [];
     				$payable_amount = 0;

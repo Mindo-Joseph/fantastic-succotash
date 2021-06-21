@@ -119,7 +119,7 @@ $timezone = Auth::user()->timezone;
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Total :</th>
                                         <td>
-                                            <div class="fw-bold">$@money($vendor->payable_amount)</div>
+                                            <div class="fw-bold">$@money($vendor->payable_amount+$taxable_amount)</div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -149,7 +149,15 @@ $timezone = Auth::user()->timezone;
                             <i class="mdi mdi-truck-fast h2 text-muted"></i>
                             <h5><b>UPS Delivery</b></h5>
                             <p class="mb-1"><span class="fw-semibold">Order ID :</span> #{{$order->order_number}}</p>
-                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> COD</p>
+                            @if($order->payment_method == 1)
+                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Credit Card</p>
+                            @elseif($order->payment_method == 2)
+                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Cash On Delivery</p>
+                            @elseif($order->payment_method == 3)
+                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Paypal </p>
+                            @elseif($order->payment_method == 4)
+                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Wallet</p>
+                            @endif
                         </div>
                         <div class="text-center mt-2">
                             <a href="javascript::void(0);" class="btn btn-primary" id="delivery_info_button">Delivery Info</a>

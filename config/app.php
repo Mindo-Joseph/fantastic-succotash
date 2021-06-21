@@ -188,6 +188,7 @@ return [
         AWT\Providers\ApiLogServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
         Spatie\Geocoder\GeocoderServiceProvider::class,
+        Jackiedo\Timezonelist\TimezonelistServiceProvider::class,
     ],
 
     /*
