@@ -22,18 +22,52 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-body">
-                <form method="post" enctype="multipart/form-data" id="save_fonts">
+                <form method="post" enctype="multipart/form-data" id="save_regular_fonts">
                     @csrf
                     <h4 class="header-title">Font Styles</h4>
                     <p class="sub-header">Examples of Spectrum Fonts.</p>
-                    <div class="mb-3">
-                        <label class="form-label">Selecting multiple dates</label>
-                        <select class="form-control" name="fonts" onchange="submitFontForm()">
-                            @foreach($font_options as $font)
-                            @if($font->is_selected == 1)
-                            <option value="{{$font->id}}" selected>{{$font->name}}</option>
+                    <div>
+                        <label class="form-label">Selecting regular font</label>
+                        <select class="form-control" name="fonts" onchange="submitRegularFontForm()">
+                            @foreach($regular_font_options as $regular_font)
+                            @if($regular_font->is_selected == 1)
+                            <option value="{{$regular_font->id}}" selected>{{$regular_font->name}}</option>
                             @else
-                            <option value="{{$font->id}}">{{$font->name}}</option>
+                            <option value="{{$regular_font->id}}">{{$regular_font->name}}</option>
+                            @endif
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" id="save_medium_fonts">
+                    @csrf
+                    <div>
+                        <label class="form-label">Selecting medium font</label>
+                        <select class="form-control" name="fonts" onchange="submitMediumFontForm()">
+                            @foreach($medium_font_options as $medium_font)
+                            @if($medium_font->is_selected == 1)
+                            <option value="{{$medium_font->id}}" selected>{{$medium_font->name}}</option>
+                            @else
+                            <option value="{{$medium_font->id}}">{{$medium_font->name}}</option>
+                            @endif
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" id="save_bold_fonts">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label">Selecting bold font</label>
+                        <select class="form-control" name="fonts" onchange="submitBoldFontForm()">
+                            @foreach($bold_font_options as $bold_font)
+                            @if($bold_font->is_selected == 1)
+                            <option value="{{$bold_font->id}}" selected>{{$bold_font->name}}</option>
+                            @else
+                            <option value="{{$bold_font->id}}">{{$bold_font->name}}</option>
                             @endif
                             @endforeach
                         </select>
@@ -51,8 +85,26 @@
                     <form method="post" enctype="multipart/form-data" id="save_colors">
                         @csrf
                         <div class="form-group mb-3">
-                            <label for="secondary_color">Simple input field</label>
-                            <input type="text" id="secondary_color" onchange="submitColorForm()" name="secondary_color" class="form-control" value="{{ old('secondary_color', $color_options->name ?? 'cccccc')}}">
+                            <label for="primary_color">Primary Color</label>
+                            <input type="text" id="primary_color" onchange="submitPrimaryColorForm()" name="primary_color" class="form-control" value="{{ old('primary_color', $primary_color_options->name ?? 'cccccc')}}">
+                        </div>
+                    </form>
+                </div>
+                <div class="mb-3">
+                    <form method="post" enctype="multipart/form-data" id="save_colors">
+                        @csrf
+                        <div class="form-group mb-3">
+                            <label for="secondary_color">Secondary Color</label>
+                            <input type="text" id="secondary_color" onchange="submitSecondaryColorForm()" name="secondary_color" class="form-control" value="{{ old('secondary_color', $secondary_color_options->name ?? 'cccccc')}}">
+                        </div>
+                    </form>
+                </div>
+                <div class="mb-3">
+                    <form method="post" enctype="multipart/form-data" id="save_colors">
+                        @csrf
+                        <div class="form-group mb-3">
+                            <label for="tertiary_color">Tertiary Color</label>
+                            <input type="text" id="tertiary_color" onchange="submitTertiaryColorForm()" name="tertiary_color" class="form-control" value="{{ old('tertiary_color', $tertiary_color_options->name ?? 'cccccc')}}">
                         </div>
                     </form>
                 </div>
@@ -137,7 +189,13 @@
         zIndex: 9999
     }
     $(document).ready(function() {
+        var color1 = new jscolor('#primary_color', options);
+    });
+    $(document).ready(function() {
         var color2 = new jscolor('#secondary_color', options);
+    });
+    $(document).ready(function() {
+        var color3 = new jscolor('#tertiary_color', options);
     });
 
     function submitHomePageForm() {
@@ -198,10 +256,10 @@
     }
 
 
-    function submitFontForm() {
+    function submitRegularFontForm() {
         //console.log("fg4rg");
         // e.preventDefault();
-        var form = document.getElementById('save_fonts');
+        var form = document.getElementById('save_regular_fonts');
         var formData = new FormData(form);
         var data_uri = "{{route('styling.updateFont')}}";
 
@@ -228,7 +286,66 @@
         });
     }
 
-    function submitColorForm() {
+    function submitMediumFontForm() {
+        //console.log("fg4rg");
+        // e.preventDefault();
+        var form = document.getElementById('save_medium_fonts');
+        var formData = new FormData(form);
+        var data_uri = "{{route('styling.updateFont')}}";
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: data_uri,
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                if (response.status == 'success') {
+                    console.log(response.message);
+                }
+            }
+        });
+    }
+
+    function submitBoldFontForm() {
+        //console.log("fg4rg");
+        // e.preventDefault();
+        var form = document.getElementById('save_bold_fonts');
+        var formData = new FormData(form);
+        var data_uri = "{{route('styling.updateFont')}}";
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: data_uri,
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                if (response.status == 'success') {
+                    console.log(response.message);
+                }
+            }
+        });
+    }
+    function submitPrimaryColorForm() {
         var form = document.getElementById('save_colors');
         var formData = new FormData(form);
         var data_uri = "{{route('styling.updateColor')}}";
