@@ -29,11 +29,7 @@ class OrderProduct extends Model{
       return $this->hasMany(OrderProduct::class, 'vendor_id', 'vendor_id')->orderBy('order_vendor_products.created_at', 'asc')->orderBy('order_vendor_products.vendor_id', 'asc');
     }
     public function translation($langId = 0){
-      if($langId > 0){
-        return $this->hasOne('App\Models\ProductTranslation','product_id', 'product_id')->where('language_id', $langId); 
-      }else{
-        return $this->hasMany('App\Models\ProductTranslation', 'product_id', 'product_id'); 
-      }
+      return $this->hasOne('App\Models\ProductTranslation','product_id', 'product_id')->where('language_id', $langId); 
     }
     public function getImageAttribute($value){
       $values = array();
