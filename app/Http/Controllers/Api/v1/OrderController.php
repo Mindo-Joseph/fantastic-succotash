@@ -24,8 +24,8 @@ class OrderController extends Controller {
         $orders = OrderVendor::where('user_id', $user->id)->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
-            $order->user_name = $order->user->name;
-            $order->user_image = $order->user->image;
+            $order->user_name = $user->name;
+            $order->user_image = $user->image;
             $order->date_time = convertDateTimeInTimeZone($order->orderDetail->created_at, $user->timezone);
             $order->payment_option_title = $order->orderDetail->paymentOption->title;
             $order->order_number = $order->orderDetail->order_number;
