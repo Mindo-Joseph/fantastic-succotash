@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Front;
-
+use Timezonelist;
 use App\Models\{UserWishlist, User, Product, UserAddress, UserRefferal, ClientPreference, Client, Order, Transaction};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Front\FrontController;
@@ -70,14 +70,16 @@ class ProfileController extends FrontController
      */
     public function profile(Request $request, $domain = '')
     {
-        $langId = Session::get('customerLanguage');
+        $timezone_list = Timezonelist::create('timezone', null, [
+            'id'    => 'timezone',
+            'class' => 'styled',
+        ]);
         $curId = Session::get('customerCurrency');
-        $user = User::with('country', 'address')->select('name', 'email', 'phone_number', 'type', 'country_id')
-                    ->where('id', Auth::user()->id)->first();
-
-        $refferal_code = UserRefferal::where('user_id', Auth::user()->id)->first();
+        $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        return view('frontend/account/profile')->with(['user' => $user, 'navCategories' => $navCategories, 'userRefferal' => $refferal_code]);
+        $user = User::with('country', 'address')->select('name', 'email', 'phone_number', 'type', 'country_id')->where('id', Auth::user()->id)->first();
+        $refferal_code = UserRefferal::where('user_id', Auth::user()->id)->first();
+        return view('frontend.account.profile')->with(['user' => $user, 'navCategories' => $navCategories, 'userRefferal' => $refferal_code,'timezone_list' => $timezone_list]);
     }
 
     /**
