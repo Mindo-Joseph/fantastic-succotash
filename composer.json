@@ -40,6 +40,7 @@
         "r0bdiablo/laravel5-phumbor": "^1.0",
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "rivalex/laravel-intl": "^1.1",
+        "sentry/sentry-laravel": "^2.7",
         "socialiteproviders/apple": "^5.0",
         "spatie/geocoder": "^3.10",
         "staudenmeir/laravel-adjacency-list": "^1.0",

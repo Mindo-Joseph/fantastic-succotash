@@ -5,7 +5,9 @@ Route::domain('{subdomain}.myorder.com')->middleware(['subdomain', 'domain'])->g
     Route::get('/productDetail/{id}','Front\ProductPageController@index')->name('productDetail');
 });*/
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-
+Route::get('/debug-sentry', function () {
+    throw new Exception('My first Sentry error!');
+});
 Route::group(['middleware' => ['domain']], function () {
 	Route::get('dispatch-order-status-update/{id?}', 'Front\DispatcherController@dispatchOrderStatusUpdate')->name('dispatch-order-update'); // Order Status update Dispatch
 	Route::get('demo', [
