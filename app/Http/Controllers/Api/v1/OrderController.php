@@ -28,6 +28,7 @@ class OrderController extends Controller {
             $order->user_image = $order->user->image;
             $order->date_time = convertDateTimeInTimeZone($order->orderDetail->created_at, $user->timezone);
             $order->payment_option_title = $order->orderDetail->paymentOption->title;
+            $order->order_number = $order->orderDetail->order_number;
             $product_details = [];
             foreach ($order->products as $product) {
                 $order_item_count += $product->quantity;
@@ -43,6 +44,7 @@ class OrderController extends Controller {
             unset($order->products);
             unset($order->paymentOption);
             unset($order->payment_option_id);
+            unset($order->orderDetail);
         }
     	return $this->successResponse($orders, 'Order placed successfully.', 201);
     }

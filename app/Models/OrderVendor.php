@@ -20,7 +20,7 @@ class OrderVendor extends Model{
 	    return $this->hasOne('App\Models\User' , 'id', 'user_id'); 
 	}
     public function products(){
-	    return $this->hasMany('App\Models\OrderProduct' , 'order_id', 'order_id'); 
+	    return $this->hasMany('App\Models\OrderProduct' , 'vendor_id', 'vendor_id'); 
 	}
 	
 	public function coupon(){
