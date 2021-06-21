@@ -72,12 +72,13 @@ class StoreController extends Controller{
 						   $query->where('vendor_id', $is_selected_vendor_id);
 						})->paginate($paginate);
 			foreach ($order_list as $key => $order) {
+				$order_status = [];
+				$product_details = [];
 				$order_item_count = 0;
 				$order->user_name = $order->user->name;
 				$order->user_image = $order->user->image;
 				$order->date_time = convertDateTimeInTimeZone($order->created_at, $user->timezone);
 				$order->payment_option_title = $order->paymentOption->title;
-				$product_details = [];
 				foreach ($order->vendors as $vendor) {
 					$vendor_order_status = VendorOrderStatus::where('order_id', $order->id)->where('vendor_id', $vendor->id)->first();
 					if($vendor_order_status){
