@@ -26,6 +26,13 @@ class OrderController extends BaseController{
             });
         }
         $orders = $orders->paginate(10);
+        foreach ($orders as $order) {
+            foreach ($order->vendors as $vendor) {
+                foreach ($vendor->products as $product) {
+                    $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
+                }
+            }
+        }
         return view('backend.order.index', compact('orders'));
     }
 
@@ -46,6 +53,11 @@ class OrderController extends BaseController{
                 'vendors.products' => function($query) use ($vendor_id){
                     $query->where('vendor_id', $vendor_id);
                 }))->findOrFail($order_id);
+        foreach ($order->vendors as $key => $vendor) {
+            foreach ($vendor->products as $key => $product) {
+                $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
+            }
+        }
         $order_status_options = OrderStatusOption::all();
         $dispatcher_status_options = DispatcherStatusOption::all();
         $vendor_order_statuses = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->get();

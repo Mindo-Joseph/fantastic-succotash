@@ -68,7 +68,7 @@
                                 <div class="product-slick">
                                     @if(!empty($product->media))
                                     @foreach($product->media as $k => $img)
-                                    <div class="image_mask"><img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" alt="" src="{{$img->image->path['proxy_url'].'600/800'.$img->image->path['image_path']}}"></div>
+                                        <div class="image_mask"><img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" alt="" src="{{$img->image->path['proxy_url'].'600/800'.$img->image->path['image_path']}}"></div>
                                     @endforeach
                                     @endif
                                 </div>
@@ -212,6 +212,7 @@
                                             </ul>
                                         </div>
                                     </div>
+
                                     <!--<div class="border-product">
                                         <h6 class="product-title">share it</h6>
                                         <div class="product-icon">
@@ -232,12 +233,12 @@
                                         <h6 class="product-title">Time Reminder</h6>
                                         <div class="timer">
                                             <p id="demo"><span>25 <span class="padding-l">:</span> <span
-                                                        class="timer-cal">Days</span> </span><span>22 <span
-                                                        class="padding-l">:</span> <span
-                                                        class="timer-cal">Hrs</span> </span><span>13 <span
-                                                        class="padding-l">:</span> <span
-                                                        class="timer-cal">Min</span> </span><span>57 <span
-                                                        class="timer-cal">Sec</span></span>
+                                                class="timer-cal">Days</span> </span><span>22 <span
+                                                class="padding-l">:</span> <span
+                                                class="timer-cal">Hrs</span> </span><span>13 <span
+                                                class="padding-l">:</span> <span
+                                                class="timer-cal">Min</span> </span><span>57 <span
+                                                class="timer-cal">Sec</span></span>
                                             </p>
                                         </div>
                                     </div> -->

@@ -32,21 +32,9 @@ class OrderController extends Controller {
             $order->payment_option_title = $order->paymentOption->title;
             $product_details = [];
             foreach ($order->products as $product) {
-                $image = [];
-                foreach ($product->variant as $key => $variant) {
-                    if($variant->media){
-                        foreach ($variant->media as $media_value) {
-                            $image = $variant->pimage->image;
-                        }
-                    }else{
-                        foreach ($variant->media as $media_value) {
-                            $image = $variant->image;
-                        }
-                    }
-                }
                 $order_item_count += $product->quantity;
                 $product_details[]= array(
-                    'image' => $image,
+                    'image_path' => $product->media->first() ? $product->media->first()->image->path : $product->image,
                     'price' => $product->price,
                     'qty' => $product->quantity,
                 );
@@ -87,9 +75,10 @@ class OrderController extends Controller {
                     'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address']
                 )->where('user_id', $user->id)->where('id', $order_id)->first();
             }
-            if($order->vendors){
+            if($order){
                 $order->user_name = $order->user->name;
                 $order->user_image = $order->user->image;
+                $order->payment_option_title = $order->paymentOption->title;
     	    	foreach ($order->vendors as $vendor) {
     				$couponData = [];
     				$payable_amount = 0;
@@ -100,6 +89,7 @@ class OrderController extends Controller {
                         $product_addons = [];
                         $variant_options = [];
     	    			$order_item_count += $product->quantity;
+                        $product->image_path = $product->media->first() ? $product->media->first()->image->path : $product->image;
                         if($product->pvariant){
                             foreach ($product->pvariant->vset as $variant_set_option) {
                                 $variant_options [] = array(
