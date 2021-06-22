@@ -16,18 +16,20 @@ class AppStyling extends Model
 
     public static function getSelectedData()
     {
+        $app_styles_array = [];
         $app_styles = AppStyling::select('id','name')->with('styleOption')->get();
         foreach ($app_styles as $app_style) {
             $key_name = str_replace(" ","_",strtolower($app_style->name));;
             if($app_style->name == "Tab Bar Style" || $app_style->name == "Home Page Style"){
-                $app_style->$key_name = $app_style->styleOption->template_id;
+                $template_id = $app_style->styleOption->template_id;
             }else {
-                $app_style->$key_name = $app_style->styleOption->name;
+                $template_id = $app_style->styleOption->name;
             }
-            unset($app_style->id);
-            unset($app_style->name);
-            unset($app_style->styleOption);
+            $app_styles_array[]=array(
+                'key' => $key_name,
+                'value' => $template_id,
+            );
         }
-        return $app_styles;
+        return (object)$app_styles_array;
     }
 }
