@@ -68,7 +68,7 @@ $timezone = Auth::user()->timezone;
                                             <div class="col-7 col-sm-4">
                                                 <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
                                                     @foreach($vendor->products as $product)
-                                                        @if($vendor->vendor_id == $product->vendor_id && $vendor->order_id == $product->order_id)
+                                                        @if($vendor->vendor_id == $product->vendor_id)
                                                             <li class="text-center">
                                                                 <img src="{{ $product->image_path['proxy_url'].'74/100'.$product->image_path['image_path']}}" alt="">
                                                                 <span class="item_no position-absolute">x{{$product->quantity}}</span>
