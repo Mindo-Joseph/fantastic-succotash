@@ -41,5 +41,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('wishlist/update/{pid?}', 'Api\v1\ProfileController@updateWishlist');
         Route::get('mystore/product/list', 'Api\v1\StoreController@getMyStoreProductList');
         Route::get('primary/address/{id}', 'Api\v1\AddressController@postUpdatePrimaryAddress');
+
+        // Rating & review 
+        Route::post('update-product-rating', 'Api\v1\RatingController@updateProductRating');
+        Route::get('get-product-rating', 'Api\v1\RatingController@getProductRating');
     });
 });

@@ -34,6 +34,13 @@ class OrderProduct extends Model{
     public function translation(){
       return $this->hasOne('App\Models\ProductTranslation','product_id', 'product_id'); 
     }
+
+    public function productRating(){
+      return $this->hasOne('App\Models\OrderProductRating', 'order_vendor_product_id', 'id');
+    }
+    public function order(){
+      return $this->belongsTo('App\Models\Order', 'order_id', 'id')->select('id', 'order_number', 'user_id');
+  }
     public function getImageAttribute($value){
       $values = array();
       $img = 'default/default_image.png';
