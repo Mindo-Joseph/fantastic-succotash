@@ -49,7 +49,7 @@ $timezone = Auth::user()->timezone;
                                 $total_order_price = 0;
                                 $total_tax_order_price = 0;
                             @endphp
-                            @foreach($order->vendors->where('order_id', $order->id)->get() as $k => $vendor)
+                            @foreach($order->vendors as $k => $vendor)
                             @php
                                 $product_total_count = 0;
                                 $product_taxable_amount = 0;
@@ -67,7 +67,7 @@ $timezone = Auth::user()->timezone;
                                             </div>
                                             <div class="col-7 col-sm-4">
                                                 <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
-                                                    @foreach($vendor->products->where('order_id', $order->id)->get() as $product)
+                                                    @foreach($vendor->products as $product)
                                                         @if($vendor->vendor_id == $product->vendor_id && $vendor->order_id == $product->order_id)
                                                             <li class="text-center">
                                                                 <img src="{{ $product->image_path['proxy_url'].'74/100'.$product->image_path['image_path']}}" alt="">
