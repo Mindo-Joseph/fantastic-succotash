@@ -156,9 +156,9 @@ $timezone = Auth::user()->timezone;
                             <p class="mb-1"><span class="fw-semibold">Order ID :</span> #{{$order->order_number}}</p>
                             @if($order->payment_option_id == 1)
                             <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Cash On Delivery</p>
-                            @elseif($order->payment_method == 3)
+                            @elseif($order->payment_option_id == 3)
                             <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Paypal </p>
-                            @elseif($order->payment_method == 4)
+                            @elseif($order->payment_option_id == 4)
                             <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Stripe</p>
                             @endif
                         </div>
