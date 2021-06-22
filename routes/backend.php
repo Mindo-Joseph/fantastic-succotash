@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Front\SearchController;
 use App\Http\Controllers\Client\DownloadFileController;
+use App\Http\Controllers\Client\Accounting\OrderController;
 
 
 
@@ -11,14 +12,12 @@ Route::post('admin/login/client', 'Auth\LoginController@clientLogin')->name('cli
 Route::get('admin/wrong/url', 'Auth\LoginController@wrongurl')->name('wrong.client');
 
 Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'], function () {
-    //Route::middleware('auth')->group(function () {
-
     Route::any('/logout', 'Auth\LoginController@logout')->name('client.logout');
     Route::get('profile', 'Client\DashBoardController@profile')->name('client.profile');
     Route::get('dashboard', 'Client\DashBoardController@index')->name('client.dashboard');
+    Route::get('account/orders', [OrderController::class, 'index'])->name('account.orders');
     Route::put('profile/{id}', 'Client\DashBoardController@updateProfile')->name('client.profile.update');
     Route::post('password/update', 'Client\DashBoardController@changePassword')->name('client.password.update');
-
     Route::get('configure', 'Client\ClientPreferenceController@index')->name('configure.index');
     Route::get('customize', 'Client\ClientPreferenceController@customize')->name('configure.customize');
     Route::post('configUpdate/{code}', 'Client\ClientPreferenceController@update')->name('configure.update');
@@ -106,15 +105,10 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::resource('celebrity', 'Client\CelebrityController');
     Route::post('celebrity/changeStatus', 'Client\CelebrityController@changeStatus')->name('celebrity.changeStatus');
     Route::post('celebrity/getBrands', 'Client\CelebrityController@getBrandList')->name('celebrity.getBrands');
-
     Route::resource('wallet', 'Client\WalletController');
-
     Route::resource('promocode', 'Client\PromocodeController');
-    // Route::get('stripe/showForm', 'Client\PaymentController@showForm')->name('stripe.form');
-    // Route::post('stripe/make', 'Client\PaymentController@makePayment')->name('stripe.makePayment');
     Route::resource('payoption', 'Client\PaymentOptionController');
     Route::post('updateAll', 'Client\PaymentOptionController@updateAll')->name('payoption.updateAll');
-    // Route::resource('acl','Client\AclController'); # create manager/vendors with permission
 });
 
 

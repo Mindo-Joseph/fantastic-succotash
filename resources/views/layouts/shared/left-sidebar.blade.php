@@ -1,4 +1,4 @@
-<!-- ========== Left Sidebar Start ========== -->
+========== Left Sidebar Start ========== -->
 <div class="left-side-menu">
 
     <div class="h-100" data-simplebar>
@@ -57,7 +57,7 @@
                     </a>
                 </li>
                 @endif
-                <!-- <li>
+                <li>
                     <a href="#sidebaraccounting" data-toggle="collapse">
                     <span class="icon-customize_icon"></span>
                         <span> Accounting </span>
@@ -66,9 +66,9 @@
                     <div class="collapse" id="sidebaraccounting">
                         <ul class="nav-second-level">
                             <li>
-                                <a href="{{route('appStyling.index')}}">Order List</a>
+                                <a href="{{route('account.orders')}}">Order List</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="{{route('webStyling.index')}}">Loyality</a>
                             </li>
                             <li>
@@ -79,10 +79,10 @@
                             </li>
                             <li>
                                 <a href="{{route('webStyling.index')}}">Vendors</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
-                </li> -->
+                </li>
                 @if(in_array('VENDORS',$allowed) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="{{route('vendor.index')}}">
@@ -928,4 +928,4 @@
         </span>
     </a> -->
 </div>
-<!-- Left Sidebar End -->
+<!-- Left Sidebar End
