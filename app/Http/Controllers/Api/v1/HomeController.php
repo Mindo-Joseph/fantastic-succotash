@@ -12,7 +12,7 @@ use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory, BrandTranslation, Celebrity};
+use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory, BrandTranslation, Celebrity, UserVendor};
 
 class HomeController extends BaseController{
     use ApiResponser;
@@ -90,7 +90,8 @@ class HomeController extends BaseController{
                                     $q->select('brand_id', 'title')->where('language_id', $langId);
                                 }])->select('id', 'image')->where('status', '!=', $this->field_status)
                                 ->orderBy('position', 'asc')->get();
-            $homeData['is_admin'] = $user->is_admin;                  
+            $user_vendor_count = UserVendor::where('user_id', $user->id)->count();
+            $homeData['is_admin'] = $user_vendor_count > 0 ? 1 : 0;                  
             return $this->successResponse($homeData);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
