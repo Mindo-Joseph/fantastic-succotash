@@ -57,6 +57,32 @@
                     </a>
                 </li>
                 @endif
+                <!-- <li>
+                    <a href="#sidebaraccounting" data-toggle="collapse">
+                    <span class="icon-customize_icon"></span>
+                        <span> Accounting </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="sidebaraccounting">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="{{route('appStyling.index')}}">Order List</a>
+                            </li>
+                            <li>
+                                <a href="{{route('webStyling.index')}}">Loyality</a>
+                            </li>
+                            <li>
+                                <a href="{{route('webStyling.index')}}">Promo Codes</a>
+                            </li>
+                            <li>
+                                <a href="{{route('webStyling.index')}}">Taxes</a>
+                            </li>
+                            <li>
+                                <a href="{{route('webStyling.index')}}">Vendors</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li> -->
                 @if(in_array('VENDORS',$allowed) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="{{route('vendor.index')}}">

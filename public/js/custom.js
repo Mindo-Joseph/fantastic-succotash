@@ -128,6 +128,7 @@ $(document).ready(function() {
         }
     });
     $(document).on("click","#order_palced_btn",function() {
+        $('.alert-danger').html('');
         $.ajax({
             data: {},
             type: "POST",
@@ -143,10 +144,15 @@ $(document).ready(function() {
                     let payment_method_tab_pane_template = _.template($('#payment_method_tab_pane_template').html());
                     $("#v_pills_tabContent").append(payment_method_tab_pane_template({payment_options: response.data}));
                     $('#proceed_to_pay_modal').modal('show');
-
                     $('#proceed_to_pay_modal #total_amt').html($('#cart_total_payable_amount').html());
                     stripeInitialize();
                 }
+            },error: function(error){
+                var response = $.parseJSON(error.responseText);
+                let error_messages = response.message;
+                $.each(error_messages, function(key, error_message) {
+                    $('#min_order_validation_error_'+error_message.vendor_id).html(error_message.message).show();
+                });
             }
         });
     });

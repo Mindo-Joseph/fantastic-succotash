@@ -49,7 +49,12 @@
     <% _.each(cart_details.products, function(product, key){%>
         <thead>
             <tr>
-                <th colspan="6" style="background-color: #f3f7f9"><%= product.vendor.name %></th>
+                <th colspan="3" style="background-color: #f3f7f9">
+                    <%= product.vendor.name %>
+                </th>
+                <th colspan="3" style="background-color: #f3f7f9">
+                    <div class="countdownholder alert-danger" id="min_order_validation_error_<%= product.vendor.id %>" style="display:none;">Your cart will be expired in
+                </th>
             </tr>
         </thead>
         <tbody id="tbody_<%= product.vendor.id %>">
