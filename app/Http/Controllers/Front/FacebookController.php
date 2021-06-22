@@ -93,7 +93,6 @@ class FacebookController extends FrontController
     public function handleSocialCallback(Request $request, $domain = '', $driver = 'facebook')
     {
         try {
-            pr($driver);die;
             $customer = new User();
             if($driver == 'apple'){
                 $user = Socialite::driver($driver)->stateless();
