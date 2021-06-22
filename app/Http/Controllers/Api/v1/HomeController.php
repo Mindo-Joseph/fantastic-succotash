@@ -82,10 +82,10 @@ class HomeController extends BaseController{
             }
             $isVendorArea = 0;
             $langId = $user->language;
+            $categories = $this->categoryNav($langId);
             $homeData['vendors'] = $vendorData;
             $homeData['categories'] = $categories;
             $homeData['reqData'] = $request->all();
-            $categories = $this->categoryNav($langId);
             $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
                                     $q->select('brand_id', 'title')->where('language_id', $langId);
                                 }])->select('id', 'image')->where('status', '!=', $this->field_status)
