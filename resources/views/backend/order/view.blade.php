@@ -33,9 +33,9 @@ $timezone = Auth::user()->timezone;
                         </div>
                         <div class="row track-order-list">
                             <div class="col-lg-6">
-                                <button type="button" class="btn btn-danger waves-effect waves-light">
+                                <!-- <button type="button" class="btn btn-danger waves-effect waves-light">
                                     <i class="mdi mdi-close"></i>
-                                 </button>
+                                 </button> -->
                                 <ul class="list-unstyled" id="order_statuses">
                                     @foreach($order_status_options as $order_status_option)
                                     @php
@@ -91,6 +91,7 @@ $timezone = Auth::user()->timezone;
                                     $taxable_amount = 0;
                                     @endphp
                                     @foreach($vendor->products as $product)
+                                    @if($product->order_id == $order->id)
                                     @php
                                     $taxable_amount += $product->taxable_amount;
                                     $sub_total += $product->quantity * $product->price;
@@ -104,6 +105,7 @@ $timezone = Auth::user()->timezone;
                                         <td>$@money($product->price)</td>
                                         <td>$@money($product->quantity * $product->price)</td>
                                     </tr>
+                                    @endif
                                     @endforeach
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Sub Total :</th>
@@ -152,14 +154,12 @@ $timezone = Auth::user()->timezone;
                             <i class="mdi mdi-truck-fast h2 text-muted"></i>
                             <h5><b>UPS Delivery</b></h5>
                             <p class="mb-1"><span class="fw-semibold">Order ID :</span> #{{$order->order_number}}</p>
-                            @if($order->payment_method == 1)
-                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Credit Card</p>
-                            @elseif($order->payment_method == 2)
+                            @if($order->payment_option_id == 1)
                             <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Cash On Delivery</p>
-                            @elseif($order->payment_method == 3)
+                            @elseif($order->payment_option_id == 3)
                             <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Paypal </p>
-                            @elseif($order->payment_method == 4)
-                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Wallet</p>
+                            @elseif($order->payment_option_id == 4)
+                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Stripe</p>
                             @endif
                         </div>
                         <div class="text-center mt-2">

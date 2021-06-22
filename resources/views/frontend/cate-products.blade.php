@@ -300,7 +300,7 @@
         grid: false,
         min: 0,
         max: 50000,
-        from: 200,
+        from: 0,
         to: 50000,
         prefix: " "
     });

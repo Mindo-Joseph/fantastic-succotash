@@ -198,21 +198,21 @@ class AuthController extends BaseController{
         $user->auth_token = $token;
         $user->save();
         if($user->id > 0){
-            if($signReq->refferal_code != null){
+            if($signReq->refferal_code){
                 $refferal_amounts = ClientPreference::first();
                 if($refferal_amounts){
                     if($refferal_amounts->reffered_by_amount != null && $refferal_amounts->reffered_to_amount != null){
                         $reffered_by = UserRefferal::where('refferal_code', $signReq->refferal_code)->first();
-                            $user_refferd_by = $reffered_by->user_id;
-                            $user_refferd_by = User::where('id', $reffered_by->user_id)->first();
-                            if($user_refferd_by){
-                                //user reffered by amount
-                                $wallet_user_reffered_by = $user_refferd_by->wallet;
-                                $wallet_user_reffered_by->deposit($refferal_amounts->reffered_by_amount, ['refer_used_by:'.$user->id]);
-                                $wallet_user_reffered_by->balance;
-                                //user reffered to amount
-                                $wallet->deposit($refferal_amounts->reffered_to_amount);
-                                $wallet->balance;
+                        $user_refferd_by = $reffered_by->user_id;
+                        $user_refferd_by = User::where('id', $reffered_by->user_id)->first();
+                        if($user_refferd_by){
+                            //user reffered by amount
+                            $wallet_user_reffered_by = $user_refferd_by->wallet;
+                            $wallet_user_reffered_by->deposit($refferal_amounts->reffered_by_amount, ['Referral code used by <b>' . $signReq->name . '</b>']);
+                            $wallet_user_reffered_by->balance;
+                            //user reffered to amount
+                            $wallet->deposit($refferal_amounts->reffered_to_amount, ['You used refferal code of <b>' . $user_refferd_by->name . '</b>']);
+                            $wallet->balance;
                         }
                     }
                 }

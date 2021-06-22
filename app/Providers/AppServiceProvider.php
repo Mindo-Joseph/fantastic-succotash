@@ -38,14 +38,13 @@ class AppServiceProvider extends ServiceProvider
         }
         $this->connectDynamicDb($request);
         Paginator::useBootstrap();
-
         $favicon_url = asset('assets/images/favicon.png');
-        // $client_preferences = ClientPreference::where(['id' => 1])->first('favicon');
-        // if ($client_preferences) {
-        //     $favicon_url = $client_preferences->favicon['proxy_url'] . '600/400' . $client_preferences->favicon['image_path'];
-        // }
+        $client_preference_detail = ClientPreference::where(['id' => 1])->first();
+        if ($client_preference_detail) {
+            $favicon_url = $client_preference_detail->favicon['proxy_url'] . '600/400' . $client_preference_detail->favicon['image_path'];
+        }
         $client = Client::where(['id' => 1])->first();
-        view()->share('company_name', ucfirst($client->company_name) ?? 'Royo');
+        view()->share('client', $client);
         view()->share('favicon', $favicon_url);
     }
 
