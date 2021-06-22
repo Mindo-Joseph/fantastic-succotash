@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
             $favicon_url = $client_preference_detail->favicon['proxy_url'] . '600/400' . $client_preference_detail->favicon['image_path'];
         }
         $client = Client::where(['id' => 1])->first();
-        view()->share('company_name', ucfirst($client->company_name) ?? 'Royo');
+        view()->share('client', $client);
         view()->share('favicon', $favicon_url);
     }
 

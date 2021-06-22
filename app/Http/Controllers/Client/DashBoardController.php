@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country,User};
+use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country, Order, User};
 
 class DashBoardController extends BaseController{
 
@@ -28,7 +28,8 @@ class DashBoardController extends BaseController{
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index(){   
-        return view('backend/dashboard');
+        $total_revenue = Order::sum('payable_amount');
+        return view('backend/dashboard')->with(['total_revenue' => $total_revenue]);
     }
 
     public function profile(){
