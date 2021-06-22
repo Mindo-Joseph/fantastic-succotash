@@ -30,6 +30,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('banner/toggle', 'Client\BannerController@toggleAllBanner')->name('banner.toggle');
 
     Route::get('web-styling', 'Client\WebStylingController@index')->name('webStyling.index');
+    Route::post('web-styling/updateWebStyles', 'Client\WebStylingController@updateWebStyles')->name('styling.updateWebStyles');
 
     Route::get('app-styling', 'Client\AppStylingController@index')->name('appStyling.index');
     Route::post('app-styling/updateFont', 'Client\AppStylingController@updateFont')->name('styling.updateFont');
