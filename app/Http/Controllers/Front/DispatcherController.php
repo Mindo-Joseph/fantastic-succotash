@@ -27,6 +27,11 @@ class DispatcherController extends FrontController
                     'order_id' =>  $checkiftokenExist->order_id,
                     'dispatcher_status_option_id' =>  $request->dispatcher_status_option_id,
                     'vendor_id' =>  $checkiftokenExist->vendor_id ]);
+
+            if(isset($request->dispatch_traking_url) && !empty($request->dispatch_traking_url))
+            {
+                $update_tr = OrderVendor::where('web_hook_code',$web_hook_code)->update(['dispatch_traking_url' =>  $request->dispatch_traking_url]);
+            }
             
                     DB::commit();
                     $message = "Order status updated.";

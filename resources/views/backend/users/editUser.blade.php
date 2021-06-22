@@ -106,20 +106,43 @@
                                             
                                         </thead>
                                         <tbody>
+                                            @php 
+                                            $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
+                                            @endphp
                                             @foreach($permissions as $singlepermission)
-                                            <tr>
-                                                <td>
-                                                    <h5 class="m-0 font-weight-normal">{{ ucwords(strtolower($singlepermission->name)) }}</h5>
-                                                </td>
-        
-                                                <td>
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input event_type" data-id="{{ $singlepermission->id }}" data-event-type="permission" id="permission_{{ $singlepermission->id}}" name="permissions[]" value="{{ $singlepermission->id }}" @if(in_array($singlepermission->id, $userpermissions)) checked @endif >
-                                                        
-                                                        <label class="custom-control-label" for="permission_{{ $singlepermission->id}}"></label>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            @if($singlepermission->name == 'CELEBRITY')
+                                                
+                                                    @if(!empty($brity) && $brity->celebrity_check == 1)
+                                                    <tr>
+                                                    <td>
+                                                        <h5 class="m-0 font-weight-normal">{{ ucwords(strtolower($singlepermission->name)) }}</h5>
+                                                    </td>
+            
+                                                    <td>
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="checkbox" class="custom-control-input event_type" data-id="{{ $singlepermission->id }}" data-event-type="permission" id="permission_{{ $singlepermission->id}}" name="permissions[]" value="{{ $singlepermission->id }}" @if(in_array($singlepermission->id, $userpermissions)) checked @endif >
+                                                            
+                                                            <label class="custom-control-label" for="permission_{{ $singlepermission->id}}"></label>
+                                                        </div>
+                                                    </td>
+                                                    </tr>
+                                                    @endif
+
+                                            @else   
+                                                <tr>
+                                                    <td>
+                                                        <h5 class="m-0 font-weight-normal">{{ ucwords(strtolower($singlepermission->name)) }}</h5>
+                                                    </td>
+            
+                                                    <td>
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="checkbox" class="custom-control-input event_type" data-id="{{ $singlepermission->id }}" data-event-type="permission" id="permission_{{ $singlepermission->id}}" name="permissions[]" value="{{ $singlepermission->id }}" @if(in_array($singlepermission->id, $userpermissions)) checked @endif >
+                                                            
+                                                            <label class="custom-control-label" for="permission_{{ $singlepermission->id}}"></label>
+                                                        </div>
+                                                    </td>
+                                                </tr> 
+                                            @endif
                                             @endforeach
         
                                         </tbody>
@@ -137,7 +160,9 @@
                                             </tr>
                                             
                                         </thead>
-                                        <tbody>
+                                        <tbody> 
+                                           
+                                            
                                             @foreach($vendors as $vendor)
                                             <tr>
                                                 <td>
