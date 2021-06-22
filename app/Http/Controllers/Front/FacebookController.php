@@ -93,16 +93,14 @@ class FacebookController extends FrontController
     public function handleSocialCallback(Request $request, $domain = '', $driver = 'facebook')
     {
         try {
-
+            pr($driver);die;
             $customer = new User();
             if($driver == 'apple'){
                 $user = Socialite::driver($driver)->stateless();
             }else{
                 $usr = $this->configDriver($request, $domain, $driver)->stateless();
                 $user = $usr->user();
-                pr($user);die;
             }
-
             $customer = User::where('status', '!=', 2);
             if($driver == 'facebook'){
                 $customer = $customer->where('facebook_auth_id', $user->getId());
@@ -113,17 +111,15 @@ class FacebookController extends FrontController
                 $customer = $customer->where('google_auth_id', $user->getId());
             }
             $customer = $customer->first();
-
             if($customer){
                 Auth::login($customer);
                 return redirect()->route('userHome');
+            }else{
+                $customer = new User();
             }
-
             $eml = $user->getId().'@twitter-xyz.com';
-
             $customer->name = $user->getName();
             $customer->email = empty($user->getEmail()) ? $eml : $user->getEmail();
-
             if($driver == 'facebook'){
                 $customer->facebook_auth_id = $user->getId();
             } elseif ($driver == 'twitter'){
@@ -139,7 +135,6 @@ class FacebookController extends FrontController
             $customer->is_email_verified = 1;
             $customer->is_phone_verified = 1;
             $customer->save();
-
             if($customer->id > 0){
                 $user_device[] = [
                     'user_id' => $customer->id,
@@ -148,7 +143,6 @@ class FacebookController extends FrontController
                     'access_token' => ''
                 ];
                 UserDevice::insert($user_device);
-
                 Auth::login($customer);
                 return redirect()->route('userHome');
             }
