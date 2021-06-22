@@ -28,4 +28,7 @@ class Order extends Model{
 	public function payment(){
 	    return $this->hasOne('App\Models\Payment' , 'order_id', 'id'); 
 	}
+	public function orderStatusVendor(){
+	    return $this->hasMany('App\Models\VendorOrderStatus' , 'order_id', 'id'); 
+	}
 }
