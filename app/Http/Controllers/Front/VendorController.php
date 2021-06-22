@@ -7,6 +7,7 @@ use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vend
 use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Hash;
 
@@ -40,7 +41,7 @@ class VendorController extends FrontController
         $brands = Product::with(['brand.translation'=> function($q) use($langId){
                     $q->select('title', 'brand_id')->where('brand_translations.language_id', $langId);
                 }])->select('brand_id')->where('vendor_id', $vid)
-                ->where('brand_id', '>', 1)->groupBy('brand_id')->get();
+                ->where('brand_id', '>', 0)->groupBy('brand_id')->get();
         $listData = Product::with(['media.image',
                         'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
@@ -108,6 +109,7 @@ class VendorController extends FrontController
                 $multiArray[$request->variants[$key]][] = $value;
             }
         }
+        DB::enableQueryLog();
         $variantIds = $productIds = array();
         if(!empty($multiArray)){
             foreach ($multiArray as $key => $value) {
@@ -153,6 +155,7 @@ class VendorController extends FrontController
                     ->where('is_live', 1)
                     ->whereIn('id', function($qr) use($startRange, $endRange){ 
                         $qr->select('product_id')->from('product_variants')
+                            ->where('status', 1)
                             ->where('price',  '>=', $startRange)
                             ->where('price',  '<=', $endRange);
                         });
