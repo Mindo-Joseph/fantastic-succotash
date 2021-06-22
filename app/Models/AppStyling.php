@@ -16,7 +16,6 @@ class AppStyling extends Model
 
     public static function getSelectedData()
     {
-
         $app_styles = AppStyling::select('id','name')->with('styleOption')->get();
         foreach ($app_styles as $app_style) {
             $key_name = str_replace(" ","_",strtolower($app_style->name));;

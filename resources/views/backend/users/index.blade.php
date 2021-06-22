@@ -141,7 +141,7 @@
                         </table>
                     </div>
                     <div class="pagination pagination-rounded justify-content-end mb-0">
-                        {{-- $users->links() --}}
+                        {{ $users->links() }}
                     </div>
                 </div>
             </div>
