@@ -7,3 +7,9 @@
 <meta name="keywords" content="Royoorders">
 <meta name="author" content="Royoorders">
 <link rel="shortcut icon" href="<?= $favicon ?>">
+
+<style>
+    :root {
+  --theme-deafult: green; }
+
+</style>
