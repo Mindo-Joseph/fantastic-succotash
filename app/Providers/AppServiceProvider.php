@@ -40,10 +40,10 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
 
         $favicon_url = asset('assets/images/favicon.png');
-        $client_preferences = ClientPreference::where(['id' => 1])->first('favicon');
-        if ($client_preferences) {
-            $favicon_url = $client_preferences->favicon['proxy_url'] . '600/400' . $client_preferences->favicon['image_path'];
-        }
+        // $client_preferences = ClientPreference::where(['id' => 1])->first('favicon');
+        // if ($client_preferences) {
+        //     $favicon_url = $client_preferences->favicon['proxy_url'] . '600/400' . $client_preferences->favicon['image_path'];
+        // }
         $client = Client::where(['id' => 1])->first();
         view()->share('company_name', ucfirst($client->company_name) ?? 'Royo');
         view()->share('favicon', $favicon_url);
