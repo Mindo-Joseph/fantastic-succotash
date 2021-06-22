@@ -41,23 +41,22 @@ class ProfileController extends FrontController
             $client_name = $client->name;
             $mail_from = $data->mail_from;
             $sendto = $request->email;
-            try {
-                Mail::send(
-                    'email.verify',
-                    [
+            try{
+                Mail::send('email.verify',[
                         'customer_name' => "Link from ".Auth::user()->name,
                         'code_text' => 'Register yourself using this refferal code below to get bonus offer',
                         'code' => $otp,
                         'logo' => $client->logo['original'],
-                        'link' => "http://local.myorder.com/user/register?refferal_code=".$otp,
-                    ],
-                    function ($message) use ($sendto, $client_name, $mail_from) {
-                        $message->from($mail_from, $client_name);
-                        $message->to($sendto)->subject('OTP to verify account');
-                    }
-                );
-                $notified = 1;
-            } catch (\Exception $e) {
+                        'link'=> "http://local.myorder.com/user/register?refferal_code=".$otp,
+                ],
+                function ($message) use($sendto, $client_name, $mail_from) {
+                    $message->from($mail_from, $client_name);
+                    $message->to($sendto)->subject('OTP to verify account');
+                });
+                $response['send_email'] = 1;
+            }
+            catch(\Exception $e){
+                return response()->json(['data' => $response]);
             }
         }
         return response()->json(array('success' => true, 'message' => 'Send Successfully'));
