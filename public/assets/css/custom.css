@@ -1312,3 +1312,15 @@ i.mdi.mdi-exclamation-thick {
     pointer-events: none;
 }
 
+#sidebar-menu > ul > li > a {
+    border-left: 3px solid transparent;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+#sidebar-menu > ul > li:hover > a,#sidebar-menu > ul > li.active > a {
+    border-color: #343a40;
+    background: linear-gradient(270deg, rgb(42 31 32 / 12%) 0%, rgb(0 0 0 / 0%) 92.47%);
+}
+

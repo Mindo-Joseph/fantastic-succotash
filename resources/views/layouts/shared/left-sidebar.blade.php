@@ -93,7 +93,7 @@
                     <a href="#sidebarstyling" data-toggle="collapse">
                     <span class="icon-customize_icon"></span>
                         <span> Styling </span>
-                        <span class="menu-arrow"></span>
+                        <!-- <label class="menu-arrow"></label> -->
                     </a>
                     <div class="collapse" id="sidebarstyling">
                         <ul class="nav-second-level">
