@@ -282,6 +282,17 @@
                                     </div> -->
                                     <div class="tab-pane fade" id="top-review" role="tabpanel" aria-labelledby="review-top-tab">
                                         <form class="theme-form">
+                                        <div id="starrate" class="starrate mt-3 d-flex align-items-center" data-val="2.5" data-max="5">
+                                            <span class="ctrl"></span>
+                                            <span class="cont m-1">
+                                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                                            </span>
+                                            <div id="test" class="col-3 mr-auto display-4">2.5</div>                    
+                                        </div>
                                             <div class="form-row">
                                                 <div class="col-md-12">
                                                     <div class="media">
@@ -294,7 +305,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <!-- <div class="col-md-6">
                                                     <label for="name">Name</label>
                                                     <input type="text" class="form-control" id="name" placeholder="Enter Your name" required>
                                                 </div>
@@ -305,7 +316,7 @@
                                                 <div class="col-md-12">
                                                     <label for="review">Review Title</label>
                                                     <input type="text" class="form-control" id="review" placeholder="Enter your Review Subjects" required>
-                                                </div>
+                                                </div> -->
                                                 <div class="col-md-12">
                                                     <label for="review">Review Title</label>
                                                     <textarea class="form-control" placeholder="Wrire Your Testimonial Here" id="exampleFormControlTextarea1" rows="6"></textarea>
@@ -327,14 +338,13 @@
     </div>
 </section>
 
-<!-- product section start -->
-<section class="section-b-space ratio_asos">
+<section class="">
     <div class="container">
         <div class="row">
-            <div class="col-12 product-related">
+            <div class="col-12 ">
                 <h2>Related products</h2>    
                 
-                <div id="starrate" class="starrate mt-3 d-flex align-items-center" data-val="2.5" data-max="5">
+                <!-- <div id="starrate" class="starrate mt-3 d-flex align-items-center" data-val="2.5" data-max="5">
                     <span class="ctrl"></span>
                     <span class="cont m-1">
                         <i class="fa fa-star-o" aria-hidden="true"></i>
@@ -344,9 +354,18 @@
                         <i class="fa fa-star-o" aria-hidden="true"></i>
                     </span>
                     <div id="test" class="col-3 mr-auto display-4">2.5</div>                    
-                </div>
+                </div> -->
                 
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- product section start -->
+<section class="section-b-space ratio_asos">
+    <div class="container">
+        <div class="row">
+            
         </div>
         <div class="row search-product">
             <div class="col-xl-2 col-md-4 col-sm-6">

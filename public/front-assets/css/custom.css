@@ -2004,6 +2004,21 @@ footer .form-control {
     font-size: 20px;
     vertical-align: middle;
     color: #000;
+    position: absolute;
+    left: 3px;
+}
+.footer-theme .sub-title  .contact_link li {
+    padding-left: 34px;
+}
+
+.lft-icon {
+    position: absolute;
+    left: 0;
+    top: 5px;
+}
+
+.footer-theme .sub-title .contact_link li a {
+    position: initial;
 }
 
 .footer-theme .sub-title .contact_link li:hover a,.contact_link li:hover i {

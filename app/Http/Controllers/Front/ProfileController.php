@@ -72,7 +72,7 @@ class ProfileController extends FrontController
     {
         $timezone_list = Timezonelist::create('timezone', null, [
             'id'    => 'timezone',
-            'class' => 'styled',
+            'class' => 'styled form-control',
         ]);
         $curId = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');

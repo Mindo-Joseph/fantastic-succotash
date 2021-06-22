@@ -85,6 +85,7 @@
                     <div class="footer-contant">
                         <ul class="contact_link">
                             <li>
+                                <span class="lft-icon"><img src="{{asset('front-assets/images/icon/address.png')}}" class="img-fluid mr-1" alt=""></span>
                                 Level- 26, Dubai World Trade Centre Tower,
                                 Sheikh Rashid Tower, Sheikh Zayed Rd, Dubai, UAE
                             </li>
