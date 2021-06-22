@@ -12,9 +12,9 @@ class AppStylingSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-        
+    public function run(){
+        DB::table('app_stylings')->truncate();    
+        DB::table('app_styling_options')->truncate();    
         $app_styling = AppStyling::insertGetId([
             'name' => 'Regular Font',
             'type' => '2'
