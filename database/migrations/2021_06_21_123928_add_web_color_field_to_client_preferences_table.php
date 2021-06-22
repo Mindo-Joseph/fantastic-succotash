@@ -27,8 +27,8 @@ class AddWebColorFieldToClientPreferencesTable extends Migration
     public function down()
     {
         Schema::table('client_preferences', function (Blueprint $table) {
-            $table->dropColumn('favicon');
-            $table->dropColumn('web_color');
+            // $table->dropColumn('favicon');
+            // $table->dropColumn('web_color');
         });
     }
 }

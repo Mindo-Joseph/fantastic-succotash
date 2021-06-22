@@ -12,8 +12,8 @@
                 	<i class="fa fa-check-circle" aria-hidden="true"></i>
                     <h2>thank you</h2>
                     <p>Payment is successfully processsed and your order is on the way</p>
-                    @if($order->payment_method != 2)
-                    	<p>Transaction ID:267676GHERT105467</p>
+                    @if($order->payment_method != 1)
+                    	<p>Transaction ID: {{$order->payment->transaction_id}}</p>
                     @endif
                 </div>
             </div>
@@ -51,20 +51,19 @@
 	                        <div class="col-3 order_detail">
 	                            <div>
 	                                <h4>price</h4>
-	                                <h5>$@money($product->price)</h5>
+	                                <h5>{{Session::get('currencySymbol')}}@money($product->price)</h5>
 	                            </div>
 	                        </div>
 	                    </div>
                     @endforeach
                     <div class="total-sec">
                         <ul>
-                            <li>subtotal <span>$@money($order->total_amount)</span></li>
-                            <!-- <li>shipping <span>$12.00</span></li> -->
-                            <li>tax(GST) <span>$@money($order->taxable_amount)</span></li>
+                            <li>subtotal <span>{{Session::get('currencySymbol')}}@money($order->total_amount)</span></li>
+                            <li>tax(GST) <span>{{Session::get('currencySymbol')}}@money($order->taxable_amount)</span></li>
                         </ul>
                     </div>
                     <div class="final-total">
-                        <h3>total <span>$@money($order->payable_amount)</span></h3>
+                        <h3>total <span>{{Session::get('currencySymbol')}}@money($order->payable_amount)</span></h3>
                     </div>
                 </div>
             </div>
@@ -86,7 +85,7 @@
                     </div>
                     <div class="col-sm-12 payment-mode">
                         <h4>payment method</h4>
-                        <p>Pay on Delivery (Cash/Card). Cash on delivery (COD) available. Card/Net banking acceptance subject to device availability.</p>
+                        <p>{{$order->paymentOption->title}}</p>
                     </div>
                 </div>
             </div>
