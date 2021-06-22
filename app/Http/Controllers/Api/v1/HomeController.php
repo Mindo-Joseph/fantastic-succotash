@@ -27,8 +27,8 @@ class HomeController extends BaseController{
             $homeData['profile'] = Client::with('preferences')->select('company_name', 'code', 'logo', 'company_address', 'phone_number', 'email')->first();
             $app_styling_detail = AppStyling::getSelectedData();
             foreach ($app_styling_detail as $app_styling) {
-                $key = $app_styling->key;
-                $homeData['profile']->preferences->$key = $app_styling->value;
+                $key = $app_styling['key'];
+                $homeData['profile']->preferences->$key = $app_styling['value'];
             }
             $homeData['languages'] = ClientLanguage::with('language')->select('language_id', 'is_primary')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
             $banners = Banner::select("id", "name", "description", "image", "link", 'redirect_category_id', 'redirect_vendor_id')
