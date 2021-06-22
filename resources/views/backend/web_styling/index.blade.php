@@ -91,6 +91,9 @@
                 if (response.status == 'success') {
                     console.log(response.message);
                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                    var r = document.querySelector(':root');
+                    r.style.setProperty('--theme-deafult', 'lightblue');
+                    console.log("Fergw");
                 }
             }
         });

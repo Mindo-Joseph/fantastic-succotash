@@ -46,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
         $client = Client::where(['id' => 1])->first();
         view()->share('client', $client);
         view()->share('favicon', $favicon_url);
+        view()->share('client_preference_detail', $client_preference_detail);
     }
 
     public function connectDynamicDb($request)
