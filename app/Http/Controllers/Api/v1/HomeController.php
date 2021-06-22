@@ -61,17 +61,19 @@ class HomeController extends BaseController{
     public function homepage(Request $request)
     {
         try{
-            $vends = array();
-            $lats = $request->latitude;
-            $longs = $request->longitude;
-            $user_geo[] = $lats;
-            $user_geo[] = $longs;
+            $vends = [];
+            $homeData = [];
+            $user = Auth::user();
+            $latitude = $request->latitude;
+            $longitude = $request->longitude;
+            $user_geo[] = $latitude;
+            $user_geo[] = $longitude;
             $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
             if($preferences->is_hyperlocal == 1){
-                $vendorData = $vendorData->whereHas('serviceArea', function($query) use($lats, $longs){
+                $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
                         $query->select('vendor_id')
-                        ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$lats." ".$longs.")'))");
+                        ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$latitude." ".$longitude.")'))");
                 });
             }
             $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
@@ -79,16 +81,16 @@ class HomeController extends BaseController{
                 $vends[] = $value->id;
             }
             $isVendorArea = 0;
-            $homeData = array();
-            $langId = Auth::user()->language;
-            $categories = $this->categoryNav($langId);
+            $langId = $user->language;
             $homeData['vendors'] = $vendorData;
             $homeData['categories'] = $categories;
             $homeData['reqData'] = $request->all();
+            $categories = $this->categoryNav($langId);
             $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
                                     $q->select('brand_id', 'title')->where('language_id', $langId);
                                 }])->select('id', 'image')->where('status', '!=', $this->field_status)
                                 ->orderBy('position', 'asc')->get();
+            $homeData['is_admin'] = $user->is_admin;                  
             return $this->successResponse($homeData);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
