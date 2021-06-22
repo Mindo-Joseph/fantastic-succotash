@@ -91,6 +91,7 @@ $timezone = Auth::user()->timezone;
                                     $taxable_amount = 0;
                                     @endphp
                                     @foreach($vendor->products as $product)
+                                    @if($product->order_id == $order->id)
                                     @php
                                     $taxable_amount += $product->taxable_amount;
                                     $sub_total += $product->quantity * $product->price;
@@ -104,6 +105,7 @@ $timezone = Auth::user()->timezone;
                                         <td>$@money($product->price)</td>
                                         <td>$@money($product->quantity * $product->price)</td>
                                     </tr>
+                                    @endif
                                     @endforeach
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Sub Total :</th>
