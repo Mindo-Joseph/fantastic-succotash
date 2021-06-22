@@ -21,7 +21,6 @@
     </div>
 </section>
 <section class="section-b-space">
-    
     <div class="container position-relative">
         <div class="error_msg">You have earned {{ (int)$order->loyalty_points_earned }} with this order.</div>
         <div class="row">
@@ -29,9 +28,12 @@
                 <div class="product-order">
                     <h3>your order details</h3>
                     @foreach($order->products as $product)
+                    @php
+                        $image = $product->media ? $product->media->first()->image['path']['proxy_url'].'74/100'.$product->media->first()->image['path']['image_path']:$product->image['proxy_url'].'74/100'.$product->image['image_path'];
+                    @endphp
 	                    <div class="row product-order-detail">
 	                        <div class="col-3">
-	                        	<img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path']}}" alt="" class="img-fluid blur-up lazyloaded">
+	                        	<img src="{{ $image }}" class="img-fluid blur-up lazyloaded">
 	                        </div>
 	                        <div class="col-3 order_detail">
 	                            <div>

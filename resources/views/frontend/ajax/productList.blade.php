@@ -3,7 +3,7 @@
 
       @if(!empty($listData))
         @foreach($listData as $key => $data)
-
+        @if(($data->variant)->isNotEmpty())
         <?php $imagePath = $imagePath2 = '';
         $mediaCount = count($data->media);
         for ($i = 0; $i < $mediaCount && $i < 2; $i++) { 
@@ -48,6 +48,7 @@
                 </div>
             </div>
         </div>
+        @endif
         @endforeach
       @endif
     </div>

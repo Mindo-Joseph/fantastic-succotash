@@ -208,10 +208,10 @@ class AuthController extends BaseController{
                         if($user_refferd_by){
                             //user reffered by amount
                             $wallet_user_reffered_by = $user_refferd_by->wallet;
-                            $wallet_user_reffered_by->deposit($refferal_amounts->reffered_by_amount, ['refer_used_by:'.$user->id]);
+                            $wallet_user_reffered_by->deposit($refferal_amounts->reffered_by_amount, ['Referral code used by <b>' . $signReq->name . '</b>']);
                             $wallet_user_reffered_by->balance;
                             //user reffered to amount
-                            $wallet->deposit($refferal_amounts->reffered_to_amount);
+                            $wallet->deposit($refferal_amounts->reffered_to_amount, ['You used refferal code of <b>' . $user_refferd_by->name . '</b>']);
                             $wallet->balance;
                         }
                     }
