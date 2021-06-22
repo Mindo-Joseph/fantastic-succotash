@@ -25,20 +25,20 @@ class FrontController extends Controller
         return '1';
     }
     public function categoryNav($lang_id) {
-        $preferences = Session::get('preferences');        
+        $preferences = Session::get('preferences');
         $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
-                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')
-                        ->where('categories.id', '>', '1')
-                        ->where('categories.is_visible', 1)
-                        ->where('categories.status', '!=', $this->field_status)
-                        ->where('cts.language_id', $lang_id);
-        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
-            $vendors = Session::get('vendors');
-            if($vendors){
+                        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')->distinct('categories.id');
+        if($preferences){
+            if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+                $vendors = (Session::has('vendors')) ? Session::get('vendors') : array();
                 $categories = $categories->join('vendor_categories as vct', 'categories.id', 'vct.category_id')->whereIn('vct.vendor_id', $vendors)->where('vct.status', 1);
             }
         }
-        $categories = $categories->orderBy('categories.position', 'asc')
+        $categories = $categories->where('categories.id', '>', '1')
+                        ->where('categories.is_visible', 1)
+                        ->where('categories.status', '!=', $this->field_status)
+                        ->where('cts.language_id', $lang_id)
+                        ->orderBy('categories.position', 'asc')
                         ->orderBy('categories.id', 'asc')
                         ->orderBy('categories.parent_id', 'asc')->get();
         if($categories){

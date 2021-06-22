@@ -44,6 +44,15 @@
                         <span>{!! \Session::get('error_delete') !!}</span>
                     </div>
                     @endif
+                    @if ( ($errors) && (count($errors) > 0) )
+                        <div class="alert alert-danger">
+                            <ul class="m-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -247,55 +256,42 @@
                 <h4 class="modal-title">Add Service Area</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-
             <form id="geo_form" action="{{ route('vendor.serviceArea', $vendor->id) }}" method="POST">
                 @csrf
                 <div class="modal-body mt-0" id="editCardBox">
-                    
-                        <input type="hidden" name="latlongs" value="" id="latlongs" />
-                        <input type="hidden" name="zoom_level" value="13" id="zoom_level" />
-                        <div class="row">
-
-                            <div class="col-lg-12 mb-2">
-                                {!! Form::label('title', 'Area Name',['class' => 'control-label']) !!}
-                                {!! Form::text('name', '',['class' => 'form-control',  'placeholder' => 'Area Name']) !!}
-                                
-                            </div>
-
-                            <div class="col-lg-12 mb-2">
-                                {!! Form::label('title', 'Area Description',['class' => 'control-label']) !!}
-                                {!! Form::textarea('description', '',['class' => 'form-control', 'rows' => '3', 'placeholder' => 'Area Description']) !!}
-                                
-                            </div>
-
-                            <div class="col-lg-12">
-                                <div class="input-group mb-3">
-
-                                  <input type="text" id="pac-input" class="form-control" placeholder="Search by name" aria-label="Recipient's username" aria-describedby="button-addon2" name="loc_name">
-                                  <div class="input-group-append">
-                                    <button class="btn btn-info" type="button" id="refresh">Edit Mode</button>
-                                  </div>
-                                  
+                    <input type="hidden" name="latlongs" value="" id="latlongs" />
+                    <input type="hidden" name="zoom_level" value="13" id="zoom_level" />
+                    <div class="row">
+                        <div class="col-lg-12 mb-2">
+                            {!! Form::label('title', 'Area Name',['class' => 'control-label']) !!}
+                            {!! Form::text('name', '',['class' => 'form-control',  'placeholder' => 'Area Name', 'required'=>'required']) !!}
+                        </div>
+                        <div class="col-lg-12 mb-2">
+                            {!! Form::label('title', 'Area Description',['class' => 'control-label']) !!}
+                            {!! Form::textarea('description', '',['class' => 'form-control', 'rows' => '3', 'placeholder' => 'Area Description']) !!}
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="input-group mb-3">
+                                <input type="text" id="pac-input" class="form-control" placeholder="Search by name" aria-label="Recipient's username" aria-describedby="button-addon2" name="loc_name">
+                                <div class="input-group-append">
+                                <button class="btn btn-info" type="button" id="refresh">Edit Mode</button>
                                 </div>
-                                <div class="" style="height:96%;">
-
-                                    <div id="map-canvas" style="min-width: 300px; width:100%; height: 600px;"></div>
-                                </div>
+                            </div>
+                            <div class="" style="height:96%;">
+                                <div id="map-canvas" style="min-width: 300px; width:100%; height: 600px;"></div>
                             </div>
                         </div>
-                        
+                    </div>
                 </div>
-
                 <div class="modal-footer">
-                        <!-- <div class="col-md-6">
-                            <button type="button"
-                                class="btn btn-block btn-outline-blue waves-effect waves-light">Cancel</button>
-                        </div> -->
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-block btn-blue waves-effect waves-light w-100">Save</button>
-                        </div>
+                    <!-- <div class="col-md-6">
+                        <button type="button"
+                            class="btn btn-block btn-outline-blue waves-effect waves-light">Cancel</button>
+                    </div> -->
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-block btn-blue waves-effect waves-light w-100">Save</button>
+                    </div>
                 </div>
-                
             </form>
         </div>
     </div>

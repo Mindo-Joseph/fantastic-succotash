@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product};
+use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption};
 
 class StoreController extends Controller{
     use ApiResponser;
@@ -72,12 +72,23 @@ class StoreController extends Controller{
 						   $query->where('vendor_id', $is_selected_vendor_id);
 						})->paginate($paginate);
 			foreach ($order_list as $key => $order) {
+				$order_status = [];
+				$product_details = [];
 				$order_item_count = 0;
 				$order->user_name = $order->user->name;
 				$order->user_image = $order->user->image;
 				$order->date_time = convertDateTimeInTimeZone($order->created_at, $user->timezone);
 				$order->payment_option_title = $order->paymentOption->title;
-				$product_details = [];
+				foreach ($order->vendors as $vendor) {
+					$vendor_order_status = VendorOrderStatus::where('order_id', $order->id)->where('vendor_id', $vendor->id)->first();
+					if($vendor_order_status){
+						$order_status[] = [
+							'current' => OrderStatusOption::find($vendor_order_status->order_status_option_id),
+							'upcoming' => OrderStatusOption::findNext($vendor_order_status->order_status_option_id)
+						];
+					}
+				}
+				$order->order_status = $order_status;
 				foreach ($order->products as $product) {
     				$order_item_count += $product->quantity;
     				if($is_selected_vendor_id == $product->vendor_id){

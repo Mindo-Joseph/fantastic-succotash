@@ -60,9 +60,6 @@ class ClientRollbcakMigrate extends Command
                 'strict' => false,
                 'engine' => null
             ];
-
-
-
             Config::set("database.connections.$database_name", $default);
             Artisan::call('migrate:rollback', ['--database' => $database_name]);
             // Artisan::call('db:seed', ['--database' => $database_name]);

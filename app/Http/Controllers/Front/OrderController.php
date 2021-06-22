@@ -254,27 +254,25 @@ class OrderController extends FrontController{
                     if($cus_address){
                         $tasks = array();
                         $vendor_details = Vendor::find($vendor_id);
-                            $location[] = array('latitude' => $vendor_details->latitude??30.71728880,
-                                                'longitude' => $vendor_details->longitude??76.80350870
-                                                );
-                            $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
-                                              'longitude' => $cus_address->longitude??76.803508700000
+                        $location[] = array('latitude' => $vendor_details->latitude??30.71728880,
+                                            'longitude' => $vendor_details->longitude??76.80350870
                                             );
-                            $postdata =  ['locations' => $location];
-                            $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
-                                                        'shortcode' => $dispatch_domain->delivery_service_key_code,
-                                                        'content-type' => 'application/json']
-                                                            ]);
-                            $url = $dispatch_domain->delivery_service_key_url;                      
-                            $res = $client->post($url.'/api/get-delivery-fee',
-                                ['form_params' => ($postdata)]
-                            );
-                            $response = json_decode($res->getBody(), true);
-                            if($response && $response['message'] == 'success'){
-                                return $response['total'];
-                            }
-                           
-                        
+                        $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
+                                          'longitude' => $cus_address->longitude??76.803508700000
+                                        );
+                        $postdata =  ['locations' => $location];
+                        $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
+                                                    'shortcode' => $dispatch_domain->delivery_service_key_code,
+                                                    'content-type' => 'application/json']
+                                                        ]);
+                        $url = $dispatch_domain->delivery_service_key_url;                      
+                        $res = $client->post($url.'/api/get-delivery-fee',
+                            ['form_params' => ($postdata)]
+                        );
+                        $response = json_decode($res->getBody(), true);
+                        if($response && $response['message'] == 'success'){
+                            return $response['total'];
+                        }
                     }
                    
                 }

@@ -68,8 +68,7 @@ class ProfileController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function profile(Request $request, $domain = '')
-    {
+    public function profile(Request $request, $domain = ''){
         $timezone_list = Timezonelist::create('timezone', null, [
             'id'    => 'timezone',
             'class' => 'styled form-control',

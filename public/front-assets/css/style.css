@@ -6879,7 +6879,9 @@ header {
     }
 .top-header {
   /* background-color: #f8f8f8;  */
-  background-color: #000; }
+  /*background-color: #000;*/
+  background-color: rgba(0,0,0,0.7);
+}
   .top-header .header-contact {
     padding: 5px 0; }
     .top-header .header-contact li {

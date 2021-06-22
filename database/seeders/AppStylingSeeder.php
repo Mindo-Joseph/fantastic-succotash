@@ -22,20 +22,8 @@ class AppStylingSeeder extends Seeder
 
         $app_styling_option = AppStylingOption::insert([
             'app_styling_id' => $app_styling,
-            'name' => 'SFProText',
+            'name' => 'CircularStd-Book',
             'is_selected' => '1'
-        ]);
-
-        $app_styling_option = AppStylingOption::insert([
-            'app_styling_id' => $app_styling,
-            'name' => 'Futura',
-            'is_selected' => '0'
-        ]);
-
-        $app_styling_option = AppStylingOption::insert([
-            'app_styling_id' => $app_styling,
-            'name' => 'CircularStd',
-            'is_selected' => '0'
         ]);
 
         $app_styling = AppStyling::insertGetId([
@@ -45,20 +33,8 @@ class AppStylingSeeder extends Seeder
 
         $app_styling_option = AppStylingOption::insert([
             'app_styling_id' => $app_styling,
-            'name' => 'SFProText',
+            'name' => 'CircularStd-Medium',
             'is_selected' => '1'
-        ]);
-
-        $app_styling_option = AppStylingOption::insert([
-            'app_styling_id' => $app_styling,
-            'name' => 'Futura',
-            'is_selected' => '0'
-        ]);
-
-        $app_styling_option = AppStylingOption::insert([
-            'app_styling_id' => $app_styling,
-            'name' => 'CircularStd',
-            'is_selected' => '0'
         ]);
 
         $app_styling = AppStyling::insertGetId([
@@ -68,20 +44,8 @@ class AppStylingSeeder extends Seeder
 
         $app_styling_option = AppStylingOption::insert([
             'app_styling_id' => $app_styling,
-            'name' => 'SFProText',
+            'name' => 'CircularStd-Bold',
             'is_selected' => '1'
-        ]);
-
-        $app_styling_option = AppStylingOption::insert([
-            'app_styling_id' => $app_styling,
-            'name' => 'Futura',
-            'is_selected' => '0'
-        ]);
-
-        $app_styling_option = AppStylingOption::insert([
-            'app_styling_id' => $app_styling,
-            'name' => 'CircularStd',
-            'is_selected' => '0'
         ]);
 
         $app_styling = AppStyling::insertGetId([
