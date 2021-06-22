@@ -38,7 +38,6 @@ class AppServiceProvider extends ServiceProvider
         }
         $this->connectDynamicDb($request);
         Paginator::useBootstrap();
-
         $favicon_url = asset('assets/images/favicon.png');
         $client_preference_detail = ClientPreference::where(['id' => 1])->first();
         if ($client_preference_detail) {
