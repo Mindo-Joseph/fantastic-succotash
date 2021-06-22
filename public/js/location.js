@@ -7,7 +7,9 @@ $(document).ready(function() {
         addressInputHide(".select_address", ".address-input-field", "#address-input");
     });*/
 
-    getHomePage();
+    if(window.location.pathname == '/'){
+        getHomePage();
+    }
     function initializeSlider(){
         $(".slide-6").slick({
             dots: !1,
