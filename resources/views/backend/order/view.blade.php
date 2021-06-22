@@ -33,9 +33,9 @@ $timezone = Auth::user()->timezone;
                         </div>
                         <div class="row track-order-list">
                             <div class="col-lg-6">
-                                <button type="button" class="btn btn-danger waves-effect waves-light">
+                                <!-- <button type="button" class="btn btn-danger waves-effect waves-light">
                                     <i class="mdi mdi-close"></i>
-                                 </button>
+                                 </button> -->
                                 <ul class="list-unstyled" id="order_statuses">
                                     @foreach($order_status_options as $order_status_option)
                                     @php

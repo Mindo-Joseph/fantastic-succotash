@@ -72,11 +72,10 @@ class VendorController extends FrontController
                             ->where('vendor_id', $vid);
                     })->groupBy('product_variant_sets.variant_type_id')->get();
 
-        $navCategories = Session::get('navCategories');
-
-        if(empty($navCategories)){
+        // $navCategories = Session::get('navCategories');
+        // if(empty($navCategories)){
             $navCategories = $this->categoryNav($langId);
-        }
+        // }
         $vendorIds[] = $vid;
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
