@@ -74,11 +74,11 @@ class OrderController extends FrontController{
             $order->save();
             $cart_prescriptions = CartProductPrescription::where('cart_id', $cart->id)->get();
             foreach($cart_prescriptions as $cart_prescription){
-                $order_prescriptions = new OrderProductPrescription();
-                $order_prescriptions->order_id = $order->id;
-                $order_prescriptions->product_id = $cart_prescription->product_id;
-                $order_prescriptions->prescription = $cart_prescription->prescription;
-                $order_prescriptions->save();
+                $order_prescription = new OrderProductPrescription();
+                $order_prescription->order_id = $order->id;
+                $order_prescription->product_id = $cart_prescription->product_id;
+                $order_prescription->prescription = $cart_prescription->getRawOriginal('prescription');
+                $order_prescription->save();
             }
             $cart_products = CartProduct::select('*')->with(['product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon.promo', 'product.addon'])->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
             $total_amount = 0;
