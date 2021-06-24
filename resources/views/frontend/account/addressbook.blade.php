@@ -90,7 +90,7 @@
 
                             <div class="row">
                                 <div class="col-xl-4 col-md-6 text-center mt-3">
-                                    <a class="outer-box border-dashed d-flex align-items-center justify-content-center" href="javascript:void(0)" data-toggle="modal" data-target="#add-new-address">
+                                    <a class="outer-box border-dashed d-flex align-items-center justify-content-center" href="javascript:void(0)" data-toggle="modal" data-target="#add_edit_address">
                                         <i class="fa fa-plus-circle d-block mb-1" aria-hidden="true"></i>
                                         <h6 class="m-0">Add new Address</h6>
                                     </a>
@@ -116,7 +116,7 @@
                                                 @else
                                                     <a class="btn btn-solid" href="{{ route('setPrimaryAddress', $add->id) }}" class="mr-2">Set as Primary</a>
                                                 @endif
-                                                <a class="btn btn-solid" href="{{ route('editAddress', $add->id) }}">Edit</a>
+                                                <a class="btn btn-solid" href="javascript:void(0)" data-toggle="modal" data-target="#add_edit_address">Edit</a>
                                                 <a class="btn btn-solid delete_address_btn" href="javascript:void(0)" data-toggle="modal" data-target="#removeAddressConfirmation" data-id="{{$add->id}}">Delete</a>
                                             </div>
                                         </div>
@@ -163,7 +163,7 @@
 </section>
 
 <!-- Add New Address Modal Start From Here -->
-<div class="modal fade add_new_address" id="add-new-address" tabindex="-1" aria-labelledby="add-new-addressLabel" aria-hidden="true">
+<?php /* ?><div class="modal fade add_new_address" id="add-new-address" tabindex="-1" aria-labelledby="add-new-addressLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -249,7 +249,7 @@
       </div>
     </div>
   </div>
-</div>
+</div><?php */ ?>
 
 
 <div class="modal fade" id="removeAddressConfirmation" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_addressLabel">
@@ -272,156 +272,121 @@
   </div>
 </div>
 
-<!-- Address Edit Modal Start Form Here -->
-<div class="modal fade edit_address" id="edit-address" tabindex="-1" aria-labelledby="edit-addressLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade" id="add_edit_address" tabindex="-1" aria-labelledby="addedit-addressLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-body p-0">
-           
-            <div id="step_one">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d13720.904154980397!2d76.81441854999998!3d30.71204525!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1622198188924!5m2!1sen!2sin" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-            
-                <div class="delivery_address p-3 position-relative">
-                    <div class="modal-title">Set your delivery location</div>
-                    <button type="button" class="close edit-close position-absolute" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <div class="form-group">
-                        <label class="delivery-head">DELIVERY AREA</label>
-                        <div class="select_address border d-flex align-items-center justify-content-between ">
-                            <div class="location-area">
-                                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
-                                <span>22A, Sector 22</span>
-                            </div>    
-                            <label class="m-0 text-uppercase">Change</label>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <a class="btn btn-solid ml-auto next-step" href="javascript:void(0)">Confirm And Proceed</a>
-                    </div>
-                </div>
-            </div>
-
-            <div id="step-two">
-                 <div class="delivery_address p-3 position-relative">
-                    <div class="modal-title">Set your delivery location</div>
-                    <button type="button" class="close edit-close hide-address position-absolute"><span aria-hidden="true">&times;</span></button>
-                    <div class="form-group">
-                        <label class="delivery-head">DELIVERY AREA</label>
-                        <div class="address-input-field d-flex align-items-center">
-                            <i class="fa fa-map-marker" aria-hidden="true"></i>
-                            <input class="form-control border-0" type="text" name="" id="">
-                        </div>
-                    </div>
-                    <div class="address_list"></div>
-                    <div class="text-right d-none">
-                        <a class="btn btn-solid ml-auto" href="#">Confirm and Proceed</a>
-                    </div>
-                </div>
-            </div>
-           
-            <div id="step-three">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d13720.904154980397!2d76.81441854999998!3d30.71204525!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1622198188924!5m2!1sen!2sin" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                <div class="delivery_address p-3 position-relative">
-                    <div class="modal-title">Set your delivery location 3   </div>
-                    <button type="button" class="close edit-close go-back position-absolute"><span aria-hidden="true">&times;</span></button>
-                    <div class="form-group">
-                        <label class="delivery-head">DELIVERY AREA</label>
-                        <div class="select_address border d-flex align-items-center justify-content-between ">
-                            <div class="location-area">
-                                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
-                                <span>22A, Sector 22</span>
-                            </div>    
-                            <label class="m-0 text-uppercase">Change</label>
-                        </div>
-                        <div class="edit-area">
-                            <input class="form-control" type="text" placeholder="Complete Address *" name="" id="">
-                            <input class="form-control" type="text" placeholder="Floor (Optional)" name="" id="">
-                            <input class="form-control" type="text" placeholder="How to reach (Optional)" name="" id="">
-                        </div>
-                        <div class="mt-2 mb-2">
-                            <div class="address_type">
-                                <label class="radio d-inline-block m-0">Home
-                                    <input type="radio" name="is_company">
-                                    <span class="checkround"></span>
-                                </label>
-                                <label class="radio d-inline-block m-0">Office
-                                    <input type="radio" name="is_company">
-                                    <span class="checkround"></span>
-                                </label>
-                                <label class="radio other_address d-inline-block m-0">Other
-                                    <input type="radio" name="is_company">
-                                    <span class="checkround"></span>
-                                </label>   
+      <div class="modal-header">
+        <h5 class="modal-title" id="addedit-addressLabel">Edit Address</h5>
+        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="outer-box">
+            <div class="row">
+                <div class="col-md-12" id="add_new_address_form">
+                    <div class="theme-card w-100">
+                        <div class="form-row no-gutters">
+                            <div class="col-12">
+                                <label for="type">Address Type</label>
                             </div>
-
-                            <div class="other-address-input">
-                                <label class="radio other_address d-inline-block m-0">Other
-                                    <input type="radio" checked="checked" name="is_company">
+                            <div class="col-md-3">
+                                <div class="delivery_box pt-0 pl-0  pb-3">
+                                    <label class="radio m-0">Home 
+                                        <input type="radio" checked="checked" name="address_type" value="1">
+                                        <span class="checkround"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            <div class="delivery_box pt-0 pl-0  pb-3">
+                                <label class="radio m-0">Office 
+                                    <input type="radio" name="address_type" value="2">
                                     <span class="checkround"></span>
-                                </label>   
-                                <div class="address-input-field">
-                                    <input class="form-control border-0" type="text" name="" id="">
-                                    <label class="hide-other m-0 text-uppercase">Changes</label>
-                                </div>                      
-                            </div>                      
+                                </label>
+                            </div>
                         </div>
-                       
+                        <div class="col-md-3">
+                            <div class="delivery_box pt-0 pl-0  pb-3">
+                                <label class="radio m-0">Others
+                                    <input type="radio" name="address_type" value="3">
+                                    <span class="checkround"></span>
+                                </label>
+                            </div>
+                        </div>
+                        </div>
+                        <input type="hidden" id="latitude">
+                        <input type="hidden" id="longitude">
+                        <div class="form-row">
+                            <div class="col-md-12 mb-2">
+                                <label for="address">Address</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2">
+                                    <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    </button>
+                                    </div>
+                                </div>
+                                <span class="text-danger" id="address_error"></span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-2">
+                                <label for="street">Street</label>
+                                <input type="text" class="form-control" id="street" placeholder="Street" name="street" value="">
+                                <span class="text-danger" id="street_error"></span>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="city">City</label>
+                                <input type="text" class="form-control" id="city" name="city" placeholder="City" value="">
+                                <span class="text-danger" id="city_error"></span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-2">
+                                <label for="state">State</label>
+                                <input type="text" class="form-control" id="state" name="state" placeholder="State" value="">
+                                <span class="text-danger" id="state_error"></span>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="country">Country</label>
+                                <select name="country" id="country" class="form-control">
+                                    @foreach($countries as $co)
+                                        <option value="{{$co->id}}">{{$co->name}}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger" id="country_error"></span>
+                            </div>
+                        </div>
+                        <div class="form-row mb-3">
+                            <div class="col-md-6 mb-2">
+                                <label for="pincode">Pincode</label>
+                                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode" value="">
+                                <span class="text-danger" id="pincode_error"></span>
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
+                                <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <a class="btn btn-solid ml-auto" href="#">Save and Proceed</a>
-                    </div>
-                </div>
+                </div> 
             </div>
-            
         </div>
+      </div>
     </div>
   </div>
 </div>
 
-
 @endsection
 
 @section('script')
-
-<script>
-    jQuery("#step-two").hide();
-    jQuery("#step-three").hide();
-    jQuery(".other-address-input").hide();
-    jQuery(document).ready(function () {
-        jQuery(".select_address").click(function () {
-            jQuery("#step-two").show();
-            jQuery("#step_one").hide();
-        });
-        jQuery(".hide-address").click(function () {
-            jQuery("#step-two").hide();
-            jQuery("#step_one").show();
-        });
-        jQuery(".next-step").click(function(){
-            jQuery("#step-three").show();
-            jQuery("#step_one").hide();
-        });
-        jQuery(".go-back").click(function(){
-            jQuery("#step-three").hide();
-            jQuery("#step_one").show();
-        });
-        jQuery(".other_address").click(function(){
-            jQuery(".other-address-input").show();
-            jQuery(".address_type").hide();
-        });
-        jQuery(".hide-other").click(function(){
-            jQuery(".other-address-input").hide();
-            jQuery(".address_type").show();
-        });
-        jQuery(".select_address").click(function () {
-            jQuery("#step-three").hide();
-        });
-        jQuery(".hide-address").click(function () {
-            jQuery("#step-three").show();
-            jQuery("#step_one").hide();
-        });
-    });
-</script>
-
 <script type="text/javascript">
+    var user_store_address_url = "{{ route('address.store') }}";
+    var delete_address_url = "{{ route('deleteAddress', ':id') }}";
+    var verify_information_url = "{{ route('verifyInformation', Auth::user()->id) }}";
+    
     var ajaxCall = 'ToCancelPrevReq';
     $('.verifyEmail').click(function(){
         verifyUser('email');
@@ -438,8 +403,7 @@
 
     $(document).delegate("#remove_address_confirm_btn", "click", function(){
         var addressID = $(this).attr("data-id");
-        var url = '{{ route("deleteAddress", ":id") }}';
-        url = url.replace(':id', addressID);
+        var url = delete_address_url.replace(':id', addressID);
         location.href = url;
     });
 
@@ -447,7 +411,7 @@
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
-            url: "{{ route('verifyInformation', Auth::user()->id) }}",
+            url: verify_information_url,
             data: {
                 "_token": "{{ csrf_token() }}",
                 "type": $type, 

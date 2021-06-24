@@ -93,7 +93,7 @@
                                     <div class="file file--upload">
                                         <label>
                                             <span class="update_pic">
-                                            <img src="{{$user->image['proxy_url'].'400/400'.$user->image['image_path']}}" alt="">
+                                            <img src="{{$user->image['proxy_url'].'1000/1000'.$user->image['image_path']}}" alt="">
                                             <?php /* ?><img src="{{asset('assets/images/products/product-1.png')}}" alt=""><?php */ ?>
                                             </span>
                                         </label>
