@@ -80,7 +80,7 @@ class StoreController extends Controller{
 				$order->date_time = convertDateTimeInTimeZone($order->created_at, $user->timezone);
 				$order->payment_option_title = $order->paymentOption->title;
 				foreach ($order->vendors as $vendor) {
-					$vendor_order_status = VendorOrderStatus::where('order_id', $order->id)->where('vendor_id', $is_selected_vendor_id)->first();
+					$vendor_order_status = VendorOrderStatus::where('order_id', $order->id)->where('vendor_id', $is_selected_vendor_id)->orderBy('id', 'DESC')->first();
 					if($vendor_order_status){
 						$current_status = OrderStatusOption::select('id','title')->find($vendor_order_status->order_status_option_id);
 						$upcoming_status = $current_status->id == 1 ? (object)[] : OrderStatusOption::select('id','title')->where('id', '>', $vendor_order_status->order_status_option_id)->first();
