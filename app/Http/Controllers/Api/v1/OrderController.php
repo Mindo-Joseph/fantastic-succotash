@@ -281,6 +281,7 @@ class OrderController extends Controller {
                 DB::commit();
                 return response()->json([
                     'status' => 'success',
+                    'order_status' => 'success',
                     'message' => 'Order Status Updated Successfully.'
                 ]);
             }
