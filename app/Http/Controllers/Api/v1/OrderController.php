@@ -31,7 +31,7 @@ class OrderController extends Controller {
                 $order_status_options = [6,3];
             break;
         }
-        $orders = OrderVendor::whereHas('status', function ($query), use($order_status_options) {
+        $orders = OrderVendor::whereHas('status', function ($query) use($order_status_options) {
                 $query->whereIn('id', $order_status_options);
             })->where('user_id', $user->id)->paginate($paginate);
         foreach ($orders as $order) {
