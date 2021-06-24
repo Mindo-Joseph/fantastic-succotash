@@ -29,19 +29,19 @@ class OrderController extends Controller {
                 $order_status_options = [6,3];
                 $orders->whereDoesntHave('status', function ($query) use($order_status_options) {
                     $query->whereNotIn('order_status_option_id', $order_status_options);
-                })->paginate($paginate);
+                });
             break;
             case 'past':
                 $order_status_options = [1,2,4,5];
                 $orders->whereHas('status', function ($query) use($order_status_options) {
                     $query->whereNotIn('order_status_option_id', $order_status_options);
-                })->paginate($paginate);
+                });
             break;
             case 'schedule':
                 $order_status_options = [];
                 $orders->whereHas('status', function ($query) use($order_status_options) {
                     $query->whereNotIn('order_status_option_id', $order_status_options);
-                })
+                });
             break;
         }
         $orders = $orders->paginate($paginate);
