@@ -30,6 +30,8 @@ class OrderController extends Controller {
             $order->payment_option_title = $order->orderDetail->paymentOption->title;
             $order->order_number = $order->orderDetail->order_number;
             $product_details = [];
+            $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->orderDetail->id)->where('vendor_id', $order->vendor_id)->orderBy('id', 'DESC')->first();
+            $order->order_status = $vendor_order_status ? $vendor_order_status->OrderStatusOption->title : '';
             foreach ($order->products as $product) {
                 $order_item_count += $product->quantity;
                 $product_details[]= array(
@@ -46,6 +48,7 @@ class OrderController extends Controller {
             unset($order->payment_option_id);
             unset($order->orderDetail);
         }
+        
     	return $this->successResponse($orders, 'Order placed successfully.', 201);
     }
 
