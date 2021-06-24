@@ -38,7 +38,7 @@ class OrderController extends Controller {
                 });
             break;
             case 'schedule':
-                $order_status_options = [];
+                $order_status_options = [10];
                 $orders->whereHas('status', function ($query) use($order_status_options) {
                     $query->whereNotIn('order_status_option_id', $order_status_options);
                 });
