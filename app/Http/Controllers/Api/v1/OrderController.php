@@ -23,20 +23,28 @@ class OrderController extends Controller {
         $order_status_options= [];
         $paginate = $request->has('limit') ? $request->limit : 12;
         $type = $request->has('type') ? $request->type : 'active';
+        $orders = OrderVendor::->where('user_id', $user->id)->orderBy('id', 'DESC');
         switch ($type) {
             case 'active':
                 $order_status_options = [6,3];
+                $orders->whereDoesntHave('status', function ($query) use($order_status_options) {
+                    $query->whereNotIn('order_status_option_id', $order_status_options);
+                })->paginate($paginate);
             break;
             case 'past':
                 $order_status_options = [1,2,4,5];
+                $orders->whereHas('status', function ($query) use($order_status_options) {
+                    $query->whereNotIn('order_status_option_id', $order_status_options);
+                })->paginate($paginate);
             break;
             case 'schedule':
                 $order_status_options = [];
+                $orders->whereHas('status', function ($query) use($order_status_options) {
+                    $query->whereNotIn('order_status_option_id', $order_status_options);
+                })
             break;
         }
-        $orders = OrderVendor::whereHas('status', function ($query) use($order_status_options) {
-                $query->whereNotIn('order_status_option_id', $order_status_options);
-            })->where('user_id', $user->id)->paginate($paginate);
+        $orders = $orders->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
             $order->user_name = $user->name;
