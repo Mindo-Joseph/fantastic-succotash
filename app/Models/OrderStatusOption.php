@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderStatusOption extends Model
 {
     use HasFactory;
+    
     public static function findNext($id){
 	    return static::where('id', '>', $id)->first();
 	}
