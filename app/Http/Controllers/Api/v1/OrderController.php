@@ -30,9 +30,12 @@ class OrderController extends Controller {
             case 'past':
                 $order_status_options = [1,2,4,5];
             break;
+            case 'schedule':
+                $order_status_options = [];
+            break;
         }
-        $orders = OrderVendor::whereHas('status', function ($query) use($order_status_options) {
-                $query->whereNotIn('order_status_option_id', $order_status_options);
+        $orders = OrderVendor::whereDoesntHave('status', function ($query) use($order_status_options) {
+                $query->whereIn('order_status_option_id', $order_status_options);
             })->where('user_id', $user->id)->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
