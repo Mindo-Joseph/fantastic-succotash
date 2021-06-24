@@ -8,7 +8,7 @@ use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption};
 
 class OrderController extends Controller {
     use ApiResponser;
@@ -21,7 +21,7 @@ class OrderController extends Controller {
     public function getOrdersList(Request $request){
     	$user = Auth::user();
         $paginate = $request->has('limit') ? $request->limit : 12;
-        $orders = OrderVendor::where('user_id', $user->id)->paginate($paginate);
+        $orders = OrderVendor::with('status')->where('user_id', $user->id)->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
             $order->user_name = $user->name;
@@ -30,6 +30,12 @@ class OrderController extends Controller {
             $order->payment_option_title = $order->orderDetail->paymentOption->title;
             $order->order_number = $order->orderDetail->order_number;
             $product_details = [];
+            $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->orderDetail->id)->where('vendor_id', $order->vendor_id)->orderBy('id', 'DESC')->first();
+            if($vendor_order_status){
+                $order->order_status =  ['current_status' => ['id' => $vendor_order_status->OrderStatusOption->id, 'title' => $vendor_order_status->OrderStatusOption->title]];
+            }else{
+                $order->current_status = null;
+            }
             foreach ($order->products as $product) {
                 $order_item_count += $product->quantity;
                 $product_details[]= array(
@@ -46,6 +52,7 @@ class OrderController extends Controller {
             unset($order->payment_option_id);
             unset($order->orderDetail);
         }
+        
     	return $this->successResponse($orders, 'Order placed successfully.', 201);
     }
 
@@ -260,5 +267,52 @@ class OrderController extends Controller {
             return $this->errorResponse($e->getMessage(), $e->getCode());
     	}
     }
-
+    public function postVendorOrderStatusUpdate(Request $request){
+        DB::beginTransaction();
+        try {
+            $order_id = $request->order_id;
+            $vendor_id = $request->vendor_id;
+            $order_status_option_id = $request->order_status_option_id;
+            if($order_status_option_id == 7){
+                $order_status_option_id = 2;
+            }else if ($order_status_option_id == 8) {
+                $order_status_option_id = 3;
+            }
+            $vendor_order_status_detail = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->where('order_status_option_id', $order_status_option_id)->first();
+            if (!$vendor_order_status_detail) {
+                $vendor_order_status = new VendorOrderStatus();
+                $vendor_order_status->order_id = $order_id;
+                $vendor_order_status->vendor_id = $vendor_id;
+                $vendor_order_status->order_status_option_id = $order_status_option_id;
+                $vendor_order_status->save();
+                $current_status = OrderStatusOption::select('id','title')->find($order_status_option_id);
+                if($order_status_option_id == 2){
+                    $upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', 3)->first();
+                }elseif ($order_status_option_id == 3) {
+                    $upcoming_status = null;
+                }elseif ($order_status_option_id == 6) {
+                    $upcoming_status = null;
+                }else{
+                    $upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', $order_status_option_id)->first();
+                }
+                $order_status = [
+                    'current_status' => $current_status,
+                    'upcoming_status' => $upcoming_status,
+                ];
+                DB::commit();
+                return response()->json([
+                    'status' => 'success',
+                    'order_status' => $order_status,
+                    'message' => 'Order Status Updated Successfully.'
+                ]);
+            }
+        } catch(\Exception $e){
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+           
+        }
+    }
 }

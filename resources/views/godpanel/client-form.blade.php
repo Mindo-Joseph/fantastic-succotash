@@ -1,12 +1,9 @@
 @extends('layouts.god-vertical', ['title' => 'Client'])
-
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
-
 @section('content')
-
 <style type="text/css">
     .sub-domain-input #sub_domain {
         border-top-right-radius: 0;
@@ -19,11 +16,7 @@
         padding: 0 30px;
     }
 </style>
-
-<!-- Start Content-->
 <div class="container-fluid">
-
-    <!-- start page title -->
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
@@ -31,14 +24,12 @@
             </div>
         </div>
     </div>
-    <!-- end page title -->
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
                     <?php $disable = $style = ""; ?>
                     @if(isset($client))
-
                     <?php $disable = 'disabled';
                     $style = "cursor:not-allowed;"; ?>
                     <form id="UpdateClient" method="post" action="{{route('client.update', $client->id)}}"
@@ -49,7 +40,7 @@
                     @endif
                         @csrf
                         <div class="row mb-2">
-                            <div class="col-md-4"> <!--  Storage::disk('s3')->url($client->logo)  url('storage/'.$client->logo)--> 
+                            <div class="col-md-4">
                                 <input type="file" accept="image/*" data-plugins="dropify" name="logo" data-default-file="{{isset($client->logo) ? $client->logo['proxy_url'].'400/400'.$client->logo['image_path'] : ''}}" />
                                 <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
                             </div>
@@ -114,62 +105,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <!-- <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="database_path" class="control-label">DATABASE PATH</label>
-                                    <input type="text" class="form-control" name="database_path" id="database_path"
-                                        value="{{ old('database_path', $client->database_path ?? '')}}"
-                                        placeholder="Enter Path">
-                                    @if($errors->has('database_path'))
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('database_path') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div> -->
-
-                            <!-- <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="database_host" class="control-label">DATABASE HOST</label>
-                                    @if(!isset($client) || !isset($client->id))
-                                        <input type="text" class="form-control" name="database_host" id="database_host"
-                                        value="{{ old('database_host', $client->database_host ?? '')}}"
-                                        placeholder="Please Enter One String Example:-'127.0.0.1' ">
-                                    @else
-                                        <input type="text" class="form-control" name="database_host" id="database_host"
-                                        value="{{ old('database_host', $client->database_host ?? '')}}"
-                                        placeholder="DB HOST Example:127.0.0.1">
-
-                                    @endif
-                                    @if($errors->has('database_host'))
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('database_host') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="database_port" class="control-label">DATABASE PORT</label>
-                                    @if(!isset($client) || !isset($client->id))
-                                        <input type="text" class="form-control" name="database_port" id="database_port"
-                                        value="{{ old('database_port', $client->database_port ?? '')}}"
-                                        placeholder="3306">
-                                    @else
-                                        <input type="text" class="form-control" name="database_port" id="database_port"
-                                        value="{{ old('database_port', $client->database_port ?? '')}}"
-                                        placeholder="DB PORT Example:3306"  >
-
-                                    @endif
-                                    @if($errors->has('database_port'))
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('database_port') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div> -->
-
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="database_name" class="control-label">DATABASE NAME</label>
@@ -190,35 +125,6 @@
                                     @endif
                                 </div>
                             </div>
-
-
-                            <!-- <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="database_username" class="control-label">DATABASE USERNAME</label>
-                                    <input type="text" class="form-control" name="database_username" id="database_username"
-                                        value="{{ old('database_username', $client->database_username ?? '')}}" placeholder="Enter database username">
-                                    @if($errors->has('database_username'))
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('database_username') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="database_password" class="control-label">DATABASE PASSWORD</label>
-                                    <input type="text" class="form-control" name="database_password"
-                                        id="database_password"
-                                        value="{{ old('database_password', $client->database_password ?? '')}}"
-                                        placeholder="Enter database password">
-                                    @if($errors->has('database_password'))
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('database_password') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div> -->
-
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="company_name" class="control-label">COMPANY NAME</label>
@@ -287,17 +193,10 @@
             </div>
         </div>
     </div>
-
-
-
 </div>
 @endsection
-
 @section('script')
 <script src="{{asset('assets/libs/dropzone/dropzone.min.js')}}"></script>
 <script src="{{asset('assets/libs/dropify/dropify.min.js')}}"></script>
-<!-- Page js-->
 <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
-
-
 @endsection

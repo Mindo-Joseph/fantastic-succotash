@@ -10,11 +10,7 @@
 @endsection
 
 @section('content')
-
-<!-- Start Content-->
 <div class="container-fluid">
-
-    <!-- start page title -->
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
@@ -22,7 +18,6 @@
             </div>
         </div>
     </div>
-    <!-- end page title -->
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -74,7 +69,6 @@
     </div>
 </div>
 @endsection
-
 @section('script')
     <script src="{{asset('assets/libs/selectize/selectize.min.js')}}"></script>
     <script src="{{asset('assets/libs/mohithg-switchery/mohithg-switchery.min.js')}}"></script>
