@@ -88,6 +88,8 @@ class StoreController extends Controller{
 							$upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', 3)->first();
 						}elseif ($order_status_option_id == 3) {
 							$upcoming_status = [];
+						}elseif ($order_status_option_id == 6) {
+							$upcoming_status = [];
 						}else{
 							$upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', $order_status_option_id)->first();
 						}
