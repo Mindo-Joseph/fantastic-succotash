@@ -30,6 +30,6 @@ class AppStyling extends Model
                 'value' => $template_id,
             );
         }
-        return (object)$app_styles_array;
+        return $app_styles_array;
     }
 }

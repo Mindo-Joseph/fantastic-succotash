@@ -6894,7 +6894,7 @@ header {
   .top-header .header-dropdown li {
     cursor: pointer;
     color: #fff;
-    padding: 5px 20px 0 0;
+    padding: 5px 20px 5px 0;
     /* padding-right: 0;  */
   }
     /* .top-header .header-dropdown li:last-child {

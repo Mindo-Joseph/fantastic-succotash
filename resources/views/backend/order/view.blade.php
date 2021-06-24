@@ -50,6 +50,12 @@ $timezone = Auth::user()->timezone;
                                         $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'completed disabled': '';
                                         $date = isset($vendor_order_status_created_dates[$order_status_option->id]) ? $vendor_order_status_created_dates[$order_status_option->id] : '';
                                     @endphp
+                                        @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 2)
+                                            @continue
+                                        @endif
+                                        @if (in_array(2, $vendor_order_status_option_ids) && $order_status_option->id == 3)
+                                            @continue
+                                        @endif
                                         <li class="{{$class}}" data-status_option_id="{{$order_status_option->id}}">
                                             <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
                                             <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
@@ -58,6 +64,9 @@ $timezone = Auth::user()->timezone;
                                                 @endif
                                             </p>
                                         </li>
+                                        @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 3)
+                                            @break
+                                        @endif
                                     @endforeach
                                 </ul>
                             </div>
@@ -227,9 +236,15 @@ $timezone = Auth::user()->timezone;
             },
             success: function(response) {
                 that.addClass("completed");
+                if(status_option_id == 2){
+                    that.next('li').remove();
+                }
+                if(status_option_id == 3){
+                    that.prev('li').remove();
+                    that.nextAll('li').remove();
+                }
                 $('#text_muted_'+status_option_id).html('<small class="text-muted">'+response.created_date+'</small>');
                 if(status_option_id == 2)
-                $('#dispatch_text_muted_1').html('<small class="text-muted">'+response.created_date+'</small>');
                 $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
             },
         });

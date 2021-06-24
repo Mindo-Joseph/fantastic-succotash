@@ -1,16 +1,10 @@
 @extends('layouts.god-vertical', ['title' => 'Language'])
-
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
-
 @section('content')
-
-<!-- Start Content-->
 <div class="container-fluid">
-
-    <!-- start page title -->
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
@@ -18,7 +12,6 @@
             </div>
         </div>
     </div>
-    <!-- end page title -->
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -69,17 +62,10 @@
             </div>
         </div>
     </div>
-
-
-
 </div>
 @endsection
-
 @section('script')
 <script src="{{asset('assets/libs/dropzone/dropzone.min.js')}}"></script>
 <script src="{{asset('assets/libs/dropify/dropify.min.js')}}"></script>
-<!-- Page js-->
 <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
-
-
 @endsection

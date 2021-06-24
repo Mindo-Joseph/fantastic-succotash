@@ -1,9 +1,5 @@
 <?php
-/*
-Route::domain('{subdomain}.myorder.com')->middleware(['subdomain', 'domain'])->group(function () {        
-    Route::get('/','Front\UserhomeController@index')->name('userHome');
-    Route::get('/productDetail/{id}','Front\ProductPageController@index')->name('productDetail');
-});*/
+
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('/debug-sentry', function () {
     throw new Exception('My first Sentry error!');
@@ -87,6 +83,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/addressBook', 'Front\AddressController@index')->name('user.addressBook');
 	Route::get('user/wallet', 'Front\WalletController@index')->name('user.account');
 	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
+	Route::post('user/updateAccount', 'Front\ProfileController@updateAccount')->name('user.updateAccount');
     Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
 	Route::get('user/sendRefferal', 'Front\ProfileController@showRefferal')->name('user.sendRefferal');
     Route::get('wishlist/remove/{sku}', 'Front\WishlistController@removeWishlist')->name('removeWishlist');

@@ -116,7 +116,10 @@
                 <div class="card-box">
                     <h5 class="text-uppercase bg-light p-2 mt-0 mb-3">General</h5>
                     <div class="row mb-2 row-spacing">
+<<<<<<< HEAD
 
+=======
+>>>>>>> 390c96ec647ae1f909ae2fdae13e098b22fae430
                         <div class="col-md-5 mb-2" style="cursor: not-allowed;">
                             {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
@@ -131,7 +134,7 @@
 
                         <div class="col-md-4" style="cursor: not-allowed;">
                             {!! Form::label('title', 'Url Slug',['class' => 'control-label']) !!}
-                            {!! Form::text('url_slug', $product->url_slug, ['class'=>'form-control', 'id' => 'url_slug', 'style' => 'pointer-events:none;']) !!}
+                            {!! Form::text('url_slug', $product->url_slug, ['class'=>'form-control', 'id' => 'url_slug','onkeypress' => "return alplaNumericSlug(event)"]) !!}
                         </div>
 
                         <div class="col-md-3" style="cursor: not-allowed;">
@@ -141,7 +144,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card-box ">
                     <div class="row mb-2 bg-light">
                         <div class="col-8" style="margin:auto; padding: 8px !important;">
@@ -155,28 +157,23 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="row mb-2">
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Product Name',['class' => 'control-label']) !!}
                             {!! Form::text('product_name', $product->primary->title, ['class'=>'form-control', 'id' => 'product_name', 'placeholder' => 'Apple iMac']) !!}
                         </div>
-
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Product Description',['class' => 'control-label']) !!}
                             {!! Form::textarea('body_html', $product->primary->body_html, ['class'=>'form-control', 'id' => 'body_html', 'placeholder' => 'Description', 'rows' => '5']) !!}
                         </div>
-
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!}
                             {!! Form::text('meta_title', $product->primary->meta_title, ['class'=>'form-control', 'id' => 'meta_title', 'placeholder' => 'Meta Title']) !!}
                         </div>
-
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Meta Keyword',['class' => 'control-label']) !!}
                             {!! Form::textarea('meta_keyword', $product->primary->meta_keyword, ['class'=>'form-control', 'id' => 'meta_keyword', 'placeholder' => 'Meta Keyword', 'rows' => '3']) !!}
                         </div>
-
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!}
                             {!! Form::textarea('meta_description', $product->primary->meta_description, ['class'=>'form-control', 'id' => 'meta_description', 'placeholder' => 'Meta Description', 'rows' => '3']) !!}
@@ -613,8 +610,16 @@
         n2.value = n1.value + charCode;
         return true;
     }
-
-    $('.saveProduct').click(function() {
+    function alplaNumericSlug(evt){
+        var charCode = String.fromCharCode(event.which || event.keyCode);
+        if (!regexp.test(charCode)){
+            return false;
+        }
+        var n2 = document.getElementById('url_slug');
+        n2.value = n2.value+charCode;
+        return true;
+    }
+    $('.saveProduct').click(function(){
         $('.product_form').submit();
     });
 

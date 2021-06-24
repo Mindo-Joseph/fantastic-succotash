@@ -20,6 +20,9 @@
     @yield('content')
     @include('layouts.store/footer-content')
     @include('layouts.store/footer')
+    <div class="loader_box" style="display: none;">
+        <div class="spinner-border text-danger m-2 showLoader" role="status" ></div>
+    </div>
     @yield('script')
     </body>
 </html>

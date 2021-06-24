@@ -67,11 +67,11 @@ class StoreController extends Controller{
 			if($user_vendor_ids){
 				$is_selected_vendor_id = $selected_vendor_id ? $selected_vendor_id : $user_vendor_ids->first();
 			}
-			$order_list = Order::select('id','order_number','payable_amount','payment_option_id','user_id')
+			$order_list = Order::with('orderStatusVendor')->select('id','order_number','payable_amount','payment_option_id','user_id')
 						->whereHas('vendors', function($query) use ($is_selected_vendor_id){
 						   $query->where('vendor_id', $is_selected_vendor_id);
 						})->paginate($paginate);
-			foreach ($order_list as $key => $order) {
+			foreach ($order_list as $order) {
 				$order_status = [];
 				$product_details = [];
 				$order_item_count = 0;
@@ -80,15 +80,25 @@ class StoreController extends Controller{
 				$order->date_time = convertDateTimeInTimeZone($order->created_at, $user->timezone);
 				$order->payment_option_title = $order->paymentOption->title;
 				foreach ($order->vendors as $vendor) {
-					$vendor_order_status = VendorOrderStatus::where('order_id', $order->id)->where('vendor_id', $vendor->id)->first();
+					$vendor_order_status = VendorOrderStatus::where('order_id', $order->id)->where('vendor_id', $is_selected_vendor_id)->orderBy('id', 'DESC')->first();
 					if($vendor_order_status){
-						$order_status[] = [
-							'current' => OrderStatusOption::find($vendor_order_status->order_status_option_id),
-							'upcoming' => OrderStatusOption::findNext($vendor_order_status->order_status_option_id)
+						$order_status_option_id = $vendor_order_status->order_status_option_id;
+						$current_status = OrderStatusOption::select('id','title')->find($order_status_option_id);
+						if($order_status_option_id == 2){
+							$upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', 3)->first();
+						}elseif ($order_status_option_id == 3) {
+							$upcoming_status = null;
+						}elseif ($order_status_option_id == 6) {
+							$upcoming_status = null;
+						}else{
+							$upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', $order_status_option_id)->first();
+						}
+						$order->order_status = [
+							'current_status' => $current_status,
+							'upcoming_status' => $upcoming_status,
 						];
 					}
 				}
-				$order->order_status = $order_status;
 				foreach ($order->products as $product) {
     				$order_item_count += $product->quantity;
     				if($is_selected_vendor_id == $product->vendor_id){
