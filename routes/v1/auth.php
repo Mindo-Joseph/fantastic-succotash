@@ -14,7 +14,6 @@ Route::group(['prefix' => 'v1/auth'], function () {
         Route::post('forgotPassword', 'Api\v1\AuthController@forgotPassword');
     });
 });
-
 Route::group(['prefix' => 'v1'], function () {
     Route::group(['middleware' => ['dbCheck', 'apilogger']], function() {
         Route::post('social/info', 'Api\v1\SocialController@getKeys');
@@ -33,6 +32,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');
         Route::get('myWallet', 'Api\v1\WalletController@getFindMyWalletDetails');
+        Route::get('revenue-details', 'Api\v1\RevenueController@getRevenueDetails');
         Route::post('changePassword', 'Api\v1\ProfileController@changePassword');
         Route::get('addressBook/{id?}', 'Api\v1\AddressController@getAddressList');
         Route::post('user/address/{id?}', 'Api\v1\AddressController@postSaveAddress');
@@ -41,7 +41,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('wishlist/update/{pid?}', 'Api\v1\ProfileController@updateWishlist');
         Route::get('mystore/product/list', 'Api\v1\StoreController@getMyStoreProductList');
         Route::get('primary/address/{id}', 'Api\v1\AddressController@postUpdatePrimaryAddress');
-
         // Rating & review 
         Route::post('update-product-rating', 'Api\v1\RatingController@updateProductRating');
         Route::get('get-product-rating', 'Api\v1\RatingController@getProductRating');

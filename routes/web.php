@@ -15,22 +15,16 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-/* Route::get('/user', function () {
-    return view('welcome');
-}); */
 include_once "images.php";
 include_once "godpanel.php";
 
 Route::domain('{domain}')->middleware(['subdomain'])->group(function() {
-
 	include_once "frontend.php";
 	include_once "backend.php";
-
 });
 
 Route::get('showImg/{folder}/{img}',function($folder, $img){
     $image  = \Storage::disk('s3')->url($folder . '/' . $img);
-    //$image  = storage_path('app/public/banner/'.$img);
     return \Image::make($image)->fit(460, 120)->response('jpg');
 });
 
@@ -38,11 +32,3 @@ Route::get('/prods/{img}',function($img){
     $image  = \Storage::disk('s3')->url('prods/' . $img);
     return \Image::make($image)->fit(460, 320)->response('jpg');
 });
-
-/*Route::get('admin/login', function () {
-    return view('auth/login');
-})->name('admin.login');
-Route::post('admin/login/client', 'Auth\LoginController@clientLogin')->name('client.login');
-Route::get('admin/wrong/url','Auth\LoginController@wrongurl')->name('wrong.client');
-
-});*/

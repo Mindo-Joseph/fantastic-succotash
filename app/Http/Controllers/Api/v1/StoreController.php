@@ -71,7 +71,7 @@ class StoreController extends Controller{
 						->whereHas('vendors', function($query) use ($is_selected_vendor_id){
 						   $query->where('vendor_id', $is_selected_vendor_id);
 						})->paginate($paginate);
-			foreach ($order_list as $key => $order) {
+			foreach ($order_list as $order) {
 				$order_status = [];
 				$product_details = [];
 				$order_item_count = 0;
@@ -80,11 +80,11 @@ class StoreController extends Controller{
 				$order->date_time = convertDateTimeInTimeZone($order->created_at, $user->timezone);
 				$order->payment_option_title = $order->paymentOption->title;
 				foreach ($order->vendors as $vendor) {
-					$vendor_order_status = VendorOrderStatus::where('order_id', $order->id)->where('vendor_id', $vendor->id)->first();
+					$vendor_order_status = VendorOrderStatus::where('order_id', $order->id)->where('vendor_id', $is_selected_vendor_id)->first();
 					if($vendor_order_status){
 						$order_status[] = [
-							'current' => OrderStatusOption::find($vendor_order_status->order_status_option_id),
-							'upcoming' => OrderStatusOption::findNext($vendor_order_status->order_status_option_id)
+							'current_status' => OrderStatusOption::find($vendor_order_status->order_status_option_id),
+							'upcoming_status' => OrderStatusOption::findNext($vendor_order_status->order_status_option_id)
 						];
 					}
 				}
