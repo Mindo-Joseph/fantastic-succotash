@@ -10,15 +10,16 @@
     }
 
     .product-img-box {
-    width: 100%;
-    height: 150px;
-    border: 1px solid #ccc;
+        width: 100%;
+        height: 150px;
+        border: 1px solid #ccc;
     }
+
     .product-img-box img {
-    height: 100%;
-    width:100%;
-    object-fit: cover;
-    object-position: center;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
     }
 
     .upload-btn-wrapper {
@@ -27,7 +28,7 @@
         display: inline-block;
     }
 
-  
+
 
     .upload-btn-wrapper input[type=file] {
         font-size: 100px;
@@ -42,11 +43,13 @@
         top: 0;
         right: 11px;
     }
+
     .product-img-box label {
         width: 100%;
         height: 100%;
         display: block;
     }
+
     .product-img-box .form-group {
         height: 100%;
     }
@@ -56,15 +59,18 @@
         left: auto;
         top: -1px;
     }
-    .product-img-box .checkbox-success input[type="checkbox"]:checked + label::after {
+
+    .product-img-box .checkbox-success input[type="checkbox"]:checked+label::after {
         left: auto;
         right: 6px;
-        top:4px;
+        top: 4px;
     }
-    .product-box.editPage .product-action{
+
+    .product-box.editPage .product-action {
         padding: 0.5rem 1rem 0 0.5rem;
     }
-    .product-box.editPage .product-action .btn{
+
+    .product-box.editPage .product-action .btn {
         padding: 0px 2px;
     }
 </style>
@@ -110,15 +116,19 @@
                 <div class="card-box">
                     <h5 class="text-uppercase bg-light p-2 mt-0 mb-3">General</h5>
                     <div class="row mb-2 row-spacing">
+<<<<<<< HEAD
+
+=======
+>>>>>>> 390c96ec647ae1f909ae2fdae13e098b22fae430
                         <div class="col-md-5 mb-2" style="cursor: not-allowed;">
                             {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
                             {!! Form::text('sku', $product->sku, ['class'=>'form-control','id' => 'sku', 'onkeypress' => "return alplaNumeric(event)",'name' => 'sku']) !!}
 
                             @if($errors->has('sku'))
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $errors->first('sku') }}</strong>
-                                </span>
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $errors->first('sku') }}</strong>
+                            </span>
                             @endif
                         </div>
 
@@ -190,7 +200,7 @@
                     @endif
                     <div class="row mb-2">
                         <div class="col-sm-4">
-                        {!! Form::label('title', 'Track Inventory') !!} <br>
+                            {!! Form::label('title', 'Track Inventory') !!} <br>
                             <input type="checkbox" bid="" id="has_inventory" data-plugin="switchery" name="has_inventory" class="chk_box" data-color="#43bee1" checked>
                         </div>
                         <div class="col-sm-8 check_inventory">
@@ -200,7 +210,7 @@
                                     {!! Form::number('quantity', $product->variant[0]->quantity, ['class'=>'form-control', 'id' => 'quantity', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                 </div>
                                 <div class="col-sm-6">
-                                    {!! Form::label('title', 'Sell When Out Of Stock',['class' => 'control-label']) !!} <br/>
+                                    {!! Form::label('title', 'Sell When Out Of Stock',['class' => 'control-label']) !!} <br />
                                     <input type="checkbox" bid="" id="sell_stock_out" data-plugin="switchery" name="sell_stock_out" class="chk_box" data-color="#43bee1" @if($product->sell_when_out_of_stock == 1) checked @endif>
                                 </div>
                             </div>
@@ -222,102 +232,103 @@
                     <p>Select or change category to get variants</p>
 
                     @if(!empty($productVariants))
-                        <div class="row" style="width:100%; overflow-x: scroll;">
-                            <div id="variantAjaxDiv" class="col-12 mb-2" >
-                                <h5 class="">Variant List</h5>
-                                <div class="row mb-2">
-                                    @foreach($productVariants as $vk => $var)
-                                        <div class="col-sm-3"> 
-                                            <label class="control-label">{{$var->title}}</label>
-                                        </div> 
-                                        <div class="col-sm-9">
-                                        @foreach($var->option as $key => $opt)
-                                            <div class="checkbox checkbox-success form-check-inline pr-3">
-                                                <input type="checkbox" name="variant{{$var->id}}" class="intpCheck" opt="{{$opt->id.';'.$opt->title}}" varId="{{$var->id.';'.$var->title}}" id="opt_vid_{{$opt->id}}" @if(in_array($opt->id, $existOptions)) checked @endif> 
-                                                <label  for="opt_vid_{{$opt->id}}">{{$opt->title}}</label>
-                                            </div>
-                                        @endforeach
-                                        </div>
+                    <div class="row" style="width:100%; overflow-x: scroll;">
+                        <div id="variantAjaxDiv" class="col-12 mb-2">
+                            <h5 class="">Variant List</h5>
+                            <div class="row mb-2">
+                                @foreach($productVariants as $vk => $var)
+                                <div class="col-sm-3">
+                                    <label class="control-label">{{$var->title}}</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    @foreach($var->option as $key => $opt)
+                                    <div class="checkbox checkbox-success form-check-inline pr-3">
+                                        <input type="checkbox" name="variant{{$var->id}}" class="intpCheck" opt="{{$opt->id.';'.$opt->title}}" varId="{{$var->id.';'.$var->title}}" id="opt_vid_{{$opt->id}}" @if(in_array($opt->id, $existOptions)) checked @endif>
+                                        <label for="opt_vid_{{$opt->id}}">{{$opt->title}}</label>
+                                    </div>
                                     @endforeach
                                 </div>
+                                @endforeach
                             </div>
+                        </div>
 
-                            @if($product->has_variant == 1)
-                            <div class="col-12" id="exist_variant_div">
-                                <h5 class="">Applied Variants Set</h5>
-                                <table class="table table-centered table-nowrap table-striped">
-                                    <thead>
-                                        <th>Image</th>
-                                        <th>Name</th>
-                                        <th>Variants</th>
-                                        <th>Price</th>
-                                        <th>Compare at price</th>
-                                        <th>Cost Price</th>
-                                        <th>Quantity</th>
-                                        <th>Action</th>
-                                    </thead>
-                                    <tbody id="product_tbody_{{$product->id}}">
+                        @if($product->has_variant == 1)
+                        <div class="col-12" id="exist_variant_div">
+                            <h5 class="">Applied Variants Set</h5>
+                            <table class="table table-centered table-nowrap table-striped">
+                                <thead>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Variants</th>
+                                    <th>Price</th>
+                                    <th>Compare at price</th>
+                                    <th>Cost Price</th>
+                                    <th>Quantity</th>
+                                    <th>Action</th>
+                                </thead>
+                                <tbody id="product_tbody_{{$product->id}}">
                                     @foreach($product->variant as $varnt)
-                                        <?php 
-                                            $existSet = array();
+                                    <?php
+                                    $existSet = array();
 
-                                            $mediaPath = Storage::disk('s3')->url('default/default_image.png');
+                                    $mediaPath = Storage::disk('s3')->url('default/default_image.png');
 
-                                            if(!empty($varnt->vimage) && isset($varnt->vimage->pimage->image)){
-                                                $mediaPath = $varnt->vimage->pimage->image->path['proxy_url'].'100/100'.$varnt->vimage->pimage->image->path['image_path'];
-                                            }
-                                            $existSet = explode('-', $varnt->sku);
-                                            $vsets = '';
+                                    if (!empty($varnt->vimage) && isset($varnt->vimage->pimage->image)) {
+                                        $mediaPath = $varnt->vimage->pimage->image->path['proxy_url'] . '100/100' . $varnt->vimage->pimage->image->path['image_path'];
+                                    }
+                                    $existSet = explode('-', $varnt->sku);
+                                    $vsets = '';
 
-                                            foreach($varnt->set as $vs){
-                                                $vsets .= $vs->title.', ';
-                                            }
-                                        ?>
-                                        <tr id="tr_{{$varnt->id}}">
-                                            <td>
-                                                <div class="image-upload">
-                                                  <label class="file-input uploadImages" for="{{$varnt->id}}">
-                                                    <img src="{{$mediaPath}}" width="30" height="30" for="{{$varnt->id}}"/>
-                                                  </label>
-                                                </div>
-                                                <div class="imageCountDiv{{$varnt->id}}"></div>
-                                            </td>
-                                            <td> 
-                                                <input type="hidden" name="variant_ids[]" value="{{$varnt->id}}">
-                                                <input type="hidden" class="exist_sets" value="{{$existSet[(count($existSet) - 1)]}}">
-                                                <input type="text" name="variant_titles[]" value="{{$varnt->title}}">
-                                            </td>
-                                            <td>{{rtrim($vsets, ', ')}}</td>
-                                            <td>
-                                                <input type="text" style="width: 70px;" name="variant_price[]" value="{{$varnt->price}}" onkeypress="return isNumberKey(event)"> </td>
-                                            <td>
-                                                <input type="text" style="width: 100px;" name="variant_compare_price[]" value="{{$varnt->compare_at_price}}" onkeypress="return isNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <input type="text" style="width: 70px;" name="variant_cost_price[]" value="{{$varnt->cost_price}}" onkeypress="return isNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <input type="text" style="width: 70px;" name="variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
-                                            </td>
-                                            <td>
-                                                <a href="javascript:void(0);" data-varient_id="{{$varnt->id}}" class="action-icon deleteExistRow"> 
-                                                    <i class="mdi mdi-delete"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                    foreach ($varnt->set as $vs) {
+                                        $vsets .= $vs->title . ', ';
+                                    }
+                                    ?>
+                                    <tr id="tr_{{$varnt->id}}">
+                                        <td>
+                                            <div class="image-upload">
+                                                <label class="file-input uploadImages" for="{{$varnt->id}}">
+                                                    <img src="{{$mediaPath}}" width="30" height="30" for="{{$varnt->id}}" />
+                                                </label>
+                                            </div>
+                                            <div class="imageCountDiv{{$varnt->id}}"></div>
+                                        </td>
+                                        <td>
+                                            <input type="hidden" name="variant_ids[]" value="{{$varnt->id}}">
+                                            <input type="hidden" class="exist_sets" value="{{$existSet[(count($existSet) - 1)]}}">
+                                            <input type="text" name="variant_titles[]" value="{{$varnt->title}}">
+                                        </td>
+                                        <td>{{rtrim($vsets, ', ')}}</td>
+                                        <td>
+                                            <input type="text" style="width: 70px;" name="variant_price[]" value="{{$varnt->price}}" onkeypress="return isNumberKey(event)">
+                                        </td>
+                                        <td>
+                                            <input type="text" style="width: 100px;" name="variant_compare_price[]" value="{{$varnt->compare_at_price}}" onkeypress="return isNumberKey(event)">
+                                        </td>
+                                        <td>
+                                            <input type="text" style="width: 70px;" name="variant_cost_price[]" value="{{$varnt->cost_price}}" onkeypress="return isNumberKey(event)">
+                                        </td>
+                                        <td>
+                                            <input type="text" style="width: 70px;" name="variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0);" data-varient_id="{{$varnt->id}}" class="action-icon deleteExistRow">
+                                                <i class="mdi mdi-delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
                                     @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            @endif
-                            <div id="variantRowDiv" class="col-12"></div>
+                                </tbody>
+                            </table>
+                        </div>
+                        @endif
+                        <div id="variantRowDiv" class="col-12"></div>
                         @else
-                            <div class="row" style="width:100%; overflow-x: scroll;">
-                                <h5 class="">No variant assigned to category.</h5>
-                            </div>
+                        <div class="row" style="width:100%; overflow-x: scroll;">
+                            <h5 class="">No variant assigned to category.</h5>
+                        </div>
                         @endif
                     </div>
-                </div>                
+                </div>
 
             </div> <!-- end col -->
 
@@ -327,7 +338,7 @@
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Other Information</h5>
 
                     <div class="row mb-2">
-                        
+
                         <div class="col-md-3 d-flex justify-content-between">
                             {!! Form::label('title', 'New',['class' => 'control-label']) !!}
                             <input type="checkbox" id="is_new" data-plugin="switchery" name="is_new" class="chk_box" data-color="#43bee1" @if($product->is_new == 1) checked @endif>
@@ -338,10 +349,10 @@
                             <input type="checkbox" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#43bee1" @if($product->is_new == 1) checked @endif>
                         </div>
                         @if($configData->need_delivery_service == 1)
-                            <div class="col-md-5 d-flex justify-content-between">
-                                {!! Form::label('title', 'Required Last Mile',['class' => 'control-label']) !!}
-                                <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#43bee1" @if($product->Requires_last_mile == 1) checked @endif>
-                            </div>
+                        <div class="col-md-5 d-flex justify-content-between">
+                            {!! Form::label('title', 'Required Last Mile',['class' => 'control-label']) !!}
+                            <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#43bee1" @if($product->Requires_last_mile == 1) checked @endif>
+                        </div>
                         @endif
                     </div>
 
@@ -358,7 +369,7 @@
                             <select class="form-control " id="brand_idBox" name="brand_id">
                                 <option value="">Select</option>
                                 @foreach($brands as $brand)
-                                    <option value="{{$brand->id}}" @if(!empty($product->brand) && $product->brand->id == $brand->id) selected @endif>{{$brand->title}}</option>
+                                <option value="{{$brand->id}}" @if(!empty($product->brand) && $product->brand->id == $brand->id) selected @endif>{{$brand->title}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -367,7 +378,7 @@
                             <select class="form-control " id="typeSelectBox" name="tax_category">
                                 <option value="">Select</option>
                                 @foreach($taxCate as $cate)
-                                    <option value="{{$cate->id}}" @if($product->variant[0]->tax_category_id == $cate->id) selected @endif>{{$cate->title}}</option>
+                                <option value="{{$cate->id}}" @if($product->variant[0]->tax_category_id == $cate->id) selected @endif>{{$cate->title}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -399,35 +410,42 @@
                             {!! Form::label('title', 'Country Origin',['class' => 'control-label']) !!}
                             <select class="form-control selectizeInput" id="country_origin_id" name="country_origin_id">
                                 @foreach($countries as $coun)
-                                    <option value="{{$coun->id}}" @if($product->country_origin_id == $coun->id) selected @endif>{{$coun->name}}</option>
+                                <option value="{{$coun->id}}" @if($product->country_origin_id == $coun->id) selected @endif>{{$coun->name}}</option>
                                 @endforeach
                             </select>
 
                         </div>
                     </div>
+                    <div class="row mb-2">
+                        @if($configData->pharmacy_check == 1)
+                        {!! Form::label('title', 'Pharmacy',['class' => 'control-label col-sm-2']) !!}
+                        <div class="col-sm-4">
+                            <input type="checkbox" bid="" id="pharmacy_check" data-plugin="switchery" name="pharmacy_check" class="chk_box" data-color="#43bee1" @if($product->pharmacy_check == 1) checked @endif>
+                        </div>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="card-box">
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Product Images</h5>
-
                     <div class="row mb-2">
                         @if(isset($product->media) && !empty($product->media))
-                            @foreach($product->media as $media)
-                            <div class="col-4 product-box editPage" style="overflow: hidden;">
-                            <?php 
-                                $mediaPath = Storage::disk('s3')->url('default/default_image.png');
-                                    if(isset($media->image) && is_array($media->image->path)){
-                                        $mediaPath = $media->image->path['proxy_url'].'300/300'.$media->image->path['image_path'];
-                                    }
-                                ?>
-                                <div class="product-action">
-                                    <a href="{{route('product.deleteImg',[$product->id, $media->image->id])}}" class="btn btn-danger btn-xs waves-effect waves-light" onclick="return confirm('Are you sure? You want to delete the image.')"><i class="mdi mdi-close" {{$media->image}}></i></a>
-                                </div>
-                                <div class="bg-light">
-                                    <img src="{{$mediaPath}}" style="width:100%;" class="vimg_{{$media->id}}"/>
-                                </div>
+                        @foreach($product->media as $media)
+                        <div class="col-4 product-box editPage" style="overflow: hidden;">
+                            <?php
+                            $mediaPath = Storage::disk('s3')->url('default/default_image.png');
+                            if (isset($media->image) && is_array($media->image->path)) {
+                                $mediaPath = $media->image->path['proxy_url'] . '300/300' . $media->image->path['image_path'];
+                            }
+                            ?>
+                            <div class="product-action">
+                                <a href="{{route('product.deleteImg',[$product->id, $media->image->id])}}" class="btn btn-danger btn-xs waves-effect waves-light" onclick="return confirm('Are you sure? You want to delete the image.')"><i class="mdi mdi-close" {{$media->image}}></i></a>
                             </div>
-                            @endforeach
+                            <div class="bg-light">
+                                <img src="{{$mediaPath}}" style="width:100%;" class="vimg_{{$media->id}}" />
+                            </div>
+                        </div>
+                        @endforeach
                         @endif
                     </div>
                     <div class="dropzone dropzone-previews" id="my-awesome-dropzone"></div>
@@ -494,7 +512,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body" id="AddCardBox">
-            
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-info waves-effect waves-light selectVaiantImages">Select</button>
@@ -516,73 +534,80 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 <script type="text/javascript">
-    $('#requiredShipping').change(function(){
+    $('#requiredShipping').change(function() {
         var val = $(this).prop('checked');
-        if(val == true){
+        if (val == true) {
             $('.shippingDiv').show();
-        }else{
+        } else {
             $('.shippingDiv').hide();
         }
     });
-    $('#is_physical').change(function(){
+    $('#is_physical').change(function() {
         var val = $(this).prop('checked');
-        if(val == true){
+        if (val == true) {
             $('.physicalDiv').show();
-        }else{
+        } else {
             $('.physicalDiv').hide();
         }
     });
 
-    $('#has_inventory').change(function(){
+    $('#has_inventory').change(function() {
         var val = $(this).prop('checked');
-        if(val == true){
+        if (val == true) {
             $('.check_inventory').show();
-        }else{
+        } else {
             $('.check_inventory').hide();
         }
     });
 
     var regexp = /^[a-zA-Z0-9-_]+$/;
-    function removeVariant(product_id, product_variant_id, is_product_delete){
+
+    function removeVariant(product_id, product_variant_id, is_product_delete) {
         var redirect_url = "{{url('client/vendor/catalogs/'.$product->vendor_id)}}";
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: "{{route('product.deleteVariant')}}",
-            data: {"_token": "{{ csrf_token() }}", product_id : product_id, product_variant_id: product_variant_id, is_product_delete : is_product_delete},
-            success: function (response) {
-                $('#tr_'+product_variant_id).remove();
-                if(is_product_delete){
+            data: {
+                "_token": "{{ csrf_token() }}",
+                product_id: product_id,
+                product_variant_id: product_variant_id,
+                is_product_delete: is_product_delete
+            },
+            success: function(response) {
+                $('#tr_' + product_variant_id).remove();
+                if (is_product_delete) {
                     window.location.href = redirect_url;
                 }
             }
         });
     }
-    $(document).on('click', '.deleteExistRow', function () {
+    $(document).on('click', '.deleteExistRow', function() {
         var that = $(this);
         var product_id = "{{$product->id}}";
         var product_variant_id = $(this).data('varient_id');
-        var rowCount = $('#product_tbody_'+product_id+' tr').length;
-        if(rowCount == 1){
+        var rowCount = $('#product_tbody_' + product_id + ' tr').length;
+        if (rowCount == 1) {
             var is_product_delete = true;
-            if(confirm("Are you sure? You want to delete this variant.")) {
+            if (confirm("Are you sure? You want to delete this variant.")) {
                 removeVariant(product_id, product_variant_id, is_product_delete);
             }
-        }else{
+        } else {
             var is_product_delete = false;
-            if(confirm("Are you sure? You want to delete this brand.")) {
+            if (confirm("Are you sure? You want to delete this brand.")) {
                 removeVariant(product_id, product_variant_id, is_product_delete);
             }
         }
     });
-    function alplaNumeric(evt){
+
+    function alplaNumeric(evt) {
         var charCode = String.fromCharCode(event.which || event.keyCode);
-        if (!regexp.test(charCode)){
+        if (!regexp.test(charCode)) {
             return false;
         }
         var n1 = document.getElementById('sku');
         var n2 = document.getElementById('url_slug');
-        n2.value = n1.value+charCode;
+        n2.value = n1.value + charCode;
         return true;
     }
     function alplaNumericSlug(evt){
@@ -606,30 +631,32 @@
             tabsize: 2,
             height: 120,
             toolbar: [
-              ['style', ['style']],
-              ['color', ['color']],
-              ['table', ['table']],
-              ['para', ['ul', 'ol', 'paragraph']],
-              ['font', ['bold', 'underline', 'clear']],
-              ['view', ['fullscreen', 'codeview', 'help']]
+                ['style', ['style']],
+                ['color', ['color']],
+                ['table', ['table']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['view', ['fullscreen', 'codeview', 'help']]
             ]
         });
         $("div#my-awesome-dropzone").dropzone({
             acceptedFiles: ".jpeg,.jpg,.png",
             addRemoveLinks: true,
             url: "{{route('product.images')}}",
-            params: {prodId: "{{$product->id}}"},
+            params: {
+                prodId: "{{$product->id}}"
+            },
             parameter: "{{route('product.images')}}",
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
-            success: function (file, res) {
+            success: function(file, res) {
 
                 $('.imageDivHidden').append('<input type="hidden" name="fileIds[]" value="' + res.imageId + '">')
                 uploadedDocumentMap[file.name] = res.imageId;
 
             },
-            removedfile: function (file) {
+            removedfile: function(file) {
                 file.previewElement.remove();
                 console.log(file);
                 var name = ''
@@ -638,13 +665,13 @@
                 } else {
                     name = uploadedDocumentMap[file.name]
                 }
-                $('form').find('input[name="fileIds[]"][value="' + name +  '"]').remove();
+                $('form').find('input[name="fileIds[]"][value="' + name + '"]').remove();
             },
         });
 
     });
 
-    $('#category_list').change(function(){
+    $('#category_list').change(function() {
 
         var cid = $(this).val();
         $.ajaxSetup({
@@ -660,81 +687,88 @@
             url: uri,
             data: '',
             dataType: 'json',
-            success: function (data) {
+            success: function(data) {
                 $('#variantAjaxDiv').html(data.resp);
             },
-            beforeSend: function(){
+            beforeSend: function() {
                 $(".loader_box").show();
             },
-            complete: function(){
+            complete: function() {
                 $(".loader_box").hide();
             },
-            error: function (data) {
+            error: function(data) {
                 console.log('data2');
             }
         });
     });
 
-    $('.makeVariantRow').click(function(){
+    $('.makeVariantRow').click(function() {
         var psku = $('#sku').val();
         var pid = "{{$product->id}}";
-        if(psku.trim() == ''){
+        if (psku.trim() == '') {
             alert('Enter Product sku.');
             return false;
         }
         var vids = [];
         var optids = [];
         var exist = [];
-        $("#variantAjaxDiv .intpCheck").each(function(){
+        $("#variantAjaxDiv .intpCheck").each(function() {
             var $this = $(this);
-            if($this.is(":checked") ){
+            if ($this.is(":checked")) {
                 optids.push($this.attr('opt'));
                 vids.push($this.attr('varid'));
             }
         });
-        $("#exist_variant_div .exist_sets").each(function(){
+        $("#exist_variant_div .exist_sets").each(function() {
             exist.push($(this).val());
         });
         $.ajax({
             type: "post",
             url: "{{route('product.makeRows')}}",
-            data: {"_token": "{{ csrf_token() }}", 'variantIds' : vids, 'optionIds' : optids, 'sku': psku, 'existing' : exist, 'pid': pid},
+            data: {
+                "_token": "{{ csrf_token() }}",
+                'variantIds': vids,
+                'optionIds': optids,
+                'sku': psku,
+                'existing': exist,
+                'pid': pid
+            },
             dataType: 'json',
-            success: function (resp) {
-                if(resp.success == 'false'){
+            success: function(resp) {
+                if (resp.success == 'false') {
                     alert(resp.msg);
                     $('#variantRowDiv').html('');
-                }else{
+                } else {
                     $('#variantRowDiv').html(resp.html);
                 }
-                
+
             },
-            beforeSend: function(){
+            beforeSend: function() {
                 $(".loader_box").show();
             },
-            complete: function(){
+            complete: function() {
                 $(".loader_box").hide();
             },
-            error: function (resp) {
+            error: function(resp) {
                 console.log('data2');
             }
         });
     });
 
-    $(document).on('click', '.deleteCurRow', function () {
+    $(document).on('click', '.deleteCurRow', function() {
         $(this).closest('tr').remove();
     });
 
-    
 
-    $(document).on('change', '.vimageNew', function () {
+
+    $(document).on('change', '.vimageNew', function() {
 
         var file = this.files[0];
         var fileType = file['type'];
         var validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
         if (!validImageTypes.includes(fileType)) {
             alert('select only images');
-        }else{
+        } else {
 
             var form = document.getElementById('modalImageForm');
             var formData = new FormData(form);
@@ -754,17 +788,17 @@
                 data: formData,
                 contentType: false,
                 processData: false,
-                success:function(data){
+                success: function(data) {
                     $('#upload-media .lastDiv').before(data.htmlData);
-                    
+
                 },
-                beforeSend: function(){
+                beforeSend: function() {
                     $(".loader_box").show();
                 },
-                complete: function(){
+                complete: function() {
                     $(".loader_box").hide();
                 },
-                error: function(data){
+                error: function(data) {
                     console.log("error");
                     console.log(data);
                 }
@@ -774,26 +808,30 @@
     });
 
     function readURL(input, forv) {
-        
+
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function(e) {
-                $('.vimg_'+forv).attr('src', e.target.result);
+                $('.vimg_' + forv).attr('src', e.target.result);
             }
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    $(document).on('change', '#language_id', function () {
+    $(document).on('change', '#language_id', function() {
         var forv = $(this).val();
         var pid = "{{$product->id}}";
         $.ajax({
             type: "post",
             url: "{{route('product.translation')}}",
-            data: {"_token": "{{ csrf_token() }}", 'prod_id' : pid, 'lang_id' : forv},
+            data: {
+                "_token": "{{ csrf_token() }}",
+                'prod_id': pid,
+                'lang_id': forv
+            },
             dataType: 'json',
-            success: function (resp) {
-                if(resp){
+            success: function(resp) {
+                if (resp) {
                     $('#product_name').val(resp.data.title);
                     $('#body_html').val(resp.data.body_html);
                     $('#meta_title').val(resp.data.meta_title);
@@ -801,16 +839,16 @@
                     $('#meta_description').val(resp.data.meta_description);
                 }
             },
-            beforeSend: function(){
+            beforeSend: function() {
                 $(".loader_box").show();
             },
-            complete: function(){
+            complete: function() {
                 $(".loader_box").hide();
             }
         });
     });
 
-    $(document).on('click', '.uploadImages', function () {
+    $(document).on('click', '.uploadImages', function() {
 
         var vari_id = $(this).attr('for');
         var pid = "{{$product->id}}";
@@ -818,57 +856,64 @@
         $.ajax({
             type: "post",
             url: "{{route('productImage.get')}}",
-            data: {"_token": "{{ csrf_token() }}", 'prod_id': pid, 'variant_id': vari_id, 'vendor_id': vendor},
+            data: {
+                "_token": "{{ csrf_token() }}",
+                'prod_id': pid,
+                'variant_id': vari_id,
+                'vendor_id': vendor
+            },
             dataType: 'json',
-            success: function (data) {
+            success: function(data) {
                 $('#upload-media #AddCardBox').html(data.htmlData);
                 $('#upload-media').modal({
                     keyboard: false
                 });
             },
-            beforeSend: function(){
+            beforeSend: function() {
                 $(".loader_box").show();
             },
-            complete: function(){
+            complete: function() {
                 $(".loader_box").hide();
             },
         });
     });
 
-    $(document).on('click', '.selectVaiantImages', function () {
+    $(document).on('click', '.selectVaiantImages', function() {
         var variantId = $('#upload-media #modalVariantId').val();
         var productId = "{{$product->id}}";
         var imageId = [];
-        $("#upload-media .imgChecks").each(function(){
+        $("#upload-media .imgChecks").each(function() {
             var $this = $(this);
-            if($this.is(":checked") ){
+            if ($this.is(":checked")) {
                 imageId.push($this.attr('imgId'));
             }
         });
         $.ajax({
             type: "post",
             url: "{{route('product.variant.update')}}",
-            data: {"_token": "{{ csrf_token() }}", 'prod_id': productId, 'variant_id': variantId, 'image_id': imageId},
+            data: {
+                "_token": "{{ csrf_token() }}",
+                'prod_id': productId,
+                'variant_id': variantId,
+                'image_id': imageId
+            },
             dataType: 'json',
-            success: function (resp) {
-                if(resp.success != 'false'){
+            success: function(resp) {
+                if (resp.success != 'false') {
                     $('#upload-media').modal('hide');
-                }else{
+                } else {
                     alert(resp.msg);
                     $('#upload-media').modal('hide');
                 }
             },
-            beforeSend: function(){
+            beforeSend: function() {
                 $(".loader_box").show();
             },
-            complete: function(){
+            complete: function() {
                 $(".loader_box").hide();
             }
         });
     });
-
-    
-
 </script>
 
 @endsection

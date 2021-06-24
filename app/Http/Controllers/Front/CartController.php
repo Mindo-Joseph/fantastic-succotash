@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor,CartCoupon};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor,CartCoupon};
 use Illuminate\Http\Request;
 use Session;
 use Auth;
 use GuzzleHttp\Client;
-use Log;
+use Illuminate\Support\Facades\Storage;
 class CartController extends FrontController
 { 
     private function randomString()
@@ -265,7 +265,6 @@ class CartController extends FrontController
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if($cartData){
             foreach ($cartData as $ven_key => $vendorData) {
-                
                 $payable_amount = $taxable_amount = $discount_amount = $discount_percent = $deliver_charge = 0.00;
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
                     $quantity_price = 0;
@@ -293,7 +292,6 @@ class CartController extends FrontController
                             $payable_amount = $payable_amount + $product_tax;
                         }
                     }
-                   
                     $prod->taxdata = $taxData;
                     unset($prod->product->taxCategory);
                     foreach ($prod->addon as $ck => $addons) {
@@ -321,7 +319,6 @@ class CartController extends FrontController
                     $prod->deliver_charge = number_format($deliver_charge, 2);
                     $payable_amount = $payable_amount + $deliver_charge;
                     $delivery_fee_charges = $deliver_charge;
-
                 }
                 if($vendorData->coupon){
                     if($vendorData->coupon->promo->promo_type_id == 2){
@@ -508,5 +505,19 @@ class CartController extends FrontController
             return false;
     }
 
+    public function uploadPrescription(Request $request, $domain = ''){
+        $user = Auth::user();
+        if ($user) {
+            $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
+            foreach($request->prescriptions as $prescription){
+                $cart_product_prescription = new CartProductPrescription();
+                $cart_product_prescription->cart_id = $cart->id;
+                $cart_product_prescription->product_id = $request->product_id;
+                $cart_product_prescription->prescription = Storage::disk('s3')->put('prescription', $prescription, 'public');
+                $cart_product_prescription->save();
+            }
+        }
+        return response()->json(['status' => 'success', 'message' => "Uploaded Successfully"]);
+    }
 
 }

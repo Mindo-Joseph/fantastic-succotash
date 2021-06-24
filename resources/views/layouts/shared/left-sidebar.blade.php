@@ -61,7 +61,6 @@
                     <a href="#sidebaraccounting" data-toggle="collapse">
                     <span class="icon-customize_icon"></span>
                         <span> Accounting </span>
-                        <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse" id="sidebaraccounting">
                         <ul class="nav-second-level">
@@ -119,7 +118,6 @@
                     <a href="#sidebarstyling" data-toggle="collapse">
                     <span class="icon-customize_icon"></span>
                         <span> Styling </span>
-                        <!-- <label class="menu-arrow"></label> -->
                     </a>
                     <div class="collapse" id="sidebarstyling">
                         <ul class="nav-second-level">
