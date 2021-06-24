@@ -381,7 +381,7 @@
                                                 </fieldset>
                                             </div>
 
-                                            <div class="row">
+                                            <div class="row rating_files">
                                                 <div class="col-12">
                                                     <h4>Upload Images</h4>
                                                 </div>
