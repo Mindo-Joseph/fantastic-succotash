@@ -100,8 +100,7 @@
                                     </div>
                                     <div class="name_location">
                                         <h5 class="mt-0 mb-1">{{$user->name}}</h5>
-                                        <p class="m-0"><i class="fa fa-map-marker mr-1" aria-hidden="true"></i>
-                                            Chandigarh</p>
+                                        <?php /* ?><p class="m-0"><i class="fa fa-map-marker mr-1" aria-hidden="true"></i> Chandigarh</p><?php */ ?>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 text-center text-md-right mt-3 mt-md-0">
@@ -180,8 +179,8 @@
                                             </div>
                                             <div class="col-md-4 d-flex justify-content-end mt-md-0 mt-3">
                                                 <div class="address_btn">
-                                                    <a href="#">Edit</a>
-                                                    <a href="#">Remove</a>
+                                                    <?php /* ?><a href="{{ route('user.addressBook') }}">Edit</a>
+                                                    <a href="#" class="removeAddress" data-id="{{ $address->id }}">Remove</a><?php */ ?>
                                                 </div>
                                             </div>
                                         </div>

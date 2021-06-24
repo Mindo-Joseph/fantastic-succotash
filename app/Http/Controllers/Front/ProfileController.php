@@ -15,6 +15,8 @@ use App\Models\{UserWishlist, User, Product, UserAddress, UserRefferal, ClientPr
 
 class ProfileController extends FrontController
 {
+    private $folderName = '/profile/image';
+    
     /**
      * Display send refferal page
      *
@@ -104,7 +106,7 @@ class ProfileController extends FrontController
         if ($user){
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $user->image = Storage::disk('s3')->put('/profile/image', $file,'public');
+                $user->image = Storage::disk('s3')->put($this->folderName, $file,'public');
             }
             $user->name = $request->name;
             $user->phone_number = $request->phone_number;

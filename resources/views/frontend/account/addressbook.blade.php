@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Login'])
+@extends('layouts.store', ['title' => 'Profile'])
 
 @section('css')
 <style type="text/css">
@@ -50,6 +50,9 @@
     .invalid-feedback{
         display: block;
     }
+    .outer-box{
+        min-height: 280px;
+    }
 </style>
 
 <section class="section-b-space">
@@ -92,55 +95,40 @@
                                         <h6 class="m-0">Add new Address</h6>
                                     </a>
                                 </div>
-
-                                <div class="col-xl-4 col-md-6 mt-3">
-                                    <div class="outer-box d-flex align-items-center justify-content-between px-0">
-                                        <div class="address-type w-100">
-                                            <div class="default_address border-bottom mb-1 px-2">
-                                                <label>Default :</label>
-                                                <img src="{{asset('assets/images/products/product-1.png')}}" alt="product-img" height="30" />
+                                @foreach($useraddress as $add)
+                                    <div class="col-xl-4 col-md-6 mt-3">
+                                        <div class="outer-box d-flex align-items-center justify-content-between px-0">
+                                            <div class="address-type w-100">
+                                                <div class="default_address border-bottom mb-1 px-2">
+                                                    <h6 class="mt-0 mb-2"><i class="fa fa-{{ ($add->type == 1) ? 'home' : 'building' }} mr-1" aria-hidden="true"></i> {{ ($add->type == 1) ? 'Home' : 'Office' }}</h6>
+                                                </div>
+                                                <div class="px-2">
+                                                    <p class="mb-1">{{$add->address}}</p>
+                                                    <p class="mb-1">{{$add->street}}</p>
+                                                    <p class="mb-1">{{$add->city}}, {{$add->state}} {{$add->pincode}}</p>
+                                                    <p class="mb-1">{{$add->country  ? $add->country : ''}}</p>
+                                                    <p class="mb-1">Phone number: ‪8219512331‬</p>
+                                                </div>
                                             </div>
-                                            <div class="px-2">
-                                                <h6 class="mt-0 mb-2"><i class="fa fa-home mr-1" aria-hidden="true"></i> Home</h6>
-                                                <p class="mb-1">#1541, phase-5, mohali, Phase 5, Mohali</p>
-                                                <p class="mb-1">Colony</p>
-                                                <p class="mb-1">Mohali, PUNJAB 160059</p>
-                                                <p class="mb-1">India</p>
-                                                <p class="mb-1">Phone number: ‪8219512331‬</p>
+                                            <div class="address-btn d-flex align-items-center justify-content-end w-100 mt-4 px-2">
+                                                @if($add->is_primary == 1)
+                                                    <a class="btn btn-solid disabled" href="#">Primary</a>
+                                                @else
+                                                    <a class="btn btn-solid" href="{{ route('setPrimaryAddress', $add->id) }}" class="mr-2">Set as Primary</a>
+                                                @endif
+                                                <a class="btn btn-solid" href="{{ route('editAddress', $add->id) }}">Edit</a>
+                                                <a class="btn btn-solid delete_address_btn" href="javascript:void(0)" data-toggle="modal" data-target="#removeAddressConfirmation" data-id="{{$add->id}}">Delete</a>
                                             </div>
-                                        </div>
-                                        <div class="address-btn d-flex align-items-center justify-content-end w-100 mt-4 px-2">
-                                            <a class="btn btn-solid" data-toggle="modal" data-target="#edit-address" href="javascript:void(0)">Edit</a>
-                                            <a class="btn btn-solid" href="#">Delete</a>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-xl-4 col-md-6 mt-3">
-                                    <div class="outer-box d-flex align-items-center justify-content-between px-0 h-100">
-                                        <div class="address-type w-100">
-                                            <div class="px-2">
-                                                <h6 class="mt-0 mb-2"><i class="fa fa-building mr-1" aria-hidden="true"></i> Office</h6>
-                                                <p class="mb-1">#1541, phase-5, mohali, Phase 5, Mohali</p>
-                                                <p class="mb-1">Colony</p>
-                                                <p class="mb-1">Mohali, PUNJAB 160059</p>
-                                                <p class="mb-1">India</p>
-                                                <p class="mb-1">Phone number: ‪8219512331‬</p>
-                                            </div>
-                                        </div>
-                                        <div class="address-btn d-flex align-items-center justify-content-end w-100 mt-4 px-2">
-                                            <a class="btn btn-solid" href="#">Edit</a>
-                                            <a class="btn btn-solid" href="#">Delete</a>
-                                            <a class="btn btn-solid" href="#">Set as Default</a>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
 
                             <!-- <div class="box-head">
                                 <h2></h2>
                                 <a href="{{route('addNewAddress')}}">Add new Address</a>
                             </div> -->
-                            <div class="row mb-3">
+                            <?php /* ?><div class="row mb-3">
                             @foreach($useraddress as $add)
                                 <div class="col-sm-6">
                                     <div class="box">
@@ -159,32 +147,13 @@
                                             <h6>Street: {{$add->street}}</h6>
                                             <h6>City: {{$add->city}}</h6>
                                             <h6>State: {{$add->state}}</h6>
-                                            <h6>Country: {{$add->country  ? $add->country->name : ''}}</h6>
+                                            <h6>Country: {{$add->country  ? $add->country : ''}}</h6>
                                             <h6>Pincode: {{$add->pincode}}</h6>
                                         </div>
                                     </div>
                                 </div>
                                 @endforeach
-                            </div>
-                            <!-- <div>
-                                <div class="box">
-                                    <div class="box-title">
-                                        <h3>Address Book</h3><a href="#">Manage Addresses</a>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <h6>Default Billing Address</h6>
-                                            <address>You have not set a default billing address.<br><a href="#">Edit
-                                                    Address</a></address>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <h6>Default Shipping Address</h6>
-                                            <address>You have not set a default shipping address.<br><a
-                                                    href="#">Edit Address</a></address>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
+                            </div><?php */ ?>
                         </div>
                     </div>
                 </div>
@@ -282,6 +251,26 @@
   </div>
 </div>
 
+
+<div class="modal fade" id="removeAddressConfirmation" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_addressLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="remove_addressLabel">Delete Address</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="m-0">Do you really want to delete this address ?</h6>
+      </div>
+      <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-solid" id="remove_address_confirm_btn" data-id="">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Address Edit Modal Start Form Here -->
 <div class="modal fade edit_address" id="edit-address" tabindex="-1" aria-labelledby="edit-addressLabel" aria-hidden="true">
@@ -440,6 +429,18 @@
 
     $('.verifyPhone').click(function(){
        verifyUser('phone');
+    });
+
+    $(document).delegate(".delete_address_btn", "click", function(){
+        var addressID = $(this).attr("data-id");
+        $("#remove_address_confirm_btn").attr("data-id", addressID);
+    });
+
+    $(document).delegate("#remove_address_confirm_btn", "click", function(){
+        var addressID = $(this).attr("data-id");
+        var url = '{{ route("deleteAddress", ":id") }}';
+        url = url.replace(':id', addressID);
+        location.href = url;
     });
 
     function verifyUser($type = 'email'){

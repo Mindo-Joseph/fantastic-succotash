@@ -75,12 +75,19 @@ class AddressController extends FrontController{
      * @return \Illuminate\Http\Response
      */
     public function update($domain = '', Request $request, $id){
+        $country = Country::select('code', 'name')->where('id', $request->country)->first();
+        $user = User::where('id', Auth::user()->id)->first();
+        if ($user){
+            $user->country_id = $request->country;
+            $user->save();
+        }
         $address = UserAddress::find($id);
         $address->address = $request->address;
         $address->street = $request->street;
         $address->city = $request->city;
         $address->state = $request->state;
-        $address->country_id = $request->country;
+        $address->country = $country->name;
+        $address->country_code = $country->code;
         $address->pincode = $request->pincode;
         $address->type = $request->type;
         $address->save();
