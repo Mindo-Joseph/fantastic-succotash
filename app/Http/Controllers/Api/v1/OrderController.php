@@ -278,14 +278,28 @@ class OrderController extends Controller {
                 $vendor_order_status->vendor_id = $vendor_id;
                 $vendor_order_status->order_status_option_id = $order_status_option_id;
                 $vendor_order_status->save();
+                $current_status = OrderStatusOption::select('id','title')->find($order_status_option_id);
+                if($order_status_option_id == 2){
+                    $upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', 3)->first();
+                }elseif ($order_status_option_id == 3) {
+                    $upcoming_status = [];
+                }elseif ($order_status_option_id == 6) {
+                    $upcoming_status = [];
+                }else{
+                    $upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', $order_status_option_id)->first();
+                }
+                $order_status = [
+                    'current_status' => $current_status,
+                    'upcoming_status' => $upcoming_status,
+                ];
                 DB::commit();
                 return response()->json([
                     'status' => 'success',
-                    'order_status' => 'success',
+                    'order_status' => $order_status,
                     'message' => 'Order Status Updated Successfully.'
                 ]);
             }
-            } catch(\Exception $e){
+        } catch(\Exception $e){
             DB::rollback();
             return response()->json([
                 'status' => 'error',
