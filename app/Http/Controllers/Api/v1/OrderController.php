@@ -20,8 +20,20 @@ class OrderController extends Controller {
 
     public function getOrdersList(Request $request){
     	$user = Auth::user();
+        $order_status_options= [];
         $paginate = $request->has('limit') ? $request->limit : 12;
-        $orders = OrderVendor::with('status')->where('user_id', $user->id)->paginate($paginate);
+        $type = $request->has('type') ? $request->type : 'active';
+        switch ($type) {
+            case 'active':
+                $order_status_options = [1,2,4,5];
+            break;
+            case 'past':
+                $order_status_options = [6,3];
+            break;
+        }
+        $orders = OrderVendor::whereHas('status', function ($query), use($order_status_options) {
+                $query->whereIn('id', $order_status_options);
+            })->where('user_id', $user->id)->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
             $order->user_name = $user->name;
@@ -52,8 +64,7 @@ class OrderController extends Controller {
             unset($order->payment_option_id);
             unset($order->orderDetail);
         }
-        
-    	return $this->successResponse($orders, 'Order placed successfully.', 201);
+    	return $this->successResponse($orders, '', 201);
     }
 
     public function postOrderDetail(Request $request){
