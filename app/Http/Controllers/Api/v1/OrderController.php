@@ -25,14 +25,14 @@ class OrderController extends Controller {
         $type = $request->has('type') ? $request->type : 'active';
         switch ($type) {
             case 'active':
-                $order_status_options = [1,2,4,5];
+                $order_status_options = [6,3];
             break;
             case 'past':
-                $order_status_options = [6,3];
+                $order_status_options = [1,2,4,5];
             break;
         }
         $orders = OrderVendor::whereHas('status', function ($query) use($order_status_options) {
-                $query->whereIn('order_status_option_id', $order_status_options);
+                $query->whereNotIn('order_status_option_id', $order_status_options);
             })->where('user_id', $user->id)->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
