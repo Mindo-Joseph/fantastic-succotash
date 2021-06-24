@@ -28,11 +28,11 @@ class OrderController extends Controller {
             case 'active':
                 $order_status_options = [6,3];
                 $orders->whereDoesntHave('status', function ($query) use($order_status_options) {
-                    $query->whereNotIn('order_status_option_id', $order_status_options);
+                    $query->whereIn('order_status_option_id', $order_status_options);
                 });
             break;
             case 'past':
-                $order_status_options = [1,2,4,5];
+                $order_status_options = [6,3];
                 $orders->whereHas('status', function ($query) use($order_status_options) {
                     $query->whereNotIn('order_status_option_id', $order_status_options);
                 });
