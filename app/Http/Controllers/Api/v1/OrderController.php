@@ -23,7 +23,7 @@ class OrderController extends Controller {
         $order_status_options= [];
         $paginate = $request->has('limit') ? $request->limit : 12;
         $type = $request->has('type') ? $request->type : 'active';
-        $orders = OrderVendor::->where('user_id', $user->id)->orderBy('id', 'DESC');
+        $orders = OrderVendor::where('user_id', $user->id)->orderBy('id', 'DESC');
         switch ($type) {
             case 'active':
                 $order_status_options = [6,3];
