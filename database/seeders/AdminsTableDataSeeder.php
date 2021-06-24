@@ -1,7 +1,7 @@
 <?php
 namespace Database\Seeders;
-
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class AdminsTableDataSeeder extends Seeder
 {
@@ -19,7 +19,7 @@ class AdminsTableDataSeeder extends Seeder
                 'name' => 'Admin',
 		        'email' => 'admin@cbl.com',
 		        'email_verified_at' => now(),
-		        'password' => '$2y$10$08DOAQL70KwfBOp0vtyoyeawUKnz9x3aZGSvEflAhauLlJp7mWVjO', // password
+		        'password' => Hash::make('password')
 		        'remember_token' => \Str::random(10),
             ),
         ); 

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Api\v1;
-
 use DB;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;

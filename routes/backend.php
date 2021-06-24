@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\Front\SearchController;
 use App\Http\Controllers\Client\DownloadFileController;
+use App\Http\Controllers\Client\Accounting\TaxController;
 use App\Http\Controllers\Client\Accounting\OrderController;
+use App\Http\Controllers\Client\Accounting\VendorController;
+use App\Http\Controllers\Client\Accounting\LoyaltyController;
+use App\Http\Controllers\Client\Accounting\PromoCodeController;
 
 
 
@@ -16,6 +20,10 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('profile', 'Client\DashBoardController@profile')->name('client.profile');
     Route::get('dashboard', 'Client\DashBoardController@index')->name('client.dashboard');
     Route::get('account/orders', [OrderController::class, 'index'])->name('account.orders');
+    Route::get('account/promo-code', [PromoCodeController::class, 'index'])->name('account.promo.code');
+    Route::get('account/loyalty', [LoyaltyController::class, 'index'])->name('account.loyalty');
+    Route::get('account/tax', [TaxController::class, 'index'])->name('account.tax');
+    Route::get('account/vendor', [VendorController::class, 'index'])->name('account.vendor');
     Route::put('profile/{id}', 'Client\DashBoardController@updateProfile')->name('client.profile.update');
     Route::post('password/update', 'Client\DashBoardController@changePassword')->name('client.password.update');
     Route::get('configure', 'Client\ClientPreferenceController@index')->name('configure.index');

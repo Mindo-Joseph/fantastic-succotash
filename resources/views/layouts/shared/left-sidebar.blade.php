@@ -68,18 +68,18 @@
                             <li>
                                 <a href="{{route('account.orders')}}">Order List</a>
                             </li>
-                            <!-- <li>
-                                <a href="{{route('webStyling.index')}}">Loyality</a>
+                            <li>
+                                <a href="{{route('account.loyalty')}}">Loyality</a>
                             </li>
                             <li>
-                                <a href="{{route('webStyling.index')}}">Promo Codes</a>
+                                <a href="{{route('account.promo.code')}}">Promo Codes</a>
                             </li>
                             <li>
-                                <a href="{{route('webStyling.index')}}">Taxes</a>
+                                <a href="{{route('account.tax')}}">Taxes</a>
                             </li>
                             <li>
-                                <a href="{{route('webStyling.index')}}">Vendors</a>
-                            </li> -->
+                                <a href="{{route('account.vendor')}}">Vendors</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
