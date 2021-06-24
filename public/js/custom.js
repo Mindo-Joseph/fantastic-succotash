@@ -570,4 +570,51 @@ $(document).ready(function() {
             $(element).find(".alert").hide();
         }, 5000);
     }
+
+    $(document).on('click', '.prescription_btn', function(e) { 
+        $("#product_id").val($(this).data("product"));
+        $('#prescription_form').modal('show');
+   });
+
+    $(document).on('click', '.submitPrescriptionForm', function(e) { 
+        e.preventDefault();
+        var form =  document.getElementById('save_prescription_form');
+        var formData = new FormData(form);
+        var route_uri =  "add/product/prescription";
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+        $.ajax({
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: route_uri,
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            success: function(response) {
+
+                if (response.status == 'success') {
+                    $(".modal .close").click();
+                    location.reload(); 
+                } else {
+                    $(".show_all_error.invalid-feedback").show();
+                    $(".show_all_error.invalid-feedback").text(response.message);
+                }
+                return response;
+            },
+            complete: function(){
+                $('.loader_box').hide();
+            }
+        });
+
+    });
+
 });
