@@ -234,44 +234,4 @@ class OrderController extends BaseController{
         else
             return false;
     }
-
-    public function postVendorOrderStatusUpdate(Request $request){
-        DB::beginTransaction();
-        try {
-            $order_id = $request->order_id;
-            $vendor_id = $request->vendor_id;
-            $action = strtolower($request->action);
-            $order_status_option_id = $request->order_status_option_id;
-            if($order_status_option_id == 0){
-                switch ($action) {
-                    case 'accept':
-                        $order_status_option_id = 2;
-                    break;
-                    case 'reject':
-                        $order_status_option_id = 3;
-                    break;
-                }
-            }
-            $vendor_order_status_detail = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->where('order_status_option_id', $order_status_option_id)->first();
-            if (!$vendor_order_status_detail) {
-                $vendor_order_status = new VendorOrderStatus();
-                $vendor_order_status->order_id = $order_id;
-                $vendor_order_status->vendor_id = $vendor_id;
-                $vendor_order_status->order_status_option_id = $order_status_option_id;
-                $vendor_order_status->save();
-                DB::commit();
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Order Status Updated Successfully.'
-                ]);
-            }
-            } catch(\Exception $e){
-            DB::rollback();
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ]);
-           
-        }
-    }
 }
