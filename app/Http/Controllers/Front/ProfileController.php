@@ -1,16 +1,17 @@
 <?php
-
 namespace App\Http\Controllers\Front;
-use Timezonelist;
-use App\Models\{UserWishlist, User, Product, UserAddress, UserRefferal, ClientPreference, Client, Order, Transaction};
-use Illuminate\Http\Request;
-use App\Http\Controllers\Front\FrontController;
-use Carbon\Carbon;
+
 use Auth;
 use Session;
+use Timezonelist;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Front\FrontController;
+use App\Models\{UserWishlist, User, Product, UserAddress, UserRefferal, ClientPreference, Client, Order, Transaction};
 
 class ProfileController extends FrontController
 {
@@ -75,9 +76,56 @@ class ProfileController extends FrontController
         $curId = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        $user = User::with('country', 'address')->select('name', 'email', 'phone_number', 'type', 'country_id')->where('id', Auth::user()->id)->first();
+        $user = User::with('country', 'address')->select('id', 'name', 'email', 'description', 'phone_number', 'image', 'type', 'country_id')->where('id', Auth::user()->id)->first();
+        $user_addresses = UserAddress::where('user_id', Auth::user()->id)->get();
         $refferal_code = UserRefferal::where('user_id', Auth::user()->id)->first();
-        return view('frontend.account.profile')->with(['user' => $user, 'navCategories' => $navCategories, 'userRefferal' => $refferal_code,'timezone_list' => $timezone_list]);
+        return view('frontend.account.profile')->with(['user' => $user, 'navCategories' => $navCategories, 'userAddresses'=>$user_addresses, 'userRefferal' => $refferal_code,'timezone_list' => $timezone_list]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAccount(Request $request, $domain = '')
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|min:3|max:80',
+            'phone_number' => 'required|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            foreach ($validator->errors()->toArray() as $error_key => $error_value) {
+                $errors['error'] = $error_value[0];
+                return redirect()->back()->with($errors);
+            }
+        }
+        $user = User::where('id', Auth::user()->id)->first();
+        if ($user){
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $user->image = Storage::disk('s3')->put('/profile/image', $file,'public');
+            }
+            $user->name = $request->name;
+            $user->phone_number = $request->phone_number;
+            $user->description = $request->description;
+            $user->save();
+            return response()->json(array('status' => 'success', 'message'=>'Profile has been updated'));
+
+        }
+        return response()->json(['status' => 'error', 'message' => 'Profile updation failed']);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editAccount(Request $request){
+        $user = User::select('id', 'name', 'email', 'description', 'phone_number', 'image', 'type', 'country_id')->where('id', Auth::user()->id)->first();
+        $user_addresses = UserAddress::where('user_id', Auth::user()->id)->get();
+        $returnHTML = view('frontend.account.edit-profile')->with(['user' => $user, 'userAddresses' => $user_addresses])->render();
+        return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
     /**

@@ -2143,6 +2143,12 @@ footer .form-control {
     border-left: 2px solid transparent !important;
 }
 
+.round_img .dropify-wrapper {
+    height: 150px !important;
+    width: 150px !important;
+    margin: auto;
+    border-radius: 50%;
+}
 .rating-form .form-group {
     position: relative;
     border: 0;
@@ -2216,7 +2222,7 @@ footer .form-control {
 .rating-form label .fa {
     font-size: 30px;
     line-height: 30px;
-    .transition();
+    /* .transition(); */
 }
 
 .rating-form label:hover .fa-star-o,
@@ -2256,7 +2262,7 @@ footer .form-control {
     position: absolute;
     left: 5px;
     bottom: 0;
-    .transition();
+    /* .transition(); */
 }
 
 .rating-form input[type='radio']:checked~.form-action {
@@ -2294,7 +2300,7 @@ body .rating-form .btn-reset {
     font-size: 30px;
     font-size: 3rem;
     opacity: 0;
-    .transition();
+    /* .transition(); */
 }
 
 .no-js .rating-form .form-output {
