@@ -1,5 +1,6 @@
 <?php
 namespace Database\Seeders;
+use DB;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
@@ -11,12 +12,11 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        \DB::table('categories')->delete();
- 
+        DB::table('categories')->delete();
         $maps = array(
             array(
                 'id' => '1',
-                'slug' => 'root',
+                'slug' => 'Root',
                 'type_id' => 3,
                 'is_visible' => 0,
                 'status' => 1,
@@ -158,12 +158,23 @@ class CategorySeeder extends Seeder
                 'display_mode' => 1,
                 'parent_id' => 1
             ),
+            array(
+                'id' => '13',
+                'slug' => 'Dispatcher',
+                'type_id' => 1,
+                'is_visible' => 1,
+                'status' => 1,
+                'position' => 1,
+                'is_core' => 1,
+                'can_add_products' => 1,
+                'display_mode' => 1,
+                'parent_id' => 1
+            ),
 
         ); 
-        \DB::table('categories')->insert($maps);
+        DB::table('categories')->insert($maps);
 
-        \DB::table('category_translations')->delete();
- 
+        DB::table('category_translations')->delete();
         $translati = array(
             array(
                 'id' => 1,
@@ -225,7 +236,6 @@ class CategorySeeder extends Seeder
                 'category_id' => 6,
                 'language_id' => 1,
             ),
-
             array(
                 'id' => 7,
                 'name' => 'Buy something',
@@ -276,7 +286,6 @@ class CategorySeeder extends Seeder
                 'category_id' => 11,
                 'language_id' => 1,
             ),
-
             array(
                 'id' => 12,
                 'name' => 'Cloth',
@@ -287,7 +296,17 @@ class CategorySeeder extends Seeder
                 'category_id' => 12,
                 'language_id' => 1,
             ),
+            array(
+                'id' => 13,
+                'name' => 'Dispatcher',
+                'trans-slug' => '',
+                'meta_title' => 'Dispatcher',
+                'meta_description' => '',
+                'meta_keywords' => '',
+                'category_id' => 13,
+                'language_id' => 1,
+            ),
         );
-        \DB::table('category_translations')->insert($translati);
+        DB::table('category_translations')->insert($translati);
     }
 }
