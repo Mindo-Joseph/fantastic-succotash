@@ -59,7 +59,7 @@ class OrderController extends BaseController{
                 $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
             }
         }
-        $order_status_options = OrderStatusOption::all();
+        $order_status_options = OrderStatusOption::where('type', 1)->get();
         $dispatcher_status_options = DispatcherStatusOption::with(['vendorOrderDispatcherStatus' => function ($q) use($order_id,$vendor_id){
             $q->where(['order_id' => $order_id,'vendor_id' => $vendor_id]);
         }])->get();
