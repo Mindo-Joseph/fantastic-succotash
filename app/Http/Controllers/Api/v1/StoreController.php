@@ -85,9 +85,11 @@ class StoreController extends Controller{
 						$order_status_option_id = $vendor_order_status->order_status_option_id;
 						$current_status = OrderStatusOption::select('id','title')->find($order_status_option_id);
 						if($order_status_option_id == 2){
-							$upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', 4)->first();
+							$upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', 3)->first();
 						}elseif ($order_status_option_id == 3) {
-							$upcoming_status = [];
+							$upcoming_status = null;
+						}elseif ($order_status_option_id == 6) {
+							$upcoming_status = null;
 						}else{
 							$upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', $order_status_option_id)->first();
 						}

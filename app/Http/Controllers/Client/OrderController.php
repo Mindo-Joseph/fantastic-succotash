@@ -20,7 +20,7 @@ class OrderController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $orders = Order::with(['vendors.products', 'address','user'])->orderBy('id', 'DESC');
+        $orders = Order::with(['vendors.products','orderStatusVendor', 'address','user'])->orderBy('id', 'DESC');
         if (Auth::user()->is_superadmin == 0) {
             $orders = $orders->whereHas('vendors.vendor.permissionToUser', function ($query) {
                 $query->where('user_id', Auth::user()->id);
@@ -29,6 +29,8 @@ class OrderController extends BaseController{
         $orders = $orders->paginate(10);
         foreach ($orders as $order) {
             foreach ($order->vendors as $vendor) {
+                $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
+                $vendor->order_status = $vendor_order_status ? $vendor_order_status->OrderStatusOption->title : '';
                 foreach ($vendor->products as $product) {
                     $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
                 }
@@ -59,7 +61,7 @@ class OrderController extends BaseController{
                 $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
             }
         }
-        $order_status_options = OrderStatusOption::all();
+        $order_status_options = OrderStatusOption::where('type', 1)->get();
         $dispatcher_status_options = DispatcherStatusOption::with(['vendorOrderDispatcherStatus' => function ($q) use($order_id,$vendor_id){
             $q->where(['order_id' => $order_id,'vendor_id' => $vendor_id]);
         }])->get();
