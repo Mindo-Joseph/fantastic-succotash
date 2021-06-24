@@ -1037,6 +1037,6 @@
 <!-- Page js-->
 <!-- <script src="../assets/js/pages/dashboard-1.init.js"></script> -->
 <script src="{{asset('assets/js/pages/ecommerce-dashboard.init.js')}}"></script>
-<script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
+<!-- <script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script> -->
 
 @endsection
