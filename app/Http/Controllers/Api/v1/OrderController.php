@@ -282,9 +282,9 @@ class OrderController extends Controller {
                 if($order_status_option_id == 2){
                     $upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', 3)->first();
                 }elseif ($order_status_option_id == 3) {
-                    $upcoming_status = collect(new OrderStatusOption);
+                    $upcoming_status = null;
                 }elseif ($order_status_option_id == 6) {
-                    $upcoming_status = collect(new OrderStatusOption);
+                    $upcoming_status = null;
                 }else{
                     $upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', $order_status_option_id)->first();
                 }
