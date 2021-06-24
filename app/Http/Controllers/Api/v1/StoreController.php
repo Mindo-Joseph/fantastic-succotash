@@ -84,13 +84,12 @@ class StoreController extends Controller{
 					if($vendor_order_status){
 						$current_status = OrderStatusOption::select('id','title')->find($vendor_order_status->order_status_option_id);
 						$upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', $vendor_order_status->order_status_option_id)->first();
-						$order_status[] = [
+						$order->order_status = [
 							'current_status' => $current_status,
 							'upcoming_status' => $upcoming_status,
 						];
 					}
 				}
-				$order->order_status = $order_status;
 				foreach ($order->products as $product) {
     				$order_item_count += $product->quantity;
     				if($is_selected_vendor_id == $product->vendor_id){
