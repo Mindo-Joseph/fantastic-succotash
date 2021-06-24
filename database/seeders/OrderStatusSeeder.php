@@ -15,9 +15,13 @@ class OrderStatusSeeder extends Seeder{
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('order_status_options')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        $statuses = ['Placed', 'Accepted','Rejected', 'Processing', 'Out For Delivery', 'Delivered'];
+        $statuses = ['Placed', 'Accepted','Rejected', 'Processing', 'Out For Delivery', 'Delivered', 'Accept', 'Reject'];
         foreach ($statuses as $status) {
-	        OrderStatusOption::create(['title' => $status, 'status' => 1, 'type' => 1]);
+            if(in_array($status, ['Accept', 'Reject'])){
+    	        OrderStatusOption::create(['title' => $status, 'status' => 1, 'type' => 2]);
+            }else{
+                OrderStatusOption::create(['title' => $status, 'status' => 1, 'type' => 1]);
+            }
         }
     }
 }

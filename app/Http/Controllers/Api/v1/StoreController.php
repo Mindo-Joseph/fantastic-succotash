@@ -67,7 +67,7 @@ class StoreController extends Controller{
 			if($user_vendor_ids){
 				$is_selected_vendor_id = $selected_vendor_id ? $selected_vendor_id : $user_vendor_ids->first();
 			}
-			$order_list = Order::select('id','order_number','payable_amount','payment_option_id','user_id')
+			$order_list = Order::with('orderStatusVendor')->select('id','order_number','payable_amount','payment_option_id','user_id')
 						->whereHas('vendors', function($query) use ($is_selected_vendor_id){
 						   $query->where('vendor_id', $is_selected_vendor_id);
 						})->paginate($paginate);
@@ -83,7 +83,7 @@ class StoreController extends Controller{
 					$vendor_order_status = VendorOrderStatus::where('order_id', $order->id)->where('vendor_id', $is_selected_vendor_id)->first();
 					if($vendor_order_status){
 						$current_status = OrderStatusOption::select('id','title')->find($vendor_order_status->order_status_option_id);
-						$upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', $vendor_order_status->order_status_option_id)->first();
+						$upcoming_status = $current_status->id == 1 ? (object)[] : OrderStatusOption::select('id','title')->where('id', '>', $vendor_order_status->order_status_option_id)->first();
 						$order->order_status = [
 							'current_status' => $current_status,
 							'upcoming_status' => $upcoming_status,
