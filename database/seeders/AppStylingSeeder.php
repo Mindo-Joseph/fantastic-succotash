@@ -1,7 +1,7 @@
 <?php
 
 namespace Database\Seeders;
-
+use DB;
 use App\Models\{AppStyling,AppStylingOption};
 use Illuminate\Database\Seeder;
 
@@ -12,9 +12,11 @@ class AppStylingSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-        
+    public function run(){
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('app_stylings')->truncate();    
+        DB::table('app_styling_options')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');   
         $app_styling = AppStyling::insertGetId([
             'name' => 'Regular Font',
             'type' => '2'

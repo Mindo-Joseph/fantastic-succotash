@@ -72,7 +72,7 @@ class OrderController extends Controller {
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $language_id);
                     },
-                    'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address']
+                    'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address','vendors.products.productRating']
                 )->where('user_id', $user->id)->where('id', $order_id)->first();
             }
             if($order){
@@ -260,5 +260,38 @@ class OrderController extends Controller {
             return $this->errorResponse($e->getMessage(), $e->getCode());
     	}
     }
-
+    public function postVendorOrderStatusUpdate(Request $request){
+        DB::beginTransaction();
+        try {
+            $order_id = $request->order_id;
+            $vendor_id = $request->vendor_id;
+            $order_status_option_id = $request->order_status_option_id;
+            if($order_status_option_id == 7){
+                $order_status_option_id = 2;
+            }else if ($order_status_option_id == 8) {
+                $order_status_option_id = 3;
+            }
+            $vendor_order_status_detail = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->where('order_status_option_id', $order_status_option_id)->first();
+            if (!$vendor_order_status_detail) {
+                $vendor_order_status = new VendorOrderStatus();
+                $vendor_order_status->order_id = $order_id;
+                $vendor_order_status->vendor_id = $vendor_id;
+                $vendor_order_status->order_status_option_id = $order_status_option_id;
+                $vendor_order_status->save();
+                DB::commit();
+                return response()->json([
+                    'status' => 'success',
+                    'order_status' => 'success',
+                    'message' => 'Order Status Updated Successfully.'
+                ]);
+            }
+            } catch(\Exception $e){
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+           
+        }
+    }
 }

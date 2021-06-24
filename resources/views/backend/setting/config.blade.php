@@ -659,7 +659,7 @@
       <input type="hidden" name="verify_config" id="verify_config" value="1">
       @csrf
       <div class="row">
-         <div class="col-md-5">
+         <div class="col-md-4">
             <div class="card-box">
                <div class="row align-items-center">
                   <div class="col-md-4">
@@ -682,12 +682,29 @@
                </div>
             </div>
          </div>
-         <div class="col-md-7">
+         <div class="col-md-4">
             <div class="card-box">
                <div class="row align-items-center">
                   <div class="col-md-8">
                      <div class="form-group mb-0">
                         <label for="celebrity_check" class="mr-3 mb-0">Influencer Mod</label>
+                        <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1'))  checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="form-group mb-0 text-md-right">
+                        <button class="btn btn-info d-block ml-md-auto" type="submit"> Save </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-md-4">
+            <div class="card-box">
+               <div class="row align-items-center">
+                  <div class="col-md-8">
+                     <div class="form-group mb-0">
+                        <label for="celebrity_check" class="mr-3 mb-0">Pharmacy Mod</label>
                         <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1'))  checked='checked' @endif>
                      </div>
                   </div>

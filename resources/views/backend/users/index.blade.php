@@ -130,9 +130,6 @@
                                                 <a href="{{route('customer.account.action', [$user->id, 3])}}" onclick="return confirm('Are you sure? You want to delete the user.')" class="action-icon"> <i class="mdi mdi-delete" title="Delete user"></i></a>
                                                 @endif    
                                             </div>
-                                            
-                                           
-                                         
                                         </div>
                                     </td> 
                                 </tr>
@@ -141,7 +138,7 @@
                         </table>
                     </div>
                     <div class="pagination pagination-rounded justify-content-end mb-0">
-                        {{-- $users->links() --}}
+                        {{ $users->links() }}
                     </div>
                 </div>
             </div>
