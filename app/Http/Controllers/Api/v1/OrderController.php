@@ -21,7 +21,7 @@ class OrderController extends Controller {
     public function getOrdersList(Request $request){
     	$user = Auth::user();
         $paginate = $request->has('limit') ? $request->limit : 12;
-        $orders = OrderVendor::where('user_id', $user->id)->paginate($paginate);
+        $orders = OrderVendor::with('status')->where('user_id', $user->id)->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
             $order->user_name = $user->name;
@@ -31,7 +31,11 @@ class OrderController extends Controller {
             $order->order_number = $order->orderDetail->order_number;
             $product_details = [];
             $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->orderDetail->id)->where('vendor_id', $order->vendor_id)->orderBy('id', 'DESC')->first();
-            $order->order_status = $vendor_order_status ? $vendor_order_status->OrderStatusOption->title : '';
+            if($vendor_order_status){
+                $order->current_status =  ['id' => $vendor_order_status->OrderStatusOption->id, 'title' => $vendor_order_status->OrderStatusOption->title];
+            }else{
+                $order->current_status = null;
+            }
             foreach ($order->products as $product) {
                 $order_item_count += $product->quantity;
                 $product_details[]= array(

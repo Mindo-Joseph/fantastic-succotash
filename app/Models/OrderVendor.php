@@ -25,4 +25,7 @@ class OrderVendor extends Model{
 	public function coupon(){
 	    return $this->hasOne('App\Models\Promocode' , 'id', 'coupon_id'); 
 	}
+	public function status(){
+	    return $this->hasOne('App\Models\VendorOrderStatus' , 'vendor_id', 'vendor_id')->latest(); 
+	}
 }
