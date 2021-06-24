@@ -27,7 +27,7 @@
             <div class="row">
                 <div class="col-sm-3 collection-filter">
                     <!-- side-bar colleps block stat -->
-                    <!-- <div class="collection-filter-block">
+                    <?php /* <div class="collection-filter-block">
                         <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left"
                                     aria-hidden="true"></i> back</span></div>
                         <div class="collection-collapse-block open">
@@ -92,7 +92,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div> */ ?>
                     <!-- side-bar single product slider start -->
                     <div class="theme-card">
                         <h5 class="title-border">new product</h5>
@@ -277,7 +277,7 @@
         grid: false,
         min: 0,
         max: 50000,
-        from: 200,
+        from: 0,
         to: 50000,
         prefix: " "
     });

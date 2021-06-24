@@ -54,7 +54,7 @@ class RatingController extends BaseController{
        
             }
             if(isset($ratings)) {
-                return $this->successResponse($ratings->with('reviewFiles'),'Rating Submitted.');
+                return $this->successResponse($ratings,'Rating Submitted.');
             }
             return $this->errorResponse('Invalid order', 404);
             

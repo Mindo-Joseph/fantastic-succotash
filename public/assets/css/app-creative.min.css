@@ -172,12 +172,36 @@ body {
   content: "\F0142";
 }
 
-li > a[aria-expanded=true] > span.menu-arrow {
+#sidebar-menu > ul > li > a[data-toggle="collapse"]:after {
+  content: "\F0142";
+  transition: transform 0.15s;
+  position: absolute;
+  right: 20px;
+  display: inline-block;
+  font-family: "Material Design Icons";
+  text-rendering: auto;
+  line-height: 1.5rem;
+  font-size: 1.1rem;
+  transform: translate(0, 0);
+  font-weight: 600;
+  /* top: 0; */
+}
+
+#sidebar-menu > ul > li > a[aria-expanded="true"]:after,#sidebar-menu > ul > li.menuitem-active > a:not(.collapsed)[aria-expanded="true"]:after {
   transform: rotate(90deg);
 }
-li.menuitem-active > a:not(.collapsed) > span.menu-arrow {
+
+body[data-sidebar-size="condensed"] #sidebar-menu > ul > li > a[data-toggle="collapse"]:after {
+  content: none !important;
+}
+
+/* li > a[aria-expanded=true] > .menu-arrow {
   transform: rotate(90deg);
 }
+li.menuitem-active > a:not(.collapsed) > .menu-arrow {
+  transform: rotate(90deg);
+} */
+
 
 body[data-sidebar-size=condensed] .logo-box {
   width: 70px !important;
@@ -246,6 +270,7 @@ body[data-sidebar-size=condensed] .left-side-menu #sidebar-menu > ul > li:hover 
   color: #f3f7f9;
   background-color: #43bee1;
   box-shadow: inset 3px 5px 10px 0 rgb(154 161 171 / 20%);
+  border: 0;
 }
 body[data-sidebar-size=condensed] .left-side-menu #sidebar-menu > ul > li:hover > a span {
   display: inline;

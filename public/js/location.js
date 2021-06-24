@@ -7,7 +7,9 @@ $(document).ready(function() {
         addressInputHide(".select_address", ".address-input-field", "#address-input");
     });*/
 
-    getHomePage();
+    if(window.location.pathname == '/'){
+        getHomePage();
+    }
     function initializeSlider(){
         $(".slide-6").slick({
             dots: !1,
@@ -154,11 +156,10 @@ $(document).ready(function() {
     if(is_hyperlocal){
         if(!selected_address){
             getLocation();
-        }else{
-            let lat = $("#address-latitude").val();
-            let long = $("#address-longitude").val();
-            displayLocation(lat,long);
         }
+        let lat = $("#address-latitude").val();
+        let long = $("#address-longitude").val();
+        displayLocation(lat,long);
     }
 
     // $(document).on('click', '#location_search_wrapper .dropdown-menu', function (e) {

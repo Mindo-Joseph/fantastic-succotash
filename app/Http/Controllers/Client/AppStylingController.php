@@ -15,31 +15,50 @@ class AppStylingController extends BaseController
      */
     public function index()
     {
-        $font_options =[];
-        $tab_style_options =[];
-        $homepage_style_options =[];
-        $color_options = [];
-        $fonts = AppStyling::where('name', 'Fonts')->first();
-        if($fonts){
-            $font_options = AppStylingOption::where('app_styling_id', $fonts->id)->get();
+        $regular_font_options = [];
+        $medium_font_options = [];
+        $bold_font_options = [];
+        $tab_style_options = [];
+        $homepage_style_options = [];
+        $primary_color_options = [];
+        $secondary_color_options = [];
+        $tertiary_color_options = [];
+        $regular_fonts = AppStyling::where('name', 'Regular Font')->first();
+        if ($regular_fonts) {
+            $regular_font_options = AppStylingOption::where('app_styling_id', $regular_fonts->id)->get();
+        }
+        $medium_fonts = AppStyling::where('name', 'Medium Font')->first();
+        if ($medium_fonts) {
+            $medium_font_options = AppStylingOption::where('app_styling_id', $medium_fonts->id)->get();
+        }
+        $bold_fonts = AppStyling::where('name', 'Bold Font')->first();
+        if ($bold_fonts) {
+            $bold_font_options = AppStylingOption::where('app_styling_id', $bold_fonts->id)->get();
         }
         $tab_style = AppStyling::where('name', 'Tab Bar Style')->first();
-        if($tab_style){
+        if ($tab_style) {
             $tab_style_options = AppStylingOption::where('app_styling_id', $tab_style->id)->get();
         }
         $homepage_style = AppStyling::where('name', 'Home Page Style')->first();
-        if($homepage_style){
+        if ($homepage_style) {
             $homepage_style_options = AppStylingOption::where('app_styling_id', $homepage_style->id)->get();
         }
-
-        $color = AppStyling::where('name', 'Color')->first();
-        if($color){
-            $color_options = AppStylingOption::where('app_styling_id', $color->id)->first();
+        $primary_color = AppStyling::where('name', 'Primary Color')->first();
+        if ($primary_color) {
+            $primary_color_options = AppStylingOption::where('app_styling_id', $primary_color->id)->first();
         }
-        return view('backend/app_styling/index')->with(['color_options' => $color_options, 'font_options' => $font_options, 'tab_style_options' => $tab_style_options,'homepage_style_options' => $homepage_style_options]);
+        $secondary_color = AppStyling::where('name', 'Secondary Color')->first();
+        if ($secondary_color) {
+            $secondary_color_options = AppStylingOption::where('app_styling_id', $secondary_color->id)->first();
+        }
+        $tertiary_color = AppStyling::where('name', 'Tertiary Color')->first();
+        if ($tertiary_color) {
+            $tertiary_color_options = AppStylingOption::where('app_styling_id', $tertiary_color->id)->first();
+        }
+        return view('backend/app_styling/index')->with(['tertiary_color_options' => $tertiary_color_options, 'secondary_color_options' => $secondary_color_options, 'primary_color_options' => $primary_color_options, 'medium_font_options' => $medium_font_options, 'bold_font_options' => $bold_font_options, 'regular_font_options' => $regular_font_options, 'tab_style_options' => $tab_style_options, 'homepage_style_options' => $homepage_style_options]);
     }
     /**
-     * Store a newly created resource in storage.
+     * Store a regular font.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -56,7 +75,7 @@ class AppStylingController extends BaseController
         ]);
     }
 
-     /**
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -64,9 +83,17 @@ class AppStylingController extends BaseController
      */
     public function updateColor(Request $request)
     {
-        $app_styling = AppStyling::where('name', 'Color')->first();
+        $app_styling = AppStyling::where('name', $request->color_type.' Color')->first();
         $app_styling_option = AppStylingOption::where('app_styling_id', $app_styling->id)->first();
-        $app_styling_option->name = $request->secondary_color;
+        if($request->color_type == "Primary"){
+            $app_styling_option->name = $request->primary_color;
+        }
+        else if($request->color_type == "Secondary"){
+            $app_styling_option->name = $request->secondary_color;
+        }
+        else if($request->color_type == "Tertiary"){
+            $app_styling_option->name = $request->tertiary_color;
+        }
         $app_styling_option->save();
         return response()->json([
             'status' => 'success',

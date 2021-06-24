@@ -6,18 +6,51 @@ $languageList = \App\Models\ClientLanguage::with('language')->where('is_active',
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
 <header class="header-2 header-6">
-    <div class="mobile-fix-option"></div>
-    <div class="container">
+    <div class="container py-3">
         <div class="row">
             <div class="col-sm-12">
                 <div class="main-menu border-section border-top-0">
-                    <div class="menu-left">
-                        
+                    <div class="col-2 menu-left">                        
                         <div class="brand-logo">
                             <a href="{{ route('userHome') }}"><img class="img-fluid blur-up lazyload" alt="" src="{{$clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path']}}" ></a>
                         </div>
                     </div>
-                    <div class="menu-right pull-right">
+
+                    <div class="col-8">
+                        <div class="row no-gutters" id="location_search_wrapper">
+                            @if( (Session::get('preferences')))
+                            @if(Session::get('preferences')->is_hyperlocal == 1)
+                                <div class="col-md-4 col">
+                                    <div class="d-flex align-items-center justify-content-start px-2 dropdown-toggle" href="#edit-address" data-toggle="modal">
+                                        <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                        <div class="homepage-address text-left">
+                                            <h2><span data-placement="top" data-toggle="tooltip" title="{{session('selectedAddress')}}">{{session('selectedAddress')}}</span></h2>
+                                        </div>
+                                        <div class="down-icon">
+                                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 col">
+                                    <form class="search_form d-flex align-items-center justify-content-between" action="">
+                                        <input class="form-control border-0" type="text" placeholder="Search">
+                                        <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                    </form>
+                                </div>
+                            @else
+                                <div class="col-md-12 col">
+                                    <form class="search_form d-flex align-items-center justify-content-between" action="">
+                                        <input class="form-control border-0" type="text" placeholder="Search">
+                                        <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                    </form>
+                                </div>
+                            @endif
+                            @endif
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="col-2 menu-right justify-content-end">
                         <div>
                             <nav id="main-nav">
                                 <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
@@ -31,9 +64,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
                                 </form>
                                 <ul>
-                                    <li class="search_btn">
+                                    <!-- <li class="search_btn">
                                         <img src="{{asset('front-assets/images/icon/search.svg')}}" class="img-fluid blur-up lazyload" alt="">
-                                    </li>
+                                    </li> -->
                                     <?php /* ?><li class="onhover-div mobile-setting">
                                         <div><img src="{{asset('front-assets/images/icon/setting.svg')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-settings"></i></div>
                                         <div class="show-div setting">
@@ -51,10 +84,10 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             </ul>
                                         </div>
                                     </li><?php */ ?>
-                                    <li class="onhover-div mobile-cart">
+                                    <li class="onhover-div">
                                         <div>
-                                            <img src="{{asset('front-assets/images/icon/cart.svg')}}" class="img-fluid blur-up lazyload" alt=""> 
-                                            <i class="ti-shopping-cart"></i>
+                                            <img src="{{asset('front-assets/images/icon/cart_.png')}}" class="img-fluid blur-up lazyload" alt=""> 
+                                            <!-- <i class="ti-shopping-cart"></i> -->
                                         </div>
                                         <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span>
                                         <script type="text/template" id="header_cart_template">
@@ -98,39 +131,102 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     </div>
                 </div>
             </div>
-
-            <div class="col-12 mt-2">
-                <ul id="main-menu" class="sm pixelstrap sm-horizontal">
-                    <li>
-                        <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
-                    </li>
-                    @foreach($navCategories as $cate)
-                    <li>
-                        <a href="{{route('categoryDetail', $cate['id'])}}">{{$cate['name']}}</a>
-                        @if(!empty($cate['children']))
-                            
-                            <ul>
-                                @foreach($cate['children'] as $childs)
-                                <li>
-                                    <a href="{{route('categoryDetail', $childs['id'])}}"><span class="new-tag">{{$childs['name']}}</span></a>
-                                    @if(!empty($childs['children']))
-                                    <ul>
-                                        @foreach($childs['children'] as $chld)
-                                        <li><a href="{{route('categoryDetail', $chld['id'])}}">{{$chld['name']}}</a></li>
-                                        @endforeach
-                                    </ul>
-                                    @endif
-                                </li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
         </div>
+                                                             
     </div>
-    <div class="search_warpper">
+    <div class="menu-navigation">
+        <div class="container">
+            <!-- <nav class="navbar navbar-expand-lg p-0">
+
+                <ul class="navbar-nav pixelstrap mr-auto align-items-end">
+                    <li class="nav-item has-menu active">
+                        <a class="nav-link" href="#">
+                            <span>Shop By</span>
+                            Department
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-category">
+                            <li><a href="#"><i class="fa fa-home dropdown-menu-category-icon"></i>Home & Garden</a></li>
+                            <li><a href="#"><i class="fa fa-diamond dropdown-menu-category-icon"></i>Jewelry</a></li>
+                            <li><a href="#"><i class="fa fa-child dropdown-menu-category-icon"></i>Toy &amp; Kids</a></li>
+                            <li><a href="#"><i class="fa fa-plug dropdown-menu-category-icon"></i>Electronics</a></li>
+                            <li><a href="#"><i class="fa fa-tags dropdown-menu-category-icon"></i>Clothes &amp; Shoes</a></li>
+                            <li><a href="#"><i class="fa fa-futbol-o dropdown-menu-category-icon"></i>Sports</a></li>
+                            <li><a href="#"><i class="fa fa-music dropdown-menu-category-icon"></i>Entertaiment</a></li>
+                            <li><a href="#"><i class="fa fa-location-arrow dropdown-menu-category-icon"></i>Travel</a></li>
+                            <li><a href="#"><i class="fa fa-picture-o dropdown-menu-category-icon"></i>Art &amp; Design</a></li>
+                            <li><a href="#"><i class="fa fa-motorcycle dropdown-menu-category-icon"></i>Motors</a></li>
+                            <li><a href="#"><i class="fa fa-paw dropdown-menu-category-icon"></i>Pets</a></li>
+                            <li><a href="#"><i class="fa fa-cubes dropdown-menu-category-icon"></i>Hobbies &amp; DIY</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item has-menu active">
+                        <a class="nav-link" href="#">
+                            Pages
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Today Deal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Gift Cards</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Weakly Ad</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav pixelstrap ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href=""></a>
+                    </li>                                                 
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Shipping</a>
+                    </li>                                                 
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Payment</a>
+                    </li>                                                 
+                </ul>
+            </nav>                                                        -->
+
+            <div class="row">
+                <div class="col-12">
+                    <ul id="main-menu" class="sm pixelstrap sm-horizontal">
+                        <li>
+                            <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
+                        </li>
+                        @foreach($navCategories as $cate)
+                        <li>
+                            <a href="{{route('categoryDetail', $cate['id'])}}">{{$cate['name']}}</a>
+                            @if(!empty($cate['children']))
+                                
+                                <ul>
+                                    @foreach($cate['children'] as $childs)
+                                    <li>
+                                        <a href="{{route('categoryDetail', $childs['id'])}}"><span class="new-tag">{{$childs['name']}}</span></a>
+                                        @if(!empty($childs['children']))
+                                        <ul>
+                                            @foreach($childs['children'] as $chld)
+                                            <li><a href="{{route('categoryDetail', $chld['id'])}}">{{$chld['name']}}</a></li>
+                                            @endforeach
+                                        </ul>
+                                        @endif
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>   
+    </div>   
+    <!-- <div class="search_warpper">
         <div class="container">
             <div class="row no-gutters" id="location_search_wrapper">
                 @if( (Session::get('preferences')))
@@ -163,7 +259,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 @endif
             </div>
         </div>
-    </div>
+    </div> -->
 </header>
 <script type="text/template" id="nav_categories_template">
     <li>

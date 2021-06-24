@@ -8,12 +8,10 @@ use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus};
 
 class OrderController extends Controller {
-
     use ApiResponser;
-
     /**
      * Display a listing of the resource.
      *
@@ -23,19 +21,19 @@ class OrderController extends Controller {
     public function getOrdersList(Request $request){
     	$user = Auth::user();
         $paginate = $request->has('limit') ? $request->limit : 12;
-        $orders = Order::select('id','order_number','payable_amount','payment_option_id','user_id')->where('user_id', $user->id)->paginate($paginate);
+        $orders = OrderVendor::where('user_id', $user->id)->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
-            $order->user_name = $order->user->name;
-            $order->user_image = $order->user->image;
-            $order->date_time = convertDateTimeInTimeZone($order->created_at, $user->timezone);
-            $order->payment_option_title = $order->paymentOption->title;
+            $order->user_name = $user->name;
+            $order->user_image = $user->image;
+            $order->date_time = convertDateTimeInTimeZone($order->orderDetail->created_at, $user->timezone);
+            $order->payment_option_title = $order->orderDetail->paymentOption->title;
+            $order->order_number = $order->orderDetail->order_number;
             $product_details = [];
             foreach ($order->products as $product) {
                 $order_item_count += $product->quantity;
                 $product_details[]= array(
-                    'media' => $product->media,
-                    'image' => $product->image,
+                    'image_path' => $product->media->first() ? $product->media->first()->image->path : $product->image,
                     'price' => $product->price,
                     'qty' => $product->quantity,
                 );
@@ -46,6 +44,7 @@ class OrderController extends Controller {
             unset($order->products);
             unset($order->paymentOption);
             unset($order->payment_option_id);
+            unset($order->orderDetail);
         }
     	return $this->successResponse($orders, 'Order placed successfully.', 201);
     }
@@ -65,7 +64,7 @@ class OrderController extends Controller {
                     $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                     $q->where('language_id', $language_id);
                 },
-                'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'
+                'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address','vendors.products.productRating'
             ])->where('id', $order_id)->first();
             }else{
                 $order = Order::with(['vendors.vendor',
@@ -76,9 +75,10 @@ class OrderController extends Controller {
                     'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address','vendors.products.productRating']
                 )->where('user_id', $user->id)->where('id', $order_id)->first();
             }
-            if($order->vendors){
+            if($order){
                 $order->user_name = $order->user->name;
                 $order->user_image = $order->user->image;
+                $order->payment_option_title = $order->paymentOption->title;
     	    	foreach ($order->vendors as $vendor) {
     				$couponData = [];
     				$payable_amount = 0;
@@ -89,6 +89,7 @@ class OrderController extends Controller {
                         $product_addons = [];
                         $variant_options = [];
     	    			$order_item_count += $product->quantity;
+                        $product->image_path = $product->media->first() ? $product->media->first()->image->path : $product->image;
                         if($product->pvariant){
                             foreach ($product->pvariant->vset as $variant_set_option) {
                                 $variant_options [] = array(
@@ -229,11 +230,17 @@ class OrderController extends Controller {
                         }
                         $order_vendor = new OrderVendor;
                         $order_vendor->status = 0;
+                        $order_vendor->user_id= $user->id;
                         $order_vendor->order_id= $order->id;
                         $order_vendor->vendor_id= $vendor_id;
                         $order_vendor->payable_amount= $vendor_payable_amount;
                         $order_vendor->discount_amount= $vendor_discount_amount;
                         $order_vendor->save();
+                        $order_status = new VendorOrderStatus();
+                        $order_status->order_id = $order->id;
+                        $order_status->order_status_option_id = 1;
+                        $order_status->vendor_id = $vendor_id;
+                        $order_status->save();
                     }
                     $order->total_amount = $total_amount;
                     $order->total_discount = $total_discount;

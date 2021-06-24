@@ -2,27 +2,23 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Api\v1\BaseController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory, BrandTranslation, Celebrity};
-use Validation;
 use DB;
-use Illuminate\Support\Facades\Storage;
 use Config;
+use Validation;
+use Carbon\Carbon;
 use ConvertCurrency;
+use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Api\v1\BaseController;
+use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory, BrandTranslation, Celebrity, UserVendor};
 
-class HomeController extends BaseController
-{
+class HomeController extends BaseController{
     use ApiResponser;
-    private $field_status = 2;
-    private $curLang = 0;
 
-    public function __construct(){
-        
-    }
+    private $curLang = 0;
+    private $field_status = 2;
 
     /** Return header data, client profile and configure data */
     public function headerContent(Request $request){
@@ -65,62 +61,42 @@ class HomeController extends BaseController
     public function homepage(Request $request)
     {
         try{
+            $vends = [];
+            $homeData = [];
+            $user = Auth::user();
+            $latitude = $request->latitude;
+            $longitude = $request->longitude;
+            $user_geo[] = $latitude;
+            $user_geo[] = $longitude;
             $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
-            $lats = $request->latitude;
-            $longs = $request->longitude;
-            $user_geo[] = $lats;
-            $user_geo[] = $longs;
-            $vends = array();
             $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
-            // if($preferences->is_hyperlocal == 1){
-            //     $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
-            //             $query->select('vendor_id')
-            //             ->from(with(new ServiceArea)->getTable())
-            //             ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$lats." ".$longs.")'))");
-            //     });
-            // }
             if($preferences->is_hyperlocal == 1){
-                $vendorData = $vendorData->whereHas('serviceArea', function($query) use($lats, $longs){
+                $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
                         $query->select('vendor_id')
-                        ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$lats." ".$longs.")'))");
+                        ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$latitude." ".$longitude.")'))");
                 });
             }
             $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
-
             foreach ($vendorData as $key => $value) {
                 $vends[] = $value->id;
             }
             $isVendorArea = 0;
-            $langId = Auth::user()->language;
-            $homeData = array();
+            $langId = $user->language;
             $categories = $this->categoryNav($langId);
-            $homeData['reqData'] = $request->all();
-            $homeData['categories'] = $categories;
             $homeData['vendors'] = $vendorData;
+            $homeData['categories'] = $categories;
+            $homeData['reqData'] = $request->all();
             $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
-                            $q->select('brand_id', 'title')->where('language_id', $langId);
-                            }])->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
-            // $homeData['featuredProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_featured');
-            // $homeData['newProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_new');
-            // $homeData['onSale'] = $this->productList($vends, $langId, Auth::user()->currency);
+                                    $q->select('brand_id', 'title')->where('language_id', $langId);
+                                }])->select('id', 'image')->where('status', '!=', $this->field_status)
+                                ->orderBy('position', 'asc')->get();
+            $user_vendor_count = UserVendor::where('user_id', $user->id)->count();
+            $homeData['is_admin'] = $user_vendor_count > 0 ? 1 : 0;                  
             return $this->successResponse($homeData);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }
     }
-
-    /*public function inServiceArea($user_geo, $area, $count = 0)
-    {
-        //echo '<pre>';print_r($area->toArray()); die;
-        foreach ($area as $geokey => $geovalue) {
-            $availables = $this->contains($user_geo, $geovalue->geo_coordinates);
-            if($availables){
-                return 1;
-            }
-            $count++;
-        }
-        return 0;
-    }*/
 
     /** return product meta data for new products, featured products, onsale products     */
     public function productList($venderIds, $langId = 1, $currency = 147, $where = '')

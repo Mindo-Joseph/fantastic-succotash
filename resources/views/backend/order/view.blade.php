@@ -41,6 +41,9 @@ $timezone = Auth::user()->timezone;
                         </div>
                         <div class="row track-order-list">
                             <div class="col-lg-6">
+                                <!-- <button type="button" class="btn btn-danger waves-effect waves-light">
+                                    <i class="mdi mdi-close"></i>
+                                 </button> -->
                                 <ul class="list-unstyled" id="order_statuses">
                                     @foreach($order_status_options as $order_status_option)
                                     @php
@@ -110,6 +113,7 @@ $timezone = Auth::user()->timezone;
                                     $taxable_amount = 0;
                                     @endphp
                                     @foreach($vendor->products as $product)
+                                    @if($product->order_id == $order->id)
                                     @php
                                     $taxable_amount += $product->taxable_amount;
                                     $sub_total += $product->quantity * $product->price;
@@ -117,12 +121,13 @@ $timezone = Auth::user()->timezone;
                                     <tr>
                                         <th scope="row">{{$product->product_name}}</th>
                                         <td>
-                                            <img src="{{$product->image['proxy_url'].'32/32'.$product->image['image_path']}}" alt="product-img" height="32">
+                                            <img src="{{$product->image_path['proxy_url'].'32/32'.$product->image_path['image_path']}}" alt="product-img" height="32">
                                         </td>
                                         <td>{{ $product->quantity }}</td>
                                         <td>$@money($product->price)</td>
                                         <td>$@money($product->quantity * $product->price)</td>
                                     </tr>
+                                    @endif
                                     @endforeach
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Sub Total :</th>
@@ -141,7 +146,7 @@ $timezone = Auth::user()->timezone;
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Total :</th>
                                         <td>
-                                            <div class="fw-bold">$@money($vendor->payable_amount)</div>
+                                            <div class="fw-bold">$@money($vendor->payable_amount+$taxable_amount)</div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -171,7 +176,13 @@ $timezone = Auth::user()->timezone;
                             <i class="mdi mdi-truck-fast h2 text-muted"></i>
                             <h5><b>UPS Delivery</b></h5>
                             <p class="mb-1"><span class="fw-semibold">Order ID :</span> #{{$order->order_number}}</p>
-                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> COD</p>
+                            @if($order->payment_option_id == 1)
+                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Cash On Delivery</p>
+                            @elseif($order->payment_option_id == 3)
+                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Paypal </p>
+                            @elseif($order->payment_option_id == 4)
+                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Stripe</p>
+                            @endif
                         </div>
                         <div class="text-center mt-2">
                             <a href="javascript::void(0);" class="btn btn-primary" id="delivery_info_button">Delivery Info</a>

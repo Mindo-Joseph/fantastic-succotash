@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet};
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet, ServiceArea};
 use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
@@ -67,11 +67,16 @@ class CategoryController extends FrontController
                     ->where('id', $cid)->firstOrFail();
 
         $navCategories = $this->categoryNav($langId);
-        $vendorIds = array();
-        $vendorList = Vendor::select('id', 'name')->where('status', '!=', $this->field_status)->get();
-        if(!empty($vendorList)){
-            foreach ($vendorList as $key => $value) {
-                $vendorIds[] = $value->id;
+        
+        if(isset($vendors)){
+            $vendorIds = $vendors;
+        }else{
+            $vendorIds = array();
+            $vendorList = Vendor::select('id', 'name')->where('status', '!=', $this->field_status)->get();
+            if(!empty($vendorList)){
+                foreach ($vendorList as $key => $value) {
+                    $vendorIds[] = $value->id;
+                }
             }
         }
 
@@ -105,29 +110,30 @@ class CategoryController extends FrontController
         return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
     }
 
-    public function listData($langId, $cid, $tpye = ''){
+    public function listData($langId, $cid, $type = ''){
 
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
         
-        if($tpye == 'vendor' || $tpye == 'Vendor'){
+        if($type == 'vendor' || $type == 'Vendor'){
 
-            $vendorData = Vendor::select('id', 'name', 'logo', 'banner', 'order_pre_time', 'order_min_amount');
-
-            /*if($preferences->is_hyperlocal == 1){
-                $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
-                        $query->select('vendor_id')
-                        ->from(with(new ServiceArea)->getTable())
-                        ->whereRaw("ST_Contains(polygon, GeomFromText('POINT(".$lats." ".$longs.")'))");
-                });
-            }*/
-            $vendorData = $vendorData->where('status', '!=', $this->field_status)->paginate($pagiNate);
+            $vendorData = Vendor::select('vendors.id', 'name', 'logo', 'banner', 'order_pre_time', 'order_min_amount');
+            $vendorData = $vendorData->join('vendor_categories as vct', 'vct.vendor_id', 'vendors.id')->where('vct.category_id', $cid)->where('vct.status', 1);
+            $preferences = Session::get('preferences');
+            if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+                $vendors = (Session::has('vendors')) ? Session::get('vendors') : array();
+                $vendors = $vendorData->whereIn('vct.vendor_id', $vendors);
+            }
+            $vendorData = $vendorData->where('vendors.status', '!=', $this->field_status)->paginate($pagiNate);
 
             return $vendorData;
 
-        //}elseif($tpye == 'product' || $tpye == 'Product'){
+        //}elseif($type == 'product' || $type == 'Product'){
             }else{
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
-
+            $vendors = array();
+            if(Session::has('vendors')){
+                $vendors = Session::get('vendors');
+            }
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
                     ->with(['media.image',
                         'translation' => function($q) use($langId){
@@ -138,7 +144,7 @@ class CategoryController extends FrontController
                             $q->groupBy('product_id');
                         },
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->paginate($pagiNate);
+                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->whereIn('products.vendor_id', $vendors)->paginate($pagiNate);
 
             if(!empty($products)){
                 foreach ($products as $key => $value) {

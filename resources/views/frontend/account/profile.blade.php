@@ -144,7 +144,7 @@
 
                                             <div class="info-text mb-2">
                                                 <label class="mb-1">Time Zone</label>
-                                                <select class="form-control" name="" id=""></select>
+                                                {!! $timezone_list !!}
                                             </div>
                                         </div>
                                     </div>

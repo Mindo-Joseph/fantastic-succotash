@@ -49,7 +49,12 @@
     <% _.each(cart_details.products, function(product, key){%>
         <thead>
             <tr>
-                <th colspan="6" style="background-color: #f3f7f9"><%= product.vendor.name %></th>
+                <th colspan="3" style="background-color: #f3f7f9">
+                    <%= product.vendor.name %>
+                </th>
+                <th colspan="3" style="background-color: #f3f7f9">
+                    <div class="countdownholder alert-danger" id="min_order_validation_error_<%= product.vendor.id %>" style="display:none;">Your cart will be expired in
+                </th>
             </tr>
         </thead>
         <tbody id="tbody_<%= product.vendor.id %>">
@@ -71,7 +76,7 @@
                         <% }); %>
                     </td>
                     <td>
-                        <div class="items-price mb-3">$<%= vendor_product.pvariant.price %></div>
+                        <div class="items-price mb-3">{{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %></div>
                     </td>
                     <td>
                         <div class="number">
@@ -90,7 +95,7 @@
                         </a>
                     </td>
                     <td class="text-right pl-lg-2">
-                        <div class="items-price mb-3">$<%= vendor_product.pvariant.quantity_price %></div>
+                        <div class="items-price mb-3">{{Session::get('currencySymbol')}}<%= vendor_product.pvariant.quantity_price %></div>
                     </td>
                 </tr>
                 <% if(vendor_product.addon.length != 0) { %>
@@ -107,12 +112,12 @@
                                 <p class="m-0"><%= addon.set.title %></p>
                             </td>
                             <td>
-                                <div class="extra-items-price">$<%= addon.option.price_in_cart %></div>
+                                <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= addon.option.price_in_cart %></div>
                             </td>
                             <td></td>
                             <td></td>
                             <td class="text-right pl-lg-2">
-                                <div class="extra-items-price">$<%= addon.option.quantity_price %></div>
+                                <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= addon.option.quantity_price %></div>
                             </td>
                     </tr> 
 
@@ -139,8 +144,8 @@
                     <p class="total_amt m-0">Delivery Fee :</p>
                 </td>
                 <td class="text-right pl-lg-2">
-                    <p class="total_amt mb-1">$ <%= product.delivery_fee_charges %></p>
-                    <p class="total_amt m-0">$ <%= product.product_total_amount %></p>
+                    <p class="total_amt mb-1">{{Session::get('currencySymbol')}} <%= product.delivery_fee_charges %></p>
+                    <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= product.product_total_amount %></p>
                 </td>
             </tr>
         </tbody>
@@ -160,14 +165,14 @@
                <!-- <p class="mb-1"></p> -$60.00 -->
                <!-- <p class="mb-1"></p> -$10.00 -->
                <hr class="mt-2 mb-0">
-               <!-- <p class="total_amt m-0">$<%= cart_details.gross_amount %></p> -->
+               <!-- <p class="total_amt m-0">{{Session::get('currencySymbol')}}<%= cart_details.gross_amount %></p> -->
             </td>
         </tr>
         <tr class="border_0">
             <td colspan="3"></td>
             <td>Tax</td>
             <td class="text-right" colspan="2">
-                <p class="m-1"><span class="pl-4">$<%= cart_details.total_taxable_amount %></span></p>
+                <p class="m-1"><span class="pl-4">{{Session::get('currencySymbol')}}<%= cart_details.total_taxable_amount %></span></p>
             </td>
         </tr>
         <tr class="border_0">
@@ -178,7 +183,7 @@
             </td>
             <td colspan="2" class="pt-0 pl-0 text-right">
                 <hr class="mt-0 mb-2">
-                <p class="total_amt m-0" id="cart_total_payable_amount">$<%= cart_details.total_payable_amount %></p>
+                <p class="total_amt m-0" id="cart_total_payable_amount">{{Session::get('currencySymbol')}}<%= cart_details.total_payable_amount %></p>
                 <div><input type="hidden" name="cart_total_payable_amount" value="<%= cart_details.total_payable_amount %>"></div>
             </td>
         </tr>

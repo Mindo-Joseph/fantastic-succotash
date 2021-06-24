@@ -5,13 +5,12 @@ Route::domain('{subdomain}.myorder.com')->middleware(['subdomain', 'domain'])->g
     Route::get('/productDetail/{id}','Front\ProductPageController@index')->name('productDetail');
 });*/
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-
+Route::get('/debug-sentry', function () {
+    throw new Exception('My first Sentry error!');
+});
 Route::group(['middleware' => ['domain']], function () {
 	Route::get('dispatch-order-status-update/{id?}', 'Front\DispatcherController@dispatchOrderStatusUpdate')->name('dispatch-order-update'); // Order Status update Dispatch
-	Route::get('demo', [
-		'as' => 'customer.login',
-		'uses' => 'Front\CustomerAuthController@getTestHtmlPage'
-	]);
+	Route::get('demo', 'Front\CustomerAuthController@getTestHtmlPage');
 	Route::post('payment/stripe', 'Front\StripeGatewayController@postPaymentViaStripe')->name('payment.stripe');
 	Route::post('payment/paypal', 'Front\PaypalGatewayController@postPaymentViaPaypal')->name('payment.paypal');
 	Route::get('payment/paypalSuccess', 'Front\PaypalGatewayController@paypalSuccess')->name('payment.paypalSuccess');

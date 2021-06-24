@@ -26,6 +26,10 @@ class Order extends Model{
 	    return $this->hasOne('App\Models\PaymentOption' , 'id', 'payment_option_id'); 
 	}
 	public function orderStatusVendor(){
-	    return $this->hasMany('App\Models\VendorOrderStatus' , 'order_id', 'id'); 
+        return $this->hasMany('App\Models\VendorOrderStatus', 'order_id', 'id');
+    }
+	
+	public function payment(){
+	    return $this->hasOne('App\Models\Payment' , 'order_id', 'id'); 
 	}
 }

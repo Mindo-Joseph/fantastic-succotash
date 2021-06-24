@@ -42,9 +42,7 @@ class OrderController extends FrontController{
         $order = $this->orderSave($request, "1", "2");
        
         return $this->successResponse(['status' => 'success','order' => $order, 'message' => 'Order placed successfully.']);
-        // return redirect('order/success/'.$order->id)->with('success', 'your message,here'); 
     }
-
     public function orderSave($request, $paymentStatus, $paymentMethod){
         try {
            DB::beginTransaction();
@@ -79,6 +77,7 @@ class OrderController extends FrontController{
             $total_discount = 0;
             $taxable_amount = 0;
             $payable_amount = 0;
+            $total_delivery_fee = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                 $delivery_fee = 0;
                 $vendor_payable_amount = 0;
@@ -156,6 +155,7 @@ class OrderController extends FrontController{
                         $vendor_discount_amount += $percentage_amount;
                     }
                 }
+                $total_delivery_fee += $delivery_fee;
                 $OrderVendor = new OrderVendor();
                 $OrderVendor->status = 0;
                 $OrderVendor->order_id= $order->id;
@@ -165,7 +165,6 @@ class OrderController extends FrontController{
                 $OrderVendor->payable_amount= $vendor_payable_amount + $delivery_fee;
                 $OrderVendor->discount_amount= $this->getDeliveryFeeDispatcher($vendor_id);
                 $OrderVendor->save();
-
                 $order_status = new VendorOrderStatus();
                 $order_status->order_id = $order->id;
                 $order_status->order_status_option_id = 1;
@@ -182,6 +181,7 @@ class OrderController extends FrontController{
                     $loyalty_points_used = $payable_amount * $redeem_points_per_primary_currency;
                 }
             }
+            $order->total_delivery_fee = $total_delivery_fee;
             $order->loyalty_points_used = $loyalty_points_used;
             $order->loyalty_amount_saved = $loyalty_amount_saved;
             $order->payable_amount = $delivery_fee + $payable_amount - $total_discount - $loyalty_amount_saved;
@@ -254,27 +254,25 @@ class OrderController extends FrontController{
                     if($cus_address){
                         $tasks = array();
                         $vendor_details = Vendor::find($vendor_id);
-                            $location[] = array('latitude' => $vendor_details->latitude??30.71728880,
-                                                'longitude' => $vendor_details->longitude??76.80350870
-                                                );
-                            $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
-                                              'longitude' => $cus_address->longitude??76.803508700000
+                        $location[] = array('latitude' => $vendor_details->latitude??30.71728880,
+                                            'longitude' => $vendor_details->longitude??76.80350870
                                             );
-                            $postdata =  ['locations' => $location];
-                            $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
-                                                        'shortcode' => $dispatch_domain->delivery_service_key_code,
-                                                        'content-type' => 'application/json']
-                                                            ]);
-                            $url = $dispatch_domain->delivery_service_key_url;                      
-                            $res = $client->post($url.'/api/get-delivery-fee',
-                                ['form_params' => ($postdata)]
-                            );
-                            $response = json_decode($res->getBody(), true);
-                            if($response && $response['message'] == 'success'){
-                                return $response['total'];
-                            }
-                           
-                        
+                        $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
+                                          'longitude' => $cus_address->longitude??76.803508700000
+                                        );
+                        $postdata =  ['locations' => $location];
+                        $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
+                                                    'shortcode' => $dispatch_domain->delivery_service_key_code,
+                                                    'content-type' => 'application/json']
+                                                        ]);
+                        $url = $dispatch_domain->delivery_service_key_url;                      
+                        $res = $client->post($url.'/api/get-delivery-fee',
+                            ['form_params' => ($postdata)]
+                        );
+                        $response = json_decode($res->getBody(), true);
+                        if($response && $response['message'] == 'success'){
+                            return $response['total'];
+                        }
                     }
                    
                 }

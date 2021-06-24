@@ -23,6 +23,7 @@ class OrderProductRatingRequest extends FormRequest{
     public function rules(){
         $id = Auth::id();
         return [
+            'review' => 'max:500',
             'order_vendor_product_id' => 'required|exists:order_vendor_products,id',
             'order_id' => 'required|exists:orders,id',
             'product_id' => 'required',

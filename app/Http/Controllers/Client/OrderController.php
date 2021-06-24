@@ -20,13 +20,20 @@ class OrderController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $orders = Order::with(['vendors', 'address','user'])->orderBy('id', 'DESC');
+        $orders = Order::with(['vendors.products', 'address','user'])->orderBy('id', 'DESC');
         if (Auth::user()->is_superadmin == 0) {
             $orders = $orders->whereHas('vendors.vendor.permissionToUser', function ($query) {
                 $query->where('user_id', Auth::user()->id);
             });
         }
         $orders = $orders->paginate(10);
+        foreach ($orders as $order) {
+            foreach ($order->vendors as $vendor) {
+                foreach ($vendor->products as $product) {
+                    $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
+                }
+            }
+        }
         return view('backend.order.index', compact('orders'));
     }
 
@@ -47,6 +54,11 @@ class OrderController extends BaseController{
                 'vendors.products' => function($query) use ($vendor_id){
                     $query->where('vendor_id', $vendor_id);
                 }))->findOrFail($order_id);
+        foreach ($order->vendors as $key => $vendor) {
+            foreach ($vendor->products as $key => $product) {
+                $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
+            }
+        }
         $order_status_options = OrderStatusOption::all();
         $dispatcher_status_options = DispatcherStatusOption::with(['vendorOrderDispatcherStatus' => function ($q) use($order_id,$vendor_id){
             $q->where(['order_id' => $order_id,'vendor_id' => $vendor_id]);

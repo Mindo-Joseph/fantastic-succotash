@@ -32,9 +32,19 @@ class UserhomeController extends FrontController
             $preferences = Session::get('preferences');
             $langId = Session::get('customerLanguage');
             $client_config = Session::get('client_config');
-            $deliveryAddress = Session::get('deliveryAddress');
+            $selectedAddress = Session::get('selectedAddress');
             $navCategories = $this->categoryNav($langId);
             Session::put('navCategories', $navCategories);
+            if($preferences){
+                if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
+                    $selectedAddress = $preferences->Default_location_name;
+                    $latitude = $preferences->Default_latitude;
+                    $longitude = $preferences->Default_longitude;
+                    Session::put('latitude', $latitude);
+                    Session::put('longitude', $longitude);
+                    Session::put('selectedAddress', $selectedAddress);
+                }
+            }
             $banners = Banner::where('status', 1)->where('validity_on', 1)
                         ->where(function($q){
                             $q->whereNull('start_date_time')->orWhere(function($q2){
@@ -42,7 +52,7 @@ class UserhomeController extends FrontController
                                     ->whereDate('end_date_time', '>=', Carbon::now());
                             });
                         })->orderBy('sorting', 'asc')->get();
-            return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'deliveryAddress' => $deliveryAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
+            return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
         } catch (Exception $e) {
             pr($e->getCode());die;
         }
@@ -74,6 +84,14 @@ class UserhomeController extends FrontController
         }
         $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
         if($preferences){
+            if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
+                $selectedAddress = $preferences->Default_location_name;
+                $latitude = $preferences->Default_latitude;
+                $longitude = $preferences->Default_longitude;
+                Session::put('latitude', $latitude);
+                Session::put('longitude', $longitude);
+                Session::put('selectedAddress', $selectedAddress);
+            }
             if(($preferences->is_hyperlocal == 1) && ($latitude) && ($longitude) ){
                 $vendors = $vendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
                     $query->select('vendor_id')
@@ -85,7 +103,7 @@ class UserhomeController extends FrontController
         foreach ($vendors as $key => $value) {
             $vendor_ids[] = $value->id;
         }
-        if($request->has(['latitude', 'longitude'])) {
+        if(($latitude) && ($longitude)) {
             Session::put('vendors', $vendor_ids);
         }
         $navCategories = $this->categoryNav($language_id);

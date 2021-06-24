@@ -19,7 +19,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             <div class="col-lg-5 text-right">
                 <ul class="header-dropdown">
                     <li class="onhover-dropdown change-language">
-                        <a href="#"><i class="fa fa-language" aria-hidden="true"></i><!--span>Change Language</span--> </a>
+                        <a href="#"><img src="{{asset('front-assets/images/icon/translation.png')}}" class="img-fluid" alt="">  </a>
                         <ul class="onhover-show-div">
                             @foreach($languageList as $key => $listl)
                             <li><a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a></li>
@@ -27,7 +27,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </ul>
                     </li>
                     <li class="onhover-dropdown change-currency">
-                        <a href="#"><i class="fa fa-money" aria-hidden="true"></i><!--span>Change Currency</span--></a>
+                        <a href="#"><img src="{{asset('front-assets/images/icon/exchange.png')}}" class="img-fluid" alt="">  </a>
                         <ul class="onhover-show-div">
                             @foreach($currencyList as $key => $listc)
                             <li><a href="javascript:void(0)" currId="{{$listc->currency_id}}" class="customerCurr" currSymbol="{{$listc->currency->symbol}}">{{$listc->currency->iso_code}}</a></li>

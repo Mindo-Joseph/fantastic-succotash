@@ -1,5 +1,6 @@
 <?php
 namespace Database\Seeders;
+use DB;
 use Illuminate\Database\Seeder;
 
 class VendorProductTempleteSeeder extends Seeder
@@ -11,9 +12,8 @@ class VendorProductTempleteSeeder extends Seeder
      */
     public function run()
     {
-        \DB::table('vendor_templetes')->delete();
- 
-        $maps = array(
+        DB::table('vendor_templetes')->delete();
+        $vendor_templete_array = array(
             ['id' => 1,
                 'title' => 'Product',
                 'type' => 'Grid',
@@ -35,6 +35,6 @@ class VendorProductTempleteSeeder extends Seeder
                 'status' =>'0'
             ],
         ); 
-        \DB::table('vendor_templetes')->insert($maps);
+        DB::table('vendor_templetes')->insert($vendor_templete_array);
     }
 }

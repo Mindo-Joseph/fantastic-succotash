@@ -43,7 +43,10 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('primary/address/{id}', 'Api\v1\AddressController@postUpdatePrimaryAddress');
 
         // Rating & review 
-        Route::post('update-product-rating', 'Api\v1\RatingController@updateProductRating');
-        Route::get('get-product-rating', 'Api\v1\RatingController@getProductRating');
+        Route::group(['prefix' => 'rating'], function () {
+            Route::post('update-product-rating', 'Api\v1\RatingController@updateProductRating');
+            Route::get('get-product-rating', 'Api\v1\RatingController@getProductRating');
+        });
+       
     });
 });

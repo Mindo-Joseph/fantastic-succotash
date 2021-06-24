@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Front;
-
+use Timezonelist;
 use App\Models\{UserWishlist, User, Product, UserAddress, UserRefferal, ClientPreference, Client, Order, Transaction};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Front\FrontController;
@@ -41,23 +41,22 @@ class ProfileController extends FrontController
             $client_name = $client->name;
             $mail_from = $data->mail_from;
             $sendto = $request->email;
-            try {
-                Mail::send(
-                    'email.verify',
-                    [
+            try{
+                Mail::send('email.verify',[
                         'customer_name' => "Link from ".Auth::user()->name,
                         'code_text' => 'Register yourself using this refferal code below to get bonus offer',
                         'code' => $otp,
                         'logo' => $client->logo['original'],
-                        'link' => "http://local.myorder.com/user/register?refferal_code=".$otp,
-                    ],
-                    function ($message) use ($sendto, $client_name, $mail_from) {
-                        $message->from($mail_from, $client_name);
-                        $message->to($sendto)->subject('OTP to verify account');
-                    }
-                );
-                $notified = 1;
-            } catch (\Exception $e) {
+                        'link'=> "http://local.myorder.com/user/register?refferal_code=".$otp,
+                ],
+                function ($message) use($sendto, $client_name, $mail_from) {
+                    $message->from($mail_from, $client_name);
+                    $message->to($sendto)->subject('OTP to verify account');
+                });
+                $response['send_email'] = 1;
+            }
+            catch(\Exception $e){
+                return response()->json(['data' => $response]);
             }
         }
         return response()->json(array('success' => true, 'message' => 'Send Successfully'));
@@ -68,16 +67,17 @@ class ProfileController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function profile(Request $request, $domain = '')
-    {
-        $langId = Session::get('customerLanguage');
+    public function profile(Request $request, $domain = ''){
+        $timezone_list = Timezonelist::create('timezone', null, [
+            'id'    => 'timezone',
+            'class' => 'styled form-control',
+        ]);
         $curId = Session::get('customerCurrency');
-        $user = User::with('country', 'address')->select('name', 'email', 'phone_number', 'type', 'country_id')
-                    ->where('id', Auth::user()->id)->first();
-
-        $refferal_code = UserRefferal::where('user_id', Auth::user()->id)->first();
+        $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        return view('frontend/account/profile')->with(['user' => $user, 'navCategories' => $navCategories, 'userRefferal' => $refferal_code]);
+        $user = User::with('country', 'address')->select('name', 'email', 'phone_number', 'type', 'country_id')->where('id', Auth::user()->id)->first();
+        $refferal_code = UserRefferal::where('user_id', Auth::user()->id)->first();
+        return view('frontend.account.profile')->with(['user' => $user, 'navCategories' => $navCategories, 'userRefferal' => $refferal_code,'timezone_list' => $timezone_list]);
     }
 
     /**

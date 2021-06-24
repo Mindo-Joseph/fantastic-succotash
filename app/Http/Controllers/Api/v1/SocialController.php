@@ -143,6 +143,7 @@ class SocialController extends BaseController{
             $response['auth_token'] =  $token;
             $response['name'] = $customer->name;
             $response['email'] = $customer->email;
+            $response['is_admin'] = $customer->is_admin;
             $response['phone_number'] = $customer->phone_number;
             $verified['is_email_verified'] = 1;
             $verified['is_phone_verified'] = 1;
