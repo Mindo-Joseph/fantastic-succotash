@@ -34,8 +34,8 @@ class OrderController extends Controller {
                 $order_status_options = [];
             break;
         }
-        $orders = OrderVendor::whereDoesntHave('status', function ($query) use($order_status_options) {
-                $query->whereIn('order_status_option_id', $order_status_options);
+        $orders = OrderVendor::whereHas('status', function ($query) use($order_status_options) {
+                $query->whereNotIn('order_status_option_id', $order_status_options);
             })->where('user_id', $user->id)->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
