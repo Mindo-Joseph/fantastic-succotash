@@ -160,7 +160,7 @@
                                             <input type="text" class="form-control" name="sub_domain" id="sub_domain"
                                             value="{{ old('sub_domain', $client->sub_domain ?? '')}}"
                                             placeholder="Enter sub domain">
-                                             <span class="input-group-text" id="inputGroupPrepend2">royoorders.com</span>
+                                             <span class="input-group-text" id="inputGroupPrepend2"></span>
                                         </div>
                                       </div>
                                     

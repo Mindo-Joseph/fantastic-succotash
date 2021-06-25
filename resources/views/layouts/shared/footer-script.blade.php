@@ -31,6 +31,12 @@
 <script src="{{asset('assets/libs/jquery-toast-plugin/jquery-toast-plugin.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/toastr.init.js')}}"></script>
 <script>
+let is_hyperlocal = 0;
+@if( Session::has('preferences') )
+    @if( (isset(Session::get('preferences')['is_hyperlocal'])) && (Session::get('preferences')['is_hyperlocal'] == 1) ) 
+        is_hyperlocal = 1;
+    @endif;
+@endif;
 
 function gm_authFailure() {
 

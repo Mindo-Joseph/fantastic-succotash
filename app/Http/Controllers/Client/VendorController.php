@@ -7,8 +7,6 @@ use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlo
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Phumbor;
-use Image;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Traits\ToasterResponser;
 use App\Http\Traits\ApiResponser;
@@ -16,6 +14,10 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\VendorImport;
 use App\Models\UserVendor;
 use Redirect;
+use Phumbor;
+use Session;
+use Image;
+
 class VendorController extends BaseController
 {
     use ToasterResponser;
@@ -162,9 +164,17 @@ class VendorController extends BaseController
                 'coordinates' => $v->geo_coordinates
             ];
         }
+        $preferences = Session::get('preferences');
+        $defaultLatitude = 30.0612323;
+        $defaultLongitude = 76.1239239;
+        if($preferences){
+            $defaultLatitude = $preferences['Default_latitude'];
+            $defaultLongitude = $preferences['Default_longitude'];
+            $defaultAddress = $preferences['Default_location_name'];
+        }
         $center = [
-            'lat' => 30.0612323,
-            'lng' => 76.1239239
+            'lat' => $defaultLatitude,
+            'lng' => $defaultLongitude
         ];
         if (!empty($all_coordinates)) {
             $center['lat'] = $all_coordinates[0]['coordinates'][0]['lat'];
@@ -174,9 +184,9 @@ class VendorController extends BaseController
         if (isset($area1)) {
             $co_ordinates = $area1->geo_coordinates[0];
         } else {
-            $co_ordinates[] = [
-                'lat' => 33.5362475,
-                'lng' => -111.9267386
+            $co_ordinates = [
+                'lat' => $defaultLatitude, //33.5362475,
+                'lng' => $defaultLongitude //-111.9267386
             ];
         }
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')

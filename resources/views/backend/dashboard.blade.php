@@ -1029,14 +1029,14 @@
 <script src="{{asset('assets/libs/flatpickr/flatpickr.min.js')}}"></script>
 
 <!-- Third Party js-->
-<script src="{{asset('assets/js/vendor.min.js')}}"></script>
+<!-- <script src="{{asset('assets/js/vendor.min.js')}}"></script> -->
 
 <!-- Plugins js-->
 <script src="{{asset('assets/libs/admin-resources/admin-resources.min.js')}}"></script>
 
 <!-- Page js-->
 <!-- <script src="../assets/js/pages/dashboard-1.init.js"></script> -->
-<script src="{{asset('assets/js/pages/ecommerce-dashboard.init.js')}}"></script>
-<script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
+<!-- <script src="{{asset('assets/js/pages/ecommerce-dashboard.init.js')}}"></script> -->
+<!-- <script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script> -->
 
 @endsection

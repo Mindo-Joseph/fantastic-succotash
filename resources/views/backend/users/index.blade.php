@@ -67,6 +67,8 @@
                                     <th>Login Type</th>
                                     <th>Email/Auth-id</th>
                                     <th>Phone</th>
+                                    <th>Email Otp</th>
+                                    <th>Phone Otp</th>
                                     <th>Orders</th>
                                     <th>Active Orders</th>
                                     <th>Status</th>
@@ -78,8 +80,6 @@
                                 <?php 
                                     $loginType = 'Email'; 
                                     $loginTypeValue = $user->email;
-                                    
-
                                     if(!empty($user->facebook_auth_id)){
                                         $loginType = 'Facebook';
                                         $loginTypeValue = $user->facebook_auth_id;
@@ -115,7 +115,8 @@
                                         @endif
                                         {{ $user->phone_number }} 
                                     </td>
-                                    
+                                    <td>{{$user->phone_token}}</td>
+                                    <td>{{$user->email_token}}</td>
                                     <td>{{$user->orders_count}}</td>
                                     <td>{{$user->active_orders_count}}</td>
                                     <td>

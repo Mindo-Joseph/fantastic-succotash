@@ -99,7 +99,6 @@ class BaseController extends Controller{
     {
         $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
         $SERVER_API_KEY = 'XXXXXX';
-
         $data = [
             "registration_ids" => $firebaseToken,
             "notification" => [
@@ -107,9 +106,7 @@ class BaseController extends Controller{
                 "body" => $request->body,  
             ]
         ];
-
         $dataString = json_encode($data);
-
         $headers = [
             'Authorization: key=' . $SERVER_API_KEY,
             'Content-Type: application/json',
@@ -192,10 +189,7 @@ class BaseController extends Controller{
                 $data['amount'] = $amount * $multiplier;
             }
         }
-        
         return $data;
-
-
     }
 
     /**     * check if cookie already exist     */
@@ -266,7 +260,6 @@ class BaseController extends Controller{
                 'meta_field' => '',
                 'currency_id' => $currency,
             ];
-
             Wallet::insert($walletData);
         }
         return 1;

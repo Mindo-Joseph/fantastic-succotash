@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\{SendReferralRequest};
-use App\Models\{User,UserRefferal,ClientPreference,Client,UserWishlist,ClientCurrency};
+use App\Models\{User,UserRefferal,ClientPreference,Client,UserWishlist,ClientCurrency, Product};
 
 class ProfileController extends BaseController{
 
@@ -82,7 +82,7 @@ class ProfileController extends BaseController{
                     ])->select( "id", "user_id", "product_id")->where('user_id', $user->id)->paginate($paginate);
     	if($user_wish_details){
     		foreach ($user_wish_details as $user_wish_detail) {
-                $user_wish_detail->product->is_wishlist = $user_wish_detail->product->category->categoryDetail->show_wishlist;
+                $user_wish_detail->product->is_wishlist = $user_wish_detail->product->category ? $user_wish_detail->product->category->categoryDetail->show_wishlist : null;
     			if($user_wish_detail->product->variant){
 		    		foreach ($user_wish_detail->product->variant as $variant) {
 			            $variant->multiplier = $clientCurrency->doller_compare;
@@ -262,7 +262,6 @@ class ProfileController extends BaseController{
                 $response['send_otp'] = 1;
             }
         }
-
         if($user->email != trim($request->email)){
             $emailCode = mt_rand(100000, 999999);
             $user->email = $request->email;

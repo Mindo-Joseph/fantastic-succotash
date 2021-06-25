@@ -1,7 +1,5 @@
 <script>
-    var options = {
-        zIndex: 9999
-    }
+    var options = {zIndex: 9999};
     $(document).on('change', '.assignToSelect', function(){
         var val = $(this).val();
         if(val == 'category'){
@@ -18,11 +16,9 @@
             $('.modal .vendor_list').hide();
         }
     });
-
     $("#banner-datatable tbody").sortable({
         placeholder : "ui-state-highlight",
-        update  : function(event, ui)
-        {
+        update  : function(event, ui){
             var post_order_ids = new Array();
             $('#post_list tr').each(function(){
                 post_order_ids.push($(this).data("row-id"));
@@ -33,7 +29,6 @@
     });
     var CSRF_TOKEN = $("input[name=_token]").val();
     function saveOrder(orderVal){
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -48,55 +43,19 @@
                 order: orderVal
             },
             success: function(response) {
-
                 if (response.status == 'success') {
                 }
                 return response;
             }
         });
     }
-
-
-    /*          Variant Modals Started      */
-
-    /*addOptionRow: function (isNullOptionRow) {
-                    const rowCount = this.optionRowCount++;
-                    const id = 'option_' + rowCount;
-                    let row = {'id': id};
-
-                                            row['en'] = '';
-                                            row['fr'] = '';
-                                            row['nl'] = '';
-                    
-                    row['notRequired'] = '';
-
-                    if (isNullOptionRow) {
-                        this.idNullOption = id;
-                        row['notRequired'] = true;
-                    }
-
-                    this.optionRows.push(row);
-                },
-
-                removeRow: function (row) {
-                    if (row.id === this.idNullOption) {
-                        this.idNullOption = null;
-                        this.isNullOptionChecked = false;
-                    }
-
-                    const index = this.optionRows.indexOf(row);
-                    Vue.delete(this.optionRows, index);
-                },*/
-
     $(".addVariantbtn").click(function (e) {
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
             }
         });
         e.preventDefault();
-
         var did = $(this).attr('dataid');
         $.ajax({
             type: "get",
@@ -104,7 +63,6 @@
             data: '',
             dataType: 'json',
             success: function (data) {
-
                 $('#addVariantmodal').modal({
                     backdrop: 'static',
                     keyboard: false
@@ -131,7 +89,6 @@
         $clone.find('.hexa-colorpicker').attr("id", "hexa-colorpicker-"+n);
         $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>');
         $('.optionTableAdd').append($clone);
-
         var picker = new jscolor("#hexa-colorpicker-"+n, options);
     });
 
@@ -158,14 +115,12 @@
     });
 
     $(document).on('click', '.deleteVariant', function(){
-       
         var did = $(this).attr('dataid');
         if(confirm("Are you sure? You want to delete this variant.")) {
             $('#varDeleteForm'+did).submit();
         }
         return false;
     });
-
     $('.editVariantBtn').on('click', function(e) {
         $.ajaxSetup({
             headers: {
@@ -184,7 +139,6 @@
                 $(".loader_box").show();
             },
             success: function (data) {
-
                 $('#editVariantmodal').modal({
                     backdrop: 'static',
                     keyboard: false
@@ -192,17 +146,11 @@
                 $('#editVariantForm #editVariantBox').html(data.html);
                 $('.dropify').dropify();
                 $('.selectize-select').selectize();
-
                 $("#editVariantForm .hexa-colorpicker").each(function() {
                     var ids = $(this).attr('id');
                     //console.log(ids);
                     var picker = new jscolor('#'+ids, options); 
-
                 });
-
-                //var picker = new jscolor('.hexa-colorpicker', options); 
-                
-
                 var getURI = document.getElementById('submitEditHidden').value;
                 document.getElementById('editVariantForm').action = data.submitUrl;
             },
@@ -232,10 +180,8 @@
     });
 
     $(document).on('change', '.dropDownType', function(){
-       
         var did = $(this).val();
         var dataFor = $(this).attr('dataFor');
-        console.log(dataFor);
         if(did == 1){
             $('#'+dataFor+'Variantmodal .hexacodeClass-'+dataFor).hide();
         }else{
@@ -244,7 +190,6 @@
     });
 
     $('.saveVariantOrder').on('click', function(e) {
-        //alert(1);
         var var_ids = new Array();
         $(".variantList").each(function () {
             var_ids.push($(this).data("row-id"));
@@ -253,9 +198,6 @@
         $('#variant_order').submit();
     });
 
-
-    /*              Brand Started               */
-
     $('.addBrandbtn').on('click', function(e) {
         $.ajaxSetup({
             headers: {
@@ -263,7 +205,6 @@
             }
         });
         e.preventDefault();
-
         var did = $(this).attr('dataid');
         $.ajax({
             type: "get",
@@ -286,7 +227,6 @@
             }
         });
     });
-
     $(document).ready(function(){
         $('#addVariantmodal .selectize-select').selectize();
         $('#addBrandmodal .selectize-select').selectize();
@@ -299,27 +239,21 @@
         {
         }
     });
-
     $(document).on('click', '.deleteBrand', function(){
-       
         var did = $(this).attr('dataid');
         if(confirm("Are you sure? You want to delete this brand.")) {
             $('#brandDeleteForm'+did).submit();
         }
         return false;
     });
-
     $('.saveBrandOrder').on('click', function(e) {
-        //alert(1);
         var var_ids = new Array();
         $(".brandList").each(function () {
             var_ids.push($(this).data("row-id"));
         });
-
         document.getElementById('orderBrandData').value = var_ids;
         $('#brand_order').submit();
     });
-
     $('.editBrandBtn').on('click', function(e) {
         $.ajaxSetup({
             headers: {
@@ -327,7 +261,6 @@
             }
         });
         e.preventDefault();
-
         var did = $(this).attr('dataid');
         $.ajax({
             type: "get",
@@ -335,7 +268,6 @@
             data: '',
             dataType: 'json',
             success: function (data) {
-
                 $('#editBrandmodal').modal({
                     backdrop: 'static',
                     keyboard: false
@@ -343,7 +275,6 @@
                 $('#editBrandForm #editBrandBox').html(data.html);
                 $('.dropify').dropify();
                 $('.selectize-select').selectize(); 
-
                 document.getElementById('editBrandForm').action = data.submitUrl;
             },
             error: function (data) {
@@ -351,5 +282,4 @@
             }
         });
     });
-  
 </script>

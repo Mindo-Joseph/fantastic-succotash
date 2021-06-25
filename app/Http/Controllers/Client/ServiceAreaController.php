@@ -71,6 +71,19 @@ class ServiceAreaController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $domain = '', $id){
+        $rules = array(
+            'name' => 'required',
+            'latlongs_edit' => 'required'
+        );
+        $messages = array(
+            'name.required' => 'Area name is required',
+            'latlongs_edit.required' => 'Service area is required',
+        );
+        $validation  = Validator::make($request->all(), $rules, $messages);
+
+        if ($validation->fails()) {
+            return redirect()->back()->withInput()->withErrors($validation);
+        }
         $area = ServiceArea::where('id', $id)->where('vendor_id', $request->ven_id)->firstOrFail();
         $latlng = str_replace('),(', ';', $request->latlongs_edit);
         $latlng = str_replace(')', '', $latlng);
