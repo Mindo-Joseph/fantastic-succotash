@@ -13,7 +13,7 @@ class CategorySeeder extends Seeder
     public function run()
     {
         DB::table('categories')->delete();
-        $maps = array(
+        $categories = array(
             array(
                 'id' => '1',
                 'slug' => 'Root',
@@ -170,12 +170,10 @@ class CategorySeeder extends Seeder
                 'display_mode' => 1,
                 'parent_id' => 1
             ),
-
         ); 
-        DB::table('categories')->insert($maps);
-
+        DB::table('categories')->insert($categories);
         DB::table('category_translations')->delete();
-        $translati = array(
+        $category_translations = array(
             array(
                 'id' => 1,
                 'name' => 'root',
@@ -307,6 +305,6 @@ class CategorySeeder extends Seeder
                 'language_id' => 1,
             ),
         );
-        DB::table('category_translations')->insert($translati);
+        DB::table('category_translations')->insert($category_translations);
     }
 }

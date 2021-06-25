@@ -262,7 +262,6 @@ class ProfileController extends BaseController{
                 $response['send_otp'] = 1;
             }
         }
-
         if($user->email != trim($request->email)){
             $emailCode = mt_rand(100000, 999999);
             $user->email = $request->email;
