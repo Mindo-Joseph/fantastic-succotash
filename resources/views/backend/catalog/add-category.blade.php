@@ -20,40 +20,58 @@
                 <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category image</p>
             </div>
-            <div class="col-sm-3">
-                <div class="form-group" id="slugInput">
-                    {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
-                    {!! Form::text('slug', null, ['class'=>'form-control', 'required' => 'required']) !!}
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                    {!! Form::hidden('login_user_type', session('login_user_type'), ['class'=>'form-control']) !!}
-                    {!! Form::hidden('login_user_id', auth()->user()->id, ['class'=>'form-control']) !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
-                    <div>
-                        <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch_menu" data-color="#43bee1" checked='checked'>
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-md-6">
+                         <div class="form-group" id="slugInput">
+                            {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
+                            {!! Form::text('slug', null, ['class'=>'form-control', 'required' => 'required']) !!}
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                            {!! Form::hidden('login_user_type', session('login_user_type'), ['class'=>'form-control']) !!}
+                            {!! Form::hidden('login_user_id', auth()->user()->id, ['class'=>'form-control']) !!}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Select Parent Category',['class' => 'control-label']) !!}
+                            <select class="selectize-select form-control parent-category" id="cateSelectBox" name="parent_cate">
+                                <option value="">Select</option>
+                                @foreach($parCategory as $pc)
+                                    <option value="{{$pc->id}}">{{$pc->slug}}</option>
+                                @endforeach
+                            </select>
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="form-group">
-                    {!! Form::label('title', 'Select Parent Category',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control parent-category" id="cateSelectBox" name="parent_cate">
-                        <option value="">Select</option>
-                        @foreach($parCategory as $pc)
-                            <option value="{{$pc->id}}">{{$pc->slug}}</option>
-                        @endforeach
-                    </select>
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('title', 'Wishlist',['class' => 'control-label']) !!} 
-                    <div>
-                        <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control wishlist_switch" data-color="#43bee1" checked='checked'>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
+                            <div>
+                                <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch_menu" data-color="#43bee1" checked='checked'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Wishlist',['class' => 'control-label']) !!} 
+                            <div>
+                                <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control wishlist_switch" data-color="#43bee1" checked='checked'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" id="addProductHide">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
+                            <div>
+                                <input type="checkbox" data-plugin="switchery" name="can_add_products" class="form-control add_product_switch" data-color="#43bee1" checked='checked'>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -66,6 +84,7 @@
                      <label for="type_id_{{$type->id}}" class="card-body">
                         <div class="form-check form-check-info">
                             <span for="customradio5">{{$type->title}}</span>
+                            <p class="text-muted mb-1 text-truncate">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
                         </div>
                      </label>
                   </div>
@@ -73,14 +92,7 @@
            @endforeach
         </div>
         <div class="row">
-            <div class="col-md-6 text-center" id="addProductHide">
-                <div class="form-group">
-                    {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
-                    <div>
-                        <input type="checkbox" data-plugin="switchery" name="can_add_products" class="form-control add_product_switch" data-color="#43bee1" checked='checked'>
-                    </div>
-                </div>
-            </div>
+            
             <div class="col-md-6" id="addDispatcherHide" style="display: none;">
                 <div class="form-group">
                     {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}

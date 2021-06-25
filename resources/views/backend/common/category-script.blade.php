@@ -80,6 +80,9 @@
     $(document).on('change', '.type-select', function() { 
         var id =  $(this).val();
         var for1 = $(this).attr('for');
+        $('#warning_page_main_div').hide();
+        $('#template_type_main_div').hide();
+        $('#warning_page_design_main_div').hide();
         if(id == '1'){
             $("#" + for1 + "-category-form #" + for1 + "ProductHide").show();
             $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
@@ -89,6 +92,9 @@
         } else if(id == '3') {
             $("#" + for1 + "-category-form #" + for1 + "ProductHide").show();
             $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
+        }else if(id == '7') {
+            $('#warning_page_main_div').show();
+            $('#template_type_main_div').show();
         } else {
             $("#" + for1 + "-category-form #" + for1 + "ProductHide").hide();
             $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
@@ -98,19 +104,6 @@
         let text = $.trim($('#cateSelectBox option:selected').text().toLowerCase());
         if(text == 'dispatcher'){
             $('#warning_page_design_main_div').show();
-        }
-    });
-    $(document).on('change', '.parent-category', function() {
-        let text = $.trim($('#cateSelectBox option:selected').text().toLowerCase());
-        if(text != ''){
-            if(text == 'dispatcher'){
-                $('#warning_page_main_div').show();
-                $('#template_type_main_div').show();
-            }else{
-                $('#warning_page_main_div').hide();
-                $('#template_type_main_div').hide();
-                $('#warning_page_design_main_div').hide();
-            }
         }
     });
     $(document).on('click', '.editCategorySubmit', function(e) { 
