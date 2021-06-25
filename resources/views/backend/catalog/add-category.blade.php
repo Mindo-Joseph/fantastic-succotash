@@ -73,7 +73,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3" id="addDispatcherHide" style="display: none;">
+                    <div class="col-md-6" id="addDispatcherHide" style="display: none;">
                         <div class="form-group">
                             {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
                             {!! Form::hidden('tags', null, ['class'=>'form-control myTag1']) !!}
