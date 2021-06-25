@@ -92,7 +92,6 @@
            @endforeach
         </div>
         <div class="row">
-            
             <div class="col-md-6" id="addDispatcherHide" style="display: none;">
                 <div class="form-group">
                     {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
