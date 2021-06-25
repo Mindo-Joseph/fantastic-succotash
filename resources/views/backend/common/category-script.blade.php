@@ -101,7 +101,9 @@
         }
     });
     $(document).on('change', '#warningPageSelectBox', function() {
-        $('#warning_page_design_main_div').show();
+        if($("#warningPageSelectBox :selected").val() == '7'){
+            $('#warning_page_design_main_div').show();
+        }
     });
     $(document).on('click', '.editCategorySubmit', function(e) { 
         e.preventDefault();
