@@ -54,7 +54,7 @@ $timezone = Auth::user()->timezone;
                                 $product_total_count = 0;
                                 $product_taxable_amount = 0;
                             @endphp
-                                <div class="row  {{$k ==0 ? 'mt-0' : ''}}">
+                                <div class="row  {{$k ==0 ? 'mt-0' : 'mt-3'}}">
                                     <div class="col-12">
                                         <a href="{{route('order.show.detail', [$order->id, $vendor->vendor_id])}}" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters h-100">
                                             <span class="left_arrow pulse">

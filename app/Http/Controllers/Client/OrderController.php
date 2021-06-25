@@ -53,9 +53,13 @@ class OrderController extends BaseController{
                 'vendors' => function($query) use ($vendor_id){
                     $query->where('vendor_id', $vendor_id);
                 },
+                'vendors.products.prescription' => function($query) use ($vendor_id, $order_id){
+                    $query->where('vendor_id', $vendor_id)->where('order_id', $order_id);
+                },
                 'vendors.products' => function($query) use ($vendor_id){
                     $query->where('vendor_id', $vendor_id);
                 }))->findOrFail($order_id);
+        // dd($order->vendors[0]->products->toArray());die;
         foreach ($order->vendors as $key => $vendor) {
             foreach ($vendor->products as $key => $product) {
                 $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';

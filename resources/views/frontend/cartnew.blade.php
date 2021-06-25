@@ -94,7 +94,11 @@
                         </div>
                     </td>
                     <td>
-                    <button type="button" class="btn btn-solid prescription_btn" data-product="<%= vendor_product.product.id %>">Add</button>
+                    <% if(cart_details.pharmacy_check == 1){ %>
+                    <% if(vendor_product.product.pharmacy_check == 1){ %>
+                    <button type="button" class="btn btn-solid prescription_btn" data-product="<%= vendor_product.product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">Add</button>
+                    <% } %>
+                    <% } %>
                     </td>
                     <td class="text-center">
                         <a  class="action-icon d-block mb-3 remove_product_via_cart" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
@@ -487,8 +491,9 @@
                 <div class="modal-body" id="AddCardBox">
                     <div class="row">
                         <div class="col-sm-6" id="imageInput">
+                            <input type="hidden" id="vendor_idd" name="vendor_idd" value="" />
                             <input type="hidden" id="product_id" name="product_id" value="" />
-                            <input data-default-file="" type="file" data-plugins="dropify" name="prescriptions[]" class="dropify" multiple/>
+                            <input data-default-file="" accept="image/*" type="file" data-plugins="dropify" name="prescriptions[]" class="dropify" multiple/>
                             <p class="text-muted text-center mt-2 mb-0">Upload Prescription</p>
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>

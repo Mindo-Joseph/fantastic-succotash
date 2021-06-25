@@ -591,8 +591,9 @@ $(document).ready(function() {
         }, 5000);
     }
 
-    $(document).on('click', '.prescription_btn', function(e) { 
+    $(document).on('click', '.prescription_btn', function(e) {
         $("#product_id").val($(this).data("product"));
+        $("#vendor_idd").val($(this).data("vendor_id"));
         $('#prescription_form').modal('show');
    });
 
