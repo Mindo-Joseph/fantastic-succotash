@@ -102,7 +102,6 @@
     });
     $(document).on('change', '.parent-category', function() {
         let text = $.trim($('#cateSelectBox option:selected').text().toLowerCase());
-        $('#warning_page_design_main_div').hide();
         if(text != ''){
             if(text == 'dispatcher'){
                 $('#warning_page_main_div').show();
