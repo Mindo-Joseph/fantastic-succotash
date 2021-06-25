@@ -527,7 +527,7 @@ function initMap() {
                 map.fitBounds(place.geometry.viewport);
             } else {
                 map.setCenter(place.geometry.location);
-                map.setZoom(17);
+                map.setZoom(13);
             }
             marker.setPosition(place.geometry.location);
             marker.setVisible(true);
