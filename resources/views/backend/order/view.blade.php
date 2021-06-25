@@ -128,7 +128,11 @@ $timezone = Auth::user()->timezone;
                                     $sub_total += $product->quantity * $product->price;
                                     @endphp
                                     <tr>
-                                        <th scope="row">{{$product->product_name}}</th>
+                                        <th scope="row">{{$product->product_name}} 
+                                        @foreach($product->prescription as $pres)
+                                        <br><a target="_blank" href="{{ ($pres) ? $pres->prescription['proxy_url'].'74/100'.$pres->prescription['image_path'] : ''}}" >{{($product->prescription) ? 'Prescription' : ''}}</a>
+                                        @endforeach
+                                        </th>
                                         <td>
                                             <img src="{{$product->image_path['proxy_url'].'32/32'.$product->image_path['image_path']}}" alt="product-img" height="32">
                                         </td>

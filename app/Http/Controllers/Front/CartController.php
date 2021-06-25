@@ -238,6 +238,8 @@ class CartController extends FrontController
         $cart_id = $cart->id;
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
+        $pharmacy = ClientPreference::first();
+        $cart->pharmacy_check = $pharmacy->pharmacy_check;
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
         $cartData = CartProduct::with(['vendor', 'coupon'=> function($qry) use($cart_id){
                             $qry->where('cart_id', $cart_id);
@@ -351,7 +353,6 @@ class CartController extends FrontController
                             $is_percent = 1;
                             $total_discount_percent = $total_discount_percent + round($coupon->promo->amount);
                         }else{
-                            
                         }
                     }
                 }
@@ -380,8 +381,6 @@ class CartController extends FrontController
      * @return \Illuminate\Http\Response
      */
     
-
-
     /**
      * Update Quantityt
      *
@@ -443,8 +442,6 @@ class CartController extends FrontController
             $address = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
             $address = UserAddress::where('user_id', Auth::user()->id)->where('id', $request->address_id)->update(['is_primary' => 1]);
         }
-       
-   
         if($cart){
             $cart_details = $this->getCart($cart);
         }
@@ -481,20 +478,10 @@ class CartController extends FrontController
                             if($response && $response['message'] == 'success'){
                                 return $response['total'];
                             }
-                           
-                        
                     }
-                   
                 }
             }    
-            catch(\Exception $e)
-            {
-                // print_r($e->getMessage());
-               //  die;
-                        
-            }
-           
-           
+            catch(\Exception $e){}
     }
     # check if last mile delivery on 
     public function checkIfLastMileOn(){
@@ -512,6 +499,7 @@ class CartController extends FrontController
             foreach($request->prescriptions as $prescription){
                 $cart_product_prescription = new CartProductPrescription();
                 $cart_product_prescription->cart_id = $cart->id;
+                $cart_product_prescription->vendor_id = $request->vendor_idd;
                 $cart_product_prescription->product_id = $request->product_id;
                 $cart_product_prescription->prescription = Storage::disk('s3')->put('prescription', $prescription, 'public');
                 $cart_product_prescription->save();
