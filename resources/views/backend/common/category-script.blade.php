@@ -95,6 +95,7 @@
         }else if(id == '7') {
             $('#warning_page_main_div').show();
             $('#template_type_main_div').show();
+            $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
         } else {
             $("#" + for1 + "-category-form #" + for1 + "ProductHide").hide();
             $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
