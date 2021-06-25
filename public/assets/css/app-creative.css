@@ -3602,6 +3602,10 @@ body.authentication-bg-pattern {
   background-color: #43bee1;
   border-radius: 50%;
   border: 3px solid #fff;
+  animation: pulse-animation 2s infinite;
+}
+.track-order-list ul li.completed::before{
+  animation: none;
 }
 .track-order-list ul li.completed {
   border-color: #43bee1;

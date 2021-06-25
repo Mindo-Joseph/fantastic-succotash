@@ -160,7 +160,7 @@ class UserhomeController extends FrontController
     public function homepage(Request $request)
     {
         try{
-            $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
+            $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id', 'pharmacy_check')->first();
             Session::put('deliveryAddress', $request->selectedAddress);
             Session::put('latitude', $request->latitude);
             Session::put('longitude', $request->longitude);

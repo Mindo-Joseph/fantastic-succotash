@@ -57,12 +57,15 @@ $timezone = Auth::user()->timezone;
                                 <div class="row  {{$k ==0 ? 'mt-0' : ''}}">
                                     <div class="col-12">
                                         <a href="{{route('order.show.detail', [$order->id, $vendor->vendor_id])}}" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters h-100">
-                                            <span class="left_arrow pulse"></span>
+                                            <span class="left_arrow pulse">
+                                            </span>
                                             <div class="col-5 col-sm-3">
                                                 <h4 class="m-0">{{ $vendor->name }}</h4>
                                                 <ul class="status_box mt-3 pl-0">
-                                                    <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Accepted</label></li>
-                                                    <li><img src="{{ asset('assmailtrapmailtrapets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Assigned</label></li>
+                                                    <li>
+                                                        <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
+                                                        <label class="m-0 in-progress">{{$vendor->order_status}}</label>
+                                                    </li>
                                                 </ul>
                                             </div>
                                             <div class="col-7 col-sm-4">
@@ -70,7 +73,7 @@ $timezone = Auth::user()->timezone;
                                                     @foreach($vendor->products as $product)
                                                         @if($vendor->vendor_id == $product->vendor_id)
                                                             <li class="text-center">
-                                                                <img src="{{ $product->image_path['proxy_url'].'74/100'.$product->image_path['image_path']}}" alt="">
+                                                                <img src="{{ $product->image_path['proxy_url'].'74/100'.$product->image_path['image_path']}}">
                                                                 <span class="item_no position-absolute">x{{$product->quantity}}</span>
                                                                 <label class="items_price">$@money($product->price)</label>
                                                             </li>
@@ -116,10 +119,6 @@ $timezone = Auth::user()->timezone;
                                         <label class="m-0">Sub Total</label>
                                         <span>$@money($total_order_price)</span>
                                     </li>
-                                   <!--  <li class="d-flex align-items-center justify-content-between">
-                                        <label class="m-0">Wallet</label>
-                                        <span>$0.00</span>
-                                    </li> -->
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">Loyalty</label>
                                         <span>{{$order->loyalty_points_earned}}</span>

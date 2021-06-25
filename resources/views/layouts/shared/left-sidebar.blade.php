@@ -61,25 +61,24 @@
                     <a href="#sidebaraccounting" data-toggle="collapse">
                     <span class="icon-customize_icon"></span>
                         <span> Accounting </span>
-                        <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse" id="sidebaraccounting">
                         <ul class="nav-second-level">
                             <li>
                                 <a href="{{route('account.orders')}}">Order List</a>
                             </li>
-                            <!-- <li>
-                                <a href="{{route('webStyling.index')}}">Loyality</a>
+                            <li>
+                                <a href="{{route('account.loyalty')}}">Loyality</a>
                             </li>
                             <li>
-                                <a href="{{route('webStyling.index')}}">Promo Codes</a>
+                                <a href="{{route('account.promo.code')}}">Promo Codes</a>
                             </li>
                             <li>
-                                <a href="{{route('webStyling.index')}}">Taxes</a>
+                                <a href="{{route('account.tax')}}">Taxes</a>
                             </li>
                             <li>
-                                <a href="{{route('webStyling.index')}}">Vendors</a>
-                            </li> -->
+                                <a href="{{route('account.vendor')}}">Vendors</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -119,7 +118,6 @@
                     <a href="#sidebarstyling" data-toggle="collapse">
                     <span class="icon-customize_icon"></span>
                         <span> Styling </span>
-                        <!-- <label class="menu-arrow"></label> -->
                     </a>
                     <div class="collapse" id="sidebarstyling">
                         <ul class="nav-second-level">

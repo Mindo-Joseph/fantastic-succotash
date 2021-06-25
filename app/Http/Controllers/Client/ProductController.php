@@ -192,8 +192,7 @@ class ProductController extends BaseController
             }
         }
         $otherProducts = Product::with('primary')->select('id', 'sku')->where('is_live', 1)->where('id', '!=', $product->id)->get();
-        $configData = ClientPreference::select('celebrity_check', 'need_dispacher_ride', 'need_delivery_service')
-            ->where('id', '>', 0)->first();
+        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service')->first();
         $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
         return view('backend/product/edit', ['typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
     }
@@ -235,6 +234,7 @@ class ProductController extends BaseController
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
         $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;
         $product->is_physical               = ($request->has('is_physical') && $request->is_physical == 'on') ? 1 : 0;
+        $product->pharmacy_check               = ($request->has('pharmacy_check') && $request->pharmacy_check == 'on') ? 1 : 0;
         $product->has_inventory             = ($request->has('has_inventory') && $request->has_inventory == 'on') ? 1 : 0;
         $product->sell_when_out_of_stock    = ($request->has('sell_stock_out') && $request->sell_stock_out == 'on') ? 1 : 0;
         $product->requires_shipping         = ($request->has('require_ship') && $request->require_ship == 'on') ? 1 : 0;

@@ -542,5 +542,5 @@ function setLocationCoordinates(key, lat, lng) {
     latitudeField.value = lat;
     longitudeField.value = lng;
 }
-
-google.maps.event.addDomListener(window, 'load', initMap);
+initMap();
+// google.maps.event.addDomListener(window, 'load', initMap);

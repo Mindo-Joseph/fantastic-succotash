@@ -1,20 +1,29 @@
-<div class="row">
-    <div class="col-md-12">
-        
+<style type="text/css">
+    .edit-category input[type="radio"] {
+    display: none;
+}
 
+.edit-category label{
+    cursor: pointer;
+}
+
+.edit-category input:checked ~ label {
+    box-shadow: 0 0px 8px rgb(67 190 225 / 55%);
+}
+</style>
+
+<div class="row ">
+    <div class="col-md-12">
         <div class="row mb-6">
-            <div class="col-sm-6">
+            <div class="col-sm-2">
                 <input type="file" accept="image/*" data-plugins="dropify" name="icon" class="dropify" data-default-file="{{$category->icon['proxy_url'].'400/400'.$category->icon['image_path']}}" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category Icon</p>
             </div> 
-            <div class="col-sm-6"> <!--  Storage::disk('s3')->url($client->logo)  -->                 
+            <div class="col-sm-4">                
                 <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$category->image['proxy_url'].'400/400'.$category->image['image_path']}}" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category image</p>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-3">
                 <div class="form-group" id="slugInputEdit">
                     {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
                     {!! Form::text('slug', $category->slug, ['class'=>'form-control']) !!}
@@ -24,8 +33,18 @@
                     {!! Form::hidden('login_user_type', session('preferences.login_user_type'), ['class'=>'form-control']) !!}
                     {!! Form::hidden('login_user_id', auth()->user()->id, ['class'=>'form-control']) !!}
                 </div>
+                <div class="form-group">
+                    {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
+                    <div>
+                        @if($category->is_visible == '1')
+                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control edit-switch_menu" data-color="#43bee1" checked='checked'>
+                        @else
+                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control edit-switch_menu" data-color="#43bee1">
+                        @endif
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-3">
                 <div class="form-group">
                     {!! Form::label('title', 'Select Parent Category',['class' => 'control-label']) !!}
                     <select class="selectize-select1 form-control" id="cateSelectBox" name="parent_cate">
@@ -38,35 +57,6 @@
                         <strong></strong>
                     </span>
                 </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control type-select" for="edit" id="typeSelectBox" name="type_id">
-                        @foreach($typeArray as $type)
-                        <option value="{{$type->id}}" @if($category->type_id == $type->id) selected @endif>{{$type->title}}</option>
-                        @endforeach
-
-                    </select>
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                    <input type="hidden" id="cateId" url="{{route('category.update', $category->id)}}">
-                </div>
-            </div>
-            <div class="col-md-2 text-center">
-                <div class="form-group">
-                    {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
-                    <div>
-                        @if($category->is_visible == '1')
-                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control edit-switch_menu" data-color="#43bee1" checked='checked'>
-                        @else
-                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control edit-switch_menu" data-color="#43bee1">
-                        @endif
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2 text-center">
                 <div class="form-group">
                     {!! Form::label('title', 'Show Wishlist',['class' => 'control-label']) !!} 
                     <div>
@@ -76,6 +66,37 @@
                             <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control edit-wishlist_switch" data-color="#43bee1">
                         @endif
                     </div>
+                </div>
+            </div>
+        </div>
+       <!--  <div class="row mt-3 edit-category">
+            @foreach($typeArray as $type)
+               <div class="col-sm-4 col-md-3 col-xl-2">
+                  <div class="card" id="tooltip-container">
+                     <input class="form-check-input" type="radio" id="type_id_{{$type->id}}" name="type_id" checked="">
+                     <label for="type_id_{{$type->id}}" class="card-body">
+                        <div class="form-check form-check-info">
+                            <span for="customradio5">{{$type->title}}</span>
+                        </div>
+                     </label>
+                  </div>
+                  
+               </div>
+           @endforeach
+        </div> -->
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
+                    <select class="selectize-select form-control type-select" for="edit" id="typeSelectBox" name="type_id">
+                        @foreach($typeArray as $type)
+                        <option value="{{$type->id}}" @if($category->type_id == $type->id) selected @endif>{{$type->title}}</option>
+                        @endforeach
+                    </select>
+                    <span class="invalid-feedback" role="alert">
+                        <strong></strong>
+                    </span>
+                    <input type="hidden" id="cateId" url="{{route('category.update', $category->id)}}">
                 </div>
             </div>
             <div class="col-md-6 text-center" style="{{($category->type_id != 1) ? 'display:none;' : ''}}" id="editProductHide">
@@ -99,22 +120,7 @@
                     </span>
                 </div>
             </div>
-
-            <!--<div class="col-md-4">
-                <div class="form-group">
-                    {!! Form::label('title', 'Display Mode',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control" name="display_mode">
-                        <option value="1" @if($category->display_mode == '1') selected @endif >Show Product only</option>
-                        <option value="2" @if($category->display_mode == '2') selected @endif >Show Product With Description</option>
-                    </select>
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                </div>
-            </div> 
-        -->
         </div>
-
         <div class="row">
             @foreach($category->translation as $trans)
                 <div class="col-lg-6">
@@ -159,7 +165,6 @@
                     </div>
                 </div>                
             @endforeach
-
             @if(count($langIds) !=  count($existlangs))
         @foreach($languages as $langs)
             @if(!in_array($langs->langId, $existlangs) && in_array($langs->langId, $langIds))
@@ -201,17 +206,11 @@
                         </div>
                     </div>
                 </div>
-
                 </div>
             </div> 
             @endif
             @endforeach   
-        
         @endif
-        </div>
-
-        
-                
-              
+        </div>    
     </div>
 </div>

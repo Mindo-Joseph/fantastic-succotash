@@ -1,6 +1,8 @@
-@extends('layouts.store', ['title' => 'Login'])
+@extends('layouts.store', ['title' => 'Profile'])
 
 @section('css')
+<link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
 <style type="text/css">
     .main-menu .brand-logo {
         display: inline-block;
@@ -91,20 +93,28 @@
                                     <div class="file file--upload">
                                         <label>
                                             <span class="update_pic">
-                                                <img src="{{asset('assets/images/products/product-1.png')}}" alt="">
+                                            <img src="{{$user->image['proxy_url'].'1000/1000'.$user->image['image_path']}}" alt="">
+                                            <?php /* ?><img src="{{asset('assets/images/products/product-1.png')}}" alt=""><?php */ ?>
                                             </span>
                                         </label>
                                     </div>
                                     <div class="name_location">
-                                        <h5 class="mt-0 mb-1"> Test</h5>
-                                        <p class="m-0"><i class="fa fa-map-marker mr-1" aria-hidden="true"></i>
-                                            Chandigarh</p>
+                                        <h5 class="mt-0 mb-1">{{$user->name}}</h5>
+                                        <?php /* ?><p class="m-0"><i class="fa fa-map-marker mr-1" aria-hidden="true"></i> Chandigarh</p><?php */ ?>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 text-center text-md-right mt-3 mt-md-0">
-                                    <a class="btn btn-solid" data-toggle="modal" data-target="#refferal-modal"
-                                        href="javascript:void(0)">Edit Profile</a>
+                                    <a class="btn btn-solid openProfileModal" data-toggle="modal" data-target="#profile-modal" href="javascript:void(0)">Edit Profile</a>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="card-box p-4 mb-3">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h6 class="m-0">About Me</h6>
+                                <?php /* ?><a class="profile-edit" href="about_me_popup.html">Edit</a><?php */ ?>
+                            </div>
+                            <div class="text-16">
+                                <p class="m-0">{{$user->description}}</p>
                             </div>
                         </div>
                         <hr class="mt-2">
@@ -122,24 +132,24 @@
                                 <div class="card-box">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="d-flex align-items-center justify-content-between">
+                                            <?php /* ?><div class="d-flex align-items-center justify-content-between">
                                                 <h6 class="mt-0">Contact Details</h6>
                                                 <a class="profile-edit" href="contact_details_popup.html">Edit</a>
-                                            </div>
+                                            </div><?php */ ?>
 
                                             <div class="info-text mb-2">
                                                 <label class="m-0">Name</label>
-                                                <p>Chander Mohan</p>
+                                                <p>{{$user->name}}</p>
                                             </div>
 
                                             <div class="info-text mb-2">
                                                 <label class="m-0">Email</label>
-                                                <p>Chander123@yopmail.com</p>
+                                                <p>{{$user->email}}</p>
                                             </div>
 
                                             <div class="info-text mb-2">
                                                 <label class="m-0">Phone Number</label>
-                                                <p>8521354681</p>
+                                                <p>{{$user->phone_number}}</p>
                                             </div>
 
                                             <div class="info-text mb-2">
@@ -156,8 +166,28 @@
                                     <div class="d-flex align-items-center justify-content-between px-4 mb-2">
                                         <h6 class="m-0">Shipping Details</h6>
                                     </div>
-
-                                    <div class="row px-4 align-items-center pb-1">
+                                    @if($userAddresses->isNotEmpty())
+                                    @foreach($userAddresses as $key => $address)
+                                        <div class="row px-4 align-items-center pb-1">
+                                            <div class="col-md-8">
+                                                <div class="address_txt">
+                                                    <p class="m-0 text-16">{{$user->name}}</p>
+                                                </div>
+                                                <div class="address_box mt-1 p-0">
+                                                    <p>{{$address->address}}, {{$address->country}}, {{$address->pincode}} </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 d-flex justify-content-end mt-md-0 mt-3">
+                                                <div class="address_btn">
+                                                    <?php /* ?><a href="{{ route('user.addressBook') }}">Edit</a>
+                                                    <a href="#" class="removeAddress" data-id="{{ $address->id }}">Remove</a><?php */ ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if($key < count($userAddresses)-1)<hr class="line_divider my-2">@endif
+                                    @endforeach
+                                    @endif
+                                    <?php /* ?><div class="row px-4 align-items-center pb-1">
                                         <div class="col-md-8">
                                             <div class="address_txt">
                                                 <p class="m-0 text-16">Chander</p>
@@ -193,10 +223,10 @@
                                                 <a href="#">Remove</a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div><?php */ ?>
                                 </div>
 
-                                <div class="card-box p-4 mb-3">
+                                <?php /* ?><div class="card-box p-4 mb-3">
                                     <div class="d-flex align-items-center justify-content-between mb-2">
                                         <h6 class="m-0">About Me</h6>
                                         <a class="profile-edit" href="about_me_popup.html">Edit</a>
@@ -205,7 +235,7 @@
                                         <p class="m-0">Women to share their wardrobes securely and in seconds. We’re on a
                                         mission to democratise luxury and make fashion circular.</p>
                                     </div>
-                                </div>
+                                </div><?php */ ?>
                                 
                             </div>
                         </div>
@@ -215,6 +245,28 @@
         </div>
     </div>
 </section>
+
+<!-- Refferal Code Popup -->
+<div class="modal fade edit_profile_modal" id="profile-modal" tabindex="-1" aria-labelledby="profile-modalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profile-modalLabel">Edit Profile</h5>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editProfileForm" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body" id="editProfileBox">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info waves-effect waves-light editProfileSubmit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!-- Refferal Code Popup -->
 <div class="modal fade refferal_modal" id="refferal-modal" tabindex="-1" aria-labelledby="refferal-modalLabel"
@@ -307,6 +359,9 @@
 @endsection
 
 @section('script')
+<script src="{{asset('assets/libs/dropzone/dropzone.min.js')}}"></script>
+<script src="{{asset('assets/libs/dropify/dropify.min.js')}}"></script>
+<script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
 
 <script type="text/javascript">
     var ajaxCall = 'ToCancelPrevReq';
@@ -337,6 +392,69 @@
             error: function(data) {},
         });
     }
+
+    $(".openProfileModal").click(function (e) {
+        e.preventDefault();
+        var uri = "{{route('user.editAccount')}}";
+        $.ajax({
+            type: "get",
+            url: uri,
+            data: '',
+            dataType: 'json',
+            success: function (data) {
+                $('#editProfileForm #editProfileBox').html(data.html);
+                $('.dropify').dropify();
+            },
+            error: function (data) {
+                // console.log('data2');
+            }
+        });
+    });
+
+    $("#editProfileForm").submit(function(e) {
+        e.preventDefault();
+        var form = document.getElementById('editProfileForm');
+        var formData = new FormData(this);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: "post",
+            url: "{{route('user.updateAccount')}}",
+            headers: {
+                Accept: "application/json"
+            },
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                if (response.status == 'success') {
+                    $(".modal .close").click();
+                    location.reload(); 
+                } else {
+                    $(".show_all_error.invalid-feedback").show();
+                    $(".show_all_error.invalid-feedback").text(response.message);
+                }
+                return response;
+            },
+            error: function(response) {
+                if (response.status === 422) {
+                    let errors = response.responseJSON.errors;
+                    Object.keys(errors).forEach(function(key) {
+                        $("#" + key + "Input input").addClass("is-invalid");
+                        $("#" + key + "Input span.invalid-feedback").children("strong").text(errors[key][0]);
+                        $("#" + key + "Input span.invalid-feedback").show();
+                    });
+                } else {
+                    $(".show_all_error.invalid-feedback").show();
+                    $(".show_all_error.invalid-feedback").text('Something went wrong, Please try Again.');
+                }
+                return response;
+            }
+        });
+    });
 </script>
 <script>
     var loadFile = function(event) {

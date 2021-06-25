@@ -122,7 +122,7 @@
             <div class="row">
                 <div class="col-sm-12 text-center">
                     <div class="footer-end">
-                        <p><i class="fa fa-copyright" aria-hidden="true"></i> 2021-2022 Royoorders</p>
+                        <p><i class="fa fa-copyright" aria-hidden="true"></i> 2021-2022</p>
                     </div>
                 </div>
             </div>

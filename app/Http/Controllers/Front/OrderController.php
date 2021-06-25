@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor, UserAddress,Vendor,CartCoupon, LoyaltyCard, VendorOrderStatus};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency,OrderVendor, UserAddress,Vendor,CartCoupon, CartProductPrescription, LoyaltyCard, VendorOrderStatus};
 use App\Models\ClientPreference;
 use GuzzleHttp\Client;
 use Log;
@@ -72,6 +72,14 @@ class OrderController extends FrontController{
             $order->address_id = $request->address_id;
             $order->payment_option_id = $request->payment_option_id;
             $order->save();
+            $cart_prescriptions = CartProductPrescription::where('cart_id', $cart->id)->get();
+            foreach($cart_prescriptions as $cart_prescription){
+                $order_prescription = new OrderProductPrescription();
+                $order_prescription->order_id = $order->id;
+                $order_prescription->product_id = $cart_prescription->product_id;
+                $order_prescription->prescription = $cart_prescription->getRawOriginal('prescription');
+                $order_prescription->save();
+            }
             $cart_products = CartProduct::select('*')->with(['product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon.promo', 'product.addon'])->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
             $total_amount = 0;
             $total_discount = 0;
@@ -190,6 +198,7 @@ class OrderController extends FrontController{
             CartAddon::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();
             CartProduct::where('cart_id', $cart->id)->delete();
+            CartProductPrescription::where('cart_id', $cart->id)->delete();
           
             if($request->payment_option_id == 4){
                 Payment::insert([

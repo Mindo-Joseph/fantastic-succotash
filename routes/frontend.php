@@ -40,6 +40,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('/product/{id?}','Front\ProductController@index')->name('productDetail');
 	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
 	Route::post('add/product/cart','Front\CartController@postAddToCart')->name('addToCart');
+	Route::post('add/product/prescription','Front\CartController@uploadPrescription')->name('cart.uploadPrescription');
 	Route::get('cartProducts','Front\CartController@getCartData')->name('getCartProducts');
 	Route::get('cartDetails','Front\CartController@getCartProducts')->name('cartDetails');
 	Route::post('cartDelete','Front\CartController@emptyCartData')->name('emptyCartData');
@@ -82,6 +83,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/addressBook', 'Front\AddressController@index')->name('user.addressBook');
 	Route::get('user/wallet', 'Front\WalletController@index')->name('user.account');
 	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
+	Route::post('user/updateAccount', 'Front\ProfileController@updateAccount')->name('user.updateAccount');
     Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
 	Route::get('user/sendRefferal', 'Front\ProfileController@showRefferal')->name('user.sendRefferal');
     Route::get('wishlist/remove/{sku}', 'Front\WishlistController@removeWishlist')->name('removeWishlist');
