@@ -133,7 +133,6 @@ class VendorController extends FrontController
                 $multiArray[$request->variants[$key]][] = $value;
             }
         }
-        DB::enableQueryLog();
         $variantIds = $productIds = array();
         if(!empty($multiArray)){
             foreach ($multiArray as $key => $value) {

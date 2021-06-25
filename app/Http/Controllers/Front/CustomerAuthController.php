@@ -26,7 +26,7 @@ class CustomerAuthController extends FrontController
     public function getTestHtmlPage()
     {
         $app_style = new AppStyling();
-        dd($app_style->getSelectedData());
+        pr($app_style->getSelectedData()->toArray());
         $active_methods = PaymentOption::select('id', 'code', 'title')->where('status', 1)->get();
         return view('test')->with('active_methods', $active_methods);
     }

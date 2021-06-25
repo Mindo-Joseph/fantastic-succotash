@@ -1,16 +1,10 @@
 @extends('layouts.god-vertical', ['title' => 'SMS'])
-
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
-
 @section('content')
-
-<!-- Start Content-->
 <div class="container-fluid">
-
-    <!-- start page title -->
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
@@ -18,7 +12,6 @@
             </div>
         </div>
     </div>
-    <!-- end page title -->
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -43,9 +36,7 @@
                                 href="{{route('sms.create')}}"><i class="mdi mdi-plus-circle mr-1"></i> Add
                             </a>
                         </div>
-
                     </div>
-
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-striped" id="products-datatable">
                             <thead>
@@ -73,48 +64,14 @@
                     <div class="pagination pagination-rounded justify-content-end mb-0">
                         {{ $sms->links() }}
                     </div>
-
-                </div> <!-- end card-body-->
-            </div> <!-- end card-->
-        </div> <!-- end col -->
+                </div>
+            </div>
+        </div>
     </div>
-
-
 </div>
 @endsection
-
 @section('script')
 <script src="{{asset('assets/libs/dropzone/dropzone.min.js')}}"></script>
 <script src="{{asset('assets/libs/dropify/dropify.min.js')}}"></script>
-<!-- Page js-->
 <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
-
-<!-- @parent
-
-@if(count($errors->add) > 0)
-<script>
-$(function() {
-    $('#add-client-modal').modal({
-        show: true
-    });
-});
-</script>
-@elseif(count($errors->update) > 0)
-<script>
-$(function() {
-    $('#update-client-modal').modal({
-        show: true
-    });
-});
-</script>
-@endif
-@if(\Session::has('getClient'))
-<script>
-$(function() {
-    $('#update-client-modal').modal({
-        show: true
-    });
-});
-</script>
-@endif -->
 @endsection

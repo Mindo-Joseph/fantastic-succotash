@@ -1,9 +1,5 @@
 <?php
-/*
-Route::domain('{subdomain}.myorder.com')->middleware(['subdomain', 'domain'])->group(function () {        
-    Route::get('/','Front\UserhomeController@index')->name('userHome');
-    Route::get('/productDetail/{id}','Front\ProductPageController@index')->name('productDetail');
-});*/
+
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('/debug-sentry', function () {
     throw new Exception('My first Sentry error!');
