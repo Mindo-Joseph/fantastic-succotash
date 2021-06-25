@@ -39,7 +39,7 @@
                             <select class="selectize-select form-control parent-category" id="cateSelectBox" name="parent_cate">
                                 <option value="">Select</option>
                                 @foreach($parCategory as $pc)
-                                    <option value="{{$pc->id}}">{{$pc->slug}}</option>
+                                    <option value="{{$pc->id}}">{{ucfirst($pc->slug)}}</option>
                                 @endforeach
                             </select>
                             <span class="invalid-feedback" role="alert">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
                             <div>
@@ -57,7 +57,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             {!! Form::label('title', 'Wishlist',['class' => 'control-label']) !!} 
                             <div>
@@ -65,7 +65,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4" id="addProductHide">
+                    <div class="col-md-3" id="addProductHide">
                         <div class="form-group">
                             {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
                             <div>
@@ -73,18 +73,29 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-3" id="addDispatcherHide" style="display: none;">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
+                            {!! Form::hidden('tags', null, ['class'=>'form-control myTag1']) !!}
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row mt-3 add-category">
             @foreach($typeArray as $k => $type)
-               <div class="col-sm-4 col-md-3 col-xl-2">
-                  <div class="card" id="tooltip-container">
-                     <input class="form-check-input type-select" for="add" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($k == 0) checked @endif value="{{$type->id}}">
-                     <label for="type_id_{{$type->id}}" class="card-body">
-                        <div class="form-check form-check-info">
+            <div class="col">
+                  <div class="card p-0 text-center" id="tooltip-container">
+                     <input class="form-check-input type-select" for="add" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
+                     <label for="type_id_{{$type->id}}" class="card-body p-0">
+                        <div class="category-img">
+                            <img src="https://www.w3schools.com/tags/img_girl.jpg" alt="">
+                        </div>
+                        <div class="form-check form-check-info pl-0">
                             <span for="customradio5">{{$type->title}}</span>
-                            <p class="text-muted mb-1 text-truncate">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
                         </div>
                      </label>
                   </div>
@@ -92,15 +103,6 @@
            @endforeach
         </div>
         <div class="row">
-            <div class="col-md-6" id="addDispatcherHide" style="display: none;">
-                <div class="form-group">
-                    {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
-                    {!! Form::hidden('tags', null, ['class'=>'form-control myTag1']) !!}
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                </div>
-            </div>
             <div class="col-md-3" style="display:none;" id="template_type_main_div">
                 <div class="form-group">
                     {!! Form::label('title', 'Template Type',['class' => 'control-label']) !!}
@@ -129,9 +131,7 @@
                     </span>
                 </div>
             </div>
-        </div>
-        <div class="row" id="warning_page_design_main_div">
-            <div class="col-12 mb-2">
+            <div class="col-md-6" id="warning_page_design_main_div" style="display:none;">
                 {!! Form::label('title', 'Warning Page Design',['class' => 'control-label']) !!}
                 {!! Form::textarea('warning_page_design', '', ['class'=>'form-control', 'id' => 'warning_page_design', 'placeholder' => 'Description', 'rows' => '5', 'name' => 'warning_page_design']) !!}
             </div>

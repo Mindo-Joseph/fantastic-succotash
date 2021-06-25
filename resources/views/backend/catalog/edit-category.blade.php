@@ -39,7 +39,7 @@
                             <select class="selectize-select1 form-control parent-category" id="cateSelectBox" name="parent_cate">
                                 <option value="">Select</option>
                                 @foreach($parCategory as $pc)
-                                    <option value="{{$pc->id}}" {{ ($pc->id == $category->parent_id) ? 'selected' : '' }} > {{$pc->slug}}</option>
+                                    <option value="{{$pc->id}}" {{ ($pc->id == $category->parent_id) ? 'selected' : '' }} > {{ucfirst($pc->slug)}}</option>
                                 @endforeach
                             </select>
                             <span class="invalid-feedback" role="alert">
