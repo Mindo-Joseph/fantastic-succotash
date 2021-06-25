@@ -108,6 +108,18 @@ class AddressController extends FrontController{
         return view('frontend/account/editAddress')->with(['navCategories' => $navCategories,'countries' => $countries, 'address' => $address]);
     }
 
+    /**
+     * Get address details by id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function address($domain = '', $id){
+        $address = UserAddress::leftJoin('countries', 'user_addresses.country', 'countries.name')
+                    ->select('user_addresses.*','countries.id as country_id')
+                    ->where('user_addresses.id', $id)->first();
+        $countries = Country::all();
+        return response()->json(['status' => 'success', 'countries' => $countries, 'address' => $address]);
+    }
    
     /**
      * Set Primary Address for user
