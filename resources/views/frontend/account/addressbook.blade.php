@@ -90,7 +90,7 @@
 
                             <div class="row">
                                 <div class="col-xl-4 col-md-6 text-center mt-3">
-                                    <a class="outer-box border-dashed d-flex align-items-center justify-content-center" href="javascript:void(0)" data-toggle="modal" data-target="#add_edit_address">
+                                    <a class="outer-box border-dashed d-flex align-items-center justify-content-center add_edit_address_btn" href="javascript:void(0)" data-toggle="modal" data-target="#add_edit_address">
                                         <i class="fa fa-plus-circle d-block mb-1" aria-hidden="true"></i>
                                         <h6 class="m-0">Add new Address</h6>
                                     </a>
@@ -116,7 +116,7 @@
                                                 @else
                                                     <a class="btn btn-solid" href="{{ route('setPrimaryAddress', $add->id) }}" class="mr-2">Set as Primary</a>
                                                 @endif
-                                                <a class="btn btn-solid" href="javascript:void(0)" data-toggle="modal" data-target="#add_edit_address">Edit</a>
+                                                <a class="btn btn-solid add_edit_address_btn" href="javascript:void(0)" data-toggle="modal" data-target="#add_edit_address" data-id="{{$add->id}}">Edit</a>
                                                 <a class="btn btn-solid delete_address_btn" href="javascript:void(0)" data-toggle="modal" data-target="#removeAddressConfirmation" data-id="{{$add->id}}">Delete</a>
                                             </div>
                                         </div>
@@ -272,16 +272,14 @@
   </div>
 </div>
 
-<div class="modal fade" id="add_edit_address" tabindex="-1" aria-labelledby="addedit-addressLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addedit-addressLabel">Edit Address</h5>
+<script type="text/template" id="add_address_template">
+    <div class="modal-header">
+        <h5 class="modal-title" id="addedit-addressLabel"><%= title %> Address</h5>
         <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
-      <div class="modal-body">
+    </div>
+    <div class="modal-body">
         <div class="outer-box">
             <div class="row">
                 <div class="col-md-12" id="add_new_address_form">
@@ -293,7 +291,7 @@
                             <div class="col-md-3">
                                 <div class="delivery_box pt-0 pl-0  pb-3">
                                     <label class="radio m-0">Home 
-                                        <input type="radio" checked="checked" name="address_type" value="1">
+                                        <input type="radio" name="address_type" <%= (typeof address != 'undefined') ? ((address.type == 1) ? 'checked="checked"' : '') : 'checked="checked"' %> value="1">
                                         <span class="checkround"></span>
                                     </label>
                                 </div>
@@ -301,7 +299,7 @@
                             <div class="col-md-3">
                             <div class="delivery_box pt-0 pl-0  pb-3">
                                 <label class="radio m-0">Office 
-                                    <input type="radio" name="address_type" value="2">
+                                    <input type="radio" name="address_type" <%= ((typeof address != 'undefined') && (address.type == 2)) ? 'checked="checked"' : '' %> value="2">
                                     <span class="checkround"></span>
                                 </label>
                             </div>
@@ -309,19 +307,20 @@
                         <div class="col-md-3">
                             <div class="delivery_box pt-0 pl-0  pb-3">
                                 <label class="radio m-0">Others
-                                    <input type="radio" name="address_type" value="3">
+                                    <input type="radio" name="address_type" <%= ((typeof address != 'undefined') && (address.type == 3)) ? 'checked="checked"' : '' %> value="3">
                                     <span class="checkround"></span>
                                 </label>
                             </div>
                         </div>
                         </div>
-                        <input type="hidden" id="latitude">
-                        <input type="hidden" id="longitude">
+                        <input type="hidden" id="address_id" value="<%= (typeof address != 'undefined') ? address.id : '' %>">
+                        <input type="hidden" id="latitude" value="<%= (typeof address != 'undefined') ? address.latitude : '' %>">
+                        <input type="hidden" id="longitude" value="<%= (typeof address != 'undefined') ? address.longitude : '' %>">
                         <div class="form-row">
                             <div class="col-md-12 mb-2">
                                 <label for="address">Address</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2">
+                                    <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2" value="<%= (typeof address != 'undefined') ? address.address : '' %>">
                                     <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" id="button-addon2">
                                         <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -334,26 +333,26 @@
                         <div class="form-row">
                             <div class="col-md-6 mb-2">
                                 <label for="street">Street</label>
-                                <input type="text" class="form-control" id="street" placeholder="Street" name="street" value="">
+                                <input type="text" class="form-control" id="street" placeholder="Street" name="street" value="<%= ((typeof address != 'undefined') && (address.street != null)) ? address.street : '' %>">
                                 <span class="text-danger" id="street_error"></span>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label for="city">City</label>
-                                <input type="text" class="form-control" id="city" name="city" placeholder="City" value="">
+                                <input type="text" class="form-control" id="city" name="city" placeholder="City" value="<%= ((typeof address != 'undefined') && (address.city != null)) ? address.city : '' %>">
                                 <span class="text-danger" id="city_error"></span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col-md-6 mb-2">
                                 <label for="state">State</label>
-                                <input type="text" class="form-control" id="state" name="state" placeholder="State" value="">
+                                <input type="text" class="form-control" id="state" name="state" placeholder="State" value="<%= ((typeof address != 'undefined') && (address.state != null)) ? address.state : '' %>">
                                 <span class="text-danger" id="state_error"></span>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label for="country">Country</label>
-                                <select name="country" id="country" class="form-control">
+                                <select name="country" id="country" class="form-control" value="<%= ((typeof address != 'undefined') && (address.id != null)) ? address.id : '' %>">
                                     @foreach($countries as $co)
-                                        <option value="{{$co->id}}">{{$co->name}}</option>
+                                        <option value="{{$co->id}}" <%= ((typeof address != 'undefined') && (address.country_id == {{$co->id}})) ? 'selected="selected"' : '' %>>{{$co->name}}</option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger" id="country_error"></span>
@@ -362,11 +361,11 @@
                         <div class="form-row mb-3">
                             <div class="col-md-6 mb-2">
                                 <label for="pincode">Pincode</label>
-                                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode" value="">
+                                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode" value="<%= ((typeof address != 'undefined') && (address.pincode != null)) ? address.pincode : ''%>">
                                 <span class="text-danger" id="pincode_error"></span>
                             </div>
                             <div class="col-md-12 mt-3">
-                                <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
+                                <button type="button" class="btn btn-solid" id="<%= ((typeof address !== 'undefined') && (address !== false)) ? 'update_address' : 'save_address' %>">Save Address</button>
                                 <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
                             </div>
                         </div>
@@ -374,7 +373,13 @@
                 </div> 
             </div>
         </div>
-      </div>
+    </div>
+</script>
+
+<div class="modal fade" id="add_edit_address" tabindex="-1" aria-labelledby="addedit-addressLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      
     </div>
   </div>
 </div>
@@ -384,6 +389,8 @@
 @section('script')
 <script type="text/javascript">
     var user_store_address_url = "{{ route('address.store') }}";
+    var user_address_url = "{{ route('user.address', ':id') }}";
+    var update_address_url = "{{ route('address.update', ':id') }}";
     var delete_address_url = "{{ route('deleteAddress', ':id') }}";
     var verify_information_url = "{{ route('verifyInformation', Auth::user()->id) }}";
     
@@ -405,6 +412,32 @@
         var addressID = $(this).attr("data-id");
         var url = delete_address_url.replace(':id', addressID);
         location.href = url;
+    });
+
+    $(document).delegate(".add_edit_address_btn", "click", function(){
+        var addressID = $(this).attr("data-id");
+        if(typeof addressID !== 'undefined' && addressID !== false){
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                url: user_address_url.replace(':id', addressID),
+                success: function(response) {
+                    // console.log(response);
+                    if(response.status == 'success'){
+                        $("#add_edit_address .modal-content").html('');
+                        let add_address_template = _.template($('#add_address_template').html());
+                        $("#add_edit_address .modal-content").append(add_address_template({title: 'Edit', address:response.address, countries: response.countries}));
+                    }else{
+                        $('#add_new_address').modal('hide');
+                    }
+                }
+            });
+        }
+        else{
+            $("#add_edit_address .modal-content").html('');
+            let add_address_template = _.template($('#add_address_template').html());
+            $("#add_edit_address .modal-content").append(add_address_template({title:'Add'}));
+        }
     });
 
     function verifyUser($type = 'email'){
@@ -430,6 +463,54 @@
             },
         });
     }
+
+    $(document).on("click","#update_address",function() {
+        let city = $('#add_new_address_form #city').val();
+        let state = $('#add_new_address_form #state').val();
+        let street = $('#add_new_address_form #street').val();
+        let address = $('#add_new_address_form #address').val();
+        let country = $('#add_new_address_form #country').val();
+        let pincode = $('#add_new_address_form #pincode').val();
+        let type = $("input[name='address_type']:checked").val();
+        let latitude = $('#add_new_address_form #latitude').val();
+        let longitude = $('#add_new_address_form #longitude').val();
+        let address_id = $('#add_new_address_form #address_id').val();
+        $.ajax({
+            type: "post",
+            // dataType: "json",
+            url: update_address_url.replace(':id', address_id),
+            data: {
+                "city": city,
+                "type" : type,
+                "state" : state,
+                "street" : street,
+                "address": address,
+                "country": country,
+                "pincode": pincode,
+                "latitude": latitude,
+                "longitude": longitude,
+            },
+            success: function(response) {
+                if($("#add_edit_address").length > 0){
+                    $("#add_edit_address").modal('hide');
+                    location.reload();
+                }
+                else{
+                    $("#add_edit_address .modal-content").html('');
+                    let add_address_template = _.template($('#add_address_template').html());
+                    $("#add_edit_address .modal-content").append(add_address_template({title: 'Edit', address:response.address}));
+                }
+            },
+            error: function (reject) {
+                if( reject.status === 422 ) {
+                    var message = $.parseJSON(reject.responseText);
+                    $.each(message.errors, function (key, val) {
+                        $("#" + key + "_error").text(val[0]);
+                    });
+                }
+            }
+        });
+    });
 
 </script>
 
