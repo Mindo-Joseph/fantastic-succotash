@@ -58,7 +58,7 @@
     }
 </style>
 
-<section class="section-b-space">
+<section class="section-b-space order-page">
     <div class="container">
         <div class="row">
             <div class="col-lg-3">
@@ -87,171 +87,292 @@
                         <div class="welcome-msg">
                             <h5>Here are all your previous orders !</h5>
                         </div>
-                        <div class="box-account box-info">
-                            <!-- <div class="box-head">
-                                <h2>Account Information</h2>
-                            </div> -->
-                            <div class="row">
-                                
-                                <div class="col-12">        
-                                    <div class="row no-gutters order_head">
-                                        <div class="col-md-3"><h4>Order Number</h4></div>
-                                        <div class="col-md-3"><h4>Date & Time</h4></div>
-                                        <div class="col-md-3"><h4>Customer Name</h4></div>
-                                        <div class="col-md-3"><h4>Address</h4></div>
-                                    </div>
-                                    <div class="row no-gutters order_data mb-lg-2">
-                                        <div class="col-md-3">#3215412</div>
-                                        <div class="col-md-3">Monday, May 24, 2021, 13:22 PM</div>
-                                        <div class="col-md-3">
-                                        <a href="#">Chander</a>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p class="ellipsis" data-toggle="tooltip" data-placement="top" title="RTC Cross Road, P & T Colony, Jawahar Nagar, Himayatnagar, Hyderabad, Telangana, India">
-                                            RTC Cross Road, P & T Colony, Jawahar Nagar, Himayatnagar, Hyderabad, Telangana, India
-                                            </p>
-                                        </div>                    
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-9 mb-3">
-                                            <a href="#" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0 h-100">
-                                                <span class="left_arrow pulse"></span>
-                                                <div class="col-5 col-sm-3">
-                                                    <h4 class="m-0">test</h4>
-                                                    <ul class="status_box mt-3 pl-0">
-                                                        <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Accepted</label></li>
-                                                        <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Assigned</label></li>
-                                                    </ul>
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-12 tab-product pt-3">
+                                <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
+                                    <li class="nav-item"><a class="nav-link active" id="active-orders-tab" data-toggle="tab"
+                                            href="#active-orders" role="tab" aria-selected="true"><i
+                                                class="icofont icofont-ui-home"></i>Active Orders</a>
+                                        <div class="material-border"></div>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-toggle="tab"
+                                            href="#top-profile" role="tab" aria-selected="false"><i
+                                                class="icofont icofont-man-in-glasses"></i>Past Orders</a>
+                                        <div class="material-border"></div>
+                                    </li>
+                                </ul>
+                                <div class="tab-content nav-material" id="top-tabContent">
+                                    <div class="tab-pane fade show active" id="active-orders" role="tabpanel"
+                                        aria-labelledby="active-orders-tab">
+                                        <div class="row">                                
+                                            <div class="col-12">        
+                                                <div class="row no-gutters order_head">
+                                                    <div class="col-md-3"><h4>Order Number</h4></div>
+                                                    <div class="col-md-3"><h4>Date & Time</h4></div>
+                                                    <div class="col-md-3"><h4>Customer Name</h4></div>
+                                                    <div class="col-md-3"><h4>Address</h4></div>
                                                 </div>
-                                                <div class="col-7 col-sm-4">
-                                                    <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
-                                                            <li class="text-center">
-                                                                <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
-                                                                <span class="item_no position-absolute">x2</span>
-                                                                <label class="items_price">$20.00</label>
-                                                            </li>                                   
-                                                    </ul>
+                                                <div class="row no-gutters order_data mb-lg-2">
+                                                    <div class="col-md-3">#3215412</div>
+                                                    <div class="col-md-3">Monday, May 24, 2021, 13:22 PM</div>
+                                                    <div class="col-md-3">
+                                                    <a href="#">Chander</a>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <p class="ellipsis" data-toggle="tooltip" data-placement="top" title="RTC Cross Road, P & T Colony, Jawahar Nagar, Himayatnagar, Hyderabad, Telangana, India">
+                                                        RTC Cross Road, P & T Colony, Jawahar Nagar, Himayatnagar, Hyderabad, Telangana, India
+                                                        </p>
+                                                    </div>                    
                                                 </div>
-                                                <div class="col-md-5 mt-md-0 mt-sm-2">
-                                                    <ul class="price_box_bottom m-0 p-0">
-                                                        <li class="d-flex align-items-center justify-content-between">
-                                                            <label class="m-0">Product Total</label>
-                                                            <span>$20.00</span>
-                                                        </li>
-                                                        <li class="d-flex align-items-center justify-content-between">
-                                                            <label class="m-0">Coupon (10%)</label>
-                                                            <span>$0.00</span>
-                                                        </li>
-                                                        <li class="d-flex align-items-center justify-content-between">
-                                                            <label class="m-0">Delivery Fee</label>
-                                                            <span>$20.00</span>
-                                                        </li>
-                                                        <li class="grand_total d-flex align-items-center justify-content-between">
-                                                            <label class="m-0">Amount</label>
-                                                            <span>$320.00</span>
-                                                        </li>
-                                                    </ul>
+                                                <div class="row">
+                                                    <div class="col-md-9 mb-3">
+                                                        <a href="#" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0 h-100">
+                                                            <span class="left_arrow pulse"></span>
+                                                            <div class="col-5 col-sm-3">
+                                                                <h4 class="m-0">test</h4>
+                                                                <ul class="status_box mt-3 pl-0">
+                                                                    <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Accepted</label></li>
+                                                                    <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Assigned</label></li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-7 col-sm-4">
+                                                                <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
+                                                                        <li class="text-center">
+                                                                            <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
+                                                                            <span class="item_no position-absolute">x2</span>
+                                                                            <label class="items_price">$20.00</label>
+                                                                        </li>                                   
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-md-5 mt-md-0 mt-sm-2">
+                                                                <ul class="price_box_bottom m-0 p-0">
+                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                        <label class="m-0">Product Total</label>
+                                                                        <span>$20.00</span>
+                                                                    </li>
+                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                        <label class="m-0">Coupon (10%)</label>
+                                                                        <span>$0.00</span>
+                                                                    </li>
+                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                        <label class="m-0">Delivery Fee</label>
+                                                                        <span>$20.00</span>
+                                                                    </li>
+                                                                    <li class="grand_total d-flex align-items-center justify-content-between">
+                                                                        <label class="m-0">Amount</label>
+                                                                        <span>$320.00</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </a>
+                                                    </div>    
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="card-box p-2 mb-0 h-100">
+                                                            <ul class="price_box_bottom m-0 pl-0 pt-1">
+                                                                <li class="d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Sub Total</label>
+                                                                    <span>$20.00</span>
+                                                                </li>
+                                                                <li class="d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Wallet</label>
+                                                                    <span>$0.00</span>
+                                                                </li>
+                                                                <li class="d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Loyalty</label>
+                                                                    <span>$20.00</span>
+                                                                </li>
+                                                                <li class="d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Tax</label>
+                                                                    <span>$320.00</span>
+                                                                </li>
+                                                                <li class="grand_total d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Total Payable</label>
+                                                                    <span>$320.00</span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </a>
-                                        </div>    
-                                        <div class="col-md-3 mb-3">
-                                            <div class="card-box p-2 mb-0 h-100">
-                                                <ul class="price_box_bottom m-0 pl-0 pt-1">
-                                                    <li class="d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">Sub Total</label>
-                                                        <span>$20.00</span>
-                                                    </li>
-                                                    <li class="d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">Wallet</label>
-                                                        <span>$0.00</span>
-                                                    </li>
-                                                    <li class="d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">Loyalty</label>
-                                                        <span>$20.00</span>
-                                                    </li>
-                                                    <li class="d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">Tax</label>
-                                                        <span>$320.00</span>
-                                                    </li>
-                                                    <li class="grand_total d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">Total Payable</label>
-                                                        <span>$320.00</span>
-                                                    </li>
-                                                </ul>
+                                                <div class="row">
+                                                    <div class="col-md-9 mb-3">
+                                                        <a href="#" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0 h-100">
+                                                            <span class="left_arrow pulse"></span>
+                                                            <div class="col-5 col-sm-3">
+                                                                <h4 class="m-0">test</h4>
+                                                                <ul class="status_box mt-3 pl-0">
+                                                                    <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Accepted</label></li>
+                                                                    <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Assigned</label></li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-7 col-sm-4">
+                                                                <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
+                                                                        <li class="text-center">
+                                                                            <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
+                                                                            <span class="item_no position-absolute">x2</span>
+                                                                            <label class="items_price">$20.00</label>
+                                                                        </li>                                   
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-md-5 mt-md-0 mt-sm-2">
+                                                                <ul class="price_box_bottom m-0 p-0">
+                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                        <label class="m-0">Product Total</label>
+                                                                        <span>$20.00</span>
+                                                                    </li>
+                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                        <label class="m-0">Coupon (10%)</label>
+                                                                        <span>$0.00</span>
+                                                                    </li>
+                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                        <label class="m-0">Delivery Fee</label>
+                                                                        <span>$20.00</span>
+                                                                    </li>
+                                                                    <li class="grand_total d-flex align-items-center justify-content-between">
+                                                                        <label class="m-0">Amount</label>
+                                                                        <span>$320.00</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </a>
+                                                    </div>    
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="card-box p-2 mb-0 h-100">
+                                                            <ul class="price_box_bottom m-0 pl-0 pt-1">
+                                                                <li class="d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Sub Total</label>
+                                                                    <span>$20.00</span>
+                                                                </li>
+                                                                <li class="d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Wallet</label>
+                                                                    <span>$0.00</span>
+                                                                </li>
+                                                                <li class="d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Loyalty</label>
+                                                                    <span>$20.00</span>
+                                                                </li>
+                                                                <li class="d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Tax</label>
+                                                                    <span>$320.00</span>
+                                                                </li>
+                                                                <li class="grand_total d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Total Payable</label>
+                                                                    <span>$320.00</span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-9 mb-3">
-                                            <a href="#" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0 h-100">
-                                                <span class="left_arrow pulse"></span>
-                                                <div class="col-5 col-sm-3">
-                                                    <h4 class="m-0">test</h4>
-                                                    <ul class="status_box mt-3 pl-0">
-                                                        <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Accepted</label></li>
-                                                        <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Assigned</label></li>
-                                                    </ul>
+                                    <div class="tab-pane fade" id="top-profile" role="tabpanel"
+                                        aria-labelledby="profile-top-tab">
+                                        <div class="row">                                
+                                            <div class="col-12">        
+                                                <div class="row no-gutters order_head">
+                                                    <div class="col-md-3"><h4>Order Number</h4></div>
+                                                    <div class="col-md-3"><h4>Date & Time</h4></div>
+                                                    <div class="col-md-3"><h4>Customer Name</h4></div>
+                                                    <div class="col-md-3"><h4>Address</h4></div>
                                                 </div>
-                                                <div class="col-7 col-sm-4">
-                                                    <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
-                                                            <li class="text-center">
-                                                                <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
-                                                                <span class="item_no position-absolute">x2</span>
-                                                                <label class="items_price">$20.00</label>
-                                                            </li>                                   
-                                                    </ul>
+                                                <div class="row no-gutters order_data mb-lg-2">
+                                                    <div class="col-md-3">#3215412</div>
+                                                    <div class="col-md-3">Monday, May 24, 2021, 13:22 PM</div>
+                                                    <div class="col-md-3">
+                                                    <a href="#">Chander</a>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <p class="ellipsis" data-toggle="tooltip" data-placement="top" title="RTC Cross Road, P & T Colony, Jawahar Nagar, Himayatnagar, Hyderabad, Telangana, India">
+                                                        RTC Cross Road, P & T Colony, Jawahar Nagar, Himayatnagar, Hyderabad, Telangana, India
+                                                        </p>
+                                                    </div>                    
                                                 </div>
-                                                <div class="col-md-5 mt-md-0 mt-sm-2">
-                                                    <ul class="price_box_bottom m-0 p-0">
-                                                        <li class="d-flex align-items-center justify-content-between">
-                                                            <label class="m-0">Product Total</label>
-                                                            <span>$20.00</span>
-                                                        </li>
-                                                        <li class="d-flex align-items-center justify-content-between">
-                                                            <label class="m-0">Coupon (10%)</label>
-                                                            <span>$0.00</span>
-                                                        </li>
-                                                        <li class="d-flex align-items-center justify-content-between">
-                                                            <label class="m-0">Delivery Fee</label>
-                                                            <span>$20.00</span>
-                                                        </li>
-                                                        <li class="grand_total d-flex align-items-center justify-content-between">
-                                                            <label class="m-0">Amount</label>
-                                                            <span>$320.00</span>
-                                                        </li>
-                                                    </ul>
+                                                <div class="row">
+                                                    <div class="col-md-9 mb-3">
+                                                        <a href="#" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0 h-100">
+                                                            <span class="left_arrow pulse"></span>
+                                                            <div class="col-5 col-sm-3">
+                                                                <h4 class="m-0">test</h4>
+                                                                <ul class="status_box mt-3 pl-0">
+                                                                    <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Accepted</label></li>
+                                                                    <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Assigned</label></li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-7 col-sm-4">
+                                                                <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
+                                                                        <li class="text-center">
+                                                                            <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
+                                                                            <span class="item_no position-absolute">x2</span>
+                                                                            <label class="items_price">$20.00</label>
+                                                                        </li>                                   
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-md-5 mt-md-0 mt-sm-2">
+                                                                <ul class="price_box_bottom m-0 p-0">
+                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                        <label class="m-0">Product Total</label>
+                                                                        <span>$20.00</span>
+                                                                    </li>
+                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                        <label class="m-0">Coupon (10%)</label>
+                                                                        <span>$0.00</span>
+                                                                    </li>
+                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                        <label class="m-0">Delivery Fee</label>
+                                                                        <span>$20.00</span>
+                                                                    </li>
+                                                                    <li class="grand_total d-flex align-items-center justify-content-between">
+                                                                        <label class="m-0">Amount</label>
+                                                                        <span>$320.00</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+
+                                                            <div class="col-12 text-md-right mt-3">
+                                                                <label class="rate-btn btn btn-solid m-0" data-toggle="modal" data-target="#product_rating">Rate This Order</label>
+                                                            </div>
+                                                        </a>
+                                                    </div>    
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="card-box p-2 mb-0 h-100">
+                                                            <ul class="price_box_bottom m-0 pl-0 pt-1">
+                                                                <li class="d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Sub Total</label>
+                                                                    <span>$20.00</span>
+                                                                </li>
+                                                                <li class="d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Wallet</label>
+                                                                    <span>$0.00</span>
+                                                                </li>
+                                                                <li class="d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Loyalty</label>
+                                                                    <span>$20.00</span>
+                                                                </li>
+                                                                <li class="d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Tax</label>
+                                                                    <span>$320.00</span>
+                                                                </li>
+                                                                <li class="grand_total d-flex align-items-center justify-content-between">
+                                                                    <label class="m-0">Total Payable</label>
+                                                                    <span>$320.00</span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </a>
-                                        </div>    
-                                        <div class="col-md-3 mb-3">
-                                            <div class="card-box p-2 mb-0 h-100">
-                                                <ul class="price_box_bottom m-0 pl-0 pt-1">
-                                                    <li class="d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">Sub Total</label>
-                                                        <span>$20.00</span>
-                                                    </li>
-                                                    <li class="d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">Wallet</label>
-                                                        <span>$0.00</span>
-                                                    </li>
-                                                    <li class="d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">Loyalty</label>
-                                                        <span>$20.00</span>
-                                                    </li>
-                                                    <li class="d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">Tax</label>
-                                                        <span>$320.00</span>
-                                                    </li>
-                                                    <li class="grand_total d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">Total Payable</label>
-                                                        <span>$320.00</span>
-                                                    </li>
-                                                </ul>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>  
+                        </div>
+
+
+                        <div class="box-account box-info">
+                            <!-- <div class="box-head">
+                                <h2>Account Information</h2>
+                            </div> -->
+                          
                             <!-- <div class="row">
 
                                 <div class="col-sm-6">
@@ -474,6 +595,153 @@
       <div class="modal-footer">
        
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade product-rating" id="product_rating" tabindex="-1" aria-labelledby="product_ratingLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+      <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      <form class="theme-form">
+        <div class="rating-form">
+            <fieldset class="form-group">
+                <legend class="form-legend">Rating:</legend>
+                <div class="form-item">
+                    <input id="rating-5" name="rating" type="radio" value="5" />
+                    <label for="rating-5" data-value="5">
+                        <span class="rating-star">
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star"></i>
+                        </span>
+                        <span class="ir">5</span>
+                    </label>
+                    <input id="rating-4" name="rating" type="radio" value="4" />
+                    <label for="rating-4" data-value="4">
+                        <span class="rating-star">
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star"></i>
+                        </span>
+                        <span class="ir">4</span>
+                    </label>
+                    <input id="rating-3" name="rating" type="radio" value="3" />
+                    <label for="rating-3" data-value="3">
+                        <span class="rating-star">
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star"></i>
+                        </span>
+                        <span class="ir">3</span>
+                    </label>
+                    <input id="rating-2" name="rating" type="radio" value="2" />
+                    <label for="rating-2" data-value="2">
+                        <span class="rating-star">
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star"></i>
+                        </span>
+                        <span class="ir">2</span>
+                    </label>
+                    <input id="rating-1" name="rating" type="radio" value="1" />
+                    <label for="rating-1" data-value="1">
+                        <span class="rating-star">
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star"></i>
+                        </span>
+                        <span class="ir">1</span>
+                    </label>
+
+                    <!-- <div class="form-action">
+                        <input class="btn-reset" type="reset" value="Reset" />
+                    </div> -->
+
+                    <div class="form-output">
+                        ? / 5
+                    </div>
+
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="row rating_files">
+            <div class="col-12">
+                <h4>Upload Images</h4>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <div class="file file--upload">
+                    <label for="input-file">
+                        <span class="plus_icon"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                    </label>
+                    <input id="input-file" type="file" name="profile_image" accept="image/*" onchange="loadFile(event)">
+                </div>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <span class="update_pic">
+                    <img src="" alt="" id="output">
+                </span>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <span class="update_pic">
+                    <img src="" alt="" id="output">
+                </span>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <span class="update_pic">
+                    <img src="" alt="" id="output">
+                </span>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <span class="update_pic">
+                    <img src="" alt="" id="output">
+                </span>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <span class="update_pic">
+                    <img src="" alt="" id="output">
+                </span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <!-- <div class="col-md-12">
+                <div class="media">
+                    <label>Rating</label>
+                    <div class="media-body ml-3">
+                        <div class="rating three-star">
+                            @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
+                                @endfor
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- <div class="col-md-6">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter Your name" required>
+            </div>
+            <div class="col-md-6">
+                <label for="email">Email</label>
+                <input type="text" class="form-control" id="email" placeholder="Email" required>
+            </div>
+            <div class="col-md-12">
+                <label for="review">Review Title</label>
+                <input type="text" class="form-control" id="review" placeholder="Enter your Review Subjects" required>
+            </div> -->
+            <div class="col-md-12 mb-3">
+                <label for="review">Review Title</label>
+                <textarea class="form-control"
+                    placeholder="Wrire Your Testimonial Here"
+                    id="exampleFormControlTextarea1" rows="8"></textarea>
+            </div>
+            <div class="col-md-12 text-center">
+                <button class="btn btn-solid" type="submit">Submit YOur
+                    Review</button>
+            </div>
+        </div>
+        </form>
+      </div>
+     
     </div>
   </div>
 </div>

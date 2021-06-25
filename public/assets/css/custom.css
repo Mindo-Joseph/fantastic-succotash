@@ -188,7 +188,7 @@
 }
 
 .dropify-wrapper {
-    height: 130px !important;
+    height: 100px !important;
 }
 
 .catalog_box .card-box {
@@ -377,7 +377,6 @@ body[data-sidebar-size="condensed"]:not([data-layout="compact"]) {
 button.btn.btn-info.btn-block.save_btn {
     width: auto;
     border-radius: 50px;
-    padding: 3px;
 }
 
 body .switchery {
@@ -1324,3 +1323,12 @@ i.mdi.mdi-exclamation-thick {
     background: linear-gradient(270deg, rgb(42 31 32 / 12%) 0%, rgb(0 0 0 / 0%) 92.47%);
 }
 
+
+
+
+
+@media(max-width:1600px){
+    .card-box{
+        padding: 20px;
+    }
+}

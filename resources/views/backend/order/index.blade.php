@@ -112,7 +112,7 @@ $timezone = Auth::user()->timezone;
                                 </div>
                             @endforeach
                         </div>   
-                        <div class="col-md-3">
+                        <div class="col-md-3 pl-0">
                             <div class="card-box h-100 p-2">
                                 <ul class="price_box_bottom m-0 pl-0 pt-1">
                                     <li class="d-flex align-items-center justify-content-between">

@@ -61,7 +61,7 @@
                     <a href="#sidebaraccounting" data-toggle="collapse">
                     <span class="icon-customize_icon"></span>
                         <span> Accounting </span>
-                        <span class="menu-arrow"></span>
+                        <!-- <span class="menu-arrow"></span> -->
                     </a>
                     <div class="collapse" id="sidebaraccounting">
                         <ul class="nav-second-level">
