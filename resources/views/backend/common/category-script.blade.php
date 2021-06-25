@@ -32,6 +32,10 @@
                         keyboard: false
                     });
                     $('#edit-category-form #editCategoryBox').html(data.html);
+                    setTimeout(function(){ 
+                        $('#cateSelectBox').trigger('change');
+                        $('#warningPageSelectBox').trigger('change');
+                    }, 1000);
                     element1 = document.getElementsByClassName('edit-switch_menu');
                     element2 = document.getElementsByClassName('edit-wishlist_switch');
                     element3 = document.getElementsByClassName('edit-add_product_switch');
@@ -41,7 +45,6 @@
                     makeTag();
                     summernoteInit();
                 }else{
-
                     $('#add-category-form').modal({
                         backdrop: 'static',
                         keyboard: false
