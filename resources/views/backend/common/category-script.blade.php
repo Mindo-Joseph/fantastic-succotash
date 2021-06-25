@@ -101,7 +101,7 @@
         }
     });
     $(document).on('change', '#warningPageSelectBox', function() {
-        if($("#warningPageSelectBox :selected").val() == '7'){
+        if($('input[name="type_id"]:checked').val() == '7'){
             $('#warning_page_design_main_div').show();
         }
     });
