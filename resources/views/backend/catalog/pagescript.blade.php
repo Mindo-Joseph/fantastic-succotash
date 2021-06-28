@@ -16,6 +16,7 @@
             $('.modal .vendor_list').hide();
         }
     });
+    
     $("#banner-datatable tbody").sortable({
         placeholder : "ui-state-highlight",
         update  : function(event, ui){

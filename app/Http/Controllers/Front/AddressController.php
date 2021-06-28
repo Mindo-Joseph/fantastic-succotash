@@ -64,9 +64,9 @@ class AddressController extends FrontController{
         $address->longitude  = $request->longitude;
         $address->save();
         if($request->ajax()){
-            return response()->json(['status' => 'success', 'message' => 'Address Added Successfully!', 'address' => $address]);
+            return response()->json(['status' => 'success', 'message' => 'Address Has Been Added Successfully!', 'address' => $address]);
         }else{
-            return redirect()->route('user.addressBook');
+            return redirect()->route('user.addressBook')->with('success', 'Address Has Been Added Successfully');
         }
     }
 
@@ -76,6 +76,16 @@ class AddressController extends FrontController{
      * @return \Illuminate\Http\Response
      */
     public function update($domain = '', Request $request, $id){
+        $validatedData = $request->validate([
+            'type' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'pincode' => 'required',
+            'address' => 'required',
+            'country' => 'required',
+        ], [
+            'type.required' => 'Address Type is required'
+        ]);
         $country = Country::select('code', 'name')->where('id', $request->country)->first();
         $user = User::where('id', Auth::user()->id)->first();
         if ($user){
@@ -83,6 +93,7 @@ class AddressController extends FrontController{
             $user->save();
         }
         $address = UserAddress::find($id);
+        $address->type = $request->type;
         $address->address = $request->address;
         $address->street = $request->street;
         $address->city = $request->city;
@@ -90,9 +101,10 @@ class AddressController extends FrontController{
         $address->country = $country->name;
         $address->country_code = $country->code;
         $address->pincode = $request->pincode;
-        $address->type = $request->type;
+        $address->latitude  = $request->latitude;
+        $address->longitude  = $request->longitude;
         $address->save();
-        return redirect()->route('user.addressBook');
+        return redirect()->route('user.addressBook')->with('success', 'Address Has Been Updated Successfully');
     }
 
     /**
