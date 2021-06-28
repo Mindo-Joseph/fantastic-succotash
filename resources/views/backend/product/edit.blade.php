@@ -116,10 +116,6 @@
                 <div class="card-box">
                     <h5 class="text-uppercase bg-light p-2 mt-0 mb-3">General</h5>
                     <div class="row mb-2 row-spacing">
-<<<<<<< HEAD
-
-=======
->>>>>>> 390c96ec647ae1f909ae2fdae13e098b22fae430
                         <div class="col-md-5 mb-2" style="cursor: not-allowed;">
                             {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>

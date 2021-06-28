@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag, Vendor};
+use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag, Vendor, DispatcherWarningPage, DispatcherTemplateTypeOption};
 
 class CategoryController extends BaseController{
     private $blocking = '2';
@@ -51,7 +51,9 @@ class CategoryController extends BaseController{
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
-        $returnHTML = view('backend.catalog.add-category')->with(['category' => $category, 'is_vendor' => $is_vendor, 'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type, 'vendor_list' => $vendor_list])->render();
+        $dispatcher_warning_page_options = DispatcherWarningPage::where('status', 1)->get();
+        $dispatcher_template_type_options = DispatcherTemplateTypeOption::where('status', 1)->get();
+        $returnHTML = view('backend.catalog.add-category')->with(['category' => $category, 'is_vendor' => $is_vendor, 'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type, 'vendor_list' => $vendor_list,'dispatcher_template_type_options'=> $dispatcher_template_type_options, 'dispatcher_warning_page_options' => $dispatcher_warning_page_options])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -129,7 +131,9 @@ class CategoryController extends BaseController{
             $existlangs[] = $value->language_id;
         }
         $parCategory = Category::select('id', 'slug')->where('categories.id', '!=', $id)->where('status', '!=', $this->blocking)->where('deleted_at', NULL)->get();
-        $returnHTML = view('backend.catalog.edit-category')->with(['typeArray' => $type, 'category' => $category,  'languages' => $langs, 'is_vendor' => $is_vendor, 'parCategory' => $parCategory, 'langIds' => $langIds, 'existlangs' => $existlangs, 'tagList' => $tagList])->render();
+        $dispatcher_warning_page_options = DispatcherWarningPage::where('status', 1)->get();
+        $dispatcher_template_type_options = DispatcherTemplateTypeOption::where('status', 1)->get();
+        $returnHTML = view('backend.catalog.edit-category')->with(['typeArray' => $type, 'category' => $category,  'languages' => $langs, 'is_vendor' => $is_vendor, 'parCategory' => $parCategory, 'langIds' => $langIds, 'existlangs' => $existlangs, 'tagList' => $tagList,'dispatcher_warning_page_options' => $dispatcher_warning_page_options, 'dispatcher_template_type_options' => $dispatcher_template_type_options])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML, 'tagList' => $tagList));
     }
 
@@ -191,6 +195,9 @@ class CategoryController extends BaseController{
         $cate->slug = $request->slug;
         $cate->type_id = $request->type_id;
         $cate->display_mode = $request->display_mode;
+        $cate->warning_page_id = $request->warning_page_id;
+        $cate->template_type_id = $request->template_type_id;
+        $cate->warning_page_design = $request->warning_page_design;
         $cate->is_visible = ($request->has('is_visible') && $request->is_visible == 'on') ? 1 : 0;
         $cate->show_wishlist = ($request->has('show_wishlist') && $request->show_wishlist == 'on') ? 1 : 0;
         $cate->can_add_products = ($request->has('can_add_products') && $request->can_add_products == 'on' && $request->type_id == 1) ? 1 : 0;
@@ -199,7 +206,6 @@ class CategoryController extends BaseController{
         }else{
             $cate->parent_id = 1;
         }
-
         if($update == 'false'){
             if($request->has('vendor_id')){
                 $cate->is_core = 0;
@@ -211,7 +217,6 @@ class CategoryController extends BaseController{
             $cate->position = 1;
             $cate->client_code = (!empty(Auth::user()->code)) ? Auth::user()->code : '';
         }
-
         if ($request->hasFile('icon')) {
             $file = $request->file('icon');
             $cate->icon = Storage::disk('s3')->put($this->folderName, $file,'public');

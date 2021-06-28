@@ -1324,3 +1324,13 @@ i.mdi.mdi-exclamation-thick {
     background: linear-gradient(270deg, rgb(42 31 32 / 12%) 0%, rgb(0 0 0 / 0%) 92.47%);
 }
 
+
+.category-img{
+    height: 170px;
+}
+
+.category-img img{
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}

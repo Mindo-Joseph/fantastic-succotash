@@ -2357,8 +2357,7 @@ body .rating-form .btn-reset {
 .rating_files .update_pic {
     height: 170px;
     width: 100%;
-    background: url(https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/TLMadcBw7aPblRxZ5ZmDAHuaoZCXV3OheYrOH2Hw.jpg) no-repeat center;
-    background-size: cover;
+    object-fit: cover;
     overflow: hidden;
     display: block;
     border-radius: 4px;
@@ -2391,9 +2390,6 @@ body .rating-form .btn-reset {
     bottom: 0;
     top: 0;
 }
-
-
-
 
 
 

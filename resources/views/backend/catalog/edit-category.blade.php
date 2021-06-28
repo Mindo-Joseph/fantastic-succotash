@@ -2,16 +2,13 @@
     .edit-category input[type="radio"] {
     display: none;
 }
-
 .edit-category label{
     cursor: pointer;
 }
-
 .edit-category input:checked ~ label {
     box-shadow: 0 0px 8px rgb(67 190 225 / 55%);
 }
 </style>
-
 <div class="row ">
     <div class="col-md-12">
         <div class="row mb-6">
@@ -23,95 +20,95 @@
                 <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$category->image['proxy_url'].'400/400'.$category->image['image_path']}}" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category image</p>
             </div>
-            <div class="col-sm-3">
-                <div class="form-group" id="slugInputEdit">
-                    {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
-                    {!! Form::text('slug', $category->slug, ['class'=>'form-control']) !!}
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                    {!! Form::hidden('login_user_type', session('preferences.login_user_type'), ['class'=>'form-control']) !!}
-                    {!! Form::hidden('login_user_id', auth()->user()->id, ['class'=>'form-control']) !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
-                    <div>
-                        @if($category->is_visible == '1')
-                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control edit-switch_menu" data-color="#43bee1" checked='checked'>
-                        @else
-                            <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control edit-switch_menu" data-color="#43bee1">
-                        @endif
+            <div class="col-md-6">
+                 <div class="row">
+                    <div class="col-md-6">
+                         <div class="form-group" id="slugInputEdit">
+                            {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
+                            {!! Form::text('slug', $category->slug, ['class'=>'form-control']) !!}
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                            {!! Form::hidden('login_user_type', session('preferences.login_user_type'), ['class'=>'form-control']) !!}
+                            {!! Form::hidden('login_user_id', auth()->user()->id, ['class'=>'form-control']) !!}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Select Parent Category',['class' => 'control-label']) !!}
+                            <select class="selectize-select1 form-control parent-category" id="cateSelectBox" name="parent_cate">
+                                <option value="">Select</option>
+                                @foreach($parCategory as $pc)
+                                    <option value="{{$pc->id}}" {{ ($pc->id == $category->parent_id) ? 'selected' : '' }} > {{$pc->slug}}</option>
+                                @endforeach
+                            </select>
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                        </div>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-md-4">               
+                        <div class="form-group">
+                            {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
+                            <div>
+                                @if($category->is_visible == '1')
+                                    <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control edit-switch_menu" data-color="#43bee1" checked='checked'>
+                                @else
+                                    <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control edit-switch_menu" data-color="#43bee1">
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">                
+                        <div class="form-group">
+                            {!! Form::label('title', 'Show Wishlist',['class' => 'control-label']) !!} 
+                            <div>
+                                @if($category->show_wishlist == '1')
+                                    <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control edit-wishlist_switch" data-color="#43bee1" checked='checked'>
+                                @else
+                                    <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control edit-wishlist_switch" data-color="#43bee1">
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="{{($category->type_id != 1) ? 'display:none;' : ''}}" id="editProductHide">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
+                            <div>
+                                @if($category->can_add_products == '1')
+                                    <input type="checkbox" data-plugin="switchery" class="form-control edit-add_product_switch" data-color="#43bee1" name="can_add_products" checked='checked'>
+                                @else
+                                    <input type="checkbox" data-plugin="switchery" class="form-control edit-add_product_switch" data-color="#43bee1" name="can_add_products">
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <div class="form-group">
-                    {!! Form::label('title', 'Select Parent Category',['class' => 'control-label']) !!}
-                    <select class="selectize-select1 form-control" id="cateSelectBox" name="parent_cate">
-                        <option value="">Select</option>
-                        @foreach($parCategory as $pc)
-                            <option value="{{$pc->id}}" {{ ($pc->id == $category->parent_id) ? 'selected' : '' }} > {{$pc->slug}}</option>
-                        @endforeach
-                    </select>
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('title', 'Show Wishlist',['class' => 'control-label']) !!} 
-                    <div>
-                        @if($category->show_wishlist == '1')
-                            <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control edit-wishlist_switch" data-color="#43bee1" checked='checked'>
-                        @else
-                            <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control edit-wishlist_switch" data-color="#43bee1">
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-       <!--  <div class="row mt-3 edit-category">
+        </div> 
+        
+        <div class="row mt-3 edit-category">
             @foreach($typeArray as $type)
-               <div class="col-sm-4 col-md-3 col-xl-2">
-                  <div class="card" id="tooltip-container">
-                     <input class="form-check-input" type="radio" id="type_id_{{$type->id}}" name="type_id" checked="">
-                     <label for="type_id_{{$type->id}}" class="card-body">
-                        <div class="form-check form-check-info">
+               <div class="col">
+                  <div class="card p-0 text-center" id="tooltip-container">
+                     <input class="form-check-input type-select" for="edit" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
+                     <label for="type_id_{{$type->id}}" class="card-body p-0">
+                        <div class="category-img">
+                            <img src="https://www.w3schools.com/tags/img_girl.jpg" alt="">
+                        </div>
+                        <div class="form-check form-check-info pl-0">
                             <span for="customradio5">{{$type->title}}</span>
                         </div>
                      </label>
                   </div>
-                  
                </div>
            @endforeach
-        </div> -->
+        </div>
+        <input type="hidden" id="cateId" url="{{route('category.update', $category->id)}}">
         <div class="row">
-            <div class="col-md-2">
-                <div class="form-group">
-                    {!! Form::label('title', 'Type',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control type-select" for="edit" id="typeSelectBox" name="type_id">
-                        @foreach($typeArray as $type)
-                        <option value="{{$type->id}}" @if($category->type_id == $type->id) selected @endif>{{$type->title}}</option>
-                        @endforeach
-                    </select>
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                    <input type="hidden" id="cateId" url="{{route('category.update', $category->id)}}">
-                </div>
-            </div>
-            <div class="col-md-6 text-center" style="{{($category->type_id != 1) ? 'display:none;' : ''}}" id="editProductHide">
-                <div class="form-group">
-                    {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
-                    <div>
-                        @if($category->can_add_products == '1')
-                            <input type="checkbox" data-plugin="switchery" class="form-control edit-add_product_switch" data-color="#43bee1" name="can_add_products" checked='checked'>
-                        @else
-                            <input type="checkbox" data-plugin="switchery" class="form-control edit-add_product_switch" data-color="#43bee1" name="can_add_products">
-                        @endif
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6" style="{{($category->type_id != 2) ? 'display:none;' : ''}}" id="editDispatcherHide">
+            <div class="col-md-3" style="{{($category->type_id != 2) ? 'display:none;' : ''}}" id="editDispatcherHide">
                 <div class="form-group">
                     {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
                     {!! Form::hidden('tags', implode(',', $tagList), ['class'=>'form-control myTag1']) !!}
@@ -119,6 +116,34 @@
                         <strong></strong>
                     </span>
                 </div>
+            </div>
+            <div class="col-md-3" id="template_type_main_div" style="display:none;">
+                <div class="form-group">
+                    {!! Form::label('title', 'Template Type',['class' => 'control-label']) !!}
+                    <select class="selectize-select form-control" id="templateTypeSelectBox" name="template_type_id">
+                            <option value="">Select</option>
+                        @foreach($dispatcher_warning_page_options as $dispatcher_warning_page_option)
+                            <option value="{{$dispatcher_warning_page_option->id}}" {{ ($category->template_type_id == $dispatcher_warning_page_option->id) ? 'selected' : '' }}>{{$dispatcher_warning_page_option->title}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3" id="warning_page_main_div" style="display:none;">
+                <div class="form-group">
+                    {!! Form::label('title', 'Warning Page',['class' => 'control-label']) !!}
+                    <select class="selectize-select form-control" id="warningPageSelectBox" name="warning_page_id">
+                            <option value="">Select</option>
+                        @foreach($dispatcher_template_type_options as $dispatcher_template_type_option)
+                            <option value="{{$dispatcher_template_type_option->id}}" {{ ($category->warning_page_id == $dispatcher_template_type_option->id) ? 'selected' : '' }}>{{$dispatcher_template_type_option->title}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="warning_page_design_main_div" style="display:none;">
+            <div class="col-12 mb-2">
+                {!! Form::label('title', 'Warning Page Design',['class' => 'control-label']) !!}
+                {!! Form::textarea('warning_page_design', '', ['class'=>'form-control', 'id' => 'warning_page_design', 'placeholder' => 'Description', 'rows' => '5', 'name' => 'warning_page_design']) !!}
             </div>
         </div>
         <div class="row">
@@ -166,51 +191,50 @@
                 </div>                
             @endforeach
             @if(count($langIds) !=  count($existlangs))
-        @foreach($languages as $langs)
-            @if(!in_array($langs->langId, $existlangs) && in_array($langs->langId, $langIds))
-            <div class="col-lg-6">
-                <div class="outer_box px-3 py-2 mb-3">
-
-                <div class="row rowYK">
-                    <h4 class="col-md-12"> {{ $langs->langName.' Language' }} </h4>
-                    <div class="col-md-6">
-                        <div class="form-group" id="{{ ($langs->is_primary == 1) ? 'nameInputEdit' : 'nameotherInput' }}">
-                            {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
-                            @if($langs->is_primary == 1)
-                                {!! Form::text('name[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
-                            @else
-                                {!! Form::text('name[]', null, ['class' => 'form-control']) !!}
-                            @endif
-                            <span class="invalid-feedback" role="alert">
-                                <strong></strong>
-                            </span>
+                @foreach($languages as $langs)
+                @if(!in_array($langs->langId, $existlangs) && in_array($langs->langId, $langIds))
+                <div class="col-lg-6">
+                    <div class="outer_box px-3 py-2 mb-3">
+                        <div class="row rowYK">
+                            <h4 class="col-md-12"> {{ $langs->langName.' Language' }} </h4>
+                            <div class="col-md-6">
+                                <div class="form-group" id="{{ ($langs->is_primary == 1) ? 'nameInputEdit' : 'nameotherInput' }}">
+                                    {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
+                                    @if($langs->is_primary == 1)
+                                        {!! Form::text('name[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
+                                    @else
+                                        {!! Form::text('name[]', null, ['class' => 'form-control']) !!}
+                                    @endif
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong></strong>
+                                    </span>
+                                </div>
+                            </div>
+                            {!! Form::hidden('language_id[]', $langs->langId) !!}
+                            <div class="col-md-6">
+                                <div class="form-group" id="meta_titleInput">
+                                    {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!} 
+                                    {!! Form::text('meta_title[]', null, ['class' => 'form-control']) !!}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!} 
+                                    {!! Form::textarea('meta_description[]', null, ['class'=>'form-control', 'rows' => '3']) !!}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {!! Form::label('title', 'Meta Keywords',['class' => 'control-label']) !!} 
+                                    {!! Form::textarea('meta_keywords[]', null, ['class' => 'form-control', 'rows' => '3']) !!}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    {!! Form::hidden('language_id[]', $langs->langId) !!}
-                    <div class="col-md-6">
-                        <div class="form-group" id="meta_titleInput">
-                            {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!} 
-                            {!! Form::text('meta_title[]', null, ['class' => 'form-control']) !!}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!} 
-                            {!! Form::textarea('meta_description[]', null, ['class'=>'form-control', 'rows' => '3']) !!}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            {!! Form::label('title', 'Meta Keywords',['class' => 'control-label']) !!} 
-                            {!! Form::textarea('meta_keywords[]', null, ['class' => 'form-control', 'rows' => '3']) !!}
-                        </div>
-                    </div>
-                </div>
-                </div>
-            </div> 
+                </div> 
+                @endif
+                @endforeach   
             @endif
-            @endforeach   
-        @endif
         </div>    
     </div>
 </div>

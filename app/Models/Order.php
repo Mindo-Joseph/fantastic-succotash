@@ -32,4 +32,7 @@ class Order extends Model{
 	public function payment(){
 	    return $this->hasOne('App\Models\Payment' , 'order_id', 'id'); 
 	}
+	public function prescription(){
+	    return $this->hasMany('App\Models\OrderProductPrescription' , 'order_id', 'id'); 
+	}
 }

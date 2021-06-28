@@ -59,7 +59,7 @@
 <div class="card-box">
     <div class="row text-left">
         <div class="col-md-12">
-            <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" id="slot-configs" method="post">
+            <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" method="post">
                 @csrf
                 <div class="row">
                     <div class="col-md-12">

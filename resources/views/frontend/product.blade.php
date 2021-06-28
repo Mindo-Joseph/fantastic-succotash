@@ -295,11 +295,13 @@
                                                 class="icofont icofont-contacts"></i>Video</a>
                                         <div class="material-border"></div>
                                     </li> -->
+                                    @if($order_deliver == 1)
                                     <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab"
                                             href="#top-review" role="tab" aria-selected="false"><i
                                                 class="icofont icofont-contacts"></i>Write Review</a>
                                         <div class="material-border"></div>
                                     </li>
+                                    @endif
                                 </ul>
                                 <div class="tab-content nav-material" id="top-tabContent">
                                     <div class="tab-pane fade show active" id="top-home" role="tabpanel"
@@ -322,8 +324,9 @@
                                     </div> -->
                                     <div class="tab-pane fade" id="top-review" role="tabpanel"
                                         aria-labelledby="review-top-tab">
-                                        <form class="theme-form">
-
+                                       
+                                <form id="file-upload-form" class="theme-form" action="{{ route('update.order.rating')}}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+                                                @csrf
                                             <div class="rating-form">
                                                 <fieldset class="form-group">
                                                     <legend class="form-legend">Rating:</legend>
@@ -390,34 +393,16 @@
                                                         <label for="input-file">
                                                             <span class="plus_icon"><i class="fa fa-plus" aria-hidden="true"></i></span>
                                                         </label>
-                                                        <input id="input-file" type="file" name="profile_image" accept="image/*" onchange="loadFile(event)">
+                                                        <input id="input-file" type="file" name="files" accept="image/*"  multiple >
                                                     </div>
                                                 </div>
-                                                <div class="col-6 col-md-3 col-lg-2">
-                                                    <span class="update_pic">
-                                                        <img src="" alt="" id="output">
+
+                                                <div class="col-10">
+                                                    <span class="row" id="thumb-output">
+                                                        
                                                     </span>
                                                 </div>
-                                                <div class="col-6 col-md-3 col-lg-2">
-                                                    <span class="update_pic">
-                                                        <img src="" alt="" id="output">
-                                                    </span>
-                                                </div>
-                                                <div class="col-6 col-md-3 col-lg-2">
-                                                    <span class="update_pic">
-                                                        <img src="" alt="" id="output">
-                                                    </span>
-                                                </div>
-                                                <div class="col-6 col-md-3 col-lg-2">
-                                                    <span class="update_pic">
-                                                        <img src="" alt="" id="output">
-                                                    </span>
-                                                </div>
-                                                <div class="col-6 col-md-3 col-lg-2">
-                                                    <span class="update_pic">
-                                                        <img src="" alt="" id="output">
-                                                    </span>
-                                                </div>
+                                                
                                             </div>
 
                                             <div class="form-row">
@@ -656,5 +641,36 @@
         });
     });
 </script>
+
+<!-----  rating product if delivered -->
+<script>
+  
+ $(document).ready(function(){
+  $('#input-file').on('change', function(){ //on file input change
+     if (window.File && window.FileReader && window.FileList && window.Blob) //check File API supported browser
+     {
+          
+         var data = $(this)[0].files; //this file data
+          
+         $.each(data, function(index, file){ //loop though each file
+             if(/(\.|\/)(gif|jpe?g|png)$/i.test(file.type)){ //check supported file type
+                 var fRead = new FileReader(); //new filereader
+                 fRead.onload = (function(file){ //trigger function on successful read
+                 return function(e) {
+                     var img = $('<img/>').addClass('col-6 col-md-3 col-lg-2 update_pic').attr('src', e.target.result); //create image element 
+                     $('#thumb-output').append(img); //append image to output element
+                 };
+                 })(file);
+                 fRead.readAsDataURL(file); //URL representing the file's data.
+             }
+         });
+          
+     }else{
+         alert("Your browser doesn't support File API!"); //if File API is absent
+     }
+  });
+ });
+  
+ </script>
 
 @endsection

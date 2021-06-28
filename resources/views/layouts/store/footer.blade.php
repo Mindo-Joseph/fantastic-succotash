@@ -43,7 +43,7 @@
         selected_address = 1;
     @endif
 
-    @if( Session::get('preferences') )
+    @if( Session::has('preferences') )
         @if( Session::get('preferences')->is_hyperlocal == 1 ) 
             is_hyperlocal = 1;
         @endif;
