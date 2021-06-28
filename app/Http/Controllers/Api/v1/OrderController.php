@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Api\v1;
-
 use DB;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
@@ -20,8 +19,31 @@ class OrderController extends Controller {
 
     public function getOrdersList(Request $request){
     	$user = Auth::user();
+        $order_status_options= [];
         $paginate = $request->has('limit') ? $request->limit : 12;
-        $orders = OrderVendor::with('status')->where('user_id', $user->id)->paginate($paginate);
+        $type = $request->has('type') ? $request->type : 'active';
+        $orders = OrderVendor::where('user_id', $user->id)->orderBy('id', 'DESC');
+        switch ($type) {
+            case 'active':
+                $order_status_options = [6,3];
+                $orders->whereDoesntHave('status', function ($query) use($order_status_options) {
+                    $query->whereIn('order_status_option_id', $order_status_options);
+                });
+            break;
+            case 'past':
+                $order_status_options = [6,3];
+                $orders->whereHas('status', function ($query) use($order_status_options) {
+                    $query->whereIn('order_status_option_id', $order_status_options);
+                });
+            break;
+            case 'schedule':
+                $order_status_options = [10];
+                $orders->whereHas('status', function ($query) use($order_status_options) {
+                    $query->whereIn('order_status_option_id', $order_status_options);
+                });
+            break;
+        }
+        $orders = $orders->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
             $order->user_name = $user->name;
@@ -32,7 +54,7 @@ class OrderController extends Controller {
             $product_details = [];
             $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->orderDetail->id)->where('vendor_id', $order->vendor_id)->orderBy('id', 'DESC')->first();
             if($vendor_order_status){
-                $order->current_status =  ['id' => $vendor_order_status->OrderStatusOption->id, 'title' => $vendor_order_status->OrderStatusOption->title];
+                $order->order_status =  ['current_status' => ['id' => $vendor_order_status->OrderStatusOption->id, 'title' => $vendor_order_status->OrderStatusOption->title]];
             }else{
                 $order->current_status = null;
             }
@@ -52,8 +74,7 @@ class OrderController extends Controller {
             unset($order->payment_option_id);
             unset($order->orderDetail);
         }
-        
-    	return $this->successResponse($orders, 'Order placed successfully.', 201);
+    	return $this->successResponse($orders, '', 201);
     }
 
     public function postOrderDetail(Request $request){

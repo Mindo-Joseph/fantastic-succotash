@@ -24,10 +24,39 @@ class CategoryController extends FrontController
         $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
+        $category = Category::with(['tags', 'brands.translation' => function($q) use($langId){
+            $q->where('brand_translations.language_id', $langId);
+        },
+        'type'  => function($q){
+            $q->select('id', 'title as redirect_to');
+        },
+        'childs.translation'  => function($q) use($langId){
+            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+            ->where('category_translations.language_id', $langId);
+        },
+        'translation' => function($q) use($langId){
+            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+            ->where('category_translations.language_id', $langId);
+        }])
+        ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
+        ->where('id', $cid)->firstOrFail();
 
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');
+                //remake child categories array
+                if($category->childs->isNotEmpty()){
+                    $childArray = array();
+                    foreach($category->childs as $key => $child){
+                        $child_ID = $child->id;
+                        $category_vendors = VendorCategory::where('category_id', $child_ID)->where('status', 1)->first();
+                        if($category_vendors){
+                            $childArray[] = $child;
+                        }
+                    }
+                    $category->childs = collect($childArray);
+                }
+                //Abort route if category from route does not exist as per hyperlocal vendors
                 $category_vendors = VendorCategory::select('vendor_id')->where('category_id', $cid)->where('status', 1)->get();
                 if(!$category_vendors->isEmpty()){
                     $index = 1;
@@ -48,23 +77,6 @@ class CategoryController extends FrontController
                 // abort(404);
             }
         }
-
-        $category = Category::with(['tags', 'brands.translation' => function($q) use($langId){
-                        $q->where('brand_translations.language_id', $langId);
-                    },
-                    'type'  => function($q){
-                        $q->select('id', 'title as redirect_to');
-                    },
-                    'childs.translation'  => function($q) use($langId){
-                        $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
-                        ->where('category_translations.language_id', $langId);
-                    },
-                    'translation' => function($q) use($langId){
-                        $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
-                        ->where('category_translations.language_id', $langId);
-                    }])
-                    ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
-                    ->where('id', $cid)->firstOrFail();
 
         $navCategories = $this->categoryNav($langId);
         

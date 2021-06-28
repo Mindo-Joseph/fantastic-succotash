@@ -95,8 +95,8 @@
                                                 class="icofont icofont-ui-home"></i>Active Orders</a>
                                         <div class="material-border"></div>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-toggle="tab"
-                                            href="#top-profile" role="tab" aria-selected="false"><i
+                                    <li class="nav-item"><a class="nav-link" id="past_order-tab" data-toggle="tab"
+                                            href="#past_order" role="tab" aria-selected="false"><i
                                                 class="icofont icofont-man-in-glasses"></i>Past Orders</a>
                                         <div class="material-border"></div>
                                     </li>
@@ -265,8 +265,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="top-profile" role="tabpanel"
-                                        aria-labelledby="profile-top-tab">
+                                    <div class="tab-pane fade past-order" id="past_order" role="tabpanel"
+                                        aria-labelledby="past_order-tab">
                                         <div class="row">                                
                                             <div class="col-12">        
                                                 <div class="row no-gutters order_head">

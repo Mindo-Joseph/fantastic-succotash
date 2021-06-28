@@ -455,5 +455,148 @@
     </section> 
   
 
+
+    <section class="order-detail-page">
+        <div class="container">
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Order Detail</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 mb-3 mb-lg-4">
+                            <div class="card mb-0 h-100">
+                                <div class="card-body">
+                                    <h4 class="header-title mb-3">Track Order</h4>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-4">
+                                                <h5 class="mt-0">Order ID:</h5>
+                                                <p>#43985703</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row track-order-list">
+                                        <div class="col-12">
+                                            <!-- <button type="button" class="btn btn-danger waves-effect waves-light">
+                                                <i class="mdi mdi-close"></i>
+                                            </button> -->
+                                            <ul class="list-unstyled" id="order_statuses">
+                                                <li class="">
+                                                    <h5 class="mt-0 mb-1">Placed</h5>
+                                                    <p class="text-muted" id="text_muted">
+                                                            <small class="text-muted">Monday, June 28, 2021, 06:18 AM</small>
+                                                    </p>
+                                                </li>
+                                                <li class="">
+                                                    <h5 class="mt-0 mb-1">Placed</h5>
+                                                    <p class="text-muted" id="text_muted">
+                                                            <small class="text-muted">Monday, June 28, 2021, 06:18 AM</small>
+                                                    </p>
+                                                </li>
+                                                <li class="">
+                                                    <h5 class="mt-0 mb-1">Placed</h5>
+                                                    <p class="text-muted" id="text_muted">
+                                                            <small class="text-muted">Monday, June 28, 2021, 06:18 AM</small>
+                                                    </p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8 mb-3 mb-lg-4">
+                            <div class="card mb-0 h-100">
+                                <div class="card-body">
+                                    <h4 class="header-title mb-3">Items from Order #43985703</h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-centered mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Product name</th>
+                                                    <th>Product</th>
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                                                            <tbody>
+                                                                                                                                                                                                <tr>
+                                                    <th scope="row">Roll 
+                                                                                            </th>
+                                                    <td>
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/32/32/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/RQAO9fhVSoquNYpVIN0aui9XpEBeyyWBXr9ncVVV.png" alt="product-img" height="32">
+                                                    </td>
+                                                    <td>1</td>
+                                                    <td>$100.00</td>
+                                                    <td>$100.00</td>
+                                                </tr>
+                                                                                                                        <tr>
+                                                    <th scope="row" colspan="4" class="text-end">Sub Total :</th>
+                                                    <td>
+                                                        <div class="fw-bold">$100.00</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" colspan="4" class="text-end">Total Discount :</th>
+                                                    <td>$0.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" colspan="4" class="text-end">Estimated Tax :</th>
+                                                    <td>$5.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" colspan="4" class="text-end">Total :</th>
+                                                    <td>
+                                                        <div class="fw-bold">$105.00</div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-4 mb-3">
+                            <div class="card mb-0 h-100">
+                                <div class="card-body">
+                                    <h4 class="header-title mb-3">Shipping Information</h4>
+                                    <h5 class="font-family-primary fw-semibold">accountsqq</h5>
+                                    <p class="mb-2"><span class="fw-semibold me-2">Address:</span> Dolphin Mall, Northwest 12th Street, Miami, FL, USA</p>
+                                    <p class="mb-0"><span class="fw-semibold me-2">Mobile:</span> 1234567890</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 mb-3">
+                            <div class="card mb-0 h-100">
+                                <div class="card-body">
+                                    <h4 class="header-title mb-3">Delivery Info</h4>
+                                    <div class="text-center">
+                                        <i class="mdi mdi-truck-fast h2 text-muted"></i>
+                                        <h5><b>UPS Delivery</b></h5>
+                                        <p class="mb-1"><span class="fw-semibold">Order ID :</span> #43985703</p>
+                                                                    <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Stripe</p>
+                                                                </div>
+                                    <div class="text-center mt-2">
+                                        <a href="javascript::void(0);" class="btn btn-solid" id="delivery_info_button">Delivery Info</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     
 @endsection

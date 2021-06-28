@@ -17,9 +17,10 @@ class AddressController extends FrontController{
      */
     public function index(Request $request, $domain = ''){
         $langId = Session::get('customerLanguage');
+        $countries = Country::get();
         $useraddress = UserAddress::where('user_id', Auth::user()->id)->with('country')->get();
         $navCategories = $this->categoryNav($langId);
-        return view('frontend/account/addressbook')->with(['useraddress' => $useraddress, 'navCategories' => $navCategories]);
+        return view('frontend/account/addressbook')->with(['useraddress' => $useraddress, 'navCategories' => $navCategories, 'countries'=>$countries]);
     }
 
     /**
@@ -75,12 +76,19 @@ class AddressController extends FrontController{
      * @return \Illuminate\Http\Response
      */
     public function update($domain = '', Request $request, $id){
+        $country = Country::select('code', 'name')->where('id', $request->country)->first();
+        $user = User::where('id', Auth::user()->id)->first();
+        if ($user){
+            $user->country_id = $request->country;
+            $user->save();
+        }
         $address = UserAddress::find($id);
         $address->address = $request->address;
         $address->street = $request->street;
         $address->city = $request->city;
         $address->state = $request->state;
-        $address->country_id = $request->country;
+        $address->country = $country->name;
+        $address->country_code = $country->code;
         $address->pincode = $request->pincode;
         $address->type = $request->type;
         $address->save();
@@ -100,6 +108,18 @@ class AddressController extends FrontController{
         return view('frontend/account/editAddress')->with(['navCategories' => $navCategories,'countries' => $countries, 'address' => $address]);
     }
 
+    /**
+     * Get address details by id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function address($domain = '', $id){
+        $address = UserAddress::leftJoin('countries', 'user_addresses.country', 'countries.name')
+                    ->select('user_addresses.*','countries.id as country_id')
+                    ->where('user_addresses.id', $id)->first();
+        $countries = Country::all();
+        return response()->json(['status' => 'success', 'countries' => $countries, 'address' => $address]);
+    }
    
     /**
      * Set Primary Address for user

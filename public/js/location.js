@@ -527,7 +527,7 @@ function initMap() {
                 map.fitBounds(place.geometry.viewport);
             } else {
                 map.setCenter(place.geometry.location);
-                map.setZoom(17);
+                map.setZoom(13);
             }
             marker.setPosition(place.geometry.location);
             marker.setVisible(true);
@@ -542,5 +542,5 @@ function setLocationCoordinates(key, lat, lng) {
     latitudeField.value = lat;
     longitudeField.value = lng;
 }
-
-google.maps.event.addDomListener(window, 'load', initMap);
+initMap();
+// google.maps.event.addDomListener(window, 'load', initMap);

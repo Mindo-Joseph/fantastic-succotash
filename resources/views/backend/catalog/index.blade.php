@@ -1,5 +1,6 @@
 @extends('layouts.vertical', ['title' => 'Category'])
 @section('css')
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
@@ -209,6 +210,7 @@
 <script src="{{asset('assets/js/jscolor.js')}}"></script>
 <script src="{{ asset('assets/js/jquery.tagsinput-revisited.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('assets/css/jquery.tagsinput-revisited.css') }}" />
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 @include('backend.common.category-script')
 @include('backend.catalog.pagescript')
 <script type="text/javascript">

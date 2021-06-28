@@ -1324,6 +1324,19 @@ i.mdi.mdi-exclamation-thick {
 }
 
 
+.page-title-right input.form-control.border.form-control.input {
+    height: auto;
+}
+
+.page-title-right .input-group-text {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+
+
+
+
 
 
 
@@ -1331,4 +1344,13 @@ i.mdi.mdi-exclamation-thick {
     .card-box{
         padding: 20px;
     }
+}
+.category-img{
+    height: 170px;
+}
+
+.category-img img{
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
 }

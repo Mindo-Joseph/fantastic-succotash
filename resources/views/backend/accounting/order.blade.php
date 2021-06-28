@@ -22,7 +22,7 @@
                 <div class="card widget-inline">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-6 col-md-3">
+                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="text-center">
                                     <i class="mdi mdi-cart-plus text-primary mdi-24px"></i>
                                     <h3><span data-plugin="counterup">8954</span></h3>
@@ -30,7 +30,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 col-md-3">
+                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="text-center">
                                     <i class="mdi mdi-currency-usd text-success mdi-24px"></i>
                                     <h3>$ <span data-plugin="counterup">7841</span></h3>
@@ -38,7 +38,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 col-md-3">
+                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="text-center">
                                     <i class="mdi mdi-account-group text-danger mdi-24px"></i>
                                     <h3><span data-plugin="counterup">6521</span></h3>
@@ -46,10 +46,10 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 col-md-3">
+                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="text-center">
                                     <i class="mdi mdi-eye-outline text-blue mdi-24px"></i>
-                                    <h3><span data-plugin="counterup">325</span> k</h3>
+                                    <h3><span data-plugin="counterup">{{round($delivery_fee_sum)}}</span> k</h3>
                                     <p class="text-muted font-15 mb-0">total delivery fees</p>
                                 </div>
                             </div>

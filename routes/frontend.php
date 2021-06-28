@@ -40,6 +40,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('/product/{id?}','Front\ProductController@index')->name('productDetail');
 	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
 	Route::post('add/product/cart','Front\CartController@postAddToCart')->name('addToCart');
+	Route::post('add/product/prescription','Front\CartController@uploadPrescription')->name('cart.uploadPrescription');
 	Route::get('cartProducts','Front\CartController@getCartData')->name('getCartProducts');
 	Route::get('cartDetails','Front\CartController@getCartProducts')->name('cartDetails');
 	Route::post('cartDelete','Front\CartController@emptyCartData')->name('emptyCartData');
@@ -65,6 +66,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/orders', 'Front\OrderController@orders')->name('user.orders');
 	Route::post('user/store', 'Front\AddressController@store')->name('address.store');
 	Route::get('user/addAddress', 'Front\AddressController@add')->name('addNewAddress');
+	Route::get('user/address/{id}', 'Front\AddressController@address')->name('user.address');
 	Route::get('user/checkout', 'Front\UserController@checkout')->name('user.checkout');
     Route::get('user/profile', 'Front\ProfileController@profile')->name('user.profile');
     Route::get('user/logout', 'Front\CustomerAuthController@logout')->name('user.logout');
@@ -82,6 +84,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/addressBook', 'Front\AddressController@index')->name('user.addressBook');
 	Route::get('user/wallet', 'Front\WalletController@index')->name('user.account');
 	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
+	Route::post('user/updateAccount', 'Front\ProfileController@updateAccount')->name('user.updateAccount');
     Route::get('user/editAccount', 'Front\ProfileController@editAccount')->name('user.editAccount');
 	Route::get('user/sendRefferal', 'Front\ProfileController@showRefferal')->name('user.sendRefferal');
     Route::get('wishlist/remove/{sku}', 'Front\WishlistController@removeWishlist')->name('removeWishlist');

@@ -40,7 +40,9 @@ class OrderProduct extends Model{
     public function translation(){
       return $this->hasOne('App\Models\ProductTranslation','product_id', 'product_id'); 
     }
-
+    public function prescription(){
+	    return $this->hasMany('App\Models\OrderProductPrescription' , 'product_id', 'product_id'); 
+	  }
     public function productRating(){
       return $this->hasOne('App\Models\OrderProductRating', 'order_vendor_product_id', 'id');
     }

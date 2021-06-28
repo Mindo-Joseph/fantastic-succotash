@@ -1,12 +1,18 @@
 @extends('layouts.store', ['title' => 'Product'])
+
+@section('css')
+<link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
+@endsection
+
 @section('content')
 <style type="text/css">
-.swal2-title {
-  margin: 0px;
-  font-size: 26px;
-  font-weight: 400;
-  margin-bottom: 28px;
-}
+    .swal2-title {
+        margin: 0px;
+        font-size: 26px;
+        font-weight: 400;
+        margin-bottom: 28px;
+    }
 </style>
 <header>
     <div class="mobile-fix-option"></div>
@@ -34,17 +40,15 @@
         </div>
     </div>
 </script>
-
 <div class="container">
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-            <h4 class="page-title text-uppercase">Cart</h4>
+                <h4 class="page-title text-uppercase">Cart</h4>
             </div>
         </div>
     </div>
 </div>
-
 <script type="text/template" id="cart_template">
     <% _.each(cart_details.products, function(product, key){%>
         <thead>
@@ -52,7 +56,7 @@
                 <th colspan="3" style="background-color: #f3f7f9">
                     <%= product.vendor.name %>
                 </th>
-                <th colspan="3" style="background-color: #f3f7f9">
+                <th colspan="4" style="background-color: #f3f7f9">
                     <div class="countdownholder alert-danger" id="min_order_validation_error_<%= product.vendor.id %>" style="display:none;">Your cart will be expired in
                 </th>
             </tr>
@@ -80,7 +84,7 @@
                     </td>
                     <td>
                         <div class="number">
-                            <span class="minus qty-minus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
+                            <span class="minus qty-minus" data-id="<%= vendor_product.product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
                                 <i class="fa fa-minus" aria-hidden="true"></i>
                             </span>
                             <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="number" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>">
@@ -88,6 +92,13 @@
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                             </span>
                         </div>
+                    </td>
+                    <td>
+                    <% if(cart_details.pharmacy_check == 1){ %>
+                    <% if(vendor_product.product.pharmacy_check == 1){ %>
+                    <button type="button" class="btn btn-solid prescription_btn" data-product="<%= vendor_product.product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">Add</button>
+                    <% } %>
+                    <% } %>
                     </td>
                     <td class="text-center">
                         <a  class="action-icon d-block mb-3 remove_product_via_cart" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
@@ -139,7 +150,7 @@
                         <% } %>
                         </div>
                 </td> 
-                <td colspan="1"></td>
+                <td colspan="2"></td>
                 <td class="text-center">
                     <p class="total_amt m-0">Delivery Fee :</p>
                 </td>
@@ -218,60 +229,60 @@
 </script>
 <div class="container" id="cart_main_page">
     @if($cartData)
-        <form method="post" action="" id="placeorder_form">
-            @csrf
-            <div class="card-box">
-                <div class="row">
-                    <div class="col-4 left_box">
-                        <div class="row">
-                            <div class="col-12 mb-2">
-                                <h4 class="page-title">Delivery Address</h4>
-                                <span class="text-danger hide" id="address_error"></span>
+    <form method="post" action="" id="placeorder_form">
+        @csrf
+        <div class="card-box">
+            <div class="row">
+                <div class="col-4 left_box">
+                    <div class="row">
+                        <div class="col-12 mb-2">
+                            <h4 class="page-title">Delivery Address</h4>
+                            <span class="text-danger hide" id="address_error"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-4" id="address_template_main_div">
+                        @forelse($addresses as $k => $address)
+                        <div class="col-md-12">
+                            <div class="delivery_box px-0">
+                                <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}}
+                                    @if($address->is_primary)
+                                    <input type="radio" name="address_id" value="{{$address->id}}" checked="checked">
+                                    @else
+                                    <input type="radio" name="address_id" value="{{$address->id}}" {{$k == 0? 'checked="checked""' : '' }}>
+                                    @endif
+                                    <span class="checkround"></span>
+                                </label>
                             </div>
                         </div>
-                        <div class="row mb-4" id="address_template_main_div">
-                            @forelse($addresses as $k => $address)
-                                <div class="col-md-12">
-                                    <div class="delivery_box px-0">
-                                        <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}} 
-                                            @if($address->is_primary)
-                                                <input type="radio" name="address_id" value="{{$address->id}}"  checked="checked">
-                                            @else
-                                                <input type="radio" name="address_id" value="{{$address->id}}"  {{$k == 0? 'checked="checked""' : '' }} >
-                                            @endif
-                                            <span class="checkround"></span>
-                                        </label>
+                        @empty
+                        <div class="col-12 address-no-found">
+                            <p>Address not available.</p>
+                        </div>
+                        @endforelse
+                    </div>
+                    <div class="row">
+                        <div class="col-12 mt-4 text-center" id="add_new_address_btn">
+                            <a class="btn btn-solid w-100 mx-auto mb-4">
+                                <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address
+                            </a>
+                        </div>
+                        <div class="col-md-12" id="add_new_address_form" style="display:none;">
+                            <div class="theme-card w-100">
+                                <div class="form-row no-gutters">
+                                    <div class="col-12">
+                                        <label for="type">Address Type</label>
                                     </div>
-                                </div>
-                            @empty
-                                <div class="col-12 address-no-found">
-                                    <p>Address not available.</p>
-                                </div>
-                            @endforelse
-                        </div>
-                        <div class="row">
-                            <div class="col-12 mt-4 text-center" id="add_new_address_btn">
-                                <a class="btn btn-solid w-100 mx-auto mb-4" >
-                                    <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address
-                                </a>
-                            </div>
-                            <div class="col-md-12" id="add_new_address_form" style="display:none;">
-                                <div class="theme-card w-100">
-                                    <div class="form-row no-gutters">
-                                        <div class="col-12">
-                                            <label for="type">Address Type</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="delivery_box pt-0 pl-0  pb-3">
-                                                <label class="radio m-0">Home 
-                                                    <input type="radio" checked="checked" name="address_type" value="1">
-                                                    <span class="checkround"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
+                                    <div class="col-md-3">
                                         <div class="delivery_box pt-0 pl-0  pb-3">
-                                            <label class="radio m-0">Office 
+                                            <label class="radio m-0">Home
+                                                <input type="radio" checked="checked" name="address_type" value="1">
+                                                <span class="checkround"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="delivery_box pt-0 pl-0  pb-3">
+                                            <label class="radio m-0">Office
                                                 <input type="radio" name="address_type" value="2">
                                                 <span class="checkround"></span>
                                             </label>
@@ -285,126 +296,126 @@
                                             </label>
                                         </div>
                                     </div>
-                                    </div>
-                                    <input type="hidden" id="latitude">
-                                    <input type="hidden" id="longitude">
-                                    <div class="form-row">
-                                        <div class="col-md-12 mb-3">
-                                            <label for="address">Address</label>
-                                            <div class="input-group">
-                                              <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2">
-                                              <div class="input-group-append">
+                                </div>
+                                <input type="hidden" id="latitude">
+                                <input type="hidden" id="longitude">
+                                <div class="form-row">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="address">Address</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2">
+                                            <div class="input-group-append">
                                                 <button class="btn btn-outline-secondary" type="button" id="button-addon2">
                                                     <i class="fa fa-map-marker" aria-hidden="true"></i>
                                                 </button>
-                                              </div>
                                             </div>
-                                            <span class="text-danger" id="address_error"></span>
                                         </div>
-                                    </div>
-                                    <div class="form-row mb-3">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="city">City</label>
-                                            <input type="text" class="form-control" id="city" placeholder="City" value="">
-                                            <span class="text-danger" id="city_error"></span>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="state">State</label>
-                                            <input type="text" class="form-control" id="state" placeholder="State" value="">
-                                            <span class="text-danger" id="state_error"></span>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="country">Country</label>
-                                            <select name="country" id="country" class="form-control">
-                                                @foreach($countries as $co)
-                                                    <option value="{{$co->id}}">{{$co->name}}</option>
-                                                @endforeach
-                                            </select>
-                                            <span class="text-danger" id="country_error"></span>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="pincode">Pincode</label>
-                                            <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
-                                            <span class="text-danger" id="pincode_error"></span>
-                                        </div>
-                                        <div class="col-md-12 mt-3">
-                                            <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
-                                            <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
-                                        </div>
+                                        <span class="text-danger" id="address_error"></span>
                                     </div>
                                 </div>
-                            </div> 
-                        </div>
-                    </div>
-                    <div class="col-8">
-                        <div class="table-responsive">
-                            <table class="table table-centered table-nowrap" id="cart_table"></table>
+                                <div class="form-row mb-3">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="city">City</label>
+                                        <input type="text" class="form-control" id="city" placeholder="City" value="">
+                                        <span class="text-danger" id="city_error"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="state">State</label>
+                                        <input type="text" class="form-control" id="state" placeholder="State" value="">
+                                        <span class="text-danger" id="state_error"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="country">Country</label>
+                                        <select name="country" id="country" class="form-control">
+                                            @foreach($countries as $co)
+                                            <option value="{{$co->id}}">{{$co->name}}</option>
+                                            @endforeach
+                                        </select>
+                                        <span class="text-danger" id="country_error"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="pincode">Pincode</label>
+                                        <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
+                                        <span class="text-danger" id="pincode_error"></span>
+                                    </div>
+                                    <div class="col-md-12 mt-3">
+                                        <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
+                                        <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                 <div class="row mb-4">
-                    <div class="col-lg-3 col-md-4">
-                        <a class="btn btn-solid" href="{{ url('/') }}">Continue Shopping</a>
-                    </div>
-                    <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4 text-md-right">
-                        <button id="order_palced_btn" class="btn btn-solid" type="button" {{$addresses->count() == 0 ? 'disabled': ''}} >Continue</button>
+                <div class="col-8">
+                    <div class="table-responsive">
+                        <table class="table table-centered table-nowrap" id="cart_table"></table>
                     </div>
                 </div>
             </div>
-           
-        </form>
-    @else
-        <div class="row mt-2 mb-4 mb-lg-5">
-            <div class="col-12 text-center">
-                <div class="cart_img_outer">
-                    <img src="{{asset('front-assets/images/empty_cart.png')}}">
+            <div class="row mb-4">
+                <div class="col-lg-3 col-md-4">
+                    <a class="btn btn-solid" href="{{ url('/') }}">Continue Shopping</a>
                 </div>
-                <h3>Your cart is empty!</h3>
-                <p>Add items to it now.</p>
-                <a class="btn btn-solid" href="{{url('/')}}">Shop Now</a>
+                <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4 text-md-right">
+                    <button id="order_palced_btn" class="btn btn-solid" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>Continue</button>
+                </div>
             </div>
         </div>
+
+    </form>
+    @else
+    <div class="row mt-2 mb-4 mb-lg-5">
+        <div class="col-12 text-center">
+            <div class="cart_img_outer">
+                <img src="{{asset('front-assets/images/empty_cart.png')}}">
+            </div>
+            <h3>Your cart is empty!</h3>
+            <p>Add items to it now.</p>
+            <a class="btn btn-solid" href="{{url('/')}}">Shop Now</a>
+        </div>
+    </div>
     @endif
 </div>
 <div class="modal fade refferal_modal" id="refferal-modal" tabindex="-1" aria-labelledby="refferal-modalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="refferal-modalLabel">Apply Coupon Code</h5>
-        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mt-0 pt-0">
-        <div class="coupon-box">
-            <div class="row" id="promo_code_list_main_div">
-                
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="refferal-modalLabel">Apply Coupon Code</h5>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mt-0 pt-0">
+                <div class="coupon-box">
+                    <div class="row" id="promo_code_list_main_div">
+
+                    </div>
+                </div>
             </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 <div class="modal fade remove-item-modal" id="remove_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_itemLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header pb-0">
-        <h5 class="modal-title" id="remove_itemLabel">Remove Item</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" id="vendor_id" value="">
-        <input type="hidden" id="cartproduct_id" value="">
-        <h6 class="m-0">Are you sure you want to remove this item ?</h6>
-      </div>
-      <div class="modal-footer flex-nowrap justify-content-center align-items-center">
-        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-solid" id="remove_product_button">Remove</button>
-      </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="remove_itemLabel">Remove Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="vendor_id" value="">
+                <input type="hidden" id="cartproduct_id" value="">
+                <h6 class="m-0">Are you sure you want to remove this item ?</h6>
+            </div>
+            <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+                <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-solid" id="remove_product_button">Remove</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <script type="text/template" id="payment_method_template">
     <% _.each(payment_options, function(payment_option, k){%>
@@ -445,27 +456,57 @@
     <% }); %>
 </script>
 <div class="modal fade" id="proceed_to_pay_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="pay-billLabel">
-   <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-         <div class="modal-body p-0">
-            <div class="row no-gutters pr-3">
-               <div class="col-4">
-                  <div class="nav flex-column nav-pills" id="v_pills_tab" role="tablist" aria-orientation="vertical"></div>
-               </div>
-               <div class="col-8">
-                  <div class="tab-content-box pl-3">
-                     <h5 class="modal-title pt-4" id="pay-billLabel">Total Amount: <span id="total_amt"></span></h5>
-                     <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
-                     <span aria-hidden="true">×</span>
-                     </button>
-                     <div class="tab-content h-100" id="v_pills_tabContent">
-                     </div>
-                  </div>
-               </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="row no-gutters pr-3">
+                    <div class="col-4">
+                        <div class="nav flex-column nav-pills" id="v_pills_tab" role="tablist" aria-orientation="vertical"></div>
+                    </div>
+                    <div class="col-8">
+                        <div class="tab-content-box pl-3">
+                            <h5 class="modal-title pt-4" id="pay-billLabel">Total Amount: <span id="total_amt"></span></h5>
+                            <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <div class="tab-content h-100" id="v_pills_tabContent">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-         </div>
-      </div>
-   </div>
+        </div>
+    </div>
+</div>
+
+<div id="prescription_form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Prescription</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form id="save_prescription_form" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body" id="AddCardBox">
+                    <div class="row">
+                        <div class="col-sm-6" id="imageInput">
+                            <input type="hidden" id="vendor_idd" name="vendor_idd" value="" />
+                            <input type="hidden" id="product_id" name="product_id" value="" />
+                            <input data-default-file="" accept="image/*" type="file" data-plugins="dropify" name="prescriptions[]" class="dropify" multiple/>
+                            <p class="text-muted text-center mt-2 mb-0">Upload Prescription</p>
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info waves-effect waves-light submitPrescriptionForm">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">

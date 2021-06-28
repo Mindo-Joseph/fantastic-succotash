@@ -30,10 +30,10 @@
                                         <i class="mdi mdi-calendar-range"></i>
                                     </span>
                                 </div>
-                                <a href="javascript: void(0);" class="btn btn-blue btn-sm ms-2">
+                                <a href="javascript: void(0);" class="btn btn-blue ml-2">
                                     <i class="mdi mdi-autorenew"></i>
                                 </a>
-                                <a href="javascript: void(0);" class="btn btn-blue btn-sm ms-1">
+                                <a href="javascript: void(0);" class="btn btn-blue ml-2">
                                     <i class="mdi mdi-filter-variant"></i>
                                 </a>
                             </form>
@@ -76,7 +76,7 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="text-end">
-                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">127</span></h3>
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
                                         <p class="text-muted mb-1 text-truncate">Today's Sales</p>
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="text-end">
-                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0.58</span>%</h3>
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span>%</h3>
                                         <p class="text-muted mb-1 text-truncate">Conversion</p>
                                     </div>
                                 </div>
@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="text-end">
-                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">78.41</span>k</h3>
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
                                         <p class="text-muted mb-1 text-truncate">Today's Visits</p>
                                     </div>
                                 </div>
@@ -171,10 +171,10 @@
                                                         </g>
                                                         <g id="SvgjsG1312">
                                                             <g id="SvgjsG1317" class="apexcharts-series apexcharts-radial-series" seriesName="Revenue" rel="1" data:realIndex="0">
-                                                                <path id="SvgjsPath1318" d="M 109 32.498170731707305 A 76.5018292682927 76.5018292682927 0 1 1 39.66579641159804 141.33107010534962" fill="none" fill-opacity="0.85" stroke="rgba(241,85,108,0.85)" stroke-opacity="1" stroke-linecap="butt" stroke-width="12.559756097560978" stroke-dasharray="0" class="apexcharts-radialbar-area apexcharts-radialbar-slice-0" data:angle="245" data:value="68" index="0" j="0" data:pathOrig="M 109 32.498170731707305 A 76.5018292682927 76.5018292682927 0 1 1 39.66579641159804 141.33107010534962"></path>
+                                                                <path id="SvgjsPath1318" d="M 109 32.498170731707305 A 76.5018292682927 76.5018292682927 0 1 1 39.66579641159804 141.33107010534962" fill="none" fill-opacity="0.85" stroke="rgba(241,85,108,0)" stroke-opacity="1" stroke-linecap="butt" stroke-width="12.559756097560978" stroke-dasharray="0" class="apexcharts-radialbar-area apexcharts-radialbar-slice-0" data:angle="245" data:value="68" index="0" j="0" data:pathOrig="M 109 32.498170731707305 A 76.5018292682927 76.5018292682927 0 1 1 39.66579641159804 141.33107010534962"></path>
                                                             </g>
                                                             <circle id="SvgjsCircle1313" r="65.41034756097562" cx="109" cy="109" class="apexcharts-radialbar-hollow" fill="transparent"></circle>
-                                                            <g id="SvgjsG1314" class="apexcharts-datalabels-group" transform="translate(0, 0) scale(1)" style="opacity: 1;"><text id="SvgjsText1315" font-family="Helvetica, Arial, sans-serif" x="109" y="109" text-anchor="middle" dominant-baseline="auto" font-size="16px" font-weight="400" fill="#f1556c" class="apexcharts-text apexcharts-datalabel-label" style="font-family: Helvetica, Arial, sans-serif;">Revenue</text><text id="SvgjsText1316" font-family="Helvetica, Arial, sans-serif" x="109" y="141" text-anchor="middle" dominant-baseline="auto" font-size="14px" font-weight="400" fill="#373d3f" class="apexcharts-text apexcharts-datalabel-value" style="font-family: Helvetica, Arial, sans-serif;">68%</text></g>
+                                                            <g id="SvgjsG1314" class="apexcharts-datalabels-group" transform="translate(0, 0) scale(1)" style="opacity: 1;"><text id="SvgjsText1315" font-family="Helvetica, Arial, sans-serif" x="109" y="109" text-anchor="middle" dominant-baseline="auto" font-size="16px" font-weight="400" fill="#f1556c" class="apexcharts-text apexcharts-datalabel-label" style="font-family: Helvetica, Arial, sans-serif;">Revenue</text><text id="SvgjsText1316" font-family="Helvetica, Arial, sans-serif" x="109" y="141" text-anchor="middle" dominant-baseline="auto" font-size="14px" font-weight="400" fill="#373d3f" class="apexcharts-text apexcharts-datalabel-value" style="font-family: Helvetica, Arial, sans-serif;">0%</text></g>
                                                         </g>
                                                     </g>
                                                 </g>
@@ -188,22 +188,22 @@
                                 </div>
 
                                 <h5 class="text-muted mt-0">Total sales made today</h5>
-                                <h2>$178</h2>
+                                <h2>$0</h2>
 
                                 <p class="text-muted w-75 mx-auto sp-line-2">Traditional heading elements are designed to work best in the meat of your page content.</p>
 
                                 <div class="row mt-3">
                                     <div class="col-4">
                                         <p class="text-muted font-15 mb-1 text-truncate">Target</p>
-                                        <h4><i class="fe-arrow-down text-danger me-1"></i>$7.8k</h4>
+                                        <h4><i class="fe-arrow-down text-danger me-1"></i>$0</h4>
                                     </div>
                                     <div class="col-4">
                                         <p class="text-muted font-15 mb-1 text-truncate">Last week</p>
-                                        <h4><i class="fe-arrow-up text-success me-1"></i>$1.4k</h4>
+                                        <h4><i class="fe-arrow-up text-success me-1"></i>$0</h4>
                                     </div>
                                     <div class="col-4">
                                         <p class="text-muted font-15 mb-1 text-truncate">Last Month</p>
-                                        <h4><i class="fe-arrow-down text-danger me-1"></i>$15k</h4>
+                                        <h4><i class="fe-arrow-down text-danger me-1"></i>$0</h4>
                                     </div>
                                 </div>
 
@@ -233,7 +233,7 @@
 
                             <div dir="ltr" style="position: relative;">
                                 <div id="sales-analytics" class="mt-4" data-colors="#1abc9c,#4a81d4" style="min-height: 393px;">
-                                    <div id="apexchartsvgr8h7xo" class="apexcharts-canvas apexchartsvgr8h7xo apexcharts-theme-light" style="width: 973px; height: 378px;"><svg id="SvgjsSvg1322" width="973" height="378" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" class="apexcharts-svg apexcharts-zoomable" xmlns:data="ApexChartsNS" transform="translate(0, 10)" style="background: transparent;">
+                                    <div style="display:none" id="apexchartsvgr8h7xo" class="apexcharts-canvas apexchartsvgr8h7xo apexcharts-theme-light" style="width: 973px; height: 378px;"><svg id="SvgjsSvg1322" width="973" height="378" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" class="apexcharts-svg apexcharts-zoomable" xmlns:data="ApexChartsNS" transform="translate(0, 10)" style="background: transparent;">
                                             <foreignObject x="0" y="0" width="973" height="378">
                                                 <div class="apexcharts-legend apexcharts-align-center position-bottom" xmlns="http://www.w3.org/1999/xhtml" style="inset: auto 0px -2px; position: absolute; max-height: 189px;">
                                                     <div class="apexcharts-legend-series" rel="1" seriesname="Revenue" data:collapsed="false" style="margin: 2px 5px;"><span class="apexcharts-legend-marker" rel="1" data:collapsed="false" style="background: rgb(26, 188, 156) !important; color: rgb(26, 188, 156); height: 12px; width: 12px; left: 0px; top: 0px; border-width: 0px; border-color: rgb(255, 255, 255); border-radius: 12px;"></span><span class="apexcharts-legend-text" rel="1" i="0" data:default-text="Revenue" data:collapsed="false" style="color: rgb(55, 61, 63); font-size: 12px; font-weight: 400; font-family: Helvetica, Arial, sans-serif;">Revenue</span></div>
@@ -688,7 +688,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                    <tr>
+                                            <td colspan="5" class="text-center">
+                                                <h5 class="m-0 fw-normal">No data found</h5>
+                                            </td>
+                                        </tr>
+                                        <!-- <tr>
                                             <td style="width: 36px;">
                                                 <img src="../assets/images/users/user-2.jpg" alt="contact-img" title="contact-img" class="rounded-circle avatar-sm">
                                             </td>
@@ -823,7 +828,7 @@
                                                 <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-plus"></i></a>
                                                 <a href="javascript: void(0);" class="btn btn-xs btn-danger"><i class="mdi mdi-minus"></i></a>
                                             </td>
-                                        </tr>
+                                        </tr> -->
 
                                     </tbody>
                                 </table>
@@ -865,6 +870,11 @@
                                     </thead>
                                     <tbody>
                                         <tr>
+                                        <td colspan="5" class="text-center">
+                                                <h5 class="m-0 fw-normal">No data found</h5>
+                                            </td>
+                                        </tr>
+                                        <!-- <tr>
                                             <td>
                                                 <h5 class="m-0 fw-normal">Themes Market</h5>
                                             </td>
@@ -994,7 +1004,7 @@
                                             <td>
                                                 <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
                                             </td>
-                                        </tr>
+                                        </tr> -->
 
                                     </tbody>
                                 </table>
@@ -1027,6 +1037,6 @@
 <!-- Page js-->
 <!-- <script src="../assets/js/pages/dashboard-1.init.js"></script> -->
 <!-- <script src="{{asset('assets/js/pages/ecommerce-dashboard.init.js')}}"></script> -->
-<script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
+<!-- <script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script> -->
 
 @endsection

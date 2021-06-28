@@ -31,4 +31,7 @@ class Order extends Model{
 	public function orderStatusVendor(){
 	    return $this->hasMany('App\Models\VendorOrderStatus' , 'order_id', 'id'); 
 	}
+	public function prescription(){
+	    return $this->hasMany('App\Models\OrderProductPrescription' , 'order_id', 'id'); 
+	}
 }

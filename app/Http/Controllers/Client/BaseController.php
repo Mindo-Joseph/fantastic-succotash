@@ -37,7 +37,6 @@ class BaseController extends Controller
             $this->htmlData .='<ol class="dd-list">';
             foreach($tree as $node) {
                 $this->htmlData .='<li class="dd-item dd3-item" data-id="'.$node["id"].'">';
-
                 if($from == 'category'){
                     $this->htmlData .='<div class="dd-handle dd3-handle"></div>';
                 }
