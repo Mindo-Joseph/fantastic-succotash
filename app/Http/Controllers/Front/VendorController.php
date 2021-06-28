@@ -22,14 +22,14 @@ class VendorController extends FrontController
      */
     public function vendorProducts(Request $request, $domain = '', $slug = 0){
         $preferences = Session::get('preferences');
+        $vendor = Vendor::select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id')->where('slug', $slug)->where('status', 1)->firstOrFail();
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');
-                if(!in_array($vid, $vendors)){
+                if(!in_array($vendor->id, $vendors)){
                     abort(404);
                 }
-            }
-            else{
+            }else{
                 // abort(404);
             }
         }
@@ -37,7 +37,7 @@ class VendorController extends FrontController
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
-        $vendor = Vendor::select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id')->where('slug', $slug)->where('status', 1)->firstOrFail();
+        
         $brands = Product::with(['brand.translation'=> function($q) use($langId){
                     $q->select('title', 'brand_id')->where('brand_translations.language_id', $langId);
                 }])->select('brand_id')->where('vendor_id', $vendor->id)
