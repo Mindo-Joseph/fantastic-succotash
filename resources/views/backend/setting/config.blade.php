@@ -27,7 +27,7 @@
    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
       @csrf
       <div class="row">
-         <div class="col-md-6">
+         <div class="col-md-4 col-xl-6">
             <div class="row h-100">
                <div class="col-12">
                   <div class="card-box h-100">
@@ -47,8 +47,8 @@
                            <div class="row">
                               <div class="col-12 mt-3 disableHyperLocal" style="{{((isset($preference) && $preference->is_hyperlocal == '1')) ? '' : 'display:none;'}}">
                                  <div class="row">
-                                    <div class="col-md-4">
-                                       <div class="form-group mb-md-0 mb-3">
+                                    <div class="col-xl-4">
+                                       <div class="form-group mb-xl-0 mb-3">
                                           <label for="Default_location_name">Default Location</label>
                                           <div class="input-group">
                                              <input type="text" name="Default_location_name" id="Default_location_name" placeholder="Delhi, India" class="form-control" value="{{ old('Default_location_name', $preference->Default_location_name ?? '')}}">
@@ -63,8 +63,8 @@
                                           @endif
                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                       <div class="form-group mb-md-0 mb-3">
+                                    <div class="col-xl-4">
+                                       <div class="form-group mb-xl-0 mb-3">
                                           <label for="Default_latitude">Latitude</label>
                                           <input type="text" name="Default_latitude" id="Default_latitude" placeholder="24.9876755" class="form-control"
                                              value="{{ old('Default_latitude', $preference->Default_latitude ?? '')}}">
@@ -75,8 +75,8 @@
                                           @endif
                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                       <div class="form-group mb-md-0 mb-3">
+                                    <div class="col-xl-4">
+                                       <div class="form-group mb-xl-0 mb-3">
                                           <label for="Default_longitude">Longitude</label>
                                           <input type="text" name="Default_longitude" id="Default_longitude" placeholder="11.9871371723" class="form-control"
                                              value="{{ old('Default_longitude', $preference->Default_longitude ?? '')}}">
@@ -96,7 +96,7 @@
                </div>
             </div>
          </div>
-         <div class="col-md-3">
+         <div class="col-md-4 col-xl-3">
             <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
                   <h4 class="header-title text-uppercase mb-0">Last Mile Delivery</h4>
@@ -146,7 +146,7 @@
                </div>
             </div>
          </div>
-         <div class="col-md-3">
+         <div class="col-md-4">
             <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
                   <h4 class="header-title text-uppercase mb-0">Pickup & Delivery</h4>
@@ -190,7 +190,7 @@
       <input type="hidden" name="social_login" id="social_login" value="1">
       @csrf
       <div class="row">
-         <div class="col-lg-3 col-md-6 mb-lg-0 mb-md-3">
+         <div class="col-xl-3 col-lg-6 mb-xl-0 mb-3">
             <div class="card-box h-100">
                <div class="row">
                   <div class="col-12">
@@ -244,7 +244,7 @@
                </div>
             </div>
          </div>
-         <div class="col-lg-3 col-md-6 mb-lg-0 mb-md-3">
+         <div class="col-xl-3 col-lg-6 mb-xl-0 mb-3">
             <div class="card-box h-100">
                <div class="row">
                   <div class="col-12">
@@ -299,7 +299,7 @@
                </div>
             </div>
          </div>
-         <div class="col-lg-3 col-md-6 mb-lg-0 mb-md-3">
+         <div class="col-xl-3 col-lg-6 mb-xl-0 mb-3">
             <div class="card-box h-100">
                <div class="row">
                   <div class="col-12">
@@ -353,7 +353,7 @@
                </div>
             </div>
          </div>
-         <div class="col-lg-3 col-md-6 mb-lg-0 mb-md-3">
+         <div class="col-xl-3 col-lg-6 mb-xl-0 mb-3">
             <div class="card-box h-100">
                <div class="row">
                   <div class="col-12">
@@ -427,7 +427,7 @@
                <p class="sub-header">
                   View and update your Map type and it's API key.
                </p>
-               <div class="row mb-2">
+               <div class="row">
                   <div class="col-12">
                      <div class="form-group mb-3">
                         <label for="currency">MAP PROVIDER</label>
@@ -537,7 +537,7 @@
             <div class="card-box h-100 h-100">
                <h4 class="header-title text-uppercase">Mail Configuration</h4>
                <p class="sub-header"> View and update your SMTP credentials.</p>
-               <div class="row mb-2">
+               <div class="row">
                   <div class="col-md-6">
                      <div class="form-group mb-3">
                         <label for="mail_type">Mail Type</label>
@@ -659,22 +659,22 @@
       <input type="hidden" name="verify_config" id="verify_config" value="1">
       @csrf
       <div class="row">
-         <div class="col-md-4">
+         <div class="col-md-6 col-lx-4">
             <div class="card-box">
                <div class="row align-items-center">
-                  <div class="col-md-4">
+                  <div class="col-sm-5">
                      <div class="form-group mb-0 switchery-demo">
                         <label for="verify_email" class="mr-3 mb-0">Verify Email</label>
                         <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1'))  checked='checked' @endif>
                      </div>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-sm-5">
                      <div class="form-group mb-0">
                         <label for="verify_phone" class="mr-3 mb-0">Verify Phone</label>
                         <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1'))  checked='checked' @endif>
                      </div>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-sm-2">
                      <div class="form-group mb-0 text-md-right">
                         <button class="btn btn-info d-block ml-auto" type="submit"> Save </button>
                      </div>
@@ -682,7 +682,7 @@
                </div>
             </div>
          </div>
-         <div class="col-md-4">
+         <div class="col-md-6 col-lx-4">
             <div class="card-box">
                <div class="row align-items-center">
                   <div class="col-md-8">
@@ -699,7 +699,7 @@
                </div>
             </div>
          </div>
-         <div class="col-md-4">
+         <div class="col-md-6 col-lx-4">
             <div class="card-box">
                <div class="row align-items-center">
                   <div class="col-md-8">

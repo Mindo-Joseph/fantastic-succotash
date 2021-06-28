@@ -16,8 +16,7 @@ class Vendor extends Model{
     }
 
     
-    public function getLogoAttribute($value)
-    {
+    public function getLogoAttribute($value){
       $values = array();
       $img = 'default/default_image.png';
       if(!empty($value)){
@@ -29,8 +28,7 @@ class Vendor extends Model{
       return $values;
     }
 
-    public function getBannerAttribute($value)
-    {
+    public function getBannerAttribute($value){
       $values = array();
       $img = 'default/default_image.png';
       if(!empty($value)){
@@ -47,7 +45,7 @@ class Vendor extends Model{
     }
 
     public function orders(){
-       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id'); 
+       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id','payable_amount','delivery_fee'); 
     }
 
     public function activeOrders(){

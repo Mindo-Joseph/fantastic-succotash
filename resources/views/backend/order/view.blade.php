@@ -13,8 +13,8 @@ $timezone = Auth::user()->timezone;
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4">
-                <div class="card">
+            <div class="col-lg-4 mb-3">
+                <div class="card mb-0 h-100">
                     <div class="card-body">
                         <h4 class="header-title mb-3">Track Order</h4>
                         <div class="row">
@@ -100,8 +100,8 @@ $timezone = Auth::user()->timezone;
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8">
-                <div class="card">
+            <div class="col-lg-8 mb-3">
+                <div class="card mb-0 h-100">
                     <div class="card-body">
                         <h4 class="header-title mb-3">Items from Order #{{$order->order_number}}</h4>
                         <div class="table-responsive">
@@ -171,8 +171,8 @@ $timezone = Auth::user()->timezone;
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4">
-                <div class="card">
+            <div class="col-lg-4 mb-3">
+                <div class="card mb-0 h-100">
                     <div class="card-body">
                         <h4 class="header-title mb-3">Shipping Information</h4>
                         <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
@@ -181,8 +181,8 @@ $timezone = Auth::user()->timezone;
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8">
-                <div class="card">
+            <div class="col-lg-8 mb-3">
+                <div class="card mb-0 h-100">
                     <div class="card-body">
                         <h4 class="header-title mb-3">Delivery Info</h4>
                         <div class="text-center">

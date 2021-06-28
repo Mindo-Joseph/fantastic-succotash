@@ -20,51 +20,81 @@
                 <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="" />
                 <p class="text-muted text-center mt-2 mb-0">Upload Category image</p>
             </div>
-            <div class="col-sm-3">
-                <div class="form-group" id="slugInput">
-                    {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
-                    {!! Form::text('slug', null, ['class'=>'form-control', 'required' => 'required']) !!}
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                    {!! Form::hidden('login_user_type', session('login_user_type'), ['class'=>'form-control']) !!}
-                    {!! Form::hidden('login_user_id', auth()->user()->id, ['class'=>'form-control']) !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
-                    <div>
-                        <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch_menu" data-color="#43bee1" checked='checked'>
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-md-6">
+                         <div class="form-group" id="slugInput">
+                            {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
+                            {!! Form::text('slug', null, ['class'=>'form-control', 'required' => 'required']) !!}
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                            {!! Form::hidden('login_user_type', session('login_user_type'), ['class'=>'form-control']) !!}
+                            {!! Form::hidden('login_user_id', auth()->user()->id, ['class'=>'form-control']) !!}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Select Parent Category',['class' => 'control-label']) !!}
+                            <select class="selectize-select form-control parent-category" id="cateSelectBox" name="parent_cate">
+                                <option value="">Select</option>
+                                @foreach($parCategory as $pc)
+                                    <option value="{{$pc->id}}">{{ucfirst($pc->slug)}}</option>
+                                @endforeach
+                            </select>
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="form-group">
-                    {!! Form::label('title', 'Select Parent Category',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control parent-category" id="cateSelectBox" name="parent_cate">
-                        <option value="">Select</option>
-                        @foreach($parCategory as $pc)
-                            <option value="{{$pc->id}}">{{$pc->slug}}</option>
-                        @endforeach
-                    </select>
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('title', 'Wishlist',['class' => 'control-label']) !!} 
-                    <div>
-                        <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control wishlist_switch" data-color="#43bee1" checked='checked'>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
+                            <div>
+                                <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control switch_menu" data-color="#43bee1" checked='checked'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Wishlist',['class' => 'control-label']) !!} 
+                            <div>
+                                <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control wishlist_switch" data-color="#43bee1" checked='checked'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" id="addProductHide">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
+                            <div>
+                                <input type="checkbox" data-plugin="switchery" name="can_add_products" class="form-control add_product_switch" data-color="#43bee1" checked='checked'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="addDispatcherHide" style="display: none;">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
+                            {!! Form::hidden('tags', null, ['class'=>'form-control myTag1']) !!}
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row mt-3 add-category">
             @foreach($typeArray as $k => $type)
-               <div class="col-sm-4 col-md-3 col-xl-2">
-                  <div class="card" id="tooltip-container">
-                     <input class="form-check-input type-select" for="add" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($k == 0) checked @endif value="{{$type->id}}">
-                     <label for="type_id_{{$type->id}}" class="card-body">
-                        <div class="form-check form-check-info">
+            <div class="col">
+                  <div class="card p-0 text-center" id="tooltip-container">
+                     <input class="form-check-input type-select" for="add" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
+                     <label for="type_id_{{$type->id}}" class="card-body p-0">
+                        <div class="category-img">
+                            <img src="https://www.w3schools.com/tags/img_girl.jpg" alt="">
+                        </div>
+                        <div class="form-check form-check-info pl-0">
                             <span for="customradio5">{{$type->title}}</span>
                         </div>
                      </label>
@@ -73,23 +103,6 @@
            @endforeach
         </div>
         <div class="row">
-            <div class="col-md-6 text-center" id="addProductHide">
-                <div class="form-group">
-                    {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
-                    <div>
-                        <input type="checkbox" data-plugin="switchery" name="can_add_products" class="form-control add_product_switch" data-color="#43bee1" checked='checked'>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6" id="addDispatcherHide" style="display: none;">
-                <div class="form-group">
-                    {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
-                    {!! Form::hidden('tags', null, ['class'=>'form-control myTag1']) !!}
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                </div>
-            </div>
             <div class="col-md-3" style="display:none;" id="template_type_main_div">
                 <div class="form-group">
                     {!! Form::label('title', 'Template Type',['class' => 'control-label']) !!}
@@ -118,9 +131,7 @@
                     </span>
                 </div>
             </div>
-        </div>
-        <div class="row" id="warning_page_design_main_div">
-            <div class="col-12 mb-2">
+            <div class="col-md-6" id="warning_page_design_main_div" style="display:none;">
                 {!! Form::label('title', 'Warning Page Design',['class' => 'control-label']) !!}
                 {!! Form::textarea('warning_page_design', '', ['class'=>'form-control', 'id' => 'warning_page_design', 'placeholder' => 'Description', 'rows' => '5', 'name' => 'warning_page_design']) !!}
             </div>

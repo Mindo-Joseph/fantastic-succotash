@@ -18,14 +18,13 @@ class ProductController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $domain = '', $sku)
+    public function index(Request $request, $domain = '', $url_slug)
     {
         $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-        $product = Product::select('vendor_id')->where('sku', $sku)->firstOrFail();
-
+        $product = Product::select('vendor_id')->where('url_slug', $url_slug)->firstOrFail();
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if($product){
                 $productVendorId = $product->vendor_id;
@@ -75,7 +74,7 @@ class ProductController extends FrontController
                 $q2->where('apt.language_id', $langId);
             },
         ])->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory')
-            ->where('sku', $sku)
+            ->where('url_slug', $url_slug)
             ->where('is_live', 1)
             ->firstOrFail();
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();

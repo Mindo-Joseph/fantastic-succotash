@@ -115,8 +115,8 @@
                                         @endif
                                         {{ $user->phone_number }} 
                                     </td>
-                                    <td>{{$user->phone_token}}</td>
                                     <td>{{$user->email_token}}</td>
+                                    <td>{{$user->phone_token}}</td>
                                     <td>{{$user->orders_count}}</td>
                                     <td>{{$user->active_orders_count}}</td>
                                     <td>

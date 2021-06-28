@@ -32,6 +32,10 @@
                         keyboard: false
                     });
                     $('#edit-category-form #editCategoryBox').html(data.html);
+                    setTimeout(function(){ 
+                        $('#cateSelectBox').trigger('change');
+                        $('#warningPageSelectBox').trigger('change');
+                    }, 1000);
                     element1 = document.getElementsByClassName('edit-switch_menu');
                     element2 = document.getElementsByClassName('edit-wishlist_switch');
                     element3 = document.getElementsByClassName('edit-add_product_switch');
@@ -41,7 +45,6 @@
                     makeTag();
                     summernoteInit();
                 }else{
-
                     $('#add-category-form').modal({
                         backdrop: 'static',
                         keyboard: false
@@ -77,14 +80,22 @@
     $(document).on('change', '.type-select', function() { 
         var id =  $(this).val();
         var for1 = $(this).attr('for');
+        $('#warning_page_main_div').hide();
+        $('#template_type_main_div').hide();
+        $('#warning_page_design_main_div').hide();
         if(id == '1'){
-            $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
             $("#" + for1 + "-category-form #" + for1 + "ProductHide").show();
+            $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
         } else if(id == '2') {
             $("#" + for1 + "-category-form #" + for1 + "ProductHide").hide();
             $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").show();
         } else if(id == '3') {
             $("#" + for1 + "-category-form #" + for1 + "ProductHide").show();
+            $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
+        }else if(id == '7') {
+            $('#warning_page_main_div').show();
+            $('#template_type_main_div').show();
+            $('#warning_page_design_main_div').show();
             $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
         } else {
             $("#" + for1 + "-category-form #" + for1 + "ProductHide").hide();
@@ -92,17 +103,8 @@
         }
     });
     $(document).on('change', '#warningPageSelectBox', function() {
-        $('#warning_page_design_main_div').show();
-    });
-    $(document).on('change', '.parent-category', function() {
-        let text = $.trim($('#cateSelectBox option:selected').text().toLowerCase());
-        if(text == 'dispatcher'){
-            $('#warning_page_main_div').show();
-            $('#template_type_main_div').show();
-        }else{
-            $('#warning_page_main_div').hide();
-            $('#template_type_main_div').hide();
-            $('#warning_page_design_main_div').hide();
+        if($('input[name="type_id"]:checked').val() == '7'){
+            $('#warning_page_design_main_div').show();
         }
     });
     $(document).on('click', '.editCategorySubmit', function(e) { 

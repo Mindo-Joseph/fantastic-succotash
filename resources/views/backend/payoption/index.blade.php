@@ -12,11 +12,11 @@
 
     <!-- start page title -->
     <div class="row">
-        <div class="col-12">
+        <!-- <div class="col-12">
             <div class="page-title-box">
                 <h4 class="page-title">Payment</h4>
             </div>
-        </div>
+        </div> -->
       <div class="col-12">
          <div class="text-sm-left">
             @if (\Session::has('success'))
@@ -31,11 +31,15 @@
     <form method="POST" id="payment_option_form" action="{{route('payoption.updateAll')}}">
         @csrf
         @method('POST')
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-sm-8">
-                <div class="text-sm-left"></div>
+                <div class="text-sm-left">
+                    <div class="page-title-box">
+                        <h4 class="page-title">Payment</h4>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-4 text-right mb-2">
+            <div class="col-sm-4 text-right">
                 <button class="btn btn-info waves-effect waves-light save_btn" type="submit"> Save</button>
             </div>
         </div>
@@ -54,7 +58,7 @@
                 $api_key = (isset($creds->api_key)) ? $creds->api_key : '';
                 ?>
 
-                <div class="card-box">
+                <div class="card-box h-100">
                     <div class="d-flex align-items-center justify-content-between mb-2">
                         <h4 class="header-title text-uppercase mb-0">{{$opt->title}}</h4>
                     </div>

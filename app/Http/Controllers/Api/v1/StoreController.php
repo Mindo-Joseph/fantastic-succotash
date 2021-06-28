@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption};
+use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency};
 
 class StoreController extends Controller{
     use ApiResponser;
+
     public function getMyStoreProductList(Request $request){
     	try {
 			$category_list = [];
@@ -17,6 +18,7 @@ class StoreController extends Controller{
     		$langId = $user->language;
     		$is_selected_vendor_id = 0;
             $paginate = $request->has('limit') ? $request->limit : 12;
+            $client_currency_detail = ClientCurrency::where('currency_id', $user->currency)->first();
             $selected_vendor_id = $request->has('selected_vendor_id') ? $request->selected_vendor_id : '';
             $selected_category_id = $request->has('selected_category_id') ? $request->selected_category_id : '';
 			$user_vendor_ids = UserVendor::where('user_id', $user->id)->pluck('vendor_id');
@@ -51,6 +53,11 @@ class StoreController extends Controller{
                             $q->groupBy('product_id');
                     	},
                     ])->where('category_id', $is_selected_category_id)->where('is_live', 1)->paginate($paginate);
+			foreach ($products as $product) {
+                foreach ($product->variant as $k => $v) {
+                    $product->variant[$k]->multiplier = $client_currency_detail->doller_compare;
+                }
+            }
 			$data = ['vendor_list' => $vendor_list,'category_list' => $category_list,'products'=> $products];
             return $this->successResponse($data, '', 200);
     	} catch (Exception $e) {

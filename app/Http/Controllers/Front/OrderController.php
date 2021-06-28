@@ -24,7 +24,8 @@ class OrderController extends FrontController{
     {
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-       return view('frontend/account/orders')->with(['navCategories' => $navCategories]);
+        $orders = Order::with(['products', 'user', 'address', 'orderStatusVendor'])->where('user_id', Auth::user()->id)->get();
+       return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'orders'=>$orders]);
     }
     
     public function getOrderSuccessPage(Request $request){

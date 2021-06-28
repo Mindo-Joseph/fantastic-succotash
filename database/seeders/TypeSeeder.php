@@ -10,8 +10,7 @@ class TypeSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
+    public function run(){
         $types = array(
             ['id' => 1,
                 'title' => 'Product',
@@ -30,6 +29,10 @@ class TypeSeeder extends Seeder
             ],
             ['id' => 6,
                 'title' => 'Subcategory',
+            ],
+            [
+                'id' => 7,
+                'title' => 'Dispatcher Parent',
             ],
         );
         foreach ($types as $type) {
