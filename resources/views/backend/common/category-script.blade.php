@@ -33,8 +33,9 @@
                     });
                     $('#edit-category-form #editCategoryBox').html(data.html);
                     setTimeout(function(){ 
-                        $('#cateSelectBox').trigger('change');
-                        $('#warningPageSelectBox').trigger('change');
+                        $('input[name="type_id"]').trigger('change');
+                        $('input[name="template_type_id"]').trigger('change');
+                        $('input[name="warning_page_id"]').trigger('change');
                     }, 1000);
                     element1 = document.getElementsByClassName('edit-switch_menu');
                     element2 = document.getElementsByClassName('edit-wishlist_switch');

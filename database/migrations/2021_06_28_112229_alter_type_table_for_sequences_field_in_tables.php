@@ -15,7 +15,7 @@ class AlterTypeTableForSequencesFieldInTables extends Migration
     {
         Schema::table('types', function (Blueprint $table) {
             $table->longText('description')->after('title')->nullable();
-            $table->tinyInteger('warning_page_id')->after('description')->nullable();
+            $table->tinyInteger('sequence')->after('description')->nullable();
         });
     }
 
