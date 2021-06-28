@@ -106,19 +106,11 @@ class CategoryController extends FrontController
                             ->where('category_id', $category->id);
                         })
                     ->groupBy('product_variant_sets.variant_type_id')->get();
-
-        //dd($variantSets->toArray());
-
         $listData = $this->listData($langId, $category->id, $category->type->redirect_to);
-
-        //dd($listData->toArray());
         $category->type->redirect_to;
         $page = ($category->type->redirect_to == 'vendor' || $category->type->redirect_to == 'Vendor') ? 'vendor' : 'product';
-
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-
-        //dd($category->toArray());
         return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
     }
 
@@ -138,8 +130,6 @@ class CategoryController extends FrontController
             $vendorData = $vendorData->where('vendors.status', '!=', $this->field_status)->paginate($pagiNate);
 
             return $vendorData;
-
-        //}elseif($type == 'product' || $type == 'Product'){
             }else{
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
             $vendors = array();
@@ -149,7 +139,7 @@ class CategoryController extends FrontController
             $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
                     ->with(['media.image',
                         'translation' => function($q) use($langId){
-                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description','url_slug')->where('language_id', $langId);
                         },
                         'variant' => function($q) use($langId){
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
