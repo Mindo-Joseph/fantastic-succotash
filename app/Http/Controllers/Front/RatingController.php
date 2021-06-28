@@ -22,44 +22,43 @@ class RatingController extends FrontController{
 
      */
     public function updateProductRating(OrderProductRatingRequest $request){
-         print_r($request->all());
-         die();
+     
         try {
             $user = Auth::user();
             $order_deliver = 0;
             $order_details = OrderProduct::where('id',$request->order_vendor_product_id)->whereHas('order',function($q){$q->where('user_id',Auth::id());})->first();
             if($order_details)
-            $order_deliver = VendorOrderStatus::where(['order_id' => $request->order_id,'vendor_id' => $order_details->vendor_id,'order_status_option_id' => 5])->count();
+            $order_deliver = VendorOrderStatus::where(['order_id' => $order_details->order_id,'vendor_id' => $order_details->vendor_id,'order_status_option_id' => 5])->count();
             
             if($order_deliver > 0){
                 $ratings = OrderProductRating::updateOrCreate(['order_vendor_product_id' => $request->order_vendor_product_id,
-                'order_id' => $request->order_id,
-                'product_id' => $request->product_id,
+                'order_id' => $order_details->order_id,
+                'product_id' => $order_details->product_id,
                 'user_id' => Auth::id()],['rating' => $request->rating,'review' => $request->review??null]);
 
-                if ($request->has('files')) {
-                    $files = $request->file('files');
-                    foreach($files as $file) {
-                            $file = time().'_'.$file->getClientOriginalName();
-                            Storage::disk('s3')->put('review', $file, 'public');
-                            $img = new OrderProductRatingFile();
-                            $img->order_product_rating_id = $ratings->id;
-                            $img->file = $file;
-                            $img->save();
-                        }
+               if ($image = $request->file('images')) {
+                    foreach ($image as $files) {
+                    $file = time().'_'.$files->getClientOriginalName();
+                    Storage::disk('s3')->put('review', $file, 'public');
+                    $img = new OrderProductRatingFile();
+                    $img->order_product_rating_id = $ratings->id;
+                    $img->file = $file;
+                    $img->save();
+                   
+                    }
                 }
-
-                if(isset($request->remove_files) && is_array($request->remove_files))    # send index array of deleted images 
+               
+              if(isset($request->remove_files) && is_array($request->remove_files))    # send index array of deleted images 
                 $removefiles = OrderProductRatingFile::where('order_product_rating_id',$ratings->id)->whereIn('id',$request->remove_files)->delete();
        
             }
             if(isset($ratings)) {
                 return $this->successResponse($ratings,'Rating Submitted.');
             }
-            return $this->errorResponse('Invalid order', 404);
+            return $this->errorResponse('Invalid order', 200);
             
         } catch (Exception $e) {
-            return $this->errorResponse($e->getMessage(), $e->getCode());
+            return $this->errorResponse($e->getMessage(), 400);
         }
     }
 

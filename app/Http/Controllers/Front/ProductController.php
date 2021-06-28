@@ -94,7 +94,7 @@ class ProductController extends FrontController
         $order_deliver = 0;
         $already_buy = OrderProduct::where('product_id',$product->id)->whereHas('order',function($q){$q->where('user_id',Auth::id());})->first();
         if($already_buy)
-        $order_deliver = VendorOrderStatus::where(['order_id' => $request->order_id,'vendor_id' => $already_buy->vendor_id,'order_status_option_id' => 5])->count();
+        $order_deliver = VendorOrderStatus::where(['order_id' => $already_buy->order_id,'vendor_id' => $already_buy->vendor_id,'order_status_option_id' => 5])->count();
         return view('frontend.product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'order_deliver' => $order_deliver]);
     }
 

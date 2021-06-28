@@ -7,6 +7,7 @@
         padding-top: 20px;
         padding-bottom: 20px;
     }
+    
 </style>
 
 @endsection
@@ -325,8 +326,9 @@
                                     <div class="tab-pane fade" id="top-review" role="tabpanel"
                                         aria-labelledby="review-top-tab">
                                        
-                                <form id="file-upload-form" class="theme-form" action="{{ route('update.order.rating')}}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
-                                                @csrf
+                                <form id="review-upload-form" class="theme-form" action="javascript:void(0)" method="post" enctype="multipart/form-data">
+                                   @csrf
+                                   <input type="hidden" name="order_vendor_product_id" value="143">
                                             <div class="rating-form">
                                                 <fieldset class="form-group">
                                                     <legend class="form-legend">Rating:</legend>
@@ -393,15 +395,13 @@
                                                         <label for="input-file">
                                                             <span class="plus_icon"><i class="fa fa-plus" aria-hidden="true"></i></span>
                                                         </label>
-                                                        <input id="input-file" type="file" name="files" accept="image/*"  multiple >
+                                                        <input id="input-file" type="file" name="images[]" accept="image/*"  multiple >
                                                     </div>
                                                 </div>
 
                                                 <div class="col-10">
-                                                    <span class="row" id="thumb-output">
-                                                        
-                                                    </span>
-                                                </div>
+                                                    <span class="row show-multiple-image-preview" id="thumb-output"></span>
+                                                </div> 
                                                 
                                             </div>
 
@@ -435,10 +435,12 @@
                                                         placeholder="Wrire Your Testimonial Here"
                                                         id="exampleFormControlTextarea1" rows="8"></textarea>
                                                 </div>
+                                                <span class="text-danger" id="error-msg"></span>
+                                                <span class="text-success" id="success-msg"></span>
                                                 <div class="col-md-12">
-                                                    <button class="btn btn-solid" type="submit">Submit YOur
-                                                        Review</button>
+                                                    <button class="btn btn-solid buttonload" type="submit" id="review_form_button">Submit Your Review</button>
                                                 </div>
+                                                
                                             </div>
                                         </form>
                                     </div>
@@ -643,34 +645,70 @@
 </script>
 
 <!-----  rating product if delivered -->
-<script>
-  
- $(document).ready(function(){
-  $('#input-file').on('change', function(){ //on file input change
-     if (window.File && window.FileReader && window.FileList && window.Blob) //check File API supported browser
-     {
-          
-         var data = $(this)[0].files; //this file data
-          
-         $.each(data, function(index, file){ //loop though each file
-             if(/(\.|\/)(gif|jpe?g|png)$/i.test(file.type)){ //check supported file type
-                 var fRead = new FileReader(); //new filereader
-                 fRead.onload = (function(file){ //trigger function on successful read
-                 return function(e) {
-                     var img = $('<img/>').addClass('col-6 col-md-3 col-lg-2 update_pic').attr('src', e.target.result); //create image element 
-                     $('#thumb-output').append(img); //append image to output element
-                 };
-                 })(file);
-                 fRead.readAsDataURL(file); //URL representing the file's data.
-             }
-         });
-          
-     }else{
-         alert("Your browser doesn't support File API!"); //if File API is absent
-     }
-  });
- });
-  
- </script>
+
+<script type="text/javascript">
+$(document).ready(function (e) {
+$.ajaxSetup({
+headers: {
+'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+}
+});
+$(function() {
+// Multiple images preview with JavaScript
+var ShowMultipleImagePreview = function(input, imgPreviewPlaceholder) {
+if (input.files) {
+var filesAmount = input.files.length;
+for (i = 0; i < filesAmount; i++) {
+var reader = new FileReader();
+reader.onload = function(event) {
+$($.parseHTML('<img>')).addClass('col-6 col-md-3 col-lg-2 update_pic').attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
+}
+reader.readAsDataURL(input.files[i]);
+}
+}
+};
+$('#input-file').on('change', function() {
+ShowMultipleImagePreview(this, 'span.show-multiple-image-preview');
+});
+});    
+$('#review-upload-form').submit(function(e) {
+e.preventDefault();
+
+var formData = new FormData(this);
+let TotalImages = $('#input-file')[0].files.length; //Total Images
+let images = $('#input-file')[0];
+for (let i = 0; i < TotalImages; i++) {
+formData.append('images' + i, images.files[i]);
+}
+formData.append('TotalImages', TotalImages);
+$.ajax({
+type:'POST',
+url: "{{ route('update.order.rating')}}",
+data: formData,
+cache:false,
+contentType: false,
+processData: false,
+beforeSend: function () {
+    $("#review_form_button").html('<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop('disabled', true);
+            },
+success: (data) => {
+if(data.status == 'Success')
+    {
+    //this.reset();
+   // $('#success-msg').text(data.message);
+    $("#review_form_button").html('Submitted');
+    }else{
+        $('#error-msg').text(data.message);
+        $("#review_form_button").html('Submitted').prop('disabled', false);
+    }
+},
+error: function(data){
+    $('#error-msg').text(data.message);
+    $("#review_form_button").html('Submit Your Review').prop('disabled', false);
+}
+});
+});
+});
+</script>
 
 @endsection
