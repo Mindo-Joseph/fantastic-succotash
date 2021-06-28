@@ -19,7 +19,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="col-8">
                         <div class="row align-items-center no-gutters" id="location_search_wrapper">
                             @if( (Session::get('preferences')))
-                            @if(Session::get('preferences')->is_hyperlocal == 1)
+                            @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
                                 <div class="col-md-4 col">
                                     <div class="d-flex align-items-center justify-content-start pl-2 dropdown-toggle" href="#edit-address" data-toggle="modal">
                                         <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
@@ -229,8 +229,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <!-- <div class="search_warpper">
         <div class="container">
             <div class="row no-gutters" id="location_search_wrapper">
-                @if( (Session::get('preferences')))
-                @if(Session::get('preferences')->is_hyperlocal == 1)
                     <div class="col-lg-3 col-md-4 col">
                         <div class="d-flex align-items-center justify-content-start px-3 dropdown-toggle" href="#edit-address" data-toggle="modal">
                             <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
@@ -248,15 +246,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i></button>
                         </form>
                     </div>
-                @else
                     <div class="col-lg-12 col-md-12 col">
                         <form class="search_form d-flex align-items-center justify-content-between" action="">
                             <input class="form-control border-0" type="text" placeholder="Search">
                             <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i></button>
                         </form>
                     </div>
-                @endif
-                @endif
             </div>
         </div>
     </div> -->

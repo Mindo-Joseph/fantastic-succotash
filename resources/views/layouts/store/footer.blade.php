@@ -44,7 +44,7 @@
     @endif
 
     @if( Session::has('preferences') )
-        @if( Session::get('preferences')->is_hyperlocal == 1 ) 
+        @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) ) 
             is_hyperlocal = 1;
         @endif;
     @endif;
