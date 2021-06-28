@@ -10,6 +10,7 @@
         </script>';
     }
 ?>
+
 <script src="{{asset('assets/libs/selectize/selectize.min.js')}}"></script>
 <script src="{{asset('assets/libs/mohithg-switchery/mohithg-switchery.min.js')}}"></script>
 <script src="{{asset('assets/libs/multiselect/multiselect.min.js')}}"></script>
