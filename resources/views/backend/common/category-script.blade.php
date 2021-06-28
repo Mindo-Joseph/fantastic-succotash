@@ -95,13 +95,15 @@
         }else if(id == '7') {
             $('#warning_page_main_div').show();
             $('#template_type_main_div').show();
+            $('#warning_page_design_main_div').show();
+            $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
         } else {
             $("#" + for1 + "-category-form #" + for1 + "ProductHide").hide();
             $("#" + for1 + "-category-form #" + for1 + "DispatcherHide").hide();
         }
     });
     $(document).on('change', '#warningPageSelectBox', function() {
-        if($("#warningPageSelectBox :selected").val() == '7'){
+        if($('input[name="type_id"]:checked').val() == '7'){
             $('#warning_page_design_main_div').show();
         }
     });

@@ -39,7 +39,7 @@
                             <select class="selectize-select1 form-control parent-category" id="cateSelectBox" name="parent_cate">
                                 <option value="">Select</option>
                                 @foreach($parCategory as $pc)
-                                    <option value="{{$pc->id}}" {{ ($pc->id == $category->parent_id) ? 'selected' : '' }} > {{$pc->slug}}</option>
+                                    <option value="{{$pc->id}}" {{ ($pc->id == $category->parent_id) ? 'selected' : '' }} > {{ucfirst($pc->slug)}}</option>
                                 @endforeach
                             </select>
                             <span class="invalid-feedback" role="alert">
@@ -49,7 +49,7 @@
                     </div>
                 </div> 
                 <div class="row">
-                    <div class="col-md-4">               
+                    <div class="col-md-3">               
                         <div class="form-group">
                             {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!} 
                             <div>
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4" style="{{($category->type_id != 1) ? 'display:none;' : ''}}" id="editProductHide">
+                    <div class="col-md-3" style="{{($category->type_id != 1) ? 'display:none;' : ''}}" id="editProductHide">
                         <div class="form-group">
                             {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!} 
                             <div>
@@ -85,10 +85,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6" style="{{($category->type_id != 2) ? 'display:none;' : ''}}" id="editDispatcherHide">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
+                            {!! Form::hidden('tags', implode(',', $tagList), ['class'=>'form-control myTag1']) !!}
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div> 
-        
         <div class="row mt-3 edit-category">
             @foreach($typeArray as $type)
                <div class="col">
@@ -108,15 +116,6 @@
         </div>
         <input type="hidden" id="cateId" url="{{route('category.update', $category->id)}}">
         <div class="row">
-            <div class="col-md-3" style="{{($category->type_id != 2) ? 'display:none;' : ''}}" id="editDispatcherHide">
-                <div class="form-group">
-                    {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
-                    {!! Form::hidden('tags', implode(',', $tagList), ['class'=>'form-control myTag1']) !!}
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                </div>
-            </div>
             <div class="col-md-3" id="template_type_main_div" style="display:none;">
                 <div class="form-group">
                     {!! Form::label('title', 'Template Type',['class' => 'control-label']) !!}
@@ -139,9 +138,7 @@
                     </select>
                 </div>
             </div>
-        </div>
-        <div class="row" id="warning_page_design_main_div" style="display:none;">
-            <div class="col-12 mb-2">
+            <div class="col-md-6" id="warning_page_design_main_div" style="display:none;">
                 {!! Form::label('title', 'Warning Page Design',['class' => 'control-label']) !!}
                 {!! Form::textarea('warning_page_design', '', ['class'=>'form-control', 'id' => 'warning_page_design', 'placeholder' => 'Description', 'rows' => '5', 'name' => 'warning_page_design']) !!}
             </div>
