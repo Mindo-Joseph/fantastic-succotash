@@ -93,32 +93,32 @@
                             </div> -->
                             <div class="row">
                                 @foreach($orders as $key => $order)
-                                <div class="col-12">        
+                                <div class="col-12">
+                                    <div class="row no-gutters order_head">
+                                        <div class="col-md-3"><h4>Order Number</h4></div>
+                                        <div class="col-md-3"><h4>Date & Time</h4></div>
+                                        <div class="col-md-3"><h4>Customer Name</h4></div>
+                                        <div class="col-md-3"><h4>Address</h4></div>
+                                    </div>
+                                    <div class="row no-gutters order_data">
+                                        <div class="col-md-3">#{{$order->order_number}}</div>
+                                        <div class="col-md-3">{{$order->created_at->format('D M d, Y h:m A')}}</div>
+                                        <div class="col-md-3">
+                                            <a href="#">{{$order->user->name}}</a>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <span class="ellipsis" data-toggle="tooltip" data-placement="top" title="">
+                                                @if($order->address)
+                                                    {{$order->address->address}}, {{$order->address->street}}, {{$order->address->city}}, {{$order->address->state}}, {{$order->address->country}} {{$order->address->pincode}}
+                                                @else
+                                                NA
+                                                @endif
+                                            </span>
+                                        </div>                    
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-9 mb-3">
                                             <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0 h-100">
-                                                <div class="row no-gutters order_head">
-                                                    <div class="col-md-3"><h4>Order Number</h4></div>
-                                                    <div class="col-md-3"><h4>Date & Time</h4></div>
-                                                    <div class="col-md-3"><h4>Customer Name</h4></div>
-                                                    <div class="col-md-3"><h4>Address</h4></div>
-                                                </div>
-                                                <div class="row no-gutters order_data mb-4">
-                                                    <div class="col-md-3">#{{$order->order_number}}</div>
-                                                    <div class="col-md-3">{{$order->created_at->format('D M d, Y h:m A')}}</div>
-                                                    <div class="col-md-3">
-                                                        <a href="#">{{$order->user->name}}</a>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <p class="ellipsis" data-toggle="tooltip" data-placement="top" title="">
-                                                            @if($order->address)
-                                                                {{$order->address->address}}, {{$order->address->street}}, {{$order->address->city}}, {{$order->address->state}}, {{$order->address->country}} {{$order->address->pincode}}
-                                                            @else
-                                                            NA
-                                                            @endif
-                                                        </p>
-                                                    </div>                    
-                                                </div>
                                                 <span class="left_arrow pulse"></span>
                                                 <div class="row">
                                                     <div class="col-5 col-sm-3">
@@ -147,9 +147,9 @@
                                                         <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
                                                             @foreach($order->products as $key => $product)
                                                                 <li class="text-center">
-                                                                    <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
+                                                                    <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
                                                                     <span class="item_no position-absolute">x{{$product->quantity}}</span>
-                                                                    <label class="items_name">{{$product->product_name}}</label>
+                                                                    <?php /* ?><label class="items_name">{{$product->product_name}}</label><?php */ ?>
                                                                     <label class="items_price">${{$product->price}}</label>
                                                                 </li>
                                                             @endforeach

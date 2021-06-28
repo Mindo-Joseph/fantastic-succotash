@@ -63,6 +63,26 @@
 <section class="section-b-space">
     <div class="container">
         <div class="row">
+            <div class="col-sm-12">
+                <div class="text-sm-left">
+                    @if (\Session::has('success'))
+                        <div class="alert alert-success">
+                            <span>{!! \Session::get('success') !!}</span>
+                        </div>
+                    @endif
+                    @if ( ($errors) && (count($errors) > 0) )
+                        <div class="alert alert-danger">
+                            <ul class="m-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-lg-3">
                 <div class="account-sidebar"><a class="popup-btn">my account</a></div>
                 <div class="dashboard-left">
@@ -256,7 +276,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="editProfileForm" method="post" enctype="multipart/form-data">
+            <form id="editProfileForm" method="post" action="{{route('user.updateAccount')}}" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body" id="editProfileBox">
                 </div>
@@ -411,50 +431,50 @@
         });
     });
 
-    $("#editProfileForm").submit(function(e) {
-        e.preventDefault();
-        var form = document.getElementById('editProfileForm');
-        var formData = new FormData(this);
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type: "post",
-            url: "{{route('user.updateAccount')}}",
-            headers: {
-                Accept: "application/json"
-            },
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                if (response.status == 'success') {
-                    $(".modal .close").click();
-                    location.reload(); 
-                } else {
-                    $(".show_all_error.invalid-feedback").show();
-                    $(".show_all_error.invalid-feedback").text(response.message);
-                }
-                return response;
-            },
-            error: function(response) {
-                if (response.status === 422) {
-                    let errors = response.responseJSON.errors;
-                    Object.keys(errors).forEach(function(key) {
-                        $("#" + key + "Input input").addClass("is-invalid");
-                        $("#" + key + "Input span.invalid-feedback").children("strong").text(errors[key][0]);
-                        $("#" + key + "Input span.invalid-feedback").show();
-                    });
-                } else {
-                    $(".show_all_error.invalid-feedback").show();
-                    $(".show_all_error.invalid-feedback").text('Something went wrong, Please try Again.');
-                }
-                return response;
-            }
-        });
-    });
+    // $("#editProfileForm").submit(function(e) {
+    //     e.preventDefault();
+    //     var form = document.getElementById('editProfileForm');
+    //     var formData = new FormData(this);
+    //     $.ajaxSetup({
+    //         headers: {
+    //             'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+    //         }
+    //     });
+    //     $.ajax({
+    //         type: "post",
+    //         url: "{{route('user.updateAccount')}}",
+    //         headers: {
+    //             Accept: "application/json"
+    //         },
+    //         data: formData,
+    //         contentType: false,
+    //         processData: false,
+    //         success: function(response) {
+    //             if (response.status == 'success') {
+    //                 $(".modal .close").click();
+    //                 location.reload(); 
+    //             } else {
+    //                 $(".show_all_error.invalid-feedback").show();
+    //                 $(".show_all_error.invalid-feedback").text(response.message);
+    //             }
+    //             return response;
+    //         },
+    //         error: function(response) {
+    //             if (response.status === 422) {
+    //                 let errors = response.responseJSON.errors;
+    //                 Object.keys(errors).forEach(function(key) {
+    //                     $("#" + key + "Input input").addClass("is-invalid");
+    //                     $("#" + key + "Input span.invalid-feedback").children("strong").text(errors[key][0]);
+    //                     $("#" + key + "Input span.invalid-feedback").show();
+    //                 });
+    //             } else {
+    //                 $(".show_all_error.invalid-feedback").show();
+    //                 $(".show_all_error.invalid-feedback").text('Something went wrong, Please try Again.');
+    //             }
+    //             return response;
+    //         }
+    //     });
+    // });
 </script>
 <script>
     var loadFile = function(event) {
