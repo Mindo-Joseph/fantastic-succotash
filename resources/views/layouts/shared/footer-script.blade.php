@@ -18,7 +18,7 @@
 <script src="{{asset('assets/libs/bootstrap-touchspin/bootstrap-touchspin.min.js')}}"></script>
 <script src="{{asset('assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
 <script src="{{asset('assets/libs/flatpickr/flatpickr.min.js')}}"></script>
-
+<script src="{{asset('front-assets/js/underscore.min.js')}}"></script>
 <script src="{{asset('assets/libs/dropzone/dropzone.min.js')}}"></script>
 <script src="{{asset('assets/libs/dropify/dropify.min.js')}}"></script>
 
