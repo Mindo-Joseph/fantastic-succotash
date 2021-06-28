@@ -20,7 +20,7 @@ class VendorController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function vendorProducts(Request $request, $domain = '', $vid = 0){
+    public function vendorProducts(Request $request, $domain = '', $slug = 0){
         $preferences = Session::get('preferences');
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if(Session::has('vendors')){
@@ -37,10 +37,10 @@ class VendorController extends FrontController
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
-        $vendor = Vendor::select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id')->where('id', $vid)->where('status', 1)->firstOrFail();
+        $vendor = Vendor::select('id', 'name', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id')->where('slug', $slug)->where('status', 1)->firstOrFail();
         $brands = Product::with(['brand.translation'=> function($q) use($langId){
                     $q->select('title', 'brand_id')->where('brand_translations.language_id', $langId);
-                }])->select('brand_id')->where('vendor_id', $vid)
+                }])->select('brand_id')->where('vendor_id', $vendor->id)
                 ->where('brand_id', '>', 0)->groupBy('brand_id')->get();
         $listData = 
         $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
@@ -52,21 +52,16 @@ class VendorController extends FrontController
                     ->join('variant_translations as vt','vt.variant_id','vr.id')
                     ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
                     ->where('vt.language_id', $langId)
-                    ->whereIn('product_id', function($qry) use($vid){ 
+                    ->whereIn('product_id', function($qry) use($vendor){ 
                         $qry->select('id')->from('products')
-                            ->where('vendor_id', $vid);
+                            ->where('vendor_id', $vendor->id);
                     })->groupBy('product_variant_sets.variant_type_id')->get();
-
-        // $navCategories = Session::get('navCategories');
-        // if(empty($navCategories)){
-            $navCategories = $this->categoryNav($langId);
-        // }
-        $vendorIds[] = $vid;
+        $navCategories = $this->categoryNav($langId);
+        $vendorIds[] = $vendor->id;
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-        $listData = $this->listData($langId, $vid, $vendor->vendor_templete_id);
+        $listData = $this->listData($langId, $vendor->id, $vendor->vendor_templete_id);
         $page = ($vendor->vendor_templete_id == 2) ? 'categories' : 'products';
-
         return view('frontend/vendor-'.$page)->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
     }
 

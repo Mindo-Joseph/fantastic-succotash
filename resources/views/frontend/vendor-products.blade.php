@@ -137,13 +137,13 @@
                                     $imagePath = $v['image']['path']['proxy_url'] . '300/300' . $v['image']['path']['image_path'];
                                 } ?>
                                 <div class="media">
-                                    <a href="{{route('productDetail', $new['sku'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt=""></a>
+                                    <a href="{{route('productDetail', $new['url_slug'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt=""></a>
                                     <div class="media-body align-self-center">
                                         <div class="rating">
                                             @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
                                                 @endfor
                                         </div>
-                                        <a href="{{route('productDetail', $new['sku'])}}">
+                                        <a href="{{route('productDetail', $new['url_slug'])}}">
                                             <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                         </a>
                                         <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
@@ -244,10 +244,10 @@
                                                     <div class="product-box">
                                                         <div class="img-wrapper">
                                                             <div class="front">
-                                                                <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
+                                                                <a href="{{route('productDetail', $data->url_slug)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
                                                             </div>
                                                             <div class="back">
-                                                                <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath2}}" alt=""></a>
+                                                                <a href="{{route('productDetail', $data->url_slug)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath2}}" alt=""></a>
                                                             </div>
                                                             <div class="cart-info cart-wrap">
                                                                 <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button>
@@ -262,7 +262,7 @@
                                                                     @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
                                                                         @endfor
                                                                 </div>
-                                                                <a href="{{route('productDetail', $data->sku)}}">
+                                                                <a href="{{route('productDetail', $data->url_slug)}}">
                                                                     <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
                                                                 </a>
                                                                 <h4>{{Session::get('currencySymbol').($data->variant[0]->price * $data->variant[0]->multiplier)}}</h4>
