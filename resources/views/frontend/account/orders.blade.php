@@ -159,19 +159,19 @@
                                                         <ul class="price_box_bottom m-0 p-0">
                                                             <li class="d-flex align-items-center justify-content-between">
                                                                 <label class="m-0">Product Total</label>
-                                                                <span>${{$order->total_amount}}</span>
+                                                                <span>${{number_format($order->total_amount, 2)}}</span>
                                                             </li>
                                                             <li class="d-flex align-items-center justify-content-between">
                                                                 <label class="m-0">Coupon (10%)</label>
-                                                                <span>${{$order->total_discount ? $order->total_discount : 0}}</span>
+                                                                <span>${{$order->total_discount ? number_format($order->total_discount, 2) : 0.00}}</span>
                                                             </li>
                                                             <li class="d-flex align-items-center justify-content-between">
                                                                 <label class="m-0">Delivery Fee</label>
-                                                                <span>${{$order->total_delivery_fee ? $order->total_delivery_fee : 0}}</span>
+                                                                <span>${{$order->total_delivery_fee ? number_format($order->total_delivery_fee, 2) : 0.00}}</span>
                                                             </li>
                                                             <li class="grand_total d-flex align-items-center justify-content-between">
                                                                 <label class="m-0">Amount</label>
-                                                                <span>${{$order->total_amount}}</span>
+                                                                <span>${{number_format($order->total_amount, 2)}}</span>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -183,7 +183,7 @@
                                                 <ul class="price_box_bottom m-0 pl-0 pt-1">
                                                     <li class="d-flex align-items-center justify-content-between">
                                                         <label class="m-0">Sub Total</label>
-                                                        <span>${{$order->total_amount}}</span>
+                                                        <span>${{number_format($order->total_amount, 2)}}</span>
                                                     </li>
                                                     <li class="d-flex align-items-center justify-content-between">
                                                         <label class="m-0">Wallet</label>
@@ -195,11 +195,11 @@
                                                     </li>
                                                     <li class="d-flex align-items-center justify-content-between">
                                                         <label class="m-0">Tax</label>
-                                                        <span>${{$order->taxable_amount}}</span>
+                                                        <span>${{number_format($order->taxable_amount, 2)}}</span>
                                                     </li>
                                                     <li class="grand_total d-flex align-items-center justify-content-between">
                                                         <label class="m-0">Total Payable</label>
-                                                        <span>${{$order->payable_amount}}</span>
+                                                        <span>${{number_format($order->payable_amount, 2)}}</span>
                                                     </li>
                                                 </ul>
                                             </div>
