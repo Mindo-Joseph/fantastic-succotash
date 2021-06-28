@@ -1333,7 +1333,9 @@ i.mdi.mdi-exclamation-thick {
     border-bottom-left-radius: 0;
 }
 
-
+.description-txt p {
+    font-size: 12px;
+}
 
 
 

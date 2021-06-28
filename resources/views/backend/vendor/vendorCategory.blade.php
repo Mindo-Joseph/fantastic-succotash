@@ -388,8 +388,8 @@
     <script src="{{asset('assets/libs/nestable2/nestable2.min.js')}}"></script>
     <script src="{{asset('assets/js/pages/my-nestable.init.js')}}"></script>
     <script src="{{asset('assets/js/jscolor.js')}}"></script>
-    <script src="{{ asset('assets/js/jquery.tagsinput-revisited.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/jquery.tagsinput-revisited.css') }}" />
+    <script src="{{ asset('assets/js/jquery.tagsinput-revisited.js') }}"></script>
 
 @include('backend.vendor.pagescript')
 @include('backend.common.category-script')
