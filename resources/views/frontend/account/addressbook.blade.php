@@ -279,8 +279,8 @@
           <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body">
-        <div class="outer-box">
+    <div class="modal-body pt-0">
+        <div class="outer-box border-0 p-0">
             <div class="row">
                 <div class="col-md-12" id="add_new_address_form">
                     <div class="theme-card w-100">
@@ -358,13 +358,13 @@
                                 <span class="text-danger" id="country_error"></span>
                             </div>
                         </div>
-                        <div class="form-row mb-3">
+                        <div class="form-row mb-0">
                             <div class="col-md-6 mb-2">
                                 <label for="pincode">Pincode</label>
                                 <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode" value="<%= ((typeof address != 'undefined') && (address.pincode != null)) ? address.pincode : ''%>">
                                 <span class="text-danger" id="pincode_error"></span>
                             </div>
-                            <div class="col-md-12 mt-3">
+                            <div class="col-md-12 mt-2">
                                 <button type="button" class="btn btn-solid" id="<%= ((typeof address !== 'undefined') && (address !== false)) ? 'update_address' : 'save_address' %>">Save Address</button>
                                 <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
                             </div>

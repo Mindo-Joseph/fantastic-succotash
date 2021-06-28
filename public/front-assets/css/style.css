@@ -582,7 +582,7 @@ del {
 .margin-default {
   margin-bottom: -30px; }
   .margin-default > div {
-    margin-bottom: 30px; }
+    margin-bottom: 20px; }
   .margin-default.no-slider .product-box {
     margin-bottom: 30px !important; }
 
@@ -6931,7 +6931,7 @@ header {
     display: flex;
     font-size: 15px;
     padding:0; }
-    .top-header .header-dropdown .onhover-dropdown .onhover-show-div li a {
+    .top-header .header-dropdown .onhover-dropdown .onhover-show-div li a,.category-list li a {
       color: #333333;
       display: block;
       width: 100%;
@@ -6944,7 +6944,7 @@ header {
         margin-top: 5px; }
       .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:last-child a{
         margin-bottom: 5px; }
-      .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:hover a {
+      .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:hover a,.category-list li:hover a {
         border-color: #ff4c3b;
         background: linear-gradient(270deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
       }
