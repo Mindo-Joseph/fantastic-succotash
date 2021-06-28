@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country, Order, User};
+use App\Models\{Category, Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country, Order, User};
+use Carbon\Carbon;
 
 class DashBoardController extends BaseController{
 
@@ -29,7 +30,8 @@ class DashBoardController extends BaseController{
      */
     public function index(){   
         $total_revenue = Order::sum('payable_amount');
-        return view('backend/dashboard')->with(['total_revenue' => $total_revenue]);
+        $today_sales = Order::whereDay('created_at', now()->day)->sum('payable_amount');
+        return view('backend/dashboard')->with(['total_revenue' => $total_revenue, 'today_sales' => $today_sales]);
     }
 
     public function profile(){
@@ -102,5 +104,50 @@ class DashBoardController extends BaseController{
         }
         $user = User::where('id', Auth::id())->update($userdata);
         return redirect()->back()->with('success', 'Client Updated successfully!');
+    }
+
+    public function monthlySalesInfo(){   
+        $monthlysales=DB::table('orders')
+        ->select(DB::raw('sum(payable_amount) as y'),DB::raw('date(created_at) as x'))
+        ->whereRaw('MONTH(created_at) = ?',[date('m')])
+        ->groupBy('x')
+        ->orderBy('x','desc')
+        ->get();
+        return $monthlysales->toArray();
+    }
+
+    public function yearlySalesInfo(){ 
+        $yearlysales=DB::table('orders')
+        ->select(DB::raw('sum(payable_amount) as y'),DB::raw('monthname(created_at) as x'))
+        ->whereRaw('YEAR(created_at) = ?',[date('Y')])
+        ->groupBy('x')
+        ->orderBy('x','desc')
+        ->get();
+        return $yearlysales->toArray();
+    }
+
+    public function weeklySalesInfo(){ 
+        Carbon::setWeekStartsAt(Carbon::SUNDAY);
+        $weeklysales=DB::table('orders')
+        ->select(DB::raw('sum(payable_amount) as y'),DB::raw('date(created_at) as x'))
+        ->whereBetween('created_at', [Carbon::now()->startOfWeek(),Carbon::now()->endOfWeek()])
+        ->groupBy('x')
+        ->orderBy('x','desc')
+        ->get();
+        return $weeklysales->toArray();
+    }
+
+    public function categoryInfo(){ 
+         $orders = Order::with(array('products' => function($query) {
+            $query->select('order_id','category_id');
+        }))->whereMonth('created_at', Carbon::now()->month)->select('id')->get();
+        $categories = array("Volvo"=>"XC90","BMW"=>"X5");
+        foreach($orders as $order){
+            foreach($order->products as $product){
+                pr($product->toArray());
+                $category = Category::where('id', )->first();
+            }
+        }die;
+        return $order->toArray();
     }
 }
