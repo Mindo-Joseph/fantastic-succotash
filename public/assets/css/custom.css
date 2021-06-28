@@ -1354,3 +1354,13 @@ i.mdi.mdi-exclamation-thick {
     object-fit: cover;
     width: 100%;
 }
+
+
+.top-input {
+    width: 30%;
+}
+
+.top-input input#month_picker_filter,.top-input select.form-control {
+    height: 30px;
+    padding: 0 5px;
+}

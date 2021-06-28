@@ -112,10 +112,12 @@ class ProfileController extends FrontController
             $user->phone_number = $request->phone_number;
             $user->description = $request->description;
             $user->save();
-            return response()->json(array('status' => 'success', 'message'=>'Profile has been updated'));
+            return redirect()->back()->with('success', 'Profile has been updated');
+            // return response()->json(array('status' => 'success', 'message'=>'Profile has been updated'));
 
         }
-        return response()->json(['status' => 'error', 'message' => 'Profile updation failed']);
+        return redirect()->back()->with('errors', 'Profile updation failed');
+        // return response()->json(['status' => 'error', 'message' => 'Profile updation failed']);
     }
 
     /**

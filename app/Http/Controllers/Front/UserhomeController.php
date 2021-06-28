@@ -119,6 +119,7 @@ class UserhomeController extends FrontController
                 'image_url' => $image_url,
                 'sku' => $new_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
+                'url_slug' => $new_product_detail->url_slug,
                 'vendor_name' => $new_product_detail->vendor ? $new_product_detail->vendor->name : '',
                 'price' => Session::get('currencySymbol').' '.($new_product_detail->variant->first()->price * $multiply),
             );
@@ -131,6 +132,7 @@ class UserhomeController extends FrontController
                 'image_url' => $image_url,
                 'sku' => $feature_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
+                'url_slug' => $feature_product_detail->url_slug,
                 'vendor_name' => $feature_product_detail->vendor ? $feature_product_detail->vendor->name : '',
                 'price' => Session::get('currencySymbol').' '.($feature_product_detail->variant->first()->price * $multiply),
             );
@@ -143,6 +145,7 @@ class UserhomeController extends FrontController
                 'image_url' => $image_url,
                 'sku' => $on_sale_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
+                'url_slug' => $on_sale_product_detail->url_slug,
                 'vendor_name' => $on_sale_product_detail->vendor ? $on_sale_product_detail->vendor->name : '',
                 'price' => Session::get('currencySymbol').' '.($on_sale_product_detail->variant->first()->price * $multiply),
             );
@@ -200,7 +203,6 @@ class UserhomeController extends FrontController
             $homeData['featuredProducts'] = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
             $homeData['newProducts'] = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
             $homeData['onSaleProducts'] = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
-
             return $this->successResponse($homeData);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
