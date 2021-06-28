@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box">
-                        <div class="page-title-right">
+                        <!-- <div class="page-title-right">
                             <form class="d-flex align-items-center mb-3">
                                 <div class="input-group input-group-sm">
                                     <input type="hidden" class="form-control border flatpickr-input" id="dash-daterange" value="2021-06-22"><input class="form-control border form-control input" placeholder="" tabindex="0" type="text" readonly="readonly">
@@ -37,7 +37,7 @@
                                     <i class="mdi mdi-filter-variant"></i>
                                 </a>
                             </form>
-                        </div>
+                        </div> -->
                         <h4 class="page-title">Dashboard</h4>
                     </div>
                 </div>
@@ -131,7 +131,7 @@
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-body">
-                            <div class="dropdown float-end">
+                            <div class="dropdown float-right">
                                 <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="mdi mdi-dots-vertical"></i>
                                 </a>
@@ -221,7 +221,7 @@
                 <div class="col-lg-8">
                     <div class="card">
                         <div class="card-body pb-2">
-                            <div class="float-end d-none d-md-inline-block">
+                            <div class="float-right d-none d-md-inline-block">
                                 <div class="btn-group mb-2">
                                     <button type="button" class="btn btn-xs btn-light">Today</button>
                                     <button type="button" class="btn btn-xs btn-light">Weekly</button>
@@ -659,7 +659,7 @@
                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-body">
-                            <div class="dropdown float-end">
+                            <div class="dropdown float-right">
                                 <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="mdi mdi-dots-vertical"></i>
                                 </a>
@@ -840,7 +840,7 @@
                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-body">
-                            <div class="dropdown float-end">
+                            <div class="dropdown float-right">
                                 <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="mdi mdi-dots-vertical"></i>
                                 </a>

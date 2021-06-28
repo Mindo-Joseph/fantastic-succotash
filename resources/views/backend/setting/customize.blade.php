@@ -177,7 +177,7 @@
                                 @foreach($preference->currency as $ac)
                                 <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 col-xl-8 offset-xl-4 mb-2" id="addCur-{{$ac->currency->id}}">
                                     <label class="primaryCurText">1 {{$preference->primary->currency->iso_code}} {{!empty($preference->primary->currency->symbol) ? $preference->primary->currency->symbol : ''}} = </label>
-                                    <input type="number" value="{{$ac->doller_compare}}" step=".01" name="multiply_by[]" min="0.01"> {{$ac->currency->iso_code}} {{!empty($ac->currency->symbol) ? $ac->currency->symbol : ''}}
+                                    <input class="form-control w-50 d-inline-block" type="number" value="{{$ac->doller_compare}}" step=".01" name="multiply_by[]" min="0.01"> {{$ac->currency->iso_code}} {{!empty($ac->currency->symbol) ? $ac->currency->symbol : ''}}
                                     <input type="hidden" name="cuid[]" class="curr_id" value="{{ $ac->currency->id }}">
                                 </div>
                                 @endforeach
@@ -227,11 +227,11 @@
                     </div>
                     <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-4" id="addCur-160">
                         <label class="primaryCurText">Reffred To Amount = </label>
-                        <input type="number" id="reffered_to_amount" name="reffered_to_amount" value="{{ old('reffered_to_amount', $reffer_to ?? '')}}" min="0">
+                        <input class="form-control" type="number" id="reffered_to_amount" name="reffered_to_amount" value="{{ old('reffered_to_amount', $reffer_to ?? '')}}" min="0">
                     </div>
                     <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-3" id="addCur-160">
                         <label class="primaryCurText">Reffred By Amount = </label>
-                        <input type="number" name="reffered_by_amount" id="reffered_by_amount" value="{{ old('reffered_by_amount', $reffer_by ?? '')}}" min="0">
+                        <input class="form-control" type="number" name="reffered_by_amount" id="reffered_by_amount" value="{{ old('reffered_by_amount', $reffer_by ?? '')}}" min="0">
                     </div>
                 </div>
             </form>

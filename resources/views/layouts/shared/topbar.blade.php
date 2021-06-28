@@ -11,10 +11,10 @@
             </li>
 
             <li class="dropdown d-inline-block d-lg-none">
-                <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown" href="#"
+                <!-- <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown" href="#"
                     role="button" aria-haspopup="false" aria-expanded="false">
                     <i class="fe-search noti-icon"></i>
-                </a>
+                </a> -->
                 <div class="dropdown-menu dropdown-lg dropdown-menu-right p-0">
                     <form class="p-3">
                         <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
@@ -25,6 +25,12 @@
             <li class="dropdown d-none d-lg-inline-block">
                 <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="fullscreen"
                     href="#">
+                    <i class="fe-bell noti-icon"></i>
+                </a>
+            </li>
+            <li class="dropdown d-lg-inline-block">
+                <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="fullscreen"
+                    href="#">
                     <i class="fe-maximize noti-icon"></i>
                 </a>
             </li>
@@ -33,14 +39,14 @@
                     href="#" role="button" aria-haspopup="false" aria-expanded="false">
 
                     <span class="pro-user-name ml-1">
-                        {{ auth()->user()->name }} <i class="mdi mdi-chevron-down"></i>
+                       <b>{{ auth()->user()->name }} <i class="mdi mdi-chevron-down"></i></b>
                     </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
 
-                    <div class="dropdown-header noti-title">
+                    <!-- <div class="dropdown-header noti-title">
                         <h6 class="text-overflow m-0">Welcome !</h6>
-                    </div>
+                    </div> -->
 
                     <a href="{{route('userHome')}}" class="dropdown-item notify-item">
                         <i class="fe-globe"></i>
@@ -97,11 +103,11 @@
         </div>
 
         <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
-            <li>
+            <!-- <li>
                 <button id="shortclick" class="button-menu-mobile waves-effect waves-light">
                     <i class="fe-menu"></i>
                 </button>
-            </li>
+            </li> -->
 
             <li>
                 <a class="navbar-toggle nav-link" data-toggle="collapse" data-target="#topnav-menu-content">
