@@ -95,11 +95,14 @@ class ProfileController extends FrontController
             'name' => 'required|string|min:3|max:80',
             'phone_number' => 'required|numeric'
         ]);
-
+        $messages = array(
+            'name.required' => 'Name field is required',
+            'phone_number.required' => 'Phone number field is required'
+        );
         if ($validator->fails()) {
             foreach ($validator->errors()->toArray() as $error_key => $error_value) {
                 $errors['error'] = $error_value[0];
-                return redirect()->back()->with($errors);
+                return redirect()->back()->withInput()->withErrors($errors);
             }
         }
         $user = User::where('id', Auth::user()->id)->first();
