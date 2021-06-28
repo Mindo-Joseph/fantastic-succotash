@@ -72,7 +72,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/logout', 'Front\CustomerAuthController@logout')->name('user.logout');
     Route::get('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
 	Route::get('user/editAddress/{id}', 'Front\AddressController@edit')->name('editAddress');
-	Route::post('user/update/{id}', 'Front\AddressController@update')->name('address.update');
+	Route::post('user/update/{id?}', 'Front\AddressController@update')->name('address.update');
     Route::get('user/wishlists', 'Front\WishlistController@wishlists')->name('user.wishlists');
 	Route::post('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
     Route::post('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInformation');

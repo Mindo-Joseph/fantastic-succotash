@@ -58,6 +58,26 @@
 <section class="section-b-space">
     <div class="container">
         <div class="row">
+            <div class="col-sm-12">
+                <div class="text-sm-left">
+                    @if (\Session::has('success'))
+                        <div class="alert alert-success">
+                            <span>{!! \Session::get('success') !!}</span>
+                        </div>
+                    @endif
+                    @if ( ($errors) && (count($errors) > 0) )
+                        <div class="alert alert-danger">
+                            <ul class="m-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-lg-3">
                 <div class="account-sidebar"><a class="popup-btn">my account</a></div>
                 <div class="dashboard-left">
@@ -280,6 +300,12 @@
         </button>
     </div>
     <div class="modal-body pt-0">
+        <% if(title == 'Edit') { %>
+            <form id="add_edit_address_form" method="post" action="{{route('address.update')}}/<%= address.id %>">
+        <% }else{ %>
+            <form id="add_edit_address_form" method="post" action="{{route('address.store')}}">
+        <% } %>
+        @csrf
         <div class="outer-box border-0 p-0">
             <div class="row">
                 <div class="col-md-12" id="add_new_address_form">
@@ -291,7 +317,7 @@
                             <div class="col-md-3">
                                 <div class="delivery_box pt-0 pl-0  pb-3">
                                     <label class="radio m-0">Home 
-                                        <input type="radio" name="address_type" <%= (typeof address != 'undefined') ? ((address.type == 1) ? 'checked="checked"' : '') : 'checked="checked"' %> value="1">
+                                        <input type="radio" name="type" <%= (typeof address != 'undefined') ? ((address.type == 1) ? 'checked="checked"' : '') : 'checked="checked"' %> value="1">
                                         <span class="checkround"></span>
                                     </label>
                                 </div>
@@ -299,7 +325,7 @@
                             <div class="col-md-3">
                             <div class="delivery_box pt-0 pl-0  pb-3">
                                 <label class="radio m-0">Office 
-                                    <input type="radio" name="address_type" <%= ((typeof address != 'undefined') && (address.type == 2)) ? 'checked="checked"' : '' %> value="2">
+                                    <input type="radio" name="type" <%= ((typeof address != 'undefined') && (address.type == 2)) ? 'checked="checked"' : '' %> value="2">
                                     <span class="checkround"></span>
                                 </label>
                             </div>
@@ -307,20 +333,19 @@
                         <div class="col-md-3">
                             <div class="delivery_box pt-0 pl-0  pb-3">
                                 <label class="radio m-0">Others
-                                    <input type="radio" name="address_type" <%= ((typeof address != 'undefined') && (address.type == 3)) ? 'checked="checked"' : '' %> value="3">
+                                    <input type="radio" name="type" <%= ((typeof address != 'undefined') && (address.type == 3)) ? 'checked="checked"' : '' %> value="3">
                                     <span class="checkround"></span>
                                 </label>
                             </div>
                         </div>
                         </div>
-                        <input type="hidden" id="address_id" value="<%= (typeof address != 'undefined') ? address.id : '' %>">
-                        <input type="hidden" id="latitude" value="<%= (typeof address != 'undefined') ? address.latitude : '' %>">
-                        <input type="hidden" id="longitude" value="<%= (typeof address != 'undefined') ? address.longitude : '' %>">
+                        <input type="hidden" name="latitude" id="latitude" value="<%= (typeof address != 'undefined') ? address.latitude : '' %>">
+                        <input type="hidden" name="longitude" id="longitude" value="<%= (typeof address != 'undefined') ? address.longitude : '' %>">
                         <div class="form-row">
                             <div class="col-md-12 mb-2">
                                 <label for="address">Address</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2" value="<%= (typeof address != 'undefined') ? address.address : '' %>">
+                                    <input type="text" name="address" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2" value="<%= (typeof address != 'undefined') ? address.address : '' %>" autocomplete="off">
                                     <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" id="button-addon2">
                                         <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -365,14 +390,15 @@
                                 <span class="text-danger" id="pincode_error"></span>
                             </div>
                             <div class="col-md-12 mt-2">
-                                <button type="button" class="btn btn-solid" id="<%= ((typeof address !== 'undefined') && (address !== false)) ? 'update_address' : 'save_address' %>">Save Address</button>
-                                <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
+                                <button type="submit" class="btn btn-solid" id="<%= ((typeof address !== 'undefined') && (address !== false)) ? 'update_address' : 'save_address' %>">Save Address</button>
+                                <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
                             </div>
                         </div>
                     </div>
                 </div> 
             </div>
         </div>
+        </form>
     </div>
 </script>
 
@@ -414,30 +440,34 @@
         location.href = url;
     });
 
-    $(document).delegate(".add_edit_address_btn", "click", function(){
-        var addressID = $(this).attr("data-id");
-        if(typeof addressID !== 'undefined' && addressID !== false){
-            $.ajax({
-                type: "get",
-                dataType: "json",
-                url: user_address_url.replace(':id', addressID),
-                success: function(response) {
-                    // console.log(response);
-                    if(response.status == 'success'){
-                        $("#add_edit_address .modal-content").html('');
-                        let add_address_template = _.template($('#add_address_template').html());
-                        $("#add_edit_address .modal-content").append(add_address_template({title: 'Edit', address:response.address, countries: response.countries}));
-                    }else{
-                        $('#add_new_address').modal('hide');
+    $(document).ready(function(){
+        $(document).delegate(".add_edit_address_btn", "click", function(){
+            var addressID = $(this).attr("data-id");
+            if(typeof addressID !== 'undefined' && addressID !== false){
+                $.ajax({
+                    type: "get",
+                    dataType: "json",
+                    url: user_address_url.replace(':id', addressID),
+                    success: function(response) {
+                        // console.log(response);
+                        if(response.status == 'success'){
+                            $("#add_edit_address .modal-content").html('');
+                            let add_address_template = _.template($('#add_address_template').html());
+                            $("#add_edit_address .modal-content").append(add_address_template({title: 'Edit', address:response.address, countries: response.countries}));
+                            initialize();
+                        }else{
+                            $('#add_new_address').modal('hide');
+                        }
                     }
-                }
-            });
-        }
-        else{
-            $("#add_edit_address .modal-content").html('');
-            let add_address_template = _.template($('#add_address_template').html());
-            $("#add_edit_address .modal-content").append(add_address_template({title:'Add'}));
-        }
+                });
+            }
+            else{
+                $("#add_edit_address .modal-content").html('');
+                let add_address_template = _.template($('#add_address_template').html());
+                $("#add_edit_address .modal-content").append(add_address_template({title:'Add'}));
+                initialize();
+            }
+        });
     });
 
     function verifyUser($type = 'email'){
@@ -511,6 +541,52 @@
             }
         });
     });
+
+    function initialize() {
+      var input = document.getElementById('address');
+      var autocomplete = new google.maps.places.Autocomplete(input);
+      google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        var place = autocomplete.getPlace();
+        // console.log(place);
+        document.getElementById('longitude').value = place.geometry.location.lng();
+        document.getElementById('latitude').value = place.geometry.location.lat();
+        for(let i=1; i < place.address_components.length; i++){
+            let mapAddress = place.address_components[i];
+            if(mapAddress.long_name !=''){
+                let streetAddress = '';
+                if (mapAddress.types[0] =="street_number") {
+                    streetAddress += mapAddress.long_name;
+                }
+                if (mapAddress.types[0] =="route") {
+                    streetAddress += mapAddress.short_name;
+                }
+                if($('#street').length > 0){
+                    document.getElementById('street').value = streetAddress;
+                }
+                if (mapAddress.types[0] =="locality") {
+                    document.getElementById('city').value = mapAddress.long_name;
+                }
+                if(mapAddress.types[0] =="administrative_area_level_1"){
+                    document.getElementById('state').value = mapAddress.long_name;
+                }
+                if(mapAddress.types[0] =="postal_code"){
+                    document.getElementById('pincode').value = mapAddress.long_name;
+                }else{
+                    document.getElementById('pincode').value = '';
+                }
+                if(mapAddress.types[0] == "country"){
+                    var country = document.getElementById('country');
+                    for (let i = 0; i < country.options.length; i++) {
+                        if (country.options[i].text.toUpperCase() == mapAddress.long_name.toUpperCase()) {
+                            country.value = country.options[i].value;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+      });
+    }
 
 </script>
 

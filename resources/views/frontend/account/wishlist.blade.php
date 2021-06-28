@@ -56,6 +56,9 @@
     .invalid-feedback {
         display: block;
     }
+    .box-info table tr:first-child td {
+        padding-top: .85rem;
+    }
 </style>
 
 
@@ -92,7 +95,7 @@
                         <div class="box-account box-info mt-3">
                             <div class="row">
                                 <div class="col-sm-12 table-responsive table-responsive-xs">
-                                    <table class="table cart-table border">
+                                    <table class="table wishlist-table border">
                                         <thead>
                                             <tr class="table-head">
                                                 <th scope="col">
@@ -125,7 +128,8 @@
                                                     <td>
                                                         <div class="product-icon">
                                                             @foreach($wish['product']['media'] as $media)
-                                                            <img src="{{$media['image']['path']['proxy_url'].'200/200'.$media['image']['path']['image_path']}}" alt="Product Image" height="50">
+                                                                <img src="{{$media['image']['path']['proxy_url'].'200/200'.$media['image']['path']['image_path']}}" alt="Product Image" height="50">
+                                                                @break
                                                             @endforeach
                                                         </div>
                                                     </td>
@@ -198,6 +202,14 @@
     $('.verifyPhone').click(function() {
         verifyUser('phone');
     });
+
+    $("#w-all").click(function(){
+        if($(this).is(":checked")){
+            $(".wishlist-table").find(".custom-checkbox input[type='checkbox']").prop("checked", true);
+        }else{
+            $(".wishlist-table").find(".custom-checkbox input[type='checkbox']").prop("checked", false);
+        }
+    })
 
     function verifyUser($type = 'email') {
         ajaxCall = $.ajax({

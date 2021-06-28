@@ -640,9 +640,13 @@
     });
 
 
+
+    var url = "{{route('client.categoryInfo')}}";
+    $.getJSON(url, function(response) {
+        
     var options = {
-        series: [44, 55, 13, 33],
-        labels: ['Apples', 'Oranges', 'Berries', 'Grapes', 'fewgw'],
+        series: response.orders,
+        labels: response.names,
         chart: {
             width: 380,
             type: 'donut',
@@ -670,14 +674,6 @@
 
     var chart1 = new ApexCharts(document.querySelector("#apexchartsfwg700r2"), options);
     chart1.render();
-
-    var url = "{{route('client.categoryInfo')}}";
-    $.getJSON(url, function(response) {
-        chart.updateSeries([{
-            name: 'Sales',
-            data: response
-        }])
     });
-    chart.render();
 </script>
 @endsection

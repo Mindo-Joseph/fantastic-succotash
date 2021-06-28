@@ -141,13 +141,26 @@ class DashBoardController extends BaseController{
          $orders = Order::with(array('products' => function($query) {
             $query->select('order_id','category_id');
         }))->whereMonth('created_at', Carbon::now()->month)->select('id')->get();
-        $categories = array("Volvo"=>"XC90","BMW"=>"X5");
+        $categories = array();
         foreach($orders as $order){
             foreach($order->products as $product){
-                pr($product->toArray());
-                $category = Category::where('id', )->first();
+                $category = Category::where('id', $product->category_id)->first();
+                if($category){
+                    if(array_key_exists($category->slug,$categories)){
+                        $categories[$category->slug] += 1;
+                    }
+                    else{
+                        $categories[$category->slug] = 1;
+                    }
+                }
             }
-        }die;
-        return $order->toArray();
+        }
+        $names = array();
+        $orders = array();
+        foreach($categories as $key => $value){
+            $names[] = $key;
+            $orders[] = $value;
+        }
+        return response()->json(['names' => $names, 'orders' => $orders]);
     }
 }
