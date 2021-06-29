@@ -23,21 +23,21 @@
                                 <div class="p-2 text-center">
                                     <i class="mdi mdi-cart-plus text-primary mdi-24px"></i>
                                     <h3>$<span data-plugin="counterup" id="total_order_value"></span></h3>
-                                    <p class="text-muted font-15 mb-0">Total order value</p>
+                                    <p class="text-muted font-15 mb-0">Total Order Value</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
                                     <i class="mdi mdi-currency-usd text-success mdi-24px"></i>
                                     <h3>$<span data-plugin="counterup" id="total_delivery_fees"></span></h3>
-                                    <p class="text-muted font-15 mb-0">total delivery fees</p>
+                                    <p class="text-muted font-15 mb-0">Total Delivery Fees</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
                                     <i class="mdi mdi-account-group text-danger mdi-24px"></i>
                                     <h3><span data-plugin="counterup" id="total_admin_commissions">0</span></h3>
-                                    <p class="text-muted font-15 mb-0">total admin commissions</p>
+                                    <p class="text-muted font-15 mb-0">Total Admin Commissions</p>
                                 </div>
                             </div>
                         </div>
@@ -83,10 +83,10 @@
                                     <th>Order Value</th>
                                     <th>Delivery Fees</th>
                                     <th>Admin Commissions</th>
-                                    <th>Promo [vendor]</th>
-                                    <th>Promo [admin]</th>
-                                    <th>cash Collected</th>
-                                    <th>payment Gateway</th>
+                                    <th>Promo [Vendor]</th>
+                                    <th>Promo [Admin]</th>
+                                    <th>Cash Collected</th>
+                                    <th>Payment Gateway</th>
                                     <th>Vendor Earning</th>
                                     <th>Total Paid</th>
                                 </tr>
@@ -142,6 +142,7 @@
                         }
                         table = $("#accounting_vendor_datatable").DataTable({
                             "dom": '<"toolbar">frtip',
+                            "scrollX": true,
                             drawCallback: function () {
                                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                             },
