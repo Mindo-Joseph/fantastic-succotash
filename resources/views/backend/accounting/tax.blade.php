@@ -53,8 +53,6 @@
             <td><%= vendor_order.discount_amount %></td>
             <td><%= vendor_order.admin_commission_fixed_amount %></td>
             <td><%= vendor_order.order_detail.payment_option.title %></td> 
-            <td><%= vendor_order.order_detail.payment_option.title %></td> 
-            <td><%= vendor_order.order_detail.payment_option.title %></td> 
         </tr>
     <% }); %>
 </script>
@@ -80,8 +78,6 @@
                                     <th>Final Amount</th>
                                     <th>Tax Amount</th>
                                     <th>Tax Types</th>
-                                    <th>Payment Method</th>
-                                    <th>Payment Method</th>
                                     <th>Payment Method</th>
                                 </tr>
                             </thead>
@@ -148,7 +144,7 @@
                             drawCallback: function () {
                                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                             },
-                        }).fnClearTable();
+                        });
                     }
                 }
             });
