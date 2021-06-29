@@ -37,7 +37,6 @@
                         <div class="form-group">
                             {!! Form::label('title', 'Select Parent Category',['class' => 'control-label']) !!}
                             <select class="selectize-select1 form-control parent-category" id="cateSelectBox" name="parent_cate">
-                                <option value="">Select</option>
                                 @foreach($parCategory as $pc)
                                     <option value="{{$pc->id}}" {{ ($pc->id == $category->parent_id) ? 'selected' : '' }} > {{ucfirst($pc->slug)}}</option>
                                 @endforeach
@@ -107,7 +106,10 @@
                             <img src="https://www.w3schools.com/tags/img_girl.jpg" alt="">
                         </div>
                         <div class="form-check form-check-info pl-0">
-                            <span for="customradio5">{{$type->title}}</span>
+                            <h6 for="customradio5">{{$type->title}}</h6>
+                        </div>
+                        <div class="description-txt">
+                            <p>{{$type->description}}</p>
                         </div>
                      </label>
                   </div>
@@ -116,31 +118,54 @@
         </div>
         <input type="hidden" id="cateId" url="{{route('category.update', $category->id)}}">
         <div class="row">
-            <div class="col-md-3" id="template_type_main_div" style="display:none;">
+            <div class="col-md-4" id="template_type_main_div" style="display:none;">
                 <div class="form-group">
                     {!! Form::label('title', 'Template Type',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control" id="templateTypeSelectBox" name="template_type_id">
-                            <option value="">Select</option>
-                        @foreach($dispatcher_warning_page_options as $dispatcher_warning_page_option)
-                            <option value="{{$dispatcher_warning_page_option->id}}" {{ ($category->template_type_id == $dispatcher_warning_page_option->id) ? 'selected' : '' }}>{{$dispatcher_warning_page_option->title}}</option>
+                    <div class="row">
+                        @foreach($dispatcher_warning_page_options as $dwpo => $dispatcher_warning_page_option)                       
+                            <div class="col-lg-6 custom-radio radio_new mt-2">
+                                @if($category->warning_page_id)
+                                    <input type="radio" 
+                                    value="{{$dispatcher_warning_page_option->id}}" id="dispatcher_warning_page_option_{{$dispatcher_warning_page_option->id}}" 
+                                    name="warning_page_id" 
+                                    class="custom-control-input tab_bar_options" {{ ($category->warning_page_id == $dispatcher_warning_page_option->id) ? 'checked' : '' }}>
+                                @else
+                                    <input {{$dwpo == 0 ? 'checked' : '' }} type="radio" 
+                                    value="{{$dispatcher_warning_page_option->id}}" 
+                                    id="dispatcher_warning_page_option_{{$dispatcher_warning_page_option->id}}" 
+                                    name="warning_page_id" 
+                                    class="custom-control-input tab_bar_options">
+                                @endif
+                                <label class="custom-control-label" for="dispatcher_warning_page_option_{{$dispatcher_warning_page_option->id}}">
+                                    <img class="card-img-top img-fluid" src="https://cdn.dribbble.com/users/1229051/screenshots/9325107/media/7a9f86f2d92541ecf49ec81ff9d53fa0.gif" alt="Card image cap">
+                                </label>
+                            </div>
                         @endforeach
-                    </select>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3" id="warning_page_main_div" style="display:none;">
+            <div class="col-md-4" id="warning_page_main_div" style="display:none;">
                 <div class="form-group">
                     {!! Form::label('title', 'Warning Page',['class' => 'control-label']) !!}
-                    <select class="selectize-select form-control" id="warningPageSelectBox" name="warning_page_id">
-                            <option value="">Select</option>
-                        @foreach($dispatcher_template_type_options as $dispatcher_template_type_option)
-                            <option value="{{$dispatcher_template_type_option->id}}" {{ ($category->warning_page_id == $dispatcher_template_type_option->id) ? 'selected' : '' }}>{{$dispatcher_template_type_option->title}}</option>
+                    <div class="row">
+                        @foreach($dispatcher_template_type_options as $dtto => $dispatcher_template_type_option)
+                            <div class="col-lg-6 custom-radio radio_new mt-2">
+                                @if($category->template_type_id)
+                                    <input type="radio" value="{{$dispatcher_template_type_option->id}}" id="dispatcher_template_type_option_{{$dispatcher_template_type_option->id}}" name="template_type_id" class="custom-control-input tab_bar_options" {{ ($category->template_type_id == $dispatcher_template_type_option->id) ? 'checked' : '' }}>
+                                @else
+                                    <input type="radio" value="{{$dispatcher_template_type_option->id}}" id="dispatcher_template_type_option_{{$dispatcher_template_type_option->id}}" name="template_type_id" {{ ($dtto == 0) ? 'checked' : '' }} class="custom-control-input tab_bar_options">
+                                @endif
+                                <label class="custom-control-label" for="dispatcher_template_type_option_{{$dispatcher_template_type_option->id}}">
+                                    <img class="card-img-top img-fluid" src="https://cdn.dribbble.com/users/2878111/screenshots/15265330/media/94ed25cc0e51db948afbd8319cd8d655.jpg?compress=1&resize=1200x900" alt="Card image cap">
+                                </label>
+                            </div>
                         @endforeach
-                    </select>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6" id="warning_page_design_main_div" style="display:none;">
+            <div class="col-md-4" id="warning_page_design_main_div" style="display:none;">
                 {!! Form::label('title', 'Warning Page Design',['class' => 'control-label']) !!}
-                {!! Form::textarea('warning_page_design', '', ['class'=>'form-control', 'id' => 'warning_page_design', 'placeholder' => 'Description', 'rows' => '5', 'name' => 'warning_page_design']) !!}
+                {!! Form::textarea('warning_page_design', '', ['class'=>'form-control', 'id' => 'warning_page_design', 'placeholder' => 'Description', 'rows' => '10', 'name' => 'warning_page_design']) !!}
             </div>
         </div>
         <div class="row">

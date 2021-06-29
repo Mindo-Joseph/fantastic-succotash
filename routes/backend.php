@@ -19,11 +19,16 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::any('/logout', 'Auth\LoginController@logout')->name('client.logout');
     Route::get('profile', 'Client\DashBoardController@profile')->name('client.profile');
     Route::get('dashboard', 'Client\DashBoardController@index')->name('client.dashboard');
+    Route::get('salesInfo/monthly', 'Client\DashBoardController@monthlySalesInfo')->name('client.monthlySalesInfo');
+    Route::get('salesInfo/yearly', 'Client\DashBoardController@yearlySalesInfo')->name('client.yearlySalesInfo');
+    Route::get('salesInfo/weekly', 'Client\DashBoardController@weeklySalesInfo')->name('client.weeklySalesInfo');
+    Route::get('categoryInfo', 'Client\DashBoardController@categoryInfo')->name('client.categoryInfo');
     Route::get('account/orders', [OrderController::class, 'index'])->name('account.orders');
     Route::get('account/promo-code', [PromoCodeController::class, 'index'])->name('account.promo.code');
     Route::get('account/loyalty', [LoyaltyController::class, 'index'])->name('account.loyalty');
     Route::get('account/tax', [TaxController::class, 'index'])->name('account.tax');
     Route::get('account/vendor', [VendorController::class, 'index'])->name('account.vendor');
+    Route::post('account/vendor/filter', [VendorController::class, 'filter'])->name('account.vendor.filter');
     Route::put('profile/{id}', 'Client\DashBoardController@updateProfile')->name('client.profile.update');
     Route::post('password/update', 'Client\DashBoardController@changePassword')->name('client.password.update');
     Route::get('configure', 'Client\ClientPreferenceController@index')->name('configure.index');

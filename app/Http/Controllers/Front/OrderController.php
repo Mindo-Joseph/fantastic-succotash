@@ -113,6 +113,7 @@ class OrderController extends FrontController{
                     if(!empty($vendor_cart_product->product->Requires_last_mile) && $vendor_cart_product->product->Requires_last_mile == 1){   
                       $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id);
                     }
+                    
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
                     $order_product->order_id = $order->id;
@@ -122,6 +123,10 @@ class OrderController extends FrontController{
                     $order_product->quantity = $vendor_cart_product->quantity;
                     $order_product->vendor_id = $vendor_cart_product->vendor_id;
                     $order_product->product_id = $vendor_cart_product->product_id;
+                    $product_category = Product::where('id', $vendor_cart_product->product_id)->first();
+                    if($product_category){
+                        $order_product->category_id = $product_category->category_id;
+                    }
                     $order_product->created_by = $vendor_cart_product->created_by;
                     $order_product->variant_id = $vendor_cart_product->variant_id;
                     $order_product->product_name = $vendor_cart_product->product->sku;

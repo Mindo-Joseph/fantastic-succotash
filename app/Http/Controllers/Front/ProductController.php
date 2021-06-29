@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating};
 use Illuminate\Http\Request;
 use Session;
 use Auth;
@@ -18,14 +18,13 @@ class ProductController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $domain = '', $sku)
+    public function index(Request $request, $domain = '', $url_slug)
     {
         $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-        $product = Product::select('vendor_id')->where('sku', $sku)->firstOrFail();
-
+        $product = Product::select('vendor_id')->where('url_slug', $url_slug)->firstOrFail();
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if($product){
                 $productVendorId = $product->vendor_id;
@@ -75,7 +74,7 @@ class ProductController extends FrontController
                 $q2->where('apt.language_id', $langId);
             },
         ])->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory')
-            ->where('sku', $sku)
+            ->where('url_slug', $url_slug)
             ->where('is_live', 1)
             ->firstOrFail();
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
@@ -92,10 +91,13 @@ class ProductController extends FrontController
         }
 
         $order_deliver = 0;
+        $rating_details = '';
         $already_buy = OrderProduct::where('product_id',$product->id)->whereHas('order',function($q){$q->where('user_id',Auth::id());})->first();
-        if($already_buy)
-        $order_deliver = VendorOrderStatus::where(['order_id' => $already_buy->order_id,'vendor_id' => $already_buy->vendor_id,'order_status_option_id' => 5])->count();
-        return view('frontend.product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'order_deliver' => $order_deliver]);
+        if($already_buy){
+            $order_deliver = VendorOrderStatus::where(['order_id' => $already_buy->order_id,'vendor_id' => $already_buy->vendor_id,'order_status_option_id' => 5])->count();
+            $rating_details = OrderProductRating::where(['user_id' => Auth::id(),'order_id' => $already_buy->order_id,'order_vendor_product_id' => $already_buy->id])->first();
+        }
+       return view('frontend.product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'order_deliver' => $order_deliver,'rating_details' => $rating_details]);
     }
 
     /**

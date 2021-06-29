@@ -61,17 +61,17 @@
                                     <th>Name</th>
                                     <th>Address</th>
                                     <th>Offers</th>
-                                    <th>Can Add <br> Category</th>
-                                    <th>Commission <br> Percentage</th>
-                                    <th>Commission <br> Fixed per Order</th>
-                                    <th>Commission <br> Monthly</th>
-                                    <th>Products</th>
-                                    <th>Orders</th>
-                                    <th>Active <br> Orders</th>
-                                    <th></th>
+                                    <th class="text-center">Can Add <br> Category</th>
+                                    <th class="text-center">Commission <br> Percentage</th>
+                                    <!-- <th>Commission <br> Fixed per Order</th>
+                                    <th>Commission <br> Monthly</th> -->
+                                    <th class="text-center">Products</th>
+                                    <th class="text-center">Orders</th>
+                                    <th class="text-center">Active <br> Orders</th>
+                                    <th class="text-center"></th>
                                     <!-- <th>Latitude</th>
                                     <th>Longitude</th> -->
-                                    <th>Action</th>
+                                    <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="post_list">
@@ -94,24 +94,24 @@
                                                 <span class="badge bg-soft-warning text-warning">Delivery</span>
                                             @endif
                                         </td>
-                                        <td>{{($vendor->add_category == 0) ? 'No' : 'Yes' }}</td>
-                                        <td>{{$vendor->commission_percent }}</td>
-                                        <td>{{$vendor->commission_fixed_per_order}}</td>
-                                        <td>{{$vendor->commission_monthly }}</td>
-                                        <td>{{$vendor->products_count}}</td>
-                                        <td>{{$vendor->orders_count}}</td>
-                                        <td>{{$vendor->active_orders_count}}</td>
-                                        <td> </td>
+                                        <td class="text-center">{{($vendor->add_category == 0) ? 'No' : 'Yes' }}</td>
+                                        <td class="text-center">{{$vendor->commission_percent }}</td>
+                                        <!-- <td>{{$vendor->commission_fixed_per_order}}</td>
+                                        <td>{{$vendor->commission_monthly }}</td> -->
+                                        <td class="text-center">{{$vendor->products_count}}</td>
+                                        <td class="text-center">{{$vendor->orders_count}}</td>
+                                        <td class="text-center">{{$vendor->active_orders_count}}</td>
+                                        <td class="text-center"> </td>
                                         <!-- <td> {{ $vendor->latitude }} </td>
                                         <td> {{ $vendor->longitude }}</td> -->
-                                        <td> 
-                                            <div class="form-ul" style="width: 60px;">
-                                                <div class="inner-div" style="float: left;">
+                                        <td class="text-center"> 
+                                            <div class="form-ul">
+                                                <div class="inner-div d-inline-block">
                                                     <a class="action-icon" userId="{{$vendor->id}}" href="{{ route('vendor.show', $vendor->id) }}">
                                                         <i class="mdi mdi-eye"></i>
                                                     </a> 
                                                 </div>
-                                                <div class="inner-div">
+                                                <div class="inner-div d-inline-block">
                                                     <form method="POST" action="{{ route('vendor.destroy', $vendor->id) }}">
                                                         @csrf
                                                         @method('DELETE')

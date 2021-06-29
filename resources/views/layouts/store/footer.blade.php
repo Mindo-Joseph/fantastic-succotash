@@ -42,7 +42,6 @@
     @if(Session::has('selectedAddress'))
         selected_address = 1;
     @endif
-
     @if( Session::has('preferences') )
         @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) ) 
             is_hyperlocal = 1;

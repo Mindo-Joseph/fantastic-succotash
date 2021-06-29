@@ -296,13 +296,12 @@
                                                 class="icofont icofont-contacts"></i>Video</a>
                                         <div class="material-border"></div>
                                     </li> -->
-                                    @if($order_deliver == 1)
                                     <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab"
                                             href="#top-review" role="tab" aria-selected="false"><i
-                                                class="icofont icofont-contacts"></i>Write Review</a>
+                                                class="icofont icofont-contacts"></i>Ratings & Reviews</a>
                                         <div class="material-border"></div>
                                     </li>
-                                    @endif
+                                   
                                 </ul>
                                 <div class="tab-content nav-material" id="top-tabContent">
                                     <div class="tab-pane fade show active" id="top-home" role="tabpanel"
@@ -325,15 +324,18 @@
                                     </div> -->
                                     <div class="tab-pane fade" id="top-review" role="tabpanel"
                                         aria-labelledby="review-top-tab">
-                                       
+                                        @if($order_deliver == 1)
+                                  
                                 <form id="review-upload-form" class="theme-form" action="javascript:void(0)" method="post" enctype="multipart/form-data">
                                    @csrf
-                                   <input type="hidden" name="order_vendor_product_id" value="143">
+                                    <input type="hidden" name="order_vendor_product_id" value="143">
+                                    <textarea class="form-control" maxlength="500" name="hidden_review" hidden>{{$rating_details->review??''}}</textarea>
                                             <div class="rating-form">
                                                 <fieldset class="form-group">
                                                     <legend class="form-legend">Rating:</legend>
                                                     <div class="form-item">
-                                                        <input id="rating-5" name="rating" type="radio" value="5" />
+
+                                                      <input id="rating-5" name="rating" type="radio" value="5" {{ $rating_details->rating == 5 ? 'checked' : '' }}/>
                                                         <label for="rating-5" data-value="5">
                                                             <span class="rating-star">
                                                                 <i class="fa fa-star-o"></i>
@@ -341,7 +343,7 @@
                                                             </span>
                                                             <span class="ir">5</span>
                                                         </label>
-                                                        <input id="rating-4" name="rating" type="radio" value="4" />
+                                                        <input id="rating-4" name="rating" type="radio" value="4"  {{ $rating_details->rating == 4 ? 'checked' : '' }}/>
                                                         <label for="rating-4" data-value="4">
                                                             <span class="rating-star">
                                                                 <i class="fa fa-star-o"></i>
@@ -349,7 +351,7 @@
                                                             </span>
                                                             <span class="ir">4</span>
                                                         </label>
-                                                        <input id="rating-3" name="rating" type="radio" value="3" />
+                                                        <input id="rating-3" name="rating" type="radio" value="3"  {{ $rating_details->rating == 3 ? 'checked' : '' }}/>
                                                         <label for="rating-3" data-value="3">
                                                             <span class="rating-star">
                                                                 <i class="fa fa-star-o"></i>
@@ -357,7 +359,7 @@
                                                             </span>
                                                             <span class="ir">3</span>
                                                         </label>
-                                                        <input id="rating-2" name="rating" type="radio" value="2" />
+                                                        <input id="rating-2" name="rating" type="radio" value="2"  {{ $rating_details->rating == 2 ? 'checked' : '' }}/>
                                                         <label for="rating-2" data-value="2">
                                                             <span class="rating-star">
                                                                 <i class="fa fa-star-o"></i>
@@ -365,7 +367,7 @@
                                                             </span>
                                                             <span class="ir">2</span>
                                                         </label>
-                                                        <input id="rating-1" name="rating" type="radio" value="1" />
+                                                        <input id="rating-1" name="rating" type="radio" value="1"  {{ $rating_details->rating == 1 ? 'checked' : '' }}/>
                                                         <label for="rating-1" data-value="1">
                                                             <span class="rating-star">
                                                                 <i class="fa fa-star-o"></i>
@@ -386,7 +388,7 @@
                                                 </fieldset>
                                             </div>
 
-                                            <div class="row rating_files">
+                                            <div class="row rating_files" style="display: none;">
                                                 <div class="col-12">
                                                     <h4>Upload Images</h4>
                                                 </div>
@@ -405,35 +407,13 @@
                                                 
                                             </div>
 
-                                            <div class="form-row">
-                                                <!-- <div class="col-md-12">
-                                                    <div class="media">
-                                                        <label>Rating</label>
-                                                        <div class="media-body ml-3">
-                                                            <div class="rating three-star">
-                                                                @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                                                    @endfor
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div> -->
-                                                <!-- <div class="col-md-6">
-                                                    <label for="name">Name</label>
-                                                    <input type="text" class="form-control" id="name" placeholder="Enter Your name" required>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="email">Email</label>
-                                                    <input type="text" class="form-control" id="email" placeholder="Email" required>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <label for="review">Review Title</label>
-                                                    <input type="text" class="form-control" id="review" placeholder="Enter your Review Subjects" required>
-                                                </div> -->
+                                            <div class="form-row" style="display: none">
+                                               
                                                 <div class="col-md-12 mb-3">
                                                     <label for="review">Review Title</label>
                                                     <textarea class="form-control"
                                                         placeholder="Wrire Your Testimonial Here"
-                                                        id="exampleFormControlTextarea1" rows="8"></textarea>
+                                                        id="exampleFormControlTextarea1" rows="4"  name="review" maxlength="500">{{$rating_details->review}}</textarea>
                                                 </div>
                                                 <span class="text-danger" id="error-msg"></span>
                                                 <span class="text-success" id="success-msg"></span>
@@ -442,7 +422,9 @@
                                                 </div>
                                                 
                                             </div>
-                                        </form>
+                                </form>
+                                @endif
+                                   
                                     </div>
                                 </div>
                             </div>
@@ -648,6 +630,19 @@
 
 <script type="text/javascript">
 $(document).ready(function (e) {
+
+    $('.rating-star').click(function(){
+        $('.rating_files').show(); 
+        $('.form-row').show();    
+    });
+
+    $('input[type=radio][name=rating]').on('change', function() {
+    $('.rating_files').show(); 
+    $('.form-row').show();    
+    $(this).closest("form").submit();
+    });
+
+
 $.ajaxSetup({
 headers: {
 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -675,6 +670,7 @@ $('#review-upload-form').submit(function(e) {
 e.preventDefault();
 
 var formData = new FormData(this);
+let review = $('#exampleFormControlTextarea1').val();
 let TotalImages = $('#input-file')[0].files.length; //Total Images
 let images = $('#input-file')[0];
 for (let i = 0; i < TotalImages; i++) {
@@ -689,17 +685,19 @@ cache:false,
 contentType: false,
 processData: false,
 beforeSend: function () {
+    if(TotalImages > 0 && review.length > 0)
     $("#review_form_button").html('<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop('disabled', true);
             },
 success: (data) => {
 if(data.status == 'Success')
     {
-    //this.reset();
-   // $('#success-msg').text(data.message);
-    $("#review_form_button").html('Submitted');
+        if(TotalImages == 0  && review.length == 0)
+        $("#review_form_button").html('Submit Your Review').prop('disabled', false);
+        else
+        $("#review_form_button").html('Submitted');
     }else{
         $('#error-msg').text(data.message);
-        $("#review_form_button").html('Submitted').prop('disabled', false);
+        $("#review_form_button").html('Submit Your Review').prop('disabled', false);
     }
 },
 error: function(data){

@@ -34,7 +34,7 @@ class RatingController extends FrontController{
                 $ratings = OrderProductRating::updateOrCreate(['order_vendor_product_id' => $request->order_vendor_product_id,
                 'order_id' => $order_details->order_id,
                 'product_id' => $order_details->product_id,
-                'user_id' => Auth::id()],['rating' => $request->rating,'review' => $request->review??null]);
+                'user_id' => Auth::id()],['rating' => $request->rating,'review' => $request->review??$request->hidden_review]);
 
                if ($image = $request->file('images')) {
                     foreach ($image as $files) {

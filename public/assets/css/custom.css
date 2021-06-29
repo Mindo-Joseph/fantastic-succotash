@@ -188,7 +188,7 @@
 }
 
 .dropify-wrapper {
-    height: 130px !important;
+    height: 100px !important;
 }
 
 .catalog_box .card-box {
@@ -377,7 +377,6 @@ body[data-sidebar-size="condensed"]:not([data-layout="compact"]) {
 button.btn.btn-info.btn-block.save_btn {
     width: auto;
     border-radius: 50px;
-    padding: 3px;
 }
 
 body .switchery {
@@ -1325,6 +1324,29 @@ i.mdi.mdi-exclamation-thick {
 }
 
 
+.page-title-right input.form-control.border.form-control.input {
+    height: auto;
+}
+
+.page-title-right .input-group-text {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.description-txt p {
+    font-size: 12px;
+}
+
+
+
+
+
+
+@media(max-width:1600px){
+    .card-box{
+        padding: 20px;
+    }
+}
 .category-img{
     height: 170px;
 }
@@ -1333,4 +1355,14 @@ i.mdi.mdi-exclamation-thick {
     height: 100%;
     object-fit: cover;
     width: 100%;
+}
+
+
+.top-input {
+    width: 30%;
+}
+
+.top-input input#month_picker_filter,.top-input select.form-control {
+    height: 30px;
+    padding: 0 5px;
 }

@@ -118,15 +118,4 @@ class Product extends Model{
     {
         return $this->belongsTo('App\Models\TaxCategory', 'tax_category_id', 'id')->select('id', 'title', 'code');
     }
-
-
-    /*public function allvariants(){
-        return $this->hasMany('App\Models\ProductVariantSet')
-        ->join('variants', 'variants.id', 'product_variant_sets.variant_type_id')
-        ->join('variant_options', 'product_variant_sets.product_id', 'variant_options.id')
-        ->select('product_variant_sets.product_id', 'variants.position', 'product_variant_sets.variant_type_id', 'variants.title as variant_title', 'variants.type', 'product_variant_sets.variant_option_id', 'variant_options.title as option_title', 'variant_options.variant_id', 'variant_options.hexacode', 'variant_options.position')
-        ->groupBy('product_variant_sets.product_variant_id')
-        ->groupBy('product_variant_sets.variant_type_id')
-        ->groupBy('product_variant_sets.variant_option_id');
-    }*/
 }

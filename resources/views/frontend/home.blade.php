@@ -68,7 +68,7 @@
 <script type="text/template" id="products_template">
     <% _.each(products, function(product, k){ %>
         <div>
-            <a class="card text-center" href="{{route('productDetail')}}/<%= product.sku %>">
+            <a class="card text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
                 <div class="product-image">
                     <img src="<%= product.image_url %>" alt="">
                 </div>    
@@ -88,6 +88,7 @@
         </div>
     <% }); %>
 </script>
+
 <section class="section-b-space p-t-0 pt-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
     <div class="container">
         <div class="row">
@@ -105,6 +106,104 @@
         </div>
     </div>
 </section>
+
+
+<section class="banner-padding ratio2_1 radius">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 mt-3">
+                <div class="h-100">
+                    <img src="../assets/images/1.jpg" class="img-fluid bg-img" alt="">
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col-md-4 mt-3">
+                        <a href="#">
+                            <div class="collection-banner p-right text-end">
+                                <div class="img-part">
+                                    <img src="../assets/images/small/img-6.jpg" alt=""
+                                        class="img-fluid blur-up lazyload bg-img">
+                                </div>
+                                <div class="contain-banner banner-3">
+                                    <div>
+                                        <h4 class="text-white">save 30%</h4>
+                                        <h2 class="text-white">bag</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <a href="#">
+                            <div class="collection-banner p-right text-end">
+                                <div class="img-part">
+                                    <img src="../assets/images/small/img-4.jpg" alt=""
+                                        class="img-fluid blur-up lazyload bg-img">
+                                </div>
+                                <div class="contain-banner banner-3">
+                                    <div>
+                                        <h4 class="text-white">save 60%</h4>
+                                        <h2 class="text-white">shoes</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <a href="#">
+                            <div class="collection-banner p-right text-end">
+                                <div class="img-part">
+                                    <img src="../assets/images/small/img-1.jpg" alt=""
+                                        class="img-fluid blur-up lazyload bg-img">
+                                </div>
+                                <div class="contain-banner banner-3">
+                                    <div>
+                                        <h4 class="text-white">save 30%</h4>
+                                        <h2 class="text-white">watch</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <a href="#">
+                            <div class="collection-banner p-right text-end">
+                                <div class="img-part">
+                                    <img src="../assets/images/small/img-2.jpg" alt=""
+                                        class="img-fluid blur-up lazyload bg-img">
+                                </div>
+                                <div class="contain-banner banner-3">
+                                    <div>
+                                        <h4 class="text-white">start from $25</h4>
+                                        <h2 class="text-white">winter</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <a href="#">
+                            <div class="collection-banner p-right text-end">
+                                <div class="img-part">
+                                    <img src="../assets/images/small/img-7.jpg" alt=""
+                                        class="img-fluid blur-up lazyload bg-img">
+                                </div>
+                                <div class="contain-banner banner-3">
+                                    <div>
+                                        <h4 class="text-white">under $200</h4>
+                                        <h2 class="text-white">denims</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="section-b-space">
     <div class="container">
         <div class="row d-none" id="new_products_wrapper">

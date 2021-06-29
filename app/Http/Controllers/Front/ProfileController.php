@@ -95,11 +95,14 @@ class ProfileController extends FrontController
             'name' => 'required|string|min:3|max:80',
             'phone_number' => 'required|numeric'
         ]);
-
+        $messages = array(
+            'name.required' => 'Name field is required',
+            'phone_number.required' => 'Phone number field is required'
+        );
         if ($validator->fails()) {
             foreach ($validator->errors()->toArray() as $error_key => $error_value) {
                 $errors['error'] = $error_value[0];
-                return redirect()->back()->with($errors);
+                return redirect()->back()->withInput()->withErrors($errors);
             }
         }
         $user = User::where('id', Auth::user()->id)->first();
@@ -112,10 +115,12 @@ class ProfileController extends FrontController
             $user->phone_number = $request->phone_number;
             $user->description = $request->description;
             $user->save();
-            return response()->json(array('status' => 'success', 'message'=>'Profile has been updated'));
+            return redirect()->back()->with('success', 'Profile has been updated');
+            // return response()->json(array('status' => 'success', 'message'=>'Profile has been updated'));
 
         }
-        return response()->json(['status' => 'error', 'message' => 'Profile updation failed']);
+        return redirect()->back()->with('errors', 'Profile updation failed');
+        // return response()->json(['status' => 'error', 'message' => 'Profile updation failed']);
     }
 
     /**

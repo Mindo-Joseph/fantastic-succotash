@@ -42,7 +42,7 @@ class CategoryController extends BaseController{
     public function create(Request $request){
         $is_vendor = ($request->has('is_vendor')) ? $request->is_vendor : 0;
         $vendors = array();
-        $type = Type::all();
+        $type = Type::orderBY('sequence', 'ASC')->get();
         $category = new Category();
         $parCategory = Category::select('id', 'slug')->where('deleted_at', NULL)->get();
         $vendor_list = Vendor::select('id', 'name')->where('status', '!=', $this->blocking)->get();
@@ -109,8 +109,8 @@ class CategoryController extends BaseController{
     public function edit(Request $request, $domain = '', $id){
         $is_vendor = ($request->has('is_vendor')) ? $request->is_vendor : 0;
         $vendors = array();
-        $type = Type::all();
         $tagList = array();
+        $type = Type::orderBY('sequence', 'ASC')->get();
         $category = Category::with('translation', 'tags')->where('id', $id)->first();
         if(!empty($category->tags)){
             foreach ($category->tags as $key => $value) {

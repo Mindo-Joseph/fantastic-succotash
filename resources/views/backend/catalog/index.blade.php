@@ -203,6 +203,7 @@
 @include('backend.catalog.modals')
 @endsection
 @section('script')
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script src="{{asset('assets/libs/nestable2/nestable2.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/my-nestable.init.js')}}"></script>
 <script src="{{asset('assets/libs/dragula/dragula.min.js')}}"></script>

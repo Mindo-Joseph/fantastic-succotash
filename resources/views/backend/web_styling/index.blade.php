@@ -19,11 +19,11 @@
 </div>
 <form id="favicon-form" method="post" enctype="multipart/form-data">
 <div class="row">
-    <div class="col-lg-6">
-        <div class="card">
+    <div class="col-lg-2">
+        <div class="card h-100">
             <div class="card-body">
                 <h4 class="header-title mb-3">Favicon</h4>
-                <div class="mb-3">
+                <div class="mb-0">
                     <input type="file" accept="image/*" data-default-file="{{$client_preferences->favicon ? $client_preferences->favicon['proxy_url'].'600/400'.$client_preferences->favicon['image_path'] : ''}}" data-plugins="dropify" name="favicon" class="dropify" id="image"/>
                     <p class="text-muted text-center mt-2 mb-0">Upload Favicon</p>
                     <span class="invalid-feedback" role="alert">
@@ -34,11 +34,11 @@
         </div>
     </div>
     <div class="col-lg-6">
-        <div class="card">
+        <div class="card h-100">
             <div class="card-body">
                 <h4 class="header-title">Color</h4>
-                <div class="mb-3">
-                    <div class="form-group mb-3">
+                <div class="mb-0">
+                    <div class="form-group mb-0">
                         <label for="primary_color">Primary Color</label>
                         <input type="text" id="primary_color_option" name="primary_color" class="form-control" value="{{ old('primary_color', $client_preferences->web_color ?? 'cccccc')}}">
                     </div>

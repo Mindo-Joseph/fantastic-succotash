@@ -11,6 +11,33 @@ function pr($var) {
 	print_r($var);
   	echo '</pre>';
 }
+function getMonthNumber($month_name){
+    if($month_name == 'January'){
+        return 1;
+    }else if($month_name == 'February'){
+        return 2;
+    }else if($month_name=='March'){
+        return 3;
+    }else if($month_name=='April'){
+        return 4;
+    }else if($month_name=='May'){
+        return 5;
+    }else if($month_name=='June'){
+        return 6;
+    }else if($month_name=='July'){
+        return 7;
+    }else if($month_name=='August'){
+        return 8;
+    }else if($month_name=='September'){
+        return 9;
+    }else if($month_name=='October'){
+        return 10;
+    }else if($month_name=='November'){
+        return 11;
+    }else if($month_name=='December'){
+        return 12;
+    }
+}
 function generateOrderNo($length = 8){
     $number = '';
     do {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{UserWishlist, Product};
 use Carbon\Carbon;
@@ -26,7 +27,7 @@ class WishlistController extends FrontController
                 $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                 $q->groupBy('product_id');
             },
-        ])->select( "id", "user_id", "product_id")
+        ])->select( "id", "user_id", "product_id", "added_on")
         ->where('user_id', Auth::user()->id)->get();
         if(!empty($wishList)){
             $wishList = $wishList->toArray();
