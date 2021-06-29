@@ -143,10 +143,8 @@ class BaseController extends Controller
 
         return $this->successCount;
     }
-
-    /**     * check if cookie already exist     */
-    public function userMetaData($userid, $device_type = 'web', $device_token = 'web')
-    {
+    
+    public function userMetaData($userid, $device_type = 'web', $device_token = 'web'){
         $device = UserDevice::where('user_id', $userid)->first();
         if(!$device){
             $user_device[] = [

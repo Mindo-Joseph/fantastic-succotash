@@ -1,6 +1,37 @@
 ========== Left Sidebar Start ========== -->
 <div class="left-side-menu">
 
+    <!-- LOGO -->
+    <div class="logo-box m-hide d-lg-block">
+            @php
+                $urlImg = URL::to('/').'/assets/images/users/user-1.jpg';
+                $clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
+                if($clientData){
+                    $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'];
+                }
+            @endphp
+            <a href="{{route('client.dashboard')}}" class="logo logo-dark text-center">
+                <span class="logo-sm">
+                    <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
+                </span>
+                <span class="logo-lg">
+                    <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="20">
+                </span>
+            </a>
+            
+            <a href="{{route('client.dashboard')}}" class="logo logo-light text-center">
+                <span class="logo-sm">
+                    <img src="{{$urlImg}}"
+                        alt="" height="30" style="padding-top: 4px;">
+                </span>
+                <span class="logo-lg">
+                    <img src="{{$urlImg}}"
+                        alt="" height="50" style="padding-top: 4px;">
+                </span>
+            </a>
+        </div>
+
+
     <div class="h-100" data-simplebar>
 
         <!-- User box -->

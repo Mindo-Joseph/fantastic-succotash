@@ -106,14 +106,14 @@
                                             $imagePath = $v['image']['path']['proxy_url'].'300/300'.$v['image']['path']['image_path'];
                                         } ?>
                                         <div class="media">
-                                            <a href="{{route('productDetail', $new['sku'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
+                                            <a href="{{route('productDetail', $new['url_slug'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                             <div class="media-body align-self-center">
                                                 <div class="rating">
                                                     @for($i = 1; $i < 6; $i++)
                                                         <i class="fa fa-star"></i>
                                                     @endfor
                                                 </div>
-                                                <a href="{{route('productDetail', $new['sku'])}}">
+                                                <a href="{{route('productDetail', $new['url_slug'])}}">
                                                     <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                                 </a>
                                                 <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
@@ -216,22 +216,19 @@
                                     <div class="displayProducts">
                                         <div class="product-wrapper-grid">
                                             <div class="row margin-res">
-
                                             @if(!empty($listData))
                                                 @foreach($listData as $key => $data)
-
                                                     <?php $imagePath = $data->logo['proxy_url'] .'300/300'. $data->logo['image_path'];
-
                                                     $imagePath2 = $data->banner['proxy_url'] .'300/300'. $data->banner['image_path'];
                                                     ?>
                                                     <div class="col-xl-3 col-6 col-grid-box">
                                                         <div class="product-box">
                                                             <div class="img-wrapper">
                                                                 <div class="front">
-                                                                    <a href="{{route('vendorDetail', $data->id)}}"><img class="img-fluid blur-up lazyload" alt="" src="{{$imagePath}}" width="300" height="300"></a>
+                                                                    <a href="{{route('vendorDetail', $data->slug)}}"><img class="img-fluid blur-up lazyload" alt="" src="{{$imagePath}}" width="300" height="300"></a>
                                                                 </div>
                                                                 <div class="back">
-                                                                    <a href="{{route('vendorDetail', $data->id)}}"><img class="img-fluid blur-up lazyload" alt="" src="{{$imagePath2}}" width="300" height="300"></a>
+                                                                    <a href="{{route('vendorDetail', $data->slug)}}"><img class="img-fluid blur-up lazyload" alt="" src="{{$imagePath2}}" width="300" height="300"></a>
                                                                 </div>
                                                             </div>
                                                             <div class="product-detail">
@@ -240,7 +237,7 @@
                                                                         <i class="fa fa-star"></i>
                                                                     @endfor
                                                                 </div>
-                                                                <a href="{{route('vendorDetail', $data->id)}}">
+                                                                <a href="{{route('vendorDetail', $data->slug)}}">
                                                                     <h6>{{$data->name}}</h6>
                                                                 </a>
                                                             </div>
