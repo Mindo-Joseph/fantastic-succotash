@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
@@ -96,7 +96,15 @@ class ProductController extends FrontController
                 $v->multiplier = $clientCurrency->doller_compare;
             }
         }
-        return view('frontend.product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts]);
+
+        $order_deliver = 0;
+        $rating_details = '';
+        $already_buy = OrderProduct::where('product_id',$product->id)->whereHas('order',function($q){$q->where('user_id',Auth::id());})->first();
+        if($already_buy){
+            $order_deliver = VendorOrderStatus::where(['order_id' => $already_buy->order_id,'vendor_id' => $already_buy->vendor_id,'order_status_option_id' => 5])->count();
+            $rating_details = OrderProductRating::where(['user_id' => Auth::id(),'order_id' => $already_buy->order_id,'order_vendor_product_id' => $already_buy->id])->first();
+        }
+       return view('frontend.product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'order_deliver' => $order_deliver,'rating_details' => $rating_details]);
     }
 
     /**

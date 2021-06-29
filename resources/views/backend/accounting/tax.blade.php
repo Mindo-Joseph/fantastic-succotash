@@ -53,6 +53,8 @@
             <td><%= vendor_order.discount_amount %></td>
             <td><%= vendor_order.admin_commission_fixed_amount %></td>
             <td><%= vendor_order.order_detail.payment_option.title %></td> 
+            <td><%= vendor_order.order_detail.payment_option.title %></td> 
+            <td><%= vendor_order.order_detail.payment_option.title %></td> 
         </tr>
     <% }); %>
 </script>
@@ -66,9 +68,6 @@
                             <div class="col-md-6">
                                  <input type="text" class="form-control" data-provide="datepicker" data-date-format="MM yyyy" data-date-min-view-mode="1" id="month_picker_filter" style="display:none;">
                             </div>
-                            <a href="{{ route('account.tax.export') }}" class="btn btn-success waves-effect waves-light">
-                                <span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV
-                            </a>
                         </div>  
                    </div>
                     <div class="table-responsive">
@@ -81,6 +80,8 @@
                                     <th>Final Amount</th>
                                     <th>Tax Amount</th>
                                     <th>Tax Types</th>
+                                    <th>Payment Method</th>
+                                    <th>Payment Method</th>
                                     <th>Payment Method</th>
                                 </tr>
                             </thead>
@@ -129,8 +130,21 @@
                             $('#accounting_vendor_datatable tbody').empty();
                         }
                         table = $("#accounting_vendor_datatable").DataTable({
-                            "dom": '<"toolbar">frtip',
+                            "dom": '<"toolbar">Bfrtip',
+                            autoWidth: false,
                             "scrollX": true,
+                            language: {
+                                search: "",
+                                searchPlaceholder: "Search records"
+                            },
+                            buttons: [
+                                {   className:'btn btn-success waves-effect waves-light',
+                                    text: '<span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV',
+                                    action: function ( e, dt, node, config ) {
+                                        window.location.href = "{{ route('account.tax.export') }}";
+                                    }
+                                }
+                            ],
                             drawCallback: function () {
                                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                             },

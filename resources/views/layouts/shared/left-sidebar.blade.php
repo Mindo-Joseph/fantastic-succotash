@@ -1,4 +1,4 @@
-========== Left Sidebar Start ========== -->
+
 <div class="left-side-menu">
 
     <!-- LOGO -->

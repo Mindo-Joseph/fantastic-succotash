@@ -13,7 +13,7 @@
 <!-- Start Content-->
 <div class="container-fluid">
 
-    <div class="content">
+    <div class="content dashboard-boxes">
 
         <!-- Start Content-->
         <div class="container-fluid">
@@ -45,10 +45,10 @@
             <!-- end page title -->
 
             <div class="row">
-                <div class="col-md-6 col-xl-3">
+                <div class="col-md-6 col-xl">
                     <div class="widget-rounded-circle card">
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row align-items-center">
                                 <div class="col">
                                     <div class="text-end">
                                         <p class="text-muted mb-1 text-truncate">Total Revenue</p>
@@ -56,8 +56,8 @@
                                     </div>
                                 </div>
                                 <div class="col text-md-right">
-                                    <div class="avatar-lg rounded-circle bg-soft-primary border-primary border ml-auto">
-                                        <i class="fe-heart font-22 avatar-title text-primary"></i>
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-heart font-22 avatar-title"></i>
                                     </div>
                                 </div>
                             </div> <!-- end row-->
@@ -65,61 +65,84 @@
                     </div> <!-- end widget-rounded-circle-->
                 </div> <!-- end col-->
 
-                <div class="col-md-6 col-xl-3">
+                <div class="col-md-6 col-xl">
                     <div class="widget-rounded-circle card">
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row align-items-center">
+                            <div class="col-6">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Today's Sales</p>
+                                        <h3 class="text-dark mt-1">$<span data-plugin="counterup">{{$today_sales}}</span></h3>
+                                    </div>
+                                </div>
                                 <div class="col-6">
-                                    <div class="avatar-lg rounded-circle bg-soft-success border-success border">
+                                    <div class="avatar-lg rounded-circle ml-auto">
                                         <i class="fe-shopping-cart font-22 avatar-title text-success"></i>
                                     </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="text-end">
-                                        <h3 class="text-dark mt-1">$<span data-plugin="counterup">{{$today_sales}}</span></h3>
-                                        <p class="text-muted mb-1 text-truncate">Today's Sales</p>
-                                    </div>
-                                </div>
+                               
                             </div> <!-- end row-->
                         </div>
                     </div> <!-- end widget-rounded-circle-->
                 </div> <!-- end col-->
 
-                <div class="col-md-6 col-xl-3">
+                <div class="col-md-6 col-xl">
                     <div class="widget-rounded-circle card">
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="avatar-lg rounded-circle bg-soft-info border-info border">
-                                        <i class="fe-bar-chart-line- font-22 avatar-title text-info"></i>
-                                    </div>
-                                </div>
+                            <div class="row align-items-center">
                                 <div class="col-6">
                                     <div class="text-end">
-                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span>%</h3>
                                         <p class="text-muted mb-1 text-truncate">Conversion</p>
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span>%</h3>
                                     </div>
                                 </div>
+                                <div class="col-6">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-bar-chart-line font-22 avatar-title"></i>
+                                    </div>
+                                </div>
+                                
                             </div> <!-- end row-->
                         </div>
                     </div> <!-- end widget-rounded-circle-->
                 </div> <!-- end col-->
 
-                <div class="col-md-6 col-xl-3">
+                <div class="col-md-6 col-xl">
                     <div class="widget-rounded-circle card">
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="avatar-lg rounded-circle bg-soft-warning border-warning border">
-                                        <i class="fe-eye font-22 avatar-title text-warning"></i>
-                                    </div>
-                                </div>
+                            <div class="row align-items-center">
                                 <div class="col-6">
                                     <div class="text-end">
-                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
                                         <p class="text-muted mb-1 text-truncate">Today's Visits</p>
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
                                     </div>
                                 </div>
+                                <div class="col-6">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-eye font-22 avatar-title"></i>
+                                    </div>
+                                </div>
+                               
+                            </div> <!-- end row-->
+                        </div>
+                    </div> <!-- end widget-rounded-circle-->
+                </div> <!-- end col-->
+                <div class="col-md-6 col-xl">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-6">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Today's Visits</p>
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-eye font-22 avatar-title"></i>
+                                    </div>
+                                </div>
+                               
                             </div> <!-- end row-->
                         </div>
                     </div> <!-- end widget-rounded-circle-->
@@ -128,8 +151,8 @@
             <!-- end row-->
 
             <div class="row">
-                <div class="col-lg-4">
-                    <div class="card">
+                <div class="col-lg-4 mb-3">
+                    <div class="card mb-0 h-100">
                         <div class="card-body">
                             <div class="dropdown float-right">
                                 <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
@@ -162,8 +185,8 @@
                     </div> <!-- end card -->
                 </div> <!-- end col-->
 
-                <div class="col-lg-8">
-                    <div class="card">
+                <div class="col-lg-8 mb-3">
+                    <div class="card mb-0 h-100">
                         <div class="card-body pb-2">
                             <div class="float-right d-none d-md-inline-block">
                                 <div class="btn-group mb-2">
