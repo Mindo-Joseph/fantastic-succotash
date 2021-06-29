@@ -100,4 +100,10 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/setPrimaryAddress/{id}', 'Front\AddressController@setPrimaryAddress')->name('setPrimaryAddress');
 	Route::post('user/submitPassword','Front\ProfileController@submitChangePassword')->name('user.submitChangePassword');
 	Route::get('user/wallethistory','Front\WalletController@index')->name('user.wallet');
+
+	 // Rating & review 
+	 Route::group(['prefix' => 'rating'], function () {
+		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');
+		Route::get('get-product-rating', 'Front\RatingController@getProductRating')->name('get-product-rating-details');
+	});
 });

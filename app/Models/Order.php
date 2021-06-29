@@ -25,11 +25,12 @@ class Order extends Model{
 	public function paymentOption(){
 	    return $this->hasOne('App\Models\PaymentOption' , 'id', 'payment_option_id'); 
 	}
+	public function orderStatusVendor(){
+        return $this->hasMany('App\Models\VendorOrderStatus', 'order_id', 'id');
+    }
+	
 	public function payment(){
 	    return $this->hasOne('App\Models\Payment' , 'order_id', 'id'); 
-	}
-	public function orderStatusVendor(){
-	    return $this->hasMany('App\Models\VendorOrderStatus' , 'order_id', 'id'); 
 	}
 	public function prescription(){
 	    return $this->hasMany('App\Models\OrderProductPrescription' , 'order_id', 'id'); 

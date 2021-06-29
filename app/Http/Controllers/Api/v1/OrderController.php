@@ -92,7 +92,7 @@ class OrderController extends Controller {
                     $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                     $q->where('language_id', $language_id);
                 },
-                'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address'
+                'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address','vendors.products.productRating'
             ])->where('id', $order_id)->first();
             }else{
                 $order = Order::with(['vendors.vendor',

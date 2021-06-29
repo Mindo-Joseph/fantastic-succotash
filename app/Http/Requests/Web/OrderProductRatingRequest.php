@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Web;
 use Illuminate\Foundation\Http\FormRequest;
 Use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -23,12 +23,12 @@ class OrderProductRatingRequest extends FormRequest{
     public function rules(){
         $id = Auth::id();
         return [
-            'rating' => 'required',
             'review' => 'max:500',
-            'order_vendor_product_id' => 'required|exists:order_vendor_products,id',
-            'order_id' => 'required|exists:orders,id',
-            'product_id' => 'required',
-            'files.*' => 'image'
+            'rating' => 'required',
+         //   'order_vendor_product_id' => 'required|exists:order_vendor_products,id',
+         //   'order_id' => 'required|exists:orders,id',
+         //   'product_id' => 'required',
+            'images.*' => 'image'
         ];
     }
     public function messages(){
@@ -55,7 +55,7 @@ class OrderProductRatingRequest extends FormRequest{
             $data_error['message'] = $errors;
         endforeach;
         //write your bussiness logic here otherwise it will give same old JSON response
-        throw new HttpResponseException(response()->json($data_error));
+        throw new HttpResponseException(response()->json($data_error),400);
 
     }
 }

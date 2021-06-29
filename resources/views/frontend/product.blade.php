@@ -7,6 +7,7 @@
         padding-top: 20px;
         padding-bottom: 20px;
     }
+    
 </style>
 
 @endsection
@@ -300,9 +301,10 @@
                                     </li> -->
                                     <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab"
                                             href="#top-review" role="tab" aria-selected="false"><i
-                                                class="icofont icofont-contacts"></i>Write Review</a>
+                                                class="icofont icofont-contacts"></i>Ratings & Reviews</a>
                                         <div class="material-border"></div>
                                     </li>
+                                   
                                 </ul>
                                 <div class="tab-content nav-material" id="top-tabContent">
                                     <div class="tab-pane fade show active" id="top-home" role="tabpanel"
@@ -315,150 +317,13 @@
                                         <p>{!! (!empty($product->translation) && isset($product->translation[0])) ?
                                             $product->translation[0]->body_html : ''!!}</p>
                                     </div>
-                                    <!-- <div class="tab-pane fade" id="top-contact" role="tabpanel"
-                                        aria-labelledby="contact-top-tab">
-                                        <div class="mt-3 text-center">
-                                            <iframe width="560" height="315"
-                                                src="https://www.youtube.com/embed/BUWzX78Ye_8"
-                                                allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                                        </div>
-                                    </div> -->
+                                   
+                                    
                                     <div class="tab-pane fade" id="top-review" role="tabpanel"
                                         aria-labelledby="review-top-tab">
-                                        <form class="theme-form">
-
-                                            <div class="rating-form">
-                                                <fieldset class="form-group">
-                                                    <legend class="form-legend">Rating:</legend>
-                                                    <div class="form-item">
-                                                        <input id="rating-5" name="rating" type="radio" value="5" />
-                                                        <label for="rating-5" data-value="5">
-                                                            <span class="rating-star">
-                                                                <i class="fa fa-star-o"></i>
-                                                                <i class="fa fa-star"></i>
-                                                            </span>
-                                                            <span class="ir">5</span>
-                                                        </label>
-                                                        <input id="rating-4" name="rating" type="radio" value="4" />
-                                                        <label for="rating-4" data-value="4">
-                                                            <span class="rating-star">
-                                                                <i class="fa fa-star-o"></i>
-                                                                <i class="fa fa-star"></i>
-                                                            </span>
-                                                            <span class="ir">4</span>
-                                                        </label>
-                                                        <input id="rating-3" name="rating" type="radio" value="3" />
-                                                        <label for="rating-3" data-value="3">
-                                                            <span class="rating-star">
-                                                                <i class="fa fa-star-o"></i>
-                                                                <i class="fa fa-star"></i>
-                                                            </span>
-                                                            <span class="ir">3</span>
-                                                        </label>
-                                                        <input id="rating-2" name="rating" type="radio" value="2" />
-                                                        <label for="rating-2" data-value="2">
-                                                            <span class="rating-star">
-                                                                <i class="fa fa-star-o"></i>
-                                                                <i class="fa fa-star"></i>
-                                                            </span>
-                                                            <span class="ir">2</span>
-                                                        </label>
-                                                        <input id="rating-1" name="rating" type="radio" value="1" />
-                                                        <label for="rating-1" data-value="1">
-                                                            <span class="rating-star">
-                                                                <i class="fa fa-star-o"></i>
-                                                                <i class="fa fa-star"></i>
-                                                            </span>
-                                                            <span class="ir">1</span>
-                                                        </label>
-
-                                                        <!-- <div class="form-action">
-                                                            <input class="btn-reset" type="reset" value="Reset" />
-                                                        </div> -->
-
-                                                        <div class="form-output">
-                                                            ? / 5
-                                                        </div>
-
-                                                    </div>
-                                                </fieldset>
-                                            </div>
-
-                                            <div class="row rating_files">
-                                                <div class="col-12">
-                                                    <h4>Upload Images</h4>
-                                                </div>
-                                                <div class="col-6 col-md-3 col-lg-2">
-                                                    <div class="file file--upload">
-                                                        <label for="input-file">
-                                                            <span class="plus_icon"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                                                        </label>
-                                                        <input id="input-file" type="file" name="profile_image" accept="image/*" onchange="loadFile(event)">
-                                                    </div>
-                                                </div>
-                                                <div class="col-6 col-md-3 col-lg-2">
-                                                    <span class="update_pic">
-                                                        <img src="" alt="" id="output">
-                                                    </span>
-                                                </div>
-                                                <div class="col-6 col-md-3 col-lg-2">
-                                                    <span class="update_pic">
-                                                        <img src="" alt="" id="output">
-                                                    </span>
-                                                </div>
-                                                <div class="col-6 col-md-3 col-lg-2">
-                                                    <span class="update_pic">
-                                                        <img src="" alt="" id="output">
-                                                    </span>
-                                                </div>
-                                                <div class="col-6 col-md-3 col-lg-2">
-                                                    <span class="update_pic">
-                                                        <img src="" alt="" id="output">
-                                                    </span>
-                                                </div>
-                                                <div class="col-6 col-md-3 col-lg-2">
-                                                    <span class="update_pic">
-                                                        <img src="" alt="" id="output">
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-row">
-                                                <!-- <div class="col-md-12">
-                                                    <div class="media">
-                                                        <label>Rating</label>
-                                                        <div class="media-body ml-3">
-                                                            <div class="rating three-star">
-                                                                @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                                                    @endfor
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div> -->
-                                                <!-- <div class="col-md-6">
-                                                    <label for="name">Name</label>
-                                                    <input type="text" class="form-control" id="name" placeholder="Enter Your name" required>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="email">Email</label>
-                                                    <input type="text" class="form-control" id="email" placeholder="Email" required>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <label for="review">Review Title</label>
-                                                    <input type="text" class="form-control" id="review" placeholder="Enter your Review Subjects" required>
-                                                </div> -->
-                                                <div class="col-md-12 mb-3">
-                                                    <label for="review">Review Title</label>
-                                                    <textarea class="form-control"
-                                                        placeholder="Wrire Your Testimonial Here"
-                                                        id="exampleFormControlTextarea1" rows="8"></textarea>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <button class="btn btn-solid" type="submit">Submit YOur
-                                                        Review</button>
-                                                </div>
-                                            </div>
-                                        </form>
+                                        {{-- <a class="btn btn-solid add_edit_review" href="javascript:void(0)" data-id="8">Rate</a>
+                                               --}}
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -542,6 +407,28 @@
         </div>
     </div>
 </section>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade product-rating" id="product_rating" tabindex="-1" aria-labelledby="product_ratingLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div id="review-rating-form-modal">
+          
+          </div>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+
+
 @endsection
 
 @section('script')
@@ -658,6 +545,32 @@
             }
         });
     });
+</script>
+
+<!-----  rating product if delivered -->
+
+<script type="text/javascript">
+$(document).ready(function (e) {
+
+    $('.rating-star-click').click(function(){
+        $('.rating_files').show(); 
+        $('.form-row').show();    
+        $('#product_rating').modal('show'); 
+        
+    });
+
+
+
+$('body').on('click', '.add_edit_review', function (event) {
+event.preventDefault();
+var id = $(this).data('id');
+$.get('/rating/get-product-rating?id=' + id , function(markup)
+          {   
+             $('#product_rating').modal('show'); 
+              $('#review-rating-form-modal').html(markup);
+          });
+});
+});
 </script>
 
 @endsection
