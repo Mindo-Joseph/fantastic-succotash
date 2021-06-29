@@ -14,7 +14,7 @@ class AddActualAmountFieldsToOrderVendorsTable extends Migration
     public function up()
     {
         Schema::table('order_vendors', function (Blueprint $table) {
-            $table->decimal('actual_amount', 10, 2)->nullable()->after('payable_amount');
+            $table->decimal('subtotal_amount', 10, 2)->nullable()->after('coupon_code');
         });
     }
 
@@ -26,7 +26,7 @@ class AddActualAmountFieldsToOrderVendorsTable extends Migration
     public function down()
     {
         Schema::table('order_vendors', function (Blueprint $table) {
-            $table->dropColumn('actual_amount');
+            $table->dropColumn('subtotal_amount');
         });
     }
 }
