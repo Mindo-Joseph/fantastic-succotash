@@ -12,6 +12,7 @@ use App\Exports\OrderVendorTaxExport;
 
 class TaxController extends Controller
 {
+    use ApiResponser;
     public function index(Request $request){
         return view('backend.accounting.tax');
     }

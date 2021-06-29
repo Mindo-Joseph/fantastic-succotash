@@ -40,12 +40,12 @@ class RatingController extends BaseController{
                 if ($request->has('files')) {
                     $files = $request->file('files');
                     foreach($files as $file) {
-                            $file = time().'_'.$file->getClientOriginalName();
-                            Storage::disk('s3')->put('review', $file, 'public');
-                            $img = new OrderProductRatingFile();
-                            $img->order_product_rating_id = $ratings->id;
-                            $img->file = $file;
-                            $img->save();
+                        $file =  substr(md5(microtime()), 0, 15).'_'.$files->getClientOriginalName();
+                        $storage = Storage::disk('s3')->put('/review', $file, 'public');
+                        $img = new OrderProductRatingFile();
+                        $img->order_product_rating_id = $ratings->id;
+                        $img->file = $storage;
+                        $img->save();
                         }
                 }
 
@@ -54,7 +54,7 @@ class RatingController extends BaseController{
        
             }
             if(isset($ratings)) {
-                return $this->successResponse($ratings->with('reviewFiles'),'Rating Submitted.');
+                return $this->successResponse($ratings,'Rating Submitted.');
             }
             return $this->errorResponse('Invalid order', 404);
             
@@ -68,6 +68,7 @@ class RatingController extends BaseController{
     */
     public function getProductRating(Request $request){
         try {
+            $ratings = '';
             $ratings = OrderProductRating::where('id',$request->id)->with('reviewFiles')->first();
        
             if(isset($ratings))

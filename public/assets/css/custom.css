@@ -1644,10 +1644,17 @@ body.light {
 
 
 .top-input {
-    width: 30%;
+    width: 60%;
+    top: 25px;
 }
 
-.top-input input#month_picker_filter,.top-input select.form-control {
+.top-input input#month_picker_filter,.top-input select.form-control,.top-input .form-control {
     height: 30px;
     padding: 0 5px;
+}
+
+.dt-buttons.btn-group.flex-wrap {
+    position: absolute;
+    right: 220px;
+    top: 20px;
 }

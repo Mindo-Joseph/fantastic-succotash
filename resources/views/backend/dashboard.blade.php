@@ -81,7 +81,7 @@
 
                                     </div>
                                 </div>
-                               
+
                             </div> <!-- end row-->
                         </div>
                     </div> <!-- end widget-rounded-circle-->
@@ -102,7 +102,7 @@
                                         <i class="fe-bar-chart-line font-22 avatar-title"></i>
                                     </div>
                                 </div>
-                                
+
                             </div> <!-- end row-->
                         </div>
                     </div> <!-- end widget-rounded-circle-->
@@ -123,7 +123,7 @@
                                         <i class="fe-eye font-22 avatar-title"></i>
                                     </div>
                                 </div>
-                               
+
                             </div> <!-- end row-->
                         </div>
                     </div> <!-- end widget-rounded-circle-->
@@ -246,7 +246,7 @@
                                         <i class="fe-eye font-22 avatar-title"></i>
                                     </div>
                                 </div>
-                               
+
                             </div> <!-- end row-->
                         </div>
                     </div> <!-- end widget-rounded-circle-->
@@ -258,25 +258,20 @@
                 <div class="col-lg-4 mb-3">
                     <div class="card mb-0 h-100">
                         <div class="card-body">
-                            <div class="dropdown float-right">
-                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="mdi mdi-dots-vertical"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                </div>
+                            <div class="card-widgets">
+                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                                <a data-bs-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                                <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
                             </div>
+<<<<<<< HEAD
 
                             <h4 class="header-title mb-3">Orders (Top Categories)</h4>
+=======
+                            
+                            <h4 class="header-title mb-3">Total Revenue</h4>
+>>>>>>> 40f029e6435d71e42dfba56a229e07e73d890ba0
 
-                            <div class="widget-chart text-center" dir="ltr" style="position: relative;">
+                            <div id="cardCollpase1" class="collapse pt-3 show widget-chart text-center" dir="ltr" style="position: relative;">
 
                                 <div id="total-revenue" class="mt-0" data-colors="#f1556c" style="min-height: 220.7px;">
                                     <div id="apexchartsfwg700r2" class="apexcharts-canvas apexchartsfwg700r2 apexcharts-theme-light" style="width: 451px; height: 220.7px;">
@@ -525,20 +520,22 @@
 
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Marketplaces</th>
-                                            <th>Date</th>
+                                            <th>Name</th>
+                                            <th>Last Order Date</th>
                                             <th>Payouts</th>
                                             <th>Status</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
+<<<<<<< HEAD
                                             <td colspan="5" class="text-center">
                                                 <h5 class="m-0 mt-3 fw-normal">No data found</h5>
                                             </td>
                                         </tr>
                                         <!-- <tr>
+=======
+>>>>>>> 40f029e6435d71e42dfba56a229e07e73d890ba0
                                             <td>
                                                 <h5 class="m-0 fw-normal">Themes Market</h5>
                                             </td>
@@ -555,9 +552,6 @@
                                                 <span class="badge bg-soft-warning text-warning">Upcoming</span>
                                             </td>
 
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
-                                            </td>
                                         </tr>
 
                                         <tr>
@@ -577,9 +571,6 @@
                                                 <span class="badge bg-soft-success text-success">Paid</span>
                                             </td>
 
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
-                                            </td>
                                         </tr>
 
                                         <tr>
@@ -599,9 +590,6 @@
                                                 <span class="badge bg-soft-success text-success">Paid</span>
                                             </td>
 
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
-                                            </td>
                                         </tr>
 
                                         <tr>
@@ -621,9 +609,6 @@
                                                 <span class="badge bg-soft-danger text-danger">Overdue</span>
                                             </td>
 
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
-                                            </td>
                                         </tr>
 
                                         <tr>
@@ -641,10 +626,6 @@
 
                                             <td>
                                                 <span class="badge bg-soft-warning text-warning">Upcoming</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
                                             </td>
                                         </tr>
 
@@ -665,10 +646,7 @@
                                                 <span class="badge bg-soft-success text-success">Paid</span>
                                             </td>
 
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr> -->
+                                        </tr>
 
                                     </tbody>
                                 </table>

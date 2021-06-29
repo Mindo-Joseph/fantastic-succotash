@@ -28,7 +28,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('account/loyalty', [LoyaltyController::class, 'index'])->name('account.loyalty');
     Route::get('account/tax', [TaxController::class, 'index'])->name('account.tax');
     Route::get('account/vendor', [VendorController::class, 'index'])->name('account.vendor');
-    Route::post('account/tax/filter', [OrderController::class, 'filter'])->name('account.tax.filter');
+    Route::post('account/tax/filter', [TaxController::class, 'filter'])->name('account.tax.filter');
     Route::get('account/tax/export', [TaxController::class, 'export'])->name('account.tax.export');
     Route::post('account/vendor/filter', [VendorController::class, 'filter'])->name('account.vendor.filter');
     Route::post('account/order/filter', [OrderController::class, 'filter'])->name('account.order.filter');

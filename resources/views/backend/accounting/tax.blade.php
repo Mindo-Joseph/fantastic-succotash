@@ -66,9 +66,6 @@
                             <div class="col-md-6">
                                  <input type="text" class="form-control" data-provide="datepicker" data-date-format="MM yyyy" data-date-min-view-mode="1" id="month_picker_filter" style="display:none;">
                             </div>
-                            <a href="{{ route('account.tax.export') }}" class="btn btn-success waves-effect waves-light">
-                                <span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV
-                            </a>
                         </div>  
                    </div>
                     <div class="table-responsive">
@@ -129,12 +126,25 @@
                             $('#accounting_vendor_datatable tbody').empty();
                         }
                         table = $("#accounting_vendor_datatable").DataTable({
-                            "dom": '<"toolbar">frtip',
+                            "dom": '<"toolbar">Bfrtip',
+                            autoWidth: false,
                             "scrollX": true,
+                            language: {
+                                search: "",
+                                searchPlaceholder: "Search records"
+                            },
+                            buttons: [
+                                {   className:'btn btn-success waves-effect waves-light',
+                                    text: '<span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV',
+                                    action: function ( e, dt, node, config ) {
+                                        window.location.href = "{{ route('account.tax.export') }}";
+                                    }
+                                }
+                            ],
                             drawCallback: function () {
                                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                             },
-                        }).fnClearTable();
+                        });
                     }
                 }
             });

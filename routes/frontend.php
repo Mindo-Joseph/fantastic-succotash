@@ -40,6 +40,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('/product/{id?}','Front\ProductController@index')->name('productDetail');
 	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
 	Route::post('add/product/cart','Front\CartController@postAddToCart')->name('addToCart');
+	Route::post('add/wishlist/cart','Front\CartController@addWishlistToCart')->name('addWishlistToCart');
 	Route::post('add/product/prescription','Front\CartController@uploadPrescription')->name('cart.uploadPrescription');
 	Route::get('cartProducts','Front\CartController@getCartData')->name('getCartProducts');
 	Route::get('cartDetails','Front\CartController@getCartProducts')->name('cartDetails');
@@ -100,4 +101,10 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/setPrimaryAddress/{id}', 'Front\AddressController@setPrimaryAddress')->name('setPrimaryAddress');
 	Route::post('user/submitPassword','Front\ProfileController@submitChangePassword')->name('user.submitChangePassword');
 	Route::get('user/wallethistory','Front\WalletController@index')->name('user.wallet');
+
+	 // Rating & review 
+	 Route::group(['prefix' => 'rating'], function () {
+		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');
+		Route::get('get-product-rating', 'Front\RatingController@getProductRating')->name('get-product-rating-details');
+	});
 });

@@ -65,7 +65,8 @@ $(document).ready(function() {
             url: add_to_whishlist_url,
             data: {
                 "_token": $('meta[name="_token"]').attr('content'),
-                "sku": sku
+                "sku": sku,
+                "variant_id": $('#prod_variant_id').val()
             },
             success: function(res) {
                 if(res.status == "success"){

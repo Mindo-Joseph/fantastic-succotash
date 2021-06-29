@@ -32,7 +32,7 @@ class OrderController extends Controller{
             }
             $vendor_order->created_date = convertDateTimeInTimeZone($vendor_order->created_at, $timezone, 'Y-m-d h:i:s A');
         }
-        $data = ['vendor_orders' => $vendor_orders, 'total_earnings_by_vendors' => $total_earnings_by_vendors, 'total_delivery_fees' => $total_delivery_fees, 'total_cash_to_collected' => $total_cash_to_collected];
+        $data = ['vendor_orders' => $vendor_orders, 'total_earnings_by_vendors' => number_format($total_earnings_by_vendors, 2), 'total_delivery_fees' => number_format($total_delivery_fees, 2), 'total_cash_to_collected' => number_format($total_cash_to_collected, 2)];
         return $this->successResponse($data, '');
     }
 

@@ -87,22 +87,20 @@
                         <div class="welcome-msg">
                             <h5>Here are all your previous orders !</h5>
                         </div>
-                        <div class="row">
+                        <div class="row" id="orders_wrapper">
                             <div class="col-sm-12 col-lg-12 tab-product pt-3">
                                 <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
-                                    <li class="nav-item"><a class="nav-link active" id="active-orders-tab" data-toggle="tab"
-                                            href="#active-orders" role="tab" aria-selected="true"><i
-                                                class="icofont icofont-ui-home"></i>Active Orders</a>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ ((Request::query('pageType') === null) || (Request::query('pageType') == 'activeOrders')) ? 'active show' : '' }}" id="active-orders-tab" data-toggle="tab" href="#active-orders" role="tab" aria-selected="true"><i class="icofont icofont-ui-home"></i>Active Orders</a>
                                         <div class="material-border"></div>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" id="past_order-tab" data-toggle="tab"
-                                            href="#past_order" role="tab" aria-selected="false"><i
-                                                class="icofont icofont-man-in-glasses"></i>Past Orders</a>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ (Request::query('pageType') == 'pastOrders') ? 'active show' : '' }}" id="past_order-tab" data-toggle="tab" href="#past_order" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Past Orders</a>
                                         <div class="material-border"></div>
                                     </li>
                                 </ul>
                                 <div class="tab-content nav-material" id="top-tabContent">
-                                    <div class="tab-pane fade show active" id="active-orders" role="tabpanel"
+                                    <div class="tab-pane fade {{ ((Request::query('pageType') === null) || (Request::query('pageType') == 'activeOrders')) ? 'active show' : '' }}" id="active-orders" role="tabpanel"
                                         aria-labelledby="active-orders-tab">
                                         <div class="row">
                                             @foreach($activeOrders as $key => $order)
@@ -245,8 +243,9 @@
                                             @endif
                                             @endforeach
                                         </div>
+                                        {{ $activeOrders->appends(['pageType' => 'activeOrders'])->links() }}
                                     </div>
-                                    <div class="tab-pane fade past-order" id="past_order" role="tabpanel"
+                                    <div class="tab-pane fade past-order {{ (Request::query('pageType') == 'pastOrders') ? 'active show' : '' }}" id="past_order" role="tabpanel"
                                         aria-labelledby="past_order-tab">
                                         <div class="row">
                                             @foreach($pastOrders as $key => $order)
@@ -312,11 +311,22 @@
                                                                                 <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
                                                                                     @foreach($vendor->products as $product)
                                                                                         @if($vendor->vendor_id == $product->vendor_id)
+                                                                                            @php
+                                                                                                $pro_rating = $product->productRating->rating??0;
+                                                                                            @endphp
                                                                                             <li class="text-center">
                                                                                                 <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
                                                                                                 <span class="item_no position-absolute">x{{$product->quantity}}</span>
                                                                                                 <?php /* ?><label class="items_name">{{$product->product_name}}</label><?php */ ?>
                                                                                                 <label class="items_price">${{$product->price}}</label>
+                                                                                                <label class="rating-star add_edit_review" data-id="{{$product->productRating->id??0}}"  data-order_vendor_product_id="{{$product->id??0}}">
+                                                                                                    <i class="fa fa-star{{ $pro_rating >= 1 ? '' : '-o' }}" ></i>
+                                                                                                    <i class="fa fa-star{{ $pro_rating >= 2 ? '' : '-o' }}" ></i>
+                                                                                                    <i class="fa fa-star{{ $pro_rating >= 3 ? '' : '-o' }}" ></i>
+                                                                                                    <i class="fa fa-star{{ $pro_rating >= 4 ? '' : '-o' }}" ></i>
+                                                                                                    <i class="fa fa-star{{ $pro_rating >= 5 ? '' : '-o' }}" ></i>
+                                                                                                </label>
+                                                                        
                                                                                             </li>
                                                                                             @php
                                                                                                 $product_total_count += $product->quantity * $product->price;
@@ -424,7 +434,6 @@
                                                                             <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
                                                                             <span class="item_no position-absolute">x2</span>
                                                                             <label class="items_price">$20.00</label>
-                                                                            <label class="items_price rating-star" data-toggle="modal" data-target="#product_rating"><i class="fa fa-star-o"></i></label>
                                                                         </li>                                   
                                                                 </ul>
                                                             </div>
@@ -450,7 +459,7 @@
                                                             </div>
 
                                                             <div class="col-12 text-md-right mt-3">
-                                                                <label class="rate-btn btn btn-solid m-0" data-toggle="modal" data-target="#return_order">Return</label>
+                                                                <label class="rate-btn btn btn-solid m-0" data-toggle="modal" data-target="#product_rating">Rate This Order</label>
                                                             </div>
                                                         </a>
                                                     </div>    
@@ -483,6 +492,7 @@
                                                 </div>
                                             </div><?php */ ?>
                                         </div>
+                                        {{ $pastOrders->appends(['pageType' => 'pastOrders'])->links() }}
                                     </div>
                                 </div>
                             </div>  
@@ -720,7 +730,7 @@
   </div>
 </div>
 
-<!-- Rating Modal -->
+<!-- product rating Modal -->
 <div class="modal fade product-rating" id="product_rating" tabindex="-1" aria-labelledby="product_ratingLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -728,250 +738,12 @@
       <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      <form class="theme-form">
-        <div class="rating-form">
-            <fieldset class="form-group">
-                <legend class="form-legend">Rating:</legend>
-                <div class="form-item">
-                    <input id="rating-5" name="rating" type="radio" value="5" />
-                    <label for="rating-5" data-value="5">
-                        <span class="rating-star">
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star"></i>
-                        </span>
-                        <span class="ir">5</span>
-                    </label>
-                    <input id="rating-4" name="rating" type="radio" value="4" />
-                    <label for="rating-4" data-value="4">
-                        <span class="rating-star">
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star"></i>
-                        </span>
-                        <span class="ir">4</span>
-                    </label>
-                    <input id="rating-3" name="rating" type="radio" value="3" />
-                    <label for="rating-3" data-value="3">
-                        <span class="rating-star">
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star"></i>
-                        </span>
-                        <span class="ir">3</span>
-                    </label>
-                    <input id="rating-2" name="rating" type="radio" value="2" />
-                    <label for="rating-2" data-value="2">
-                        <span class="rating-star">
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star"></i>
-                        </span>
-                        <span class="ir">2</span>
-                    </label>
-                    <input id="rating-1" name="rating" type="radio" value="1" />
-                    <label for="rating-1" data-value="1">
-                        <span class="rating-star">
-                            <i class="fa fa-star-o"></i>
-                            <i class="fa fa-star"></i>
-                        </span>
-                        <span class="ir">1</span>
-                    </label>
-
-                    <!-- <div class="form-action">
-                        <input class="btn-reset" type="reset" value="Reset" />
-                    </div> -->
-
-                    <div class="form-output">
-                        ? / 5
-                    </div>
-
-                </div>
-            </fieldset>
+        <div id="review-rating-form-modal">
         </div>
-
-        <div class="row rating_files">
-            <div class="col-12">
-                <h4>Upload Images</h4>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <div class="file file--upload">
-                    <label for="input-file">
-                        <span class="plus_icon"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                    </label>
-                    <input id="input-file" type="file" name="profile_image" accept="image/*" onchange="loadFile(event)">
-                </div>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <span class="update_pic">
-                    <img src="" alt="" id="output">
-                </span>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <span class="update_pic">
-                    <img src="" alt="" id="output">
-                </span>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <span class="update_pic">
-                    <img src="" alt="" id="output">
-                </span>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <span class="update_pic">
-                    <img src="" alt="" id="output">
-                </span>
-            </div>
-            <div class="col-6 col-md-3 col-lg-2">
-                <span class="update_pic">
-                    <img src="" alt="" id="output">
-                </span>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <!-- <div class="col-md-12">
-                <div class="media">
-                    <label>Rating</label>
-                    <div class="media-body ml-3">
-                        <div class="rating three-star">
-                            @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                @endfor
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- <div class="col-md-6">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter Your name" required>
-            </div>
-            <div class="col-md-6">
-                <label for="email">Email</label>
-                <input type="text" class="form-control" id="email" placeholder="Email" required>
-            </div>
-            <div class="col-md-12">
-                <label for="review">Review Title</label>
-                <input type="text" class="form-control" id="review" placeholder="Enter your Review Subjects" required>
-            </div> -->
-            <div class="col-md-12 mb-3">
-                <label for="review">Review Title</label>
-                <textarea class="form-control"
-                    placeholder="Wrire Your Testimonial Here"
-                    id="exampleFormControlTextarea1" rows="8"></textarea>
-            </div>
-            <div class="col-md-12 text-center">
-                <button class="btn btn-solid" type="submit">Submit YOur
-                    Review</button>
-            </div>
-        </div>
-        </form>
       </div>
      
     </div>
   </div>
-</div>
-
-
-<!-- Rating Modal -->
-<div class="modal fade return-order" id="return_order" tabindex="-1" aria-labelledby="return_orderLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body">
-                <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                <h5 class="modal-title">
-                    Do you want to return your order.
-                </h5>
-                <form class="return-order-form" action="">
-                    <div class="table-responsive">
-                        <table class="w-100">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Select item(s) for return
-                                    </th>
-                                    <th>order Information</th>
-                                    <th>Return Need to arive by</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <input id="item_one" type="checkbox">
-                                            <label class="order-items d-flex" for="item_one">  
-                                                <div class="item-img mx-1">
-                                                    <img src="https://imgproxy.royoorders.com/insecure/fill/600/800/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
-                                                </div>    
-                                                <div class="items-name ml-2">
-                                                    <h4 class="mt-0 mb-1"><b>Pizza</b></h4>
-                                                    <label><b>Quantity</b>: 2</label>
-                                                </div>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td class="order_address">
-                                        <p>RTC Cross Road, P & T Colony, Jawahar Nagar, Himayatnagar, Hyderabad, Telangana, India</p>
-                                    </td>
-                                    <td>
-                                        <p>Monday, May 24, 2021, 13:22 PM</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <input id="item_two" type="checkbox">
-                                            <label class="order-items d-flex" for="item_two">  
-                                                <div class="item-img mx-1">
-                                                    <img src="https://imgproxy.royoorders.com/insecure/fill/600/800/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
-                                                </div>    
-                                                <div class="items-name ml-2">
-                                                    <h4 class="mt-0 mb-1"><b>Pizza</b></h4>
-                                                    <label><b>Quantity</b>: 2</label>
-                                                </div>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td class="order_address">
-                                        <p>RTC Cross Road, P & T Colony, Jawahar Nagar, Himayatnagar, Hyderabad, Telangana, India</p>
-                                    </td>
-                                    <td>
-                                        <p>Monday, May 24, 2021, 13:22 PM</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <input id="item_three" type="checkbox">
-                                            <label class="order-items d-flex" for="item_three">  
-                                                <div class="item-img mx-1">
-                                                    <img src="https://imgproxy.royoorders.com/insecure/fill/600/800/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
-                                                </div>    
-                                                <div class="items-name ml-2">
-                                                    <h4 class="mt-0 mb-1"><b>Pizza</b></h4>
-                                                    <label><b>Quantity</b>: 2</label>
-                                                </div>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td class="order_address">
-                                        <p>RTC Cross Road, P & T Colony, Jawahar Nagar, Himayatnagar, Hyderabad, Telangana, India</p>
-                                    </td>
-                                    <td>
-                                        <p>Monday, May 24, 2021, 13:22 PM</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td class="text-center" colspan="3">
-                                        <a class="btn btn-solid" href="#">Continue</a>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 </div>
 
 @endsection
@@ -1011,6 +783,30 @@
             },
         });
     }
+
+    $('body').on('click', '.add_edit_review', function (event) {
+        event.preventDefault();
+        var id = $(this).data('id');
+        var order_vendor_product_id = $(this).data('order_vendor_product_id');
+        $.get('/rating/get-product-rating?id=' + id +'&order_vendor_product_id=' + order_vendor_product_id, function(markup)
+        {
+            $('#product_rating').modal('show'); 
+            $('#review-rating-form-modal').html(markup);
+        });
+    });
+
+    $(document).delegate("#orders_wrapper .nav-tabs .nav-link", "click", function(){
+        let id = $(this).attr('id');
+        const params = window.location.search;
+        if(params != ''){
+            if(id == 'active-orders-tab'){
+                window.location.href = window.location.pathname + '?pageType=activeOrders';
+            }
+            else if(id == 'past_order-tab'){
+                window.location.href = window.location.pathname + '?pageType=pastOrders';
+            }
+        }
+    });
 </script>
 
 @endsection
