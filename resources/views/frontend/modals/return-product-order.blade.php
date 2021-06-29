@@ -19,7 +19,7 @@
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
-                            <input id="item_one{{$key}}" type="checkbox" name="return_ids[]" value="{{ $product->id }}">
+                            <input id="item_one{{$key}}" type="checkbox" name="return_ids[]" value="{{ $product->id }}" required>
                             <label class="order-items d-flex" for="item_one{{$key}}">  
                                 <div class="item-img mx-1">
                                     <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
