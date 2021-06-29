@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\OrderVendorTaxExport;
 
 class TaxController extends Controller
 {
@@ -25,5 +27,8 @@ class TaxController extends Controller
         }
         $data = ['vendor_orders' => $vendor_orders, 'total_tax_collected'=> $total_tax_collected, 'type_of_taxes_applied_count' => $type_of_taxes_applied_count];
         return $this->successResponse($data, '');
+    }
+    public function export() {
+        return Excel::download(new OrderVendorTaxExport, 'tax.xlsx');
     }
 }
