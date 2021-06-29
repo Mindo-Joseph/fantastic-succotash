@@ -340,10 +340,10 @@ span.inner-div {
     padding: 1.5rem;
     margin-bottom: 24px !important;
     /* margin-bottom: 10px; */
-
     border-radius: 12px;
     /* background-color: #FFFFFF; */
     box-shadow: none !important;
+    border: 1px solid #ddd;
 }
 
 #AddbrandBox {
@@ -1008,11 +1008,11 @@ label.file-input.uploadImages {
 
 .order_detail:before {
     content: "";
-    border: 1px solid #43bee1e8;
+    border-left: 1px solid #43bee1e8;
     background-color: #43bee1e8;
     position: absolute;
-    height: calc(100% - 15px);
-    left: 0;
+    height: calc(100% - 25px);
+    left: -1px;
     top: 15px;
 }
 
@@ -1141,7 +1141,7 @@ label.file-input.uploadImages {
     cursor: pointer;
     box-shadow: 0 0 0 rgb(67 190 225 / 50%);
     position: absolute;
-    left: -3px;
+    left: -4px;
     top: 0;
     animation: pulse-animation 2s infinite;
 }
@@ -1466,6 +1466,120 @@ body.light {
 }
 
 
+
+
+
+
+
+
+
+
+  
+.file--upload>label .fa-user:before {
+    content: "\f007";
+    position: relative;
+    top: 10px;
+}
+
+.file>input[type='file'] {
+    display: none
+}
+
+.file>label {
+    cursor: pointer;
+    outline: 0;
+}
+
+.file>label:hover {
+    border-color: hsl(0, 0%, 21%);
+}
+
+.file>label:active {
+    background-color: hsl(0, 0%, 96%);
+}
+
+.file>label>i {
+    padding-right: 5px;
+}
+
+.file--upload>label {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.file--upload>label:active {
+    background-color: transparent;
+}
+
+.file .update_pic {
+    height: 180px;
+    width: 100%;
+    border: 0.9px solid #E9F0F8;
+    background: url(./images/slider01.jpg) no-repeat center;
+    background-size: cover;
+    overflow: hidden;
+    display: block;
+    border-radius: 12px;
+}
+
+.file .update_pic img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.file--upload>label .plus_icon {
+    height: 60px;
+    width: 60px;
+    line-height: 76px;
+    color: #FFFFFF;
+    text-align: right;
+    font-family: "Nunito Sans";
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0;
+    border-radius: 50%;
+    background-color: #43bee1;
+    box-shadow: 0 2px 4px 0 rgb(63 159 255 / 40%);
+    display: block;
+    position: absolute;
+    left: -30px;
+    top: -27px;
+    padding: 3px 13px 0 0;
+}
+@media(min-width:320px){
+    .custom-cols > .col {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media(min-width:576px){
+    .custom-cols > .col {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+@media(min-width:992px){
+    .custom-cols > .col {
+        flex: 0 0 33.33%;
+        max-width: 33.33%;
+    }
+}
+@media(min-width:1367px){
+    .custom-cols > .col {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+
+
+
+
+@media(min-width:1600px){}
 
 
 

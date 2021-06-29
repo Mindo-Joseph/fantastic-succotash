@@ -44,18 +44,18 @@
             </div>
             <!-- end page title -->
 
-            <div class="row">
-                <div class="col-md-6 col-xl">
+            <div class="row custom-cols">
+                <div class="col col-md-4 col-lg-3 col-xl">
                     <div class="widget-rounded-circle card">
                         <div class="card-body">
                             <div class="row align-items-center">
-                                <div class="col">
+                                <div class="col-8">
                                     <div class="text-end">
-                                        <p class="text-muted mb-1 text-truncate">Total Revenue</p>
+                                        <p class="text-muted mb-1 text-truncate">Pending Orders</p>
                                         <h3 class="text-dark mt-1">$<span data-plugin="counterup">{{$total_revenue}}</span></h3>
                                     </div>
                                 </div>
-                                <div class="col text-md-right">
+                                <div class="col-4 text-md-right">
                                     <div class="avatar-lg rounded-circle ml-auto">
                                         <i class="fe-heart font-22 avatar-title"></i>
                                     </div>
@@ -65,19 +65,20 @@
                     </div> <!-- end widget-rounded-circle-->
                 </div> <!-- end col-->
 
-                <div class="col-md-6 col-xl">
+                <div class="col">
                     <div class="widget-rounded-circle card">
                         <div class="card-body">
                             <div class="row align-items-center">
-                            <div class="col-6">
+                            <div class="col-8">
                                     <div class="text-end">
-                                        <p class="text-muted mb-1 text-truncate">Today's Sales</p>
+                                        <p class="text-muted mb-1 text-truncate">Active Orders</p>
                                         <h3 class="text-dark mt-1">$<span data-plugin="counterup">{{$today_sales}}</span></h3>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-4">
                                     <div class="avatar-lg rounded-circle ml-auto">
                                         <i class="fe-shopping-cart font-22 avatar-title text-success"></i>
+
                                     </div>
                                 </div>
                                
@@ -86,17 +87,17 @@
                     </div> <!-- end widget-rounded-circle-->
                 </div> <!-- end col-->
 
-                <div class="col-md-6 col-xl">
+                <div class="col">
                     <div class="widget-rounded-circle card">
                         <div class="card-body">
                             <div class="row align-items-center">
-                                <div class="col-6">
+                                <div class="col-8">
                                     <div class="text-end">
-                                        <p class="text-muted mb-1 text-truncate">Conversion</p>
+                                        <p class="text-muted mb-1 text-truncate">Delivered Orders</p>
                                         <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span>%</h3>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-4">
                                     <div class="avatar-lg rounded-circle ml-auto">
                                         <i class="fe-bar-chart-line font-22 avatar-title"></i>
                                     </div>
@@ -107,17 +108,17 @@
                     </div> <!-- end widget-rounded-circle-->
                 </div> <!-- end col-->
 
-                <div class="col-md-6 col-xl">
+                <div class="col">
                     <div class="widget-rounded-circle card">
                         <div class="card-body">
                             <div class="row align-items-center">
-                                <div class="col-6">
+                                <div class="col-8">
                                     <div class="text-end">
-                                        <p class="text-muted mb-1 text-truncate">Today's Visits</p>
+                                        <p class="text-muted mb-1 text-truncate">Cancelled Orders</p>
                                         <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-4">
                                     <div class="avatar-lg rounded-circle ml-auto">
                                         <i class="fe-eye font-22 avatar-title"></i>
                                     </div>
@@ -127,17 +128,120 @@
                         </div>
                     </div> <!-- end widget-rounded-circle-->
                 </div> <!-- end col-->
-                <div class="col-md-6 col-xl">
+                <div class="col">
                     <div class="widget-rounded-circle card">
                         <div class="card-body">
                             <div class="row align-items-center">
-                                <div class="col-6">
+                                <div class="col-8">
                                     <div class="text-end">
-                                        <p class="text-muted mb-1 text-truncate">Today's Visits</p>
+                                        <p class="text-muted mb-1 text-truncate">Vendor</p>
                                         <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-4">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-eye font-22 avatar-title"></i>
+                                    </div>
+                                </div>
+                               
+                            </div> <!-- end row-->
+                        </div>
+                    </div> <!-- end widget-rounded-circle-->
+                </div> <!-- end col-->
+                <br>
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Categories</p>
+                                        <h3 class="text-dark mt-1">$<span data-plugin="counterup">{{$total_revenue}}</span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-md-right">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fa fa-list-alt font-22 avatar-title" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div> <!-- end row-->
+                        </div>
+                    </div> <!-- end widget-rounded-circle-->
+                </div> <!-- end col-->
+
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                            <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Products</p>
+                                        <h3 class="text-dark mt-1">$<span data-plugin="counterup">{{$today_sales}}</span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-shopping-cart font-22 avatar-title text-success"></i>
+                                    </div>
+                                </div>
+                               
+                            </div> <!-- end row-->
+                        </div>
+                    </div> <!-- end widget-rounded-circle-->
+                </div> <!-- end col-->
+
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Promotions</p>
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span>%</h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fa fa-bullhorn  font-22 avatar-title text-success" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                                
+                            </div> <!-- end row-->
+                        </div>
+                    </div> <!-- end widget-rounded-circle-->
+                </div> <!-- end col-->
+
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Active Salemen</p>
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fa fa-first-order font-22 avatar-title" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                               
+                            </div> <!-- end row-->
+                        </div>
+                    </div> <!-- end widget-rounded-circle-->
+                </div> <!-- end col-->
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Drive Active Orders</p>
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
                                     <div class="avatar-lg rounded-circle ml-auto">
                                         <i class="fe-eye font-22 avatar-title"></i>
                                     </div>
@@ -170,7 +274,7 @@
                                 </div>
                             </div>
 
-                            <h4 class="header-title mb-3">Total Revenue</h4>
+                            <h4 class="header-title mb-3">Orders (Top Categories)</h4>
 
                             <div class="widget-chart text-center" dir="ltr" style="position: relative;">
 
@@ -250,7 +354,7 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="5" class="text-center">
-                                                <h5 class="m-0 fw-normal">No data found</h5>
+                                                <h5 class="m-0 mt-3 fw-normal">No data found</h5>
                                             </td>
                                         </tr>
                                         <!-- <tr>
@@ -431,7 +535,7 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="5" class="text-center">
-                                                <h5 class="m-0 fw-normal">No data found</h5>
+                                                <h5 class="m-0 mt-3 fw-normal">No data found</h5>
                                             </td>
                                         </tr>
                                         <!-- <tr>
