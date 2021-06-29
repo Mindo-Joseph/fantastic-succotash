@@ -87,22 +87,20 @@
                         <div class="welcome-msg">
                             <h5>Here are all your previous orders !</h5>
                         </div>
-                        <div class="row">
+                        <div class="row" id="orders_wrapper">
                             <div class="col-sm-12 col-lg-12 tab-product pt-3">
                                 <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
-                                    <li class="nav-item"><a class="nav-link active" id="active-orders-tab" data-toggle="tab"
-                                            href="#active-orders" role="tab" aria-selected="true"><i
-                                                class="icofont icofont-ui-home"></i>Active Orders</a>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ ((Request::query('pageType') === null) || (Request::query('pageType') == 'activeOrders')) ? 'active show' : '' }}" id="active-orders-tab" data-toggle="tab" href="#active-orders" role="tab" aria-selected="true"><i class="icofont icofont-ui-home"></i>Active Orders</a>
                                         <div class="material-border"></div>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" id="past_order-tab" data-toggle="tab"
-                                            href="#past_order" role="tab" aria-selected="false"><i
-                                                class="icofont icofont-man-in-glasses"></i>Past Orders</a>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ (Request::query('pageType') == 'pastOrders') ? 'active show' : '' }}" id="past_order-tab" data-toggle="tab" href="#past_order" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Past Orders</a>
                                         <div class="material-border"></div>
                                     </li>
                                 </ul>
                                 <div class="tab-content nav-material" id="top-tabContent">
-                                    <div class="tab-pane fade show active" id="active-orders" role="tabpanel"
+                                    <div class="tab-pane fade {{ ((Request::query('pageType') === null) || (Request::query('pageType') == 'activeOrders')) ? 'active show' : '' }}" id="active-orders" role="tabpanel"
                                         aria-labelledby="active-orders-tab">
                                         <div class="row">
                                             @foreach($activeOrders as $key => $order)
@@ -245,8 +243,9 @@
                                             @endif
                                             @endforeach
                                         </div>
+                                        {{ $activeOrders->appends(['pageType' => 'activeOrders'])->links() }}
                                     </div>
-                                    <div class="tab-pane fade past-order" id="past_order" role="tabpanel"
+                                    <div class="tab-pane fade past-order {{ (Request::query('pageType') == 'pastOrders') ? 'active show' : '' }}" id="past_order" role="tabpanel"
                                         aria-labelledby="past_order-tab">
                                         <div class="row">
                                             @foreach($pastOrders as $key => $order)
@@ -493,6 +492,7 @@
                                                 </div>
                                             </div><?php */ ?>
                                         </div>
+                                        {{ $pastOrders->appends(['pageType' => 'pastOrders'])->links() }}
                                     </div>
                                 </div>
                             </div>  
@@ -789,11 +789,24 @@
         var id = $(this).data('id');
         var order_vendor_product_id = $(this).data('order_vendor_product_id');
         $.get('/rating/get-product-rating?id=' + id +'&order_vendor_product_id=' + order_vendor_product_id, function(markup)
-                {   
-                    $('#product_rating').modal('show'); 
-                    $('#review-rating-form-modal').html(markup);
-                });
+        {
+            $('#product_rating').modal('show'); 
+            $('#review-rating-form-modal').html(markup);
         });
+    });
+
+    $(document).delegate("#orders_wrapper .nav-tabs .nav-link", "click", function(){
+        let id = $(this).attr('id');
+        const params = window.location.search;
+        if(params != ''){
+            if(id == 'active-orders-tab'){
+                window.location.href = window.location.pathname + '?pageType=activeOrders';
+            }
+            else if(id == 'past_order-tab'){
+                window.location.href = window.location.pathname + '?pageType=pastOrders';
+            }
+        }
+    });
 </script>
 
 @endsection
