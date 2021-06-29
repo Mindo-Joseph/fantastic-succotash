@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\OrderVendorListTaxExport;
 
 class OrderController extends Controller{
     use ApiResponser;
@@ -30,5 +32,8 @@ class OrderController extends Controller{
         }
         $data = ['vendor_orders' => $vendor_orders, 'total_earnings_by_vendors' => $total_earnings_by_vendors, 'total_delivery_fees' => $total_delivery_fees, 'total_cash_to_collected' => $total_cash_to_collected];
         return $this->successResponse($data, '');
+    }
+    public function export() {
+        return Excel::download(new OrderVendorListTaxExport, 'order_list.xlsx');
     }
 }

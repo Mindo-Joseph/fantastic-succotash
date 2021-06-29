@@ -86,7 +86,10 @@
                             <div class="col-md-6">
                                  <input type="text" class="form-control" data-provide="datepicker" data-date-format="MM yyyy" data-date-min-view-mode="1" id="month_picker_filter" style="display:none;">
                             </div>
-                        </div>  
+                        </div>
+                        <a href="{{ route('account.order.export') }}" class="btn btn-success waves-effect waves-light">
+                            <span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV
+                        </a> 
                    </div>
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable">
@@ -96,10 +99,10 @@
                                     <th>Date & Time</th>
                                     <th>Customer Name</th>
                                     <th>Vendor</th>
-                                    <th>Subtotal amount</th>
+                                    <th>Subtotal Amount</th>
                                     <th>Promo Code Discount</th>
                                     <th>Admin Commission [Fixed]</th>
-                                    <th>Admin Commission [%age]</th>
+                                    <th>Admin Commission [%Age]</th>
                                     <th>Final Amount</th>
                                     <th>Payment Method</th>
                                 </tr>
