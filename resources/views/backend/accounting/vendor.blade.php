@@ -21,22 +21,19 @@
                         <div class="row">
                             <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <i class="mdi mdi-cart-plus text-primary mdi-24px"></i>
-                                    <h3>$<span data-plugin="counterup" id="total_order_value"></span></h3>
+                                    <h3><i class="mdi mdi-currency-usd text-success mdi-24px"></i><span data-plugin="counterup" id="total_order_value"></span></h3>
                                     <p class="text-muted font-15 mb-0">Total Order Value</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <i class="mdi mdi-currency-usd text-success mdi-24px"></i>
-                                    <h3>$<span data-plugin="counterup" id="total_delivery_fees"></span></h3>
+                                    <h3><i class="mdi mdi-currency-usd text-success mdi-24px"></i><span data-plugin="counterup" id="total_delivery_fees"></span></h3>
                                     <p class="text-muted font-15 mb-0">Total Delivery Fees</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <i class="mdi mdi-account-group text-danger mdi-24px"></i>
-                                    <h3><span data-plugin="counterup" id="total_admin_commissions">0</span></h3>
+                                    <h3><i class="mdi mdi-currency-usd text-success mdi-24px"></i><span data-plugin="counterup" id="total_admin_commissions">0.00</span></h3>
                                     <p class="text-muted font-15 mb-0">Total Admin Commissions</p>
                                 </div>
                             </div>
