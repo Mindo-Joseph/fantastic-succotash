@@ -2507,17 +2507,52 @@ body .rating-form .btn-reset {
 
 
 
+.rating-star{
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.rate-btn.btn.btn-solid.m-0 {
+    padding: 0 5px;
+    border-radius: 2px;
+}
 
 
 
+.item-img {
+    width: 70px;
+    height: 70px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}   
 
 
+.order_address p {width: 80%;}
 
+td.order_address {
+    width: 300px;
+}
 
+.return-order td {
+    padding-top: 10px;
+}
 
+.return-order th {
+    padding: 10px 0;
+    color: #000;
+    text-transform: capitalize;
+    font-weight: 600;
+}
 
-
-
+.return-order tfoot td {
+    padding-top: 20px;
+}
 
 
 
@@ -2573,7 +2608,7 @@ body .rating-form .btn-reset {
     .refferal_modal .modal-dialog {
         max-width: 1000px;
     }
-    #proceed_to_pay_modal .modal-dialog {
+    #proceed_to_pay_modal .modal-dialog,.return-order .modal-dialog {
         max-width: 800px;
     }
     .product-rating .modal-dialog {

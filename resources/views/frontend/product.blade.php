@@ -223,7 +223,10 @@
                                     </div>
                                     @endif
 
-                                    <div class="product-buttons"><a href="#" data-toggle="modal"
+                                    <div class="product-buttons">
+                                    <a href="#" data-toggle="modal"
+                                            data-target="#addtocart" class="btn btn-solid addToCart">add to wishist</a>
+                                            <a href="#" data-toggle="modal"
                                             data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a> <a
                                             href="#" class="btn btn-solid">buy now</a></div>
                                     <div class="border-product">
