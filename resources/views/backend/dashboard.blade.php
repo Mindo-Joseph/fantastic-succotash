@@ -210,7 +210,7 @@
                                 </div>
                             </div>
 
-                            <h4 class="header-title mb-3">Top 5 Users Balances</h4>
+                            <h4 class="header-title mb-3">Top 5 Users</h4>
 
                             <div class="table-responsive">
                                 <table class="table table-borderless table-hover table-nowrap table-centered m-0">
@@ -391,7 +391,7 @@
                                 </div>
                             </div>
 
-                            <h4 class="header-title mb-3">Revenue History</h4>
+                            <h4 class="header-title mb-3">Top 5 Vendors</h4>
 
                             <div class="table-responsive">
                                 <table class="table table-borderless table-nowrap table-hover table-centered m-0">
@@ -561,7 +561,14 @@
 
 @section('script')
 
+<script>
+    var monthlyInfo_url = "{{route('client.monthlySalesInfo')}}";
+    var yearlyInfo_url = "{{route('client.yearlySalesInfo')}}";
+    var weeklyInfo_url = "{{route('client.weeklySalesInfo')}}";
+    var categoryInfo_url = "{{route('client.categoryInfo')}}";
+</script>
 
+<script src="{{asset('js/admin_dashboard.js')}}"></script>
 
 <script src="{{asset('assets/libs/flatpickr/flatpickr.min.js')}}"></script>
 
