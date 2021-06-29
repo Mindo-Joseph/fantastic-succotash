@@ -27,18 +27,18 @@ class OrderController extends FrontController
     {
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        
-        $pastOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'=>function($q){
+
+        $pastOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor' => function ($q) {
             $q->where('order_status_option_id', 5);
         }])
-        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
-        
-        $activeOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'=>function($q){
+            ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
+
+        $activeOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor' => function ($q) {
             $q->where('order_status_option_id', '!=', 5);
         }])
-        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
+            ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
 
-       return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders]);
+        return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders' => $activeOrders, 'pastOrders' => $pastOrders]);
     }
 
     public function getOrderSuccessPage(Request $request)
@@ -120,12 +120,14 @@ class OrderController extends FrontController
                     $quantity_price = $price_in_dollar_compare * $vendor_cart_product->quantity;
                     $payable_amount = $payable_amount + $quantity_price;
                     $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
-                    foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
-                        $rate = round($tax_rate_detail->tax_rate);
-                        $tax_amount = ($price_in_dollar_compare * $rate) / 100;
-                        $product_tax = $quantity_price * $rate / 100;
-                        $product_taxable_amount += $product_tax;
-                        $payable_amount = $payable_amount + $product_tax;
+                    if (isset($vendor_cart_product->product['taxCategory'])) {
+                        foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
+                            $rate = round($tax_rate_detail->tax_rate);
+                            $tax_amount = ($price_in_dollar_compare * $rate) / 100;
+                            $product_tax = $quantity_price * $rate / 100;
+                            $product_taxable_amount += $product_tax;
+                            $payable_amount = $payable_amount + $product_tax;
+                        }
                     }
                     if (!empty($vendor_cart_product->product->Requires_last_mile) && $vendor_cart_product->product->Requires_last_mile == 1) {
                         $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id);
@@ -192,7 +194,7 @@ class OrderController extends FrontController
                         $vendor_discount_amount += $percentage_amount;
                     }
                 }
-                
+
                 $total_delivery_fee += $delivery_fee;
                 $OrderVendor = new OrderVendor();
                 $OrderVendor->status = 0;
