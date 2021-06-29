@@ -1,8 +1,6 @@
 @extends('layouts.vertical', ['demo' => 'Order list', 'title' => 'Accounting'])
-
 @section('css')
-<link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
-<link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/libs/datatables/datatables.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
 <div class="content">
@@ -10,8 +8,6 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <div class="page-title-right">
-                    </div>
                     <h4 class="page-title">Order list</h4>
                 </div>
             </div>
@@ -23,29 +19,37 @@
                         <div class="row">
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="text-center">
-                                    <i class="mdi mdi-cart-plus text-primary mdi-24px"></i>
-                                    <h3><span data-plugin="counterup" id="total_earnings_by_vendors">0</span></h3>
+                                    <h3>
+                                        <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
+                                        <span data-plugin="counterup" id="total_earnings_by_vendors">0</span>
+                                    </h3>
                                     <p class="text-muted font-15 mb-0">Total Earnings By Vendors</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="text-center">
-                                    <i class="mdi mdi-currency-usd text-success mdi-24px"></i>
-                                    <h3>$ <span data-plugin="counterup" id="total_order_count">0</span></h3>
+                                    <h3>
+                                        <i class="mdi mdi-cart-arrow-up text-primary mdi-24px"></i>
+                                        <span data-plugin="counterup" id="total_order_count">0</span>
+                                    </h3>
                                     <p class="text-muted font-15 mb-0">Total Orders</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="text-center">
-                                    <i class="mdi mdi-account-group text-danger mdi-24px"></i>
-                                    <h3><span data-plugin="counterup" id="total_cash_to_collected">0</span></h3>
+                                    <h3>
+                                        <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
+                                        <span data-plugin="counterup" id="total_cash_to_collected">0</span>
+                                    </h3>
                                     <p class="text-muted font-15 mb-0">Total Cash To Be Collected</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="text-center">
-                                    <i class="mdi mdi-eye-outline text-blue mdi-24px"></i>
-                                    <h3><span data-plugin="counterup" id="total_delivery_fees">0</span> k</h3>
+                                    <h3>
+                                        <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
+                                        <span data-plugin="counterup" id="total_delivery_fees">0</span>
+                                    </h3>
                                     <p class="text-muted font-15 mb-0">Total Delivery Fees</p>
                                 </div>
                             </div>
@@ -63,11 +67,11 @@
             <td><%= vendor_order.created_at %></td>
             <td><%= vendor_order.user.name %></td>
             <td><%= vendor_order.vendor.name %></td>
-            <td><%= vendor_order.payable_amount %></td>
+            <td><%= vendor_order.subtotal_amount %></td>
             <td><%= vendor_order.discount_amount %></td>
-            <td></td>
-            <td></td>
-            <td></td> 
+            <td><%= vendor_order.admin_commission_fixed_amount %></td>
+            <td><%= vendor_order.admin_commission_percentage_amount %></td>
+            <td><%= vendor_order.payable_amount %></td> 
             <td><%= vendor_order.order_detail.payment_option.title %></td> 
         </tr>
     <% }); %>
@@ -131,12 +135,10 @@
                         $('#accounting_vendor_tbody_list').html('');
                         let accounting_vendor_template = _.template($('#accounting_vendor_template').html());
                         $("#accounting_vendor_tbody_list").append(accounting_vendor_template({vendor_orders: response.data.vendor_orders}));
-
                         $('#total_order_count').html(response.data.vendor_orders.length);
                         $('#total_delivery_fees').html(response.data.total_delivery_fees);
                         $('#total_cash_to_collected').html(response.data.total_cash_to_collected);
                         $('#total_earnings_by_vendors').html(response.data.total_earnings_by_vendors);
-
                         $('#total_order_count').counterUp({
                           delay: 10,
                           time: 2000
@@ -153,20 +155,24 @@
                           delay: 10,
                           time: 2000
                         });
-                        // if($.fn.DataTable.isDataTable('#accounting_vendor_datatable')){
-                        //     table.destroy();
-                        //     $('#accounting_vendor_datatable tbody').empty();
-                        // }
-                        // table = $("#accounting_vendor_datatable").DataTable({
-                        //     "dom": '<"toolbar">frtip',
-                        //     drawCallback: function () {
-                        //         $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                        //     },
-                        // }).fnClearTable();
+                        if($.fn.DataTable.isDataTable('#accounting_vendor_datatable')){
+                            table.destroy();
+                            $('#accounting_vendor_datatable tbody').empty();
+                        }
+                        table = $("#accounting_vendor_datatable").DataTable({
+                            "dom": '<"toolbar">frtip',
+                            "scrollX": true,
+                            drawCallback: function () {
+                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                            },
+                        }).fnClearTable();
                     }
                 }
             });
         }
     });
 </script>
+@endsection
+@section('script')
+<script src="{{asset('assets/libs/datatables/datatables.min.js')}}"></script>
 @endsection
