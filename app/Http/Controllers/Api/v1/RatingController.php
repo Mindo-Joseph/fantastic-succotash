@@ -37,16 +37,16 @@ class RatingController extends BaseController{
                 'product_id' => $request->product_id,
                 'user_id' => Auth::id()],['rating' => $request->rating,'review' => $request->review??null]);
 
-                if ($request->has('files')) {
-                    $files = $request->file('files');
-                    foreach($files as $file) {
-                        $file =  substr(md5(microtime()), 0, 15).'_'.$files->getClientOriginalName();
-                        $storage = Storage::disk('s3')->put('/review', $file, 'public');
-                        $img = new OrderProductRatingFile();
-                        $img->order_product_rating_id = $ratings->id;
-                        $img->file = $storage;
-                        $img->save();
-                        }
+                if ($image = $request->file('files')) {
+                    foreach ($image as $files) {
+                    $file =  substr(md5(microtime()), 0, 15).'_'.$files->getClientOriginalName();
+                    $storage = Storage::disk('s3')->put('/review', $files, 'public');
+                    $img = new OrderProductRatingFile();
+                    $img->order_product_rating_id = $ratings->id;
+                    $img->file = $storage;
+                    $img->save();
+                   
+                    }
                 }
 
                 if(isset($request->remove_files) && is_array($request->remove_files))    # send index array of deleted images 

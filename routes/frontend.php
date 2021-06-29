@@ -106,4 +106,10 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');
 		Route::get('get-product-rating', 'Front\RatingController@getProductRating')->name('get-product-rating-details');
 	});
+
+	// Return product 
+	Route::group(['prefix' => 'return-order'], function () {
+		Route::get('get-order-data-in-model', 'Front\ReturnOrderController@getOrderDatainModel')->name('getOrderDatainModel');
+		Route::get('get-return-products', 'Front\ReturnOrderController@getReturnProducts')->name('get-return-products');
+	});
 });
