@@ -52,11 +52,14 @@ class AddressController extends FrontController{
         ], [
             'type.required' => 'Address Type is required'
         ]);
+        $country = Country::select('code', 'name')->where('id', $request->country)->first();
         $address = new UserAddress;
         $address->type = $request->type;
         $address->city = $request->city;
         $address->state = $request->state;
         $address->street = $request->street;
+        $address->country = $country->name;
+        $address->country_code = $country->code;
         $address->user_id = Auth::user()->id;
         $address->address = $request->address;
         $address->pincode = $request->pincode;
