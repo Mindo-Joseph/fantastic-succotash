@@ -27,8 +27,18 @@ class OrderController extends FrontController
     {
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        $orders = Order::with(['products', 'user', 'address', 'orderStatusVendor'])->where('user_id', Auth::user()->id)->get();
-        return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'orders' => $orders]);
+        
+        $pastOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'=>function($q){
+            $q->where('order_status_option_id', 5);
+        }])
+        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
+        
+        $activeOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'=>function($q){
+            $q->where('order_status_option_id', '!=', 5);
+        }])
+        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
+
+       return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders]);
     }
 
     public function getOrderSuccessPage(Request $request)

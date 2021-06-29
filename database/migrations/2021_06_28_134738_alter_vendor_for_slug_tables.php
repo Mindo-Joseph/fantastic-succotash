@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterTypeTableForSequencesFieldInTables extends Migration
+class AlterVendorForSlugTables extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AlterTypeTableForSequencesFieldInTables extends Migration
      */
     public function up()
     {
-        Schema::table('types', function (Blueprint $table) {
-            $table->longText('description')->after('title')->nullable();
-            $table->tinyInteger('sequence')->after('description')->nullable();
+        Schema::table('vendors', function (Blueprint $table) {
+            $table->mediumText('slug')->after('name')->nullable();
         });
     }
 
@@ -26,8 +25,6 @@ class AlterTypeTableForSequencesFieldInTables extends Migration
      */
     public function down()
     {
-        Schema::table('types', function (Blueprint $table) {
-            //
-        });
+        //
     }
 }

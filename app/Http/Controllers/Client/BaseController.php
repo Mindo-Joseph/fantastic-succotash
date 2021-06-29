@@ -41,7 +41,7 @@ class BaseController extends Controller
                     $this->htmlData .='<div class="dd-handle dd3-handle"></div>';
                 }
                 $icon = $node['icon']['proxy_url'].'30/30'.$node['icon']['image_path'];
-                $this->htmlData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node["slug"].'<span class="inner-div text-right">';
+                $this->htmlData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node['translation_one']["name"].'<span class="inner-div text-right">';
 
                 if(!in_array($node["id"], $blockedCategory)){
                     $status = 2; //$icon = 'mdi-lock-open-variant';
@@ -143,10 +143,8 @@ class BaseController extends Controller
 
         return $this->successCount;
     }
-
-    /**     * check if cookie already exist     */
-    public function userMetaData($userid, $device_type = 'web', $device_token = 'web')
-    {
+    
+    public function userMetaData($userid, $device_type = 'web', $device_token = 'web'){
         $device = UserDevice::where('user_id', $userid)->first();
         if(!$device){
             $user_device[] = [

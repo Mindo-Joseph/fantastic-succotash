@@ -19,7 +19,7 @@ class CategoryController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function categoryProduct(Request $request, $domain = '', $cid = 0)
+    public function categoryProduct(Request $request, $domain = '', $slug = 0)
     {
         $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
@@ -39,8 +39,7 @@ class CategoryController extends FrontController
             ->where('category_translations.language_id', $langId);
         }])
         ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
-        ->where('id', $cid)->firstOrFail();
-
+        ->where('slug', $slug)->firstOrFail();
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');
@@ -57,7 +56,7 @@ class CategoryController extends FrontController
                     $category->childs = collect($childArray);
                 }
                 //Abort route if category from route does not exist as per hyperlocal vendors
-                $category_vendors = VendorCategory::select('vendor_id')->where('category_id', $cid)->where('status', 1)->get();
+                $category_vendors = VendorCategory::select('vendor_id')->where('category_id', $category->id)->where('status', 1)->get();
                 if(!$category_vendors->isEmpty()){
                     $index = 1;
                     foreach($category_vendors as $key => $value){
@@ -101,24 +100,16 @@ class CategoryController extends FrontController
                     ->join('variant_translations as vt','vt.variant_id','vr.id')
                     ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
                     ->where('vt.language_id', $langId)
-                    ->whereIn('product_variant_sets.product_id', function($qry) use($cid){ 
+                    ->whereIn('product_variant_sets.product_id', function($qry) use($category){ 
                         $qry->select('product_id')->from('product_categories')
-                            ->where('category_id', $cid);
+                            ->where('category_id', $category->id);
                         })
                     ->groupBy('product_variant_sets.variant_type_id')->get();
-
-        //dd($variantSets->toArray());
-
-        $listData = $this->listData($langId, $cid, $category->type->redirect_to);
-
-        //dd($listData->toArray());
+        $listData = $this->listData($langId, $category->id, $category->type->redirect_to);
         $category->type->redirect_to;
         $page = ($category->type->redirect_to == 'vendor' || $category->type->redirect_to == 'Vendor') ? 'vendor' : 'product';
-
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-
-        //dd($category->toArray());
         return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
     }
 
@@ -138,8 +129,6 @@ class CategoryController extends FrontController
             $vendorData = $vendorData->where('vendors.status', '!=', $this->field_status)->paginate($pagiNate);
 
             return $vendorData;
-
-        //}elseif($type == 'product' || $type == 'Product'){
             }else{
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
             $vendors = array();

@@ -47,7 +47,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('/product/updateCartQuantity','Front\CartController@updateQuantity')->name('updateQuantity');
 	Route::post('/product/deletecartproduct','Front\CartController@deleteCartProduct')->name('deleteCartProduct');
 	Route::get('userAddress','Front\UserController@getUserAddress')->name('getUserAddress');
-	Route::get('category/{id?}', 'Front\CategoryController@categoryProduct')->name('categoryDetail');
+	Route::get('category/{slug?}', 'Front\CategoryController@categoryProduct')->name('categoryDetail');
     Route::post('category/filters/{id}', 'Front\CategoryController@categoryFilters')->name('productFilters');
     Route::get('vendor/{id?}', 'Front\VendorController@vendorProducts')->name('vendorDetail');
     Route::post('vendor/filters/{id}', 'Front\VendorController@vendorFilters')->name('vendorProductFilters');
@@ -72,7 +72,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/logout', 'Front\CustomerAuthController@logout')->name('user.logout');
     Route::get('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
 	Route::get('user/editAddress/{id}', 'Front\AddressController@edit')->name('editAddress');
-	Route::post('user/update/{id}', 'Front\AddressController@update')->name('address.update');
+	Route::post('user/update/{id?}', 'Front\AddressController@update')->name('address.update');
     Route::get('user/wishlists', 'Front\WishlistController@wishlists')->name('user.wishlists');
 	Route::post('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
     Route::post('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInformation');

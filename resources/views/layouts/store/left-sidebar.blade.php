@@ -201,17 +201,17 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </li>
                         @foreach($navCategories as $cate)
                         <li>
-                            <a href="{{route('categoryDetail', $cate['id'])}}">{{$cate['name']}}</a>
+                            <a href="{{route('categoryDetail', $cate['slug'])}}">{{$cate['name']}}</a>
                             @if(!empty($cate['children']))
                                 
                                 <ul>
                                     @foreach($cate['children'] as $childs)
                                     <li>
-                                        <a href="{{route('categoryDetail', $childs['id'])}}"><span class="new-tag">{{$childs['name']}}</span></a>
+                                        <a href="{{route('categoryDetail', $childs['slug'])}}"><span class="new-tag">{{$childs['name']}}</span></a>
                                         @if(!empty($childs['children']))
                                         <ul>
                                             @foreach($childs['children'] as $chld)
-                                            <li><a href="{{route('categoryDetail', $chld['id'])}}">{{$chld['name']}}</a></li>
+                                            <li><a href="{{route('categoryDetail', $chld['slug'])}}">{{$chld['name']}}</a></li>
                                             @endforeach
                                         </ul>
                                         @endif
@@ -262,16 +262,16 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     </li>
     <% _.each(nav_categories, function(category, key){ %>
         <li>
-            <a href="{{route('categoryDetail')}}/<%= category.id %>"><%= category.name %></a>
+            <a href="{{route('categoryDetail')}}/<%= category.slug %>"><%= category.name %></a>
             <% if(category.children) { %>
                 <ul>
                 <% _.each(category.children, function(childs, key1){ %>
                     <li>
-                        <a href="{{route('categoryDetail')}}/<%= childs.id %>"><span class="new-tag"><%= childs.name %></span></a>
+                        <a href="{{route('categoryDetail')}}/<%= childs.slug %>"><span class="new-tag"><%= childs.name %></span></a>
                         <% if(childs.children) { %>
                         <ul>
                             <% _.each(childs.children, function(chld, key2){ %>
-                                <li><a href="{{route('categoryDetail')}}/<%= chld.id %>"><%= chld.name %></a></li>
+                                <li><a href="{{route('categoryDetail')}}/<%= chld.slug %>"><%= chld.name %></a></li>
                             <% }); %>
                         </ul>
                         <% } %>
