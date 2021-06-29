@@ -17,6 +17,7 @@ use Redirect;
 use Phumbor;
 use Session;
 use Image;
+use Illuminate\Support\Str;
 
 class VendorController extends BaseController
 {
@@ -105,6 +106,7 @@ class VendorController extends BaseController
             $vendor->banner = Storage::disk('s3')->put('/vendor', $file, 'public');
         }
 
+        $vendor->slug = Str::slug($request->name, "-");
         $vendor->save();
         return $vendor->id;
     }

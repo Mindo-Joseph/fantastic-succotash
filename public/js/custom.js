@@ -58,16 +58,27 @@ $(document).ready(function() {
     }
     $('.addWishList').click(function(){
         var sku = $(this).attr('proSku');
+        var _this = $(this);
         $.ajax({
             type: "post",
             dataType: "json",
-            url: "{{ route('addWishlist') }}",
+            url: add_to_whishlist_url,
             data: {
-                "_token": "{{ csrf_token() }}",
+                "_token": $('meta[name="_token"]').attr('content'),
                 "sku": sku
             },
-            success: function(response) {
-
+            success: function(res) {
+                if(res.status == "success"){
+                    if(_this.hasClass('btn-solid')){
+                        if(res.message.indexOf('added') !== -1){
+                            _this.text('REMOVE FROM WISHLIST');
+                        }else{
+                            _this.text('ADD TO WISHLIST');
+                        }
+                    }
+                }else{
+                    location.reload();
+                }
             }
         });
     });

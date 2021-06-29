@@ -1,6 +1,6 @@
 <script type="text/javascript">
     summernoteInit();
-    var regexp = /^[a-zA-Z0-9-_]+$/;
+    var regexp = /^[a-z0-9-_-]+$/;
 
     function alphaNumeric(evt){
         var charCode = String.fromCharCode(event.which || event.keyCode);
@@ -9,7 +9,7 @@
             return false;
         }
         var n2 = document.getElementById('slug');
-        n2.value = n2.value+charCode;
+        // n2.value = n2.value+charCode;
         return true;
     }
     function summernoteInit(){

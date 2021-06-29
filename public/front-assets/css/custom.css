@@ -221,6 +221,18 @@ a{
     margin: 0;
 }
 
+td.items-details {
+    width: 300px;
+}
+
+td.items-details h4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    white-space: break-spaces;
+    overflow: hidden;
+}
+
 .items-details h6 {
     margin: 0 0 3px;
     font-size: 15px;

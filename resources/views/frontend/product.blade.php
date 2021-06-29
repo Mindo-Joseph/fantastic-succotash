@@ -223,11 +223,11 @@
                                     @endif
 
                                     <div class="product-buttons">
-                                    <a href="#" data-toggle="modal"
-                                            data-target="#addtocart" class="btn btn-solid addToCart">add to wishist</a>
-                                            <a href="#" data-toggle="modal"
-                                            data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a> <a
-                                            href="#" class="btn btn-solid">buy now</a></div>
+                                        <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
+                                            {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? 'Remove from Wishlist' : 'Add To Wishlist' }}
+                                        </button>
+                                        <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a>
+                                    </div>
                                     <div class="border-product">
                                         <h6 class="product-title">product details</h6>
                                         <p>{!!(!empty($product->translation) && isset($product->translation[0])) ?
