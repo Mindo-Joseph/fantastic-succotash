@@ -175,6 +175,7 @@ class OrderController extends FrontController
                 }
                 $coupon_id = null;
                 $coupon_name = null;
+                $actual_amount = $vendor_payable_amount;
                 if ($vendor_cart_product->coupon) {
                     $coupon_id = $vendor_cart_product->coupon->promo->id;
                     $coupon_name = $vendor_cart_product->coupon->promo->name;
@@ -201,6 +202,7 @@ class OrderController extends FrontController
                 $OrderVendor->coupon_code = $coupon_name;
                 $OrderVendor->discount_amount = $vendor_discount_amount;
                 $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
+                $OrderVendor->actual_amount = $actual_amount;
                 $OrderVendor->discount_amount = $this->getDeliveryFeeDispatcher($vendor_id);
                 $vendor_info = Vendor::where('id', $vendor_id)->first();
                 if ($vendor_info) {
