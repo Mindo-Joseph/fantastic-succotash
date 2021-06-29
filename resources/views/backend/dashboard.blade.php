@@ -561,7 +561,14 @@
 
 @section('script')
 
+<script>
+    var monthlyInfo_url = "{{route('client.monthlySalesInfo')}}";
+    var yearlyInfo_url = "{{route('client.yearlySalesInfo')}}";
+    var weeklyInfo_url = "{{route('client.weeklySalesInfo')}}";
+    var categoryInfo_url = "{{route('client.categoryInfo')}}";
+</script>
 
+<script src="{{asset('js/admin_dashboard.js')}}"></script>
 
 <script src="{{asset('assets/libs/flatpickr/flatpickr.min.js')}}"></script>
 

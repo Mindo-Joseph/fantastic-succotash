@@ -32,7 +32,7 @@ if (Session::has('toaster')) {
 <script src="{{asset('assets/js/pages/my-form-advanced.init.js')}}"></script>
 <script src="{{asset('assets/libs/jquery-toast-plugin/jquery-toast-plugin.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/toastr.init.js')}}"></script>
-<script src="{{asset('js/admin_custom.js')}}"></script>
+
 <script>
     let is_hyperlocal = 0;
     @if(Session::has('preferences'))
@@ -83,10 +83,6 @@ if (Session::has('toaster')) {
         $(element).waitMe("hide");
     }
 
-    var monthlyInfo_url = "{{route('client.monthlySalesInfo')}}";
-    var yearlyInfo_url = "{{route('client.yearlySalesInfo')}}";
-    var weeklyInfo_url = "{{route('client.weeklySalesInfo')}}";
-    var categoryInfo_url = "{{route('client.categoryInfo')}}";
 </script>
 
 @yield('script-bottom')
