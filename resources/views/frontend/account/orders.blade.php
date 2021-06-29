@@ -312,17 +312,20 @@
                                                                                 <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
                                                                                     @foreach($vendor->products as $product)
                                                                                         @if($vendor->vendor_id == $product->vendor_id)
+                                                                                            @php
+                                                                                                $pro_rating = $product->productRating->rating??0;
+                                                                                            @endphp
                                                                                             <li class="text-center">
                                                                                                 <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
                                                                                                 <span class="item_no position-absolute">x{{$product->quantity}}</span>
                                                                                                 <?php /* ?><label class="items_name">{{$product->product_name}}</label><?php */ ?>
                                                                                                 <label class="items_price">${{$product->price}}</label>
-                                                                                                <label class="rating-star add_edit_review" data-id="{{$product->productRating->id??0}}">
-                                                                                                    <i class="fa fa-star{{ $product->productRating->rating >= 1 ? '' : '-o' }}" ></i>
-                                                                                                    <i class="fa fa-star{{ $product->productRating->rating >= 2 ? '' : '-o' }}" ></i>
-                                                                                                    <i class="fa fa-star{{ $product->productRating->rating >= 3 ? '' : '-o' }}" ></i>
-                                                                                                    <i class="fa fa-star{{ $product->productRating->rating >= 4 ? '' : '-o' }}" ></i>
-                                                                                                    <i class="fa fa-star{{ $product->productRating->rating >= 5 ? '' : '-o' }}" ></i>
+                                                                                                <label class="rating-star add_edit_review" data-id="{{$product->productRating->id??0}}"  data-order_vendor_product_id="{{$product->id??0}}">
+                                                                                                    <i class="fa fa-star{{ $pro_rating >= 1 ? '' : '-o' }}" ></i>
+                                                                                                    <i class="fa fa-star{{ $pro_rating >= 2 ? '' : '-o' }}" ></i>
+                                                                                                    <i class="fa fa-star{{ $pro_rating >= 3 ? '' : '-o' }}" ></i>
+                                                                                                    <i class="fa fa-star{{ $pro_rating >= 4 ? '' : '-o' }}" ></i>
+                                                                                                    <i class="fa fa-star{{ $pro_rating >= 5 ? '' : '-o' }}" ></i>
                                                                                                 </label>
                                                                         
                                                                                             </li>
@@ -784,7 +787,8 @@
     $('body').on('click', '.add_edit_review', function (event) {
         event.preventDefault();
         var id = $(this).data('id');
-        $.get('/rating/get-product-rating?id=' + id , function(markup)
+        var order_vendor_product_id = $(this).data('order_vendor_product_id');
+        $.get('/rating/get-product-rating?id=' + id +'&order_vendor_product_id=' + order_vendor_product_id, function(markup)
                 {   
                     $('#product_rating').modal('show'); 
                     $('#review-rating-form-modal').html(markup);

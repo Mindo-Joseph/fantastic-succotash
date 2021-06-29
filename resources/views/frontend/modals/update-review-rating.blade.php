@@ -1,13 +1,13 @@
 <form id="review-upload-form" class="theme-form" action="javascript:void(0)" method="post" enctype="multipart/form-data">
     @csrf
-    <input type="hidden" name="order_vendor_product_id" value="143">
+    <input type="hidden" name="order_vendor_product_id" value="{{$order_vendor_product_id}}">
     <textarea class="form-control" maxlength="500" name="hidden_review" hidden>{{$rating_details->review??''}}</textarea>
     <div class="rating-form">
         <fieldset class="form-group">
             <legend class="form-legend">Rating:</legend> 
             <div class="form-item">
 
-            <input id="rating-5" name="rating" type="radio" value="5" {{ $rating_details->rating == 5 ? 'checked' : '' }}/>
+            <input id="rating-5" name="rating" type="radio" value="5" {{ $rating == 5 ? 'checked' : '' }}/>
                 <label for="rating-5" data-value="5">
                     <span class="rating-star">
                         <i class="fa fa-star-o"></i>
@@ -15,7 +15,7 @@
                     </span>
                     <span class="ir">5</span>
                 </label>
-                <input id="rating-4" name="rating" type="radio" value="4"  {{ $rating_details->rating == 4 ? 'checked' : '' }}/>
+                <input id="rating-4" name="rating" type="radio" value="4"  {{ $rating == 4 ? 'checked' : '' }}/>
                 <label for="rating-4" data-value="4">
                     <span class="rating-star">
                         <i class="fa fa-star-o"></i>
@@ -23,7 +23,7 @@
                     </span>
                     <span class="ir">4</span>
                 </label>
-                <input id="rating-3" name="rating" type="radio" value="3"  {{ $rating_details->rating == 3 ? 'checked' : '' }}/>
+                <input id="rating-3" name="rating" type="radio" value="3"  {{ $rating == 3 ? 'checked' : '' }}/>
                 <label for="rating-3" data-value="3">
                     <span class="rating-star">
                         <i class="fa fa-star-o"></i>
@@ -31,7 +31,7 @@
                     </span>
                     <span class="ir">3</span>
                 </label>
-                <input id="rating-2" name="rating" type="radio" value="2"  {{ $rating_details->rating == 2 ? 'checked' : '' }}/>
+                <input id="rating-2" name="rating" type="radio" value="2"  {{ $rating == 2 ? 'checked' : '' }}/>
                 <label for="rating-2" data-value="2">
                     <span class="rating-star">
                         <i class="fa fa-star-o"></i>
@@ -39,7 +39,7 @@
                     </span>
                     <span class="ir">2</span>
                 </label>
-                <input id="rating-1" name="rating" type="radio" value="1"  {{ $rating_details->rating == 1 ? 'checked' : '' }}/>
+                <input id="rating-1" name="rating" type="radio" value="1"  {{ $rating == 1 ? 'checked' : '' }}/>
                 <label for="rating-1" data-value="1">
                     <span class="rating-star">
                         <i class="fa fa-star-o"></i>
@@ -71,9 +71,11 @@
 
         <div class="col-10">
             <span class="row show-multiple-image-preview" id="thumb-output">
+                @if(isset($rating_details->reviewFiles))
                 @foreach ($rating_details->reviewFiles as $files)
                     <img class="col-6 col-md-3 col-lg-2 update_pic" src="{{$files->file['proxy_url'].'300/300'.$files->file['image_path']}}">
                 @endforeach
+                @endif
                 
             </span>
         </div> 
@@ -83,10 +85,10 @@
     <div class="form-row">
                                             
         <div class="col-md-12 mb-3">
-            <label for="review">Review Title</label>
+            <label for="review">Review</label>
             <textarea class="form-control"
                 placeholder="Wrire Your Testimonial Here"
-                id="exampleFormControlTextarea1" rows="4"  name="review" maxlength="500" required>{{$rating_details->review}}</textarea>
+                id="exampleFormControlTextarea1" rows="4"  name="review" maxlength="500" required>{{$rating_details->review??''}}</textarea>
         </div>
         <span class="text-danger" id="error-msg"></span>
         <span class="text-success" id="success-msg"></span>
