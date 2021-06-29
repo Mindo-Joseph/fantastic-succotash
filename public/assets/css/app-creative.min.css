@@ -57,7 +57,7 @@ body {
   overflow: hidden;
   padding: 0 15px 65px 15px;
   min-height: 80vh;
-  margin-top: 70px;
+  margin-top: 30px;
 }
 
 .left-side-menu {
@@ -692,11 +692,11 @@ body[data-sidebar-icon=twotones] #sidebar-menu > ul > li > a svg {
 .navbar-custom {
   background-color: #fff;
   box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
-  padding: 0 10px 0 0;
+  padding: 10px 10px 10px 0;
   position: fixed;
   left: 0;
   right: 0;
-  height: 70px;
+  height: auto;
   z-index: 1001;
   /* Search */
 }
@@ -708,9 +708,9 @@ body[data-sidebar-icon=twotones] #sidebar-menu > ul > li > a svg {
   color: rgba(0 0 0 / 0.6);
   min-width: 32px;
   display: block;
-  line-height: 70px;
+  line-height: normal;
   text-align: center;
-  max-height: 70px;
+  max-height: initial;
 }
 .navbar-custom .dropdown.show .nav-link {
   background-color: rgba(255, 255, 255, 0.05);
@@ -719,7 +719,7 @@ body[data-sidebar-icon=twotones] #sidebar-menu > ul > li > a svg {
   padding: 0;
 }
 .navbar-custom .app-search {
-  height: 70px;
+  height: auto;
   display: table;
   max-width: 180px;
   margin-right: 20px;

@@ -29,6 +29,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('account/tax', [TaxController::class, 'index'])->name('account.tax');
     Route::get('account/vendor', [VendorController::class, 'index'])->name('account.vendor');
     Route::post('account/vendor/filter', [VendorController::class, 'filter'])->name('account.vendor.filter');
+    Route::post('account/order/filter', [OrderController::class, 'filter'])->name('account.order.filter');
     Route::put('profile/{id}', 'Client\DashBoardController@updateProfile')->name('client.profile.update');
     Route::post('password/update', 'Client\DashBoardController@changePassword')->name('client.password.update');
     Route::get('configure', 'Client\ClientPreferenceController@index')->name('configure.index');

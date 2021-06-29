@@ -177,9 +177,7 @@
 
                             <div dir="ltr" style="position: relative;">
                                 <div id="sales-analytics" class="mt-4" data-colors="#1abc9c,#4a81d4" style="min-height: 393px;">
-                                    <div id="apexchartsvgr8h7xo" class="apexcharts-canvas apexchartsvgr8h7xo apexcharts-theme-light" style="width: 973px; height: 378px;">
 
-                                    </div>
                                 </div>
                                 <div class="resize-triggers">
                                     <div class="expand-trigger">
@@ -579,101 +577,9 @@
 <script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
 
 <script>
-    var options = {
-        chart: {
-            height: 350,
-            type: 'bar',
-        },
-        dataLabels: {
-            enabled: false
-        },
-        series: [],
-        title: {
-            text: '',
-        },
-        noData: {
-            text: 'Loading...'
-        }
-    }
-    var chart = new ApexCharts(
-        document.querySelector("#apexchartsvgr8h7xo"),
-        options
-    );
-    var url = "{{route('client.monthlySalesInfo')}}";
-    $.getJSON(url, function(response) {
-        chart.updateSeries([{
-            name: 'Sales',
-            data: response
-        }])
-    });
-    chart.render();
-
-    $(".yearSales").click(function() {
-        var url = "{{route('client.yearlySalesInfo')}}";
-        $.getJSON(url, function(response) {
-            chart.updateSeries([{
-                name: 'Sales',
-                data: response
-            }])
-        });
-        chart.render();
-    });
-    $(".monthlySales").click(function() {
-        var url = "{{route('client.monthlySalesInfo')}}";
-        $.getJSON(url, function(response) {
-            chart.updateSeries([{
-                name: 'Sales',
-                data: response
-            }])
-        });
-        chart.render();
-    });
-    $(".weeklySales").click(function() {
-        var url = "{{route('client.weeklySalesInfo')}}";
-        $.getJSON(url, function(response) {
-            chart.updateSeries([{
-                name: 'Sales',
-                data: response
-            }])
-        });
-        chart.render();
-    });
-
-
-
-    var url = "{{route('client.categoryInfo')}}";
-    $.getJSON(url, function(response) {
-        
-    var options = {
-        series: response.orders,
-        labels: response.names,
-        chart: {
-            width: 380,
-            type: 'donut',
-        },
-        dataLabels: {
-            enabled: false
-        },
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-                    show: false
-                }
-            }
-        }],
-        legend: {
-            position: 'left',
-            offsetY: 0,
-            height: 230,
-        }
-    };
-
-    var chart1 = new ApexCharts(document.querySelector("#apexchartsfwg700r2"), options);
-    chart1.render();
-    });
+   var monthlyInfo_url = "{{route('client.monthlySalesInfo')}}";
+   var yearlyInfo_url = "{{route('client.yearlySalesInfo')}}";
+   var weeklyInfo_url = "{{route('client.weeklySalesInfo')}}";
+   var categoryInfo_url = "{{route('client.categoryInfo')}}";
 </script>
 @endsection

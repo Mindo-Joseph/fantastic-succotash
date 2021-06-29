@@ -7,7 +7,7 @@
                 <div class="logo-box">
                     @php
                         $urlImg = URL::to('/').'/assets/images/users/user-1.jpg';
-                        $clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
+                        $clientData = \App\Models\Client::select('id', 'logo','custom_domain')->where('id', '>', 0)->first();
                         if($clientData){
                             $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'];
                         }
@@ -38,7 +38,7 @@
                     <i class="fe-menu"></i>
                 </button>
             </li>
-            <li class="m-hide"><label class="site-name m-0">Run.Royoorders</label></li>
+            <li class="m-hide"><label class="site-name m-0">{{ucFirst($clientData->custom_domain)}}</label></li>
             <li class="m-hide"><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_website.svg" alt=""><span class="align-middle">View Website</span></a></li>
             <li class="m-hide"><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_app.svg" alt=""><span class="align-middle">Ios App Link</span></a></li>
             <li class="m-hide"><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_app.svg" alt=""><span class="align-middle">Android App Link</span></a></li>
