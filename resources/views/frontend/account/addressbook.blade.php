@@ -127,7 +127,6 @@
                                                     <p class="mb-1">{{$add->street}}</p>
                                                     <p class="mb-1">{{$add->city}}, {{$add->state}} {{$add->pincode}}</p>
                                                     <p class="mb-1">{{$add->country  ? $add->country : ''}}</p>
-                                                    <p class="mb-1">Phone number: ‪8219512331‬</p>
                                                 </div>
                                             </div>
                                             <div class="address-btn d-flex align-items-center justify-content-end w-100 mt-4 px-2">
@@ -375,7 +374,7 @@
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label for="country">Country</label>
-                                <select name="country" id="country" class="form-control" value="<%= ((typeof address != 'undefined') && (address.id != null)) ? address.id : '' %>">
+                                <select name="country" id="country" class="form-control" value="<%= ((typeof address != 'undefined') && (address.country_id != null)) ? address.country_id : '' %>">
                                     @foreach($countries as $co)
                                         <option value="{{$co->id}}" <%= ((typeof address != 'undefined') && (address.country_id == {{$co->id}})) ? 'selected="selected"' : '' %>>{{$co->name}}</option>
                                     @endforeach

@@ -29,12 +29,12 @@
         <div class="product-box">
             <div class="img-wrapper">
                 <div class="front">
-                    <a href="{{route('vendorDetail')}}/<%= vendor.id %>">
+                    <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                         <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
                     </a>
                 </div>
                 <div class="back">
-                    <a href="{{route('vendorDetail')}}/<%= vendor.id %>">
+                    <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                         <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo.image_path %>">
                     </a>
                 </div>
@@ -47,7 +47,7 @@
                     <i class="fa fa-star"></i> 
                     <i class="fa fa-star"></i>
                 </div>
-                <a href="{{route('vendorDetail')}}/<%= vendor.id %>">
+                <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                     <h6><%= vendor.name %></h6>
                 </a>
             </div>

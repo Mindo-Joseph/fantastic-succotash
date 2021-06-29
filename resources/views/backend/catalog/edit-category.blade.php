@@ -25,7 +25,7 @@
                     <div class="col-md-6">
                          <div class="form-group" id="slugInputEdit">
                             {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
-                            {!! Form::text('slug', $category->slug, ['class'=>'form-control']) !!}
+                            {!! Form::text('slug', $category->slug, ['class'=>'form-control','id' => 'slug', 'onkeypress' => "return alphaNumeric(event)"]) !!}
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
                             </span>
@@ -165,7 +165,7 @@
             </div>
             <div class="col-md-4" id="warning_page_design_main_div" style="display:none;">
                 {!! Form::label('title', 'Warning Page Design',['class' => 'control-label']) !!}
-                {!! Form::textarea('warning_page_design', '', ['class'=>'form-control', 'id' => 'warning_page_design', 'placeholder' => 'Description', 'rows' => '10', 'name' => 'warning_page_design']) !!}
+                {!! Form::textarea('warning_page_design', $category->warning_page_design, ['class'=>'form-control', 'id' => 'warning_page_design', 'placeholder' => 'Description', 'rows' => '15', 'name' => 'warning_page_design']) !!}
             </div>
         </div>
         <div class="row">
@@ -182,7 +182,6 @@
                                     @else
                                         {!! Form::text('name[]', $trans->name, ['class' => 'form-control']) !!}
                                     @endif
-                                    
                                     <span class="invalid-feedback" role="alert">
                                         <strong></strong>
                                     </span>
