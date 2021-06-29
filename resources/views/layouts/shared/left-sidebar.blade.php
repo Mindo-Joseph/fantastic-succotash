@@ -2,7 +2,7 @@
 <div class="left-side-menu">
 
     <!-- LOGO -->
-    <div class="logo-box d-none d-lg-block">
+    <div class="logo-box m-hide d-lg-block">
             @php
                 $urlImg = URL::to('/').'/assets/images/users/user-1.jpg';
                 $clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
@@ -13,11 +13,9 @@
             <a href="{{route('client.dashboard')}}" class="logo logo-dark text-center">
                 <span class="logo-sm">
                     <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
-                    <!-- <span class="logo-lg-text-light">UBold</span> -->
                 </span>
                 <span class="logo-lg">
                     <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="20">
-                    <!-- <span class="logo-lg-text-light">U</span> -->
                 </span>
             </a>
             

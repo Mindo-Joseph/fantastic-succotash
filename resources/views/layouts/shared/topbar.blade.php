@@ -1,22 +1,57 @@
 <!-- Topbar Start -->
 <div class="navbar-custom">
-    <div class="container-fluid d-lg-flex align-items-center justify-content-between">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
         
-        <ul class="top-site-links d-none d-lg-flex align-items-center p-0 m-0">
-            <li><label class="site-name m-0">My Order</label></li>
-            <li><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_website.svg" alt=""><span class="align-middle">View Website</span></a></li>
-            <li><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_app.svg" alt=""><span class="align-middle">Ios App Link</span></a></li>
-            <li><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_app.svg" alt=""><span class="align-middle">Android App Link</span></a></li>
+        <ul class="top-site-links d-flex align-items-center p-0 m-0">
+            <li class="d_none">
+                <div class="logo-box">
+                    @php
+                        $urlImg = URL::to('/').'/assets/images/users/user-1.jpg';
+                        $clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
+                        if($clientData){
+                            $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'];
+                        }
+                    @endphp
+                    <a href="{{route('client.dashboard')}}" class="logo logo-dark text-center">
+                        <span class="logo-sm">
+                            <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
+                        </span>
+                        <span class="logo-lg">
+                            <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="20">
+                        </span>
+                    </a>
+                    
+                    <a href="{{route('client.dashboard')}}" class="logo logo-light text-center">
+                        <span class="logo-sm">
+                            <img src="{{$urlImg}}"
+                                alt="" height="30" style="padding-top: 4px;">
+                        </span>
+                        <span class="logo-lg">
+                            <img src="{{$urlImg}}"
+                                alt="" height="50" style="padding-top: 4px;">
+                        </span>
+                    </a>
+                </div>
+            </li>
+            <li class="mobile-toggle">
+                <button id="shortclick" class="button-menu-mobile waves-effect waves-light">
+                    <i class="fe-menu"></i>
+                </button>
+            </li>
+            <li class="m-hide"><label class="site-name m-0">Run.Royoorders</label></li>
+            <li class="m-hide"><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_website.svg" alt=""><span class="align-middle">View Website</span></a></li>
+            <li class="m-hide"><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_app.svg" alt=""><span class="align-middle">Ios App Link</span></a></li>
+            <li class="m-hide"><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_app.svg" alt=""><span class="align-middle">Android App Link</span></a></li>
         </ul>
 
-        <ul class=" list-unstyled topnav-menu topnav-menu-left m-0">
+        <!-- <ul class=" list-unstyled topnav-menu topnav-menu-left m-0">
             <li class="">
                 <button id="shortclick" class="button-menu-mobile waves-effect waves-light">
                     <i class="fe-menu"></i>
                 </button>
             </li>
 
-            <!-- <li>
+            <li>
                 <a class="navbar-toggle nav-link" data-toggle="collapse" data-target="#topnav-menu-content">
                     <div class="lines">
                         <span></span>
@@ -24,12 +59,12 @@
                         <span></span>
                     </div>
                 </a>
-            </li> -->
+            </li>
 
-        </ul>
+        </ul> -->
 
         <!-- LOGO -->
-        <div class="logo-box d-inline-block d-lg-none">
+        <!-- <div class="logo-box d-inline-block d-lg-none">
             @php
                 $urlImg = URL::to('/').'/assets/images/users/user-1.jpg';
                 $clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
@@ -56,7 +91,7 @@
                         alt="" height="50" style="padding-top: 4px;">
                 </span>
             </a>
-        </div>
+        </div> -->
         
         <ul class="list-unstyled topnav-menu float-right mb-0">
 

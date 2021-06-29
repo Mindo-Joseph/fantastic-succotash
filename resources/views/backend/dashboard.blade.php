@@ -49,15 +49,15 @@
                     <div class="widget-rounded-circle card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-6">
-                                    <div class="avatar-lg rounded-circle bg-soft-primary border-primary border">
-                                        <i class="fe-heart font-22 avatar-title text-primary"></i>
+                                <div class="col">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Total Revenue</p>
+                                        <h3 class="text-dark mt-1">$<span data-plugin="counterup">{{$total_revenue}}</span></h3>
                                     </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="text-end">
-                                        <h3 class="text-dark mt-1">$<span data-plugin="counterup">{{$total_revenue}}</span></h3>
-                                        <p class="text-muted mb-1 text-truncate">Total Revenue</p>
+                                <div class="col text-md-right">
+                                    <div class="avatar-lg rounded-circle bg-soft-primary border-primary border ml-auto">
+                                        <i class="fe-heart font-22 avatar-title text-primary"></i>
                                     </div>
                                 </div>
                             </div> <!-- end row-->

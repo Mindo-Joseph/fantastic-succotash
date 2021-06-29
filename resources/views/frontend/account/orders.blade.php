@@ -331,6 +331,7 @@
                                                                             <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
                                                                             <span class="item_no position-absolute">x2</span>
                                                                             <label class="items_price">$20.00</label>
+                                                                            <label class="items_price rating-star" data-toggle="modal" data-target="#product_rating"><i class="fa fa-star-o"></i></label>
                                                                         </li>                                   
                                                                 </ul>
                                                             </div>
@@ -356,7 +357,7 @@
                                                             </div>
 
                                                             <div class="col-12 text-md-right mt-3">
-                                                                <label class="rate-btn btn btn-solid m-0" data-toggle="modal" data-target="#product_rating">Rate This Order</label>
+                                                                <label class="rate-btn btn btn-solid m-0" data-toggle="modal" data-target="#return_order">Return</label>
                                                             </div>
                                                         </a>
                                                     </div>    
@@ -626,7 +627,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Rating Modal -->
 <div class="modal fade product-rating" id="product_rating" tabindex="-1" aria-labelledby="product_ratingLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -771,6 +772,113 @@
      
     </div>
   </div>
+</div>
+
+
+<!-- Rating Modal -->
+<div class="modal fade return-order" id="return_order" tabindex="-1" aria-labelledby="return_orderLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                <h5 class="modal-title">
+                    Do you want to return your order.
+                </h5>
+                <form class="return-order-form" action="">
+                    <div class="table-responsive">
+                        <table class="w-100">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Select item(s) for return
+                                    </th>
+                                    <th>order Information</th>
+                                    <th>Return Need to arive by</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <input id="item_one" type="checkbox">
+                                            <label class="order-items d-flex" for="item_one">  
+                                                <div class="item-img mx-1">
+                                                    <img src="https://imgproxy.royoorders.com/insecure/fill/600/800/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
+                                                </div>    
+                                                <div class="items-name ml-2">
+                                                    <h4 class="mt-0 mb-1"><b>Pizza</b></h4>
+                                                    <label><b>Quantity</b>: 2</label>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="order_address">
+                                        <p>RTC Cross Road, P & T Colony, Jawahar Nagar, Himayatnagar, Hyderabad, Telangana, India</p>
+                                    </td>
+                                    <td>
+                                        <p>Monday, May 24, 2021, 13:22 PM</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <input id="item_two" type="checkbox">
+                                            <label class="order-items d-flex" for="item_two">  
+                                                <div class="item-img mx-1">
+                                                    <img src="https://imgproxy.royoorders.com/insecure/fill/600/800/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
+                                                </div>    
+                                                <div class="items-name ml-2">
+                                                    <h4 class="mt-0 mb-1"><b>Pizza</b></h4>
+                                                    <label><b>Quantity</b>: 2</label>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="order_address">
+                                        <p>RTC Cross Road, P & T Colony, Jawahar Nagar, Himayatnagar, Hyderabad, Telangana, India</p>
+                                    </td>
+                                    <td>
+                                        <p>Monday, May 24, 2021, 13:22 PM</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <input id="item_three" type="checkbox">
+                                            <label class="order-items d-flex" for="item_three">  
+                                                <div class="item-img mx-1">
+                                                    <img src="https://imgproxy.royoorders.com/insecure/fill/600/800/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
+                                                </div>    
+                                                <div class="items-name ml-2">
+                                                    <h4 class="mt-0 mb-1"><b>Pizza</b></h4>
+                                                    <label><b>Quantity</b>: 2</label>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="order_address">
+                                        <p>RTC Cross Road, P & T Colony, Jawahar Nagar, Himayatnagar, Hyderabad, Telangana, India</p>
+                                    </td>
+                                    <td>
+                                        <p>Monday, May 24, 2021, 13:22 PM</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="text-center" colspan="3">
+                                        <a class="btn btn-solid" href="#">Continue</a>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 @endsection

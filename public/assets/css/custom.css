@@ -1336,9 +1336,16 @@ i.mdi.mdi-exclamation-thick {
     font-size: 12px;
 }
 
+.top-site-links li {
+    list-style: none;
+}
+
 
 
 @media(min-width:1025px){
+    .mobile-toggle,.d_none{
+        display: none;
+    }
     .navbar-custom {
         left: auto;
         width: calc(100% - 240px);
@@ -1349,16 +1356,23 @@ i.mdi.mdi-exclamation-thick {
     }
     
     .top-site-links li {
-        list-style: none;
         padding: 0 0 0 20px;
+    }
+    body[data-sidebar-size="condensed"] .navbar-custom {
+        width: calc(100% - 70px);
     }
 }
 
 @media(max-width:1199px){
-    .logo-box ,.top-site-links {
+    .top-site-links,.logo-box.m-hide,.m-hide {
         display: none !important;
     }
-    
+    .mobile-toggle{
+        display: block;
+    }
+    .top-site-links li {
+        padding: 0 0 0 10px;
+    }
 }
 
 
