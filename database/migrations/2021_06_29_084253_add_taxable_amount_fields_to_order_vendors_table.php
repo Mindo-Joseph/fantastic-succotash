@@ -14,7 +14,7 @@ class AddTaxableAmountFieldsToOrderVendorsTable extends Migration
     public function up()
     {
         Schema::table('order_vendors', function (Blueprint $table) {
-            //
+            $table->decimal('taxable_amount', 10, 2)->nullable()->after('coupon_code');
         });
     }
 
@@ -26,7 +26,7 @@ class AddTaxableAmountFieldsToOrderVendorsTable extends Migration
     public function down()
     {
         Schema::table('order_vendors', function (Blueprint $table) {
-            //
+            $table->dropColumn('taxable_amount');
         });
     }
 }

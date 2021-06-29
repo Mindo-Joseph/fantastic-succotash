@@ -110,6 +110,7 @@ class OrderController extends FrontController
                 $vendor_discount_amount = 0;
                 $product_taxable_amount = 0;
                 $product_payable_amount = 0;
+                $vendor_taxable_amount = 0;
                 foreach ($vendor_cart_products as $vendor_cart_product) {
                     $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
                     $quantity_price = 0;
@@ -129,12 +130,12 @@ class OrderController extends FrontController
                     if (!empty($vendor_cart_product->product->Requires_last_mile) && $vendor_cart_product->product->Requires_last_mile == 1) {
                         $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id);
                     }
-
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
                     $order_product->order_id = $order->id;
                     $order_product->price = $variant->price;
                     $taxable_amount += $product_taxable_amount;
+                    $vendor_taxable_amount += $product_taxable_amount;
                     $order_product->taxable_amount = $product_taxable_amount;
                     $order_product->quantity = $vendor_cart_product->quantity;
                     $order_product->vendor_id = $vendor_cart_product->vendor_id;
@@ -203,6 +204,7 @@ class OrderController extends FrontController
                 $OrderVendor->discount_amount = $vendor_discount_amount;
                 $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
                 $OrderVendor->subtotal_amount = $actual_amount;
+                $OrderVendor->taxable_amount   = $vendor_taxable_amount;
                 $OrderVendor->discount_amount = $this->getDeliveryFeeDispatcher($vendor_id);
                 $vendor_info = Vendor::where('id', $vendor_id)->first();
                 if ($vendor_info) {
