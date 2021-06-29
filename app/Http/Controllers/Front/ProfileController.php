@@ -169,7 +169,7 @@ class ProfileController extends FrontController
         $user->password = Hash::make($request['new_password']);
         $user->save();
         }
-        return redirect()->route('user.profile');
+        return redirect()->route('user.profile')->with('success', 'Your Password has been changed successfully');
     }
 
 }
