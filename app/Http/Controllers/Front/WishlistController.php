@@ -44,20 +44,17 @@ class WishlistController extends FrontController
     public function updateWishlist(Request $request)
     {
         $product = Product::where('sku', $request->sku)->firstOrFail();
-
         $exist = UserWishlist::where('user_id', Auth::user()->id)->where('product_id', $product->id)->first();
-
         if($exist){
             $exist->delete();
-            return response()->json(array('error' => true, 'message'=> 'Product has been removed from wishlist.'));
+            return response()->json(array('status' => 'success', 'message'=> 'Product has been removed from wishlist.'));
         }
         $wishlist = new UserWishlist();
         $wishlist->user_id = Auth::user()->id;
         $wishlist->product_id = $product->id;
         $wishlist->added_on = Carbon::now();
         $wishlist->save();
-
-        return response()->json(array('success' => true, 'message' => 'Product has been added in wishlist.'));
+        return response()->json(array('status' => 'success', 'message' => 'Product has been added in wishlist.'));
     }
 
      /**

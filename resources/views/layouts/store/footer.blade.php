@@ -31,6 +31,7 @@
     var is_hyperlocal = 0;
     var selected_address = 0;
     var home_page_url = "{{ route('userHome') }}";
+    var add_to_whishlist_url = "{{ route('addWishlist') }}";
     var show_cart_url = "{{ route('showCart') }}";
     var home_page_data_url = "{{ route('homePageData') }}";
     let empty_cart_url = "{{route('emptyCartData')}}";
