@@ -14,9 +14,9 @@ class AddAdminCommissionFieldsToOrderVendorsTable extends Migration
     public function up()
     {
         Schema::table('order_vendors', function (Blueprint $table) {
-            $table->decimal('admin_commission_percentage_amount', 10, 2)->nullable();
-            $table->decimal('admin_commission_fixed_amount', 10, 2)->nullable();
-            $table->tinyInteger('coupon_paid_by')->nullable()->comment('0-Vendor, 1-Admin')->default(1);
+            $table->decimal('admin_commission_percentage_amount', 10, 2)->nullable()->after('web_hook_code');;
+            $table->decimal('admin_commission_fixed_amount', 10, 2)->nullable()->after('admin_commission_percentage_amount');;
+            $table->tinyInteger('coupon_paid_by')->nullable()->comment('0-Vendor, 1-Admin')->default(1)->after('admin_commission_fixed_amount');;
         });
     }
 
