@@ -25,32 +25,15 @@ class OrderController extends FrontController{
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         
-        $activeOrderIds = $pastOrderIds = array();
-        $activeOrders = Order::join('vendor_order_statuses as vos', 'orders.id', 'vos.order_id')
-        ->join('order_status_options as os', 'os.id', 'vos.order_status_option_id')
-        ->select('orders.*')
-        ->where('vos.order_status_option_id','!=',5)
-        ->where("user_id", Auth::user()->id)->get();
-        $pastOrders = Order::join('vendor_order_statuses as vos', 'orders.id', 'vos.order_id')
-        ->join('order_status_options as os', 'os.id', 'vos.order_status_option_id')
-        ->select('orders.*')
-        ->where('vos.order_status_option_id',5)
-        ->where("user_id", Auth::user()->id)->get();
-        foreach($activeOrders as $order){
-            $activeOrderIds[] = $order->id;
-        }
-        foreach($pastOrders as $order){
-            $pastOrderIds[] = $order->id;
-        }
-        $pastOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'])
-        ->whereIn('orders.id', $pastOrderIds)->get();
+        $pastOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'=>function($q){
+            $q->where('order_status_option_id', 5);
+        }])
+        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
         
-        // DB::enableQueryLog();
-        
-        $orders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'])
-        ->whereIn('orders.id', $activeOrderIds)->get();
-        // dd($orders);
-        // dd(DB::getQueryLog());
+        $orders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'=>function($q){
+            $q->where('order_status_option_id', '!=', 5);
+        }])
+        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
        return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'orders'=>$orders, 'pastOrders'=>$pastOrders]);
     }
     
