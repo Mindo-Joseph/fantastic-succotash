@@ -124,55 +124,58 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($wishList as $key => $wish)
-                                                <tr>
-                                                    <td>
-                                                        <div class="form-group mb-0">
-                                                            <div class="custom-control custom-checkbox">
-                                                                <input type="checkbox" class="custom-control-input" id="w-{{$key}}">
-                                                                <label class="custom-control-label" for="w-{{$key}}"></label>
+                                            @if(!empty($wishList))
+                                                @foreach($wishList as $key => $wish)
+                                                    <tr class="wishlist-row">
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                @if($wish['product']['variant'][0]['quantity'] > 0)
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input type="checkbox" class="custom-control-input" id="wp-{{$wish['product']['id']}}" data-variant="{{$wish['product']['variant'][0]['id']}}">
+                                                                    <label class="custom-control-label" for="wp-{{$wish['product']['id']}}"></label>
+                                                                </div>
+                                                                @endif
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="product-icon">
-                                                            @foreach($wish['product']['media'] as $media)
-                                                                <img src="{{$media['image']['path']['proxy_url'].'200/200'.$media['image']['path']['image_path']}}" alt="Product Image" height="50">
-                                                                @break
-                                                            @endforeach
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="product-title pl-1">
-                                                            <h4 class="m-0">{{$wish['product']['sku']}}</h4>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        ${{$wish['product']['variant'][0]['price']}}
-                                                    </td>
-                                                    <td>
-                                                       {{date('M d, Y', strtotime($wish['added_on']))}}
-                                                    </td>
-                                                    <td>
-                                                        @if($wish['product']['variant'][0]['quantity'] > 0)
-                                                        <i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>
-                                                        <span>In stock</span>
-                                                        @else
-                                                        <span>Not in stock</span>
-                                                        @endif
-                                                    </td>
-                                                    <td><a href="{{ route('removeWishlist', $wish['product']['sku']) }}" class="icon me-3"><i class="ti-close"></i> </a></td>
-                                                </tr>
-                                            @endforeach
+                                                        </td>
+                                                        <td>
+                                                            <div class="product-icon">
+                                                                @foreach($wish['product']['media'] as $media)
+                                                                    <img src="{{$media['image']['path']['proxy_url'].'200/200'.$media['image']['path']['image_path']}}" alt="Product Image" height="50">
+                                                                    @break
+                                                                @endforeach
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="product-title pl-1">
+                                                                <h4 class="m-0">{{$wish['product']['sku']}}</h4>
+                                                            </div>
+                                                        </td>
+                                                        <td>${{$wish['product']['variant'][0]['price']}}</td>
+                                                        <td>{{date('M d, Y', strtotime($wish['added_on']))}}</td>
+                                                        <td>
+                                                            @if($wish['product']['variant'][0]['quantity'] > 0)
+                                                                <i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>
+                                                                <span>In stock</span>
+                                                            @else
+                                                                <span>Not in stock</span>
+                                                            @endif
+                                                        </td>
+                                                        <td><a href="{{ route('removeWishlist', $wish['product']['sku']) }}" class="icon me-3"><i class="ti-close"></i> </a></td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                <tr><td align="center" colspan="6">No Item Exists In Your Wishlist</td></tr>
+                                            @endif
                                         </tbody>
-                                        <tfoot class="border-top border-bottom">
-                                            <tr>
-                                                <td colspan="7" class="text-center pt-2">
-                                                    <a class="btn btn-solid float-left" href="">Add All to Cart</a>
-                                                    <a class="btn btn-solid float-right mr-2" href="">Add Selected to Cart</a>
-                                                </td>
-                                            </tr>
-                                        </tfoot>
+                                        @if(!empty($wishList))
+                                            <tfoot class="border-top border-bottom">
+                                                <tr>
+                                                    <td colspan="7" class="pt-2">
+                                                        <button type="button" class="btn btn-solid mr-2 addWishlistToCart">Add to Cart</button>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        @endif
                                     </table>
                                 </div>
                                 <!-- @foreach($wishList as $wish)
@@ -203,6 +206,7 @@
 @section('script')
 
 <script type="text/javascript">
+    var add_wishlist_to_cart_url = "{{ route('addWishlistToCart') }}";
     var ajaxCall = 'ToCancelPrevReq';
     $('.verifyEmail').click(function() {
         verifyUser('email');
@@ -218,7 +222,34 @@
         }else{
             $(".wishlist-table").find(".custom-checkbox input[type='checkbox']").prop("checked", false);
         }
-    })
+    });
+
+    $(document).ready(function(){
+        $(document).on("click",".addWishlistToCart",function() {
+            let wishlist_products = [];
+            $(".wishlist-row .custom-control-input:checked").each(function(i, obj){
+                var id = $(obj).attr('id');
+                var product_id = id.replace('wp-', '');
+                var product_variant_id = $(obj).attr('data-variant');
+                wishlist_products.push({'product_id':product_id, 'variant_id':product_variant_id});
+            });
+            addWishlistToCart(wishlist_products);
+        });
+        function addWishlistToCart(wishlist_products) {
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: add_wishlist_to_cart_url,
+                data: {"wishlistProducts": wishlist_products},
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                },
+            });
+        }
+    });
 
     function verifyUser($type = 'email') {
         ajaxCall = $.ajax({

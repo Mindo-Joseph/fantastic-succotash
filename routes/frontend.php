@@ -40,6 +40,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('/product/{id?}','Front\ProductController@index')->name('productDetail');
 	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
 	Route::post('add/product/cart','Front\CartController@postAddToCart')->name('addToCart');
+	Route::post('add/wishlist/cart','Front\CartController@addWishlistToCart')->name('addWishlistToCart');
 	Route::post('add/product/prescription','Front\CartController@uploadPrescription')->name('cart.uploadPrescription');
 	Route::get('cartProducts','Front\CartController@getCartData')->name('getCartProducts');
 	Route::get('cartDetails','Front\CartController@getCartProducts')->name('cartDetails');

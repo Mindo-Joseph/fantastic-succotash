@@ -174,9 +174,14 @@
                                     @endif
 
                                     <div class="product-description border-product">
-                                        <h6 class="product-title mt-0">quantity: <span id="instock"
-                                                style="color: green;">In Stock
-                                                ({{$product->variant[0]->quantity}})</span></h6>
+                                        <h6 class="product-title mt-0">quantity: 
+                                            @if($product->variant[0]->quantity > 0)
+                                                <span id="instock" style="color: green;">In Stock ({{$product->variant[0]->quantity}})</span>
+                                            @else
+                                                <span id="outofstock" style="color: red;">Out of Stock</span>
+                                            @endif
+                                        </h6>
+                                        @if($product->variant[0]->quantity > 0)
                                         <div class="qty-box">
                                             <div class="input-group">
                                                 <span class="input-group-prepend"><button type="button"
@@ -189,6 +194,7 @@
                                                         data-field=""><i class="ti-angle-right"></i></button></span>
                                             </div>
                                         </div>
+                                        @endif
                                     </div>
 
                                     @if(!empty($product->addOn))
@@ -224,10 +230,12 @@
                                     @endif
 
                                     <div class="product-buttons">
-                                        <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
-                                            {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? 'Remove from Wishlist' : 'Add To Wishlist' }}
-                                        </button>
-                                        <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a>
+                                        @if($product->variant[0]->quantity > 0)
+                                            <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
+                                                {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? 'Remove from Wishlist' : 'Add To Wishlist' }}
+                                            </button>
+                                            <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a>
+                                        @endif
                                     </div>
                                     <div class="border-product">
                                         <h6 class="product-title">product details</h6>
