@@ -1,72 +1,84 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
 
-
+    <!-- Order Return Page -->
     <section class="return-page">
         <div class="container">
-            <h2>Choose items to return</h2>
-            <div class="row rating_files">
-                <div class="col-12">
-                <label>Upload Images</label>
-                </div>
-                <div class="col-6 col-md-3 col-lg-2">
-                    <div class="file file--upload">
-                        <label for="input-file">
-                            <span class="plus_icon"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                        </label>
-                        <input id="input-file" type="file" name="profile_image" accept="image/*" onchange="loadFile(event)">
+            <h2 >Choose items to return</h2>
+            <form class="" action="">
+                <div class="row rating_files">
+                    <div class="col-12">
+                    <label>Upload Images</label>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <div class="file file--upload">
+                            <label for="input-file">
+                                <span class="plus_icon"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                            </label>
+                            <input id="input-file" type="file" name="profile_image" accept="image/*" onchange="loadFile(event)">
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <span class="update_pic">
+                            <img src="" alt="" id="output">
+                        </span>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <span class="update_pic">
+                            <img src="" alt="" id="output">
+                        </span>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <span class="update_pic">
+                            <img src="" alt="" id="output">
+                        </span>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <span class="update_pic">
+                            <img src="" alt="" id="output">
+                        </span>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <span class="update_pic">
+                            <img src="" alt="" id="output">
+                        </span>
                     </div>
                 </div>
-                <div class="col-6 col-md-3 col-lg-2">
-                    <span class="update_pic">
-                        <img src="" alt="" id="output">
-                    </span>
-                </div>
-                <div class="col-6 col-md-3 col-lg-2">
-                    <span class="update_pic">
-                        <img src="" alt="" id="output">
-                    </span>
-                </div>
-                <div class="col-6 col-md-3 col-lg-2">
-                    <span class="update_pic">
-                        <img src="" alt="" id="output">
-                    </span>
-                </div>
-                <div class="col-6 col-md-3 col-lg-2">
-                    <span class="update_pic">
-                        <img src="" alt="" id="output">
-                    </span>
-                </div>
-                <div class="col-6 col-md-3 col-lg-2">
-                    <span class="update_pic">
-                        <img src="" alt="" id="output">
-                    </span>
-                </div>
-            </div>
 
-            
-            <div class="row form-group">
-                <div class="col-md-6">
-                    <label>Resoan for return product.</label>
-                    <select class="form-control" name="" id=""></select>
-                </div>    
-            </div>
-            <div class="form-group">
-                <label>Comments (Opitonal):</label>
-                <textarea class="form-control" name="" id="" cols="30" rows="10"></textarea>
-            </div>
+                
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label>Resoan for return product.</label>
+                        <select class="form-control" name="" id=""></select>
+                    </div>    
+                </div>
+                <div class="form-group">
+                    <label>Comments (Opitonal):</label>
+                    <textarea class="form-control" name="" id="" cols="30" rows="10"></textarea>
+                </div>
+                <button class="btn btn-solid mt-3 ">Request</button>
+            </form>
         </div>
     </section>
 
 
+    <!-- Return List Page -->
+    <!-- <section class="return-list-page">
+        <div class="container">
+            <h2></h2>
+            <div class="row">
+                <div class="col-12">
+
+                </div>
+            </div>
+        </div>
+    </section> -->
 
 
 
 
 
-
-
-    <div class="container-fluid px-0">
+    <div class="container-fluid px-0 py-5">
         <div class="row no-gutters">
             <div class="col-12">
                 <div class="full-banner custom-space p-right text-end">

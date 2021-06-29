@@ -13,16 +13,37 @@ $timezone = Auth::user()->timezone;
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="page-title-box">
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                        </ol>
-                    </div>
+                <div class="page-title-box d-flex align-items-center justify-content-between">
                     <h4 class="page-title">Orders</h4>
+                    <a class="return-btn" href="#"><b>Return Request <span>(5)</span> <i class="fa fa-arrow-circle-right ml-1" aria-hidden="true"></i></b></a>
                 </div>
             </div>
-        </div>     
-        <div class="row">    
+        </div>    
+        
+        <!-- Order Tabbar COntent -->
+        <div class="row">
+            <div class="col-sm-12 col-lg-12 tab-product pt-0">
+                <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" id="active-orders-tab" data-toggle="tab"
+                            href="#active-orders" role="tab" aria-selected="true"><i
+                                class="icofont icofont-ui-home"></i>Active Orders</a>
+                        <div class="material-border"></div>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" id="pending_order-tab" data-toggle="tab"
+                            href="#pending_order" role="tab" aria-selected="false"><i
+                                class="icofont icofont-man-in-glasses"></i>Past Orders</a>
+                        <div class="material-border"></div>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" id="order_history-tab" data-toggle="tab"
+                            href="#order_history" role="tab" aria-selected="false"><i
+                                class="icofont icofont-man-in-glasses"></i>Orders History</a>
+                        <div class="material-border"></div>
+                    </li>
+                </ul>
+                <div class="tab-content nav-material" id="top-tabContent">
+                    <div class="tab-pane fade show active" id="active-orders" role="tabpanel"
+                        aria-labelledby="active-orders-tab">
+                        <div class="row">    
             @foreach($orders as $order)
                 <div class="col-xl-6 mb-3">
                     <div class="row no-gutters order_head">
@@ -139,5 +160,19 @@ $timezone = Auth::user()->timezone;
             @endforeach
             <hr>
         </div>
+                    </div>
+                    <div class="tab-pane fade past-order" id="pending_order" role="tabpanel"
+                        aria-labelledby="pending_order-tab">
+                    </div>
+                    <div class="tab-pane fade past-order" id="order_history" role="tabpanel"
+                        aria-labelledby="order_history-tab">
+                        order_history
+                    </div>
+                </div>
+            </div>
+        </div>    
+
+
+       
     </div> 
 @endsection
