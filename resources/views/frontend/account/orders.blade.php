@@ -130,7 +130,7 @@
                                                         </span>
                                                     </div>                    
                                                 </div>
-                                                <div class="row mt-2">
+                                                <div class="row mt-2"> 
                                                     <div class="col-md-9 mb-3">
                                                         @php
                                                             $subtotal_order_price = $total_order_price = $total_tax_order_price = 0;
