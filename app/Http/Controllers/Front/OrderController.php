@@ -28,17 +28,20 @@ class OrderController extends FrontController
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         
-        $pastOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'=>function($q){
+        $pastOrders = Order::with(['vendors.products','products.productRating', 'user', 'address', 'orderStatusVendor'=>function($q){
             $q->where('order_status_option_id', 5);
-        }])
+        }])->whereHas('orderStatusVendor',function($q){
+            $q->where('order_status_option_id', 5);
+        })
         ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
         
         $activeOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'=>function($q){
             $q->where('order_status_option_id', '!=', 5);
-        }])
+        }])->whereHas('orderStatusVendor',function($q){
+            $q->where('order_status_option_id', '!=', 5);
+        })
         ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
-
-       return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders]);
+        return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders]);
     }
 
     public function getOrderSuccessPage(Request $request)

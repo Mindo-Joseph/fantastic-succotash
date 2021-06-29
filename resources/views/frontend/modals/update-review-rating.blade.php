@@ -4,7 +4,7 @@
     <textarea class="form-control" maxlength="500" name="hidden_review" hidden>{{$rating_details->review??''}}</textarea>
     <div class="rating-form">
         <fieldset class="form-group">
-            <legend class="form-legend">Rating:</legend>
+            <legend class="form-legend">Rating:</legend> 
             <div class="form-item">
 
             <input id="rating-5" name="rating" type="radio" value="5" {{ $rating_details->rating == 5 ? 'checked' : '' }}/>
@@ -65,7 +65,7 @@
                 <label for="input-file">
                     <span class="plus_icon"><i class="fa fa-plus" aria-hidden="true"></i></span>
                 </label>
-                <input id="input-file" type="file" name="images[]" accept="image/*"  multiple >
+                <input id="input-file" type="file" name="images[]" accept="image/*"  multiple>
             </div>
         </div>
 
@@ -86,7 +86,7 @@
             <label for="review">Review Title</label>
             <textarea class="form-control"
                 placeholder="Wrire Your Testimonial Here"
-                id="exampleFormControlTextarea1" rows="4"  name="review" maxlength="500">{{$rating_details->review}}</textarea>
+                id="exampleFormControlTextarea1" rows="4"  name="review" maxlength="500" required>{{$rating_details->review}}</textarea>
         </div>
         <span class="text-danger" id="error-msg"></span>
         <span class="text-success" id="success-msg"></span>
@@ -152,8 +152,8 @@ contentType: false,
 processData: false,
 beforeSend: function () {
     if(TotalImages > 0 && review.length > 0)
-    $("#review_form_button").html('<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop('disabled', true);
-            },
+        $("#review_form_button").html('<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop('disabled', true);
+    },
 success: (data) => {
 if(data.status == 'Success')
     {

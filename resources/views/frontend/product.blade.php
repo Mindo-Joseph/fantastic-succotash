@@ -321,8 +321,8 @@
                                     
                                     <div class="tab-pane fade" id="top-review" role="tabpanel"
                                         aria-labelledby="review-top-tab">
-                                        <a class="btn btn-solid add_edit_review" href="javascript:void(0)" data-id="8">Rate</a>
-                                              
+                                        {{-- <a class="btn btn-solid add_edit_review" href="javascript:void(0)" data-id="8">Rate</a>
+                                               --}}
                                        
                                     </div>
                                 </div>

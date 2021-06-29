@@ -68,16 +68,15 @@ class RatingController extends FrontController{
     public function getProductRating(Request $request){
         try {
             $rating_details = OrderProductRating::where('id',$request->id)->with('reviewFiles')->first();
-       
             if(isset($rating_details)){
               
                 if ($request->ajax()) {
-                return \Response::json(\View::make('frontend.modals.update-review-rating', array('rating_details' => $rating_details))->render());
+                 return \Response::json(\View::make('frontend.modals.update-review-rating', array('rating_details' => $rating_details))->render());
                 }
 
                 return $this->successResponse($rating_details,'Rating Details.');
             }
-            
+            return \Response::json(\View::make('frontend.modals.update-review-rating', array('rating_details' => $rating_details))->render());
            
             return $this->errorResponse('Invalid rating', 404);
             

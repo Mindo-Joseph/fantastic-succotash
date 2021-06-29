@@ -68,6 +68,7 @@ class RatingController extends BaseController{
     */
     public function getProductRating(Request $request){
         try {
+            $ratings = '';
             $ratings = OrderProductRating::where('id',$request->id)->with('reviewFiles')->first();
        
             if(isset($ratings))
