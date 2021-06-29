@@ -103,6 +103,7 @@
                                     <div class="tab-pane fade {{ ((Request::query('pageType') === null) || (Request::query('pageType') == 'activeOrders')) ? 'active show' : '' }}" id="active-orders" role="tabpanel"
                                         aria-labelledby="active-orders-tab">
                                         <div class="row">
+                                            @if($activeOrders->isNotEmpty())
                                             @foreach($activeOrders as $key => $order)
                                             @if($order->orderStatusVendor->isNotEmpty())
                                             <div class="col-12">
@@ -242,12 +243,20 @@
                                             </div>
                                             @endif
                                             @endforeach
+                                            @else
+                                                <div class="col-12">
+                                                    <div class="no-gutters order_head">
+                                                        <h4 class="text-center">No Active Order</h4>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
                                         {{ $activeOrders->appends(['pageType' => 'activeOrders'])->links() }}
                                     </div>
                                     <div class="tab-pane fade past-order {{ (Request::query('pageType') == 'pastOrders') ? 'active show' : '' }}" id="past_order" role="tabpanel"
                                         aria-labelledby="past_order-tab">
                                         <div class="row">
+                                            @if($pastOrders->isNotEmpty())
                                             @foreach($pastOrders as $key => $order)
                                             @if($order->orderStatusVendor->isNotEmpty())
                                             <div class="col-12">
@@ -398,6 +407,13 @@
                                             </div>
                                             @endif
                                             @endforeach
+                                            @else
+                                                <div class="col-12">
+                                                    <div class="no-gutters order_head">
+                                                        <h4 class="text-center">No Past Order</h4>
+                                                    </div>
+                                                </div>
+                                            @endif
                                             <?php /* ?><div class="col-12">        
                                                 <div class="row no-gutters order_head">
                                                     <div class="col-md-3"><h4>Order Number</h4></div>
