@@ -65,7 +65,7 @@
         <tr data-row-id="1">
             <td><%= vendor_order.order_detail.order_number%></td>
             <td><%= vendor_order.created_at %></td>
-            <td><%= vendor_order.user.name %></td>
+            <td><%= vendor_order.user ? vendor_order.user.name : '' %></td>
             <td><%= vendor_order.vendor.name %></td>
             <td><%= vendor_order.subtotal_amount %></td>
             <td><%= vendor_order.discount_amount %></td>
