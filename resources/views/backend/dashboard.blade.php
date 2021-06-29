@@ -210,7 +210,7 @@
                                 </div>
                             </div>
 
-                            <h4 class="header-title mb-3">Top 5 Users Balances</h4>
+                            <h4 class="header-title mb-3">Top 5 Users</h4>
 
                             <div class="table-responsive">
                                 <table class="table table-borderless table-hover table-nowrap table-centered m-0">
@@ -391,7 +391,7 @@
                                 </div>
                             </div>
 
-                            <h4 class="header-title mb-3">Revenue History</h4>
+                            <h4 class="header-title mb-3">Top 5 Vendors</h4>
 
                             <div class="table-responsive">
                                 <table class="table table-borderless table-nowrap table-hover table-centered m-0">
