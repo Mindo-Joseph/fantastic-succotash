@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="col-4 text-md-right">
                                     <div class="avatar-lg rounded-circle ml-auto">
-                                        <i class="fe-heart font-22 avatar-title"></i>
+                                        <i class="fe-heart font-22 avatar-title text-success"></i>
                                     </div>
                                 </div>
                             </div> <!-- end row-->
@@ -99,7 +99,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="avatar-lg rounded-circle ml-auto">
-                                        <i class="fe-bar-chart-line font-22 avatar-title"></i>
+                                        <i class="fe-bar-chart-line font-22 avatar-title text-success"></i>
                                     </div>
                                 </div>
 
@@ -120,7 +120,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="avatar-lg rounded-circle ml-auto">
-                                        <i class="fe-eye font-22 avatar-title"></i>
+                                        <i class="fe-eye font-22 avatar-title text-success"></i>
                                     </div>
                                 </div>
 
@@ -140,7 +140,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="avatar-lg rounded-circle ml-auto">
-                                        <i class="fe-eye font-22 avatar-title"></i>
+                                        <i class="fe-eye font-22 avatar-title text-success"></i>
                                     </div>
                                 </div>
                                
@@ -161,7 +161,7 @@
                                 </div>
                                 <div class="col-4 text-md-right">
                                     <div class="avatar-lg rounded-circle ml-auto">
-                                        <i class="fa fa-list-alt font-22 avatar-title" aria-hidden="true"></i>
+                                        <i class="fa fa-list-alt font-22 avatar-title text-success" aria-hidden="true"></i>
                                     </div>
                                 </div>
                             </div> <!-- end row-->
@@ -223,7 +223,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="avatar-lg rounded-circle ml-auto">
-                                        <i class="fa fa-first-order font-22 avatar-title" aria-hidden="true"></i>
+                                    <i class="fa fa-shopping-cart font-22 avatar-title text-success" aria-hidden="true"></i>
                                     </div>
                                 </div>
                                
@@ -243,7 +243,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="avatar-lg rounded-circle ml-auto">
-                                        <i class="fe-eye font-22 avatar-title"></i>
+                                        <i class="fe-eye font-22 avatar-title text-success"></i>
                                     </div>
                                 </div>
 
@@ -636,11 +636,11 @@
                                                 <span class="badge bg-soft-success text-success">Paid</span>
                                             </td>
 
-                                        </tr>
+                                        </tr> -->
 
                                     </tbody>
                                 </table>
-                            </div> <!-- end .table-responsive-->
+                            </div>
                         </div>
                     </div> <!-- end card-->
                 </div> <!-- end col -->
