@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Profile'])
+@extends('layouts.store', ['title' => 'My Orders'])
 
 @section('css')
 <style type="text/css">
@@ -106,6 +106,7 @@
                                         aria-labelledby="active-orders-tab">
                                         <div class="row">
                                             @foreach($orders as $key => $order)
+                                            @if($order->orderStatusVendor->isNotEmpty())
                                             <div class="col-12">
                                                 <div class="row no-gutters order_head">
                                                     <div class="col-md-3"><h4>Order Number</h4></div>
@@ -138,7 +139,7 @@
                                                                     <div class="col-5 col-sm-3">
                                                                         <h5 class="m-0">Order Status</h5>
                                                                         <ul class="status_box mt-3 pl-0">
-                                                                            @foreach($order->orderStatusVendor as $key => $status)
+                                                                            @foreach($order->orderStatusVendor as $status)
                                                                                 @if($status->order_status_option_id == 1)
                                                                                     <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Placed</label></li>
                                                                                 @endif
@@ -293,6 +294,7 @@
                                                     </div>
                                                 </div><?php /*/ ?>
                                             </div>
+                                            @endif
                                             @endforeach
                                         </div>
                                     </div>
@@ -300,6 +302,7 @@
                                         aria-labelledby="past_order-tab">
                                         <div class="row">
                                             @foreach($pastOrders as $key => $order)
+                                            @if($order->orderStatusVendor->isNotEmpty())
                                             <div class="col-12">
                                                 <div class="row no-gutters order_head">
                                                     <div class="col-md-3"><h4>Order Number</h4></div>
@@ -332,7 +335,7 @@
                                                                     <div class="col-5 col-sm-3">
                                                                         <h5 class="m-0">Order Status</h5>
                                                                         <ul class="status_box mt-3 pl-0">
-                                                                            @foreach($order->orderStatusVendor as $key => $status)
+                                                                            @foreach($order->orderStatusVendor as $status)
                                                                                 @if($status->order_status_option_id == 1)
                                                                                     <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Placed</label></li>
                                                                                 @endif
@@ -417,6 +420,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            @endif
                                             @endforeach
                                             <?php /* ?><div class="col-12">        
                                                 <div class="row no-gutters order_head">
