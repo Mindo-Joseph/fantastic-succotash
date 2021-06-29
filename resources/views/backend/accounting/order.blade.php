@@ -63,7 +63,7 @@
 <script type="text/template" id="accounting_vendor_template">
     <% _.each(vendor_orders, function(vendor_order, key){%>
         <tr data-row-id="1">
-            <td><%= vendor_order.order_detail.order_number%></td>
+            <td><%= vendor_order.order_detail ? vendor_order.order_detail.order_number : ''%></td>
             <td><%= vendor_order.created_date %></td>
             <td><%= vendor_order.user ? vendor_order.user.name : '' %></td>
             <td><%= vendor_order.vendor.name %></td>
@@ -72,7 +72,7 @@
             <td><%= vendor_order.admin_commission_fixed_amount %></td>
             <td><%= vendor_order.admin_commission_percentage_amount %></td>
             <td><%= vendor_order.payable_amount %></td> 
-            <td><%= vendor_order.order_detail.payment_option.title %></td> 
+            <td><%= vendor_order.order_detail ? vendor_order.order_detail.payment_option.title : '' %></td> 
         </tr>
     <% }); %>
 </script>
@@ -87,9 +87,9 @@
                                  <input type="text" class="form-control" data-provide="datepicker" data-date-format="MM yyyy" data-date-min-view-mode="1" id="month_picker_filter" style="display:none;">
                             </div>
                         </div>
-                        <a href="{{ route('account.order.export') }}" class="btn btn-success waves-effect waves-light">
+                        <!-- <a href="" class="btn btn-success waves-effect waves-light">
                             <span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV
-                        </a> 
+                        </a> --> 
                    </div>
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable">
@@ -163,12 +163,24 @@
                             $('#accounting_vendor_datatable tbody').empty();
                         }
                         table = $("#accounting_vendor_datatable").DataTable({
-                            "dom": '<"toolbar">frtip',
+                            "dom": '<"toolbar">Bfrtip',
                             "scrollX": true,
+                            language: {
+                                search: "",
+                                searchPlaceholder: "Search records"
+                            },
+                            buttons: [
+                                {   className:'btn btn-success waves-effect waves-light',
+                                    text: '<span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV',
+                                    action: function ( e, dt, node, config ) {
+                                        window.location.href = "{{ route('account.order.export') }}";
+                                    }
+                                }
+                            ],
                             drawCallback: function () {
                                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                             },
-                        }).fnClearTable();
+                        });
                     }
                 }
             });
