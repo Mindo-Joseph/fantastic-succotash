@@ -198,6 +198,7 @@ class OrderController extends FrontController
                 $total_delivery_fee += $delivery_fee;
                 $OrderVendor = new OrderVendor();
                 $OrderVendor->status = 0;
+                $order_vendor->user_id= $user->id;
                 $OrderVendor->order_id = $order->id;
                 $OrderVendor->vendor_id = $vendor_id;
                 $OrderVendor->delivery_fee = $delivery_fee;
