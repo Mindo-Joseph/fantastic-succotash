@@ -100,8 +100,8 @@ $(document).ready(function() {
     var url = categoryInfo_url;
     $.getJSON(url, function(response) {
         var options = {
-            series: [],
-            labels: [],
+            series: response.orders,
+            labels: response.names,
             chart: {
                 width: 380,
                 type: 'donut',

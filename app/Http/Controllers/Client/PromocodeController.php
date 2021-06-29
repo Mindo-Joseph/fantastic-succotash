@@ -96,11 +96,13 @@ class PromocodeController extends BaseController
         if($promocode->id){
             PromoCodeDetail::where('promocode_id', $promocode->id)->delete();
             $productList = $request->restriction_on == 1 ? $request->vendorList : $request->productList;
-            foreach ($productList as  $refrence_id) {
-                $promo_code_detail = new PromoCodeDetail();
-                $promo_code_detail->promocode_id = $promocode->id;
-                $promo_code_detail->refrence_id = $refrence_id;
-                $promo_code_detail->save();
+            if($productList){
+                foreach ($productList as  $refrence_id) {
+                    $promo_code_detail = new PromoCodeDetail();
+                    $promo_code_detail->promocode_id = $promocode->id;
+                    $promo_code_detail->refrence_id = $refrence_id;
+                    $promo_code_detail->save();
+                }
             }
         }
         return $promocode->id;

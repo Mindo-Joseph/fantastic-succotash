@@ -398,20 +398,14 @@
 
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Marketplaces</th>
-                                            <th>Date</th>
+                                            <th>Name</th>
+                                            <th>Last Order Date</th>
                                             <th>Payouts</th>
                                             <th>Status</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td colspan="5" class="text-center">
-                                                <h5 class="m-0 fw-normal">No data found</h5>
-                                            </td>
-                                        </tr>
-                                        <!-- <tr>
                                             <td>
                                                 <h5 class="m-0 fw-normal">Themes Market</h5>
                                             </td>
@@ -428,9 +422,6 @@
                                                 <span class="badge bg-soft-warning text-warning">Upcoming</span>
                                             </td>
 
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
-                                            </td>
                                         </tr>
 
                                         <tr>
@@ -450,9 +441,6 @@
                                                 <span class="badge bg-soft-success text-success">Paid</span>
                                             </td>
 
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
-                                            </td>
                                         </tr>
 
                                         <tr>
@@ -472,9 +460,6 @@
                                                 <span class="badge bg-soft-success text-success">Paid</span>
                                             </td>
 
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
-                                            </td>
                                         </tr>
 
                                         <tr>
@@ -494,9 +479,6 @@
                                                 <span class="badge bg-soft-danger text-danger">Overdue</span>
                                             </td>
 
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
-                                            </td>
                                         </tr>
 
                                         <tr>
@@ -514,10 +496,6 @@
 
                                             <td>
                                                 <span class="badge bg-soft-warning text-warning">Upcoming</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
                                             </td>
                                         </tr>
 
@@ -538,10 +516,7 @@
                                                 <span class="badge bg-soft-success text-success">Paid</span>
                                             </td>
 
-                                            <td>
-                                                <a href="javascript: void(0);" class="btn btn-xs btn-light"><i class="mdi mdi-pencil"></i></a>
-                                            </td>
-                                        </tr> -->
+                                        </tr>
 
                                     </tbody>
                                 </table>

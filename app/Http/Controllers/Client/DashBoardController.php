@@ -17,10 +17,11 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Category, Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country, Order, User};
+use App\Models\{Category, Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country, Order, User, Vendor};
 use Carbon\Carbon;
 
-class DashBoardController extends BaseController{
+class DashBoardController extends BaseController
+{
 
     private $folderName = 'Clientlogo';
     /**
@@ -28,20 +29,23 @@ class DashBoardController extends BaseController{
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index(){   
+    public function index()
+    {
         $total_revenue = Order::sum('payable_amount');
         $today_sales = Order::whereDay('created_at', now()->day)->sum('payable_amount');
         return view('backend/dashboard')->with(['total_revenue' => $total_revenue, 'today_sales' => $today_sales]);
     }
 
-    public function profile(){
+    public function profile()
+    {
         $countries = Country::all();
         $client = Client::where('code', Auth::user()->code)->first();
         $tzlist = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
-        return view('backend/setting/profile')->with(['client' => $client, 'countries'=> $countries,'tzlist'=>$tzlist]);
+        return view('backend/setting/profile')->with(['client' => $client, 'countries' => $countries, 'tzlist' => $tzlist]);
     }
 
-    public function changePassword(Request $request){
+    public function changePassword(Request $request)
+    {
         $client = User::where('id', Auth::id())->first();
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
@@ -91,32 +95,33 @@ class DashBoardController extends BaseController{
         $client = Client::where('code', Auth::user()->code)->first();
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
-            $file_name = 'Clientlogo/'.uniqid() .'.'.  $file->getClientOriginalExtension();
+            $file_name = 'Clientlogo/' . uniqid() . '.' .  $file->getClientOriginalExtension();
             $path = Storage::disk('s3')->put($file_name, file_get_contents($file), 'public');
             $data['logo'] = $file_name;
-        }else{
-             $data['logo'] = $client->getRawOriginal('logo');
+        } else {
+            $data['logo'] = $client->getRawOriginal('logo');
         }
         $client = Client::where('code', Auth::user()->code)->update($data);
         $userdata = array();
-        foreach ($request->only('name','phone_number','timezone') as $key => $value) {
+        foreach ($request->only('name', 'phone_number', 'timezone') as $key => $value) {
             $userdata[$key] = $value;
         }
         $user = User::where('id', Auth::id())->update($userdata);
         return redirect()->back()->with('success', 'Client Updated successfully!');
     }
 
-    public function monthlySalesInfo(){   
-        $monthlysales=DB::table('orders')
-        ->select(DB::raw('sum(payable_amount) as y'),DB::raw('count(*) as z'),DB::raw('date(created_at) as x'))
-        ->whereRaw('MONTH(created_at) = ?',[date('m')])
-        ->groupBy('x')
-        // ->orderBy('x','desc')
-        ->get();
+    public function monthlySalesInfo()
+    {
+        $monthlysales = DB::table('orders')
+            ->select(DB::raw('sum(payable_amount) as y'), DB::raw('count(*) as z'), DB::raw('date(created_at) as x'))
+            ->whereRaw('MONTH(created_at) = ?', [date('m')])
+            ->groupBy('x')
+            // ->orderBy('x','desc')
+            ->get();
         $dates = array();
         $revenue = array();
         $sales = array();
-        foreach($monthlysales as $monthly){
+        foreach ($monthlysales as $monthly) {
             $dates[] = $monthly->x;
             $revenue[] = $monthly->y;
             $sales[] = $monthly->z;
@@ -124,17 +129,18 @@ class DashBoardController extends BaseController{
         return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
     }
 
-    public function yearlySalesInfo(){ 
-        $yearlysales=DB::table('orders')
-        ->select(DB::raw('sum(payable_amount) as y'),DB::raw('count(*) as z'),DB::raw('monthname(created_at) as x'))
-        ->whereRaw('YEAR(created_at) = ?',[date('Y')])
-        ->groupBy('x')
-        ->orderBy('x','desc')
-        ->get();
+    public function yearlySalesInfo()
+    {
+        $yearlysales = DB::table('orders')
+            ->select(DB::raw('sum(payable_amount) as y'), DB::raw('count(*) as z'), DB::raw('monthname(created_at) as x'))
+            ->whereRaw('YEAR(created_at) = ?', [date('Y')])
+            ->groupBy('x')
+            ->orderBy('x', 'desc')
+            ->get();
         $dates = array();
         $revenue = array();
         $sales = array();
-        foreach($yearlysales as $yearly){
+        foreach ($yearlysales as $yearly) {
             $dates[] = $yearly->x;
             $revenue[] = $yearly->y;
             $sales[] = $yearly->z;
@@ -142,18 +148,19 @@ class DashBoardController extends BaseController{
         return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
     }
 
-    public function weeklySalesInfo(){ 
+    public function weeklySalesInfo()
+    {
         Carbon::setWeekStartsAt(Carbon::SUNDAY);
-        $weeklysales=DB::table('orders')
-        ->select(DB::raw('sum(payable_amount) as y'),DB::raw('count(*) as z'),DB::raw('date(created_at) as x'))
-        ->whereBetween('created_at', [Carbon::now()->startOfWeek(),Carbon::now()->endOfWeek()])
-        ->groupBy('x')
-        ->orderBy('x','desc')
-        ->get();
+        $weeklysales = DB::table('orders')
+            ->select(DB::raw('sum(payable_amount) as y'), DB::raw('count(*) as z'), DB::raw('date(created_at) as x'))
+            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->groupBy('x')
+            ->orderBy('x', 'desc')
+            ->get();
         $dates = array();
         $revenue = array();
         $sales = array();
-        foreach($weeklysales as $weekly){
+        foreach ($weeklysales as $weekly) {
             $dates[] = $weekly->x;
             $revenue[] = $weekly->y;
             $sales[] = $weekly->z;
@@ -161,19 +168,19 @@ class DashBoardController extends BaseController{
         return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
     }
 
-    public function categoryInfo(){ 
-         $orders = Order::with(array('products' => function($query) {
-            $query->select('order_id','category_id');
+    public function categoryInfo()
+    {
+        $orders = Order::with(array('products' => function ($query) {
+            $query->select('order_id', 'category_id');
         }))->whereMonth('created_at', Carbon::now()->month)->select('id')->get();
         $categories = array();
-        foreach($orders as $order){
-            foreach($order->products as $product){
+        foreach ($orders as $order) {
+            foreach ($order->products as $product) {
                 $category = Category::where('id', $product->category_id)->first();
-                if($category){
-                    if(array_key_exists($category->slug,$categories)){
+                if ($category) {
+                    if (array_key_exists($category->slug, $categories)) {
                         $categories[$category->slug] += 1;
-                    }
-                    else{
+                    } else {
                         $categories[$category->slug] = 1;
                     }
                 }
@@ -181,10 +188,34 @@ class DashBoardController extends BaseController{
         }
         $names = array();
         $orders = array();
-        foreach($categories as $key => $value){
+        foreach ($categories as $key => $value) {
             $names[] = $key;
             $orders[] = $value;
         }
         return response()->json(['names' => $names, 'orders' => $orders]);
     }
+
+    public function getTopVendors()
+    {
+    }
+
+    public function thousandsCurrencyFormat($num) {
+
+        if($num>1000) {
+      
+              $x = round($num);
+              $x_number_format = number_format($x);
+              $x_array = explode(',', $x_number_format);
+              $x_parts = array('k', 'm', 'b', 't');
+              $x_count_parts = count($x_array) - 1;
+              $x_display = $x;
+              $x_display = $x_array[0] . ((int) $x_array[1][0] !== 0 ? '.' . $x_array[1][0] : '');
+              $x_display .= $x_parts[$x_count_parts - 1];
+      
+              return $x_display;
+      
+        }
+      
+        return $num;
+      }
 }
