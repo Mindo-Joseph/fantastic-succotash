@@ -108,33 +108,57 @@ class DashBoardController extends BaseController{
 
     public function monthlySalesInfo(){   
         $monthlysales=DB::table('orders')
-        ->select(DB::raw('sum(payable_amount) as y'),DB::raw('date(created_at) as x'))
+        ->select(DB::raw('sum(payable_amount) as y'),DB::raw('count(*) as z'),DB::raw('date(created_at) as x'))
         ->whereRaw('MONTH(created_at) = ?',[date('m')])
         ->groupBy('x')
-        ->orderBy('x','desc')
+        // ->orderBy('x','desc')
         ->get();
-        return $monthlysales->toArray();
+        $dates = array();
+        $revenue = array();
+        $sales = array();
+        foreach($monthlysales as $monthly){
+            $dates[] = $monthly->x;
+            $revenue[] = $monthly->y;
+            $sales[] = $monthly->z;
+        }
+        return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
     }
 
     public function yearlySalesInfo(){ 
         $yearlysales=DB::table('orders')
-        ->select(DB::raw('sum(payable_amount) as y'),DB::raw('monthname(created_at) as x'))
+        ->select(DB::raw('sum(payable_amount) as y'),DB::raw('count(*) as z'),DB::raw('monthname(created_at) as x'))
         ->whereRaw('YEAR(created_at) = ?',[date('Y')])
         ->groupBy('x')
         ->orderBy('x','desc')
         ->get();
-        return $yearlysales->toArray();
+        $dates = array();
+        $revenue = array();
+        $sales = array();
+        foreach($yearlysales as $yearly){
+            $dates[] = $yearly->x;
+            $revenue[] = $yearly->y;
+            $sales[] = $yearly->z;
+        }
+        return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
     }
 
     public function weeklySalesInfo(){ 
         Carbon::setWeekStartsAt(Carbon::SUNDAY);
         $weeklysales=DB::table('orders')
-        ->select(DB::raw('sum(payable_amount) as y'),DB::raw('date(created_at) as x'))
+        ->select(DB::raw('sum(payable_amount) as y'),DB::raw('count(*) as z'),DB::raw('date(created_at) as x'))
         ->whereBetween('created_at', [Carbon::now()->startOfWeek(),Carbon::now()->endOfWeek()])
         ->groupBy('x')
         ->orderBy('x','desc')
         ->get();
-        return $weeklysales->toArray();
+        $dates = array();
+        $revenue = array();
+        $sales = array();
+        foreach($weeklysales as $weekly){
+            $dates[] = $weekly->x;
+            $revenue[] = $weekly->y;
+            $sales[] = $weekly->z;
+        }
+        return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
     }
 
     public function categoryInfo(){ 
