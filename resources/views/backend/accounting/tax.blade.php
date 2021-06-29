@@ -47,7 +47,7 @@
         <tr>
             <td><%= vendor_order.order_detail.order_number%></td>
             <td><%= vendor_order.created_at %></td>
-            <td><%= vendor_order.user.name %></td>
+            <td><%= vendor_order.user ? vendor_order.user.name : '' %></td>
             <td><%= vendor_order.payable_amount %></td>
             <td><%= vendor_order.discount_amount %></td>
             <td><%= vendor_order.admin_commission_fixed_amount %></td>
