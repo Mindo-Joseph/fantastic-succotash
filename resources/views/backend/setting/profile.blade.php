@@ -84,8 +84,6 @@
                                 </div>                              
                             </div>
                         </div>
-
-
                         <div class=" row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -153,8 +151,8 @@
                                     </span>
                                     @endif
                                     <select class="form-control" id="country" name="country_id" value="{{ old('country', $client->id ?? '')}}" placeholder="Country">
-                                        @foreach($countries as $code=>$country)
-                                        <option value="{{ $country->id }}" @if(Auth::user()->country == $country->name) selected @endif>{{ $country->name }}</option>
+                                        @foreach($countries as $code=> $country)
+                                            <option value="{{ $country->id }}" @if($client->country_id == $country->id) selected @endif>{{ $country->name }}</option>
                                         @endforeach
                                     </select>
                                     <span class="invalid-feedback" role="alert">

@@ -1,5 +1,17 @@
 <script type="text/javascript">
     summernoteInit();
+    var regexp = /^[a-zA-Z0-9-_]+$/;
+
+    function alphaNumeric(evt){
+        var charCode = String.fromCharCode(event.which || event.keyCode);
+
+        if (!regexp.test(charCode)){
+            return false;
+        }
+        var n2 = document.getElementById('slug');
+        n2.value = n2.value+charCode;
+        return true;
+    }
     function summernoteInit(){
         $('#warning_page_design').summernote({
             placeholder: 'Warning Page',
@@ -33,8 +45,9 @@
                     });
                     $('#edit-category-form #editCategoryBox').html(data.html);
                     setTimeout(function(){ 
-                        $('#cateSelectBox').trigger('change');
-                        $('#warningPageSelectBox').trigger('change');
+                        $('input[name="type_id"]:checked').trigger('change');
+                        $('input[name="warning_page_id"]:checked').trigger('change');
+                        $('input[name="template_type_id"]:checked').trigger('change');
                     }, 1000);
                     element1 = document.getElementsByClassName('edit-switch_menu');
                     element2 = document.getElementsByClassName('edit-wishlist_switch');
