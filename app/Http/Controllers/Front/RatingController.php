@@ -38,11 +38,11 @@ class RatingController extends FrontController{
 
                if ($image = $request->file('images')) {
                     foreach ($image as $files) {
-                    $file = time().'_'.$files->getClientOriginalName();
-                    Storage::disk('s3')->put('review', $file, 'public');
+                    $file =  substr(md5(microtime()), 0, 15).'_'.$files->getClientOriginalName();
+                    $storage = Storage::disk('s3')->put('/review', $files, 'public');
                     $img = new OrderProductRatingFile();
                     $img->order_product_rating_id = $ratings->id;
-                    $img->file = $file;
+                    $img->file = $storage;
                     $img->save();
                    
                     }
@@ -67,10 +67,17 @@ class RatingController extends FrontController{
     */
     public function getProductRating(Request $request){
         try {
-            $ratings = OrderProductRating::where('id',$request->id)->with('reviewFiles')->first();
+            $rating_details = OrderProductRating::where('id',$request->id)->with('reviewFiles')->first();
        
-            if(isset($ratings))
-            return $this->successResponse($ratings,'Rating Details.');
+            if(isset($rating_details)){
+              
+                if ($request->ajax()) {
+                return \Response::json(\View::make('frontend.modals.update-review-rating', array('rating_details' => $rating_details))->render());
+                }
+
+                return $this->successResponse($rating_details,'Rating Details.');
+            }
+            
            
             return $this->errorResponse('Invalid rating', 404);
             

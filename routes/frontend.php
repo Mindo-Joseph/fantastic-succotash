@@ -104,6 +104,6 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	 // Rating & review 
 	 Route::group(['prefix' => 'rating'], function () {
 		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');
-		Route::get('get-product-rating', 'Front\RatingController@getProductRating');
+		Route::get('get-product-rating', 'Front\RatingController@getProductRating')->name('get-product-rating-details');
 	});
 });

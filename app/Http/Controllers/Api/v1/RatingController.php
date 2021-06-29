@@ -40,12 +40,12 @@ class RatingController extends BaseController{
                 if ($request->has('files')) {
                     $files = $request->file('files');
                     foreach($files as $file) {
-                            $file = time().'_'.$file->getClientOriginalName();
-                            Storage::disk('s3')->put('review', $file, 'public');
-                            $img = new OrderProductRatingFile();
-                            $img->order_product_rating_id = $ratings->id;
-                            $img->file = $file;
-                            $img->save();
+                        $file =  substr(md5(microtime()), 0, 15).'_'.$files->getClientOriginalName();
+                        $storage = Storage::disk('s3')->put('/review', $file, 'public');
+                        $img = new OrderProductRatingFile();
+                        $img->order_product_rating_id = $ratings->id;
+                        $img->file = $storage;
+                        $img->save();
                         }
                 }
 
