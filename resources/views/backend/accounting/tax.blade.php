@@ -12,6 +12,7 @@
                     <div class="page-title-right">
                     </div>
                     <h4 class="page-title">Taxes</h4>
+                    
                 </div>
             </div>
         </div>     
@@ -24,14 +25,14 @@
                                 <div class="p-2 text-center">
                                     <h3>
                                         <i class="mdi mdi-cart-plus text-primary mdi-24px"></i>
-                                        <span data-plugin="counterup" id="">8954</span>
+                                        <span data-plugin="counterup" id="type_of_taxes_applied_count"></span>
                                     </h3>
                                     <p class="text-muted font-15 mb-0">Type Of Taxes Applied</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 mb-3 mb-sm-0">
                                 <div class="p-2 text-center">
-                                    <h3><i class="mdi mdi-currency-usd text-success mdi-24px"></i><span data-plugin="counterup">7841</span></h3>
+                                    <h3><i class="mdi mdi-currency-usd text-success mdi-24px"></i><span data-plugin="counterup" id="total_tax_collected">0</span></h3>
                                     <p class="text-muted font-15 mb-0">Total Tax Collected</p>
                                 </div>
                             </div>
@@ -46,7 +47,7 @@
     <% _.each(vendor_orders, function(vendor_order, key){%>
         <tr>
             <td><%= vendor_order.order_detail.order_number%></td>
-            <td><%= vendor_order.created_at %></td>
+            <td><%= vendor_order.created_date %></td>
             <td><%= vendor_order.user ? vendor_order.user.name : '' %></td>
             <td><%= vendor_order.payable_amount %></td>
             <td><%= vendor_order.discount_amount %></td>
@@ -65,6 +66,9 @@
                             <div class="col-md-6">
                                  <input type="text" class="form-control" data-provide="datepicker" data-date-format="MM yyyy" data-date-min-view-mode="1" id="month_picker_filter" style="display:none;">
                             </div>
+                            <a href="{{ route('account.tax.export') }}" class="btn btn-success waves-effect waves-light">
+                                <span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV
+                            </a>
                         </div>  
                    </div>
                     <div class="table-responsive">
@@ -104,31 +108,20 @@
                 data: {},
                 type: "POST",
                 dataType: "json",
-                url: "{{route('account.order.filter')}}",
+                url: "{{route('account.tax.filter')}}",
                 success: function(response) {
                     if(response.status == 'Success'){
-                        // $('#month_picker_filter').show();
                         $('#accounting_vendor_tbody_list').html('');
                         let accounting_vendor_template = _.template($('#accounting_vendor_template').html());
                         $("#accounting_vendor_tbody_list").append(accounting_vendor_template({vendor_orders: response.data.vendor_orders}));
-                        $('#total_order_count').html(response.data.vendor_orders.length);
-                        $('#total_delivery_fees').html(response.data.total_delivery_fees);
-                        $('#total_cash_to_collected').html(response.data.total_cash_to_collected);
-                        $('#total_earnings_by_vendors').html(response.data.total_earnings_by_vendors);
-                        $('#total_order_count').counterUp({
-                          delay: 10,
+                        $('#total_tax_collected').html(response.data.total_tax_collected);
+                        $('#type_of_taxes_applied_count').html(response.data.type_of_taxes_applied_count);
+                        $('#total_tax_collected').counterUp({
+                          delay: 5,
                           time: 2000
                         });
-                        $('#total_delivery_fees').counterUp({
-                          delay: 10,
-                          time: 2000
-                        });
-                        $('#total_cash_to_collected').counterUp({
-                          delay: 10,
-                          time: 2000
-                        });
-                        $('#total_earnings_by_vendors').counterUp({
-                          delay: 10,
+                        $('#type_of_taxes_applied_count').counterUp({
+                          delay: 5,
                           time: 2000
                         });
                         if($.fn.DataTable.isDataTable('#accounting_vendor_datatable')){

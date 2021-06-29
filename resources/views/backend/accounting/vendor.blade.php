@@ -125,11 +125,16 @@
                         $("#accounting_vendor_tbody_list").append(accounting_vendor_template({vendors: response.data.vendors}));
                         $('#total_order_value').html(response.data.total_order_value);
                         $('#total_delivery_fees').html(response.data.total_delivery_fees);
+                        $('#total_admin_commissions').html(response.data.total_admin_commissions);
                         $('#total_order_value').counterUp({
                           delay: 10,
                           time: 2000
                         });
                         $('#total_delivery_fees').counterUp({
+                          delay: 10,
+                          time: 2000
+                        });
+                        $('#total_admin_commissions').counterUp({
                           delay: 10,
                           time: 2000
                         });
