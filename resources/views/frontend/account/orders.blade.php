@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Profile'])
+@extends('layouts.store', ['title' => 'My Orders'])
 
 @section('css')
 <style type="text/css">
@@ -105,7 +105,8 @@
                                     <div class="tab-pane fade show active" id="active-orders" role="tabpanel"
                                         aria-labelledby="active-orders-tab">
                                         <div class="row">
-                                            @foreach($orders as $key => $order)
+                                            @foreach($activeOrders as $key => $order)
+                                            @if($order->orderStatusVendor->isNotEmpty())
                                             <div class="col-12">
                                                 <div class="row no-gutters order_head">
                                                     <div class="col-md-3"><h4>Order Number</h4></div>
@@ -131,68 +132,86 @@
                                                 </div>
                                                 <div class="row mt-2">
                                                     <div class="col-md-9 mb-3">
+                                                        @php
+                                                            $subtotal_order_price = $total_order_price = $total_tax_order_price = 0;
+                                                        @endphp
                                                         @foreach($order->vendors as $key => $vendor)
-                                                            <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
-                                                                <span class="left_arrow pulse"></span>
-                                                                <div class="row">
-                                                                    <div class="col-5 col-sm-3">
-                                                                        <h5 class="m-0">Order Status</h5>
-                                                                        <ul class="status_box mt-3 pl-0">
-                                                                            @foreach($order->orderStatusVendor as $key => $status)
-                                                                                @if($status->order_status_option_id == 1)
-                                                                                    <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Placed</label></li>
-                                                                                @endif
-                                                                                @if($status->order_status_option_id == 2)
-                                                                                    <li><img src="{{ asset('assets/images/payment_icon.svg') }}" alt=""><label class="m-0 in-progress">Accepted</label></li>
-                                                                                @endif
-                                                                                @if($status->order_status_option_id == 3)
-                                                                                    <li><img src="{{ asset('assets/images/customize_icon.svg') }}" alt=""><label class="m-0 in-progress">Processing</label></li>
-                                                                                @endif
-                                                                                @if($status->order_status_option_id == 4)
-                                                                                    <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Out For Delivery</label></li>
-                                                                                @endif
-                                                                                @if($status->order_status_option_id == 5)
-                                                                                    <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Delivered</label></li>
-                                                                                @endif
-                                                                            @endforeach
-                                                                        </ul>
+                                                            @php
+                                                                $product_total_count = $product_subtotal_amount = $product_taxable_amount = 0;
+                                                            @endphp
+                                                            @foreach($order->orderStatusVendor as $status)
+                                                                @if($status->vendor_id == $vendor->vendor_id)
+                                                                    <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
+                                                                        <span class="left_arrow pulse"></span>
+                                                                        <div class="row">
+                                                                            <div class="col-5 col-sm-3">
+                                                                                <h5 class="m-0">Order Status</h5>
+                                                                                <ul class="status_box mt-3 pl-0">
+                                                                                    @if($status->order_status_option_id == 1)
+                                                                                        <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Placed</label></li>
+                                                                                    @endif
+                                                                                    @if($status->order_status_option_id == 2)
+                                                                                        <li><img src="{{ asset('assets/images/payment_icon.svg') }}" alt=""><label class="m-0 in-progress">Accepted</label></li>
+                                                                                    @endif
+                                                                                    @if($status->order_status_option_id == 3)
+                                                                                        <li><img src="{{ asset('assets/images/customize_icon.svg') }}" alt=""><label class="m-0 in-progress">Processing</label></li>
+                                                                                    @endif
+                                                                                    @if($status->order_status_option_id == 4)
+                                                                                        <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Out For Delivery</label></li>
+                                                                                    @endif
+                                                                                    @if($status->order_status_option_id == 5)
+                                                                                        <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Delivered</label></li>
+                                                                                    @endif
+                                                                                </ul>
+                                                                            </div>
+                                                                            <div class="col-7 col-sm-4">
+                                                                                <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
+                                                                                    @foreach($vendor->products as $product)
+                                                                                        @if($vendor->vendor_id == $product->vendor_id)
+                                                                                            <li class="text-center">
+                                                                                                <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
+                                                                                                <span class="item_no position-absolute">x{{$product->quantity}}</span>
+                                                                                                <?php /* ?><label class="items_name">{{$product->product_name}}</label><?php */ ?>
+                                                                                                <label class="items_price">${{$product->price}}</label>
+                                                                                            </li>
+                                                                                            @php
+                                                                                                $product_total_count += $product->quantity * $product->price;
+                                                                                                $product_taxable_amount += $product->taxable_amount;
+                                                                                                $total_tax_order_price += $product->taxable_amount;
+                                                                                            @endphp
+                                                                                        @endif
+                                                                                    @endforeach
+                                                                                </ul>
+                                                                            </div>
+                                                                            <div class="col-md-5 mt-md-0 mt-sm-2">
+                                                                                <ul class="price_box_bottom m-0 p-0">
+                                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                                        <label class="m-0">Product Total</label>
+                                                                                        <span>$@money($product_total_count)</span>
+                                                                                    </li>
+                                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                                        <label class="m-0">Coupon Discount</label>
+                                                                                        <span>$@money($vendor->discount_amount)</span>
+                                                                                    </li>
+                                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                                        <label class="m-0">Delivery Fee</label>
+                                                                                        <span>$@money($vendor->delivery_fee)</span>
+                                                                                    </li>
+                                                                                    <li class="grand_total d-flex align-items-center justify-content-between">
+                                                                                        <label class="m-0">Amount</label>
+                                                                                        @php
+                                                                                            $product_subtotal_amount = $product_total_count - $vendor->discount_amount + $vendor->delivery_fee;
+                                                                                            $subtotal_order_price += $product_subtotal_amount;
+                                                                                            $total_order_price += $product_subtotal_amount + $total_tax_order_price;
+                                                                                        @endphp
+                                                                                        <span>$@money($product_subtotal_amount)</span>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="col-7 col-sm-4">
-                                                                        <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
-                                                                            @foreach($vendor->products as $product)
-                                                                                @if($vendor->vendor_id == $product->vendor_id)
-                                                                                <li class="text-center">
-                                                                                    <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
-                                                                                    <span class="item_no position-absolute">x{{$product->quantity}}</span>
-                                                                                    <?php /* ?><label class="items_name">{{$product->product_name}}</label><?php */ ?>
-                                                                                    <label class="items_price">${{$product->price}}</label>
-                                                                                </li>
-                                                                                @endif
-                                                                            @endforeach
-                                                                        </ul>
-                                                                    </div>
-                                                                    <div class="col-md-5 mt-md-0 mt-sm-2">
-                                                                        <ul class="price_box_bottom m-0 p-0">
-                                                                            <li class="d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Product Total</label>
-                                                                                <span>${{number_format($order->total_amount, 2)}}</span>
-                                                                            </li>
-                                                                            <li class="d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Coupon (10%)</label>
-                                                                                <span>${{$order->total_discount ? number_format($order->total_discount, 2) : 0.00}}</span>
-                                                                            </li>
-                                                                            <li class="d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Delivery Fee</label>
-                                                                                <span>${{$order->total_delivery_fee ? number_format($order->total_delivery_fee, 2) : 0.00}}</span>
-                                                                            </li>
-                                                                            <li class="grand_total d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Amount</label>
-                                                                                <span>${{number_format($order->total_amount, 2)}}</span>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                                @endif
+                                                            @endforeach
                                                         @endforeach
                                                     </div>
                                                     <div class="col-md-3 mb-3 pl-lg-0">
@@ -200,99 +219,30 @@
                                                             <ul class="price_box_bottom m-0 pl-0 pt-1">
                                                                 <li class="d-flex align-items-center justify-content-between">
                                                                     <label class="m-0">Sub Total</label>
-                                                                    <span>${{number_format($order->total_amount, 2)}}</span>
+                                                                    <span>$@money($subtotal_order_price)</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
                                                                     <label class="m-0">Wallet</label>
-                                                                    <span>$0.00</span>
+                                                                    <span>--</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
                                                                     <label class="m-0">Loyalty</label>
-                                                                    <span>${{$order->loyality_points_used ? $order->loyality_points_used : 0}}</span>
+                                                                    <span>{{$order->loyality_points_used ? $order->loyality_points_used : 0}}</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
                                                                     <label class="m-0">Tax</label>
-                                                                    <span>${{number_format($order->taxable_amount, 2)}}</span>
+                                                                    <span>$@money($total_tax_order_price)</span>
                                                                 </li>
                                                                 <li class="grand_total d-flex align-items-center justify-content-between">
                                                                     <label class="m-0">Total Payable</label>
-                                                                    <span>${{number_format($order->payable_amount, 2)}}</span>
+                                                                    <span>$@money($total_order_price)</span>
                                                                 </li>
                                                             </ul>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
-                                                <?php /* ?><div class="row">
-                                                    <div class="col-md-9 mb-3">
-                                                        <a href="#" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0 h-100">
-                                                            <span class="left_arrow pulse"></span>
-                                                            <div class="col-5 col-sm-3">
-                                                                <h4 class="m-0">test</h4>
-                                                                <ul class="status_box mt-3 pl-0">
-                                                                    <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Accepted</label></li>
-                                                                    <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Assigned</label></li>
-                                                                </ul>
-                                                            </div>
-                                                            <div class="col-7 col-sm-4">
-                                                                <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
-                                                                        <li class="text-center">
-                                                                            <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
-                                                                            <span class="item_no position-absolute">x2</span>
-                                                                            <label class="items_price">$20.00</label>
-                                                                        </li>                                   
-                                                                </ul>
-                                                            </div>
-                                                            <div class="col-md-5 mt-md-0 mt-sm-2">
-                                                                <ul class="price_box_bottom m-0 p-0">
-                                                                    <li class="d-flex align-items-center justify-content-between">
-                                                                        <label class="m-0">Product Total</label>
-                                                                        <span>$20.00</span>
-                                                                    </li>
-                                                                    <li class="d-flex align-items-center justify-content-between">
-                                                                        <label class="m-0">Coupon (10%)</label>
-                                                                        <span>$0.00</span>
-                                                                    </li>
-                                                                    <li class="d-flex align-items-center justify-content-between">
-                                                                        <label class="m-0">Delivery Fee</label>
-                                                                        <span>$20.00</span>
-                                                                    </li>
-                                                                    <li class="grand_total d-flex align-items-center justify-content-between">
-                                                                        <label class="m-0">Amount</label>
-                                                                        <span>$320.00</span>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </a>
-                                                    </div>    
-                                                    <div class="col-md-3 mb-3">
-                                                        <div class="card-box p-2 mb-0 h-100">
-                                                            <ul class="price_box_bottom m-0 pl-0 pt-1">
-                                                                <li class="d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Sub Total</label>
-                                                                    <span>$20.00</span>
-                                                                </li>
-                                                                <li class="d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Wallet</label>
-                                                                    <span>$0.00</span>
-                                                                </li>
-                                                                <li class="d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Loyalty</label>
-                                                                    <span>$20.00</span>
-                                                                </li>
-                                                                <li class="d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Tax</label>
-                                                                    <span>$320.00</span>
-                                                                </li>
-                                                                <li class="grand_total d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Total Payable</label>
-                                                                    <span>$320.00</span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div><?php /*/ ?>
                                             </div>
+                                            @endif
                                             @endforeach
                                         </div>
                                     </div>
@@ -300,6 +250,7 @@
                                         aria-labelledby="past_order-tab">
                                         <div class="row">
                                             @foreach($pastOrders as $key => $order)
+                                            @if($order->orderStatusVendor->isNotEmpty())
                                             <div class="col-12">
                                                 <div class="row no-gutters order_head">
                                                     <div class="col-md-3"><h4>Order Number</h4></div>
@@ -325,68 +276,86 @@
                                                 </div>
                                                 <div class="row mt-2">
                                                     <div class="col-md-9 mb-3">
+                                                        @php
+                                                            $subtotal_order_price = $total_order_price = $total_tax_order_price = 0;
+                                                        @endphp
                                                         @foreach($order->vendors as $key => $vendor)
-                                                            <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
-                                                                <span class="left_arrow pulse"></span>
-                                                                <div class="row">
-                                                                    <div class="col-5 col-sm-3">
-                                                                        <h5 class="m-0">Order Status</h5>
-                                                                        <ul class="status_box mt-3 pl-0">
-                                                                            @foreach($order->orderStatusVendor as $key => $status)
-                                                                                @if($status->order_status_option_id == 1)
-                                                                                    <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Placed</label></li>
-                                                                                @endif
-                                                                                @if($status->order_status_option_id == 2)
-                                                                                    <li><img src="{{ asset('assets/images/payment_icon.svg') }}" alt=""><label class="m-0 in-progress">Accepted</label></li>
-                                                                                @endif
-                                                                                @if($status->order_status_option_id == 3)
-                                                                                    <li><img src="{{ asset('assets/images/customize_icon.svg') }}" alt=""><label class="m-0 in-progress">Processing</label></li>
-                                                                                @endif
-                                                                                @if($status->order_status_option_id == 4)
-                                                                                    <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Out For Delivery</label></li>
-                                                                                @endif
-                                                                                @if($status->order_status_option_id == 5)
-                                                                                    <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Delivered</label></li>
-                                                                                @endif
-                                                                            @endforeach
-                                                                        </ul>
+                                                            @php
+                                                                $product_total_count = $product_subtotal_amount = $product_taxable_amount = 0;
+                                                            @endphp
+                                                            @foreach($order->orderStatusVendor as $status)
+                                                                @if($status->vendor_id == $vendor->vendor_id)
+                                                                    <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
+                                                                        <span class="left_arrow pulse"></span>
+                                                                        <div class="row">
+                                                                            <div class="col-5 col-sm-3">
+                                                                                <h5 class="m-0">Order Status</h5>
+                                                                                <ul class="status_box mt-3 pl-0">
+                                                                                    @if($status->order_status_option_id == 1)
+                                                                                        <li><img src="{{ asset('assets/images/order-icon.svg') }}" alt=""><label class="m-0 in-progress">Placed</label></li>
+                                                                                    @endif
+                                                                                    @if($status->order_status_option_id == 2)
+                                                                                        <li><img src="{{ asset('assets/images/payment_icon.svg') }}" alt=""><label class="m-0 in-progress">Accepted</label></li>
+                                                                                    @endif
+                                                                                    @if($status->order_status_option_id == 3)
+                                                                                        <li><img src="{{ asset('assets/images/customize_icon.svg') }}" alt=""><label class="m-0 in-progress">Processing</label></li>
+                                                                                    @endif
+                                                                                    @if($status->order_status_option_id == 4)
+                                                                                        <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Out For Delivery</label></li>
+                                                                                    @endif
+                                                                                    @if($status->order_status_option_id == 5)
+                                                                                        <li><img src="{{ asset('assets/images/driver_icon.svg') }}" alt=""><label class="m-0 in-progress">Delivered</label></li>
+                                                                                    @endif
+                                                                                </ul>
+                                                                            </div>
+                                                                            <div class="col-7 col-sm-4">
+                                                                                <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
+                                                                                    @foreach($vendor->products as $product)
+                                                                                        @if($vendor->vendor_id == $product->vendor_id)
+                                                                                            <li class="text-center">
+                                                                                                <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
+                                                                                                <span class="item_no position-absolute">x{{$product->quantity}}</span>
+                                                                                                <?php /* ?><label class="items_name">{{$product->product_name}}</label><?php */ ?>
+                                                                                                <label class="items_price">${{$product->price}}</label>
+                                                                                            </li>
+                                                                                            @php
+                                                                                                $product_total_count += $product->quantity * $product->price;
+                                                                                                $product_taxable_amount += $product->taxable_amount;
+                                                                                                $total_tax_order_price += $product->taxable_amount;
+                                                                                            @endphp
+                                                                                        @endif
+                                                                                    @endforeach
+                                                                                </ul>
+                                                                            </div>
+                                                                            <div class="col-md-5 mt-md-0 mt-sm-2">
+                                                                                <ul class="price_box_bottom m-0 p-0">
+                                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                                        <label class="m-0">Product Total</label>
+                                                                                        <span>$@money($product_total_count)</span>
+                                                                                    </li>
+                                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                                        <label class="m-0">Coupon Discount</label>
+                                                                                        <span>$@money($vendor->discount_amount)</span>
+                                                                                    </li>
+                                                                                    <li class="d-flex align-items-center justify-content-between">
+                                                                                        <label class="m-0">Delivery Fee</label>
+                                                                                        <span>$@money($vendor->delivery_fee)</span>
+                                                                                    </li>
+                                                                                    <li class="grand_total d-flex align-items-center justify-content-between">
+                                                                                        <label class="m-0">Amount</label>
+                                                                                        @php
+                                                                                            $product_subtotal_amount = $product_total_count - $vendor->discount_amount + $vendor->delivery_fee;
+                                                                                            $subtotal_order_price += $product_subtotal_amount;
+                                                                                            $total_order_price += $product_subtotal_amount + $total_tax_order_price;
+                                                                                        @endphp
+                                                                                        <span>$@money($product_subtotal_amount)</span>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="col-7 col-sm-4">
-                                                                        <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
-                                                                            @foreach($vendor->products as $product)
-                                                                                @if($vendor->vendor_id == $product->vendor_id)
-                                                                                <li class="text-center">
-                                                                                    <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
-                                                                                    <span class="item_no position-absolute">x{{$product->quantity}}</span>
-                                                                                    <?php /* ?><label class="items_name">{{$product->product_name}}</label><?php */ ?>
-                                                                                    <label class="items_price">${{$product->price}}</label>
-                                                                                </li>
-                                                                                @endif
-                                                                            @endforeach
-                                                                        </ul>
-                                                                    </div>
-                                                                    <div class="col-md-5 mt-md-0 mt-sm-2">
-                                                                        <ul class="price_box_bottom m-0 p-0">
-                                                                            <li class="d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Product Total</label>
-                                                                                <span>${{number_format($order->total_amount, 2)}}</span>
-                                                                            </li>
-                                                                            <li class="d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Coupon (10%)</label>
-                                                                                <span>${{$order->total_discount ? number_format($order->total_discount, 2) : 0.00}}</span>
-                                                                            </li>
-                                                                            <li class="d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Delivery Fee</label>
-                                                                                <span>${{$order->total_delivery_fee ? number_format($order->total_delivery_fee, 2) : 0.00}}</span>
-                                                                            </li>
-                                                                            <li class="grand_total d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Amount</label>
-                                                                                <span>${{number_format($order->total_amount, 2)}}</span>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                                @endif
+                                                            @endforeach
                                                         @endforeach
                                                     </div>
                                                     <div class="col-md-3 mb-3 pl-lg-0">
@@ -394,29 +363,30 @@
                                                             <ul class="price_box_bottom m-0 pl-0 pt-1">
                                                                 <li class="d-flex align-items-center justify-content-between">
                                                                     <label class="m-0">Sub Total</label>
-                                                                    <span>${{number_format($order->total_amount, 2)}}</span>
+                                                                    <span>$@money($subtotal_order_price)</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
                                                                     <label class="m-0">Wallet</label>
-                                                                    <span>$0.00</span>
+                                                                    <span>--</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
                                                                     <label class="m-0">Loyalty</label>
-                                                                    <span>${{$order->loyality_points_used ? $order->loyality_points_used : 0}}</span>
+                                                                    <span>{{$order->loyality_points_used ? $order->loyality_points_used : 0}}</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
                                                                     <label class="m-0">Tax</label>
-                                                                    <span>${{number_format($order->taxable_amount, 2)}}</span>
+                                                                    <span>$@money($total_tax_order_price)</span>
                                                                 </li>
                                                                 <li class="grand_total d-flex align-items-center justify-content-between">
                                                                     <label class="m-0">Total Payable</label>
-                                                                    <span>${{number_format($order->payable_amount, 2)}}</span>
+                                                                    <span>$@money($total_order_price)</span>
                                                                 </li>
                                                             </ul>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            @endif
                                             @endforeach
                                             <?php /* ?><div class="col-12">        
                                                 <div class="row no-gutters order_head">

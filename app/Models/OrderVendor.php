@@ -22,7 +22,9 @@ class OrderVendor extends Model{
     public function products(){
 	    return $this->hasMany('App\Models\OrderProduct' , 'order_id', 'order_id'); 
 	}
-	
+	public function payment(){
+	    return $this->hasOne('App\Models\Payment' , 'order_id', 'order_id'); 
+	}
 	public function coupon(){
 	    return $this->hasOne('App\Models\Promocode' , 'id', 'coupon_id'); 
 	}

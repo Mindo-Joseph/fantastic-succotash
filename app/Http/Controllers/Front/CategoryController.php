@@ -40,7 +40,6 @@ class CategoryController extends FrontController
         }])
         ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
         ->where('slug', $slug)->firstOrFail();
-
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');
