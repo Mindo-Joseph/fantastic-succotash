@@ -131,10 +131,11 @@
                     href="#" role="button" aria-haspopup="false" aria-expanded="false">
 
                     <span class="pro-user-name ml-1">
-                       <b>{{ auth()->user()->name }} <i class="mdi mdi-chevron-down"></i></b>
+                        <img src="https://imgproxy.royoorders.com/insecure/fit/200/80/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/Clientlogo/60c1e84d06f64.jpg" alt="">
+                       <!-- <b class="text-capitalize">{{ auth()->user()->name }} <i class="mdi mdi-chevron-down"></i></b> -->
                     </span>
                 </a>
-                <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                <div class="dropdown-menu dropdown-menu-right profile-dropdown p-0">
 
                     <!-- <div class="dropdown-header noti-title">
                         <h6 class="text-overflow m-0">Welcome !</h6>
@@ -149,10 +150,13 @@
                         <i class="fe-user"></i>
                         <span>My Account</span>
                     </a>
+                    <a href="javascript:void(0)" class="dropdown-item notify-item" data-toggle="modal" data-target="#change_password">
+                        <i class="fe-user"></i>
+                        <span>Change Password</span>
+                    </a>
 
-                    <div class="dropdown-divider"></div>
-                        <a class="dropdown-item notify-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i class="fe-log-out"></i> <span>Logout</span>
-                        </a>
+                    <a class="dropdown-item notify-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i class="fe-log-out"></i> <span>Logout</span>
+                    </a>
 
                     <form id="logout-form" action="{{route('client.logout')}}" method="POST">
                         @csrf
@@ -168,4 +172,103 @@
 
         
     </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="change_password" tabindex="-1" aria-labelledby="change_passwordLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close top-right" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      <div class="col-md-12">
+            <form method="post" action="{{route('client.password.update')}}">
+                @csrf
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-box">
+                            <h4 class="header-title">Change Password</h4>
+                            <p class="sub-header">
+                                {{-- <code>Organization details</code>/Change Password. --}}
+                            </p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-2">
+                                        <label for="old_password">Old Password</label>
+                                        <div class="input-group input-group-merge ">
+                                            <input class="form-control " name="old_password" type="password" required="" id="old_password" placeholder="Enter your old password">
+                                            <div class="input-group-append" data-password="false">
+                                                <div class="input-group-text">
+                                                    <span class="password-eye"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if($errors->has('old_password'))
+                                    <span class="text-danger" role="alert">
+                                        <strong>{{ $errors->first('old_password') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-2">
+                                        <label for="password">New Password</label>
+                                        <div class="input-group input-group-merge ">
+                                            <input class="form-control " name="password" type="password" required="" id="password" placeholder="Enter your password">
+                                            <div class="input-group-append" data-password="false">
+                                                <div class="input-group-text">
+                                                    <span class="password-eye"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if($errors->has('password'))
+                                    <span class="text-danger" role="alert">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-2">
+                                        <label for="confirm_password">Confirm Password</label>
+                                        <div class="input-group input-group-merge ">
+                                            <input class="form-control " name="password_confirmation" type="password" required="" id="confirm_password" placeholder="Enter your confirm password">
+                                            <div class="input-group-append" data-password="false">
+                                                <div class="input-group-text">
+                                                    <span class="password-eye"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if($errors->has('password_confirmation'))
+                                    <span class="text-danger" role="alert">
+                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group mb-0 text-cente2">
+                                        <button class="btn btn-info btn-block" type="submit"> Update </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
