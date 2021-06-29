@@ -1,15 +1,16 @@
 <!-- bundle -->
 <!-- Vendor js -->
-<?php 
-    if(Session::has('toaster')){
+<?php
+if (Session::has('toaster')) {
     $toast = Session::get('toaster');
-        echo '<script>
+    echo '<script>
             $(document).ready(function(){
-                $.NotificationApp.send("'.$toast["title"].'", "'.$toast["body"].'", "top-right", "'.$toast["color"].'", "'.$toast["type"].'");
+                $.NotificationApp.send("' . $toast["title"] . '", "' . $toast["body"] . '", "top-right", "' . $toast["color"] . '", "' . $toast["type"] . '");
             });
         </script>';
-    }
+}
 ?>
+
 
 <script src="{{asset('assets/libs/selectize/selectize.min.js')}}"></script>
 <script src="{{asset('assets/libs/mohithg-switchery/mohithg-switchery.min.js')}}"></script>
@@ -33,54 +34,59 @@
 <script src="{{asset('assets/js/pages/toastr.init.js')}}"></script>
 <script src="{{asset('js/admin_custom.js')}}"></script>
 <script>
-let is_hyperlocal = 0;
-@if( Session::has('preferences') )
-    @if( (isset(Session::get('preferences')['is_hyperlocal'])) && (Session::get('preferences')['is_hyperlocal'] == 1) ) 
-        is_hyperlocal = 1;
+    let is_hyperlocal = 0;
+    @if(Session::has('preferences'))
+    @if((isset(Session::get('preferences')['is_hyperlocal'])) && (Session::get('preferences')['is_hyperlocal'] == 1))
+    is_hyperlocal = 1;
     @endif;
-@endif;
+    @endif;
 
-function gm_authFailure() {
+    function gm_authFailure() {
 
-    $('.excetion_keys').append('<span><i class="mdi mdi-block-helper mr-2"></i> <strong>Google Map</strong> key is not valid</span><br/>');
-    $('.displaySettingsError').show();
-};
+        $('.excetion_keys').append('<span><i class="mdi mdi-block-helper mr-2"></i> <strong>Google Map</strong> key is not valid</span><br/>');
+        $('.displaySettingsError').show();
+    };
 
-const startLoader = function(element) {
-    // check if the element is not specified
-    if (typeof element == 'undefined') {
-        element = "body";
+    const startLoader = function(element) {
+        // check if the element is not specified
+        if (typeof element == 'undefined') {
+            element = "body";
+        }
+        // set the wait me loader
+        $(element).waitMe({
+            effect: 'bounce',
+            text: 'Please Wait..',
+            bg: 'rgba(255,255,255,0.7)',
+            //color : 'rgb(66,35,53)',
+            color: '#EFA91F',
+            sizeW: '20px',
+            sizeH: '20px',
+            source: ''
+        });
     }
-    // set the wait me loader
-    $(element).waitMe({
-        effect: 'bounce',
-        text: 'Please Wait..',
-        bg: 'rgba(255,255,255,0.7)',
-        //color : 'rgb(66,35,53)',
-        color: '#EFA91F',
-        sizeW: '20px',
-        sizeH: '20px',
-        source: ''
-    });
-}
 
-function isNumberKey(evt){
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)){
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
 
-        return false;
+            return false;
+        }
+        return true;
     }
-    return true;
-}
 
-const stopLoader = function(element) {
-    // check if the element is not specified
-    if (typeof element == 'undefined') {
-        element = 'body';
+    const stopLoader = function(element) {
+        // check if the element is not specified
+        if (typeof element == 'undefined') {
+            element = 'body';
+        }
+        // close the loader
+        $(element).waitMe("hide");
     }
-    // close the loader
-    $(element).waitMe("hide");
-}
+
+    var monthlyInfo_url = "{{route('client.monthlySalesInfo')}}";
+    var yearlyInfo_url = "{{route('client.yearlySalesInfo')}}";
+    var weeklyInfo_url = "{{route('client.weeklySalesInfo')}}";
+    var categoryInfo_url = "{{route('client.categoryInfo')}}";
 </script>
 
 @yield('script-bottom')
