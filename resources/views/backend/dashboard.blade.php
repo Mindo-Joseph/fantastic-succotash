@@ -576,10 +576,4 @@
 <!-- <script src="{{asset('assets/js/pages/ecommerce-dashboard.init.js')}}"></script> -->
 <script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
 
-<script>
-   var monthlyInfo_url = "{{route('client.monthlySalesInfo')}}";
-   var yearlyInfo_url = "{{route('client.yearlySalesInfo')}}";
-   var weeklyInfo_url = "{{route('client.weeklySalesInfo')}}";
-   var categoryInfo_url = "{{route('client.categoryInfo')}}";
-</script>
 @endsection
