@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Session;
 use Auth;
 
@@ -24,7 +25,7 @@ class ProductController extends FrontController
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-        $product = Product::select('vendor_id')->where('url_slug', $url_slug)->firstOrFail();
+        $product = Product::select('id', 'vendor_id')->where('url_slug', $url_slug)->firstOrFail();
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if($product){
                 $productVendorId = $product->vendor_id;
@@ -73,7 +74,13 @@ class ProductController extends FrontController
                 $q2->select('addon_options.id', 'addon_options.title', 'addon_options.price', 'apt.title', 'addon_options.addon_id');
                 $q2->where('apt.language_id', $langId);
             },
-        ])->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory')
+        ]);
+        if(Auth::user()->id){
+            $product = $product->with('inwishlist', function ($query) use($p_id) {
+                $query->where('user_wishlists.user_id',Auth::user()->id);
+            });
+        }
+        $product = $product->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory')
             ->where('url_slug', $url_slug)
             ->where('is_live', 1)
             ->firstOrFail();

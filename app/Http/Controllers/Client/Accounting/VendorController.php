@@ -22,13 +22,14 @@ class VendorController extends Controller{
             $temp_arr = explode(' ', $month_picker_filter);
             $month_number =  getMonthNumber($temp_arr[0]);
         }
-        $total_admin_commissions = 0;
         if($month_number){
             $total_order_value = OrderVendor::whereMonth('created_at', $month_number)->sum('payable_amount');
             $total_delivery_fees = OrderVendor::whereMonth('created_at', $month_number)->sum('delivery_fee');
+            $total_admin_commissions = OrderVendor::whereMonth('created_at', $month_number)->sum(DB::raw('admin_commission_percentage_amount + admin_commission_fixed_amount'));
         }else{
             $total_order_value = OrderVendor::sum('payable_amount');
             $total_delivery_fees = OrderVendor::sum('delivery_fee');
+            $total_admin_commissions = OrderVendor::sum(DB::raw('admin_commission_percentage_amount + admin_commission_fixed_amount'));
         }
         $vendors = Vendor::with(['orders' => function($query) use($month_number) {
             if($month_number){
@@ -40,7 +41,7 @@ class VendorController extends Controller{
             $vendor->order_value = $vendor->orders->sum('payable_amount');
             $vendor->delivery_fee = $vendor->orders->sum('delivery_fee');
         }
-        $data = ['vendors' => $vendors, 'total_order_value' => $total_order_value, 'total_delivery_fees' => $total_delivery_fees];
+        $data = ['vendors' => $vendors, 'total_order_value' => $total_order_value, 'total_delivery_fees' => $total_delivery_fees, 'total_admin_commissions' => $total_admin_commissions];
         return $this->successResponse($data, '');
     }
 }

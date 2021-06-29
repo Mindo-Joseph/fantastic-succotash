@@ -96,11 +96,12 @@ $(document).ready(function() {
             updateSales(response.revenue, response.sales, response.dates, "datetime")
         });
     });
+
     var url = categoryInfo_url;
     $.getJSON(url, function(response) {
         var options = {
-            series: response.orders,
-            labels: response.names,
+            series: [],
+            labels: [],
             chart: {
                 width: 380,
                 type: 'donut',
@@ -123,7 +124,19 @@ $(document).ready(function() {
                 position: 'left',
                 offsetY: 0,
                 height: 230,
-            }
+            },
+            noData: {  
+                text: "No Data Found",  
+                align: 'center',  
+                verticalAlign: 'middle',  
+                offsetX: 0,  
+                offsetY: 0,  
+                style: {  
+                  color: "#000000",  
+                  fontSize: '14px',  
+                  fontFamily: "Helvetica"  
+                }  
+              }
         };
 
         var chart1 = new ApexCharts(document.querySelector("#apexchartsfwg700r2"), options);
