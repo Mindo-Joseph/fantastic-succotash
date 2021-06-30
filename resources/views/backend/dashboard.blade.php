@@ -260,10 +260,10 @@
                         <div class="card-body p-2">
                             <div class="card-widgets">
                                 <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh refresh_cataegoryinfo"></i></a>
-                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-plus"></i></a>
+                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
                             </div>
                             <h4 class="header-title mb-0">Orders (Top Categories)</h4>
-                            <div id="cardCollpase1" class="collapse mt-3 hide widget-chart" dir="ltr" style="position: relative;">
+                            <div id="cardCollpase1" class="collapse mt-3 show widget-chart" dir="ltr" style="position: relative;">
 
                                 <div id="total-revenue" class="mt-0" data-colors="#f1556c" style="min-height: 220.7px;">
                                     <div id="apexchartsfwg700r2" class="apexcharts-canvas apexchartsfwg700r2 apexcharts-theme-light" style="width: 451px; height: 220.7px;">
@@ -286,14 +286,14 @@
                                     <button type="button" class="btn btn-xs btn-secondary monthlySales">Monthly</button>
                                 </div>
                                 <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh align-middle refresh_salesChart"></i></a>
-                                <a class="align-middle" data-toggle="collapse" href="#cardCollpase2" role="button" aria-expanded="false" aria-controls="cardCollpase2"><i class="mdi mdi-plus"></i></a>
+                                <a class="align-middle" data-toggle="collapse" href="#cardCollpase2" role="button" aria-expanded="false" aria-controls="cardCollpase2"><i class="mdi mdi-minus"></i></a>
 
                             </div>
                            
 
                             <h4 class="header-title mb-0">Sales Analytics</h4>
 
-                            <div id="cardCollpase2" class="collapse hide mt-3" dir="ltr" style="position: relative;">
+                            <div id="cardCollpase2" class="collapse show mt-3" dir="ltr" style="position: relative;">
                                 <div id="sales-analytics" class="mt-4" data-colors="#1abc9c,#4a81d4" style="min-height: 393px;">
 
                                 </div>
