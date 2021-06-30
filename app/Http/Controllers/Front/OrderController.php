@@ -197,20 +197,20 @@ class OrderController extends FrontController
                         $vendor_discount_amount += $percentage_amount;
                     }
                 }
-
                 $total_delivery_fee += $delivery_fee;
                 $OrderVendor = new OrderVendor();
                 $OrderVendor->status = 0;
                 $OrderVendor->user_id= $user->id;
                 $OrderVendor->order_id = $order->id;
                 $OrderVendor->vendor_id = $vendor_id;
-                $OrderVendor->delivery_fee = $delivery_fee;
                 $OrderVendor->coupon_id = $coupon_id;
                 $OrderVendor->coupon_code = $coupon_name;
-                $OrderVendor->discount_amount = $vendor_discount_amount;
-                $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
+                $OrderVendor->delivery_fee = $delivery_fee;
                 $OrderVendor->subtotal_amount = $actual_amount;
+                $OrderVendor->discount_amount = $vendor_discount_amount;
                 $OrderVendor->taxable_amount   = $vendor_taxable_amount;
+                $OrderVendor->payment_option_id = $request->payment_option_id;
+                $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
                 $OrderVendor->discount_amount = $this->getDeliveryFeeDispatcher($vendor_id);
                 $vendor_info = Vendor::where('id', $vendor_id)->first();
                 if ($vendor_info) {
@@ -224,8 +224,8 @@ class OrderController extends FrontController
                 $OrderVendor->save();
                 $order_status = new VendorOrderStatus();
                 $order_status->order_id = $order->id;
-                $order_status->order_status_option_id = 1;
                 $order_status->vendor_id = $vendor_id;
+                $order_status->order_status_option_id = 1;
                 $order_status->save();
             }
             $loyalty_points_earned = LoyaltyCard::getLoyaltyPoint($loyalty_points_used, $payable_amount);
@@ -248,7 +248,6 @@ class OrderController extends FrontController
             CartCoupon::where('cart_id', $cart->id)->delete();
             CartProduct::where('cart_id', $cart->id)->delete();
             CartProductPrescription::where('cart_id', $cart->id)->delete();
-
             if ($request->payment_option_id == 4) {
                 Payment::insert([
                     'date' => date('Y-m-d'),
@@ -257,7 +256,6 @@ class OrderController extends FrontController
                     'balance_transaction' => $order->payable_amount,
                 ]);
             }
-
             //  if(count($delivery_on_vendors))
             //   $order_dispatch = $this->placeRequestToDispatch($order,$delivery_on_vendors,$request);
 
