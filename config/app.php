@@ -164,7 +164,7 @@ return [
         AkibTanjim\Currency\CurrencyServiceProvider::class,
         
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        
+        Yajra\DataTables\DataTablesServiceProvider::class,
 
 
 
@@ -246,7 +246,7 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Geocoder' => Spatie\Geocoder\Facades\Geocoder::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ],
 
 ];
