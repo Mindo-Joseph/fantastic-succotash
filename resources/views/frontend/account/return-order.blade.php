@@ -40,15 +40,39 @@
                             <h2>Return Order</h2>
                         </div>
                         <div class="welcome-msg">
-                            <h5>Here are all your for return products !</h5>
+                            <h5>Here are your for return product !</h5>
                         </div>
                         <div class="row">
                             <div class="container">
-                                <h2 >Choose items to return</h2>
-                                <form class="" action="">
+                                @foreach($order->vendors as $key => $vendor)    
+                                @foreach($vendor->products as  $key => $product)
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <input id="item_one{{$key}}" type="hidden" name="return_ids" value="{{ $product->id }}" required>
+                                            <label class="order-items d-flex" for="item_one{{$key}}">  
+                                                <div class="item-img mx-1">
+                                                    <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
+                                                </div>    
+                                                <div class="items-name ml-2">
+                                                    <h4 class="mt-0 mb-1"><b>{{ $product->product_name }}</b></h4>
+                                                    <label><b>Quantity</b>: {{ $product->quantity }}</label>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </td>
+                                   
+                                    
+                                </tr>
+                                @endforeach  
+                            @endforeach  
+                                <h2 >{{__('Choose files to share')}}</h2>
+                                <form id="return-upload-form" class="theme-form" action="javascript:void(0)" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                    <input type="hidden" name="order_vendor_product_id" value="{{app('request')->input('return_ids')}}">
                                     <div class="row rating_files">
                                         <div class="col-12">
-                                        <label>Upload Images</label>
+                                        <label>{{__('Upload Images')}}</label>
                                         </div>
                                         <div class="col-6 col-md-3 col-lg-2">
                                             <div class="file file--upload">
@@ -69,15 +93,19 @@
                                     
                                     <div class="row form-group">
                                         <div class="col-md-6">
-                                            <label>Resoan for return product.</label>
-                                            <select class="form-control" name="" id=""></select>
+                                            <label>{{__('Reason for return product')}}</label>
+                                            <select class="form-control" name="reason" id="reason">
+                                                @foreach ($reasons as $reason)
+                                                    <option value="{{$reason->title}}">{{$reason->title}}</option>
+                                                @endforeach
+                                            </select>
                                         </div>    
                                     </div>
                                     <div class="form-group">
-                                        <label>Comments (Opitonal):</label>
-                                        <textarea class="form-control" name="" id="" cols="30" rows="10"></textarea>
+                                        <label>{{__('Comments (Opitonal)')}}:</label>
+                                        <textarea class="form-control" name="" id="comments" cols="20" rows="4"></textarea>
                                     </div>
-                                    <button class="btn btn-solid mt-3 ">Request</button>
+                                    <button class="btn btn-solid mt-3" id="return_form_button">{{__('Request')}}</button>
                                 </form>
                             </div>
                         </div>
@@ -116,6 +144,49 @@ $('#input-file').on('change', function() {
 ShowMultipleImagePreview(this, 'span.show-multiple-image-preview');
 });
 }); 
+
+$.ajaxSetup({
+headers: {
+'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+}
+});
+
+$('#return-upload-form').submit(function(e) {
+e.preventDefault();
+
+var formData = new FormData(this);
+let TotalImages = $('#input-file')[0].files.length; //Total Images
+let images = $('#input-file')[0];
+for (let i = 0; i < TotalImages; i++) {
+formData.append('images' + i, images.files[i]);
+}
+formData.append('TotalImages', TotalImages);
+$.ajax({
+type:'POST',
+url: "{{ route('update.order.return')}}",
+data: formData,
+cache:false,
+contentType: false,
+processData: false,
+beforeSend: function () {
+    if(TotalImages > 0)
+        $("#return_form_button").html('<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop('disabled', true);
+    },
+success: (data) => {
+if(data.status == 'Success')
+    {
+      $("#return_form_button").html('Submitted');
+    }else{
+        $('#error-msg').text(data.message);
+        $("#return_form_button").html('Request').prop('disabled', false);
+    }
+},
+error: function(data){
+    $('#error-msg').text(data.message);
+    $("#review_form_button").html('Request').prop('disabled', false);
+}
+});
+});
        
 </script>
 

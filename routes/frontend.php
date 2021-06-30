@@ -111,5 +111,9 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::group(['prefix' => 'return-order'], function () {
 		Route::get('get-order-data-in-model', 'Front\ReturnOrderController@getOrderDatainModel')->name('getOrderDatainModel');
 		Route::get('get-return-products', 'Front\ReturnOrderController@getReturnProducts')->name('get-return-products');
+		Route::post('update-product-return', 'Front\ReturnOrderController@updateProductReturn')->name('update.order.return');
+		
 	});
+
+	Route::post('upload-file', 'Front\ReturnOrderController@uploadFile')->name('uploadfile');
 });

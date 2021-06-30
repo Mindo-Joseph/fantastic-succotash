@@ -10,7 +10,7 @@
                         Select item(s) for return
                     </th>
                     <th>order Information</th>
-                    <th>Return Need to arive by</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -19,7 +19,7 @@
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
-                            <input id="item_one{{$key}}" type="checkbox" name="return_ids[]" value="{{ $product->id }}" required>
+                            <input id="item_one{{$key}}" type="radio" name="return_ids" value="{{ $product->id }}" required>
                             <label class="order-items d-flex" for="item_one{{$key}}">  
                                 <div class="item-img mx-1">
                                     <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
@@ -38,9 +38,7 @@
                                                                 NA
                         @endif
                     </td>
-                    <td>
-                        <p>Monday, May 24, 2021, 13:22 PM</p>
-                    </td>
+                    
                 </tr>
                 @endforeach  
             @endforeach  
