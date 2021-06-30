@@ -125,6 +125,7 @@ $(document).ready(function () {
                 }],
                 legend: {
                     position: 'left',
+                    // horizontalAlign: 'center', 
                     offsetY: 0,
                     height: 230,
                 },

@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Banner, Category, Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country, Order, Product, User, Vendor, VendorOrderStatus};
+use App\Models\{Banner, Brand, Category, Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country, Order, Product, User, Vendor, VendorOrderStatus};
 use Carbon\Carbon;
 
 class DashBoardController extends BaseController
@@ -37,11 +37,12 @@ class DashBoardController extends BaseController
         $total_products = Product::count();
         $total_vendor = Vendor::count();
         $total_banners = Banner::count();
+        $total_brands = Brand::count();
         $total_pending_order = VendorOrderStatus::where('order_status_option_id', 1)->count();
         $total_rejected_order = VendorOrderStatus::where('order_status_option_id', 3)->count();
         $total_delivered_order = VendorOrderStatus::where('order_status_option_id', 6)->count();
         $total_active_order = VendorOrderStatus::where('order_status_option_id', '!=', 3)->where('order_status_option_id', '!=', 1)->count();
-        return view('backend/dashboard')->with(['total_banners' => $total_banners, 'total_delivered_order' => $total_delivered_order, 'total_active_order' => $total_active_order, 'total_rejected_order' => $total_rejected_order, 'total_pending_order' => $total_pending_order, 'total_vendor' => $total_vendor, 'total_products' => $total_products, 'total_revenue' => $total_revenue, 'today_sales' => $today_sales, 'total_categories' => $total_categories]);
+        return view('backend/dashboard')->with(['total_brands' => $total_brands, 'total_banners' => $total_banners, 'total_delivered_order' => $total_delivered_order, 'total_active_order' => $total_active_order, 'total_rejected_order' => $total_rejected_order, 'total_pending_order' => $total_pending_order, 'total_vendor' => $total_vendor, 'total_products' => $total_products, 'total_revenue' => $total_revenue, 'today_sales' => $today_sales, 'total_categories' => $total_categories]);
     }
 
     public function profile()
