@@ -78,11 +78,11 @@
         </div> -->
 
         <div class="row ipad-view">
-            <div class="col-lg-5 col-xl-4">
+            <div class="col-lg-3 col-xl-3">
                 @include('backend.vendor.show-md-3')
             </div>
 
-            <div class="col-lg-7 col-xl-8">
+            <div class="col-lg-9 col-xl-9">
                 <div class="">
                     <ul class="nav nav-pills navtab-bg nav-justified">
                         <li class="nav-item">
@@ -110,7 +110,7 @@
                             <div class="row">
                                 
                                 <div class="col-xl-4">
-                                    <div class="card-box" style="">
+                                    <div class="card-box">
                                         <div class="row" style="max-height: 600px; overflow-x: auto">
                                             <div class="col-sm-6">
                                                 <h4 class="mb-4"> Categories</h4>
@@ -128,66 +128,66 @@
                                                         <div class="custom-dd-empty dd" id="nestable_list_3">
                                                             <?php print_r($html); ?>
                                                         </div>
-                                                    </div>
-                                                    
+                                                    </div>                                                        
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-8">
-                                    <div class="row card-box" style="max-height: 600px; overflow-x: auto">
-                                        <div class="col-sm-8">
-                                            <h4 class="mb-4"> Addon Set</h4>
-                                        </div>
-                                        <div class="col-sm-4 text-right">
-                                            <button class="btn btn-info waves-effect waves-light text-sm-right openAddonModal" dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add 
-                                            </button>
-                                        </div> 
-                                        <div class="col-md-12">
-                                            <div class="row addon-row">
-                                                <div class="col-md-12">
-                                                    <form name="addon_order" id="addon_order" action="" method="post">
-                                                        @csrf
-                                                        <input type="hidden" name="orderData" id="orderVariantData" value="" />
-                                                    </form>
-                                                    <table class="table table-centered table-nowrap table-striped" id="varient-datatable">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Title</th>
-                                                                <th>Select(Min - Max)</th>
-                                                                <th>Options</th>
-                                                                <th>Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach($addon_sets as $set)
-                                                            <tr>
-                                                                <td>{{$set->id}}</td>
-                                                                <td>{{$set->title}}</td>
-                                                                <td>{{$set->min_select}} - {{$set->max_select}}</td>
-                                                                <td>
-                                                                    @foreach($set->option as $opt)
-                                                                        <span>{{$opt->title}} - ${{$opt->price}}</span><br/>
-                                                                        <span></span>
-                                                                    @endforeach
-                                                                </td>
-                                                                <td>
-                                                                    <a class="action-icon editAddonBtn" dataid="{{$set->id}}" href="javascript:void(0);" > <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
+                                    <div class="card-box">
+                                        <div class="row" style="max-height: 600px; overflow-x: auto">
+                                            <div class="col-sm-8">
+                                                <h4 class="mb-4"> Addon Set</h4>
+                                            </div>
+                                            <div class="col-sm-4 text-right">
+                                                <button class="btn btn-info waves-effect waves-light text-sm-right openAddonModal" dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add 
+                                                </button>
+                                            </div> 
+                                            <div class="col-md-12">
+                                                <div class="row addon-row">
+                                                    <div class="col-md-12">
+                                                        <form name="addon_order" id="addon_order" action="" method="post">
+                                                            @csrf
+                                                            <input type="hidden" name="orderData" id="orderVariantData" value="" />
+                                                        </form>
+                                                        <table class="table table-centered table-nowrap table-striped" id="varient-datatable">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Title</th>
+                                                                    <th>Select(Min - Max)</th>
+                                                                    <th>Options</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($addon_sets as $set)
+                                                                <tr>
+                                                                    <td>{{$set->id}}</td>
+                                                                    <td>{{$set->title}}</td>
+                                                                    <td>{{$set->min_select}} - {{$set->max_select}}</td>
+                                                                    <td>
+                                                                        @foreach($set->option as $opt)
+                                                                            <span>{{$opt->title}} - ${{$opt->price}}</span><br/>
+                                                                            <span></span>
+                                                                        @endforeach
+                                                                    </td>
+                                                                    <td>
+                                                                        <a class="action-icon editAddonBtn" dataid="{{$set->id}}" href="javascript:void(0);" > <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
 
-                                                                    <a class="action-icon deleteAddon" dataid="{{$set->id}}" href="javascript:void(0);"> <i class="mdi mdi-delete"></i></a>
-                                                                    <form action="{{route('addon.destroy', $set->id)}}" method="POST" style="display: none;" id="addonDeleteForm{{$set->id}}">
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                        
-                                                                    </form>
-                                                                </td>
-                                                            </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
+                                                                        <a class="action-icon deleteAddon" dataid="{{$set->id}}" href="javascript:void(0);"> <i class="mdi mdi-delete"></i></a>
+                                                                        <form action="{{route('addon.destroy', $set->id)}}" method="POST" style="display: none;" id="addonDeleteForm{{$set->id}}">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -208,11 +208,11 @@
     </div>
 <!--   Add On    modals   -->
 <div id="addAddonmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Create AddOn Set</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="addAddonForm" method="post" enctype="multipart/form-data" action="{{route('addon.store')}}">
                 @csrf
@@ -315,11 +315,11 @@
 </div>
 
 <div id="editdAddonmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Create AddOn Set</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="editAddonForm" method="post" enctype="multipart/form-data" action="">
                 @csrf
@@ -336,11 +336,11 @@
 </div>
 
 <div id="add-category-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Category</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="addCategoryForm" method="post" enctype="multipart/form-data">
                 @csrf
@@ -357,11 +357,11 @@
 </div>
 
 <div id="edit-category-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Category</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
 
             <form id="editCategoryForm" method="post" enctype="multipart/form-data">

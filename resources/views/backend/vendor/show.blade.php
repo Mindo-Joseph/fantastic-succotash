@@ -59,12 +59,12 @@
 
         <div class="row">
 
-            <div class="col-lg-5 col-xl-4">
+            <div class="col-lg-3 col-xl-3">
                 @include('backend.vendor.show-md-3')
 
             </div> <!-- end col-->
 
-            <div class="col-lg-7 col-xl-8">
+            <div class="col-lg-9 col-xl-9">
                 <div class="">
                     <ul class="nav nav-pills navtab-bg nav-justified">
                         <li class="nav-item">
@@ -160,60 +160,61 @@
                             </div> -->
 
                             @if(session('preferences.is_hyperlocal') == 1)
-                
-                            <div class="row card-box">
-                                <div class="col-md-12">
-                                    <div class="row align-items-center mb-3">
-                                        <div class="col-sm-6">
-                                            <h4 class="mb-2 "><span> Service Area </span></h4>
-                                        </div>
-                                        <div class="col-sm-6 text-center text-sm-right">
-                                            <button class="btn btn-info openServiceModal"> Add Service Area</button>
-                                        </div>
-                                    </div>
+                                <div class="card-box">
                                     <div class="row">
-                                        <div class="col-md-4"> 
-                                            <div class="table-responsive" style="max-height: 612px; overflow-y: auto;">
-                                                <table class="table table-centered table-nowrap table-striped" id="products-datatable">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th style="width: 85px;">Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach($areas as $geo)
-                                                        <tr>
-                                                            <td class="table-user">
-                                                                <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$geo->name}}</a>
-                                                            </td>
-
-                                                            <td>
-                                                                <button type="button" class="btn btn-primary-outline action-icon editAreaBtn" area_id="{{$geo->id}}"><i class="mdi mdi-square-edit-outline"></i></button> 
-                                                               
-                                                                <form action="{{route('vendor.serviceArea.delete', $vendor->id)}}" method="POST" class="action-icon">
-                                                                    @csrf
-                                                                    <input type="hidden" value="{{$geo->id}}" name="area_id">
-                                                                    <button type="submit" onclick="return confirm('Are you sure? You want to delete the banner.')" class="btn btn-primary-outline action-icon"><i class="mdi mdi-delete"></i></button> 
-
-                                                                </form>
-                                                            </td>
-                                                        </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
+                                        <div class="col-md-12">
+                                            <div class="row align-items-center mb-3">
+                                                <div class="col-sm-6">
+                                                    <h4 class="mb-2 "><span> Service Area </span></h4>
+                                                </div>
+                                                <div class="col-sm-6 text-center text-sm-right">
+                                                    <button class="btn btn-info openServiceModal"> Add Service Area</button>
+                                                </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-4"> 
+                                                    <div class="table-responsive" style="max-height: 612px; overflow-y: auto;">
+                                                        <table class="table table-centered table-nowrap table-striped" id="products-datatable">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th style="width: 85px;">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($areas as $geo)
+                                                                <tr>
+                                                                    <td class="table-user">
+                                                                        <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$geo->name}}</a>
+                                                                    </td>
 
-                                        </div>
-                                        <div class="col-md-8">
-                                            
-                                            <div class="card-box p-1 m-0" style="height:400px;">
-                                                <div id="show_map-canvas"></div>
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-primary-outline action-icon editAreaBtn" area_id="{{$geo->id}}"><i class="mdi mdi-square-edit-outline"></i></button> 
+                                                                    
+                                                                        <form action="{{route('vendor.serviceArea.delete', $vendor->id)}}" method="POST" class="action-icon">
+                                                                            @csrf
+                                                                            <input type="hidden" value="{{$geo->id}}" name="area_id">
+                                                                            <button type="submit" onclick="return confirm('Are you sure? You want to delete the banner.')" class="btn btn-primary-outline action-icon"><i class="mdi mdi-delete"></i></button> 
+
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-8">
+                                                    
+                                                    <div class="card-box p-1 m-0" style="height:400px;">
+                                                        <div id="show_map-canvas"></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             @else
                             <div class="row text-center mt-3">
                                 <div class="col-md-12">
@@ -222,12 +223,14 @@
                             </div>
                             @endif
                             @if($vendor->show_slot == 0)
-                                <div class="row card-box">
-                                    <h4 class="mb-4 "> Weekly Slot</h4>
-                                    <div class="col-md-12">
-                                        <div class="row mb-2">
-                                            <div class="col-md-12">
-                                                <div id='calendar'></div>
+                                <div class="card-box">
+                                    <div class="row">
+                                        <h4 class="mb-4 "> Weekly Slot</h4>
+                                        <div class="col-md-12">
+                                            <div class="row mb-2">
+                                                <div class="col-md-12">
+                                                    <div id='calendar'></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -256,11 +259,11 @@
     </div>    
 
 <div id="service-area-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Service Area</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="geo_form" action="{{ route('vendor.serviceArea', $vendor->id) }}" method="POST">
                 @csrf

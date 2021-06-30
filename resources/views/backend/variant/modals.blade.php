@@ -1,9 +1,9 @@
 <div id="add-category-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Category</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="addCategoryForm" method="post" enctype="multipart/form-data">
                 @csrf
@@ -19,11 +19,11 @@
 </div>
 
 <div id="edit-category-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Category</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
 
             <form id="editCategoryForm" method="post" enctype="multipart/form-data">
@@ -43,11 +43,11 @@
 
 <!--   Variant      modals   -->
 <div id="addVariantmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Variant</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="addVariantForm" method="post" enctype="multipart/form-data">
                 @csrf
@@ -143,11 +143,11 @@
 </div>
 
 <div id="editVariantmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Variant</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="editVariantForm" method="post" enctype="multipart/form-data">
                 @csrf
@@ -164,11 +164,11 @@
 
 <!--   Brand      modals   -->
 <div id="addBrandmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Brand</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="addBrandForm" method="post" enctype="multipart/form-data">
                 @csrf
@@ -184,11 +184,11 @@
 </div>
 
 <div id="editBrandmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Brand</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="editBrandForm" method="post" enctype="multipart/form-data">
                 @csrf

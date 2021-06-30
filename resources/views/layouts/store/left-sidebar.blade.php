@@ -308,7 +308,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <div class="modal-content">
       <div class="modal-header pb-0">
         <h5 class="modal-title" id="remove_cartLabel">Remove Cart</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>

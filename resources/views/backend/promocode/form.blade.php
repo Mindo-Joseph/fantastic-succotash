@@ -108,7 +108,7 @@
                     {!! Form::label('title', 'Paid By',['class' => 'control-label']) !!}
                     <div>
                         <div class="radio radio-info form-check-inline">
-                            <input type="radio" id="inlineRadio1" value="1" name="radioInline" @if(isset($promo->id) && $promo->id > 0 && $promo->paid_by_vendor_admin == 1) checked @endif>
+                            <input type="radio" id="inlineRadio1" checked="" value="1" name="radioInline" @if(isset($promo->id) && $promo->id > 0 && $promo->paid_by_vendor_admin == 1) checked @endif>
                             <label for="inlineRadio1"> Admin</label>
                         </div>
                         <div class="radio form-check-inline">

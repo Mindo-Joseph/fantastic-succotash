@@ -33,11 +33,6 @@
                         <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
                     </a>
                 </div>
-                <div class="back">
-                    <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
-                        <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo.image_path %>">
-                    </a>
-                </div>
             </div>
             <div class="product-detail">
                 <div class="rating">
