@@ -433,6 +433,16 @@ td.items-details h4 {
 
 body .main-menu .brand-logo {
     padding: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-logo img.img-fluid {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
 .slide-6 .slick-track {
@@ -1613,10 +1623,6 @@ label{
     border-radius: 4px;
 }
 
-.brand-logo img.img-fluid {
-    height: 40px;
-}
-
 .sp-colorize-container {
     background: rgb(74, 129, 212);
 }
@@ -2049,12 +2055,13 @@ footer .form-control {
 .org_price {
     text-decoration: line-through;
     font-weight: 900;
+    font-size: 18px;
     color: #000;
     opacity: 0.3;
     margin-right: 10px;
 }
 
-.org_price + b {
+#productPriceValue b {
     font-weight: 900;
     color: var(--theme-deafult);
 }
@@ -2137,7 +2144,7 @@ footer .form-control {
 }
 
 .icon-nav i {
-    font-size: 26px;
+    /* font-size: 26px; */
     color: #999999;
 }   
 

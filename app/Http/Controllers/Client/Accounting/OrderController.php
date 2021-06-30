@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client\Accounting;
 use DataTables;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Models\OrderVendor;
@@ -18,13 +19,13 @@ use App\Exports\OrderVendorListTaxExport;
 class OrderController extends Controller{
     use ApiResponser;
     public function index(Request $request){
-        $vendors = Vendor::get();
         $total_order_count = 0;
         $total_delivery_fees = 0;
         $total_cash_to_collected = 0;
         $total_earnings_by_vendors = 0;
         $dispatcher_status_options = DispatcherStatusOption::get();
         $order_status_options = OrderStatusOption::where('type', 1)->get();
+        $vendors = Vendor::where('status', '!=', '2')->orderBy('id', 'desc')->get();
         $vendor_orders = OrderVendor::with(['orderDetail.paymentOption', 'user','vendor','payment'])->get();
         foreach ($vendor_orders as $vendor_order) {
             $total_delivery_fees+= $vendor_order->delivery_fee;
@@ -42,10 +43,18 @@ class OrderController extends Controller{
         $user = Auth::user();
         $search_value = $request->get('search');
         $timezone = $user->timezone ? $user->timezone : 'Asia/Kolkata';
-        $vendor_orders = OrderVendor::with(['orderDetail.paymentOption', 'user','vendor','payment'])->get();
+        $vendor_orders_query = OrderVendor::with(['orderDetail.paymentOption', 'user','vendor','payment','orderstatus']);
+        if (!empty($request->get('date_filter'))) {
+            $date_date_filter = explode('to', $request->get('date_filter'));
+            $to_date = $date_date_filter[1];
+            $from_date = $date_date_filter[0];
+            $vendor_orders_query->between($from_date, $to_date);
+        }
+        $vendor_orders = $vendor_orders_query->get();
         foreach ($vendor_orders as $vendor_order) {
             $vendor_order->created_date = convertDateTimeInTimeZone($vendor_order->created_at, $timezone, 'Y-m-d h:i:s A');
             $vendor_order->user_name = $vendor_order->user ? $vendor_order->user->name : '';
+            $vendor_order->order_status = $vendor_order->orderstatus ? $vendor_order->orderstatus->OrderStatusOption->title : '';
         }
         return Datatables::of($vendor_orders)
                     ->addIndexColumn()
@@ -53,6 +62,12 @@ class OrderController extends Controller{
                         if (!empty($request->get('vendor_id'))) {
                             $instance->collection = $instance->collection->filter(function ($row) use ($request) {
                                 return Str::contains($row['vendor_id'], $request->get('vendor_id')) ? true : false;
+                            });
+                        }
+                        if (!empty($request->get('status_filter'))) {
+                            $status_fillter = $request->get('status_filter');
+                            $instance->collection = $instance->collection->filter(function ($row) use ($status_fillter) {
+                                return Str::contains($row['order_status'], $status_fillter) ? true : false;
                             });
                         }
                         if (!empty($request->get('search'))) {

@@ -94,22 +94,17 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                              <% _.each(cart_details.products, function(product, key){%>
                                               <% _.each(product.vendor_products, function(vendor_product, vp){%>
                                                 <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
-                                                    <div class='media'>
-                                                        <a href='#'>
-                                                            <% if(vendor_product.pvariant.media_one) { %>
-                                                                <img class='mr-3' src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.image.path.image_path %>">
-                                                            <% } %>
-                                                        </a>
-                                                        <div class='media-body'>
-                                                            <a href='#'>
-                                                                
-                                                                <h4><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>
-                                                            </a>
+                                                    <a class='media' href='#'>
+                                                        <% if(vendor_product.pvariant.media_one) { %>
+                                                            <img class='mr-2' src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.image.path.image_path %>">
+                                                        <% } %>
+                                                        <div class='media-body'>                                                                
+                                                            <h4><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>
                                                             <h4>
                                                                 <span><%= vendor_product.quantity %> x <%= vendor_product.pvariant.price %></span>
                                                             </h4>
                                                         </div>
-                                                    </div>
+                                                    </a>
                                                     <div class='close-circle'>
                                                         <a href="javascript::void(0);" data-product="<%= vendor_product.id %>" class='remove-product'>
                                                             <i class='fa fa-times' aria-hidden='true'></i>

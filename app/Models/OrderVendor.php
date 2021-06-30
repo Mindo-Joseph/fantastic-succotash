@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderVendor extends Model{
-
     use HasFactory;
 	protected $fillable = ['web_hook_code'];
-
 	public function orderDetail(){
 	    return $this->hasOne('App\Models\Order' , 'id', 'order_id'); 
 	}
@@ -31,4 +29,10 @@ class OrderVendor extends Model{
 	public function status(){
 	    return $this->hasOne('App\Models\VendorOrderStatus' , 'vendor_id', 'vendor_id')->latest(); 
 	}
+	public function orderstatus(){
+	    return $this->hasOne('App\Models\VendorOrderStatus' , 'vendor_id', 'vendor_id')->latest(); 
+	}
+	public function scopeBetween($query, $from, $to){
+        $query->whereBetween('created_at', [$from, $to]);
+    }
 }
