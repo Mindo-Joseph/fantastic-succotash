@@ -53,6 +53,10 @@
     .outer-box{
         min-height: 280px;
     }
+    #address-map-container #pick-address-map {
+        width: 100%;
+        height: 100%;
+    }
 </style>
 
 <section class="section-b-space">
@@ -346,7 +350,7 @@
                                 <div class="input-group">
                                     <input type="text" name="address" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2" value="<%= (typeof address != 'undefined') ? address.address : '' %>" autocomplete="off">
                                     <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                    <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
                                         <i class="fa fa-map-marker" aria-hidden="true"></i>
                                     </button>
                                     </div>
@@ -401,10 +405,37 @@
     </div>
 </script>
 
-<div class="modal fade" id="add_edit_address" tabindex="-1" aria-labelledby="addedit-addressLabel" aria-hidden="true">
+<div class="modal fade" id="add_edit_address" tabindex="-1" aria-labelledby="addedit-addressLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="pick_address" tabindex="-1" aria-labelledby="pick-addressLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="background-color: rgba(0,0,0,0.8);">
+  <div class="modal-dialog modal-full-width modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pick-addressLabel">Select Location</h5>
+        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="address-map-container" style="height: 500px; min-width: 500px; width: 100%;">
+                    <div id="pick-address-map"></div>
+                </div>
+                <div class="pick_address p-2 mb-2 position-relative">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-solid ml-auto pick_address_confirm w-100" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -539,6 +570,38 @@
                 }
             }
         });
+    });
+
+    $(document).on('click', '.showMapHeader', function(){
+        var lats = document.getElementById('latitude').value;
+        var lngs = document.getElementById('longitude').value;
+
+        var myLatlng = new google.maps.LatLng(lats, lngs);
+            var mapProp = {
+                center:myLatlng,
+                zoom:13,
+                mapTypeId:google.maps.MapTypeId.ROADMAP
+              
+            };
+            var map=new google.maps.Map(document.getElementById("pick-address-map"), mapProp);
+                var marker = new google.maps.Marker({
+                  position: myLatlng,
+                  map: map,
+                  draggable:true  
+              });
+            // marker drag event
+            google.maps.event.addListener(marker,'drag',function(event) {
+                console.log(event.latLng.lat());
+                document.getElementById('latitude').value = event.latLng.lat();
+                document.getElementById('longitude').value = event.latLng.lng();
+            });
+            //marker drag event end
+            google.maps.event.addListener(marker,'dragend',function(event) {
+                document.getElementById('latitude').value = event.latLng.lat();
+                document.getElementById('longitude').value = event.latLng.lng();
+            });
+        $('#pick_address').modal('show');
+
     });
 
     function initialize() {

@@ -23,7 +23,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
     <!-- end page title -->
 
     <!-- New Banner Design Start From Here -->
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-6 col-lg-4 mb-3">
             <div class='file file--upload'>
                 <label for='input-file'>
@@ -33,6 +33,13 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                     <span class="plus_icon"><i class="fas fa-plus"></i></span>
                 </label>
                 <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
+                <div class="remove-banner position-absolute">
+                    <i class="mdi mdi-delete"></i>
+                </div>
+                <div class="banner-info">
+                    <h4>Banner</h4>
+                    <label></label>
+                </div>
             </div>
         </div>
         <div class="col-md-6 col-lg-4 mb-3">
@@ -90,7 +97,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                 <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
 

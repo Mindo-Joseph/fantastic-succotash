@@ -454,7 +454,6 @@ class CartController extends BaseController{
                                 $payable_amount = $payable_amount + $opt_quantity_price;
                             }
                         }
-                        unset($prod->product->taxCategory);
                         unset($prod->addon);
                         unset($prod->pvariant);
                     }
