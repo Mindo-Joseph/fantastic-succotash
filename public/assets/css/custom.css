@@ -1357,6 +1357,12 @@ i.mdi.mdi-exclamation-thick {
 
 .top-site-links li a {
     color: #6c757d;
+    transition: all 0.5s;
+}
+
+.top-site-links li:hover a {
+    text-decoration: underline;
+    color: #43bee1;
 }
 
 .top-site-links li i {
@@ -1496,7 +1502,11 @@ body.light {
 
 
 
-
+.file--upload{
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
   
 .file--upload>label .fa-user:before {
     content: "\f007";
@@ -1527,9 +1537,8 @@ body.light {
 
 .file--upload>label {
     width: 100%;
+    margin: 0;
     display: inline-block;
-    position: relative;
-    overflow: hidden;
 }
 
 
@@ -1543,9 +1552,6 @@ body.light {
     border: 0.9px solid #E9F0F8;
     background: url(./images/slider01.jpg) no-repeat center;
     background-size: cover;
-    overflow: hidden;
-    display: block;
-    border-radius: 12px;
 }
 
 .file .update_pic img {
@@ -1572,6 +1578,47 @@ body.light {
     left: -30px;
     top: -27px;
     padding: 3px 13px 0 0;
+    z-index: 1;
+}
+
+
+.banner-info {
+    position: absolute;
+    bottom: -100%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(0 0 0 / 40%);
+    transform: translateY(100%);
+    transition: all 0.5s;
+}
+
+.file.file--upload:hover .banner-info {
+    transform: translateY(0);
+    bottom: 0;
+}
+
+.remove-banner {
+    cursor: pointer;
+    top: -27px;
+    right: -30px;
+    background: #43bee1;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    color: #fff;
+    padding: 10px 0 0 10px;
+    opacity: 0;
+    z-index: 1;
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.7s;
+    transition: all 0.7s;
+}
+
+.file.file--upload:hover .remove-banner {
+    opacity: 1;
 }
 
 .close.top_right {
