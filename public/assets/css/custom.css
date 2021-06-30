@@ -340,10 +340,10 @@ span.inner-div {
     padding: 1.5rem;
     margin-bottom: 24px !important;
     /* margin-bottom: 10px; */
-    border-radius: 6px;
+    border-radius: 16px;
     /* background-color: #FFFFFF; */
-    box-shadow: none !important;
-    border: 1px solid #ddd;
+    /* box-shadow: none !important;
+    border: 1px solid #ddd; */
 }
 
 #AddbrandBox {
@@ -1011,7 +1011,7 @@ label.file-input.uploadImages {
     border-left: 1px solid #43bee1e8;
     background-color: #43bee1e8;
     position: absolute;
-    height: calc(100% - 20px);
+    height: calc(100% - 26px);
     left: -1px;
     top: 15px;
 }
@@ -1324,7 +1324,7 @@ i.mdi.mdi-exclamation-thick {
 
 #sidebar-menu > ul > li:hover > a,#sidebar-menu > ul > li.menuitem-active > a,.notification-list .profile-dropdown .notify-item:hover {
     border-color: #343a40;
-    background: linear-gradient(270deg, rgb(42 31 32 / 12%) 0%, rgb(0 0 0 / 0%) 92.47%);
+    background: linear-gradient(90deg, rgb(183 179 179 / 12%) 0%, rgb(0 0 0 / 0%) 92.47%);
 }
 
 .notification-list .profile-dropdown .notify-item {
@@ -1470,9 +1470,9 @@ body.light {
 }
 
 .card {
-    border: 0.1px solid #ddd !important;
-    box-shadow: none !important;
     border-radius: .25rem;
+    box-shadow: 0 16px 32px 0 rgb(0 0 0 / 5%) !important;
+    border-radius: 16px !important;
 }
 
 .dashboard-boxes p {
@@ -1645,6 +1645,7 @@ body.light {
     .left-side-menu {
         top: 0;
         padding-top: 130px;
+        box-shadow: none;
     }
     
     .top-site-links li {
