@@ -96,7 +96,7 @@
                     <div class="collapse" id="sidebaraccounting">
                         <ul class="nav-second-level">
                             <li>
-                                <a href="{{route('account.orders')}}">Order List</a>
+                                <a href="{{route('account.orders')}}">Orders</a>
                             </li>
                             <li>
                                 <a href="{{route('account.loyalty')}}">Loyality</a>

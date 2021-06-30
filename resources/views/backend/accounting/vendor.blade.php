@@ -59,7 +59,7 @@
                 <div class="card-body position-relative">
                     <div class="top-input position-absolute">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                  <input type="text" class="form-control" data-provide="datepicker" data-date-format="MM yyyy" data-date-min-view-mode="1" id="month_picker_filter" placeholder="Select Month">
                             </div>
                         </div>  
@@ -69,7 +69,7 @@
                             <thead>
                                 <tr>
                                     <th>Vendor Name</th>
-                                    <th >Order Value <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="Hooray!"></i></th>
+                                    <th >Order Value <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="Order Value Without Delivery Fee."></i></th>
                                     <th>Delivery Fees</th>
                                     <th>Admin Commissions</th>
                                     <th>Promo [Vendor]</th>

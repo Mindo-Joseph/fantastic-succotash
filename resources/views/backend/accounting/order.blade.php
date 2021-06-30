@@ -181,7 +181,7 @@
                             {data: 'admin_commission_percentage_amount', name: 'action', orderable: false, searchable: false},
                             {data: 'payable_amount', name: 'action', orderable: false, searchable: false},
                             {data: 'order_detail.payment_option.title', name: 'action', orderable: false, searchable: false},
-                            {data: 'order_status', name: 'action', orderable: false, searchable: false},
+                            {data: 'order_status', name: 'order_status', orderable: false, searchable: false},
                         ]
                     });
                 }

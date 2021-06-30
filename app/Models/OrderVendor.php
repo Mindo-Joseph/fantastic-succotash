@@ -31,7 +31,7 @@ class OrderVendor extends Model{
 	    return $this->hasOne('App\Models\VendorOrderStatus' , 'vendor_id', 'vendor_id')->latest(); 
 	}
 	public function orderstatus(){
-	    return $this->hasOne('App\Models\VendorOrderStatus' , 'vendor_id', 'vendor_id')->latest(); 
+	    return $this->hasOne('App\Models\VendorOrderStatus' , 'vendor_id', 'vendor_id')->orderBy('id', 'DESC')->latest(); 
 	}
 	public function scopeBetween($query, $from, $to){
         $query->whereBetween('created_at', [$from, $to]);

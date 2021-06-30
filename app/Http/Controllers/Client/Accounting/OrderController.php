@@ -54,7 +54,17 @@ class OrderController extends Controller{
         foreach ($vendor_orders as $vendor_order) {
             $vendor_order->created_date = convertDateTimeInTimeZone($vendor_order->created_at, $timezone, 'Y-m-d h:i:s A');
             $vendor_order->user_name = $vendor_order->user ? $vendor_order->user->name : '';
-            $vendor_order->order_status = $vendor_order->orderstatus ? $vendor_order->orderstatus->OrderStatusOption->title : '';
+            $order_status = '';
+            if($vendor_order->orderstatus){
+                $order_status_detail = $vendor_order->orderstatus->where('order_id', $vendor_order->order_id)->orderBy('id', 'DESC')->first();
+                if($order_status_detail){
+                    $order_status_option = OrderStatusOption::where('id', $order_status_detail->order_status_option_id)->first();
+                    if($order_status_option){
+                        $order_status = $order_status_option->title;
+                    }
+                }
+            }
+            $vendor_order->order_status = $order_status;
         }
         return Datatables::of($vendor_orders)
             ->addIndexColumn()
