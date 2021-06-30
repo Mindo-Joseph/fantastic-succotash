@@ -52,7 +52,6 @@ class BaseController extends Controller{
                         ->where('cts.language_id', $lang_id)
                         ->orderBy('categories.parent_id', 'asc')
                         ->orderBy('categories.position', 'asc')->get();
-        pr($categories->toArray());die;
         if($categories){
             $categories = $this->buildTree($categories->toArray());
         }
