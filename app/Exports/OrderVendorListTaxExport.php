@@ -34,16 +34,16 @@ class OrderVendorListTaxExport implements FromCollection,WithHeadings,WithMappin
     public function map($order_vendors): array
     {
         return [
-            $order_vendors->orderDetail->order_number,
-            $order_vendors->orderDetail->created_at,
-            $order_vendors->user->name,
-            $order_vendors->vendor->name,
+            $order_vendors->orderDetail ? $order_vendors->orderDetail->order_number : '',
+            $order_vendors->orderDetail ? $order_vendors->orderDetail->created_at : '',
+            $order_vendors->user ? $order_vendors->user->name : '',
+            $order_vendors->vendor ? $order_vendors->vendor->name : '',
             $order_vendors->subtotal_amount,
             $order_vendors->discount_amount,
             $order_vendors->admin_commission_fixed_amount,
             $order_vendors->admin_commission_fixed_amount,
             $order_vendors->payable_amount,
-            $order_vendors->orderDetail->paymentOption->title,
+            $order_vendors->orderDetail ? $order_vendors->orderDetail->paymentOption->title : '',
         ];
     }
 }

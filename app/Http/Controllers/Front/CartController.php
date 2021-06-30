@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor,CartCoupon};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor,CartCoupon, UserWishlist};
 use Illuminate\Http\Request;
 use Session;
 use Auth;
@@ -198,6 +198,61 @@ class CartController extends FrontController
                 }
             }
             return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
+        }
+    }
+
+    /**
+     * add wishlist products to cart
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addWishlistToCart(Request $request, $domain = ''){
+        try {
+            $cart_detail = [];
+            $user = Auth::user();
+            $new_session_token = session()->get('_token');
+            $client_currency = ClientCurrency::where('is_primary', '=', 1)->first();
+            $user_id = $user ? $user->id : '';
+            if($user){
+                $cart_detail['user_id'] = $user_id;
+                $cart_detail['created_by'] = $user_id;
+                $cart_detail = [
+                    'is_gift' => 1,
+                    'status' => '0',
+                    'item_count' => 0,
+                    'currency_id' => $client_currency->currency_id,
+                    'unique_identifier' => !$user ? $new_session_token : '',
+                ];
+                $cart_detail = Cart::updateOrCreate(['user_id' => $user->id], $cart_detail);
+                foreach($request->wishlistProducts as $product){
+                    $checkIfExist = CartProduct::where('product_id', $product['product_id'])->where('variant_id', $product['variant_id'])->where('cart_id', $cart_detail->id)->first();
+                    if ($checkIfExist) {
+                        $checkIfExist->quantity = (int)$checkIfExist->quantity + 1;
+                        $cart_detail->cartProducts()->save($checkIfExist);
+                    }else{
+                        $productVendor = Product::where('id', $product['product_id'])->first();
+                        $cart_product_detail = [
+                            'status'  => '0',
+                            'is_tax_applied'  => '1',
+                            'created_by'  => $user_id,
+                            'cart_id'  => $cart_detail->id,
+                            'quantity'  => 1,
+                            'vendor_id'  => $productVendor->vendor_id,
+                            'product_id' => $product['product_id'],
+                            'variant_id'  => $product['variant_id'],
+                            'currency_id' => $client_currency->currency_id,
+                        ];
+                        $cart_product = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id, 'product_id' => $product['product_id']], $cart_product_detail);
+                    }
+                    $exist = UserWishlist::where('user_id', Auth::user()->id)->where('product_id', $product['product_id'])->where('product_variant_id', $product['variant_id'])->first();
+                    if($exist){
+                        $exist->delete();
+                    }
+                }                
+            }
+            return response()->json(['status' => 'success', 'message' => 'Products Has Been Added to Cart Successfully!']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->message()]);
         }
     }
 

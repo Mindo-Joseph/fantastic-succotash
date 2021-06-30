@@ -28,10 +28,10 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('account/loyalty', [LoyaltyController::class, 'index'])->name('account.loyalty');
     Route::get('account/tax', [TaxController::class, 'index'])->name('account.tax');
     Route::get('account/vendor', [VendorController::class, 'index'])->name('account.vendor');
-    Route::post('account/tax/filter', [OrderController::class, 'filter'])->name('account.tax.filter');
+    Route::post('account/tax/filter', [TaxController::class, 'filter'])->name('account.tax.filter');
     Route::get('account/tax/export', [TaxController::class, 'export'])->name('account.tax.export');
     Route::post('account/vendor/filter', [VendorController::class, 'filter'])->name('account.vendor.filter');
-    Route::post('account/order/filter', [OrderController::class, 'filter'])->name('account.order.filter');
+    Route::get('account/order/filter', [OrderController::class, 'filter'])->name('account.order.filter');
     Route::get('account/order/export', [OrderController::class, 'export'])->name('account.order.export');
     Route::put('profile/{id}', 'Client\DashBoardController@updateProfile')->name('client.profile.update');
     Route::post('password/update', 'Client\DashBoardController@changePassword')->name('client.password.update');
@@ -85,6 +85,9 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('vendor/updateArea/{id}', 'Client\ServiceAreaController@update');
     Route::post('vendor/deleteArea/{vid}', 'Client\ServiceAreaController@destroy')->name('vendor.serviceArea.delete');
     Route::resource('order', 'Client\OrderController');
+    Route::get('order/return/{status}', 'Client\OrderController@returnOrders')->name('backend.order.returns');
+    Route::get('order/return-modal/get-return-product-modal', 'Client\OrderController@getReturnProductModal')->name('get-return-product-modal');
+    Route::post('order/update-product-return-client', 'Client\OrderController@updateProductReturn')->name('update.order.return.client');
     Route::get('order/{order_id}/{vendor_id}', 'Client\OrderController@getOrderDetail')->name('order.show.detail');
     Route::post('order/updateStatus', 'Client\OrderController@changeStatus')->name('order.changeStatus');
     Route::resource('customer', 'Client\UserController');

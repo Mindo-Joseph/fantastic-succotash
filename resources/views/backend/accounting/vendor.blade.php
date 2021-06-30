@@ -33,7 +33,7 @@
                             </div>
                             <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <h3><i class="mdi mdi-currency-usd text-success mdi-24px"></i><span data-plugin="counterup" id="total_admin_commissions">0.00</span></h3>
+                                    <h3><i class="mdi mdi-currency-usd text-success mdi-24px"></i><span data-plugin="counterup" id="total_admin_commissions"></span></h3>
                                     <p class="text-muted font-15 mb-0">Total Admin Commissions</p>
                                 </div>
                             </div>
@@ -48,8 +48,8 @@
     <% _.each(vendors, function(vendor, key){%>
         <tr data-row-id="1">
             <td><a href="<%= vendor.url %>" target="_blank"><%= vendor.name%></a></td>
-            <td><%= vendor.order_value %></td>
-            <td><%= vendor.delivery_fee %></td>
+            <td><%= vendor.order_value > 0 ? vendor.order_value : '-' %></td>
+            <td><%= vendor.delivery_fee > 0 ? vendor.delivery_fee : '-' %></td>
             <td><%= vendor.commission_percent %></td>
             <td></td>
             <td></td>
@@ -146,10 +146,18 @@
                         table = $("#accounting_vendor_datatable").DataTable({
                             "dom": '<"toolbar">frtip',
                             "scrollX": true,
+                            buttons: [
+                                {
+                                    text: 'My button',
+                                    action: function ( e, dt, node, config ) {
+                                        alert( 'Button activated' );
+                                    }
+                                }
+                            ],
                             drawCallback: function () {
                                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                             },
-                        }).fnClearTable();
+                        });
                     }
                 }
             });

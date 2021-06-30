@@ -21,6 +21,7 @@ class ProductController extends FrontController
      */
     public function index(Request $request, $domain = '', $url_slug)
     {
+        $user = Auth::user();
         $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
@@ -75,9 +76,9 @@ class ProductController extends FrontController
                 $q2->where('apt.language_id', $langId);
             },
         ]);
-        if(Auth::user()->id){
-            $product = $product->with('inwishlist', function ($query) use($p_id) {
-                $query->where('user_wishlists.user_id',Auth::user()->id);
+        if($user){
+            $product = $product->with('inwishlist', function ($query) use($user) {
+                $query->where('user_wishlists.user_id', $user->id);
             });
         }
         $product = $product->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory')

@@ -340,10 +340,10 @@ span.inner-div {
     padding: 1.5rem;
     margin-bottom: 24px !important;
     /* margin-bottom: 10px; */
-
-    border-radius: 12px;
+    border-radius: 16px;
     /* background-color: #FFFFFF; */
-    box-shadow: none !important;
+    /* box-shadow: none !important;
+    border: 1px solid #ddd; */
 }
 
 #AddbrandBox {
@@ -940,12 +940,15 @@ label.file-input.uploadImages {
 }
 
 .left-side-menu .logo span {
-    height: 110px;
+    height: 70px;
+    width: 150px;
+    margin: auto;
 }
 
 .left-side-menu .logo img {
     height: 100%;
     object-fit: contain;
+    width: 100%;
 }
 
 .left-side-menu .logo {
@@ -1008,11 +1011,11 @@ label.file-input.uploadImages {
 
 .order_detail:before {
     content: "";
-    border: 1px solid #43bee1e8;
+    border-left: 1px solid #43bee1e8;
     background-color: #43bee1e8;
     position: absolute;
-    height: calc(100% - 15px);
-    left: 0;
+    height: calc(100% - 26px);
+    left: -1px;
     top: 15px;
 }
 
@@ -1141,8 +1144,8 @@ label.file-input.uploadImages {
     cursor: pointer;
     box-shadow: 0 0 0 rgb(67 190 225 / 50%);
     position: absolute;
-    left: -3px;
-    top: 0;
+    left: -4px;
+    top: 4px;
     animation: pulse-animation 2s infinite;
 }
 
@@ -1324,7 +1327,7 @@ i.mdi.mdi-exclamation-thick {
 
 #sidebar-menu > ul > li:hover > a,#sidebar-menu > ul > li.menuitem-active > a,.notification-list .profile-dropdown .notify-item:hover {
     border-color: #343a40;
-    background: linear-gradient(270deg, rgb(42 31 32 / 12%) 0%, rgb(0 0 0 / 0%) 92.47%);
+    background: linear-gradient(90deg, rgb(183 179 179 / 12%) 0%, rgb(0 0 0 / 0%) 92.47%);
 }
 
 .notification-list .profile-dropdown .notify-item {
@@ -1344,12 +1347,30 @@ i.mdi.mdi-exclamation-thick {
     font-size: 12px;
 }
 
+.site-name{
+    font-weight: 400;
+}
+
 .top-site-links li {
     list-style: none;
 }
 
 .top-site-links li a {
     color: #6c757d;
+}
+
+.top-site-links li i {
+    font-size: 16px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.top-site-links li i.fa.fa-globe {
+    font-size: 12px;
+}
+
+.top-site-links li i.fab.fa-android {
+    font-size: 16px;
 }
 
 .top-site-links li a img {
@@ -1451,8 +1472,10 @@ body.light {
     background: #fff;
 }
 
-.dashboard-boxes .card { 
-    border: 0.1px solid #ddd;
+.card {
+    border-radius: .25rem;
+    box-shadow: 0 16px 32px 0 rgb(0 0 0 / 5%) !important;
+    border-radius: 16px !important;
 }
 
 .dashboard-boxes p {
@@ -1469,6 +1492,156 @@ body.light {
 
 
 
+
+
+
+
+
+  
+.file--upload>label .fa-user:before {
+    content: "\f007";
+    position: relative;
+    top: 10px;
+}
+
+.file>input[type='file'] {
+    display: none
+}
+
+.file>label {
+    cursor: pointer;
+    outline: 0;
+}
+
+.file>label:hover {
+    border-color: hsl(0, 0%, 21%);
+}
+
+.file>label:active {
+    background-color: hsl(0, 0%, 96%);
+}
+
+.file>label>i {
+    padding-right: 5px;
+}
+
+.file--upload>label {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.file--upload>label:active {
+    background-color: transparent;
+}
+
+.file .update_pic {
+    height: 180px;
+    width: 100%;
+    border: 0.9px solid #E9F0F8;
+    background: url(./images/slider01.jpg) no-repeat center;
+    background-size: cover;
+    overflow: hidden;
+    display: block;
+    border-radius: 12px;
+}
+
+.file .update_pic img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.file--upload>label .plus_icon {
+    height: 60px;
+    width: 60px;
+    line-height: 76px;
+    color: #FFFFFF;
+    text-align: right;
+    font-family: "Nunito Sans";
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0;
+    border-radius: 50%;
+    background-color: #43bee1;
+    box-shadow: 0 2px 4px 0 rgb(63 159 255 / 40%);
+    display: block;
+    position: absolute;
+    left: -30px;
+    top: -27px;
+    padding: 3px 13px 0 0;
+}
+
+.close.top_right {
+    position: absolute;
+    right: -25px;
+    top: -30px;
+    color: #fff;
+    opacity: 1;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.card-widgets>a[aria-expanded="true"] i:before {
+    content: "\F0374";
+}
+
+.card-widgets .btn-group {
+    margin-top: -5px;
+}
+
+.footer {
+    padding: 5px 0 0;
+    text-align: center;
+}
+
+label.logo-size {
+    right: 16px;
+    font-size: 11px;
+    color: red;
+    bottom: 5px;
+}
+
+
+
+
+
+@media(min-width:320px){
+    .custom-cols > .col {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media(min-width:576px){
+    .custom-cols > .col {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+@media(min-width:992px){
+    .custom-cols > .col {
+        flex: 0 0 33.33%;
+        max-width: 33.33%;
+    }
+}
+@media(min-width:1367px){
+    .custom-cols > .col {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+
+
+
+
+@media(min-width:1600px){}
+
+
+
 @media(min-width:1025px){
     .mobile-toggle,.d_none{
         display: none;
@@ -1479,7 +1652,8 @@ body.light {
     }
     .left-side-menu {
         top: 0;
-        padding-top: 130px;
+        padding-top: 100px;
+        box-shadow: none;
     }
     
     .top-site-links li {
@@ -1530,10 +1704,17 @@ body.light {
 
 
 .top-input {
-    width: 30%;
+    width: 60%;
+    top: 25px;
 }
 
-.top-input input#month_picker_filter,.top-input select.form-control {
+.top-input input#month_picker_filter,.top-input select.form-control,.top-input .form-control {
     height: 30px;
     padding: 0 5px;
+}
+
+.dt-buttons.btn-group.flex-wrap {
+    position: absolute;
+    right: 220px;
+    top: 20px;
 }

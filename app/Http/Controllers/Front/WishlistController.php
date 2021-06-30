@@ -24,7 +24,7 @@ class WishlistController extends FrontController
             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
             },
             'product.variant' => function($q) use($langId){
-                $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                $q->select('id', 'sku', 'product_id', 'quantity', 'price', 'barcode');
                 $q->groupBy('product_id');
             },
         ])->select( "id", "user_id", "product_id", "added_on")
@@ -52,6 +52,7 @@ class WishlistController extends FrontController
         $wishlist = new UserWishlist();
         $wishlist->user_id = Auth::user()->id;
         $wishlist->product_id = $product->id;
+        $wishlist->product_variant_id = $request->variant_id;
         $wishlist->added_on = Carbon::now();
         $wishlist->save();
         return response()->json(array('status' => 'success', 'message' => 'Product has been added in wishlist.'));

@@ -21,6 +21,80 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
         </div>
     </div>
     <!-- end page title -->
+
+    <!-- New Banner Design Start From Here -->
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class='file file--upload'>
+                <label for='input-file'>
+                    <span class="update_pic">
+                        <img src="https://imgproxy.royoorders.com/insecure/fill/400/160/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/banner/q20UcgmTuiuvzk8MjnwtfRTLhLOCCkT9EGYuFv3I.jpg" alt="" id="output">
+                    </span>
+                    <span class="plus_icon"><i class="fas fa-plus"></i></span>
+                </label>
+                <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class='file file--upload'>
+                <label for='input-file'>
+                    <span class="update_pic">
+                        <img src="https://imgproxy.royoorders.com/insecure/fill/400/160/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/banner/q20UcgmTuiuvzk8MjnwtfRTLhLOCCkT9EGYuFv3I.jpg" alt="" id="output">
+                    </span>
+                    <span class="plus_icon"><i class="fas fa-plus"></i></span>
+                </label>
+                <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class='file file--upload'>
+                <label for='input-file'>
+                    <span class="update_pic">
+                        <img src="https://imgproxy.royoorders.com/insecure/fill/400/160/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/banner/q20UcgmTuiuvzk8MjnwtfRTLhLOCCkT9EGYuFv3I.jpg" alt="" id="output">
+                    </span>
+                    <span class="plus_icon"><i class="fas fa-plus"></i></span>
+                </label>
+                <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class='file file--upload'>
+                <label for='input-file'>
+                    <span class="update_pic">
+                        <img src="https://imgproxy.royoorders.com/insecure/fill/400/160/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/banner/q20UcgmTuiuvzk8MjnwtfRTLhLOCCkT9EGYuFv3I.jpg" alt="" id="output">
+                    </span>
+                    <span class="plus_icon"><i class="fas fa-plus"></i></span>
+                </label>
+                <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class='file file--upload'>
+                <label for='input-file'>
+                    <span class="update_pic">
+                        <img src="https://imgproxy.royoorders.com/insecure/fill/400/160/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/banner/q20UcgmTuiuvzk8MjnwtfRTLhLOCCkT9EGYuFv3I.jpg" alt="" id="output">
+                    </span>
+                    <span class="plus_icon"><i class="fas fa-plus"></i></span>
+                </label>
+                <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class='file file--upload'>
+                <label for='input-file'>
+                    <span class="update_pic">
+                        <img src="https://imgproxy.royoorders.com/insecure/fill/400/160/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/banner/q20UcgmTuiuvzk8MjnwtfRTLhLOCCkT9EGYuFv3I.jpg" alt="" id="output">
+                    </span>
+                    <span class="plus_icon"><i class="fas fa-plus"></i></span>
+                </label>
+                <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -167,6 +241,13 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
         }
       });
     }
+</script>
+
+<script>
+  var loadFile = function(event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+   };
 </script>
 
 
