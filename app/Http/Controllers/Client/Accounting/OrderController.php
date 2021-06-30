@@ -57,33 +57,32 @@ class OrderController extends Controller{
             $vendor_order->order_status = $vendor_order->orderstatus ? $vendor_order->orderstatus->OrderStatusOption->title : '';
         }
         return Datatables::of($vendor_orders)
-                    ->addIndexColumn()
-                    ->filter(function ($instance) use ($request) {
-                        if (!empty($request->get('vendor_id'))) {
-                            $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                                return Str::contains($row['vendor_id'], $request->get('vendor_id')) ? true : false;
-                            });
+            ->addIndexColumn()
+            ->filter(function ($instance) use ($request) {
+                if (!empty($request->get('vendor_id'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains($row['vendor_id'], $request->get('vendor_id')) ? true : false;
+                    });
+                }
+                if (!empty($request->get('status_filter'))) {
+                    $status_fillter = $request->get('status_filter');
+                    $instance->collection = $instance->collection->filter(function ($row) use ($status_fillter) {
+                        return Str::contains($row['order_status'], $status_fillter) ? true : false;
+                    });
+                }
+                if (!empty($request->get('search'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request){
+                        if (Str::contains(Str::lower($row['order_detail']['order_number']), Str::lower($request->get('search')))){
+                            return true;
+                        }else if (Str::contains(Str::lower($row['user_name']), Str::lower($request->get('search')))) {
+                            return true;
+                        }else if (Str::contains(Str::lower($row['vendor']['name']), Str::lower($request->get('search')))) {
+                            return true;
                         }
-                        if (!empty($request->get('status_filter'))) {
-                            $status_fillter = $request->get('status_filter');
-                            $instance->collection = $instance->collection->filter(function ($row) use ($status_fillter) {
-                                return Str::contains($row['order_status'], $status_fillter) ? true : false;
-                            });
-                        }
-                        if (!empty($request->get('search'))) {
-                            $instance->collection = $instance->collection->filter(function ($row) use ($request){
-                                if (Str::contains(Str::lower($row['order_detail']['order_number']), Str::lower($request->get('search')))){
-                                    return true;
-                                }else if (Str::contains(Str::lower($row['user_name']), Str::lower($request->get('search')))) {
-                                    return true;
-                                }else if (Str::contains(Str::lower($row['vendor']['name']), Str::lower($request->get('search')))) {
-                                    return true;
-                                }
-                                return false;
-                            });
-                        }
-                    })->make(true);
-        $data = ['vendor_orders' => $vendor_orders, ];
+                        return false;
+                    });
+                }
+            })->make(true);
     }
 
     public function export() {

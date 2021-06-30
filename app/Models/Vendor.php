@@ -12,7 +12,7 @@ class Vendor extends Model{
     }
 
     public function products(){
-       return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
+      return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
     }
 
     
