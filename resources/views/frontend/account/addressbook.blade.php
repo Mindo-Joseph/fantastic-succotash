@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Profile'])
+@extends('layouts.store', ['title' => 'Address Book'])
 
 @section('css')
 <style type="text/css">
