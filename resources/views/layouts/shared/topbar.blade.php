@@ -176,10 +176,10 @@
 
 <!-- Change Password Modal -->
 <div class="modal fade" id="change_password" tabindex="-1" aria-labelledby="change_passwordLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
-        <button type="button" class="close top-right" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
             <form method="post" action="{{route('client.password.update')}}">
@@ -252,8 +252,8 @@
                     </div>
 
                 </div>
-                <div class="row">
-                    <div class="col-md-2">
+                <div class="row mt-3">
+                    <div class="col-md-12">
                         <div class="form-group mb-0 text-cente2">
                             <button class="btn btn-info btn-block w-100" type="submit"> Update </button>
                         </div>

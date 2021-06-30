@@ -256,14 +256,14 @@
 
             <div class="row">
                 <div class="col-lg-4 mb-3">
-                    <div class="card mb-0 h-100">
+                    <div class="card mb-0">
                         <div class="card-body">
                             <div class="card-widgets">
                                 <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
-                                <a data-bs-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
                                 <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
                             </div>
-                            <h4 class="header-title mb-3">Orders (Top Categories)</h4>
+                            <h4 class="header-title mb-0">Orders (Top Categories)</h4>
                             <div id="cardCollpase1" class="collapse pt-3 show widget-chart text-center" dir="ltr" style="position: relative;">
 
                                 <div id="total-revenue" class="mt-0" data-colors="#f1556c" style="min-height: 220.7px;">
