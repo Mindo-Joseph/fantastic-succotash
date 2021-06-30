@@ -55,34 +55,15 @@
                                                 <label for="input-file">
                                                     <span class="plus_icon"><i class="fa fa-plus" aria-hidden="true"></i></span>
                                                 </label>
-                                                <input id="input-file" type="file" name="profile_image" accept="image/*" onchange="loadFile(event)">
+                                                <input id="input-file" type="file" name="images[]" accept="image/*"  multiple>
+                                                
                                             </div>
                                         </div>
-                                        <div class="col-6 col-md-3 col-lg-2">
-                                            <span class="update_pic">
-                                                <img src="" alt="" id="output">
+                                        <div class="col-10">
+                                            <span class="row show-multiple-image-preview" id="thumb-output">
                                             </span>
                                         </div>
-                                        <div class="col-6 col-md-3 col-lg-2">
-                                            <span class="update_pic">
-                                                <img src="" alt="" id="output">
-                                            </span>
-                                        </div>
-                                        <div class="col-6 col-md-3 col-lg-2">
-                                            <span class="update_pic">
-                                                <img src="" alt="" id="output">
-                                            </span>
-                                        </div>
-                                        <div class="col-6 col-md-3 col-lg-2">
-                                            <span class="update_pic">
-                                                <img src="" alt="" id="output">
-                                            </span>
-                                        </div>
-                                        <div class="col-6 col-md-3 col-lg-2">
-                                            <span class="update_pic">
-                                                <img src="" alt="" id="output">
-                                            </span>
-                                        </div>
+                                        
                                     </div>
                     
                                     
@@ -117,7 +98,24 @@
 @section('script')
 
 <script type="text/javascript">
-  
+  $(function() {
+// Multiple images preview with JavaScript
+var ShowMultipleImagePreview = function(input, imgPreviewPlaceholder) {
+if (input.files) {
+var filesAmount = input.files.length;
+for (i = 0; i < filesAmount; i++) {
+var reader = new FileReader();
+reader.onload = function(event) {
+$($.parseHTML('<img>')).addClass('col-6 col-md-3 col-lg-2 update_pic').attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
+}
+reader.readAsDataURL(input.files[i]);
+}
+}
+};
+$('#input-file').on('change', function() {
+ShowMultipleImagePreview(this, 'span.show-multiple-image-preview');
+});
+}); 
        
 </script>
 
