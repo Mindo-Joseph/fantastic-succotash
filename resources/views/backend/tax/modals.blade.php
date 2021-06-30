@@ -49,11 +49,11 @@
 </div>
 
 <div id="edit-tax-category" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Tax Category</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
 
             <form id="update_tax_category" method="post" enctype="multipart/form-data">
@@ -191,11 +191,11 @@
 </div>
 
 <div id="edit-tax-rate" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Tax Rate</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
 
             <form id="update_tax_rate" method="post" enctype="multipart/form-data">

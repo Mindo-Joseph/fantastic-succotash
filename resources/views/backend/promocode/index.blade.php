@@ -72,7 +72,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                                     <td> 
                                         <img class="promo_img" src="{{$promo->image['proxy_url'].'200/100'.$promo->image['image_path']}}" alt="{{$promo->id}}" >
                                     </td>
-                                    <td>{{$promo->name}}</td>
+                                    <td><a class="openPromoModal" userId="{{$promo->id}}" href="#"> {{$promo->name}}</a></td>
                                     <td style="width:150px"><p class="ellips">{{$promo->title}}</p></td>
                                     <td>{{$promo->short_desc}}</td>
                                     <td>{{$promo->type->title}}</td>

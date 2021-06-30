@@ -1,6 +1,6 @@
 <div class="card-box text-center p-0 overflow-hidden" style="">
     
-    <div class="background pt-3 pb-2 px-2" style="background:url({{$vendor->banner['proxy_url'] . '90/90' . $vendor->banner['image_path']}}) no-repeat center center;background-size:cover;">
+    <div class="background pt-3 pb-2 px-2" style="background:url({{$vendor->banner['proxy_url'] . '200/100' . $vendor->banner['image_path']}}) no-repeat center center;background-size:cover;">
         <div class="vendor_text">
             <img src="{{$vendor->logo['proxy_url'] . '90/90' . $vendor->logo['image_path']}}" class="rounded-circle avatar-lg img-thumbnail"
                 alt="profile-image">
@@ -83,12 +83,12 @@
                             <input class="form-control" name="commission_fixed_per_order" type="text" value="{{$vendor->commission_fixed_per_order}}" onkeypress="return isNumberKey(event)">
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <!-- <div class="col-md-12">
                         <div class="form-group" id="commission_monthlyInput">
                             {!! Form::label('title', 'Commission Monthly',['class' => 'control-label']) !!}
                             <input class="form-control" onkeypress="return isNumberKey(event)" name="commission_monthly" type="text" value="{{$vendor->commission_monthly}}">
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-12">
                         <button class="btn btn-info waves-effect waves-light w-100">Save</button>
                     </div>

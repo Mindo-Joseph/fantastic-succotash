@@ -137,7 +137,7 @@
                                 <div class="top-banner-wrapper text-center">
                                     
                                     @if(!empty($category->image))
-                                      <a href="#"><img alt="" src="{{$category->image['proxy_url'] . '1000/200' . $category->image['image_path']}}" class="img-fluid blur-up lazyload" style="max-height: 200px;overflow: hidden;"></a>
+                                      <div class="common-banner"><img alt="" src="{{$category->image['proxy_url'] . '1000/200' . $category->image['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
 
                                         
@@ -145,7 +145,6 @@
                                         <h4>{{ (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug }}</h4>
 
                                         @if(!empty($category->childs) && count($category->childs) > 0)
-                                            <h5>Sub Categories</h5>
                                             <div class="row">
                                                 <div class="col-12">
                                                     
@@ -153,7 +152,7 @@
                                                         @foreach($category->childs->toArray() as $cate)
                                                         <div class="category-block">
                                                             <a href="{{route('categoryDetail', $cate['slug'])}}">
-                                                                <div class="category-image"><img alt="" src="{{$cate['icon']['proxy_url'] . '40/30' . $cate['icon']['image_path']}}" ></div>
+                                                                <div class="category-image"><img alt="" src="{{$cate['icon']['proxy_url'] . '100/80' . $cate['icon']['image_path']}}" ></div>
                                                             </a>
                                                             <div class="category-details">
                                                                 <a href="{{route('categoryDetail', $cate['slug'])}}">

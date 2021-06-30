@@ -2578,7 +2578,15 @@ td.order_address {
 }
 
 
+.common-banner {
+    height: 200px;
+}
 
+.common-banner img,.category-block .category-image img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
 
 
 
@@ -2589,12 +2597,12 @@ td.order_address {
 
 /* Responsiveness Css Start From Here */
 @media (max-width: 1919px){
-    .brand-logo img.img-fluid {
+    /* .brand-logo img.img-fluid {
         height: 30px;
-    }
-    .pixelstrap a, .pixelstrap a:hover, .pixelstrap a:active {
+    } */
+    /* .pixelstrap a, .pixelstrap a:hover, .pixelstrap a:active {
         padding: 0 25px 0 0; 
-    }
+    } */
     .pixelstrap a,.pixelstrap a:hover, .pixelstrap a:active {
         font-size: 13px;
     }

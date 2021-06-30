@@ -11,7 +11,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             <div class="col-lg-7">
                 <div class="header-contact">
                     <ul>
-                        <li>Welcome to Our store {{session('client_config') ? session('client_config')->company_name : ''}}</li>
+                        <li>{{session('client_config') ? session('client_config')->company_name : ''}}</li>
                         <li><i class="fa fa-phone" aria-hidden="true"></i>Call Us: {{session('client_config') ? session('client_config')->phone_number : ''}}</li>
                     </ul>
                 </div>

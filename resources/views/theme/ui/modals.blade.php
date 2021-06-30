@@ -33,11 +33,11 @@
 
                         <!-- Standard modal content -->
                         <div id="standard-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="standard-modalLabel">Modal Heading</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h6>Text in a modal</h6>
@@ -58,11 +58,11 @@
 
                         <!--  Modal content for the Large example -->
                         <div class="modal fade" id="bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="myLargeModalLabel">Large modal</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         ...
@@ -76,7 +76,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="mySmallModalLabel">Small modal</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         ...
@@ -91,7 +91,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="fullWidthModalLabel">Modal Heading</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h6>Text in a modal</h6>
@@ -117,7 +117,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="scrollableModalTitle">Modal title</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
@@ -191,7 +191,7 @@
 
                         <!-- Signup modal content -->
                         <div id="signup-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
 
                                     <div class="modal-body">
@@ -239,7 +239,7 @@
 
                         <!-- SignIn modal content -->
                         <div id="login-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-body">
                                         <div class="text-center mt-2 mb-4">
@@ -307,7 +307,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="topModalLabel">Modal Heading</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h5>Text in a modal</h5>
@@ -326,7 +326,7 @@
                             <div class="modal-dialog modal-sm modal-right">
                                 <div class="modal-content">
                                     <div class="modal-header border-0">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="text-center">
@@ -345,7 +345,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="bottomModalLabel">Modal Heading</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h5>Text in a modal</h5>
@@ -365,7 +365,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="myCenterModalLabel">Center modal</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h5>Overflowing text to show scroll behavior</h5>
@@ -486,11 +486,11 @@
         
                         <!-- Modal -->
                         <div id="multiple-one" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="multiple-oneModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="multiple-oneModalLabel">Modal Heading</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h5 class="mt-0">Text in a modal</h5>
@@ -505,11 +505,11 @@
 
                         <!-- Modal -->
                         <div id="multiple-two" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="multiple-twoModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="multiple-twoModalLabel">Modal Heading</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h5 class="mt-0">Text in a modal</h5>
@@ -543,11 +543,11 @@
                     <!-- sample modal content -->
 
                     <div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title">Modal Content is Responsive</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
                                 </div>
                                 <div class="modal-body p-4">
                                     <div class="row">
@@ -610,7 +610,7 @@
                     </div><!-- /.modal -->
 
                     <div id="accordion-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content p-0">
                                 <div id="accordion">
                                     <div class="card mb-0">
