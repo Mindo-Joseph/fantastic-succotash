@@ -691,15 +691,17 @@ body[data-sidebar-icon=twotones] #sidebar-menu > ul > li > a svg {
 
 .navbar-custom {
   background-color: #fff;
-  box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
+  box-shadow: 0 0 35px 0 rgb(154 161 171 / 15%);
   padding: 10px 10px 10px 0;
   position: fixed;
   left: 0;
   right: 0;
   height: auto;
   z-index: 1001;
-  /* Search */
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
 }
+
 .navbar-custom .topnav-menu > li {
   float: left;
 }
