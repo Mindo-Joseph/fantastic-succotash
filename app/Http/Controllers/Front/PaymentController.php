@@ -22,12 +22,13 @@ class PaymentController extends FrontController{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $currency_symbol = Session::get('currencySymbol');
         $user = Auth::user();
         $vendor_min_amount_errors = [];
         $cart = Cart::where('user_id', $user->id)->first();
         if($cart){
-            $clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
+            $currency_id = Session::get('customerCurrency');
+            $currency_symbol = Session::get('currencySymbol');
+            $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
             $cart_products = CartProduct::with('vendor','product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon', 'product.addon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
             $dollar_compare = $clientCurrency ? $clientCurrency->doller_compare : 1;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {

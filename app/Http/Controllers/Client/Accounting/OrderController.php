@@ -55,6 +55,11 @@ class OrderController extends Controller{
                                 return Str::contains($row['vendor_id'], $request->get('vendor_id')) ? true : false;
                             });
                         }
+                        if (!empty($request->get('date_filter'))) {
+                            $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                                return Str::contains($row['vendor_id'], $request->get('vendor_id')) ? true : false;
+                            });
+                        }
                         if (!empty($request->get('search'))) {
                             $instance->collection = $instance->collection->filter(function ($row) use ($request){
                                 if (Str::contains(Str::lower($row['order_detail']['order_number']), Str::lower($request->get('search')))){

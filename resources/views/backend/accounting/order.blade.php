@@ -132,7 +132,12 @@
         function getOrderList() {
             $(document).ready(function() {
                 initDataTable();
-                $("#range-datepicker").flatpickr({ mode: "range" });
+                $("#range-datepicker").flatpickr({ 
+                    mode: "range",
+                    onClose: function(selectedDates, dateStr, instance) {
+                        initDataTable();
+                    }
+                });
                 $("#vendor_select_box").change(function() {
                     initDataTable();
                 });
@@ -140,6 +145,8 @@
                     $('#accounting_vendor_datatable').DataTable({
                         "dom": '<"toolbar">Bfrtip',
                         "scrollX": true,
+                        "processing": true,
+                        "serverSide": true,
                         "iDisplayLength": 50,
                         destroy: true,
                         language: {
@@ -153,8 +160,6 @@
                                     window.location.href = "{{ route('account.order.export') }}";
                                 }
                         }],
-                        "processing": true,
-                        "serverSide": true,
                         ajax: {
                           url: "{{route('account.order.filter')}}",
                           data: function (d) {
