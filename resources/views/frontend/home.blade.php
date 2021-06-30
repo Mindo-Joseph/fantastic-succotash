@@ -68,7 +68,7 @@
 <script type="text/template" id="products_template">
     <% _.each(products, function(product, k){ %>
         <div>
-            <a class="card text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
+            <a class="card scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
                 <div class="product-image">
                     <img src="<%= product.image_url %>" alt="">
                 </div>    
