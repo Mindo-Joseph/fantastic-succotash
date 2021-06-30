@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <h4 class="page-title">Order list</h4>
+                    <h4 class="page-title">Orders</h4>
                 </div>
             </div>
         </div>     
@@ -21,7 +21,7 @@
                                 <div class="text-center">
                                     <h3>
                                         <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
-                                        <span data-plugin="counterup" id="total_earnings_by_vendors">0</span>
+                                        <span data-plugin="counterup" id="total_earnings_by_vendors">{{$total_earnings_by_vendors}}</span>
                                     </h3>
                                     <p class="text-muted font-15 mb-0">Total Earnings By Vendors</p>
                                 </div>
@@ -30,7 +30,7 @@
                                 <div class="text-center">
                                     <h3>
                                         <i class="mdi mdi-cart-arrow-up text-primary mdi-24px"></i>
-                                        <span data-plugin="counterup" id="total_order_count">0</span>
+                                        <span data-plugin="counterup" id="total_order_count">{{$total_order_count}}</span>
                                     </h3>
                                     <p class="text-muted font-15 mb-0">Total Orders</p>
                                 </div>
@@ -39,7 +39,7 @@
                                 <div class="text-center">
                                     <h3>
                                         <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
-                                        <span data-plugin="counterup" id="total_cash_to_collected"></span>
+                                        <span data-plugin="counterup" id="total_cash_to_collected">{{$total_cash_to_collected}}</span>
                                     </h3>
                                     <p class="text-muted font-15 mb-0">Total Cash To Be Collected</p>
                                 </div>
@@ -48,7 +48,7 @@
                                 <div class="text-center">
                                     <h3>
                                         <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
-                                        <span data-plugin="counterup" id="total_delivery_fees"></span>
+                                        <span data-plugin="counterup" id="total_delivery_fees">{{$total_delivery_fees}}</span>
                                     </h3>
                                     <p class="text-muted font-15 mb-0">Total Delivery Fees</p>
                                 </div>
@@ -60,22 +60,6 @@
         </div>    
     </div> 
 </div>
-<script type="text/template" id="accounting_vendor_template">
-    <% _.each(vendor_orders, function(vendor_order, key){%>
-        <tr data-row-id="1">
-            <td><%= vendor_order.order_detail ? vendor_order.order_detail.order_number : ''%></td>
-            <td><%= vendor_order.created_date %></td>
-            <td><%= vendor_order.user ? vendor_order.user.name : '' %></td>
-            <td><%= vendor_order.vendor.name %></td>
-            <td><%= vendor_order.subtotal_amount %></td>
-            <td><%= vendor_order.discount_amount %></td>
-            <td><%= vendor_order.admin_commission_fixed_amount %></td>
-            <td><%= vendor_order.admin_commission_percentage_amount %></td>
-            <td><%= vendor_order.payable_amount %></td> 
-            <td><%= vendor_order.order_detail ? vendor_order.order_detail.payment_option.title : '' %></td> 
-        </tr>
-    <% }); %>
-</script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -86,24 +70,29 @@
                             <div class="col-md-9">
                                 <div class="row">
                                     <div class="col">
-                                        <input class="form-control" type="text">
+                                        <input type="text" id="range-datepicker" class="form-control flatpickr-input" placeholder="2018-10-03 to 2018-10-10" readonly="readonly">
                                     </div>
                                     <div class="col">
-                                        <input class="form-control" type="text">
+                                        <select class="form-control" id="vendor_select_box">
+                                            <option value="">Select</option>
+                                            @forelse($vendors as $vendor)
+                                                <option value="{{$vendor->id}}">{{$vendor->name}}</option>
+                                            @empty
+                                            @endforelse
+                                        </select>
                                     </div>
                                     <div class="col">
-                                        <select class="form-control" name="" id=""></select>
-                                    </div>
-                                    <div class="col">
-                                        <select class="form-control" name="" id=""></select>
+                                        <select class="form-control" name="" id="order_status_option_select_box">
+                                            <option value="">Select</option>
+                                            @forelse($order_status_options as $order_status_option)
+                                                <option value="{{$order_status_option->id}}">{{$order_status_option->title}}</option>
+                                            @empty
+                                            @endforelse
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- <a href="" class="btn btn-success waves-effect waves-light">
-                            <span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV
-                        </a> --> 
-                        
                    </div>
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable">
@@ -141,62 +130,53 @@
         });
         getOrderList();
         function getOrderList() {
-            $.ajax({
-                data: {},
-                type: "POST",
-                dataType: "json",
-                url: "{{route('account.order.filter')}}",
-                success: function(response) {
-                    if(response.status == 'Success'){
-                        // $('#month_picker_filter').show();
-                        $('#accounting_vendor_tbody_list').html('');
-                        let accounting_vendor_template = _.template($('#accounting_vendor_template').html());
-                        $("#accounting_vendor_tbody_list").append(accounting_vendor_template({vendor_orders: response.data.vendor_orders}));
-                        $('#total_order_count').html(response.data.vendor_orders.length);
-                        $('#total_delivery_fees').html(response.data.total_delivery_fees);
-                        $('#total_cash_to_collected').html(response.data.total_cash_to_collected);
-                        $('#total_earnings_by_vendors').html(response.data.total_earnings_by_vendors);
-                        $('#total_order_count').counterUp({
-                          delay: 10,
-                          time: 2000
-                        });
-                        $('#total_delivery_fees').counterUp({
-                          delay: 10,
-                          time: 2000
-                        });
-                        $('#total_cash_to_collected').counterUp({
-                          delay: 10,
-                          time: 2000
-                        });
-                        $('#total_earnings_by_vendors').counterUp({
-                          delay: 10,
-                          time: 2000
-                        });
-                        if($.fn.DataTable.isDataTable('#accounting_vendor_datatable')){
-                            table.destroy();
-                            $('#accounting_vendor_datatable tbody').empty();
-                        }
-                        table = $("#accounting_vendor_datatable").DataTable({
-                            "dom": '<"toolbar">Bfrtip',
-                            "scrollX": true,
-                            language: {
-                                search: "",
-                                searchPlaceholder: "Search records"
-                            },
-                            buttons: [
-                                {   className:'btn btn-success waves-effect waves-light',
-                                    text: '<span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV',
-                                    action: function ( e, dt, node, config ) {
-                                        window.location.href = "{{ route('account.order.export') }}";
-                                    }
+            $(document).ready(function() {
+                initDataTable();
+                $("#range-datepicker").flatpickr({ mode: "range" });
+                $("#vendor_select_box").change(function() {
+                    initDataTable();
+                });
+                function initDataTable() {
+                    $('#accounting_vendor_datatable').DataTable({
+                        "dom": '<"toolbar">Bfrtip',
+                        "scrollX": true,
+                        "iDisplayLength": 2,
+                        destroy: true,
+                        language: {
+                            search: "",
+                            searchPlaceholder: "Search By Order No.,Vendor,Customer Name"
+                        },
+                        buttons: [{   
+                                className:'btn btn-success waves-effect waves-light',
+                                text: '<span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV',
+                                action: function ( e, dt, node, config ) {
+                                    window.location.href = "{{ route('account.order.export') }}";
                                 }
-                            ],
-                            drawCallback: function () {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                        });
-                    }
+                        }],
+                        "processing": true,
+                        "serverSide": true,
+                        ajax: {
+                          url: "{{route('account.order.filter')}}",
+                          data: function (d) {
+                            d.search = $('input[type="search"]').val()
+                            d.vendor_id = $('#vendor_select_box option:selected').val()
+                          }
+                        },
+                        columns: [
+                            {data: 'order_detail.order_number', name: 'order_number', orderable: false, searchable: false},
+                            {data: 'created_date', name: 'name',orderable: false, searchable: false},
+                            {data: 'user_name', name: 'Customer Name',orderable: false, searchable: false},
+                            {data: 'vendor.name', name: 'vendor_name', orderable: false, searchable: false},
+                            {data: 'subtotal_amount', name: 'action', orderable: false, searchable: false},
+                            {data: 'discount_amount', name: 'action', orderable: false, searchable: false},
+                            {data: 'admin_commission_fixed_amount', name: 'action', orderable: false, searchable: false},
+                            {data: 'admin_commission_percentage_amount', name: 'action', orderable: false, searchable: false},
+                            {data: 'payable_amount', name: 'action', orderable: false, searchable: false},
+                            {data: 'order_detail.payment_option.title', name: 'action', orderable: false, searchable: false},
+                        ]
+                });
                 }
+                
             });
         }
     });
