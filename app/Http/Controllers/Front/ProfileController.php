@@ -71,16 +71,16 @@ class ProfileController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function profile(Request $request, $domain = ''){
-        $timezone_list = Timezonelist::create('timezone', null, [
-            'id'    => 'timezone',
-            'class' => 'styled form-control',
-        ]);
         $curId = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         $user = User::with('country', 'address')->select('id', 'name', 'email', 'description', 'phone_number', 'image', 'type', 'country_id', 'timezone')->where('id', Auth::user()->id)->first();
         $user_addresses = UserAddress::where('user_id', Auth::user()->id)->get();
         $refferal_code = UserRefferal::where('user_id', Auth::user()->id)->first();
+        $timezone_list = Timezonelist::create('timezone', $user->timezone, [
+            'id'    => 'timezone',
+            'class' => 'styled form-control',
+        ]);
         return view('frontend.account.profile')->with(['user' => $user, 'navCategories' => $navCategories, 'userAddresses'=>$user_addresses, 'userRefferal' => $refferal_code,'timezone_list' => $timezone_list]);
     }
 

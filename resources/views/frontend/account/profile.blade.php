@@ -173,8 +173,11 @@
                                             </div>
 
                                             <div class="info-text mb-2">
-                                                <label class="mb-1">Time Zone</label>
-                                                {!! $timezone_list !!}
+                                                <form method="post" action="{{ route('user.updateTimezone') }}" id="user_timezone_form">
+                                                    @csrf
+                                                    <label class="mb-1">Time Zone</label>
+                                                    {!! $timezone_list !!}
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -429,6 +432,10 @@
                 // console.log('data2');
             }
         });
+    });
+
+    $("#timezone").change(function(){
+        $("#user_timezone_form").submit();
     });
 
     // $("#editProfileForm").submit(function(e) {
