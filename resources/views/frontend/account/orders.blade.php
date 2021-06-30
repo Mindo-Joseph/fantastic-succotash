@@ -369,6 +369,9 @@
                                                                                         @endphp
                                                                                         <span>$@money($product_subtotal_amount)</span>
                                                                                     </li>
+
+                                                                                    <label class="return-order-product" data-id="{{$order->id??0}}"  data-vendor_id="{{$vendor->vendor_id??0}}">Return
+                                                                                    </label>
                                                                                 </ul>
                                                                             </div>
                                                                         </div>
@@ -762,6 +765,25 @@
   </div>
 </div>
 
+<!-- product return modal -->
+<div class="modal fade return-order" id="return_order" tabindex="-1" aria-labelledby="return_orderLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                    </button>
+                <div id="return-order-form-modal">
+
+                </div>    
+               
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end product return modal -->
+
 @endsection
 
 @section('script')
@@ -799,7 +821,7 @@
             },
         });
     }
-
+//// ************  rating review order  *****************  //
     $('body').on('click', '.add_edit_review', function (event) {
         event.preventDefault();
         var id = $(this).data('id');
@@ -823,6 +845,17 @@
             }
         }
     });
+//// ************  return product + Order   *****************  //
+    $('body').on('click', '.return-order-product', function (event) {
+        event.preventDefault();
+        var id = $(this).data('id');
+        var vendor_id = $(this).data('vendor_id');
+        $.get('/return-order/get-order-data-in-model?id=' + id +'&vendor_id=' + vendor_id, function(markup)
+                {   
+                    $('#return_order').modal('show'); 
+                    $('#return-order-form-modal').html(markup);
+                });
+    });        
 </script>
 
 @endsection

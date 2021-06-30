@@ -224,6 +224,7 @@
 
 span.inner-div {
     float: right;
+    margin-top: 5px;
     /*position: absolute;
     top: -5px;
     right: 16px;*/
@@ -239,7 +240,7 @@ span.inner-div {
 }
 
 .dd-list .dd3-content {
-    padding: 8px 50px 8px 16px;
+    padding: 8px 10px 8px 16px;
 }
 .nestable_list_1 > .dd-list {
     padding: 0;
@@ -1650,6 +1651,27 @@ label.logo-size {
     font-size: 11px;
     color: red;
     bottom: 5px;
+}
+
+.dd-list .dd3-content img.rounded-circle.mr-1 {
+    width: 30px;
+    height: 30px;
+}
+
+
+.ellips{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#promo-datatable .ellips{
+    width: 80%;
+}
+
+
+#promo-datatable th, #promo-datatable td {
+    padding: 10px;
 }
 
 

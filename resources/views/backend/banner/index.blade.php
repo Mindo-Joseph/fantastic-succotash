@@ -23,7 +23,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
     <!-- end page title -->
 
     <!-- New Banner Design Start From Here -->
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-6 col-lg-4 mb-3">
             <div class='file file--upload'>
                 <label for='input-file'>
@@ -97,7 +97,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                 <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
 

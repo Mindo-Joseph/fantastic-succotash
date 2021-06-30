@@ -85,7 +85,7 @@
                                         <select class="form-control" name="" id="order_status_option_select_box">
                                             <option value="">Select</option>
                                             @forelse($order_status_options as $order_status_option)
-                                                <option value="{{$order_status_option->id}}">{{$order_status_option->title}}</option>
+                                                <option value="{{$order_status_option->title}}">{{$order_status_option->title}}</option>
                                             @empty
                                             @endforelse
                                         </select>
@@ -108,6 +108,7 @@
                                     <th>Admin Commission [%Age]</th>
                                     <th>Final Amount</th>
                                     <th>Payment Method</th>
+                                    <th>Order Status</th>
                                 </tr>
                             </thead>
                             <tbody id="accounting_vendor_tbody_list">
@@ -138,7 +139,7 @@
                         initDataTable();
                     }
                 });
-                $("#vendor_select_box").change(function() {
+                $("#vendor_select_box, #order_status_option_select_box").change(function() {
                     initDataTable();
                 });
                 function initDataTable() {
@@ -166,6 +167,7 @@
                             d.search = $('input[type="search"]').val();
                             d.date_filter = $('#range-datepicker').val();
                             d.vendor_id = $('#vendor_select_box option:selected').val();
+                            d.status_filter = $('#order_status_option_select_box option:selected').val();
                           }
                         },
                         columns: [
@@ -179,8 +181,9 @@
                             {data: 'admin_commission_percentage_amount', name: 'action', orderable: false, searchable: false},
                             {data: 'payable_amount', name: 'action', orderable: false, searchable: false},
                             {data: 'order_detail.payment_option.title', name: 'action', orderable: false, searchable: false},
+                            {data: 'order_status', name: 'action', orderable: false, searchable: false},
                         ]
-                });
+                    });
                 }
                 
             });

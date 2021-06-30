@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\Web\OrderProductRatingRequest;
+use App\Http\Requests\Web\CheckImageRequest;
 use App\Models\{Order,OrderProductRating,VendorOrderStatus,OrderProduct,OrderProductRatingFile};
 use App\Http\Traits\ApiResponser;
 
@@ -85,5 +86,32 @@ class RatingController extends FrontController{
         }
     }
 
+    
+    /**
+     * update order product rating
 
+     */
+    public function uploadFile(CheckImageRequest $request){
+     try {
+               $files = array();
+               $folder =$request->folder ??'';
+               if ($image = $request->file('images')) {
+                    foreach ($image as $files) {
+                    $file =  substr(md5(microtime()), 0, 15).'_'.$files->getClientOriginalName();
+                    $storage = Storage::disk('s3')->put($folder, $files, 'public');
+                    $files[] = $storage;
+                   
+                    }
+                }
+               
+       
+            if(isset($files)) {
+                return $this->successResponse($files,'Files Submitted.');
+            }
+            return $this->errorResponse('Invalid order', 200);
+            
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 400);
+        }
+    }
 }
