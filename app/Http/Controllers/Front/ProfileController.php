@@ -78,7 +78,7 @@ class ProfileController extends FrontController
         $curId = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        $user = User::with('country', 'address')->select('id', 'name', 'email', 'description', 'phone_number', 'image', 'type', 'country_id')->where('id', Auth::user()->id)->first();
+        $user = User::with('country', 'address')->select('id', 'name', 'email', 'description', 'phone_number', 'image', 'type', 'country_id', 'timezone')->where('id', Auth::user()->id)->first();
         $user_addresses = UserAddress::where('user_id', Auth::user()->id)->get();
         $refferal_code = UserRefferal::where('user_id', Auth::user()->id)->first();
         return view('frontend.account.profile')->with(['user' => $user, 'navCategories' => $navCategories, 'userAddresses'=>$user_addresses, 'userRefferal' => $refferal_code,'timezone_list' => $timezone_list]);
@@ -121,6 +121,23 @@ class ProfileController extends FrontController
         }
         return redirect()->back()->with('errors', 'Profile updation failed');
         // return response()->json(['status' => 'error', 'message' => 'Profile updation failed']);
+    }
+
+    /**
+     * Update user timezone.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateTimezone(Request $request, $domain = '')
+    {
+        $timezone = $request->timezone ? $request->timezone : NULL;
+        $user = User::where('id', Auth::user()->id)->first();
+        if ($user){
+            $user->timezone = $timezone;
+            $user->save();
+            return redirect()->back()->with('success', 'Timezone has been updated');
+        }
+        return redirect()->back()->with('error', 'Timezone cannot be updated');
     }
 
     /**

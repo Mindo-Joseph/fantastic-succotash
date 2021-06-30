@@ -283,7 +283,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <% }); %>
 </script>
 <div class="modal fade edit_address" id="edit-address" tabindex="-1" aria-labelledby="edit-addressLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body p-0">
         <div id="address-map-container">
