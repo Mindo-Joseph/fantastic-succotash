@@ -43,6 +43,8 @@ class BaseController extends Controller
                 $icon = $node['icon']['proxy_url'].'30/30'.$node['icon']['image_path'];
                 if(isset($node['translation_one'])){
                     $this->htmlData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node['translation_one']["name"].'<span class="inner-div text-right">';
+                }else{
+                    $this->htmlData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node['translation_one']["name"].'<span class="inner-div text-right">';
                 }
 
                 if(!in_array($node["id"], $blockedCategory)){

@@ -120,7 +120,7 @@
         <div class="row">
             <div class="col-md-4" id="template_type_main_div" style="display:none;">
                 <div class="form-group">
-                    {!! Form::label('title', 'Template Type',['class' => 'control-label']) !!}
+                    {!! Form::label('title', 'Warning Page',['class' => 'control-label']) !!}
                     <div class="row">
                         @foreach($dispatcher_warning_page_options as $dwpo => $dispatcher_warning_page_option)                       
                             <div class="col-lg-6 custom-radio radio_new mt-2">
@@ -137,7 +137,7 @@
                                     class="custom-control-input tab_bar_options">
                                 @endif
                                 <label class="custom-control-label" for="dispatcher_warning_page_option_{{$dispatcher_warning_page_option->id}}">
-                                    <img class="card-img-top img-fluid" src="https://cdn.dribbble.com/users/1229051/screenshots/9325107/media/7a9f86f2d92541ecf49ec81ff9d53fa0.gif" alt="Card image cap">
+                                    <img class="card-img-top img-fluid" src="{{asset($dispatcher_warning_page_option->image_path)}}" alt="Card image cap">
                                 </label>
                             </div>
                         @endforeach
@@ -146,7 +146,7 @@
             </div>
             <div class="col-md-4" id="warning_page_main_div" style="display:none;">
                 <div class="form-group">
-                    {!! Form::label('title', 'Warning Page',['class' => 'control-label']) !!}
+                    {!! Form::label('title', 'Template Type',['class' => 'control-label']) !!}
                     <div class="row">
                         @foreach($dispatcher_template_type_options as $dtto => $dispatcher_template_type_option)
                             <div class="col-lg-6 custom-radio radio_new mt-2">
@@ -156,7 +156,7 @@
                                     <input type="radio" value="{{$dispatcher_template_type_option->id}}" id="dispatcher_template_type_option_{{$dispatcher_template_type_option->id}}" name="template_type_id" {{ ($dtto == 0) ? 'checked' : '' }} class="custom-control-input tab_bar_options">
                                 @endif
                                 <label class="custom-control-label" for="dispatcher_template_type_option_{{$dispatcher_template_type_option->id}}">
-                                    <img class="card-img-top img-fluid" src="https://cdn.dribbble.com/users/2878111/screenshots/15265330/media/94ed25cc0e51db948afbd8319cd8d655.jpg?compress=1&resize=1200x900" alt="Card image cap">
+                                    <img class="card-img-top img-fluid" src="{{asset($dispatcher_template_type_option->image_path)}}" alt="Card image cap">
                                 </label>
                             </div>
                         @endforeach

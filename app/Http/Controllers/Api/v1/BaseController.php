@@ -44,7 +44,7 @@ class BaseController extends Controller{
     public function categoryNav($lang_id) {
         $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
                         ->leftjoin('types', 'types.id', 'categories.type_id')
-                        ->select('categories.id', 'categories.icon', 'categories.image', 'categories.slug', 'categories.parent_id', 'cts.name', 'types.title as redirect_to')
+                        ->select('categories.id', 'categories.icon', 'categories.image', 'categories.slug', 'categories.parent_id', 'cts.name', 'categories.warning_page_id', 'categories.template_type_id', 'types.title as redirect_to')
                         ->where('categories.id', '>', '1')
                         ->where('categories.is_visible', 1)
                         ->where('categories.status', '!=', $this->field_status)

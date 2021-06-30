@@ -220,14 +220,12 @@ class VendorController extends BaseController
         $csvVendors = [];
         $vendor = Vendor::findOrFail($id);
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
-        $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
+        $categories = Category::with('translation_one')->select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
             ->where('id', '>', '1')
             ->where(function ($q) use ($id) {
                 $q->whereNull('vendor_id')
                     ->orWhere('vendor_id', $id);
-            })
-            ->orderBy('position', 'asc')->orderBy('id', 'asc')
-            ->orderBy('parent_id', 'asc')->get();
+            })->orderBy('position', 'asc')->orderBy('id', 'asc')->orderBy('parent_id', 'asc')->get();
         $categoryToggle = array();
         $active = array();
         /* get active category list also with parent */
@@ -245,12 +243,10 @@ class VendorController extends BaseController
             $tree = $this->printTree($build, 'vendor');
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
-
         $addons = AddonSet::with('option')->select('id', 'title', 'min_select', 'max_select', 'position')
             ->where('status', '!=', 2)
             ->where('vendor_id', $id)
             ->orderBy('position', 'asc')->get();
-
         $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
             ->where('is_active', 1)
             ->orderBy('is_primary', 'desc')->get();
