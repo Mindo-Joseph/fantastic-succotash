@@ -1595,7 +1595,12 @@ body.light {
     text-align: center;
 }
 
-
+label.logo-size {
+    right: 16px;
+    font-size: 11px;
+    color: red;
+    bottom: 5px;
+}
 
 
 
