@@ -175,7 +175,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Product</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="save_product_form" method="post" enctype="multipart/form-data" action="{{route('product.store')}}">
                 @csrf
@@ -237,7 +237,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Product</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form method="post" enctype="multipart/form-data" id="save_imported_products">
                 @csrf

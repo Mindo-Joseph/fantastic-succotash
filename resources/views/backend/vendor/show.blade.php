@@ -263,7 +263,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Service Area</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="geo_form" action="{{ route('vendor.serviceArea', $vendor->id) }}" method="POST">
                 @csrf

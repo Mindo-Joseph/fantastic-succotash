@@ -84,7 +84,7 @@
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header py-3 px-4 border-bottom-0 d-block">
-                                <button type="button" class="close top_right" data-dismiss="modal"
+                                <button type="button" class="close" data-dismiss="modal"
                                     aria-hidden="true">&times;</button>
                                 <h5 class="modal-title" id="modal-title">Event</h5>
                             </div>

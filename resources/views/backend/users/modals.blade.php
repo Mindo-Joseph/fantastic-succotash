@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Customer</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="add_user" action="{{ route('customer.store') }}" method="POST">
                 @csrf
@@ -116,7 +116,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Customer</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
 
             <form id="add_user" method="POST">

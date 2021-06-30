@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Agent</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="StoreClient" method="post" action="{{url('client')}}" enctype="multipart/form-data">
                 @csrf

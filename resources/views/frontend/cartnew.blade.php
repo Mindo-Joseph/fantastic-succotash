@@ -382,7 +382,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="refferal-modalLabel">Apply Coupon Code</h5>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -401,7 +401,7 @@
         <div class="modal-content">
             <div class="modal-header pb-0">
                 <h5 class="modal-title" id="remove_itemLabel">Remove Item</h5>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -466,7 +466,7 @@
                     <div class="col-8">
                         <div class="tab-content-box pl-3">
                             <h5 class="modal-title pt-4" id="pay-billLabel">Total Amount: <span id="total_amt"></span></h5>
-                            <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                             <div class="tab-content h-100" id="v_pills_tabContent">
@@ -484,7 +484,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Prescription</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="save_prescription_form" method="post" enctype="multipart/form-data">
                 @csrf

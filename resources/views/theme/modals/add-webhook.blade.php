@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Webhook</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form action="{{ route('set.webhook.url')}}" method="POST">
             @csrf

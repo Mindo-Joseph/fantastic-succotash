@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Vendor</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="save_banner_form" method="post" enctype="multipart/form-data">
                 @csrf
@@ -127,7 +127,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Import Vendors</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form method="post" enctype="multipart/form-data" id="save_imported_vendors">
                 @csrf
@@ -201,7 +201,7 @@
 
             <div class="modal-header">
                 <h4 class="modal-title">Select Location</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body p-4">
                 
@@ -229,7 +229,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Vendor</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
 
             <form id="save_edit_banner_form" method="post" enctype="multipart/form-data">

@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Tax Category</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="save_tax_category" method="post" enctype="multipart/form-data">
                 @csrf
@@ -53,7 +53,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Tax Category</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
 
             <form id="update_tax_category" method="post" enctype="multipart/form-data">
@@ -77,7 +77,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Tax Rate</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="save_tax_rate" method="post" enctype="multipart/form-data">
                 @csrf
@@ -195,7 +195,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Tax Rate</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
 
             <form id="update_tax_rate" method="post" enctype="multipart/form-data">

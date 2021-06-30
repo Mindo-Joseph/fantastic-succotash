@@ -37,7 +37,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="standard-modalLabel">Modal Heading</h4>
-                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h6>Text in a modal</h6>
@@ -62,7 +62,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="myLargeModalLabel">Large modal</h4>
-                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         ...
@@ -76,7 +76,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="mySmallModalLabel">Small modal</h4>
-                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         ...
@@ -91,7 +91,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="fullWidthModalLabel">Modal Heading</h4>
-                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h6>Text in a modal</h6>
@@ -117,7 +117,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="scrollableModalTitle">Modal title</h5>
-                                        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
@@ -307,7 +307,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="topModalLabel">Modal Heading</h4>
-                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h5>Text in a modal</h5>
@@ -326,7 +326,7 @@
                             <div class="modal-dialog modal-sm modal-right">
                                 <div class="modal-content">
                                     <div class="modal-header border-0">
-                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="text-center">
@@ -345,7 +345,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="bottomModalLabel">Modal Heading</h4>
-                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h5>Text in a modal</h5>
@@ -365,7 +365,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="myCenterModalLabel">Center modal</h4>
-                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h5>Overflowing text to show scroll behavior</h5>
@@ -490,7 +490,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="multiple-oneModalLabel">Modal Heading</h4>
-                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h5 class="mt-0">Text in a modal</h5>
@@ -509,7 +509,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="multiple-twoModalLabel">Modal Heading</h4>
-                                        <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                     </div>
                                     <div class="modal-body">
                                         <h5 class="mt-0">Text in a modal</h5>
@@ -547,7 +547,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title">Modal Content is Responsive</h4>
-                                    <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                 </div>
                                 <div class="modal-body p-4">
                                     <div class="row">

@@ -3,7 +3,7 @@
         <div class="modal-content p-3">
             <div class="modal-header p-0 mb-3 border-0">
                 <h4 class="modal-title">Add Celebrity</h4><br>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="save_loyality_form" enctype="multipart/form-data">
                 @csrf
@@ -94,7 +94,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Celebrity</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="update_loyality_form" method="post" enctype="multipart/form-data">
                 @csrf

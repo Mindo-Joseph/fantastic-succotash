@@ -439,10 +439,14 @@ body .main-menu .brand-logo {
     justify-content: center;
 }
 
+body .main-menu .brand-logo a {
+    height: 50px;
+}
+
 .brand-logo img.img-fluid {
     height: 100%;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .slide-6 .slick-track {

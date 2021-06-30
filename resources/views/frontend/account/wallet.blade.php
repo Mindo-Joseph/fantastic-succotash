@@ -140,7 +140,7 @@ $timezone = Auth::user()->timezone;
     <div class="modal-content">
       <div class="modal-header border-bottom">
         <h5 class="modal-title" id="add-moneyLabel">Pay-Out</h5>
-        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>

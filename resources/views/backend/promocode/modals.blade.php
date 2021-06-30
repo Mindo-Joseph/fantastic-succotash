@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Promocode</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="addPromoForm" method="post" enctype="multipart/form-data">
                 @csrf
@@ -23,7 +23,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Promocode</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
 
             <form id="editPromoForm" method="post" enctype="multipart/form-data">

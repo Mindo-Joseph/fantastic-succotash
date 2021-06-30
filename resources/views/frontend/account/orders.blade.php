@@ -657,7 +657,7 @@
     <div class="modal-content">
       <div class="modal-header pb-2">
         <h5 class="modal-title" id="order-detailsLabel">Order Details</h5>
-        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -754,7 +754,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
-      <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
         <div id="review-rating-form-modal">
@@ -770,7 +770,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
-                <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                     </button>
                 <div id="return-order-form-modal">

@@ -212,7 +212,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Create AddOn Set</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="addAddonForm" method="post" enctype="multipart/form-data" action="{{route('addon.store')}}">
                 @csrf
@@ -319,7 +319,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Create AddOn Set</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="editAddonForm" method="post" enctype="multipart/form-data" action="">
                 @csrf
@@ -340,7 +340,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Category</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="addCategoryForm" method="post" enctype="multipart/form-data">
                 @csrf
@@ -361,7 +361,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Category</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
 
             <form id="editCategoryForm" method="post" enctype="multipart/form-data">

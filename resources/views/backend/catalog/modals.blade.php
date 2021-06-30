@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Variant</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="addVariantForm" method="post" enctype="multipart/form-data" action="{{route('variant.store')}}">
                 @csrf
@@ -24,7 +24,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Variant</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="editVariantForm" method="post" enctype="multipart/form-data">
                 @csrf
@@ -46,7 +46,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Brand</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="addBrandForm" method="post" enctype="multipart/form-data" action="{{route('brand.store')}}">
                 @csrf
@@ -66,7 +66,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Brand</h4>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="editBrandForm" method="post" enctype="multipart/form-data" action="">
                 @csrf

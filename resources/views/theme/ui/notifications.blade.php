@@ -201,49 +201,49 @@
                     </p>
 
                     <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a primary alert—check it out!
                     </div>
                     <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a secondary alert—check it out!
                     </div>
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a success alert—check it out!
                     </div>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a danger alert—check it out!
                     </div>
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a warning alert—check it out!
                     </div>
                     <div class="alert alert-info alert-dismissible fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a info alert—check it out!
                     </div>
                     <div class="alert alert-light alert-dismissible fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a light alert—check it out!
                     </div>
                     <div class="alert alert-dark alert-dismissible fade show mb-0" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a dark alert—check it out!
@@ -297,49 +297,49 @@
                     </p>
 
                     <div class="alert alert-primary alert-dismissible bg-primary text-white border-0 fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a primary alert—check it out!
                     </div>
                     <div class="alert alert-secondary alert-dismissible bg-secondary text-white border-0 fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a secondary alert—check it out!
                     </div>
                     <div class="alert alert-success alert-dismissible bg-success text-white border-0 fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a success alert—check it out!
                     </div>
                     <div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a danger alert—check it out!
                     </div>
                     <div class="alert alert-warning alert-dismissible bg-warning text-white border-0 fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a warning alert—check it out!
                     </div>
                     <div class="alert alert-info alert-dismissible bg-info text-white border-0 fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a info alert—check it out!
                     </div>
                     <div class="alert alert-light alert-dismissible bg-light text-dark border-0 fade show" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a light alert—check it out!
                     </div>
                     <div class="alert alert-dark alert-dismissible bg-dark text-white border-0 fade show mb-0" role="alert">
-                        <button type="button" class="close top_right" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         This is a dark alert—check it out!
