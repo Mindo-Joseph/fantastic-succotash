@@ -137,7 +137,7 @@
                                     class="custom-control-input tab_bar_options">
                                 @endif
                                 <label class="custom-control-label" for="dispatcher_warning_page_option_{{$dispatcher_warning_page_option->id}}">
-                                    <img class="card-img-top img-fluid" src="{{asset($dispatcher_warning_page_option->image_path)}}" alt="Card image cap">
+                                    <img class="card-img-top img-fluid" src="{{asset('images/'.$dispatcher_warning_page_option->image_path)}}" alt="Card image cap">
                                 </label>
                             </div>
                         @endforeach
@@ -156,7 +156,7 @@
                                     <input type="radio" value="{{$dispatcher_template_type_option->id}}" id="dispatcher_template_type_option_{{$dispatcher_template_type_option->id}}" name="template_type_id" {{ ($dtto == 0) ? 'checked' : '' }} class="custom-control-input tab_bar_options">
                                 @endif
                                 <label class="custom-control-label" for="dispatcher_template_type_option_{{$dispatcher_template_type_option->id}}">
-                                    <img class="card-img-top img-fluid" src="{{asset($dispatcher_template_type_option->image_path)}}" alt="Card image cap">
+                                    <img class="card-img-top img-fluid" src="{{asset('images/'.$dispatcher_template_type_option->image_path)}}" alt="Card image cap">
                                 </label>
                             </div>
                         @endforeach

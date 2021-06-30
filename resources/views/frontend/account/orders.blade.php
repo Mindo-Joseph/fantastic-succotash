@@ -12,7 +12,9 @@
 @endsection
 
 @section('content')
-
+@php
+$timezone = Auth::user()->timezone;
+@endphp
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -115,7 +117,7 @@
                                                 </div>
                                                 <div class="row no-gutters order_data">
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
-                                                    <div class="col-md-3">{{$order->created_at->format('D M d, Y h:m A')}}</div>
+                                                    <div class="col-md-3">{{convertDateTimeInTimeZone($order->created_at, $timezone, 'l, F d, Y, H:i A')}}</div>
                                                     <div class="col-md-3">
                                                         <a href="#">{{$order->user->name}}</a>
                                                     </div>

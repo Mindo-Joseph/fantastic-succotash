@@ -54,9 +54,11 @@ $timezone = Auth::user()->timezone;
     .login-page .theme-card .theme-form input {
         margin-bottom: 5px;
     }
-
     .invalid-feedback {
         display: block;
+    }
+    .box-info table tr:first-child td {
+        padding-top: .85rem;
     }
 </style>
 
@@ -100,32 +102,40 @@ $timezone = Auth::user()->timezone;
                         <div class="box-account box-info">
                             <div class="card-box mb-0">
                                 <div class="row align-items-center">
-                                    <div class="col-sm-9 text-sm-left text-center mb-md-0 mb-4">
+                                    <div class="col-md-6 text-md-left text-center mb-md-0 mb-4">
                                         <h5 class="text-17 mb-2">Available Balance</h5>
                                         <div class="text-36">${{Auth::user()->balance}}</div>
                                     </div>
-                                    <div class="col-sm-3 text-sm-right text-center">
-                                        <a class="btn btn-solid" href="#" data-toggle="modal" data-target="#add-money">Payout</a>
+                                    <div class="col-md-6 text-md-right text-center">
+                                        <button type="button" class="btn btn-solid" id="topup_wallet_btn" data-toggle="modal" data-target="#topup_wallet">Topup Wallet</button>
+                                        <button type="button" class="btn btn-solid" data-toggle="modal" data-target="#add-money">Payout</button>
                                     </div>
                                 </div>
                             </div>
                             <h6>Transaction History</h6>
                             <div class="card-box">
-                              <div class="table-responsive">
-                                  <table class="table wallet-tarnsaction w-100">
-                                      <tbody>
-                                      @foreach($user_transactions as $ut)
-                                      <?php $reason = json_decode($ut->meta) ?>
+                                <div class="table-responsive table-responsive-xs">
+                                  <table class="table wallet-transactions border">
+                                    <thead>
+                                        <tr class="table-head">
+                                            <th>Date</th>
+                                            <th>Description</th>
+                                            <th class="text-right"><span class="text-success">Credit</span> / <span class="text-danger">Debit</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($user_transactions as $ut)
+                                        <?php $reason = json_decode($ut->meta) ?>
                                           <tr>
                                               <td>{{convertDateTimeInTimeZone($ut->created_at, $timezone, 'l, F d, Y, H:i A')}}</td>
                                               <td  class="name_">{!!$reason[0]!!}</td>
-                                              <td class="text-right"><b>+${{$ut->amount}}</b></td>
+                                              <td class="text-right {{ ($ut->type == 'deposit') ? 'text-success' : (($ut->type == 'deposit') ? 'text-danger' : '') }}"><b>+${{$ut->amount}}</b></td>
                                           </tr>
-                                         @endforeach 
-                                      </tbody>
+                                        @endforeach 
+                                    </tbody>
                                   </table>
-                              </div>
-                          </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -169,11 +179,66 @@ $timezone = Auth::user()->timezone;
   </div>
 </div>
 
+<div class="modal fade" id="topup_wallet" tabindex="-1" aria-labelledby="topup_walletLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title" id="topup_walletLabel">Topup Wallet</h5>
+        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="">
+        <div class="modal-body">
+            <div class="form-group">
+                <h5 class="text-17 mb-2">Available Balance</h5>
+                <div class="text-36">${{Auth::user()->balance}}</div>
+            </div>
+            <div class="form-group">
+                <label for="">Amount</label>
+                <input class="form-control" name="wallet_amount" id="wallet_amount" type="text" placeholder="Enter Amount">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-solid mt-2 custom_amount">+10</button>
+                <button type="button" class="btn btn-solid mt-2 custom_amount">+20</button>
+                <button type="button" class="btn btn-solid mt-2 custom_amount">+50</button>
+            </div>
+            <hr />
+            <h5 class="text-17 mb-2">Select Payment Method</h5>
+            <div class="form-group" id="wallet_payment_methods">
+            </div>
+        </div>
+        <div class="modal-footer text-center">
+            <button type="button" class="btn btn-solid mt-2" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-solid mt-2 topup_wallet_confirm">Topup Wallet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/template" id="payment_method_template">
+    <% if(payment_options == '') { %>
+        <h6>Payment Methods Not Avaialable</h6>
+    <% }else{ %>
+        <% _.each(payment_options, function(payment_option, k){%>
+            <% if( (payment_option.slug != 'cash_on_delivery') && (payment_option.slug != 'loyalty_points') ) { %>
+                <label class="radio mt-2">
+                    <%= payment_option.title %> 
+                    <input type="radio" name="address_id" id="radio-<%= payment_option.slug %>" value="<%= payment_option.id %>" data-payment_option_id="<%= payment_option.id %>">
+                    <span class="checkround"></span>
+                </label>
+            <% } %>
+        <% }); %>
+    <% } %>
+</script>
+
 @endsection
 
 @section('script')
 
 <script type="text/javascript">
+    var payment_option_list_url = "{{route('payment.option.list')}}";
     var ajaxCall = 'ToCancelPrevReq';
     $('.verifyEmail').click(function() {
         verifyUser('email');
@@ -202,6 +267,39 @@ $timezone = Auth::user()->timezone;
             error: function(data) {},
         });
     }
+
+    $(document).delegate(".custom_amount", "click", function(){
+        let wallet_amount = $("#wallet_amount").val();
+        let amount = $(this).text();
+        if(wallet_amount == ''){ wallet_amount = 0; }
+        let new_amount = parseInt(amount) + parseInt(wallet_amount);
+        $("#wallet_amount").val(new_amount);
+    });
+
+    $(document).on("click","#topup_wallet_btn",function() {
+        // $('.alert-danger').html('');
+        $.ajax({
+            data: {},
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            url: payment_option_list_url,
+            success: function(response) {
+                if (response.status == "Success") {
+                    $('#wallet_payment_methods').html('');
+                    let payment_method_template = _.template($('#payment_method_template').html());
+                    $("#wallet_payment_methods").append(payment_method_template({payment_options: response.data}));
+                    // stripeInitialize();
+                }
+            },error: function(error){
+                var response = $.parseJSON(error.responseText);
+                let error_messages = response.message;
+                $.each(error_messages, function(key, error_message) {
+                    $('#min_order_validation_error_'+error_message.vendor_id).html(error_message.message).show();
+                });
+            }
+        });
+    });
 </script>
 
 <script>
