@@ -940,12 +940,15 @@ label.file-input.uploadImages {
 }
 
 .left-side-menu .logo span {
-    height: 80px;
+    height: 100px;
+    width: 150px;
+    margin: auto;
 }
 
 .left-side-menu .logo img {
     height: 100%;
     object-fit: contain;
+    width: 100%;
 }
 
 .left-side-menu .logo {
