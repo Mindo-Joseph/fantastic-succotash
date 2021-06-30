@@ -21,7 +21,7 @@ class Category extends Model
     public function english(){
        return $this->hasOne('App\Models\Category_translation')->select('category_id', 'name')->where('language_id', 1); 
     }
-
+    
     public function primary(){
 
       $langData = $this->hasOne('App\Models\Category_translation')->join('client_languages as cl', 'cl.language_id', 'category_translations.language_id')->select('category_translations.category_id', 'category_translations.name', 'category_translations.language_id')->where('cl.is_primary', 1);
