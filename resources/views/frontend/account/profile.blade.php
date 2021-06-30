@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Profile'])
+@extends('layouts.store', ['title' => 'My Profile'])
 
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
