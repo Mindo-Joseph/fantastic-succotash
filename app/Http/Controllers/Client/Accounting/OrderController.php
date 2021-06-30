@@ -19,13 +19,13 @@ use App\Exports\OrderVendorListTaxExport;
 class OrderController extends Controller{
     use ApiResponser;
     public function index(Request $request){
-        $vendors = Vendor::get();
         $total_order_count = 0;
         $total_delivery_fees = 0;
         $total_cash_to_collected = 0;
         $total_earnings_by_vendors = 0;
         $dispatcher_status_options = DispatcherStatusOption::get();
         $order_status_options = OrderStatusOption::where('type', 1)->get();
+        $vendors = Vendor::where('status', '!=', '2')->orderBy('id', 'desc')->get();
         $vendor_orders = OrderVendor::with(['orderDetail.paymentOption', 'user','vendor','payment'])->get();
         foreach ($vendor_orders as $vendor_order) {
             $total_delivery_fees+= $vendor_order->delivery_fee;
