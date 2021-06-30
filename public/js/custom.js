@@ -459,10 +459,20 @@ $(document).ready(function() {
                         }
                     }
                 }
+            },
+            complete: function(data){
+                if($(".number .fa-spinner fa-pulse").length > 0){
+                    $(".number .qty-minus .fa").removeAttr("class").addClass("fa fa-minus");
+                    $(".number .qty-plus .fa").removeAttr("class").addClass("fa fa-plus");
+                }
             }
         });
     }
-    function updateQuantity(cartproduct_id, quantity, base_price) {
+    function updateQuantity(cartproduct_id, quantity, base_price, iconElem='') {
+        if(iconElem != ''){
+            let elemClasses = $(iconElem).attr("class"); 
+            $(iconElem).removeAttr("class").addClass("fa fa-spinner fa-pulse");
+        }
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
@@ -471,6 +481,12 @@ $(document).ready(function() {
             success: function(response) {
                 var latest_price = parseInt(base_price) * parseInt(quantity);
                 $('#product_total_amount_'+cartproduct_id).html('$'+latest_price);
+            },
+            error: function(err){
+                if($(".number .fa-spinner fa-pulse").length > 0){
+                    $(".number .qty-minus .fa").removeAttr("class").addClass("fa fa-minus");
+                    $(".number .qty-plus .fa").removeAttr("class").addClass("fa fa-plus");
+                }
             }
         });
     }
@@ -478,12 +494,17 @@ $(document).ready(function() {
         let base_price = $(this).data('base_price');
         let cartproduct_id = $(this).attr("data-id");
         let qty = $('#quantity_'+cartproduct_id).val();
-        if (qty >= 1) {
+        $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
+        if (qty > 1) {
             $('#quantity_'+cartproduct_id).val(--qty);
+            updateQuantity(cartproduct_id, qty, base_price);
         }else{
-            alert('remove this product');
+            // alert('remove this product');
+            $('#remove_item_modal').modal('show');
+            let vendor_id = $(this).data('vendor_id');
+            $('#remove_item_modal #vendor_id').val(vendor_id);
+            $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
         }
-        updateQuantity(cartproduct_id, qty, base_price);
         cartHeader();
     });
     $(document).on('click', '.qty-plus', function() {
@@ -491,6 +512,7 @@ $(document).ready(function() {
         let cartproduct_id = $(this).attr("data-id");
         let qty = $('#quantity_'+cartproduct_id).val();
         $('#quantity_'+cartproduct_id).val(++qty);
+        $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
         updateQuantity(cartproduct_id, qty, base_price);
         cartHeader();
     });

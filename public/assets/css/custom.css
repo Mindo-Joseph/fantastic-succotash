@@ -340,7 +340,7 @@ span.inner-div {
     padding: 1.5rem;
     margin-bottom: 24px !important;
     /* margin-bottom: 10px; */
-    border-radius: 12px;
+    border-radius: 6px;
     /* background-color: #FFFFFF; */
     box-shadow: none !important;
     border: 1px solid #ddd;
@@ -940,7 +940,7 @@ label.file-input.uploadImages {
 }
 
 .left-side-menu .logo span {
-    height: 110px;
+    height: 80px;
 }
 
 .left-side-menu .logo img {
@@ -1011,7 +1011,7 @@ label.file-input.uploadImages {
     border-left: 1px solid #43bee1e8;
     background-color: #43bee1e8;
     position: absolute;
-    height: calc(100% - 25px);
+    height: calc(100% - 20px);
     left: -1px;
     top: 15px;
 }
@@ -1142,7 +1142,7 @@ label.file-input.uploadImages {
     box-shadow: 0 0 0 rgb(67 190 225 / 50%);
     position: absolute;
     left: -4px;
-    top: 0;
+    top: 4px;
     animation: pulse-animation 2s infinite;
 }
 
@@ -1344,12 +1344,30 @@ i.mdi.mdi-exclamation-thick {
     font-size: 12px;
 }
 
+.site-name{
+    font-weight: 400;
+}
+
 .top-site-links li {
     list-style: none;
 }
 
 .top-site-links li a {
     color: #6c757d;
+}
+
+.top-site-links li i {
+    font-size: 16px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.top-site-links li i.fa.fa-globe {
+    font-size: 12px;
+}
+
+.top-site-links li i.fab.fa-android {
+    font-size: 16px;
 }
 
 .top-site-links li a img {
@@ -1451,8 +1469,10 @@ body.light {
     background: #fff;
 }
 
-.dashboard-boxes .card { 
-    border: 0.1px solid #ddd;
+.card {
+    border: 0.1px solid #ddd !important;
+    box-shadow: none !important;
+    border-radius: .25rem;
 }
 
 .dashboard-boxes p {
@@ -1551,13 +1571,29 @@ body.light {
     padding: 3px 13px 0 0;
 }
 
+.close.top_right {
+    position: absolute;
+    right: -25px;
+    top: -30px;
+    color: #fff;
+    opacity: 1;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
 
 .card-widgets>a[aria-expanded="true"] i:before {
     content: "\F0374";
 }
 
+.card-widgets .btn-group {
+    margin-top: -5px;
+}
 
-
+.footer {
+    padding: 5px 0 0;
+    text-align: center;
+}
 
 
 

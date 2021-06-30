@@ -1,8 +1,8 @@
 <!-- Topbar Start -->
 <div class="navbar-custom">
-    <div class="container-fluid d-flex align-items-center justify-content-between">
+    <div class="container-fluid d-flex align-items-center justify-content-end">
         
-        <ul class="top-site-links d-flex align-items-center p-0 m-0">
+        <ul class="top-site-links d-flex align-items-center p-0 mb-0 mr-3">
             <li class="d_none">
                 <div class="logo-box">
                     @php
@@ -39,9 +39,9 @@
                 </button>
             </li>
             <li class="m-hide"><label class="site-name m-0">{{ucFirst($clientData->custom_domain)}}</label></li>
-            <li class="m-hide"><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_website.svg" alt=""><span class="align-middle">View Website</span></a></li>
-            <li class="m-hide"><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_app.svg" alt=""><span class="align-middle">Ios App Link</span></a></li>
-            <li class="m-hide"><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_app.svg" alt=""><span class="align-middle">Android App Link</span></a></li>
+            <li class="m-hide"><a href="#"><i class="fa fa-globe" aria-hidden="true"></i><span class="align-middle">View Website</span></a></li>
+            <li class="m-hide"><a href="#"><i class="fab fa-apple" aria-hidden="true"></i><span class="align-middle">Ios App Link</span></a></li>
+            <li class="m-hide"><a href="#"><i class="fab fa-android" aria-hidden="true"></i><span class="align-middle">Android App Link</span></a></li>
         </ul>
 
         <!-- <ul class=" list-unstyled topnav-menu topnav-menu-left m-0">
@@ -176,10 +176,10 @@
 
 <!-- Change Password Modal -->
 <div class="modal fade" id="change_password" tabindex="-1" aria-labelledby="change_passwordLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
-        <button type="button" class="close top-right" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
             <form method="post" action="{{route('client.password.update')}}">
@@ -252,8 +252,8 @@
                     </div>
 
                 </div>
-                <div class="row">
-                    <div class="col-md-2">
+                <div class="row mt-3">
+                    <div class="col-md-12">
                         <div class="form-group mb-0 text-cente2">
                             <button class="btn btn-info btn-block w-100" type="submit"> Update </button>
                         </div>

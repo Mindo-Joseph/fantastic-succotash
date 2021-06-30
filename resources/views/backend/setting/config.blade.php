@@ -27,7 +27,7 @@
    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
       @csrf
       <div class="row">
-         <div class="col-md-4 col-xl-6">
+         <div class="col-lg-4 col-md-6 mb-3">
             <div class="row h-100">
                <div class="col-12">
                   <div class="card-box h-100">
@@ -47,8 +47,8 @@
                            <div class="row">
                               <div class="col-12 mt-3 disableHyperLocal" style="{{((isset($preference) && $preference->is_hyperlocal == '1')) ? '' : 'display:none;'}}">
                                  <div class="row">
-                                    <div class="col-xl-4">
-                                       <div class="form-group mb-xl-0 mb-3">
+                                    <div class="col-12">
+                                       <div class="form-group mb-0">
                                           <label for="Default_location_name">Default Location</label>
                                           <div class="input-group">
                                              <input type="text" name="Default_location_name" id="Default_location_name" placeholder="Delhi, India" class="form-control" value="{{ old('Default_location_name', $preference->Default_location_name ?? '')}}">
@@ -62,9 +62,7 @@
                                           </span>
                                           @endif
                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                       <div class="form-group mb-xl-0 mb-3">
+                                       <div class="form-group mt-3 mb-0">
                                           <label for="Default_latitude">Latitude</label>
                                           <input type="text" name="Default_latitude" id="Default_latitude" placeholder="24.9876755" class="form-control"
                                              value="{{ old('Default_latitude', $preference->Default_latitude ?? '')}}">
@@ -74,9 +72,7 @@
                                           </span>
                                           @endif
                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                       <div class="form-group mb-xl-0 mb-3">
+                                       <div class="form-group mt-3 mb-0">
                                           <label for="Default_longitude">Longitude</label>
                                           <input type="text" name="Default_longitude" id="Default_longitude" placeholder="11.9871371723" class="form-control"
                                              value="{{ old('Default_longitude', $preference->Default_longitude ?? '')}}">
@@ -96,7 +92,7 @@
                </div>
             </div>
          </div>
-         <div class="col-md-4 col-xl-3">
+         <div class="col-lg-4 col-md-6 mb-3">
             <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
                   <h4 class="header-title text-uppercase mb-0">Last Mile Delivery</h4>
@@ -146,7 +142,7 @@
                </div>
             </div>
          </div>
-         <div class="col-md-4">
+         <div class="col-lg-4 col-md-6 mb-3">
             <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
                   <h4 class="header-title text-uppercase mb-0">Pickup & Delivery</h4>
