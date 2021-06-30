@@ -131,7 +131,7 @@
                     href="#" role="button" aria-haspopup="false" aria-expanded="false">
 
                     <span class="pro-user-name ml-1">
-                        <img src="https://imgproxy.royoorders.com/insecure/fit/200/80/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/Clientlogo/60c1e84d06f64.jpg" alt="">
+                        <img src="<?= $favicon ?>" alt="">
                        <!-- <b class="text-capitalize">{{ auth()->user()->name }} <i class="mdi mdi-chevron-down"></i></b> -->
                     </span>
                 </a>
