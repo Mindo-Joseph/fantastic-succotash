@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Login'])
+@extends('layouts.store', ['title' => 'My Wallet'])
 
 @section('css')
 <style type="text/css">
