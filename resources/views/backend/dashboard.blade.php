@@ -217,8 +217,8 @@
                             <div class="row align-items-center">
                                 <div class="col-8">
                                     <div class="text-end">
-                                        <p class="text-muted mb-1 text-truncate">Active Salemen</p>
-                                        <h3 class="text-dark mt-1 mb-0"><span data-plugin="counterup">0</span></h3>
+                                        <p class="text-muted mb-1 text-truncate">Brands</p>
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup">{{$total_brands}}</span></h3>
                                     </div>
                                 </div>
                                 <div class="col-4">
@@ -263,7 +263,7 @@
                                 <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-plus"></i></a>
                             </div>
                             <h4 class="header-title mb-0">Orders (Top Categories)</h4>
-                            <div id="cardCollpase1" class="collapse mt-3 hide widget-chart" dir="ltr" style="position: relative;">
+                            <div id="cardCollpase1" class="collapse mt-3 show widget-chart" dir="ltr" style="position: relative;">
 
                                 <div id="total-revenue" class="mt-0" data-colors="#f1556c" style="min-height: 220.7px;">
                                     <div id="apexchartsfwg700r2" class="apexcharts-canvas apexchartsfwg700r2 apexcharts-theme-light" style="width: 451px; height: 220.7px;">
