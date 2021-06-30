@@ -101,65 +101,38 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
-        var table;
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('input[name="_token"]').val()
             }
         });
-        updateQuantity();
+        initDataTable();
         $(document).on("change","#month_picker_filter",function() {
-            updateQuantity();
+            initDataTable();
         });
-        function updateQuantity() {
-
-            $.ajax({
-                type: "post",
-                dataType: "json",
-                url: "{{route('account.vendor.filter')}}",
-                data: {month_picker_filter :$('#month_picker_filter').val()},
-                success: function(response) {
-                    if(response.status == 'Success'){
-                        $('#month_picker_filter').show();
-                        $('#accounting_vendor_tbody_list').html('');
-                        let accounting_vendor_template = _.template($('#accounting_vendor_template').html());
-                        $("#accounting_vendor_tbody_list").append(accounting_vendor_template({vendors: response.data.vendors}));
-                        $('#total_order_value').html(response.data.total_order_value);
-                        $('#total_delivery_fees').html(response.data.total_delivery_fees);
-                        $('#total_admin_commissions').html(response.data.total_admin_commissions);
-                        $('#total_order_value').counterUp({
-                          delay: 10,
-                          time: 2000
-                        });
-                        $('#total_delivery_fees').counterUp({
-                          delay: 10,
-                          time: 2000
-                        });
-                        $('#total_admin_commissions').counterUp({
-                          delay: 10,
-                          time: 2000
-                        });
-                        if($.fn.DataTable.isDataTable('#accounting_vendor_datatable')){
-                            table.destroy();
-                            $('#accounting_vendor_datatable tbody').empty();
-                        }
-                        table = $("#accounting_vendor_datatable").DataTable({
-                            "dom": '<"toolbar">frtip',
-                            "scrollX": true,
-                            buttons: [
-                                {
-                                    text: 'My button',
-                                    action: function ( e, dt, node, config ) {
-                                        alert( 'Button activated' );
-                                    }
-                                }
-                            ],
-                            drawCallback: function () {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                        });
-                    }
-                }
+        function initDataTable() {
+            $('#accounting_vendor_datatable').DataTable({
+                "dom": '<"toolbar">Bfrtip',
+                "scrollX": true,
+                "processing": true,
+                "serverSide": true,
+                "iDisplayLength": 50,
+                destroy: true,
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search By Order No.,Vendor,Customer Name"
+                },
+                ajax: {
+                  url: "{{route('account.vendor.filter')}}",
+                  data: function (d) {
+                    d.search = $('input[type="search"]').val();
+                    d.date_filter = $('#range-datepicker').val();
+                  }
+                },
+                columns: [
+                    {data: 'vendor.name', name: 'vendor_name', orderable: false, searchable: false},
+                    {data: 'vendor.order_value', name: 'order_value', orderable: false, searchable: false},
+                ]
             });
         }
     });

@@ -30,7 +30,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('account/vendor', [VendorController::class, 'index'])->name('account.vendor');
     Route::post('account/tax/filter', [TaxController::class, 'filter'])->name('account.tax.filter');
     Route::get('account/tax/export', [TaxController::class, 'export'])->name('account.tax.export');
-    Route::post('account/vendor/filter', [VendorController::class, 'filter'])->name('account.vendor.filter');
+    Route::get('account/vendor/filter', [VendorController::class, 'filter'])->name('account.vendor.filter');
     Route::get('account/order/filter', [OrderController::class, 'filter'])->name('account.order.filter');
     Route::get('account/order/export', [OrderController::class, 'export'])->name('account.order.export');
     Route::put('profile/{id}', 'Client\DashBoardController@updateProfile')->name('client.profile.update');
