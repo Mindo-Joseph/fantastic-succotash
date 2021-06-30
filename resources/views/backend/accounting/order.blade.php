@@ -140,7 +140,7 @@
                     $('#accounting_vendor_datatable').DataTable({
                         "dom": '<"toolbar">Bfrtip',
                         "scrollX": true,
-                        "iDisplayLength": 2,
+                        "iDisplayLength": 50,
                         destroy: true,
                         language: {
                             search: "",
@@ -158,8 +158,9 @@
                         ajax: {
                           url: "{{route('account.order.filter')}}",
                           data: function (d) {
-                            d.search = $('input[type="search"]').val()
-                            d.vendor_id = $('#vendor_select_box option:selected').val()
+                            d.search = $('input[type="search"]').val();
+                            d.date_filter = $('#range-datepicker').val();
+                            d.vendor_id = $('#vendor_select_box option:selected').val();
                           }
                         },
                         columns: [

@@ -77,7 +77,7 @@ class ProductController extends FrontController
             },
         ]);
         if($user){
-            $product = $product->with('inwishlist', function ($query) use($p_id) {
+            $product = $product->with('inwishlist', function ($query) use($user) {
                 $query->where('user_wishlists.user_id', $user->id);
             });
         }
