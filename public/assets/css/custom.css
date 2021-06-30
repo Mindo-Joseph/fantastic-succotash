@@ -1344,12 +1344,30 @@ i.mdi.mdi-exclamation-thick {
     font-size: 12px;
 }
 
+.site-name{
+    font-weight: 400;
+}
+
 .top-site-links li {
     list-style: none;
 }
 
 .top-site-links li a {
     color: #6c757d;
+}
+
+.top-site-links li i {
+    font-size: 16px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.top-site-links li i.fa.fa-globe {
+    font-size: 12px;
+}
+
+.top-site-links li i.fab.fa-android {
+    font-size: 16px;
 }
 
 .top-site-links li a img {
@@ -1452,8 +1470,8 @@ body.light {
 }
 
 .card {
-    border: 0.1px solid #ddd;
-    box-shadow: none;
+    border: 0.1px solid #ddd !important;
+    box-shadow: none !important;
     border-radius: .25rem;
 }
 
@@ -1564,40 +1582,18 @@ body.light {
     transition: all 0.5s;
 }
 
+.card-widgets>a[aria-expanded="true"] i:before {
+    content: "\F0374";
+}
 
+.card-widgets .btn-group {
+    margin-top: -5px;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.footer {
+    padding: 5px 0 0;
+    text-align: center;
+}
 
 
 

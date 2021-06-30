@@ -1,8 +1,8 @@
 <!-- Topbar Start -->
 <div class="navbar-custom">
-    <div class="container-fluid d-flex align-items-center justify-content-between">
+    <div class="container-fluid d-flex align-items-center justify-content-end">
         
-        <ul class="top-site-links d-flex align-items-center p-0 m-0">
+        <ul class="top-site-links d-flex align-items-center p-0 mb-0 mr-3">
             <li class="d_none">
                 <div class="logo-box">
                     @php
@@ -39,9 +39,9 @@
                 </button>
             </li>
             <li class="m-hide"><label class="site-name m-0">{{ucFirst($clientData->custom_domain)}}</label></li>
-            <li class="m-hide"><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_website.svg" alt=""><span class="align-middle">View Website</span></a></li>
-            <li class="m-hide"><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_app.svg" alt=""><span class="align-middle">Ios App Link</span></a></li>
-            <li class="m-hide"><a href="#"><img src="https://farmaprisa-admin.royostaging1.com/img/v1_images/ic_app.svg" alt=""><span class="align-middle">Android App Link</span></a></li>
+            <li class="m-hide"><a href="#"><i class="fa fa-globe" aria-hidden="true"></i><span class="align-middle">View Website</span></a></li>
+            <li class="m-hide"><a href="#"><i class="fab fa-apple" aria-hidden="true"></i><span class="align-middle">Ios App Link</span></a></li>
+            <li class="m-hide"><a href="#"><i class="fab fa-android" aria-hidden="true"></i><span class="align-middle">Android App Link</span></a></li>
         </ul>
 
         <!-- <ul class=" list-unstyled topnav-menu topnav-menu-left m-0">
