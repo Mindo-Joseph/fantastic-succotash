@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderVendor extends Model{
     use HasFactory;
-	protected $fillable = ['web_hook_code'];
+    
+	protected $fillable = ['web_hook_code','payment_option_id'];
 	public function orderDetail(){
 	    return $this->hasOne('App\Models\Order' , 'id', 'order_id'); 
 	}

@@ -45,7 +45,7 @@ class Vendor extends Model{
     }
 
     public function orders(){
-       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id','payable_amount','delivery_fee'); 
+       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id','payable_amount','delivery_fee','payment_option_id'); 
     }
 
     public function activeOrders(){

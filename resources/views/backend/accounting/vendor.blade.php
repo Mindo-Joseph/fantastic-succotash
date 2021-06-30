@@ -14,7 +14,6 @@
             </div>
         </div>     
         <div class="row">
-            {{$total_order_value}}
             <div class="col-12">
                 <div class="card widget-inline">
                     <div class="card-body">
@@ -23,20 +22,26 @@
                                 <div class="p-2 text-center">
                                     <h3>
                                         <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
-                                        <span data-plugin="counterup"></span>500
+                                        <span data-plugin="counterup">{{$total_order_value}}</span>
                                     </h3>
                                     <p class="text-muted font-15 mb-0">Total Order Value</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <h3><i class="mdi mdi-currency-usd text-success mdi-24px"></i><span data-plugin="counterup" id="total_delivery_fees"></span>{{$total_order_value}}</h3>
+                                    <h3>
+                                        <i class="mdi mdi-currency-usd text-success mdi-24px"></i>
+                                        <span data-plugin="counterup" id="total_delivery_fees">{{$total_delivery_fees}}</span>
+                                    </h3>
                                     <p class="text-muted font-15 mb-0">Total Delivery Fees</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <h3><i class="mdi mdi-currency-usd text-success mdi-24px"></i><span data-plugin="counterup" id="total_admin_commissions"></span>{{$total_order_value}}</h3>
+                                    <h3>
+                                        <i class="mdi mdi-currency-usd text-success mdi-24px"></i>
+                                        <span data-plugin="counterup" id="total_admin_commissions">{{$total_admin_commissions}}</span>
+                                    </h3>
                                     <p class="text-muted font-15 mb-0">Total Admin Commissions</p>
                                 </div>
                             </div>
@@ -64,7 +69,7 @@
                             <thead>
                                 <tr>
                                     <th>Vendor Name</th>
-                                    <th>Order Value</th>
+                                    <th >Order Value <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="Hooray!"></i></th>
                                     <th>Delivery Fees</th>
                                     <th>Admin Commissions</th>
                                     <th>Promo [Vendor]</th>
@@ -116,7 +121,9 @@
                   }
                 },
                 columns: [
-                    {data: 'name', name: 'name', orderable: false, searchable: false},
+                    {data: 'name', name: 'name', orderable: true, searchable: false, "mRender": function ( data, type, full ) {
+                      return "<a href='" + full.view_url + "' target='_blank'>"+full.name+"</a>";
+                      }},
                     {data: 'order_value', name: 'order_amt', orderable: false, searchable: false},
                     {data: 'delivery_fee', name: 'delivery_fee', orderable: false, searchable: false},
                     {data: 'admin_commission_amount', name: 'admin_commission_amount', orderable: false, searchable: false},
