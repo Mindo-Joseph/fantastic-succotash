@@ -51,7 +51,7 @@ class PaymentController extends FrontController{
                             $opt_quantity_price = 0;
                             $opt_price_in_currency = $addon->option->price;
                             $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
-                            $opt_quantity_price = $opt_price_in_doller_compare * $order_product->quantity;
+                            $opt_quantity_price = $opt_price_in_doller_compare * $vendor_cart_product->quantity;
                             $vendor_payable_amount = $vendor_payable_amount + $opt_quantity_price;
                         }
                     }
