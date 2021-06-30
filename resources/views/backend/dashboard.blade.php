@@ -263,7 +263,7 @@
                                 <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-plus"></i></a>
                             </div>
                             <h4 class="header-title mb-0">Orders (Top Categories)</h4>
-                            <div id="cardCollpase1" class="collapse mt-3 show widget-chart" dir="ltr" style="position: relative;">
+                            <div id="cardCollpase1" class="collapse mt-3 hide widget-chart" dir="ltr" style="position: relative;">
 
                                 <div id="total-revenue" class="mt-0" data-colors="#f1556c" style="min-height: 220.7px;">
                                     <div id="apexchartsfwg700r2" class="apexcharts-canvas apexchartsfwg700r2 apexcharts-theme-light" style="width: 451px; height: 220.7px;">
