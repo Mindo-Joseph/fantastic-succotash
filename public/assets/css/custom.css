@@ -1550,6 +1550,21 @@ body.light {
     top: -27px;
     padding: 3px 13px 0 0;
 }
+
+
+.card-widgets>a[aria-expanded="true"] i:before {
+    content: "\F0374";
+}
+
+
+
+
+
+
+
+
+
+
 @media(min-width:320px){
     .custom-cols > .col {
         flex: 0 0 100%;

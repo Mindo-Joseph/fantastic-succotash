@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Category, Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country, Order, User, Vendor};
+use App\Models\{Banner, Category, Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country, Order, Product, User, Vendor, VendorOrderStatus};
 use Carbon\Carbon;
 
 class DashBoardController extends BaseController
@@ -33,7 +33,15 @@ class DashBoardController extends BaseController
     {
         $total_revenue = Order::sum('payable_amount');
         $today_sales = Order::whereDay('created_at', now()->day)->sum('payable_amount');
-        return view('backend/dashboard')->with(['total_revenue' => $total_revenue, 'today_sales' => $today_sales]);
+        $total_categories = Category::count();
+        $total_products = Product::count();
+        $total_vendor = Vendor::count();
+        $total_banners = Banner::count();
+        $total_pending_order = VendorOrderStatus::where('order_status_option_id', 1)->count();
+        $total_rejected_order = VendorOrderStatus::where('order_status_option_id', 3)->count();
+        $total_delivered_order = VendorOrderStatus::where('order_status_option_id', 6)->count();
+        $total_active_order = VendorOrderStatus::where('order_status_option_id', '!=', 3)->where('order_status_option_id', '!=', 1)->count();
+        return view('backend/dashboard')->with(['total_banners' => $total_banners, 'total_delivered_order' => $total_delivered_order, 'total_active_order' => $total_active_order, 'total_rejected_order' => $total_rejected_order, 'total_pending_order' => $total_pending_order, 'total_vendor' => $total_vendor, 'total_products' => $total_products, 'total_revenue' => $total_revenue, 'today_sales' => $today_sales, 'total_categories' => $total_categories]);
     }
 
     public function profile()
@@ -155,7 +163,7 @@ class DashBoardController extends BaseController
             ->select(DB::raw('sum(payable_amount) as y'), DB::raw('count(*) as z'), DB::raw('date(created_at) as x'))
             ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
             ->groupBy('x')
-            ->orderBy('x', 'desc')
+            ->orderBy('x', 'asc')
             ->get();
         $dates = array();
         $revenue = array();

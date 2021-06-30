@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     function updateSales(revenue, sales, dates, type_xaxis) {
         $('#sales-analytics').html("");
         var colors = ['#1abc9c', '#4a81d4'];
@@ -75,71 +75,86 @@ $(document).ready(function() {
     }
 
     var url = monthlyInfo_url;
-    $.getJSON(url, function(response) {
+    updateCategoryInfo();
+    $.getJSON(url, function (response) {
         updateSales(response.revenue, response.sales, response.dates, "datetime")
     });
-    $(".yearSales").click(function() {
+    $(".yearSales").click(function () {
         var url = yearlyInfo_url;
-        $.getJSON(url, function(response) {
+        $.getJSON(url, function (response) {
             updateSales(response.revenue, response.sales, response.dates, "category")
         });
     });
-    $(".monthlySales").click(function() {
+    $(".monthlySales").click(function () {
         var url = monthlyInfo_url;
-        $.getJSON(url, function(response) {
+        $.getJSON(url, function (response) {
             updateSales(response.revenue, response.sales, response.dates, "datetime")
         });
     });
-    $(".weeklySales").click(function() {
+    $(".weeklySales").click(function () {
         var url = weeklyInfo_url;
-        $.getJSON(url, function(response) {
+        $.getJSON(url, function (response) {
             updateSales(response.revenue, response.sales, response.dates, "datetime")
         });
     });
 
-    var url = categoryInfo_url;
-    $.getJSON(url, function(response) {
-        var options = {
-            series: response.orders,
-            labels: response.names,
-            chart: {
-                width: 380,
-                type: 'donut',
-            },
-            dataLabels: {
-                enabled: false
-            },
-            responsive: [{
-                breakpoint: 480,
-                options: {
-                    chart: {
-                        width: 200
-                    },
-                    legend: {
-                        show: false
+    function updateCategoryInfo() {
+        $('#apexchartsfwg700r2').html("");
+        var url = categoryInfo_url;
+        $.getJSON(url, function (response) {
+            var options = {
+                series: response.orders,
+                labels: response.names,
+                chart: {
+                    width: 380,
+                    type: 'donut',
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            show: false
+                        }
+                    }
+                }],
+                legend: {
+                    position: 'left',
+                    offsetY: 0,
+                    height: 230,
+                },
+                noData: {
+                    text: "No Data Found",
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    offsetX: 0,
+                    offsetY: 0,
+                    style: {
+                        color: "#000000",
+                        fontSize: '14px',
+                        fontFamily: "Helvetica"
                     }
                 }
-            }],
-            legend: {
-                position: 'left',
-                offsetY: 0,
-                height: 230,
-            },
-            noData: {  
-                text: "No Data Found",  
-                align: 'center',  
-                verticalAlign: 'middle',  
-                offsetX: 0,  
-                offsetY: 0,  
-                style: {  
-                  color: "#000000",  
-                  fontSize: '14px',  
-                  fontFamily: "Helvetica"  
-                }  
-              }
-        };
+            };
 
-        var chart1 = new ApexCharts(document.querySelector("#apexchartsfwg700r2"), options);
-        chart1.render();
+            var chart1 = new ApexCharts(document.querySelector("#apexchartsfwg700r2"), options);
+            chart1.render();
+        });
+    }
+
+    $(".refresh_cataegoryinfo").click(function () {
+        updateCategoryInfo();
+    });
+
+    $(".refresh_salesChart").click(function () {
+        var url = monthlyInfo_url;
+        $.getJSON(url, function (response) {
+            updateSales(response.revenue, response.sales, response.dates, "datetime")
+        });
     });
 });
