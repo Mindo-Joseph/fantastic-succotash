@@ -74,26 +74,32 @@
                              
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                    @if($client_preferences->dinein_check == 1)
                                         {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
                                         <div>
                                             <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control validity" data-color="#43bee1" checked='checked'>
                                         </div>
+                                    @endif
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                    @if($client_preferences->takeaway_check == 1)
                                         {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
                                         <div>
                                             <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control validity" data-color="#43bee1" checked='checked'>
                                         </div>
+                                    @endif
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                    @if($client_preferences->delivery_check == 1)
                                         {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
                                         <div>
                                             <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control validity" data-color="#43bee1" checked='checked'>
                                         </div>
+                                    @endif
                                     </div>
                                 </div>
                                 <!-- <div class="col-md-3">

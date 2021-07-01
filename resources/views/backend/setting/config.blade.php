@@ -19,6 +19,10 @@
             <div class="alert alert-success">
                <span>{!! \Session::get('success') !!}</span>
             </div>
+            @elseif(\Session::has('error'))
+            <div class="alert alert-danger">
+               <span>{!! \Session::get('error') !!}</span>
+            </div>
             @endif
          </div>
       </div>
@@ -705,6 +709,35 @@
                      </div>
                   </div>
                   <div class="col-md-4">
+                     <div class="form-group mb-0 text-md-right">
+                        <button class="btn btn-info d-block ml-md-auto" type="submit"> Save </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-md-6 col-lx-4">
+            <div class="card-box">
+               <div class="row align-items-center">
+                  <div class="col-md-3">
+                     <div class="form-group mb-0">
+                        <label for="dinein_check" class="mr-3 mb-0">Dine In</label>
+                        <input type="checkbox" data-plugin="switchery" name="dinein_check" id="dinein_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->dinein_check == '1'))  checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-3">
+                     <div class="form-group mb-0">
+                        <label for="delivery_check" class="mr-3 mb-0">Delivery</label>
+                        <input type="checkbox" data-plugin="switchery" name="delivery_check" id="delivery_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delivery_check == '1'))  checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-3">
+                     <div class="form-group mb-0">
+                        <label for="takeaway_check" class="mr-3 mb-0">Takeaway</label>
+                        <input type="checkbox" data-plugin="switchery" name="takeaway_check" id="takeaway_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->takeaway_check == '1'))  checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-3">
                      <div class="form-group mb-0 text-md-right">
                         <button class="btn btn-info d-block ml-md-auto" type="submit"> Save </button>
                      </div>

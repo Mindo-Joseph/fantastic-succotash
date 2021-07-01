@@ -161,7 +161,14 @@ class ClientPreferenceController extends BaseController
             $preference->verify_phone = ($request->has('verify_phone') && $request->verify_phone == 'on') ? 1 : 0;
             $preference->celebrity_check = ($request->has('celebrity_check') && $request->celebrity_check == 'on') ? 1 : 0;
             $preference->pharmacy_check = ($request->has('pharmacy_check') && $request->pharmacy_check == 'on') ? 1 : 0;
-            
+            if((!$request->has('dinein_check') && !$request->dinein_check == 'on')
+                && (!$request->has('takeaway_check') && !$request->dinein_check == 'on')
+                && (!$request->has('delivery_check') && !$request->dinein_check == 'on')){
+                    return redirect()->route('configure.index')->with('error', 'One Option must be acitve');
+            }
+            $preference->dinein_check = ($request->has('dinein_check') && $request->dinein_check == 'on') ? 1 : 0;
+            $preference->takeaway_check = ($request->has('takeaway_check') && $request->takeaway_check == 'on') ? 1 : 0;
+            $preference->delivery_check = ($request->has('delivery_check') && $request->delivery_check == 'on') ? 1 : 0;
         }
 
         if($request->has('languages')){
