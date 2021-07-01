@@ -30,6 +30,7 @@ class OrderVendor extends Model{
 	public function status(){
 	    return $this->hasOne('App\Models\VendorOrderStatus' , 'order_id', 'order_id' , 'vendor_id', 'vendor_id')->latest(); 
 	}
+	
 	public function orderstatus(){
 	    return $this->hasOne('App\Models\VendorOrderStatus' , 'vendor_id', 'vendor_id')->orderBy('id', 'DESC')->latest(); 
 	}

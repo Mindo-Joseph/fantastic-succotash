@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client\Accounting;
 use DataTables;
 use Carbon\Carbon;
 use App\Models\Order;
+use App\Models\OrderTax;
 use App\Models\LoyaltyCard;
 use Illuminate\Support\Str; 
 use Illuminate\Http\Request;
@@ -20,22 +21,41 @@ class TaxController extends Controller{
     public function index(Request $request){
         $tax_category_options = TaxCategory::get();
         $total_tax_collected = Order::sum('taxable_amount');
+        $type_of_taxes_applied_count = OrderTax::count('tax_category_id');
         $payment_options = PaymentOption::where('status', 1)->get();
-        return view('backend.accounting.tax', compact('total_tax_collected','payment_options','tax_category_options'));
+        return view('backend.accounting.tax', compact('total_tax_collected','payment_options','tax_category_options', 'type_of_taxes_applied_count'));
     }
 
     public function filter(Request $request){
         $user = Auth::user();
-        $total_tax_collected = 0;;
-        $type_of_taxes_applied_count = 0;;
         $timezone = $user->timezone ? $user->timezone : 'Asia/Kolkata';
-        $orders_query = Order::with('user','paymentOption');
+        $orders_query = Order::with('user','paymentOption','taxes');
+        if (!empty($request->get('date_filter'))) {
+            $date_date_filter = explode('to', $request->get('date_filter'));
+            $to_date = $date_date_filter[1];
+            $from_date = $date_date_filter[0];
+            $orders_query->between($from_date, $to_date);
+        }
+        if (!empty($request->get('tax_type_filter'))) {
+            $tax_type_filter = $request->get('tax_type_filter');
+            $orders_query->whereHas('taxes', function($q) use($tax_type_filter){
+                if($tax_type_filter){
+                    $q->where('tax_category_id', $tax_type_filter);
+                }
+            });
+        }
         $orders = $orders_query->orderBy('id', 'desc')->get();
         foreach ($orders as $order) {
             $order->payment_method = $order->paymentOption ? $order->paymentOption->title : '';
-            $order->tax_types = $order->loyalty_points_earned ? $order->loyalty_points_earned : '0.00';
             $order->customer_name = $order->user ? $order->user->name : '-';
             $order->created_date = convertDateTimeInTimeZone($order->created_at, $timezone, 'Y-m-d h:i:s A');
+            $tax_types = [];
+            foreach ($order->taxes as $tax) {
+                if($tax){
+                    $tax_types[]= $tax->category->title;
+                }
+            }
+            $order->tax_types = implode(', ',$tax_types);
         }
         return Datatables::of($orders)
         ->addIndexColumn()

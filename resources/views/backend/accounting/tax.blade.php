@@ -22,7 +22,7 @@
                                 <div class="p-2 text-center">
                                     <h3>
                                         <i class="mdi mdi-cart-plus text-primary mdi-24px"></i>
-                                        <span data-plugin="counterup" id="type_of_taxes_applied_count"></span>
+                                        <span data-plugin="counterup" id="type_of_taxes_applied_count">{{$type_of_taxes_applied_count}}</span>
                                     </h3>
                                     <p class="text-muted font-15 mb-0">Type Of Taxes Applied</p>
                                 </div>
@@ -138,7 +138,11 @@
                         "iDisplayLength": 50,
                         language: {
                             search: "",
-                            searchPlaceholder: "Search By Order No.,Vendor,Customer Name"
+                            paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
+                            searchPlaceholder: "Search By Order Id"
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                         },
                         buttons: [{   
                             className:'btn btn-success waves-effect waves-light',
@@ -153,6 +157,7 @@
                             d.search = $('input[type="search"]').val();
                             d.date_filter = $('#range-datepicker').val();
                             d.payment_option = $('#payment_option_select_box option:selected').val();
+                            d.tax_type_filter = $('#tax_type_select_box option:selected').val();
                           }
                         },
                         columns: [

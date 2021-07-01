@@ -94,7 +94,7 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable">
+                        <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable" width="100%">
                             <thead>
                                 <tr>
                                     <th>Order Id</th>
@@ -151,10 +151,9 @@
                 "serverSide": true,
                 "iDisplayLength": 50,
                 language: {
-                    search: "",
-                    searchPlaceholder: "Search By Order Id"
-                },
-                language: { paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" } 
+                            search: "",
+                            paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
+                            searchPlaceholder: "Search By Order No.,Vendor,Customer Name"
                 },
                 drawCallback: function () {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
