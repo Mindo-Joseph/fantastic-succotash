@@ -127,7 +127,7 @@ $timezone = Auth::user()->timezone;
                                 <div class="row align-items-center">
                                     <div class="col-md-6 text-md-left text-center mb-md-0 mb-4">
                                         <h5 class="text-17 mb-2">Available Balance</h5>
-                                        <div class="text-36">$<span class="wallet_balance">{{Auth::user()->balance}}</span></div>
+                                        <div class="text-36">$<span class="wallet_balance">@money(Auth::user()->balance)</span></div>
                                     </div>
                                     <div class="col-md-6 text-md-right text-center">
                                         <button type="button" class="btn btn-solid" id="topup_wallet_btn" data-toggle="modal" data-target="#topup_wallet">Topup Wallet</button>
@@ -217,7 +217,7 @@ $timezone = Auth::user()->timezone;
         <div class="modal-body">
             <div class="form-group">
                 <h5 class="text-17 mb-2">Available Balance</h5>
-                <div class="text-36">$<span class="wallet_balance">{{Auth::user()->balance}}</span></div>
+                <div class="text-36">$<span class="wallet_balance">@money(Auth::user()->balance)</span></div>
             </div>
             <hr />
             <div class="form-group">
