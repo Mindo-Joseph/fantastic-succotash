@@ -1718,3 +1718,29 @@ label.logo-size {
     right: 220px;
     top: 20px;
 }
+
+.return-order .update_pic {
+    height: 100px;
+}
+
+td.product-name {
+    width: 300px;
+}
+
+td.product-name img + b{
+    width: 200px;
+    display: block;
+}
+
+td.product-name,.vendor-name {
+    width: 200px;
+}
+
+.vendor-name .round_img_box  + a {
+    width: 150px;
+    display: block;
+}
+
+.show-return-product-modal {
+    cursor: pointer;
+}

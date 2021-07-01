@@ -1,11 +1,6 @@
-<div class="row">
-    <div class="container">
-
-
-
         <div class="d-flex align-items-center">
-            <label class="order-items d-flex" for="item_one">
-                <div class="item-img mx-1">
+            <label class="order-items d-flex align-items-center" for="item_one">
+                <div class="item-img mr-1">
                     <img src="{{ $return_details->product->image['proxy_url'] . '74/100' . $return_details->product->image['image_path'] }}"
                         alt="">
                 </div>
@@ -21,7 +16,7 @@
             @csrf
             <input type="hidden" name="id" value="{{$return_details->id}}">
             @if (isset($return_details->returnFiles))
-            <div class="form-group rating_files">
+            <div class="row form-group rating_files">
                 <div class="col-12">
                     <label>Uploaded Files</label>
                 </div>
@@ -30,7 +25,7 @@
                     <span class="row show-multiple-image-preview" id="thumb-output">
                         @if (isset($return_details->returnFiles))
                             @foreach ($return_details->returnFiles as $files)
-                                <img class="col-6 col-md-3 col-lg-2 update_pic"
+                                <img class="col-6 col-md-3 update_pic"
                                     src="{{ $files->file['proxy_url'] . '300/300' . $files->file['image_path'] }}">
                             @endforeach
                         @endif
@@ -49,23 +44,22 @@
                 <p class="form-control">{{ $return_details->coments ?? '' }}</p>
             </div>
             <div class="row form-group">
-                <div class="col-md-6">
-                    <label>{{__('Update Status')}}</label></div>
-                    <div class="col-md-6">
-                    <select class="form-group" name="status" id="status">
+                <div class="col-md-12">
+                    <label>{{__('Update Status')}}</label>
+                </div>
+                <div class="col-md-12">
+                    <select class="form-control" name="status">
                        <option value="Pending" @if($return_details->status == 'Pending') selected="selected" @endif>Pending</option>
                        <option value="Accepted" @if($return_details->status == 'Accepted') selected="selected" @endif>Accepted</option>
                        <option value="Rejected" @if($return_details->status == 'Rejected') selected="selected" @endif>Rejected</option>
                     </select>
-                </div> 
+                </div>     
             </div>
 
             <span class="text-danger" id="error-msg"></span>
             <span class="text-success" id="success-msg"></span>
-            <button class="btn btn-primary mt-3" id="return_form_button">Update</button>
+            <button class="btn btn-primary w-100 mt-3" id="return_form_button">Update</button>
         </form>
-    </div>
-</div>
 
 
 <script type="text/javascript">
