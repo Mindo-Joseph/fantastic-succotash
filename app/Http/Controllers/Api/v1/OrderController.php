@@ -269,6 +269,7 @@ class OrderController extends Controller {
                         $order_vendor->coupon_code = $coupon_name;
                         $order_vendor->payable_amount= $vendor_payable_amount;
                         $order_vendor->discount_amount= $vendor_discount_amount;
+                        $order_vendor->payment_option_id = $request->payment_option_id;
                         $order_vendor->save();
                         $order_status = new VendorOrderStatus();
                         $order_status->order_id = $order->id;

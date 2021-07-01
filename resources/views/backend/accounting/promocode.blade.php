@@ -22,30 +22,29 @@
                         <div class="row">
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <i class="mdi mdi-cart-plus text-primary mdi-24px"></i>
-                                    <h3><span data-plugin="counterup">8954</span></h3>
-                                    <p class="text-muted font-15 mb-0">Admin paid total</p>
+                                    <h3><i class="mdi mdi-currency-usd text-success mdi-24px"></i><span data-plugin="counterup">{{$admin_paid_total_amt}}</span></h3>
+                                    <p class="text-muted font-15 mb-0">Admin Paid Total</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <i class="mdi mdi-currency-usd text-success mdi-24px"></i>
-                                    <h3>$ <span data-plugin="counterup">7841</span></h3>
-                                    <p class="text-muted font-15 mb-0">Vendor paid total</p>
+                                    <h3><i class="mdi mdi-currency-usd text-success mdi-24px"></i><span data-plugin="counterup">{{$vendor_paid_total_amt}}</span></h3>
+                                    <p class="text-muted font-15 mb-0">Vendor Paid Total</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <i class="mdi mdi-account-group text-danger mdi-24px"></i>
-                                    <h3><span data-plugin="counterup">6521</span></h3>
-                                    <p class="text-muted font-15 mb-0">Promo code uses</p>
+                                    <h3><i class="mdi mdi-account-group text-danger mdi-24px"></i><span data-plugin="counterup"> {{$promo_code_uses_count}}</span></h3>
+                                    <p class="text-muted font-15 mb-0">Promo Code Uses</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <i class="mdi mdi-eye-outline text-blue mdi-24px"></i>
-                                    <h3><span data-plugin="counterup">10</span> k</h3>
-                                    <p class="text-muted font-15 mb-0">Unique users to use promo code</p>
+                                    <h3>
+                                        <i class="mdi mdi-eye-outline text-blue mdi-24px"></i>
+                                        <span data-plugin="counterup">{{$unique_users_to_use_promo_code_count}}</span>
+                                    </h3>
+                                    <p class="text-muted font-15 mb-0">Unique Users To Use Promo Code</p>
                                 </div>
                             </div>
                         </div>
@@ -55,4 +54,141 @@
         </div>    
     </div> 
 </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body position-relative">
+                   <div class="top-input position-absolute">
+                        <div class="row">                            
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="text" id="range-datepicker" class="form-control flatpickr-input" placeholder="2018-10-03 to 2018-10-10" readonly="readonly">
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-control" id="order_status_option_select_box">
+                                            <option value="">Select</option>
+                                            @forelse($order_status_options as $order_status_option)
+                                                <option value="{{$order_status_option->title}}">{{$order_status_option->title}}</option>
+                                            @empty
+                                            @endforelse
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-control" name="" id="promo_code_option_select_box">
+                                            <option value="">Select</option>
+                                            @forelse($promo_code_options as $promo_code_option)
+                                                <option value="{{$promo_code_option->coupon_id}}">{{$promo_code_option->coupon_code}}</option>
+                                            @empty
+                                            @endforelse
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-danger waves-effect waves-light" id="clear_filter_btn_icon">
+                                            <i class="mdi mdi-close"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable">
+                            <thead>
+                                <tr>
+                                    <th>Order Id</th>
+                                    <th>Date & Time</th>
+                                    <th>Customer Name</th>
+                                    <th>Vendor Name</th>
+                                    <th>Subtotal Amount</th>
+                                    <th>Promo Code Discount [Vendor Paid Promos]</th>
+                                    <th>Promo Code Discount [Admin Paid Promos]</th>
+                                    <th>Final Amount</th>
+                                    <th>Payment Method</th>
+                                    <th>Order Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="accounting_vendor_tbody_list">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+        initDataTable();
+        $("#range-datepicker").flatpickr({ 
+            mode: "range",
+            onClose: function(selectedDates, dateStr, instance) {
+                initDataTable();
+            }
+        });
+        $("#clear_filter_btn_icon").click(function() {
+            $('#range-datepicker').val('');
+            $('#promo_code_option_select_box').val('');
+            $('#order_status_option_select_box').val('');
+            initDataTable();
+        });
+        $("#promo_code_option_select_box, #order_status_option_select_box").change(function() {
+            initDataTable();
+        });
+        function initDataTable() {
+            $('#accounting_vendor_datatable').DataTable({
+                "destroy": true,
+                "scrollX": true,
+                "processing": true,
+                "serverSide": true,
+                "iDisplayLength": 50,
+                "dom": '<"toolbar">Bfrtip',
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search By Order Id"
+                },
+                buttons: [{   
+                    className:'btn btn-success waves-effect waves-light',
+                    text: '<span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV',
+                    action: function ( e, dt, node, config ) {
+                        window.location.href = "{{ route('account.promo-code.export') }}";
+                    }
+                }],
+                ajax: {
+                  url: "{{route('account.promo-code.filter')}}",
+                  data: function (d) {
+                    d.search = $('input[type="search"]').val();
+                    d.date_filter = $('#range-datepicker').val();
+                    d.status_filter = $('#order_status_option_select_box option:selected').val();
+                    d.promo_code_filter = $('#promo_code_option_select_box option:selected').val();
+                  }
+                },
+                columns: [
+                    {data: 'order_detail.order_number', name: 'name', orderable: true, searchable: false, "mRender": function ( data, type, full ) {
+                      return "<a href='" + full.view_url + "' target='_blank'>"+full.order_detail.order_number+"</a>";
+                      }},
+                    {data: 'created_date', name: 'created_date', orderable: false, searchable: false},
+                    {data: 'user_name', name: 'user_name', orderable: false, searchable: false},
+                    {data: 'vendor.name', name: 'vendor.name', orderable: false, searchable: false},
+                    {data: 'subtotal_amount', name: 'subtotal_amount', orderable: false, searchable: false},
+                    {data: 'vendor_paid_promo', name: 'vendor_paid_promo', orderable: false, searchable: false},
+                    {data: 'admin_paid_promo', name: 'admin_paid_promo', orderable: false, searchable: false},
+                    {data: 'payable_amount', name: 'payable_amount', orderable: false, searchable: false},
+                    {data: 'order_detail.payment_option.title', name: 'payment_method', orderable: false, searchable: false},
+                    {data: 'order_status', name: 'order_status', orderable: false, searchable: false},
+                ]
+            });            
+        }
+    });
+</script>
+@endsection
+@section('script')
+<script src="{{asset('assets/libs/datatables/datatables.min.js')}}"></script>
 @endsection
