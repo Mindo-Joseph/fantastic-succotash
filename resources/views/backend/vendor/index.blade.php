@@ -84,15 +84,21 @@
                                     <td class="address_txt"> <p class="ellips_txt" data-toggle="tooltip" data-placement="top" title="{{ $vendor->address }}">{{ $vendor->address }}</p></td>
 
                                         <td>
+                                        @if($client_preferences->dinein_check == 1)
                                             @if($vendor->dine_in == 1)
                                                 <span class="badge bg-soft-warning text-warning">Dine In</span>
                                             @endif
+                                        @endif
+                                        @if($client_preferences->takeaway_check == 1)
                                             @if($vendor->takeaway == 1)
                                                 <span class="badge bg-soft-warning text-warning">Take Away</span>
                                             @endif
+                                        @endif
+                                        @if($client_preferences->delivery_check == 1)
                                             @if($vendor->delivery == 1)
                                                 <span class="badge bg-soft-warning text-warning">Delivery</span>
                                             @endif
+                                        @endif
                                         </td>
                                         <td class="text-center">{{($vendor->add_category == 0) ? 'No' : 'Yes' }}</td>
                                         <td class="text-center">{{$vendor->commission_percent }}</td>

@@ -120,8 +120,10 @@ class VendorController extends BaseController
      */
     public function edit($domain = '', $id)
     {
+        $client_preferences = ClientPreference::first();
         $vendor = Vendor::where('id', $id)->first();
-        $returnHTML = view('backend.vendor.form')->with(['vendor' => $vendor])->render();
+        $returnHTML = view('backend.vendor.form')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor])->render();
+        // dd($returnHTML);
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
