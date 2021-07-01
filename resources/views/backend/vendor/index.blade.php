@@ -82,7 +82,6 @@
                                     </td>
                                     <td><a href="{{ route('vendor.show', $vendor->id) }}">{{ $vendor->name }}</a> </td>
                                     <td class="address_txt"> <p class="ellips_txt" data-toggle="tooltip" data-placement="top" title="{{ $vendor->address }}">{{ $vendor->address }}</p></td>
-
                                         <td>
                                         @if($client_preferences->dinein_check == 1)
                                             @if($vendor->dine_in == 1)
