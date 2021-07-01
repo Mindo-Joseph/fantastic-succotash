@@ -171,7 +171,9 @@
                           }
                         },
                         columns: [
-                            {data: 'order_detail.order_number', name: 'order_number', orderable: false, searchable: false},
+                            {data: 'order_detail.order_number', name: 'order_number', orderable: false, searchable: false,"mRender": function ( data, type, full ) {
+                              return "<a href='" + full.view_url + "' target='_blank'>"+full.order_detail.order_number+"</a>";
+                            }},
                             {data: 'created_date', name: 'name',orderable: false, searchable: false},
                             {data: 'user_name', name: 'Customer Name',orderable: false, searchable: false},
                             {data: 'vendor.name', name: 'vendor_name', orderable: false, searchable: false},
