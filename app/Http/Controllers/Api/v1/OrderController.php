@@ -242,7 +242,11 @@ class OrderController extends Controller {
                                 CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                             }
                         }
+                        $coupon_id = null;
+                        $coupon_name = null;
                         if($vendor_cart_product->coupon){
+                            $coupon_id = $vendor_cart_product->coupon->promo->id;
+                            $coupon_name = $vendor_cart_product->coupon->promo->name;
                             if($vendor_cart_product->coupon->promo->promo_type_id == 2){
                                 $coupon_discount_amount = $vendor_cart_product->coupon->promo->amount;
                                 $total_discount += $coupon_discount_amount;
@@ -261,6 +265,8 @@ class OrderController extends Controller {
                         $order_vendor->user_id= $user->id;
                         $order_vendor->order_id= $order->id;
                         $order_vendor->vendor_id= $vendor_id;
+                        $order_vendor->coupon_id = $coupon_id;
+                        $order_vendor->coupon_code = $coupon_name;
                         $order_vendor->payable_amount= $vendor_payable_amount;
                         $order_vendor->discount_amount= $vendor_discount_amount;
                         $order_vendor->save();
