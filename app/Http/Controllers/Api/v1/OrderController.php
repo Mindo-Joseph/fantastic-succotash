@@ -7,7 +7,7 @@ use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor};
 
 class OrderController extends Controller {
     use ApiResponser;
@@ -195,6 +195,7 @@ class OrderController extends Controller {
                             $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
                             $product_taxable_amount = 0;
                             $product_payable_amount = 0;
+                            $vendor_taxable_amount = 0;
                             if($vendor_cart_product->product['taxCategory']){
                                 foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
                                     $rate = round($tax_rate_detail->tax_rate);
@@ -205,6 +206,7 @@ class OrderController extends Controller {
                                     $vendor_payable_amount = $vendor_payable_amount;
                                 }
                             }
+                            $vendor_taxable_amount += $taxable_amount;
                             $total_amount += $variant->price;
                             $order_product = new OrderProduct;
                             $order_product->order_id = $order->id;
@@ -242,7 +244,12 @@ class OrderController extends Controller {
                                 CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                             }
                         }
+                        $coupon_id = null;
+                        $coupon_name = null;
+                        $actual_amount = $vendor_payable_amount;
                         if($vendor_cart_product->coupon){
+                            $coupon_id = $vendor_cart_product->coupon->promo->id;
+                            $coupon_name = $vendor_cart_product->coupon->promo->name;
                             if($vendor_cart_product->coupon->promo->promo_type_id == 2){
                                 $coupon_discount_amount = $vendor_cart_product->coupon->promo->amount;
                                 $total_discount += $coupon_discount_amount;
@@ -261,9 +268,22 @@ class OrderController extends Controller {
                         $order_vendor->user_id= $user->id;
                         $order_vendor->order_id= $order->id;
                         $order_vendor->vendor_id= $vendor_id;
-                        $order_vendor->payable_amount= $vendor_payable_amount;
+                        $order_vendor->coupon_id = $coupon_id;
+                        $order_vendor->coupon_code = $coupon_name;
+                        $order_vendor->subtotal_amount = $actual_amount;
+                        $order_vendor->payable_amount = $vendor_payable_amount;
+                        $order_vendor->taxable_amount = $vendor_taxable_amount;
                         $order_vendor->discount_amount= $vendor_discount_amount;
                         $order_vendor->payment_option_id = $request->payment_option_id;
+                        $vendor_info = Vendor::where('id', $vendor_id)->first();
+                        if ($vendor_info) {
+                            if (($vendor_info->commission_percent) != null && $vendor_payable_amount > 0) {
+                                $order_vendor->admin_commission_percentage_amount = round($vendor_info->commission_percent * ($vendor_payable_amount / 100), 2);
+                            }
+                            if (($vendor_info->commission_fixed_per_order) != null && $vendor_payable_amount > 0) {
+                                $order_vendor->admin_commission_fixed_amount = $vendor_info->commission_fixed_per_order;
+                            }
+                        }
                         $order_vendor->save();
                         $order_status = new VendorOrderStatus();
                         $order_status->order_id = $order->id;
