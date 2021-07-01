@@ -21,30 +21,38 @@
                         <div class="row">
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                   
-                                    <h3><i class="mdi mdi-trophy-variant-outline text-primary mdi-24px"></i><span data-plugin="counterup">8954</span></h3>
-                                    <p class="text-muted font-15 mb-0">Type of Loyalty applied</p>
+                                    <h3>
+                                        <i class="mdi mdi-trophy-variant-outline text-primary mdi-24px"></i>
+                                        <span data-plugin="counterup">{{$type_of_loyality_applied_count}}</span>
+                                    </h3>
+                                    <p class="text-muted font-15 mb-0">Type Of Loyalty Applied</p>
                                 </div>
                             </div>
-
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <h3><i class="mdi mdi-currency-usd text-primary mdi-24px"></i><span data-plugin="counterup">7841</span></h3>
-                                    <p class="text-muted font-15 mb-0">Total Loyalty earned</p>
+                                    <h3>
+                                        <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
+                                        <span data-plugin="counterup">{{$total_loyalty_earned}}</span>
+                                    </h3>
+                                        <p class="text-muted font-15 mb-0">Total Loyalty Earned</p>
                                 </div>
                             </div>
-
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <h3><i class="mdi mdi-currency-usd text-primary mdi-24px"></i><span data-plugin="counterup">6521</span></h3>
-                                    <p class="text-muted font-15 mb-0">Total Loyalty spent</p>
+                                    <h3>
+                                        <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
+                                        <span data-plugin="counterup">{{$total_loyalty_spent}}</span>
+                                    </h3>
+                                    <p class="text-muted font-15 mb-0">Total Loyalty Spent</p>
                                 </div>
                             </div>
-
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
                                 <div class="p-2 text-center">
-                                    <h3><i class="mdi mdi-eye-outline text-primary mdi-24px"></i><span data-plugin="counterup">0</span> k</h3>
-                                    <p class="text-muted font-15 mb-0">Unique orders</p>
+                                    <h3>
+                                        <i class="mdi mdi-eye-outline text-primary mdi-24px"></i>
+                                        <span data-plugin="counterup">0</span> k
+                                    </h3>
+                                    <p class="text-muted font-15 mb-0">Unique Orders</p>
                                 </div>
                             </div>
                         </div>
@@ -67,19 +75,25 @@
                                         <input type="text" id="range-datepicker" class="form-control flatpickr-input" placeholder="2018-10-03 to 2018-10-10" readonly="readonly">
                                     </div>
                                     <div class="col">
-                                        <select class="form-control" id="vendor_select_box">
-                                            <option value="">Select</option>
+                                        <select class="form-control" id="loyalty_select_box">
+                                            <option value="">Select Loyalty</option>
+                                            @foreach($loyalty_card_details as $loyalty_card_detail)
+                                                <option value="{{$loyalty_card_detail->id}}">{{$loyalty_card_detail->name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <select class="form-control" name="" id="order_status_option_select_box">
-                                            <option value="">Select</option>
+                                        <select class="form-control" id="payment_option_select_box">
+                                            <option value="">Select Payment Option</option>
+                                            @foreach($payment_options as $payment_option)
+                                                <option value="{{$payment_option->id}}">{{$payment_option->title}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                   </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-striped" id="accounting_loyality_datatable">
                             <thead>
@@ -122,16 +136,17 @@
                         initDataTable();
                     }
                 });
-                $("#vendor_select_box, #order_status_option_select_box").change(function() {
+                $("#loyalty_select_box, #payment_option_select_box").change(function() {
                     initDataTable();
                 });
                 function initDataTable() {
                     $('#accounting_loyality_datatable').DataTable({
                         "dom": '<"toolbar">Bfrtip',
+                        "destroy": true,
+                        "scrollX": true,
                         "processing": true,
                         "serverSide": true,
                         "iDisplayLength": 50,
-                        destroy: true,
                         language: {
                             search: "",
                             searchPlaceholder: "Search By Order No.,Vendor,Customer Name"
@@ -140,7 +155,7 @@
                             className:'btn btn-success waves-effect waves-light',
                             text: '<span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV',
                             action: function ( e, dt, node, config ) {
-                                window.location.href = "{{ route('account.order.export') }}";
+                                window.location.href = "{{ route('account.loyalty.export') }}";
                             }
                         }],
                         ajax: {
@@ -148,8 +163,7 @@
                           data: function (d) {
                             d.search = $('input[type="search"]').val();
                             d.date_filter = $('#range-datepicker').val();
-                            d.vendor_id = $('#vendor_select_box option:selected').val();
-                            d.status_filter = $('#order_status_option_select_box option:selected').val();
+                            d.payment_option = $('#payment_option_select_box option:selected').val();
                           }
                         },
                         columns: [
@@ -160,7 +174,7 @@
                             {data: 'loyalty_points_used', name: 'loyalty_points_used', orderable: false, searchable: false},
                             {data: 'loyalty_membership', name: 'action', orderable: false, searchable: false},
                             {data: 'loyalty_points_earned', name: 'action', orderable: false, searchable: false},
-                            {data: 'payment_option_id', name: 'action', orderable: false, searchable: false},
+                            {data: 'payment_option.title', name: 'action', orderable: false, searchable: false},
                         ]
                     });
                 }

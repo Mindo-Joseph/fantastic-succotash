@@ -25,6 +25,8 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('categoryInfo', 'Client\DashBoardController@categoryInfo')->name('client.categoryInfo');
     Route::get('account/orders', [OrderController::class, 'index'])->name('account.orders');
     Route::get('account/promo-code', [PromoCodeController::class, 'index'])->name('account.promo.code');
+    Route::get('account/promo-code/filter', [PromoCodeController::class, 'filter'])->name('account.promo-code.filter');
+    Route::get('account/promo-code/export', [PromoCodeController::class, 'export'])->name('account.promo-code.export');
     Route::get('account/loyalty', [LoyaltyController::class, 'index'])->name('account.loyalty');
     Route::get('account/tax', [TaxController::class, 'index'])->name('account.tax');
     Route::get('account/vendor', [VendorController::class, 'index'])->name('account.vendor');
@@ -33,6 +35,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('account/vendor/filter', [VendorController::class, 'filter'])->name('account.vendor.filter');
     Route::get('account/order/filter', [OrderController::class, 'filter'])->name('account.order.filter');
     Route::get('account/loyalty/filter', [LoyaltyController::class, 'filter'])->name('account.loyalty.filter');
+    Route::get('account/loyalty/export', [LoyaltyController::class, 'export'])->name('account.loyalty.export');
     Route::get('account/order/export', [OrderController::class, 'export'])->name('account.order.export');
     Route::put('profile/{id}', 'Client\DashBoardController@updateProfile')->name('client.profile.update');
     Route::post('password/update', 'Client\DashBoardController@changePassword')->name('client.password.update');

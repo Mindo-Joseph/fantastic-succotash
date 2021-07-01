@@ -1,36 +1,35 @@
 <?php
 
 namespace App\Exports;
-
 use App\Models\OrderVendor;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\FromCollection;
 
 
-class OrderVendorListTaxExport implements FromCollection,WithHeadings,WithMapping
-{
+class OrderVendorListTaxExport implements FromCollection,WithHeadings,WithMapping{
     /**
     * @return \Illuminate\Support\Collection
     */
-    public function collection()
-    {
+    public function collection(){
         return OrderVendor::with(['orderDetail.paymentOption', 'user','vendor','payment'])->get();
     }
+
     public function headings(): array{
         return [
-        'Order Id',
-        'Date & Time',
-        'Customer Name',
-        'Vendor Name',
-        'Subtotal Amount',
-        'Promo Code Discount',
-        'Admin Commission [Fixed]',
-        'Admin Commission [%Age]',
-        'Final Amount',
-        'Payment Method'
-    ];
+            'Order Id',
+            'Date & Time',
+            'Customer Name',
+            'Vendor Name',
+            'Subtotal Amount',
+            'Promo Code Discount',
+            'Admin Commission [Fixed]',
+            'Admin Commission [%Age]',
+            'Final Amount',
+            'Payment Method'
+        ];
     }
+
     public function map($order_vendors): array
     {
         return [
