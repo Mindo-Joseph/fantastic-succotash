@@ -152,7 +152,7 @@ $timezone = Auth::user()->timezone;
                                           <tr>
                                               <td>{{convertDateTimeInTimeZone($ut->created_at, $timezone, 'l, F d, Y, H:i A')}}</td>
                                               <td  class="name_">{!!$reason[0]!!}</td>
-                                              <td class="text-right {{ ($ut->type == 'deposit') ? 'text-success' : (($ut->type == 'deposit') ? 'text-danger' : '') }}"><b>+${{$ut->amount}}</b></td>
+                                              <td class="text-right {{ ($ut->type == 'deposit') ? 'text-success' : (($ut->type == 'deposit') ? 'text-danger' : '') }}"><b>$@money($ut->amount)</b></td>
                                           </tr>
                                         @endforeach
                                     </tbody>
