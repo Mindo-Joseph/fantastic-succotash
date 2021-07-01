@@ -1483,6 +1483,7 @@ body.light {
     border-radius: .25rem;
     box-shadow: 0 16px 32px 0 rgb(0 0 0 / 5%) !important;
     border-radius: 16px !important;
+    overflow: hidden;
 }
 
 .dashboard-boxes p {
@@ -1666,13 +1667,97 @@ label.logo-size {
 }
 
 #promo-datatable .ellips{
-    width: 80%;
+    width: 50%;
 }
 
 
 #promo-datatable th, #promo-datatable td {
     padding: 10px;
 }
+
+
+.price-range-slider {
+    width: 100%;
+    float: left;
+    padding: 10px 0;
+  }
+  .price-range-slider .range-value {
+    margin: 0;
+  }
+  .price-range-slider .range-value input {
+    width: 100%;
+    background: none;
+    color: #000;
+    font-size: 16px;
+    font-weight: initial;
+    box-shadow: none;
+    border: none;
+    margin: 20px 0 20px 0;
+  }
+  .price-range-slider .range-bar {
+    border: none;
+    background: #000;
+    height: 3px;
+    width: calc(100% - 8px);
+    margin-left: 8px;
+  }
+  .price-range-slider .range-bar .ui-slider-range {
+    background: #43bee1;
+  }
+  .price-range-slider .range-bar .ui-slider-handle {
+    border: none;
+    border-radius: 25px;
+    background: #fff;
+    border: 2px solid #43bee1;
+    height: 17px;
+    width: 17px;
+    top: -0.52em;
+    cursor: pointer;
+  }
+  .price-range-slider .range-bar .ui-slider-handle + span {
+    background: #43bee1;
+  }
+  .price-range-slider {
+      width: 100%;
+      float: left;
+      padding: 10px 0;
+    }
+    .price-range-slider .range-value {
+      margin: 0;
+    }
+    .price-range-slider .range-value input {
+      width: 100%;
+      background: none;
+      color: #000;
+      font-size: 16px;
+      font-weight: initial;
+      box-shadow: none;
+      border: none;
+      margin: 20px 0 20px 0;
+    }
+    .price-range-slider .range-bar {
+      border: none;
+      background: #000;
+      height: 3px;
+      width: calc(100% - 8px);
+      margin-left: 8px;
+    }
+    .price-range-slider .range-bar .ui-slider-range {
+      background: #43bee1;
+    }
+    .price-range-slider .range-bar .ui-slider-handle {
+      border: none;
+      border-radius: 25px;
+      background: #fff;
+      border: 2px solid #43bee1;
+      height: 17px;
+      width: 17px;
+      top: -0.52em;
+      cursor: pointer;
+    }
+    .price-range-slider .range-bar .ui-slider-handle + span {
+      background: #43bee1;
+    }
 
 
 

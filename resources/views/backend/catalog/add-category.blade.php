@@ -5,9 +5,9 @@
 .add-category label{
     cursor: pointer;
 }
-.add-category input:checked ~ label {
+/* .add-category input:checked ~ label {
     box-shadow: 0 0px 8px rgb(67 190 225 / 55%);
-}
+} */
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <div class="col-md-6" id="addDispatcherHide" style="display: none;">
-                        <div class="form-group">
+                        <div class="form-group mb-0">
                             {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
                             {!! Form::hidden('tags', null, ['class'=>'form-control myTag1']) !!}
                             <span class="invalid-feedback" role="alert">
@@ -95,7 +95,8 @@
                             <img src="https://www.w3schools.com/tags/img_girl.jpg" alt="">
                         </div>
                         <div class="form-check form-check-info pl-0">
-                            <span for="customradio5">{{$type->title}}</span>
+                            <h5 for="customradio5">{{$type->title}}</h5>
+                            <p>{{$type->description}}</p>
                         </div>
                      </label>
                   </div>

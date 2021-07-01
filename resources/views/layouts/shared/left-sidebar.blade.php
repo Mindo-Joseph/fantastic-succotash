@@ -124,7 +124,7 @@
                 @if(in_array('CUSTOMERS',$allowed) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="{{route('customer.index')}}">
-                        <span class="icon-customize_icon"></span>
+                        <span class="icon-customer_icon"></span>
                         <span> Customers </span>
                     </a>
                 </li>
@@ -196,7 +196,7 @@
                 @if(in_array('PAYMENT',$allowed) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="{{route('payoption.index')}}">
-                        <span class="icon-payment_options_icon"></span>
+                        <span class="icon-payment_icon"></span>
                         <span> Payment Options </span>
                     </a>
                 </li>

@@ -1916,7 +1916,7 @@ header{
 }
 
 .footer-theme .sub-title li:first-child {
-    padding-top: 0;
+    padding-top: 10px;
 }
 
 footer h6 a{

@@ -25,11 +25,16 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
+    <div class="row align-items-center">
+        <div class="col-sm-6">
             <div class="page-title-box">
                 <h4 class="page-title">Customers</h4>
             </div>
+        </div>
+        <div class="col-sm-6 text-right">
+            <button class="btn btn-info waves-effect waves-light text-sm-right addUserModal"
+                userId="0" style=""><i class="mdi mdi-plus-circle mr-1"></i> Add
+            </button>
         </div>
     </div>
     <div class="row">
@@ -37,7 +42,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
-                        <div class="col-sm-8">
+                        <div class="col-sm-12">
                             <div class="text-sm-left">
                                 @if (\Session::has('success'))
                                 <div class="alert alert-success">
@@ -50,11 +55,6 @@
                                 </div>
                                 @endif
                             </div>
-                        </div>
-                        <div class="col-sm-4 text-right">
-                            <button class="btn btn-info waves-effect waves-light text-sm-right addUserModal"
-                             userId="0" style=""><i class="mdi mdi-plus-circle mr-1"></i> Add
-                            </button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -101,7 +101,7 @@
                                     <td> 
                                         <img src="{{$user->image['proxy_url'].'40/40'.$user->image['image_path']}}" class="rounded-circle" alt="{{$user->id}}" >
                                     </td>
-                                    <td>{{$user->name}}</td>
+                                    <td><a href="{{route('customer.new.edit', $user->id)}}"  class=""> {{$user->name}}</a></td>
                                     <td>{{$loginType}}</td>
                                     <td> 
                                         @if($user->is_email_verified == 1)

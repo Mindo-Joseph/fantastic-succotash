@@ -7,9 +7,15 @@
         
         @yield('css')
 
+        <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
+        
         <script src="{{asset('assets/js/jquery-3.1.1.min.js')}}"></script>
         <script src="{{asset('assets/js/jquery-ui.min.js')}}" ></script>
-        <script src="{{asset('assets/js/vendor.min.js')}}"></script>
+   
+        <script src="{{asset('assets/js/vendor.min.js')}}"></script>    
+        
+        
        
        <style type="text/css">
             .loader_box {
