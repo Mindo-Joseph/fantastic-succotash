@@ -144,15 +144,20 @@
         });
         function initDataTable() {
             $('#accounting_vendor_datatable').DataTable({
-                "destroy": true,
+                "dom": '<"toolbar">Bfrtip',
                 "scrollX": true,
+                "destroy": true,
                 "processing": true,
                 "serverSide": true,
                 "iDisplayLength": 50,
-                "dom": '<"toolbar">Bfrtip',
                 language: {
                     search: "",
                     searchPlaceholder: "Search By Order Id"
+                },
+                language: { paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" } 
+                },
+                drawCallback: function () {
+                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                 },
                 buttons: [{   
                     className:'btn btn-success waves-effect waves-light',

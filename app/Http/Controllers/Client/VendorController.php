@@ -123,7 +123,6 @@ class VendorController extends BaseController
         $client_preferences = ClientPreference::first();
         $vendor = Vendor::where('id', $id)->first();
         $returnHTML = view('backend.vendor.form')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor])->render();
-        // dd($returnHTML);
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
