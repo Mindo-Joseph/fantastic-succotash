@@ -270,9 +270,9 @@ class OrderController extends Controller {
                         $order_vendor->vendor_id= $vendor_id;
                         $order_vendor->coupon_id = $coupon_id;
                         $order_vendor->coupon_code = $coupon_name;
+                        $order_vendor->subtotal_amount = $actual_amount;
                         $order_vendor->payable_amount = $vendor_payable_amount;
                         $order_vendor->taxable_amount = $vendor_taxable_amount;
-                        $order_vendor->subtotal_amount = $actual_amount;
                         $order_vendor->discount_amount= $vendor_discount_amount;
                         $order_vendor->payment_option_id = $request->payment_option_id;
                         $vendor_info = Vendor::where('id', $vendor_id)->first();
