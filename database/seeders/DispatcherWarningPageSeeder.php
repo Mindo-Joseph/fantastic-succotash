@@ -14,7 +14,7 @@ class DispatcherWarningPageSeeder extends Seeder
      */
     public function run()
     {
-        $array = array('Design 1' => 'warning1.png', 'Design 2' => 'warning2.png');
+        $array = array('Design 1' => 'warning2.png', 'Design 2' => 'warning1.png');
         DispatcherWarningPage::truncate();
         foreach ($array as $key => $val) {
             DispatcherWarningPage::create(['title' => $key, 'image_path' => $val, 'status' => 1]);
