@@ -195,6 +195,7 @@ class OrderController extends Controller {
                             $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
                             $product_taxable_amount = 0;
                             $product_payable_amount = 0;
+                            $vendor_taxable_amount = 0;
                             if($vendor_cart_product->product['taxCategory']){
                                 foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
                                     $rate = round($tax_rate_detail->tax_rate);
@@ -205,6 +206,7 @@ class OrderController extends Controller {
                                     $vendor_payable_amount = $vendor_payable_amount;
                                 }
                             }
+                            $vendor_taxable_amount += $taxable_amount;
                             $total_amount += $variant->price;
                             $order_product = new OrderProduct;
                             $order_product->order_id = $order->id;
@@ -244,6 +246,7 @@ class OrderController extends Controller {
                         }
                         $coupon_id = null;
                         $coupon_name = null;
+                        $actual_amount = $vendor_payable_amount;
                         if($vendor_cart_product->coupon){
                             $coupon_id = $vendor_cart_product->coupon->promo->id;
                             $coupon_name = $vendor_cart_product->coupon->promo->name;
@@ -267,7 +270,9 @@ class OrderController extends Controller {
                         $order_vendor->vendor_id= $vendor_id;
                         $order_vendor->coupon_id = $coupon_id;
                         $order_vendor->coupon_code = $coupon_name;
-                        $order_vendor->payable_amount= $vendor_payable_amount;
+                        $order_vendor->payable_amount = $vendor_payable_amount;
+                        $order_vendor->taxable_amount = $vendor_taxable_amount;
+                        $order_vendor->subtotal_amount = $actual_amount;
                         $order_vendor->discount_amount= $vendor_discount_amount;
                         $order_vendor->payment_option_id = $request->payment_option_id;
                         $vendor_info = Vendor::where('id', $vendor_id)->first();
