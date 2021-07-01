@@ -104,7 +104,6 @@
             $('#accounting_vendor_datatable').DataTable({
                 "dom": '<"toolbar">Bfrtip',
                 "destroy": true,
-                "scrollX": true,
                 "processing": true,
                 "serverSide": true,
                 "iDisplayLength": 50,
