@@ -46,8 +46,13 @@ class PromoCodeController extends Controller{
                 $vendor_order->created_date = convertDateTimeInTimeZone($vendor_order->created_at, $timezone, 'Y-m-d h:i:s A');
                 $vendor_order->user_name = $vendor_order->user ? $vendor_order->user->name : '';
                 $vendor_order->view_url = route('order.show.detail', [$vendor_order->order_id, $vendor_order->vendor_id]);
-                $vendor_order->vendor_paid_promo = $vendor_order->coupon_paid_by == 0 ?  $vendor_order->discount_amount : '0.00';
-                $vendor_order->admin_paid_promo = $vendor_order->coupon_paid_by == 1 ?  $vendor_order->discount_amount : '0.00';
+                if($vendor_order->coupon_paid_by == 0){
+                    $vendor_order->vendor_paid_promo = $vendor_order->discount_amount ?  $vendor_order->discount_amount : '0.00';
+                    $vendor_order->admin_paid_promo = '0.00';
+                }else{
+                    $vendor_order->admin_paid_promo = $vendor_order->discount_amount ?  $vendor_order->discount_amount : '0.00';
+                    $vendor_order->vendor_paid_promo = '0.00';
+                }
                 if($vendor_order->orderstatus){
                     $order_status_detail = $vendor_order->orderstatus->where('order_id', $vendor_order->order_id)->orderBy('id', 'DESC')->first();
                     if($order_status_detail){

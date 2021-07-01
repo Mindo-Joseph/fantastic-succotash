@@ -68,7 +68,7 @@
                                     </div>
                                     <div class="col">
                                         <select class="form-control" id="order_status_option_select_box">
-                                            <option value="">Select</option>
+                                            <option value="">Select Order Status</option>
                                             @forelse($order_status_options as $order_status_option)
                                                 <option value="{{$order_status_option->title}}">{{$order_status_option->title}}</option>
                                             @empty
@@ -77,7 +77,7 @@
                                     </div>
                                     <div class="col">
                                         <select class="form-control" name="" id="promo_code_option_select_box">
-                                            <option value="">Select</option>
+                                            <option value="">Select Coupon Code</option>
                                             @forelse($promo_code_options as $promo_code_option)
                                                 <option value="{{$promo_code_option->coupon_id}}">{{$promo_code_option->coupon_code}}</option>
                                             @empty
