@@ -28,8 +28,6 @@ $timezone = Auth::user()->timezone;
                 </div>
             </div>
         </div>    
-        
-        <!-- Order Tabbar COntent -->
         <div class="row">
             <div class="col-sm-12 col-lg-12 tab-product pt-0">
                 <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">

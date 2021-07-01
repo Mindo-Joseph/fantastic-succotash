@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Product, Type, VendorCategory};
+use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, ClientPreference, Product, Type, VendorCategory};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -31,6 +31,7 @@ class VendorController extends BaseController
     public function index()
     {
         $csvVendors = CsvVendorImport::all();
+        $client_preferences = ClientPreference::first();
         $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->where('status', '!=', '2')->orderBy('id', 'desc');
         if (Auth::user()->is_superadmin == 0) {
             $vendors = $vendors->whereHas('permissionToUser', function ($query) {
@@ -40,12 +41,12 @@ class VendorController extends BaseController
         $vendors = $vendors->get();
         if(count($vendors) == 1){
             if (Auth::user()->is_superadmin == 1) {
-                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
+                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors, 'client_preferences'=> $client_preferences]);
             }else{
                 return Redirect::route('vendor.show', $vendors->first()->id);
             }
         }else{
-            return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
+            return view('backend/vendor/index')->with(['client_preferences' => $client_preferences, 'vendors' => $vendors, 'csvVendors' => $csvVendors]);
         }
 
     }
@@ -119,8 +120,9 @@ class VendorController extends BaseController
      */
     public function edit($domain = '', $id)
     {
+        $client_preferences = ClientPreference::first();
         $vendor = Vendor::where('id', $id)->first();
-        $returnHTML = view('backend.vendor.form')->with(['vendor' => $vendor])->render();
+        $returnHTML = view('backend.vendor.form')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
@@ -250,8 +252,9 @@ class VendorController extends BaseController
         $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
             ->where('is_active', 1)
             ->orderBy('is_primary', 'desc')->get();
+        $client_preferences = ClientPreference::first();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend/vendor/vendorCategory')->with(['vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build,'csvVendors'=> $csvVendors]);
+        return view('backend/vendor/vendorCategory')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build,'csvVendors'=> $csvVendors]);
     }
 
     /**   show vendor page - catalog tab      */
@@ -307,7 +310,8 @@ class VendorController extends BaseController
         }
         $product_categories = VendorCategory::with('category')->where('status', 1)->where('vendor_id', $id)->get();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend.vendor.vendorCatalog')->with(['vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
+        $client_preferences = ClientPreference::first();
+        return view('backend.vendor.vendorCatalog')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
     }
 
     /**       delete vendor       */

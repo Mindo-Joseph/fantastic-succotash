@@ -39,6 +39,7 @@ class UserController extends BaseController{
      */
     public function deleteCustomer($domain = '', $uid, $action){
         $user = User::where('id', $uid)->firstOrFail();
+        $user->status = 3;
         $user->save();
         $msg = 'activated';
         if($action == 2){

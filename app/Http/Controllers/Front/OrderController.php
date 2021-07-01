@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Front;
 
 use DB;
+use Log;
 use Auth;
 use Omnipay\Omnipay;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use App\Models\ClientPreference;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, VendorOrderStatus};
-use App\Models\ClientPreference;
-use GuzzleHttp\Client;
-use Log;
+use App\Models\{Order, OrderProduct, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, VendorOrderStatus,OrderTax};
 
 class OrderController extends FrontController
 {
@@ -106,6 +106,7 @@ class OrderController extends FrontController
             $total_discount = 0;
             $taxable_amount = 0;
             $payable_amount = 0;
+            $tax_category_ids = [];
             $total_delivery_fee = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                 $delivery_fee = 0;
@@ -125,6 +126,9 @@ class OrderController extends FrontController
                     $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
                     if (isset($vendor_cart_product->product['taxCategory'])) {
                         foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
+                            if(!in_array($vendor_cart_product->product['taxCategory']['id'], $tax_category_ids)){
+                                $tax_category_ids[] = $vendor_cart_product->product['taxCategory']['id'];
+                            }
                             $rate = round($tax_rate_detail->tax_rate);
                             $tax_amount = ($price_in_dollar_compare * $rate) / 100;
                             $product_tax = $quantity_price * $rate / 100;
@@ -248,6 +252,14 @@ class OrderController extends FrontController
             CartCoupon::where('cart_id', $cart->id)->delete();
             CartProduct::where('cart_id', $cart->id)->delete();
             CartProductPrescription::where('cart_id', $cart->id)->delete();
+            if(count($tax_category_ids)){
+                foreach ($tax_category_ids as $tax_category_id) {
+                    $order_tax = new OrderTax();
+                    $order_tax->order_id = $order->id;
+                    $order_tax->tax_category_id = $tax_category_id;
+                    $order_tax->save();
+                }
+            }
             if ($request->payment_option_id == 4) {
                 Payment::insert([
                     'date' => date('Y-m-d'),
@@ -256,9 +268,6 @@ class OrderController extends FrontController
                     'balance_transaction' => $order->payable_amount,
                 ]);
             }
-            //  if(count($delivery_on_vendors))
-            //   $order_dispatch = $this->placeRequestToDispatch($order,$delivery_on_vendors,$request);
-
             DB::commit();
             return $order;
         } catch (Exception $e) {
