@@ -140,20 +140,22 @@
                                     <div class="displayProducts">
                                         <div class="product-wrapper-grid">
                                             <div class="row margin-res">
-                                            @if(!empty($listData))
-                                                @foreach($listData as $key => $data)
-                                                    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                                                @if(!empty($listData))
+                                                    @foreach($listData as $key => $data)
+                                                    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4">
                                                         <div class="product-box">
-                                                            <div class="text-center">
-                                                                <a href="{{ $data->redirect_url }}">
-                                                                    <?php //print_r($data->image);?>
-                                                                    <img width="100%" src="{{ $data->image['proxy_url'] }}150/150{{ $data->image['image_path'] }}" alt="">
+                                                            <a href="#">
+                                                                <div class="celebrity-avatar text-center"><img width="100%" alt="{{$data->name}}" src="{{$data->avatar['proxy_url'] . '150/150' . $data->avatar['image_path']}}" ></div>
+                                                            </a>
+                                                            <div class="celebrity-detail">
+                                                                <a href="">
+                                                                    <h5 class="text-center">{{$data->name}}</h5>
                                                                 </a>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                @endforeach
-                                            @endif
+                                                    @endforeach
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="pagination pagination-rounded justify-content-end mb-0">
