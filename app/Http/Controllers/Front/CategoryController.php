@@ -107,8 +107,7 @@ class CategoryController extends FrontController
                     ->groupBy('product_variant_sets.variant_type_id')->get();
         $redirect_to = $category->type->redirect_to;
         $listData = $this->listData($langId, $category->id, $redirect_to);
-        // dd($listData->toArray());
-        $page = (strtolower($redirect_to) != '') ? $redirect_to : 'product';
+        $page = (strtolower($redirect_to) != '') ? strtolower($redirect_to) : 'product';
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
