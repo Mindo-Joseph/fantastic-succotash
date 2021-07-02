@@ -28,19 +28,29 @@ class OrderController extends FrontController
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         
-        $pastOrders = Order::with(['vendors.products','products.productRating', 'user', 'address', 'orderStatusVendor'=>function($q){
-            $q->where('order_status_option_id', 5);
-        }])->whereHas('orderStatusVendor',function($q){
+        $pastOrders = Order::with(['vendors.products','products.productRating', 'user', 'address'])->whereHas('orderStatusVendor',function($q){
             $q->where('order_status_option_id', 5);
         })
-        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(1);
+        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(10);
+
+        $activeOrders = Order::with(['vendors.products', 'user', 'address'])->whereHas('orderStatusVendor',function($q){
+            $q->where('order_status_option_id', '!=', 5);
+        })
+        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(10);
+
+        foreach ($activeOrders as $order) {
+            foreach ($order->vendors as $vendor) {
+                $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
+                $vendor->order_status = $vendor_order_status ? strtolower($vendor_order_status->OrderStatusOption->title) : '';
+            }
+        }
+        foreach ($pastOrders as $order) {
+            foreach ($order->vendors as $vendor) {
+                $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
+                $vendor->order_status = $vendor_order_status ? strtolower($vendor_order_status->OrderStatusOption->title) : '';
+            }
+        }
         
-        $activeOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'=>function($q){
-            $q->where('order_status_option_id', '!=', 5);
-        }])->whereHas('orderStatusVendor',function($q){
-            $q->where('order_status_option_id', '!=', 5);
-        })
-        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(1);
         return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders]);
     }
 

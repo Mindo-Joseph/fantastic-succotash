@@ -157,7 +157,7 @@ class LoyaltyController extends BaseController
     public function getRedeemPoints($domain = '')
     {
         $currency = ClientCurrency::where('is_primary', '=', 1)->first();
-        $loyaltyCard = LoyaltyCard::first();
+        $loyaltyCard = LoyaltyCard::firstOrFail();
         if ($loyaltyCard->redeem_points_per_primary_currency == null) {
             return response()->json(['symbol' => $currency->currency->symbol,'value' => '0']);
         }else {

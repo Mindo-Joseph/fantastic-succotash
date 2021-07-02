@@ -84,11 +84,11 @@
                                     <td><a href="{{ route('vendor.show', $vendor->id) }}">{{ $vendor->name }}</a> </td>
                                     <td>
                                     @if($vendor->show_slot == 1)
-                                        <span class="badge bg-soft-success text-success">Online</span>
+                                        <span class="badge bg-soft-success text-success">Open</span>
                                     @elseif($vendor->slot->count() > 0)
-                                        <span class="badge bg-soft-success text-success">Online</span>
+                                        <span class="badge bg-soft-success text-success">Open</span>
                                     @else
-                                        <span class="badge bg-soft-danger text-danger">Offline</span>
+                                        <span class="badge bg-soft-danger text-danger">Closed</span>
                                     @endif
                                     </td>
                                     <td class="address_txt"> <p class="ellips_txt" data-toggle="tooltip" data-placement="top" title="{{ $vendor->address }}">{{ $vendor->address }}</p></td>
