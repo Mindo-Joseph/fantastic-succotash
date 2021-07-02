@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet, ServiceArea};
+use App\Models\{Currency, Banner, Category, Brand, Product, Celebrity, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet, ServiceArea};
 use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
@@ -133,14 +133,15 @@ class CategoryController extends FrontController
                 ->whereHas('bc',function($q) use($cid){
                     $q->where('category_id', $cid);
                 })
-                ->select('id', 'image')
-                ->where('status', '!=', $this->field_status)
-                ->orderBy('position', 'asc')
-                ->paginate($pagiNate);
+                ->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->paginate($pagiNate);
             foreach ($brands as $brand) {
                 $brand->redirect_url = route('brandDetail', $brand->id);
             }
             return $brands;
+        }
+        elseif(strtolower($type) == 'celebrity'){
+            $celebs = Celebrity::orderBy('name', 'asc')->paginate($pagiNate);
+            return $celebs;
         }
         else{
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();

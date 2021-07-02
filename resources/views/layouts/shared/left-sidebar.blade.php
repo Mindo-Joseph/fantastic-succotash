@@ -165,7 +165,7 @@
                 <li>
                     <a href="{{route('configure.index')}}">
                         <span class="icon-configure_icon"></span>
-                        <span> Configure </span>
+                        <span> Configurations </span>
                     </a>
                 </li>
                 @endif

@@ -14,7 +14,7 @@
     <div class="row">
         <!-- <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Payment</h4>
+                <h4 class="page-title">Payment Options</h4>
             </div>
         </div> -->
       <div class="col-12">
@@ -35,7 +35,7 @@
             <div class="col-sm-8">
                 <div class="text-sm-left">
                     <div class="page-title-box">
-                        <h4 class="page-title">Payment</h4>
+                        <h4 class="page-title">Payment Options</h4>
                     </div>
                 </div>
             </div>

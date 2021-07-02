@@ -142,10 +142,10 @@
                                             <div class="row margin-res">
                                                 @if(!empty($category->childs) && count($category->childs) > 0)
                                                     @foreach($category->childs->toArray() as $cate)
-                                                    <div class="col-xl-2 col-6 col-grid-box">
+                                                    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-xs-6">
                                                         <div class="product-box">
                                                             <a href="{{route('categoryDetail', $cate['id'])}}">
-                                                                <div class="category-image"><img alt="" src="{{$cate['icon']['proxy_url'] . '150/150' . $cate['icon']['image_path']}}" ></div>
+                                                                <div class="category-image text-center"><img width="100%" alt="" src="{{$cate['icon']['proxy_url'] . '150/150' . $cate['icon']['image_path']}}" ></div>
                                                             </a>
                                                             <div class="category-details">
                                                                 <a href="{{route('categoryDetail', $cate['id'])}}">
