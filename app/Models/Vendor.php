@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 //use Laravel\Scout\Searchable;
 
@@ -15,6 +15,12 @@ class Vendor extends Model{
       return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
     }
 
+    public function slot(){
+      $client = Client::first();
+      $mytime = Carbon::now()->setTimezone($client->timezone);
+      $current_time = $mytime->toTimeString();
+      return $this->hasMany('App\Models\VendorSlot', 'vendor_id', 'id')->has('day')->where('start_time', '<', $current_time)->where('end_time', '>', $current_time);
+    }
     
     public function getLogoAttribute($value){
       $values = array();

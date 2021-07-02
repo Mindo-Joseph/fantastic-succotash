@@ -59,6 +59,7 @@
                                 <tr>
                                     <th>Icon</th>
                                     <th>Name</th>
+                                    <th>Status</th>
                                     <th>Address</th>
                                     <th>Offers</th>
                                     <th class="text-center">Can Add <br> Category</th>
@@ -81,6 +82,15 @@
                                         <a class="round_img_box" href="{{ route('vendor.show', $vendor->id) }}"><img class="rounded-circle" src="{{$vendor->logo['proxy_url'].'90/90'.$vendor->logo['image_path']}}" alt="{{$vendor->id}}"></a>
                                     </td>
                                     <td><a href="{{ route('vendor.show', $vendor->id) }}">{{ $vendor->name }}</a> </td>
+                                    <td>
+                                    @if($vendor->show_slot == 1)
+                                        <span class="badge bg-soft-success text-success">Online</span>
+                                    @elseif($vendor->slot->count() > 0)
+                                        <span class="badge bg-soft-success text-success">Online</span>
+                                    @else
+                                        <span class="badge bg-soft-danger text-danger">Offline</span>
+                                    @endif
+                                    </td>
                                     <td class="address_txt"> <p class="ellips_txt" data-toggle="tooltip" data-placement="top" title="{{ $vendor->address }}">{{ $vendor->address }}</p></td>
 
                                         <td>

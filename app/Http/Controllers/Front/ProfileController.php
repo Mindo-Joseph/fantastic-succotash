@@ -59,7 +59,7 @@ class ProfileController extends FrontController
                 $response['send_email'] = 1;
             }
             catch(\Exception $e){
-                return response()->json(['data' => $response]);
+                return response()->json(['data' => $e->getMessage()]);
             }
         }
         return response()->json(array('success' => true, 'message' => 'Send Successfully'));

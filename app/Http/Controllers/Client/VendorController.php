@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, ClientPreference, Product, Type, VendorCategory};
+use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -17,6 +17,7 @@ use Redirect;
 use Phumbor;
 use Session;
 use Image;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class VendorController extends BaseController
@@ -32,7 +33,7 @@ class VendorController extends BaseController
     {
         $csvVendors = CsvVendorImport::all();
         $client_preferences = ClientPreference::first();
-        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->where('status', '!=', '2')->orderBy('id', 'desc');
+        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->with('slot')->where('status', '!=', '2')->orderBy('id', 'desc');
         if (Auth::user()->is_superadmin == 0) {
             $vendors = $vendors->whereHas('permissionToUser', function ($query) {
                 $query->where('user_id', Auth::user()->id);

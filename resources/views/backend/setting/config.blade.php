@@ -4,7 +4,6 @@
 @section('content')
 
 <div class="container-fluid">
-   <!-- start page title -->
    <div class="row">
       <div class="col-12">
          <div class="page-title-box">
@@ -27,7 +26,6 @@
          </div>
       </div>
    </div>
-   <!-- end page title -->
    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
       @csrf
       <div class="row">
@@ -177,7 +175,6 @@
          </div>
       </div>
    </form>
-   <!-- start page title -->
    <div class="row">
       <div class="col-12">
          <div class="page-title-box">
@@ -185,7 +182,6 @@
          </div>
       </div>
    </div>
-   <!-- end page title -->
    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
       <input type="hidden" name="social_login" id="social_login" value="1">
       @csrf
@@ -409,7 +405,6 @@
          </div>
       </div>
    </form>
-   <!-- start page title -->
    <div class="row">
       <div class="col-12">
          <div class="page-title-box">
@@ -417,7 +412,6 @@
          </div>
       </div>
    </div>
-   <!-- end page title -->  
    <div class="row">
       <div class="col-xl-3 mb-3">
          <form class="h-100" method="POST" action="{{route('configure.update', Auth::user()->code)}}">
@@ -646,7 +640,6 @@
          </form>
       </div>
    </div>
-   <!-- start page title -->
    <div class="row">
       <div class="col-12">
          <div class="page-title-box">
@@ -654,7 +647,6 @@
          </div>
       </div>
    </div>
-   <!-- end page title -->
    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
       <input type="hidden" name="verify_config" id="verify_config" value="1">
       @csrf
@@ -814,59 +806,7 @@
          </div>
       </form>
    </div>
-   <!-- <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
-      @csrf
-      <div class="row">
-         <div class="col-xl-11 col-md-offset-1">
-            <div class="card-box h-100">
-               <h4 class="header-title text-uppercase">Personal Access Token</h4>
-               <p class="sub-header">
-                  View and Generate API keys.
-               </p>
-               <div class="row mb-2">
-                  <div class="col-md-6">
-                     <div class="form-group mb-3">
-                        <label for="personal_access_token_v1">V1 API ACCESS TOKEN</label>
-                        <input type="text" name="personal_access_token_v1" id="personal_access_token_v1"
-                           placeholder="" class="form-control"
-                           value="{{ old('personal_access_token_v1', $preference->personal_access_token_v1 ?? '')}}">
-                        @if($errors->has('personal_access_token_v1'))
-                        <span class="text-danger" role="alert">
-                        <strong>{{ $errors->first('personal_access_token_v1') }}</strong>
-                        </span>
-                        @endif
-                     </div>
-                  </div>
-                  <div class="col-md-6">
-                     <div class="form-group mb-3">
-                        <label for="personal_access_token_v2" class="row">
-                        <span class="col-md-6">V2 API KEYS</span>
-                        <span class="text-right col-md-6"><a href="javascript: genrateKeyAndToken();">Generate Key</a></span>
-                        </label>
-                        <input type="text" name="personal_access_token_v2" id="personal_access_token_v2"
-                           placeholder="No API key found.." class="form-control"
-                           value="{{ old('personal_access_token_v2', $preference->personal_access_token_v2 ?? '')}}">
-                        @if($errors->has('personal_access_token_v2'))
-                        <span class="text-danger" role="alert">
-                        <strong>{{ $errors->first('personal_access_token_v2') }}</strong>
-                        </span>
-                        @endif
-                     </div>
-                  </div>
-               </div>
-               <div class="row mb-2">
-                  <div class="col-md-2">
-                     <div class="form-group mb-0 text-center">
-                        <button class="btn btn-info btn-block" type="submit"> Save </button>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      </form> -->
 </div>
-<!-- container -->
 <div id="show-map-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
    <div class="modal-dialog modal-full-width">
       <div class="modal-content">
@@ -888,7 +828,6 @@
          </div>
          <div class="modal-footer">
             <button type="submit" class="btn btn-info waves-effect waves-light selectMapLocation">Ok</button>
-            <!--<button type="Cancel" class="btn btn-info waves-effect waves-light cancelMapLocation">cancel</button>-->
          </div>
       </div>
    </div>
@@ -896,11 +835,6 @@
 @endsection
 @section('script')
 <script type="text/javascript">
-   /*function toggleDisplayCustomDomain(){
-       $("#custom_domain_name").toggle( 'fast', function(){ 
-   
-       });
-   }*/
    
    function generateRandomString(length) {
      var text = "";
@@ -930,14 +864,12 @@
    
    function loadMap(autocompletesWraps){
    
-      //  console.log(autocompletesWraps);
        $.each(autocompletesWraps, function(index, name) {
            const geocoder = new google.maps.Geocoder;
        
            if($('#'+name).length == 0) {
                return;
            }
-           //autocomplete[name] = new google.maps.places.Autocomplete(('.form-control')[0], { types: ['geocode'] }); console.log('hello');
            autocomplete[name] = new google.maps.places.Autocomplete(document.getElementById(name), { types: ['geocode'] });
                
            google.maps.event.addListener(autocomplete[name], 'place_changed', function() {
@@ -992,13 +924,11 @@
              });
            document.getElementById('lat_map').value= lats;
            document.getElementById('lng_map').value= lngs ; 
-           // marker drag event
            google.maps.event.addListener(marker,'drag',function(event) {
                document.getElementById('lat_map').value = event.latLng.lat();
                document.getElementById('lng_map').value = event.latLng.lng();
            });
    
-           //marker drag event end
            google.maps.event.addListener(marker,'dragend',function(event) {
                var zx =JSON.stringify(event);
                console.log(zx);
@@ -1006,12 +936,9 @@
    
                document.getElementById('lat_map').value = event.latLng.lat();
                document.getElementById('lng_map').value = event.latLng.lng();
-               //alert("lat=>"+event.latLng.lat());
-               //alert("long=>"+event.latLng.lng());
            });
            $('#add-customer-modal').addClass('fadeIn');
        $('#show-map-modal').modal({
-           //backdrop: 'static',
            keyboard: false
        });
    
@@ -1036,12 +963,8 @@
    
        if($('#is_hyperlocal:checked').length != 1){
            $('.disableHyperLocal').hide();
-           //$('.disableHyperLocal').attr('style', "cursor: not-allowed;");
-           //$('.disableHyperLocal input').attr('style', "pointer-events: none;");
        }else{
            $('.disableHyperLocal').show();
-           //$('.disableHyperLocal').attr('style', "cursor: auto;");
-           //$('.disableHyperLocal input').attr('style', "pointer-events: auto;");
        }
    }
    
@@ -1061,12 +984,8 @@
    
        if($('#need_dispacher_ride:checked').length != 1){
            $('.dispatcherFields').hide();
-           //$('.disableHyperLocal').attr('style', "cursor: not-allowed;");
-           //$('.disableHyperLocal input').attr('style', "pointer-events: none;");
        }else{
            $('.dispatcherFields').show();
-           //$('.disableHyperLocal').attr('style', "cursor: auto;");
-           //$('.disableHyperLocal input').attr('style', "pointer-events: auto;");
        }
    }
    
@@ -1074,7 +993,6 @@
    var hyprlocal = $('#fb_login');
    
    hyprlocal[0].onchange = function() {
-   
        if($('#fb_login:checked').length != 1){
            $('.fb_row').hide();
        }else{
@@ -1085,7 +1003,6 @@
    var hyprlocal = $('#twitter_login');
    
    hyprlocal[0].onchange = function() {
-   
        if($('#twitter_login:checked').length != 1){
            $('.twitter_row').hide();
        }else{
@@ -1096,7 +1013,6 @@
    var hyprlocal = $('#google_login');
    
    hyprlocal[0].onchange = function() {
-   
        if($('#google_login:checked').length != 1){
            $('.google_row').hide();
        }else{
@@ -1114,7 +1030,28 @@
            $('.apple_row').show();
        }
    }
-   
-   
+
+   var dinein_option = $('#dinein_check');
+   dinein_option[0].onchange = function() {
+      optionsChecked("dinein_check");
+   }
+   var takeaway_option = $('#takeaway_check');
+   takeaway_option[0].onchange = function() {
+      optionsChecked("takeaway_check");
+   }
+   var delivery_option = $('#delivery_check');
+   delivery_option[0].onchange = function() {
+      optionsChecked("delivery_check");
+   }
+
+   function optionsChecked(id){
+      var delivery_checked = $("#delivery_check").is(":checked");
+      var takeaway_checked = $("#takeaway_check").is(":checked");
+      var dinein_checked = $("#dinein_check").is(":checked");
+      if(dinein_checked == false && takeaway_checked == false && delivery_checked == false){
+         alert("One option must be enables");
+         $("#"+id).trigger('click');
+      }
+   }
 </script>
 @endsection
