@@ -374,7 +374,9 @@
                                                                                         <span>$@money($product_subtotal_amount)</span>
                                                                                     </li>
 
-                                                                                    <label class="return-order-product" data-id="{{$order->id??0}}"  data-vendor_id="{{$vendor->vendor_id??0}}">Return
+                                                                                    <label class="return-order-product" data-id="{{$order->id??0}}"  data-vendor_id="{{$vendor->vendor_id??0}}"><td class="text-center" colspan="3">
+                                                                                        <button class="btn btn-solid" type="submit">Return</button>
+                                                                                    </td>
                                                                                     </label>
                                                                                 </ul>
                                                                             </div>
@@ -706,7 +708,7 @@
 </div>
 
 <!-- product return modal -->
-<div class="modal fade return-order" id="return_order" tabindex="-1" aria-labelledby="return_orderLabel">
+<div class="modal fade return-order" id="return_order_model" tabindex="-1" aria-labelledby="return_orderLabel">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
@@ -779,7 +781,7 @@ $('body').on('click', '.return-order-product', function (event) {
         var vendor_id = $(this).data('vendor_id');
         $.get('/return-order/get-order-data-in-model?id=' + id +'&vendor_id=' + vendor_id, function(markup)
                 {   
-                    $('#return_order').modal('show'); 
+                    $('#return_order_model').modal('show'); 
                     $('#return-order-form-modal').html(markup);
                 });
     });        
