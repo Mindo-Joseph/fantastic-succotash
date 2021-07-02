@@ -34,7 +34,7 @@
                <div class="col-12">
                   <div class="card-box h-100">
                      <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h4 class="header-title text-uppercase mb-0">Hyperlocal</h4>
+                        <h4 class="header-title mb-0">Hyperlocal</h4>
                         <button class="btn btn-info d-block" type="submit"> Save </button>
                      </div>
                      <p class="sub-header">Enable location based visibility of Vendors and set the Default Location.</p>
@@ -97,7 +97,7 @@
          <div class="col-lg-4 col-md-6 mb-3">
             <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
-                  <h4 class="header-title text-uppercase mb-0">Last Mile Delivery</h4>
+                  <h4 class="header-title mb-0">Last Mile Delivery</h4>
                   <button class="btn btn-info d-block" type="submit"> Save </button>
                </div>
                <p class="sub-header">Offer Last Mile Delivery with Royo Dispatcher.</p>
@@ -147,7 +147,7 @@
          <div class="col-lg-4 col-md-6 mb-3">
             <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
-                  <h4 class="header-title text-uppercase mb-0">Pickup & Delivery</h4>
+                  <h4 class="header-title mb-0">Pickup & Delivery</h4>
                   <button class="btn btn-info d-block" type="submit"> Save </button>
                </div>
                <p class="sub-header">Offer Pickup & Delivery with Royo Dispatcher.</p>

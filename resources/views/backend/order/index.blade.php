@@ -133,7 +133,10 @@
                 </a>
             </div>
         </div>
-    </div>    
+    </div>  
+    <div class="loader">
+        <div class="spinner-border avatar-lg text-primary m-2" role="status"></div>
+    </div>  
     <div class="row">
         <div class="col-sm-12 col-lg-12 tab-product pt-0">
             <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
