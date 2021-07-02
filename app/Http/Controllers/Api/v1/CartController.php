@@ -437,7 +437,7 @@ class CartController extends BaseController{
                         if(!empty($prod->addon)){
                             foreach ($prod->addon as $ck => $addons) {
                                 $opt_quantity_price = 0;
-                                $opt_price_in_currency = $addons->option->price;
+                                $opt_price_in_currency = $addons->option ? $addons->option->price : 0;
                                 $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
                                 $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
                                 $vendorAddons[$ck]['quantity'] = $prod->quantity;
