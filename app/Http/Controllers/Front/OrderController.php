@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Front;
 
 use DB;
-use Log;
 use Auth;
 use Omnipay\Omnipay;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use App\Models\ClientPreference;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, VendorOrderStatus,OrderTax};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, VendorOrderStatus};
+use App\Models\ClientPreference;
+use GuzzleHttp\Client;
+use Log;
 
 class OrderController extends FrontController
 {
@@ -48,7 +48,7 @@ class OrderController extends FrontController
             $q->whereHas('productReturn');
         }])->whereHas('products.productReturn')
         ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(1);
-      
+       
          return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders, 'returnOrders'=>$returnOrders]);
     }
 
@@ -114,7 +114,6 @@ class OrderController extends FrontController
             $total_discount = 0;
             $taxable_amount = 0;
             $payable_amount = 0;
-            $tax_category_ids = [];
             $total_delivery_fee = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                 $delivery_fee = 0;
@@ -134,9 +133,6 @@ class OrderController extends FrontController
                     $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
                     if (isset($vendor_cart_product->product['taxCategory'])) {
                         foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
-                            if(!in_array($vendor_cart_product->product['taxCategory']['id'], $tax_category_ids)){
-                                $tax_category_ids[] = $vendor_cart_product->product['taxCategory']['id'];
-                            }
                             $rate = round($tax_rate_detail->tax_rate);
                             $tax_amount = ($price_in_dollar_compare * $rate) / 100;
                             $product_tax = $quantity_price * $rate / 100;
@@ -209,20 +205,20 @@ class OrderController extends FrontController
                         $vendor_discount_amount += $percentage_amount;
                     }
                 }
+
                 $total_delivery_fee += $delivery_fee;
                 $OrderVendor = new OrderVendor();
                 $OrderVendor->status = 0;
                 $OrderVendor->user_id= $user->id;
                 $OrderVendor->order_id = $order->id;
                 $OrderVendor->vendor_id = $vendor_id;
+                $OrderVendor->delivery_fee = $delivery_fee;
                 $OrderVendor->coupon_id = $coupon_id;
                 $OrderVendor->coupon_code = $coupon_name;
-                $OrderVendor->delivery_fee = $delivery_fee;
-                $OrderVendor->subtotal_amount = $actual_amount;
                 $OrderVendor->discount_amount = $vendor_discount_amount;
-                $OrderVendor->taxable_amount   = $vendor_taxable_amount;
-                $OrderVendor->payment_option_id = $request->payment_option_id;
                 $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
+                $OrderVendor->subtotal_amount = $actual_amount;
+                $OrderVendor->taxable_amount   = $vendor_taxable_amount;
                 $OrderVendor->discount_amount = $this->getDeliveryFeeDispatcher($vendor_id);
                 $vendor_info = Vendor::where('id', $vendor_id)->first();
                 if ($vendor_info) {
@@ -236,8 +232,8 @@ class OrderController extends FrontController
                 $OrderVendor->save();
                 $order_status = new VendorOrderStatus();
                 $order_status->order_id = $order->id;
-                $order_status->vendor_id = $vendor_id;
                 $order_status->order_status_option_id = 1;
+                $order_status->vendor_id = $vendor_id;
                 $order_status->save();
             }
             $loyalty_points_earned = LoyaltyCard::getLoyaltyPoint($loyalty_points_used, $payable_amount);
@@ -260,14 +256,7 @@ class OrderController extends FrontController
             CartCoupon::where('cart_id', $cart->id)->delete();
             CartProduct::where('cart_id', $cart->id)->delete();
             CartProductPrescription::where('cart_id', $cart->id)->delete();
-            if(count($tax_category_ids)){
-                foreach ($tax_category_ids as $tax_category_id) {
-                    $order_tax = new OrderTax();
-                    $order_tax->order_id = $order->id;
-                    $order_tax->tax_category_id = $tax_category_id;
-                    $order_tax->save();
-                }
-            }
+
             if ($request->payment_option_id == 4) {
                 Payment::insert([
                     'date' => date('Y-m-d'),
@@ -276,6 +265,10 @@ class OrderController extends FrontController
                     'balance_transaction' => $order->payable_amount,
                 ]);
             }
+
+            //  if(count($delivery_on_vendors))
+            //   $order_dispatch = $this->placeRequestToDispatch($order,$delivery_on_vendors,$request);
+
             DB::commit();
             return $order;
         } catch (Exception $e) {
