@@ -12,10 +12,10 @@ class DispatcherTemplateTypeOptionSeeder extends Seeder
      * @return void
      */
     public function run(){
-        $array = ['Pickup & Delivery', 'Cab Booking'];
+        $array = array('Pickup & Delivery' => 'template1.png', 'Cab Booking' => 'template2.png');
         DispatcherTemplateTypeOption::truncate();
-        foreach ($array as $val) {
-            DispatcherTemplateTypeOption::create(['title' => $val, 'status' => 1]);
+        foreach ($array as $key => $val) {
+            DispatcherTemplateTypeOption::create(['title' => $key, 'image_path' => $val, 'status' => 1]);
         }
     }
 }

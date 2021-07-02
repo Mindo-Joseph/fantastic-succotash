@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\DispatcherWarningPage;
+use Illuminate\Support\Arr;
 
 class DispatcherWarningPageSeeder extends Seeder
 {
@@ -13,10 +14,10 @@ class DispatcherWarningPageSeeder extends Seeder
      */
     public function run()
     {
-        $array = ['Design 1', 'Design 2'];
+        $array = array('Design 1' => 'warning2.png', 'Design 2' => 'warning1.png');
         DispatcherWarningPage::truncate();
-        foreach ($array as $val) {
-            DispatcherWarningPage::create(['title' => $val, 'status' => 1]);
+        foreach ($array as $key => $val) {
+            DispatcherWarningPage::create(['title' => $key, 'image_path' => $val, 'status' => 1]);
         }
     }
 }

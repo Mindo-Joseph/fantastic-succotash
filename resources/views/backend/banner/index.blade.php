@@ -13,17 +13,22 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
 <div class="container-fluid">
 
     <!-- start page title -->
-    <div class="row">
-        <div class="col-12">
+    <div class="row align-items-center">
+        <div class="col-sm-6">
             <div class="page-title-box">
                 <h4 class="page-title">Banner</h4>
             </div>
+        </div>
+        <div class="col-sm-6 text-right">
+            <button class="btn btn-info waves-effect waves-light text-sm-right openBannerModal"
+                userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
+            </button>
         </div>
     </div>
     <!-- end page title -->
 
     <!-- New Banner Design Start From Here -->
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-6 col-lg-4 mb-3">
             <div class='file file--upload'>
                 <label for='input-file'>
@@ -33,6 +38,13 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                     <span class="plus_icon"><i class="fas fa-plus"></i></span>
                 </label>
                 <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
+                <div class="remove-banner position-absolute">
+                    <i class="mdi mdi-delete"></i>
+                </div>
+                <div class="banner-info">
+                    <h4>Banner</h4>
+                    <label></label>
+                </div>
             </div>
         </div>
         <div class="col-md-6 col-lg-4 mb-3">
@@ -90,7 +102,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                 <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
 
@@ -100,7 +112,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
-                        <div class="col-sm-8">
+                        <div class="col-sm-12">
                             <div class="text-sm-left">
                                 @if (\Session::has('success'))
                                 <div class="alert alert-success">
@@ -113,11 +125,6 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                                 </div>
                                 @endif
                             </div>
-                        </div>
-                        <div class="col-sm-4 text-right">
-                            <button class="btn btn-info waves-effect waves-light text-sm-right openBannerModal"
-                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
-                            </button>
                         </div>
                     </div>
 
@@ -145,7 +152,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                                         </div>    
                                     </td>
 
-                                    <td> {{ $ban->name }} </td> 
+                                    <td><a class="openBannerModal" userId="{{$ban->id}}" href="#"> {{ $ban->name }}</a> </td> 
                                     <td> <span class="text-center d-inline-block">
                                         @if(isset($ban->start_date_time) && isset($ban->end_date_time))
                                         {{ convertDateTimeInTimeZone($ban->start_date_time, $timezone, 'd-m-Y, H:i A')}} <br/> to <br/> {{convertDateTimeInTimeZone($ban->end_date_time, $timezone, 'd-m-Y, H:i A')}} 

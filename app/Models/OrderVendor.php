@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderVendor extends Model{
     use HasFactory;
-	protected $fillable = ['web_hook_code'];
+    
+	protected $fillable = ['web_hook_code','payment_option_id'];
 	public function orderDetail(){
 	    return $this->hasOne('App\Models\Order' , 'id', 'order_id'); 
 	}
@@ -27,10 +28,11 @@ class OrderVendor extends Model{
 	    return $this->hasOne('App\Models\Promocode' , 'id', 'coupon_id'); 
 	}
 	public function status(){
-	    return $this->hasOne('App\Models\VendorOrderStatus' , 'vendor_id', 'vendor_id')->latest(); 
+	    return $this->hasOne('App\Models\VendorOrderStatus' , 'order_id', 'order_id' , 'vendor_id', 'vendor_id')->latest(); 
 	}
+	
 	public function orderstatus(){
-	    return $this->hasOne('App\Models\VendorOrderStatus' , 'vendor_id', 'vendor_id')->latest(); 
+	    return $this->hasOne('App\Models\VendorOrderStatus' , 'vendor_id', 'vendor_id')->orderBy('id', 'DESC')->latest(); 
 	}
 	public function scopeBetween($query, $from, $to){
         $query->whereBetween('created_at', [$from, $to]);

@@ -15,11 +15,19 @@
 <div class="container-fluid">
 
     <!-- start page title -->
-    <div class="row">
-        <div class="col-12">
+    <div class="row align-items-center">
+        <div class="col-sm-6">
             <div class="page-title-box">
                 <h4 class="page-title">Vendors</h4>
             </div>
+        </div>
+        <div class="col-sm-6 text-sm-right">
+            <button class="btn btn-info waves-effect waves-light text-sm-right openImportModal"
+                    userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Import
+            </button>
+            <button class="btn btn-info waves-effect waves-light text-sm-right openAddModal"
+                userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
+            </button>
         </div>
     </div>
     <!-- end page title -->
@@ -28,7 +36,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
-                        <div class="col-sm-8">
+                        <div class="col-sm-12">
                             <div class="text-sm-left">
                                 @if (\Session::has('success'))
                                 <div class="alert alert-success">
@@ -41,14 +49,6 @@
                                 </div>
                                 @endif
                             </div>
-                        </div>
-                        <div class="col-sm-4 text-right">
-                        <button class="btn btn-info waves-effect waves-light text-sm-right openImportModal"
-                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Import
-                            </button>
-                            <button class="btn btn-info waves-effect waves-light text-sm-right openAddModal"
-                             userId="0"><i class="mdi mdi-plus-circle mr-1"></i> Add
-                            </button>
                         </div>
                     </div>
 
@@ -82,17 +82,22 @@
                                     </td>
                                     <td><a href="{{ route('vendor.show', $vendor->id) }}">{{ $vendor->name }}</a> </td>
                                     <td class="address_txt"> <p class="ellips_txt" data-toggle="tooltip" data-placement="top" title="{{ $vendor->address }}">{{ $vendor->address }}</p></td>
-
                                         <td>
+                                        @if($client_preferences->dinein_check == 1)
                                             @if($vendor->dine_in == 1)
                                                 <span class="badge bg-soft-warning text-warning">Dine In</span>
                                             @endif
+                                        @endif
+                                        @if($client_preferences->takeaway_check == 1)
                                             @if($vendor->takeaway == 1)
                                                 <span class="badge bg-soft-warning text-warning">Take Away</span>
                                             @endif
+                                        @endif
+                                        @if($client_preferences->delivery_check == 1)
                                             @if($vendor->delivery == 1)
                                                 <span class="badge bg-soft-warning text-warning">Delivery</span>
                                             @endif
+                                        @endif
                                         </td>
                                         <td class="text-center">{{($vendor->add_category == 0) ? 'No' : 'Yes' }}</td>
                                         <td class="text-center">{{$vendor->commission_percent }}</td>

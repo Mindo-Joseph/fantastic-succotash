@@ -84,7 +84,7 @@
                             <li><a href="{{route('user.addressBook')}}">Address Book</a></li>
                             <li><a href="{{route('user.orders')}}">My Orders</a></li>
                             <li class="active"><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
-                            <li><a href="{{route('user.account')}}">My Wallet</a></li>
+                            <li><a href="{{route('user.wallet')}}">My Wallet</a></li>
                             <li><a href="{{route('user.changePassword')}}">Change Password</a></li>
                             <li class="last"><a href="{{route('user.logout')}}" >Log Out</a></li>
                         </ul>
@@ -116,8 +116,8 @@
                                                     </div>
                                                 </th>   
                                                 <th scope="col">Image</th>
-                                                <th scope="col">product name</th>
-                                                <th scope="col">Unit price</th>
+                                                <th scope="col">Product Name</th>
+                                                <th scope="col">Price</th>
                                                 <th scope="col">Date Added</th>
                                                 <th scope="col">Stock Status</th>
                                                 <th scope="col"></th>
@@ -147,7 +147,7 @@
                                                         </td>
                                                         <td>
                                                             <div class="product-title pl-1">
-                                                                <h4 class="m-0">{{$wish['product']['sku']}}</h4>
+                                                                <h4 class="m-0">{{ ((isset($wish['product']['translation'][0])) && (!empty($wish['product']['translation'][0]))) ? $wish['product']['translation'][0]['title'] : '' }}</h4>
                                                             </div>
                                                         </td>
                                                         <td>${{$wish['product']['variant'][0]['price']}}</td>
@@ -155,9 +155,9 @@
                                                         <td>
                                                             @if($wish['product']['variant'][0]['quantity'] > 0)
                                                                 <i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>
-                                                                <span>In stock</span>
+                                                                <span>In Stock</span>
                                                             @else
-                                                                <span>Not in stock</span>
+                                                                <span>Not In Stock</span>
                                                             @endif
                                                         </td>
                                                         <td><a href="{{ route('removeWishlist', $wish['product']['sku']) }}" class="icon me-3"><i class="ti-close"></i> </a></td>

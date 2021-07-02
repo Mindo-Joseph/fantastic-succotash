@@ -39,9 +39,9 @@
                 </button>
             </li>
             <li class="m-hide"><label class="site-name m-0">{{ucFirst($clientData->custom_domain)}}</label></li>
-            <li class="m-hide"><a href="{{route('userHome')}}"><i class="fa fa-globe" aria-hidden="true"></i><span class="align-middle">View Website</span></a></li>
-            <li class="m-hide"><a href="#"><i class="fab fa-apple" aria-hidden="true"></i><span class="align-middle">Ios App Link</span></a></li>
-            <li class="m-hide"><a href="#"><i class="fab fa-android" aria-hidden="true"></i><span class="align-middle">Android App Link</span></a></li>
+            <li class="m-hide"><a href="{{route('userHome')}}" target="_blank"><i class="fa fa-globe" aria-hidden="true"></i><span class="align-middle">View Website</span></a></li>
+            <li class="m-hide"><a href="#" target="_blank"><i class="fab fa-apple" aria-hidden="true"></i><span class="align-middle">iOS App</span></a></li>
+            <li class="m-hide"><a href="#" target="_blank"><i class="fab fa-android" aria-hidden="true"></i><span class="align-middle">Android App</span></a></li>
         </ul>
 
         <!-- <ul class=" list-unstyled topnav-menu topnav-menu-left m-0">
@@ -179,7 +179,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
-        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
             <form method="post" action="{{route('client.password.update')}}">

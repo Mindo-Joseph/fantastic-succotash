@@ -9,8 +9,17 @@ $timezone = Auth::user()->timezone;
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    body{
+        font-size: 0.75rem;
+    }
+    .order_data > div,.order_head h4 {
+        padding: 0 !important;
+    }
+    .order-page .card-box {
+        padding: 20px 20px 5px !important;
+    }
 </style>
-    <div class="container-fluid">
+    <div class="container-fluid order-page">
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-flex align-items-center justify-content-between">
@@ -19,8 +28,6 @@ $timezone = Auth::user()->timezone;
                 </div>
             </div>
         </div>    
-        
-        <!-- Order Tabbar COntent -->
         <div class="row">
             <div class="col-sm-12 col-lg-12 tab-product pt-0">
                 <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
@@ -49,7 +56,7 @@ $timezone = Auth::user()->timezone;
                                     <div class="row no-gutters order_head">
                                         <div class="col-md-3"><h4>Order Id</h4></div>
                                         <div class="col-md-3"><h4>Date & Time</h4></div>
-                                        <div class="col-md-3"><h4>Customer Name</h4></div>
+                                        <div class="col-md-3"><h4>Customer</h4></div>
                                         <div class="col-md-3"><h4>Address</h4></div>
                                     </div>
                                     <div class="row no-gutters order_data mb-lg-0">
@@ -111,15 +118,15 @@ $timezone = Auth::user()->timezone;
                                                             <div class="col-md-5 mt-md-0 mt-sm-2">
                                                                 <ul class="price_box_bottom m-0 p-0">
                                                                     <li class="d-flex align-items-center justify-content-between">
-                                                                        <label class="m-0">Product Total</label>
+                                                                        <label class="m-0">Total</label>
                                                                         <span>$@money($product_total_count)</span>
                                                                     </li>
                                                                     <li class="d-flex align-items-center justify-content-between">
-                                                                        <label class="m-0">Discount Amount</label>
+                                                                        <label class="m-0">Promocode</label>
                                                                         <span>{{$vendor->discount_amount}}</span>
                                                                     </li>
                                                                     <li class="d-flex align-items-center justify-content-between">
-                                                                        <label class="m-0">Delivery Fee</label>
+                                                                        <label class="m-0">Delivery</label>
                                                                         <span>--</span>
                                                                     </li>
                                                                     <li class="grand_total d-flex align-items-center justify-content-between">
@@ -134,10 +141,10 @@ $timezone = Auth::user()->timezone;
                                             @endforeach
                                         </div>   
                                         <div class="col-md-3 pl-0">
-                                            <div class="card-box h-100 p-2">
+                                            <div class="card-box p-2">
                                                 <ul class="price_box_bottom m-0 pl-0 pt-1">
                                                     <li class="d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">Sub Total</label>
+                                                        <label class="m-0">Total</label>
                                                         <span>$@money($total_order_price)</span>
                                                     </li>
                                                     <li class="d-flex align-items-center justify-content-between">
@@ -149,7 +156,7 @@ $timezone = Auth::user()->timezone;
                                                         <span>$@money($order->taxable_amount)</span>
                                                     </li>
                                                     <li class="grand_total d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">Total Payable </label>
+                                                        <label class="m-0">Payable </label>
                                                         <span>$@money($order->payable_amount)</span>
                                                     </li>
                                                 </ul>

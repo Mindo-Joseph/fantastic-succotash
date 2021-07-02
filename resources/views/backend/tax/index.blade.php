@@ -67,7 +67,7 @@
 
                                 <tr data-row-id="{{$cat->id}}">
                                     <td> {{ $cat->id }} </td>
-                                    <td> {{ $cat->title }} </td>
+                                    <td><a class="editTaxCateModal text-capitalize" userId="{{$cat->id}}" href="javascript:void(0);"> {{ $cat->title }}</a> </td>
                                     <td> {{ $cat->code }} </td>
                                     <td> {{ $cat->description }} </td>
                                     

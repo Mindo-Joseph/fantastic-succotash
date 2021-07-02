@@ -5,8 +5,17 @@
 .edit-category label{
     cursor: pointer;
 }
-.edit-category input:checked ~ label {
-    box-shadow: 0 0px 8px rgb(67 190 225 / 55%);
+.edit-category label:before {
+    content: "\f058";
+    font-family: "Font Awesome 5 free";
+    position: absolute;
+    left: 0;
+    top: -3px;
+    color: green;
+    opacity: 0;
+}
+.edit-category input:checked ~ label:before  {
+    opacity: 1;
 }
 </style>
 <div class="row ">
@@ -14,7 +23,7 @@
         <div class="row mb-6">
             <div class="col-sm-2">
                 <input type="file" accept="image/*" data-plugins="dropify" name="icon" class="dropify" data-default-file="{{$category->icon['proxy_url'].'400/400'.$category->icon['image_path']}}" />
-                <p class="text-muted text-center mt-2 mb-0">Upload Category Icon</p>
+                <p class="text-muted text-center mt-2 mb-0">Upload Category Icon </p>
             </div> 
             <div class="col-sm-4">                
                 <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$category->image['proxy_url'].'400/400'.$category->image['image_path']}}" />
@@ -85,7 +94,7 @@
                         </div>
                     </div>
                     <div class="col-md-6" style="{{($category->type_id != 2) ? 'display:none;' : ''}}" id="editDispatcherHide">
-                        <div class="form-group">
+                        <div class="form-group mb-0">
                             {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
                             {!! Form::hidden('tags', implode(',', $tagList), ['class'=>'form-control myTag1']) !!}
                             <span class="invalid-feedback" role="alert">
@@ -120,7 +129,7 @@
         <div class="row">
             <div class="col-md-4" id="template_type_main_div" style="display:none;">
                 <div class="form-group">
-                    {!! Form::label('title', 'Template Type',['class' => 'control-label']) !!}
+                    {!! Form::label('title', 'Warning Page',['class' => 'control-label']) !!}
                     <div class="row">
                         @foreach($dispatcher_warning_page_options as $dwpo => $dispatcher_warning_page_option)                       
                             <div class="col-lg-6 custom-radio radio_new mt-2">
@@ -137,7 +146,7 @@
                                     class="custom-control-input tab_bar_options">
                                 @endif
                                 <label class="custom-control-label" for="dispatcher_warning_page_option_{{$dispatcher_warning_page_option->id}}">
-                                    <img class="card-img-top img-fluid" src="https://cdn.dribbble.com/users/1229051/screenshots/9325107/media/7a9f86f2d92541ecf49ec81ff9d53fa0.gif" alt="Card image cap">
+                                    <img class="card-img-top img-fluid" src="{{asset('images/'.$dispatcher_warning_page_option->image_path)}}" alt="Card image cap">
                                 </label>
                             </div>
                         @endforeach
@@ -146,7 +155,7 @@
             </div>
             <div class="col-md-4" id="warning_page_main_div" style="display:none;">
                 <div class="form-group">
-                    {!! Form::label('title', 'Warning Page',['class' => 'control-label']) !!}
+                    {!! Form::label('title', 'Template Type',['class' => 'control-label']) !!}
                     <div class="row">
                         @foreach($dispatcher_template_type_options as $dtto => $dispatcher_template_type_option)
                             <div class="col-lg-6 custom-radio radio_new mt-2">
@@ -156,7 +165,7 @@
                                     <input type="radio" value="{{$dispatcher_template_type_option->id}}" id="dispatcher_template_type_option_{{$dispatcher_template_type_option->id}}" name="template_type_id" {{ ($dtto == 0) ? 'checked' : '' }} class="custom-control-input tab_bar_options">
                                 @endif
                                 <label class="custom-control-label" for="dispatcher_template_type_option_{{$dispatcher_template_type_option->id}}">
-                                    <img class="card-img-top img-fluid" src="https://cdn.dribbble.com/users/2878111/screenshots/15265330/media/94ed25cc0e51db948afbd8319cd8d655.jpg?compress=1&resize=1200x900" alt="Card image cap">
+                                    <img class="card-img-top img-fluid" src="{{asset('images/'.$dispatcher_template_type_option->image_path)}}" alt="Card image cap">
                                 </label>
                             </div>
                         @endforeach

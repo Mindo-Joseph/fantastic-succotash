@@ -54,18 +54,7 @@
                             </span>
                             @endif
                         </div>
-                        <div class="col-sm-12">
-                            <div class="form-group mb-3">
-                                <label for="primary_color">Primary Color</label>
-                                <input type="text" id="primary_color" name="primary_color" class="form-control" value="{{ old('primary_color', $preference->primary_color ?? 'cccccc')}}">
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="form-group mb-3">
-                                <label for="secondary_color">Secondary Color</label>
-                                <input type="text" id="secondary_color" name="secondary_color" class="form-control" value="{{ old('secondary_color', $preference->secondary_color ?? 'cccccc')}}">
-                            </div>
-                        </div>
+                       
                     </div>
                 </div>
             </form>
@@ -226,11 +215,11 @@
                         <button class="btn btn-info d-block" type="submit"> Save </button>
                     </div>
                     <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-4" id="addCur-160">
-                        <label class="primaryCurText">Reffred To Amount = </label>
+                        <label class="primaryCurText">Referred To Amount = </label>
                         <input class="form-control" type="number" id="reffered_to_amount" name="reffered_to_amount" value="{{ old('reffered_to_amount', $reffer_to ?? '')}}" min="0">
                     </div>
                     <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-3" id="addCur-160">
-                        <label class="primaryCurText">Reffred By Amount = </label>
+                        <label class="primaryCurText">Referred By Amount = </label>
                         <input class="form-control" type="number" name="reffered_by_amount" id="reffered_by_amount" value="{{ old('reffered_by_amount', $reffer_by ?? '')}}" min="0">
                     </div>
                 </div>

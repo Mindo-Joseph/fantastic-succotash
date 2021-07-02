@@ -1,5 +1,5 @@
 <div id="edit-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Vendor</h4>
@@ -23,7 +23,7 @@
 </div>
 
 <div class="modal fade" id="standard-modal" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="min-width: 530px;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="min-width: 530px;">
         <div class="modal-content">
             <div class="modal-header py-3 px-4 border-bottom-0 d-block">
                 <button type="button" class="close" data-dismiss="modal"
@@ -161,7 +161,7 @@
 </div>
 
 <div class="modal fade" id="edit-slot-modal" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="min-width: 530px;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="min-width: 530px;">
         <div class="modal-content">
             <div class="modal-header py-3 px-4 border-bottom-0 d-block">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -330,7 +330,7 @@
 </div>
 
 <div id="edit-area-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Service Area</h4>

@@ -94,7 +94,7 @@
                             <li><a href="{{route('user.addressBook')}}">Address Book</a></li>
                             <li><a href="{{route('user.orders')}}">My Orders</a></li>
                             <li><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
-                            <li><a href="{{route('user.account')}}">My Wallet</a></li>
+                            <li><a href="{{route('user.wallet')}}">My Wallet</a></li>
                             <li><a href="{{route('user.changePassword')}}">Change Password</a></li>
                             <li class="last"><a href="{{route('user.logout')}}">Log Out</a></li>
                         </ul>
@@ -173,8 +173,11 @@
                                             </div>
 
                                             <div class="info-text mb-2">
-                                                <label class="mb-1">Time Zone</label>
-                                                {!! $timezone_list !!}
+                                                <form method="post" action="{{ route('user.updateTimezone') }}" id="user_timezone_form">
+                                                    @csrf
+                                                    <label class="mb-1">Time Zone</label>
+                                                    {!! $timezone_list !!}
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -272,7 +275,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="profile-modalLabel">Edit Profile</h5>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -295,7 +298,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="refferal-modalLabel">Apply Coupon Code</h5>
-                <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -429,6 +432,10 @@
                 // console.log('data2');
             }
         });
+    });
+
+    $("#timezone").change(function(){
+        $("#user_timezone_form").submit();
     });
 
     // $("#editProfileForm").submit(function(e) {

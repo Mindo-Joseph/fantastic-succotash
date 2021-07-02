@@ -29,7 +29,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Settings</h4>
+                <h4 class="page-title">Profile</h4>
             </div>
         </div>
     </div>
@@ -62,8 +62,8 @@
                         @csrf
                         <div class="row mb-2 d-flex align-items-center">
                             <div class="col-md-4 positoin-relative">
-                                <input type="file" accept="image/*" data-plugins="dropify" name="logo" data-default-file="{{$client->logo['proxy_url'] . '400/400' . $client->logo['image_path']}}" />
-                                <label class="logo-size position-absolute">Image Size 150x150</label>
+                                <input type="file" accept="image/*" data-plugins="dropify" name="logo" data-default-file="{{$client->logo['proxy_url'] . '300/100' . $client->logo['image_path']}}" />
+                                <label class="logo-size position-absolute">Image Size 300x100</label>
                                 <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
                             </div>
                             <div class="offset-2 col-md-6">

@@ -33,7 +33,7 @@
 
                         <!-- Standard modal content -->
                         <div id="standard-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="standard-modalLabel">Modal Heading</h4>
@@ -58,7 +58,7 @@
 
                         <!--  Modal content for the Large example -->
                         <div class="modal fade" id="bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="myLargeModalLabel">Large modal</h4>
@@ -191,7 +191,7 @@
 
                         <!-- Signup modal content -->
                         <div id="signup-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
 
                                     <div class="modal-body">
@@ -239,7 +239,7 @@
 
                         <!-- SignIn modal content -->
                         <div id="login-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-body">
                                         <div class="text-center mt-2 mb-4">
@@ -486,7 +486,7 @@
         
                         <!-- Modal -->
                         <div id="multiple-one" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="multiple-oneModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="multiple-oneModalLabel">Modal Heading</h4>
@@ -505,7 +505,7 @@
 
                         <!-- Modal -->
                         <div id="multiple-two" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="multiple-twoModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="multiple-twoModalLabel">Modal Heading</h4>
@@ -543,7 +543,7 @@
                     <!-- sample modal content -->
 
                     <div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title">Modal Content is Responsive</h4>
@@ -610,7 +610,7 @@
                     </div><!-- /.modal -->
 
                     <div id="accordion-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content p-0">
                                 <div id="accordion">
                                     <div class="card mb-0">

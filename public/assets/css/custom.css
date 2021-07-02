@@ -224,6 +224,7 @@
 
 span.inner-div {
     float: right;
+    margin-top: 5px;
     /*position: absolute;
     top: -5px;
     right: 16px;*/
@@ -239,7 +240,7 @@ span.inner-div {
 }
 
 .dd-list .dd3-content {
-    padding: 8px 50px 8px 16px;
+    padding: 8px 10px 8px 16px;
 }
 .nestable_list_1 > .dd-list {
     padding: 0;
@@ -595,7 +596,7 @@ body .tagsinput .tag {
 
 .table th,
 .table td {
-    padding: 10px 20px;
+    padding: 10px;
 }
 
 .card_outer {
@@ -608,6 +609,7 @@ body .tagsinput .tag {
 
 .content-page {
     min-height: calc(100vh - 129px);
+    padding: 0 15px 25px 15px;
 }
 
 @media (min-width: 1200px) {
@@ -955,7 +957,6 @@ label.file-input.uploadImages {
     padding: 0;
     top: 10px;
     position: absolute;
-    background: #fff;
     width: 100%;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
@@ -1357,6 +1358,12 @@ i.mdi.mdi-exclamation-thick {
 
 .top-site-links li a {
     color: #6c757d;
+    transition: all 0.5s;
+}
+
+.top-site-links li:hover a {
+    text-decoration: underline;
+    color: #43bee1;
 }
 
 .top-site-links li i {
@@ -1489,6 +1496,15 @@ body.light {
 }
 
 
+.form-group.mb-0 input {
+    margin: 0;
+}
+
+.form-group.mb-0 .tagsinput {
+    padding: 2.5px;
+    border: 1px solid #ced4da;
+    border-radius: 0.2rem;
+}
 
 
 
@@ -1496,7 +1512,11 @@ body.light {
 
 
 
-
+.file--upload{
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
   
 .file--upload>label .fa-user:before {
     content: "\f007";
@@ -1527,9 +1547,8 @@ body.light {
 
 .file--upload>label {
     width: 100%;
+    margin: 0;
     display: inline-block;
-    position: relative;
-    overflow: hidden;
 }
 
 
@@ -1543,9 +1562,6 @@ body.light {
     border: 0.9px solid #E9F0F8;
     background: url(./images/slider01.jpg) no-repeat center;
     background-size: cover;
-    overflow: hidden;
-    display: block;
-    border-radius: 12px;
 }
 
 .file .update_pic img {
@@ -1572,6 +1588,47 @@ body.light {
     left: -30px;
     top: -27px;
     padding: 3px 13px 0 0;
+    z-index: 1;
+}
+
+
+.banner-info {
+    position: absolute;
+    bottom: -100%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(0 0 0 / 40%);
+    transform: translateY(100%);
+    transition: all 0.5s;
+}
+
+.file.file--upload:hover .banner-info {
+    transform: translateY(0);
+    bottom: 0;
+}
+
+.remove-banner {
+    cursor: pointer;
+    top: -27px;
+    right: -30px;
+    background: #43bee1;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    color: #fff;
+    padding: 10px 0 0 10px;
+    opacity: 0;
+    z-index: 1;
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.7s;
+    transition: all 0.7s;
+}
+
+.file.file--upload:hover .remove-banner {
+    opacity: 1;
 }
 
 .close.top_right {
@@ -1605,8 +1662,177 @@ label.logo-size {
     bottom: 5px;
 }
 
+.dd-list .dd3-content img.rounded-circle.mr-1 {
+    width: 30px;
+    height: 30px;
+}
 
 
+.ellips{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#promo-datatable .ellips{
+    width: 50%;
+}
+
+
+#promo-datatable th, #promo-datatable td {
+    padding: 10px;
+}
+
+
+.price-range-slider {
+    width: 100%;
+    float: left;
+    padding: 10px 0;
+  }
+  .price-range-slider .range-value {
+    margin: 0;
+  }
+  .price-range-slider .range-value input {
+    width: 100%;
+    background: none;
+    color: #000;
+    font-size: 16px;
+    font-weight: initial;
+    box-shadow: none;
+    border: none;
+    margin: 20px 0 20px 0;
+  }
+  .price-range-slider .range-bar {
+    border: none;
+    background: #000;
+    height: 3px;
+    width: calc(100% - 8px);
+    margin-left: 8px;
+  }
+  .price-range-slider .range-bar .ui-slider-range {
+    background: #43bee1;
+  }
+  .price-range-slider .range-bar .ui-slider-handle {
+    border: none;
+    border-radius: 25px;
+    background: #fff;
+    border: 2px solid #43bee1;
+    height: 17px;
+    width: 17px;
+    top: -0.52em;
+    cursor: pointer;
+  }
+.price-range-slider .range-bar .ui-slider-handle + span {
+    background: #43bee1;
+}
+.price-range-slider {
+    width: 100%;
+    float: left;
+    padding: 10px 0;
+}
+.price-range-slider .range-value {
+    margin: 0;
+}
+.price-range-slider .range-value input {
+    width: 100%;
+    background: none;
+    color: #000;
+    font-size: 16px;
+    font-weight: initial;
+    box-shadow: none;
+    border: none;
+    margin: 20px 0 20px 0;
+}
+.price-range-slider .range-bar {
+    border: none;
+    background: #000;
+    height: 3px;
+    width: calc(100% - 8px);
+    margin-left: 8px;
+}
+.price-range-slider .range-bar .ui-slider-range {
+    background: #43bee1;
+}
+.price-range-slider .range-bar .ui-slider-handle {
+    border: none;
+    border-radius: 25px;
+    background: #fff;
+    border: 2px solid #43bee1;
+    height: 17px;
+    width: 17px;
+    top: -0.52em;
+    cursor: pointer;
+}
+.price-range-slider .range-bar .ui-slider-handle + span {
+    background: #43bee1;
+}
+
+.category-img{
+    height: 170px;
+}
+
+.category-img img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+
+.top-input {
+    width: 60%;
+    top: 25px;
+}
+
+.top-input input#month_picker_filter,.top-input select.form-control,.top-input .form-control {
+    height: 30px;
+    padding: 0 5px;
+}
+
+.dt-buttons.btn-group.flex-wrap {
+    position: absolute;
+    right: 220px;
+    top: 20px;
+}
+
+.navbar-custom .app-search {
+    height: auto;
+}
+
+
+
+.dt-buttons.btn-group.flex-wrap {
+    position: absolute;
+    right: 220px;
+    top: 20px;
+}
+
+.return-order .update_pic {
+    height: 100px;
+}
+
+td.product-name {
+    width: 300px;
+}
+
+td.product-name img + b{
+    width: 200px;
+    display: block;
+}
+
+td.product-name,.vendor-name {
+    width: 200px;
+}
+
+.vendor-name .round_img_box  + a {
+    width: 150px;
+    display: block;
+}
+
+.show-return-product-modal {
+    cursor: pointer;
+}
 
 
 @media(min-width:320px){
@@ -1691,56 +1917,4 @@ label.logo-size {
     .card-box{
         padding: 20px;
     }
-}
-.category-img{
-    height: 170px;
-}
-
-.category-img img{
-    height: 100%;
-    object-fit: cover;
-    width: 100%;
-}
-
-
-.top-input {
-    width: 60%;
-    top: 25px;
-}
-
-.top-input input#month_picker_filter,.top-input select.form-control,.top-input .form-control {
-    height: 30px;
-    padding: 0 5px;
-}
-
-.dt-buttons.btn-group.flex-wrap {
-    position: absolute;
-    right: 220px;
-    top: 20px;
-}
-
-.return-order .update_pic {
-    height: 100px;
-}
-
-td.product-name {
-    width: 300px;
-}
-
-td.product-name img + b{
-    width: 200px;
-    display: block;
-}
-
-td.product-name,.vendor-name {
-    width: 200px;
-}
-
-.vendor-name .round_img_box  + a {
-    width: 150px;
-    display: block;
-}
-
-.show-return-product-modal {
-    cursor: pointer;
 }

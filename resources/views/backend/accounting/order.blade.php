@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'Order list', 'title' => 'Accounting'])
+@extends('layouts.vertical', ['demo' => 'Orders', 'title' => 'Orders Accounting'])
 @section('css')
 <link href="{{asset('assets/libs/datatables/datatables.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="col">
                                         <select class="form-control" id="vendor_select_box">
-                                            <option value="">Select</option>
+                                            <option value="">Select Vendor</option>
                                             @forelse($vendors as $vendor)
                                                 <option value="{{$vendor->id}}">{{$vendor->name}}</option>
                                             @empty
@@ -83,12 +83,17 @@
                                     </div>
                                     <div class="col">
                                         <select class="form-control" name="" id="order_status_option_select_box">
-                                            <option value="">Select</option>
+                                            <option value="">Select Order Status</option>
                                             @forelse($order_status_options as $order_status_option)
                                                 <option value="{{$order_status_option->title}}">{{$order_status_option->title}}</option>
                                             @empty
                                             @endforelse
                                         </select>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-danger waves-effect waves-light" id="clear_filter_btn_icon">
+                                            <i class="mdi mdi-close"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -139,6 +144,12 @@
                         initDataTable();
                     }
                 });
+                $("#clear_filter_btn_icon").click(function() {
+                    $('#range-datepicker').val('');
+                    $('#vendor_select_box').val('');
+                    $('#order_status_option_select_box').val('');
+                    initDataTable();
+                });
                 $("#vendor_select_box, #order_status_option_select_box").change(function() {
                     initDataTable();
                 });
@@ -146,13 +157,17 @@
                     $('#accounting_vendor_datatable').DataTable({
                         "dom": '<"toolbar">Bfrtip',
                         "scrollX": true,
+                        "destroy": true,
                         "processing": true,
                         "serverSide": true,
                         "iDisplayLength": 50,
-                        destroy: true,
                         language: {
                             search: "",
+                            paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
                             searchPlaceholder: "Search By Order No.,Vendor,Customer Name"
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                         },
                         buttons: [{   
                                 className:'btn btn-success waves-effect waves-light',
@@ -171,7 +186,9 @@
                           }
                         },
                         columns: [
-                            {data: 'order_detail.order_number', name: 'order_number', orderable: false, searchable: false},
+                            {data: 'order_detail.order_number', name: 'order_number', orderable: false, searchable: false,"mRender": function ( data, type, full ) {
+                              return "<a href='" + full.view_url + "' target='_blank'>"+full.order_detail.order_number+"</a>";
+                            }},
                             {data: 'created_date', name: 'name',orderable: false, searchable: false},
                             {data: 'user_name', name: 'Customer Name',orderable: false, searchable: false},
                             {data: 'vendor.name', name: 'vendor_name', orderable: false, searchable: false},
@@ -181,9 +198,9 @@
                             {data: 'admin_commission_percentage_amount', name: 'action', orderable: false, searchable: false},
                             {data: 'payable_amount', name: 'action', orderable: false, searchable: false},
                             {data: 'order_detail.payment_option.title', name: 'action', orderable: false, searchable: false},
-                            {data: 'order_status', name: 'action', orderable: false, searchable: false},
+                            {data: 'order_status', name: 'order_status', orderable: false, searchable: false},
                         ]
-                });
+                    });
                 }
                 
             });

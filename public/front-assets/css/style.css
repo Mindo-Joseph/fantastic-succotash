@@ -3186,20 +3186,21 @@ button.btn.btn-solid:active, button.btn.btn-outline:active {
   margin: 0 auto;
   text-align: center;
   border: 1px solid #dddddd;
-  border-radius: 100%;
-  width: 80px;
-  height: 80px;
+  border-radius: 0;
+  width: calc(100% - 20px);
+  height: 100px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   -webkit-transition: 0.5s ease;
-  transition: 0.5s ease; }
+  transition: 0.5s ease;
+}
   .category-block .category-image.svg-image {
     background-color: #ffffff; }
     .category-block .category-image.svg-image svg {

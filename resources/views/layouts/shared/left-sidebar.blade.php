@@ -96,7 +96,7 @@
                     <div class="collapse" id="sidebaraccounting">
                         <ul class="nav-second-level">
                             <li>
-                                <a href="{{route('account.orders')}}">Order List</a>
+                                <a href="{{route('account.orders')}}">Orders</a>
                             </li>
                             <li>
                                 <a href="{{route('account.loyalty')}}">Loyality</a>
@@ -124,7 +124,7 @@
                 @if(in_array('CUSTOMERS',$allowed) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="{{route('customer.index')}}">
-                        <span class="icon-customize_icon"></span>
+                        <span class="icon-customer_icon"></span>
                         <span> Customers </span>
                     </a>
                 </li>
@@ -165,7 +165,7 @@
                 <li>
                     <a href="{{route('configure.index')}}">
                         <span class="icon-configure_icon"></span>
-                        <span> Configure </span>
+                        <span> Configurations </span>
                     </a>
                 </li>
                 @endif
@@ -196,7 +196,7 @@
                 @if(in_array('PAYMENT',$allowed) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="{{route('payoption.index')}}">
-                        <span class="icon-payment_options_icon"></span>
+                        <span class="icon-payment_icon"></span>
                         <span> Payment Options </span>
                     </a>
                 </li>

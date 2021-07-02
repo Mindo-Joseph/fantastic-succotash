@@ -62,7 +62,7 @@
                 </div>
             @endif
             @if($preference->verify_phone == 1 && $user->is_phone_verified == 0)
-            <div class="col-lg-6 text-center {{$user->verify_phone == 1 && $preference->is_phone_verified == 0 ? '' : 'offset-lg-3'}}" id="verify_phone_main_div">
+            <div class="col-lg-6 text-center {{$user->verify_phone == 1 && $preference->is_phone_verified == 0 ? '' : 'offset-lg-0'}}" id="verify_phone_main_div">
                 @if($user->is_phone_verified == 0)
                 <img src="{{asset('front-assets/images/phone-otp.svg')}}">
                 <h3 class="mb-2">Verify Phone</h3>
@@ -105,6 +105,7 @@
                 @endif
             </div>
             @endif
+        </div>
         </div>
     </div>
 </section> 

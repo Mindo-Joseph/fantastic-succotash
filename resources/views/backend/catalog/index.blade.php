@@ -90,7 +90,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Name</th>
-                                        <th>Category</th>
+                                        <!-- <th>Category</th> -->
                                         <th>Options</th>
                                         <th>Action</th>
                                     </tr>
@@ -99,8 +99,7 @@
                                     @foreach($variants as $key => $variant)
                                     <tr class="variantList" data-row-id="{{$variant->id}}">
                                         <td><span class="dragula-handle"></span></td>
-                                        <td>{{$variant->title}}</td>
-                                        <td>{{isset($variant->varcategory->cate->primary->name) ? $variant->varcategory->cate->primary->name : ''}}</td>
+                                        <td><a class="editVariantBtn" dataid="{{$variant->id}}" href="javascript:void(0);" >{{$variant->title}}</a> <br> <b>{{isset($variant->varcategory->cate->primary->name) ? $variant->varcategory->cate->primary->name : ''}}</b></td>
                                         <td>
                                             @foreach($variant->option as $key => $value)
                                             <label style="margin-bottom: 3px;">
@@ -163,7 +162,7 @@
                                         <th>#</th>
                                         <th>Icon</th>
                                         <th>Name</th>
-                                        <th>Category</th>
+                                        <!-- <th>Category</th> -->
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -172,8 +171,7 @@
                                     <tr class="brandList" data-row-id="{{$brand->id}}">
                                         <td><span class="dragula-handle"></span></td>
                                         <td><img class="rounded-circle" src="{{$brand->image['proxy_url'].'30/30'.$brand->image['image_path']}}"></td>
-                                        <td>{{$brand->title}}</td>
-                                        <td>{{isset($brand->bc->cate->primary) ? $brand->bc->cate->primary->name : ''}}</td>
+                                        <td><a class="editBrandBtn" dataid="{{$brand->id}}" href="javascript:void(0);" >{{$brand->title}}</a> <br> <b>{{isset($brand->bc->cate->primary) ? $brand->bc->cate->primary->name : ''}}</b></td>
                                         <td>
                                             <a class="action-icon editBrandBtn" dataid="{{$brand->id}}" href="javascript:void(0);" > 
                                                 <i class="mdi mdi-square-edit-outline"></i>

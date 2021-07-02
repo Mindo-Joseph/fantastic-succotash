@@ -698,8 +698,6 @@ body[data-sidebar-icon=twotones] #sidebar-menu > ul > li > a svg {
   right: 0;
   height: auto;
   z-index: 1001;
-  border-top-left-radius: 16px;
-  border-bottom-left-radius: 16px;
 }
 
 .navbar-custom .topnav-menu > li {
@@ -5253,7 +5251,7 @@ div.dt-button-info h2 {
 
 .dd-list .dd-item .dd-handle {
   border: none;
-  padding: 8px 16px;
+  padding: 12px 16px;
   height: auto;
   font-weight: 600;
   border-radius: 3px;

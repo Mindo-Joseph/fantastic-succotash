@@ -80,7 +80,7 @@
 </div>
 
 <div id="edit-loyalty-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Loyalty Card</h4>
@@ -101,36 +101,3 @@
     </div>
 </div>
 
-<div class="modal fade redeemPoint" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Redeem Point Value</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="setRedeem">
-            @csrf
-                <div class="modal-body">
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text primaryKey" id="basic-addon1"></span>
-                                    </div>
-                                    <input type="text" onkeypress="return isNumberKey(event);" class="form-control" name="redeem_points_per_primary_currency" id="redeem_points_per_primary_currency" placeholder="Value" aria-label="Username" aria-describedby="basic-addon1">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary setredeempoints">Save changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>

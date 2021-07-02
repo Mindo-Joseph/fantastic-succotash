@@ -335,19 +335,25 @@
 
                     <div class="row mb-2">
 
-                        <div class="col-md-3 d-flex justify-content-between">
+                        <div class="col-md-6 d-flex justify-content-between mb-2">
                             {!! Form::label('title', 'New',['class' => 'control-label']) !!}
                             <input type="checkbox" id="is_new" data-plugin="switchery" name="is_new" class="chk_box" data-color="#43bee1" @if($product->is_new == 1) checked @endif>
                         </div>
 
-                        <div class="col-md-4 d-flex justify-content-between">
+                        <div class="col-md-6 d-flex justify-content-between mb-2">
                             {!! Form::label('title', 'Featured',['class' => 'control-label']) !!}
                             <input type="checkbox" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#43bee1" @if($product->is_new == 1) checked @endif>
                         </div>
                         @if($configData->need_delivery_service == 1)
-                        <div class="col-md-5 d-flex justify-content-between">
-                            {!! Form::label('title', 'Required Last Mile',['class' => 'control-label']) !!}
+                        <div class="col-md-6 d-flex justify-content-between mb-2">
+                            {!! Form::label('title', 'Requires Last Mile Delivery',['class' => 'control-label']) !!}
                             <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#43bee1" @if($product->Requires_last_mile == 1) checked @endif>
+                        </div>
+                        @endif
+                        @if($configData->pharmacy_check == 1)
+                        <div class="col-md-6 d-flex justify-content-between mb-2">
+                            {!! Form::label('title', 'Requires Prescription',['class' => 'control-label']) !!}
+                            <input type="checkbox" bid="" id="pharmacy_check" data-plugin="switchery" name="pharmacy_check" class="chk_box" data-color="#43bee1" @if($product->pharmacy_check == 1) checked @endif>
                         </div>
                         @endif
                     </div>
@@ -380,7 +386,7 @@
                         </div>
                     </div>
 
-                    <div class="row mb-2">
+                    <!-- <div class="row mb-2">
                         {!! Form::label('title', 'Physical',['class' => 'control-label col-sm-2']) !!}
                         <div class="col-sm-4">
                             <input type="checkbox" bid="" id="is_physical" data-plugin="switchery" name="is_physical" class="chk_box" data-color="#43bee1" @if($product->is_physical == 1) checked @endif>
@@ -411,15 +417,8 @@
                             </select>
 
                         </div>
-                    </div>
-                    <div class="row mb-2">
-                        @if($configData->pharmacy_check == 1)
-                        {!! Form::label('title', 'Pharmacy',['class' => 'control-label col-sm-2']) !!}
-                        <div class="col-sm-4">
-                            <input type="checkbox" bid="" id="pharmacy_check" data-plugin="switchery" name="pharmacy_check" class="chk_box" data-color="#43bee1" @if($product->pharmacy_check == 1) checked @endif>
-                        </div>
-                        @endif
-                    </div>
+                    </div> -->
+                    
                 </div>
 
                 <div class="card-box">
@@ -501,7 +500,7 @@
     </form>
 </div>
 <div id="upload-media" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Product Image</h4>

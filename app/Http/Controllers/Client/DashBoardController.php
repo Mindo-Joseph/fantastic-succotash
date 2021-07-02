@@ -204,10 +204,6 @@ class DashBoardController extends BaseController
         return response()->json(['names' => $names, 'orders' => $orders]);
     }
 
-    public function getTopVendors()
-    {
-    }
-
     public function thousandsCurrencyFormat($num) {
 
         if($num>1000) {

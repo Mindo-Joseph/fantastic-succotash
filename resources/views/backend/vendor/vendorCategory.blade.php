@@ -78,11 +78,11 @@
         </div> -->
 
         <div class="row ipad-view">
-            <div class="col-lg-5 col-xl-4">
+            <div class="col-lg-3 col-xl-3">
                 @include('backend.vendor.show-md-3')
             </div>
 
-            <div class="col-lg-7 col-xl-8">
+            <div class="col-lg-9 col-xl-9">
                 <div class="">
                     <ul class="nav nav-pills navtab-bg nav-justified">
                         <li class="nav-item">
@@ -110,7 +110,7 @@
                             <div class="row">
                                 
                                 <div class="col-xl-4">
-                                    <div class="card-box" style="">
+                                    <div class="card-box">
                                         <div class="row" style="max-height: 600px; overflow-x: auto">
                                             <div class="col-sm-6">
                                                 <h4 class="mb-4"> Categories</h4>
@@ -128,66 +128,66 @@
                                                         <div class="custom-dd-empty dd" id="nestable_list_3">
                                                             <?php print_r($html); ?>
                                                         </div>
-                                                    </div>
-                                                    
+                                                    </div>                                                        
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-8">
-                                    <div class="row card-box" style="max-height: 600px; overflow-x: auto">
-                                        <div class="col-sm-8">
-                                            <h4 class="mb-4"> Addon Set</h4>
-                                        </div>
-                                        <div class="col-sm-4 text-right">
-                                            <button class="btn btn-info waves-effect waves-light text-sm-right openAddonModal" dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add 
-                                            </button>
-                                        </div> 
-                                        <div class="col-md-12">
-                                            <div class="row addon-row">
-                                                <div class="col-md-12">
-                                                    <form name="addon_order" id="addon_order" action="" method="post">
-                                                        @csrf
-                                                        <input type="hidden" name="orderData" id="orderVariantData" value="" />
-                                                    </form>
-                                                    <table class="table table-centered table-nowrap table-striped" id="varient-datatable">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Title</th>
-                                                                <th>Select(Min - Max)</th>
-                                                                <th>Options</th>
-                                                                <th>Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach($addon_sets as $set)
-                                                            <tr>
-                                                                <td>{{$set->id}}</td>
-                                                                <td>{{$set->title}}</td>
-                                                                <td>{{$set->min_select}} - {{$set->max_select}}</td>
-                                                                <td>
-                                                                    @foreach($set->option as $opt)
-                                                                        <span>{{$opt->title}} - ${{$opt->price}}</span><br/>
-                                                                        <span></span>
-                                                                    @endforeach
-                                                                </td>
-                                                                <td>
-                                                                    <a class="action-icon editAddonBtn" dataid="{{$set->id}}" href="javascript:void(0);" > <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
+                                    <div class="card-box">
+                                        <div class="row" style="max-height: 600px; overflow-x: auto">
+                                            <div class="col-sm-8">
+                                                <h4 class="mb-4"> Addon Set</h4>
+                                            </div>
+                                            <div class="col-sm-4 text-right">
+                                                <button class="btn btn-info waves-effect waves-light text-sm-right openAddonModal" dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add 
+                                                </button>
+                                            </div> 
+                                            <div class="col-md-12">
+                                                <div class="row addon-row">
+                                                    <div class="col-md-12">
+                                                        <form name="addon_order" id="addon_order" action="" method="post">
+                                                            @csrf
+                                                            <input type="hidden" name="orderData" id="orderVariantData" value="" />
+                                                        </form>
+                                                        <table class="table table-centered table-nowrap table-striped" id="varient-datatable">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Title</th>
+                                                                    <th>Select(Min - Max)</th>
+                                                                    <th>Options</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($addon_sets as $set)
+                                                                <tr>
+                                                                    <td>{{$set->id}}</td>
+                                                                    <td>{{$set->title}}</td>
+                                                                    <td>{{$set->min_select}} - {{$set->max_select}}</td>
+                                                                    <td>
+                                                                        @foreach($set->option as $opt)
+                                                                            <span>{{$opt->title}} - ${{$opt->price}}</span><br/>
+                                                                            <span></span>
+                                                                        @endforeach
+                                                                    </td>
+                                                                    <td>
+                                                                        <a class="action-icon editAddonBtn" dataid="{{$set->id}}" href="javascript:void(0);" > <h3> <i class="mdi mdi-square-edit-outline"></i> </h3></a>
 
-                                                                    <a class="action-icon deleteAddon" dataid="{{$set->id}}" href="javascript:void(0);"> <i class="mdi mdi-delete"></i></a>
-                                                                    <form action="{{route('addon.destroy', $set->id)}}" method="POST" style="display: none;" id="addonDeleteForm{{$set->id}}">
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                        
-                                                                    </form>
-                                                                </td>
-                                                            </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
+                                                                        <a class="action-icon deleteAddon" dataid="{{$set->id}}" href="javascript:void(0);"> <i class="mdi mdi-delete"></i></a>
+                                                                        <form action="{{route('addon.destroy', $set->id)}}" method="POST" style="display: none;" id="addonDeleteForm{{$set->id}}">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -208,7 +208,7 @@
     </div>
 <!--   Add On    modals   -->
 <div id="addAddonmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Create AddOn Set</h4>
@@ -280,10 +280,11 @@
                                         <input type="range" class="form-control-range" id="formControlRange">
                                     </div>
                                 </div> -->
+                               
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {!! Form::label('title', 'Min Select',['class' => 'control-label']) !!}
-                                        {!! Form::text('min_select', 1, ['class' => 'form-control', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                                        {!! Form::text('min_select', 1, ['class' => 'form-control', 'id' => 'min', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
@@ -292,10 +293,15 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {!! Form::label('title', 'Max Select',['class' => 'control-label']) !!}
-                                        {!! Form::text('max_select', 1, ['class' => 'form-control', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                                        {!! Form::text('max_select', 1, ['class' => 'form-control', 'id' => 'max', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <div class="price-range-slider">  
+                                        <div id="slider-range" class="range-bar"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -315,7 +321,7 @@
 </div>
 
 <div id="editdAddonmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Create AddOn Set</h4>
@@ -336,7 +342,7 @@
 </div>
 
 <div id="add-category-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Category</h4>
@@ -357,7 +363,7 @@
 </div>
 
 <div id="edit-category-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Category</h4>
@@ -390,9 +396,11 @@
     <script src="{{asset('assets/js/jscolor.js')}}"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/jquery.tagsinput-revisited.css') }}" />
     <script src="{{ asset('assets/js/jquery.tagsinput-revisited.js') }}"></script>
-
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
 @include('backend.vendor.pagescript')
 @include('backend.common.category-script')
+
+
 
 <script type="text/javascript">
     var tagList = "";
@@ -406,5 +414,29 @@
         });
     }
 </script>
+
+<script>
+
+$(function() {
+	$( "#slider-range" ).slider({
+	  range: true,
+	  min: 0,
+	  max: 1000,
+	  values: [ 0, 1000 ],
+	  slide: function( event, ui ) {
+		// $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+		$( "#min" ).val( "$" + ui.values[ 0 ] );
+		$( "#max" ).val( "$" + ui.values[ 1 ] );
+	  }
+	});
+	// $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+	//   " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+
+    $( "#min" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) );
+
+    $( "#max" ).val( "$" + $( "#slider-range" ).slider( "values", 1 ) );
+});
+</script>
+
 
 @endsection

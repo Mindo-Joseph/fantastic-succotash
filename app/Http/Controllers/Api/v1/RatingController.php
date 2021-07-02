@@ -22,8 +22,6 @@ class RatingController extends BaseController{
 
      */
     public function updateProductRating(OrderProductRatingRequest $request){
-        // print_r($request->all());
-        // die();
         try {
             $user = Auth::user();
             $order_deliver = 0;
@@ -36,7 +34,6 @@ class RatingController extends BaseController{
                 'order_id' => $request->order_id,
                 'product_id' => $request->product_id,
                 'user_id' => Auth::id()],['rating' => $request->rating,'review' => $request->review??null]);
-
                 if ($image = $request->file('files')) {
                     foreach ($image as $files) {
                     $file =  substr(md5(microtime()), 0, 15).'_'.$files->getClientOriginalName();
@@ -48,7 +45,6 @@ class RatingController extends BaseController{
                    
                     }
                 }
-
                 if(isset($request->remove_files) && is_array($request->remove_files))    # send index array of deleted images 
                 $removefiles = OrderProductRatingFile::where('order_product_rating_id',$ratings->id)->whereIn('id',$request->remove_files)->delete();
        

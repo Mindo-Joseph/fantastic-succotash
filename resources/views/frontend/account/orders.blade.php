@@ -12,7 +12,9 @@
 @endsection
 
 @section('content')
-
+@php
+$timezone = Auth::user()->timezone;
+@endphp
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -71,7 +73,7 @@
                             <li><a href="{{route('user.addressBook')}}">Address Book</a></li>
                             <li class="active"><a href="{{route('user.orders')}}">My Orders</a></li>
                             <li><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
-                            <li><a href="{{route('user.account')}}">My Wallet</a></li>
+                            <li><a href="{{route('user.wallet')}}">My Wallet</a></li>
                             <li><a href="{{route('user.changePassword')}}">Change Password</a></li>
                             <li class="last"><a href="{{route('user.logout')}}" >Log Out</a></li>
                         </ul>
@@ -119,7 +121,7 @@
                                                 </div>
                                                 <div class="row no-gutters order_data">
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
-                                                    <div class="col-md-3">{{$order->created_at->format('D M d, Y h:m A')}}</div>
+                                                    <div class="col-md-3">{{convertDateTimeInTimeZone($order->created_at, $timezone, 'l, F d, Y, H:i A')}}</div>
                                                     <div class="col-md-3">
                                                         <a href="#">{{$order->user->name}}</a>
                                                     </div>
@@ -599,7 +601,7 @@
     <div class="modal-content">
       <div class="modal-header pb-2">
         <h5 class="modal-title" id="order-detailsLabel">Order Details</h5>
-        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -696,7 +698,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
-      <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
         <div id="review-rating-form-modal">
@@ -712,7 +714,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
-                <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                     </button>
                 <div id="return-order-form-modal">
@@ -799,6 +801,18 @@ $('body').on('click', '.return-order-product', function (event) {
             }
         }
     });
+//// ************  return product + Order   *****************  //
+    $('body').on('click', '.return-order-product', function (event) {
+        event.preventDefault();
+        var id = $(this).data('id');
+        var vendor_id = $(this).data('vendor_id');
+        $.get('/return-order/get-order-data-in-model?id=' + id +'&vendor_id=' + vendor_id, function(markup)
+                {   
+                    $('#return_order').modal('show'); 
+                    $('#return-order-form-modal').html(markup);
+                });
+    });        
+
 </script>
 
 @endsection

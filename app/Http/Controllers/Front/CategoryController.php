@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet, ServiceArea};
+use App\Models\{Currency, Banner, Category, Brand, Product, Celebrity, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet, ServiceArea};
 use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
@@ -105,9 +105,9 @@ class CategoryController extends FrontController
                             ->where('category_id', $category->id);
                         })
                     ->groupBy('product_variant_sets.variant_type_id')->get();
-        $listData = $this->listData($langId, $category->id, $category->type->redirect_to);
-        $category->type->redirect_to;
-        $page = ($category->type->redirect_to == 'vendor' || $category->type->redirect_to == 'Vendor') ? 'vendor' : 'product';
+        $redirect_to = $category->type->redirect_to;
+        $listData = $this->listData($langId, $category->id, $redirect_to);
+        $page = (strtolower($redirect_to) != '') ? strtolower($redirect_to) : 'product';
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
@@ -117,19 +117,33 @@ class CategoryController extends FrontController
 
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
         
-        if($type == 'vendor' || $type == 'Vendor'){
-
+        if(strtolower($type) == 'vendor'){
             $vendorData = Vendor::select('vendors.id', 'name', 'logo', 'banner', 'order_pre_time', 'order_min_amount');
             $vendorData = $vendorData->join('vendor_categories as vct', 'vct.vendor_id', 'vendors.id')->where('vct.category_id', $cid)->where('vct.status', 1);
-            $preferences = Session::get('preferences');
+            $preferences= Session::get('preferences');
             if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
-                $vendors = (Session::has('vendors')) ? Session::get('vendors') : array();
-                $vendors = $vendorData->whereIn('vct.vendor_id', $vendors);
+                $vendors= (Session::has('vendors')) ? Session::get('vendors') : array();
+                $vendors= $vendorData->whereIn('vct.vendor_id', $vendors);
             }
             $vendorData = $vendorData->where('vendors.status', '!=', $this->field_status)->paginate($pagiNate);
-
             return $vendorData;
-            }else{
+        }
+        elseif(strtolower($type) == 'brand'){
+            $brands = Brand::with('bc')
+                ->whereHas('bc',function($q) use($cid){
+                    $q->where('category_id', $cid);
+                })
+                ->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->paginate($pagiNate);
+            foreach ($brands as $brand) {
+                $brand->redirect_url = route('brandDetail', $brand->id);
+            }
+            return $brands;
+        }
+        elseif(strtolower($type) == 'celebrity'){
+            $celebs = Celebrity::orderBy('name', 'asc')->paginate($pagiNate);
+            return $celebs;
+        }
+        else{
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
             $vendors = array();
             if(Session::has('vendors')){

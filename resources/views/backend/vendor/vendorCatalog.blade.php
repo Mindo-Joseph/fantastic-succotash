@@ -87,76 +87,76 @@
 
                     </div>
                     <div class="tab-pane {{($tab == 'catalog') ? 'active show' : '' }}" id="catalog">
-                        <div class="row card-box">
-                            <h4 class="mb-4"> Catalog</h4>
-                            <div class="col-md-12">
-                                <div class="row mb-2">
-                                    <div class="col-md-8">
-                                        Catalog
+                        <div class="card-box">
+                            <div class="row">
+                                    <div class="col-12 d-flex align-items-center justify-content-between mb-3">
+                                        <h4 class="mb-0"> Catalog</h4>
+                                        <div class="">
+                                                <a class="btn btn-info waves-effect waves-light text-sm-right importProductBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1"></i> Import
+                                                </a>
+                                                <a class="btn btn-info waves-effect waves-light text-sm-right addProductBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1"></i> Add Product
+                                                </a>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-4 text-right">
-                                        <a class="btn btn-info waves-effect waves-light text-sm-right importProductBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1"></i> Import
-                                        </a>
-                                        <a class="btn btn-info waves-effect waves-light text-sm-right addProductBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1"></i> Add Product
-                                        </a>
+                                
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-centered table-nowrap table-striped" id="">
+                                            <thead>
+                                                <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Category</th>
+                                                <th>Brand</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Status</th>
+                                                <th>New</th>
+                                                <th>Featured</th>
+                                                <th>Requires Last<br>Mile Delivery</th>
+                                                <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="post_list">
+                                                @foreach($products as $product)
+                                                <tr data-row-id="{{$product->id}}">
+                                                    <td>
+                                                        @if(isset($product->media[0]))
+                                                        <img alt="{{$product->id}}" class="rounded-circle" src="{{$product->media[0]->image->path['proxy_url'].'30/30'.$product->media[0]->image->path['image_path']}}">
+                                                        @else
+                                                        {{ $product->sku }}
+                                                        @endif
+                                                    </td>
+                                                    <td> <a href="{{ route('product.edit', $product->id) }}" target="_blank">{{ (isset($product->primary->title) && !empty($product->primary->title)) ? $product->primary->title : '' }}</a> </td>
+                                                    <td> {{ $product->category ? $product->category->cat->slug: 'N/A' }}</td>
+                                                    <td> {{ !empty($product->brand) ? $product->brand->title : 'N/A'  }}</td>
+                                                    <td> {{ $product->variant->first() ? $product->variant->first()->quantity : 0 }}</td>
+                                                    <td> {{ $product->variant->first() ? $product->variant->first()->price : 0 }}</td>
+                                                    <td> {{ ($product->is_live == 1) ? 'Published' : 'Draft'}}</td>
+                                                    <td> {{ ($product->is_new == 0) ? 'No' : 'Yes' }}</td>
+                                                    <td> {{ ($product->is_featured == 0) ? 'No' : 'Yes' }}</td>
+                                                    <td> {{ ($product->Requires_last_mile == 0) ? 'No' : 'Yes' }}</td>
+                                                    <td>
+                                                        <div class="form-ul" style="width: 60px;">
+                                                            <div class="inner-div" style="float: left;">
+                                                                <a class="action-icon" href="{{ route('product.edit', $product->id) }}" userId="{{$product->id}}"><i class="mdi mdi-square-edit-outline"></i></a>
+                                                            </div>
+                                                            <div class="inner-div">
+                                                                <form method="POST" action="{{ route('product.destroy', $product->id) }}">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <div class="form-group">
+                                                                        <button type="submit" onclick="return confirm('Are you sure? You want to delete the product.')" class="btn btn-primary-outline action-icon"><i class="mdi mdi-delete"></i></button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-centered table-nowrap table-striped" id="">
-                                        <thead>
-                                            <tr>
-                                              <th>#</th>
-                                              <th>Name</th>
-                                              <th>Category</th>
-                                              <th>Brand</th>
-                                              <th>Quantity</th>
-                                              <th>Price</th>
-                                              <th>Status</th>
-                                              <th>New</th>
-                                              <th>Featured</th>
-                                              <th>Requires Last<br>Mile Delivery</th>
-                                              <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="post_list">
-                                            @foreach($products as $product)
-                                            <tr data-row-id="{{$product->id}}">
-                                                <td>
-                                                    @if(isset($product->media[0]))
-                                                    <img alt="{{$product->id}}" class="rounded-circle" src="{{$product->media[0]->image->path['proxy_url'].'30/30'.$product->media[0]->image->path['image_path']}}">
-                                                    @else
-                                                    {{ $product->sku }}
-                                                    @endif
-                                                </td>
-                                                <td> {{ (isset($product->primary->title) && !empty($product->primary->title)) ? $product->primary->title : '' }} </td>
-                                                <td> {{ $product->category ? $product->category->cat->slug: 'N/A' }}</td>
-                                                <td> {{ !empty($product->brand) ? $product->brand->title : 'N/A'  }}</td>
-                                                <td> {{ $product->variant->first() ? $product->variant->first()->quantity : 0 }}</td>
-                                                <td> {{ $product->variant->first() ? $product->variant->first()->price : 0 }}</td>
-                                                <td> {{ ($product->is_live == 1) ? 'Published' : 'Draft'}}</td>
-                                                <td> {{ ($product->is_new == 0) ? 'No' : 'Yes' }}</td>
-                                                <td> {{ ($product->is_featured == 0) ? 'No' : 'Yes' }}</td>
-                                                <td> {{ ($product->Requires_last_mile == 0) ? 'No' : 'Yes' }}</td>
-                                                <td>
-                                                    <div class="form-ul" style="width: 60px;">
-                                                        <div class="inner-div" style="float: left;">
-                                                            <a class="action-icon" href="{{ route('product.edit', $product->id) }}" userId="{{$product->id}}"><i class="mdi mdi-square-edit-outline"></i></a>
-                                                        </div>
-                                                        <div class="inner-div">
-                                                            <form method="POST" action="{{ route('product.destroy', $product->id) }}">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <div class="form-group">
-                                                                    <button type="submit" onclick="return confirm('Are you sure? You want to delete the product.')" class="btn btn-primary-outline action-icon"><i class="mdi mdi-delete"></i></button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -171,7 +171,7 @@
 </div>
 
 <div id="add-product" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Product</h4>
@@ -233,7 +233,7 @@
     </div>
 </div>
 <div id="import-product" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Product</h4>
