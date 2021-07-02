@@ -33,15 +33,23 @@ class OrderController extends FrontController
         }])->whereHas('orderStatusVendor',function($q){
             $q->where('order_status_option_id', 5);
         })
-        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(1);
+        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
         
         $activeOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'=>function($q){
             $q->where('order_status_option_id', '!=', 5);
         }])->whereHas('orderStatusVendor',function($q){
             $q->where('order_status_option_id', '!=', 5);
         })
+        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
+
+
+    
+        $returnOrders = Order::with(['vendors.products.productReturn','products.productRating', 'user', 'address', 'products'=>function($q){
+            $q->whereHas('productReturn');
+        }])->whereHas('products.productReturn')
         ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(1);
-        return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders]);
+      
+         return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders, 'returnOrders'=>$returnOrders]);
     }
 
     public function getOrderSuccessPage(Request $request)
