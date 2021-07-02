@@ -1860,8 +1860,8 @@ td.product-name,.vendor-name {
 
 
 /* Dark Mood Css */
-.dark a,.dark .tab-product .nav-material.nav-tabs .nav-link.active,.dark .items_price,.dark .top-site-links li:hover a,.dark .nav-second-level li a:focus, .dark .nav-second-level li a:hover,
-.dark #sidebar-menu .menuitem-active > a {
+.dark a,.dark .tab-product .nav-material.nav-tabs .nav-link.active,.dark .items_price,.dark .top-site-links li:hover a,.dark .nav-second-level li a:focus, 
+.dark .nav-second-level li a:hover,.dark #sidebar-menu .menuitem-active > a,.dark .mdi-icons,.dark label.logo-size,.dark .social_head i,.dark .dd-list .dd3-content:hover {
     color: rgb(247 184 75 / 82%);
 }
 
@@ -1869,16 +1869,20 @@ td.product-name,.vendor-name {
     color: rgb(247 184 75 / 82%) !important;
 }
 
-.dark .tab-product .nav-material.nav-tabs .nav-link.active ~ .material-border,.dark .order_detail:before {
+.dark .tab-product .nav-material.nav-tabs .nav-link.active ~ .material-border,.dark .order_detail:before,.dark .track-order-list ul li.completed {
     border-color: rgb(247 184 75 / 82%);
 }
 
-.dark .tab-product .nav-material.nav-tabs .nav-item .nav-link {
+.dark .tab-product .nav-material.nav-tabs .nav-link {
     color: #f3f7f9;
 }
 
-.dark .pulse,.dark .item_no {
+.dark .pulse,.dark .item_no,.dark .track-order-list ul li:before,.dark .page-item.active .page-link,.dark .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
     background: rgb(247 184 75 / 82%);
+}
+
+.dark .page-item.active .page-link {
+    border-color: rgb(247 184 75 / 82%);
 }
 
 .dark .top-site-links li a,.dark .grand_total label, .dark .grand_total span {
