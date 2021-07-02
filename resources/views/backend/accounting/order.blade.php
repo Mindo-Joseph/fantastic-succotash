@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="col">
                                         <select class="form-control" id="vendor_select_box">
-                                            <option value="">Select</option>
+                                            <option value="">Select Vendor</option>
                                             @forelse($vendors as $vendor)
                                                 <option value="{{$vendor->id}}">{{$vendor->name}}</option>
                                             @empty
@@ -83,12 +83,17 @@
                                     </div>
                                     <div class="col">
                                         <select class="form-control" name="" id="order_status_option_select_box">
-                                            <option value="">Select</option>
+                                            <option value="">Select Order Status</option>
                                             @forelse($order_status_options as $order_status_option)
                                                 <option value="{{$order_status_option->title}}">{{$order_status_option->title}}</option>
                                             @empty
                                             @endforelse
                                         </select>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-danger waves-effect waves-light" id="clear_filter_btn_icon">
+                                            <i class="mdi mdi-close"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -139,6 +144,12 @@
                         initDataTable();
                     }
                 });
+                $("#clear_filter_btn_icon").click(function() {
+                    $('#range-datepicker').val('');
+                    $('#vendor_select_box').val('');
+                    $('#order_status_option_select_box').val('');
+                    initDataTable();
+                });
                 $("#vendor_select_box, #order_status_option_select_box").change(function() {
                     initDataTable();
                 });
@@ -146,13 +157,17 @@
                     $('#accounting_vendor_datatable').DataTable({
                         "dom": '<"toolbar">Bfrtip',
                         "scrollX": true,
+                        "destroy": true,
                         "processing": true,
                         "serverSide": true,
                         "iDisplayLength": 50,
-                        destroy: true,
                         language: {
                             search: "",
+                            paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
                             searchPlaceholder: "Search By Order No.,Vendor,Customer Name"
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                         },
                         buttons: [{   
                                 className:'btn btn-success waves-effect waves-light',

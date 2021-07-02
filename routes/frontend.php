@@ -91,7 +91,8 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::post('wishlist/update', 'Front\WishlistController@updateWishlist')->name('addWishlist');
 	Route::post('verifTokenProcess', 'Front\UserController@verifyToken')->name('user.verifyToken');
     Route::get('user/addressBook', 'Front\AddressController@index')->name('user.addressBook');
-	Route::get('user/wallet', 'Front\WalletController@index')->name('user.account');
+	Route::get('user/wallet', 'Front\WalletController@index')->name('user.wallet');
+	Route::post('user/wallet/credit', 'Front\WalletController@creditWallet')->name('user.creditWallet');
 	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
 	Route::post('user/updateAccount', 'Front\ProfileController@updateAccount')->name('user.updateAccount');
 	Route::post('user/updateTimezone', 'Front\ProfileController@updateTimezone')->name('user.updateTimezone');
@@ -109,7 +110,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::post('payment/option/list', 'Front\PaymentController@index')->name('payment.option.list');
 	Route::get('user/setPrimaryAddress/{id}', 'Front\AddressController@setPrimaryAddress')->name('setPrimaryAddress');
 	Route::post('user/submitPassword','Front\ProfileController@submitChangePassword')->name('user.submitChangePassword');
-	Route::get('user/wallethistory','Front\WalletController@index')->name('user.wallet');
+	Route::get('user/wallet/history','Front\WalletController@index')->name('user.walletHistory');
 
 	 // Rating & review 
 	 Route::group(['prefix' => 'rating'], function () {
@@ -125,5 +126,5 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 		
 	});
 
-	Route::post('upload-file', 'Front\ReturnOrderController@uploadFile')->name('uploadfile');
+	Route::post('upload-file', 'Front\RatingController@uploadFile')->name('uploadfile');
 });

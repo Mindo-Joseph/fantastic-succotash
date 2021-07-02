@@ -14,6 +14,16 @@ class OrderReturnRequest extends Model
 
 
     public function returnFiles(){
-        return $this->hasMany(OrderReturnRequestFile::class, 'order_vendor_product_id', 'id');
-      }
+        return $this->hasMany(OrderReturnRequestFile::class, 'order_return_request_id', 'id');
+    }
+
+    public function product(){
+	    return $this->belongsTo(OrderProduct::class, 'order_vendor_product_id', 'id'); 
+	  }
+    public function order(){
+	    return $this->belongsTo(Order::class, 'order_id', 'id'); 
+	  }
+    public function returnBy(){
+	    return $this->belongsTo(User::class, 'return_by', 'id'); 
+	  }
 }

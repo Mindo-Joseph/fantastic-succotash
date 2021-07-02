@@ -5,8 +5,17 @@
 .edit-category label{
     cursor: pointer;
 }
-.edit-category input:checked ~ label {
-    box-shadow: 0 0px 8px rgb(67 190 225 / 55%);
+.edit-category label:before {
+    content: "\f058";
+    font-family: "Font Awesome 5 free";
+    position: absolute;
+    left: 0;
+    top: -3px;
+    color: green;
+    opacity: 0;
+}
+.edit-category input:checked ~ label:before  {
+    opacity: 1;
 }
 </style>
 <div class="row ">
@@ -85,7 +94,7 @@
                         </div>
                     </div>
                     <div class="col-md-6" style="{{($category->type_id != 2) ? 'display:none;' : ''}}" id="editDispatcherHide">
-                        <div class="form-group">
+                        <div class="form-group mb-0">
                             {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
                             {!! Form::hidden('tags', implode(',', $tagList), ['class'=>'form-control myTag1']) !!}
                             <span class="invalid-feedback" role="alert">

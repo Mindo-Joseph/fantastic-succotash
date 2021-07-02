@@ -73,7 +73,7 @@ $timezone = Auth::user()->timezone;
                             <li><a href="{{route('user.addressBook')}}">Address Book</a></li>
                             <li class="active"><a href="{{route('user.orders')}}">My Orders</a></li>
                             <li><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
-                            <li><a href="{{route('user.account')}}">My Wallet</a></li>
+                            <li><a href="{{route('user.wallet')}}">My Wallet</a></li>
                             <li><a href="{{route('user.changePassword')}}">Change Password</a></li>
                             <li class="last"><a href="{{route('user.logout')}}" >Log Out</a></li>
                         </ul>
@@ -834,6 +834,18 @@ $timezone = Auth::user()->timezone;
             $('#review-rating-form-modal').html(markup);
         });
     });
+//// ************  return product + Order   *****************  //
+$('body').on('click', '.return-order-product', function (event) {
+        event.preventDefault();
+        var id = $(this).data('id');
+        var vendor_id = $(this).data('vendor_id');
+        $.get('/return-order/get-order-data-in-model?id=' + id +'&vendor_id=' + vendor_id, function(markup)
+                {   
+                    $('#return_order').modal('show'); 
+                    $('#return-order-form-modal').html(markup);
+                });
+    });        
+   
 
     $(document).delegate("#orders_wrapper .nav-tabs .nav-link", "click", function(){
         let id = $(this).attr('id');
@@ -858,6 +870,7 @@ $timezone = Auth::user()->timezone;
                     $('#return-order-form-modal').html(markup);
                 });
     });        
+
 </script>
 
 @endsection

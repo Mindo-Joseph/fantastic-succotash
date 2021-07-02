@@ -34,6 +34,9 @@ class Order extends Model{
 	public function payment(){
 	    return $this->hasOne('App\Models\Payment' , 'order_id', 'id'); 
 	}
+	public function taxes(){
+	    return $this->hasMany('App\Models\OrderTax' , 'order_id', 'id' )->latest(); 
+	}
 	public function prescription(){
 	    return $this->hasMany('App\Models\OrderProductPrescription' , 'order_id', 'id'); 
 	}

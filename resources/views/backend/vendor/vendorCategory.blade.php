@@ -280,10 +280,11 @@
                                         <input type="range" class="form-control-range" id="formControlRange">
                                     </div>
                                 </div> -->
+                               
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {!! Form::label('title', 'Min Select',['class' => 'control-label']) !!}
-                                        {!! Form::text('min_select', 1, ['class' => 'form-control', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                                        {!! Form::text('min_select', 1, ['class' => 'form-control', 'id' => 'min', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
@@ -292,10 +293,15 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {!! Form::label('title', 'Max Select',['class' => 'control-label']) !!}
-                                        {!! Form::text('max_select', 1, ['class' => 'form-control', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                                        {!! Form::text('max_select', 1, ['class' => 'form-control', 'id' => 'max', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <div class="price-range-slider">  
+                                        <div id="slider-range" class="range-bar"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -390,9 +396,11 @@
     <script src="{{asset('assets/js/jscolor.js')}}"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/jquery.tagsinput-revisited.css') }}" />
     <script src="{{ asset('assets/js/jquery.tagsinput-revisited.js') }}"></script>
-
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
 @include('backend.vendor.pagescript')
 @include('backend.common.category-script')
+
+
 
 <script type="text/javascript">
     var tagList = "";
@@ -406,5 +414,29 @@
         });
     }
 </script>
+
+<script>
+
+$(function() {
+	$( "#slider-range" ).slider({
+	  range: true,
+	  min: 0,
+	  max: 1000,
+	  values: [ 0, 1000 ],
+	  slide: function( event, ui ) {
+		// $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+		$( "#min" ).val( "$" + ui.values[ 0 ] );
+		$( "#max" ).val( "$" + ui.values[ 1 ] );
+	  }
+	});
+	// $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+	//   " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+
+    $( "#min" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) );
+
+    $( "#max" ).val( "$" + $( "#slider-range" ).slider( "values", 1 ) );
+});
+</script>
+
 
 @endsection

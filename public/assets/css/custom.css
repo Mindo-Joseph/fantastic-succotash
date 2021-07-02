@@ -609,6 +609,7 @@ body .tagsinput .tag {
 
 .content-page {
     min-height: calc(100vh - 129px);
+    padding: 0 15px 25px 15px;
 }
 
 @media (min-width: 1200px) {
@@ -956,7 +957,6 @@ label.file-input.uploadImages {
     padding: 0;
     top: 10px;
     position: absolute;
-    background: #fff;
     width: 100%;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
@@ -1496,6 +1496,15 @@ body.light {
 }
 
 
+.form-group.mb-0 input {
+    margin: 0;
+}
+
+.form-group.mb-0 .tagsinput {
+    padding: 2.5px;
+    border: 1px solid #ced4da;
+    border-radius: 0.2rem;
+}
 
 
 
@@ -1666,7 +1675,7 @@ label.logo-size {
 }
 
 #promo-datatable .ellips{
-    width: 80%;
+    width: 50%;
 }
 
 
@@ -1675,7 +1684,155 @@ label.logo-size {
 }
 
 
+.price-range-slider {
+    width: 100%;
+    float: left;
+    padding: 10px 0;
+  }
+  .price-range-slider .range-value {
+    margin: 0;
+  }
+  .price-range-slider .range-value input {
+    width: 100%;
+    background: none;
+    color: #000;
+    font-size: 16px;
+    font-weight: initial;
+    box-shadow: none;
+    border: none;
+    margin: 20px 0 20px 0;
+  }
+  .price-range-slider .range-bar {
+    border: none;
+    background: #000;
+    height: 3px;
+    width: calc(100% - 8px);
+    margin-left: 8px;
+  }
+  .price-range-slider .range-bar .ui-slider-range {
+    background: #43bee1;
+  }
+  .price-range-slider .range-bar .ui-slider-handle {
+    border: none;
+    border-radius: 25px;
+    background: #fff;
+    border: 2px solid #43bee1;
+    height: 17px;
+    width: 17px;
+    top: -0.52em;
+    cursor: pointer;
+  }
+.price-range-slider .range-bar .ui-slider-handle + span {
+    background: #43bee1;
+}
+.price-range-slider {
+    width: 100%;
+    float: left;
+    padding: 10px 0;
+}
+.price-range-slider .range-value {
+    margin: 0;
+}
+.price-range-slider .range-value input {
+    width: 100%;
+    background: none;
+    color: #000;
+    font-size: 16px;
+    font-weight: initial;
+    box-shadow: none;
+    border: none;
+    margin: 20px 0 20px 0;
+}
+.price-range-slider .range-bar {
+    border: none;
+    background: #000;
+    height: 3px;
+    width: calc(100% - 8px);
+    margin-left: 8px;
+}
+.price-range-slider .range-bar .ui-slider-range {
+    background: #43bee1;
+}
+.price-range-slider .range-bar .ui-slider-handle {
+    border: none;
+    border-radius: 25px;
+    background: #fff;
+    border: 2px solid #43bee1;
+    height: 17px;
+    width: 17px;
+    top: -0.52em;
+    cursor: pointer;
+}
+.price-range-slider .range-bar .ui-slider-handle + span {
+    background: #43bee1;
+}
 
+.category-img{
+    height: 170px;
+}
+
+.category-img img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+
+.top-input {
+    width: 60%;
+    top: 25px;
+}
+
+.top-input input#month_picker_filter,.top-input select.form-control,.top-input .form-control {
+    height: 30px;
+    padding: 0 5px;
+}
+
+.dt-buttons.btn-group.flex-wrap {
+    position: absolute;
+    right: 220px;
+    top: 20px;
+}
+
+.navbar-custom .app-search {
+    height: auto;
+}
+
+
+
+.dt-buttons.btn-group.flex-wrap {
+    position: absolute;
+    right: 220px;
+    top: 20px;
+}
+
+.return-order .update_pic {
+    height: 100px;
+}
+
+td.product-name {
+    width: 300px;
+}
+
+td.product-name img + b{
+    width: 200px;
+    display: block;
+}
+
+td.product-name,.vendor-name {
+    width: 200px;
+}
+
+.vendor-name .round_img_box  + a {
+    width: 150px;
+    display: block;
+}
+
+.show-return-product-modal {
+    cursor: pointer;
+}
 
 
 @media(min-width:320px){
@@ -1760,30 +1917,4 @@ label.logo-size {
     .card-box{
         padding: 20px;
     }
-}
-.category-img{
-    height: 170px;
-}
-
-.category-img img{
-    height: 100%;
-    object-fit: cover;
-    width: 100%;
-}
-
-
-.top-input {
-    width: 60%;
-    top: 25px;
-}
-
-.top-input input#month_picker_filter,.top-input select.form-control,.top-input .form-control {
-    height: 30px;
-    padding: 0 5px;
-}
-
-.dt-buttons.btn-group.flex-wrap {
-    position: absolute;
-    right: 220px;
-    top: 20px;
 }

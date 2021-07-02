@@ -10,16 +10,20 @@ use App\Models\VendorOrderDispatcherStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus,ClientPreference,OrderVendorProduct,OrderVendor,UserAddress,Vendor};
+use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus,ClientPreference,OrderVendorProduct,OrderVendor,UserAddress,Vendor,OrderReturnRequest};
 use DB;
 use GuzzleHttp\Client;
+use App\Http\Traits\ApiResponser;
 class OrderController extends BaseController{
+
+    use ApiResponser;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(){
+        $user = Auth::user();
         $orders = Order::with(['vendors.products','orderStatusVendor', 'address','user'])->orderBy('id', 'DESC');
         if (Auth::user()->is_superadmin == 0) {
             $orders = $orders->whereHas('vendors.vendor.permissionToUser', function ($query) {
@@ -28,6 +32,8 @@ class OrderController extends BaseController{
         }
         $orders = $orders->paginate(10);
         foreach ($orders as $order) {
+            $order->address = $order->address ? $order->address['address'] : '';
+            $order->created_date = convertDateTimeInTimeZone($order->created_at, $user->timezone, 'd-m-Y, H:i A');
             foreach ($order->vendors as $vendor) {
                 $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
                 $vendor->order_status = $vendor_order_status ? $vendor_order_status->OrderStatusOption->title : '';
@@ -36,9 +42,65 @@ class OrderController extends BaseController{
                 }
             }
         }
-        return view('backend.order.index', compact('orders'));
+        $return_requests = OrderReturnRequest::where('status','Pending');
+        if (Auth::user()->is_superadmin == 0) {
+            $return_requests = $return_requests->whereHas('order.vendors.vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $return_requests = $return_requests->count();
+        return view('backend.order.index', compact('orders','return_requests'));
     }
 
+    public function postOrderFilter(Request $request, $domain = ''){
+        $user = Auth::user();
+        $filter_order_status = $request->filter_order_status;
+        $orders = Order::with(['vendors.products','vendors.status','orderStatusVendor', 'address','user'])->orderBy('id', 'DESC');
+        if (Auth::user()->is_superadmin == 0) {
+            $orders = $orders->whereHas('vendors.vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        if($filter_order_status){
+            switch ($filter_order_status) {
+                case 'pending_orders':
+                    $order_status_options = [2,3,4,5,6,7,8];
+                    $orders = $orders->whereDoesntHave('vendors.status', function ($query) use($order_status_options) {
+                        $query->whereIn('order_status_option_id', $order_status_options);
+                    });
+                break;
+                case 'active_orders':
+                    $order_status_options = [6,7,8,3];
+                    $orders = $orders->whereHas('vendors.status', function ($query) use($order_status_options) {
+                        $query->whereNotIn('order_status_option_id', $order_status_options)->whereIn('order_status_option_id',['2,3,4']);
+                    });
+                break;
+                case 'orders_history':
+                    $order_status_options = [6,3];
+                    $orders = $orders->whereHas('vendors.status', function ($query) use($order_status_options) {
+                        $query->whereIn('order_status_option_id', $order_status_options);
+                    });
+                break;
+            }
+        }
+        $orders = $orders->paginate(50);
+        foreach ($orders as $order) {
+            $order->created_date = convertDateTimeInTimeZone($order->created_at, $user->timezone, 'd-m-Y, H:i A');
+            foreach ($order->vendors as $vendor) {
+                $vendor->vendor_detail_url = route('order.show.detail', [$order->id, $vendor->vendor_id]);
+                $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
+                $vendor->order_status = $vendor_order_status ? $vendor_order_status->OrderStatusOption->title : '';
+                $product_total_count = 0;
+                foreach ($vendor->products as $product) {
+                        $product_total_count += $product->quantity * $product->price;
+                        $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
+                }
+                $vendor->product_total_count = $product_total_count;
+                $vendor->final_amount = $vendor->taxable_amount+ $product_total_count;
+            }
+        }
+        return $this->successResponse($orders,'',201);
+    }
     /**
      * Display the order.
      *
@@ -239,5 +301,72 @@ class OrderController extends BaseController{
             return $preference;
         else
             return false;
+    }
+
+
+
+     /**
+     * Display a listing of the order return request.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function returnOrders(Request $request, $domain = '',$status){
+        try {
+            
+            $orders_list = OrderReturnRequest::where('status',$status)->with('product')->orderBy('updated_at','DESC');
+            if (Auth::user()->is_superadmin == 0) {
+                $orders_list = $orders_list->whereHas('order.vendors.vendor.permissionToUser', function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                });
+            }
+            $orders[$status] = $orders_list->paginate(20);
+            return view('backend.order.return'
+            , [
+                'orders' => $orders,
+                'status' => $status
+            ]);
+
+           
+            } catch (\Throwable $th) {
+                return redirect()->back();
+            }
+    }
+
+
+     /**
+     * return orders details
+    */
+    public function getReturnProductModal(Request $request, $domain = ''){
+        try {
+            $return_details = OrderReturnRequest::where('id',$request->id)->with('returnFiles')->first();
+            if(isset($return_details)){
+              
+                if ($request->ajax()) {
+                 return \Response::json(\View::make('frontend.modals.update-return-product-client', array('return_details' => $return_details))->render());
+                }
+            }
+            return $this->errorResponse('Invalid order', 404);
+            
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
+    }
+
+     /**
+     * return  order product 
+    */
+    public function updateProductReturn(Request $request){
+     
+        try {
+           
+            $returns = OrderReturnRequest::where('id',$request->id)->update(['status'=>$request->status??null]);
+            if(isset($returns)) {
+                return $this->successResponse($returns,'Updated.');
+            }
+            return $this->errorResponse('Invalid order', 200);
+            
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 400);
+        }
     }
 }

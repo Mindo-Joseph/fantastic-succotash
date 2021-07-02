@@ -65,7 +65,7 @@
                         </div>  
                    </div>
                     <div class="table-responsive">
-                        <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable">
+                        <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable" width="100%">
                             <thead>
                                 <tr>
                                     <th>Vendor Name</th>
@@ -109,7 +109,11 @@
                 "iDisplayLength": 50,
                 language: {
                     search: "",
+                    paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
                     searchPlaceholder: "Search By Vendor Name"
+                },
+                drawCallback: function () {
+                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                 },
                 buttons:[],
                 ajax: {

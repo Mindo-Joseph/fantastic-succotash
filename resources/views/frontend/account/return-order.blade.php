@@ -26,7 +26,7 @@
                             <li><a href="{{route('user.addressBook')}}">Address Book</a></li>
                             <li class="active"><a href="{{route('user.orders')}}">My Orders</a></li>
                             <li><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
-                            <li><a href="{{route('user.account')}}">My Wallet</a></li>
+                            <li><a href="{{route('user.wallet')}}">My Wallet</a></li>
                             <li><a href="{{route('user.changePassword')}}">Change Password</a></li>
                             <li class="last"><a href="{{route('user.logout')}}" >Log Out</a></li>
                         </ul>
@@ -105,6 +105,8 @@
                                         <label>{{__('Comments (Opitonal)')}}:</label>
                                         <textarea class="form-control" name="" id="comments" cols="20" rows="4"></textarea>
                                     </div>
+                                    <span class="text-danger" id="error-msg"></span>
+                                    <span class="text-success" id="success-msg"></span>
                                     <button class="btn btn-solid mt-3" id="return_form_button">{{__('Request')}}</button>
                                 </form>
                             </div>

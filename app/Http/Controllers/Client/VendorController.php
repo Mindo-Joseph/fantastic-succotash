@@ -42,7 +42,7 @@ class VendorController extends BaseController
         $vendors = $vendors->get();
         if(count($vendors) == 1){
             if (Auth::user()->is_superadmin == 1) {
-                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors]);
+                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors, 'client_preferences'=> $client_preferences]);
             }else{
                 return Redirect::route('vendor.show', $vendors->first()->id);
             }
@@ -124,7 +124,6 @@ class VendorController extends BaseController
         $client_preferences = ClientPreference::first();
         $vendor = Vendor::where('id', $id)->first();
         $returnHTML = view('backend.vendor.form')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor])->render();
-        // dd($returnHTML);
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 

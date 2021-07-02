@@ -95,7 +95,7 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-centered table-nowrap table-striped" id="accounting_loyality_datatable">
+                        <table class="table table-centered table-nowrap table-striped" id="accounting_loyality_datatable" width="100%">
                             <thead>
                                 <tr>
                                     <th>Order Id</th>
@@ -149,7 +149,11 @@
                         "iDisplayLength": 50,
                         language: {
                             search: "",
+                            paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
                             searchPlaceholder: "Search By Order No.,Vendor,Customer Name"
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                         },
                         buttons: [{   
                             className:'btn btn-success waves-effect waves-light',

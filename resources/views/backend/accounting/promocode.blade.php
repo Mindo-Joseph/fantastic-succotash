@@ -68,7 +68,7 @@
                                     </div>
                                     <div class="col">
                                         <select class="form-control" id="order_status_option_select_box">
-                                            <option value="">Select</option>
+                                            <option value="">Select Order Status</option>
                                             @forelse($order_status_options as $order_status_option)
                                                 <option value="{{$order_status_option->title}}">{{$order_status_option->title}}</option>
                                             @empty
@@ -77,7 +77,7 @@
                                     </div>
                                     <div class="col">
                                         <select class="form-control" name="" id="promo_code_option_select_box">
-                                            <option value="">Select</option>
+                                            <option value="">Select Coupon Code</option>
                                             @forelse($promo_code_options as $promo_code_option)
                                                 <option value="{{$promo_code_option->coupon_id}}">{{$promo_code_option->coupon_code}}</option>
                                             @empty
@@ -94,7 +94,7 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable">
+                        <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable" width="100%">
                             <thead>
                                 <tr>
                                     <th>Order Id</th>
@@ -144,15 +144,19 @@
         });
         function initDataTable() {
             $('#accounting_vendor_datatable').DataTable({
-                "destroy": true,
+                "dom": '<"toolbar">Bfrtip',
                 "scrollX": true,
+                "destroy": true,
                 "processing": true,
                 "serverSide": true,
                 "iDisplayLength": 50,
-                "dom": '<"toolbar">Bfrtip',
                 language: {
-                    search: "",
-                    searchPlaceholder: "Search By Order Id"
+                            search: "",
+                            paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
+                            searchPlaceholder: "Search By Order No.,Vendor,Customer Name"
+                },
+                drawCallback: function () {
+                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                 },
                 buttons: [{   
                     className:'btn btn-success waves-effect waves-light',
