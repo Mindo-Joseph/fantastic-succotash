@@ -24,8 +24,8 @@ class ReturnOrderController extends FrontController{
      * order details in modal
     */
     public function getOrderDatainModel(Request $request){
-        try {
-            $order_details = Order::with(['vendors.products','products.productRating', 'user', 'address'])->whereHas('vendors',function($q)use($request){
+        try { 
+            $order_details = Order::with(['vendors.products.productReturn','products.productRating', 'user', 'address'])->whereHas('vendors',function($q)use($request){
                 $q->where('vendor_id', $request->vendor_id);
             })
             ->where('orders.user_id', Auth::user()->id)->where('orders.id', $request->id)->orderBy('orders.id', 'DESC')->first();
@@ -85,17 +85,28 @@ class ReturnOrderController extends FrontController{
                 'order_id' => $order_details->order_id,
                 'return_by' => Auth::id()],['reason' => $request->reason??null,'coments' => $request->coments??null]);
 
-               if ($image = $request->file('images')) {
-                    foreach ($image as $files) {
-                    $file =  substr(md5(microtime()), 0, 15).'_'.$files->getClientOriginalName();
-                    $storage = Storage::disk('s3')->put('/return', $files, 'public');
-                    $img = new OrderReturnRequestFile();
-                    $img->order_return_request_id = $returns->id;
-                    $img->file = $storage;
-                    $img->save();
+            //    if ($image = $request->file('images')) { 
+            //         foreach ($image as $files) {
+            //         $file =  substr(md5(microtime()), 0, 15).'_'.$files->getClientOriginalName();
+            //         $storage = Storage::disk('s3')->put('/return', $files, 'public');
+            //         $img = new OrderReturnRequestFile();
+            //         $img->order_return_request_id = $returns->id;
+            //         $img->file = $storage;
+            //         $img->save();
                    
+            //         }
+            //     }
+
+            if(isset($request->add_files) && is_array($request->add_files))    # send  array of insert images 
+                {
+                    foreach ($request->add_files as $storage) {
+                        $img = new OrderReturnRequestFile();
+                        $img->order_return_request_id = $returns->id;
+                        $img->file = $storage;
+                        $img->save();
+                       
                     }
-                }
+                }  
                
               if(isset($request->remove_files) && is_array($request->remove_files))    # send index array of deleted images 
                 $removefiles = OrderReturnRequestFile::where('order_return_request_id',$returns->id)->whereIn('id',$request->remove_files)->delete();

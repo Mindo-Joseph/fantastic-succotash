@@ -14,12 +14,19 @@
                 </tr>
             </thead>
             <tbody>
+                @php $continue = 0; @endphp
             @foreach($order->vendors as $key => $vendor)    
                 @foreach($vendor->products as  $key => $product)
+               
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
+                            @if($product->productReturn->status)
+                             {{ __($product->productReturn->status) }}
+                            @else
+                            @php $continue = 1; @endphp
                             <input id="item_one{{$key}}" type="radio" name="return_ids" value="{{ $product->id }}" required>
+                            @endif
                             <label class="order-items d-flex" for="item_one{{$key}}">  
                                 <div class="item-img mx-1">
                                     <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
@@ -33,9 +40,9 @@
                     </td>
                     <td class="order_address">
                         @if($order->address)
-                                                                {{$order->address->address}}, {{$order->address->street}}, {{$order->address->city}}, {{$order->address->state}}, {{$order->address->country}} {{$order->address->pincode}}
-                                                            @else
-                                                                NA
+                            {{$order->address->address}}, {{$order->address->street}}, {{$order->address->city}}, {{$order->address->state}}, {{$order->address->country}} {{$order->address->pincode}}
+                        @else
+                        {{__('NA')}}
                         @endif
                     </td>
                     
@@ -46,7 +53,9 @@
             <tfoot>
                 <tr>
                     <td class="text-center" colspan="3">
+                        @if($continue == 1)
                         <button class="btn btn-solid" type="submit">Continue</button>
+                        @endif
                     </td>
                 </tr>
             </tfoot>

@@ -45,7 +45,7 @@ class RatingController extends FrontController{
                 //     $img->file = $storage;
                 //     $img->save();
                    
-                //     }
+                //     } 
                 // }
                 if(isset($request->add_files) && is_array($request->add_files))    # send  array of insert images 
                 {

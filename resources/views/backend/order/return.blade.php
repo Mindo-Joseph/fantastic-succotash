@@ -86,7 +86,7 @@ $timezone = Auth::user()->timezone;
                                         </tr>
                                         @endforeach
                                         @else
-                                        <tr><td colspan="6">{{__('No Records Found')}}</td></tr>
+                                        <tr><td colspan="7">{{__('No Records Found')}}</td></tr>
                                         @endif     
                                        
                                     </tbody>
@@ -141,7 +141,7 @@ $timezone = Auth::user()->timezone;
                                             </tr>
                                             @endforeach
                                         @else
-                                        <tr><td colspan="6">{{__('No Records Found')}}</td></tr>
+                                        <tr><td colspan="7">{{__('No Records Found')}}</td></tr>
                                         @endif    
                                        
                                         </tbody>
@@ -196,7 +196,7 @@ $timezone = Auth::user()->timezone;
                                             </tr>
                                             @endforeach
                                         @else
-                                        <tr><td colspan="6">{{__('No Records Found')}}</td></tr>
+                                        <tr><td colspan="7">{{__('No Records Found')}}</td></tr>
                                         @endif   
                                         </tbody>
                                     </table>
