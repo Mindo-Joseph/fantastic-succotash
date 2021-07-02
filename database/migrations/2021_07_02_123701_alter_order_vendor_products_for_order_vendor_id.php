@@ -13,7 +13,7 @@ class AlterOrderVendorProductsForOrderVendorId extends Migration
      */
     public function up()
     {
-        Schema::table('vendor_orders', function (Blueprint $table) {
+        Schema::table('order_vendors', function (Blueprint $table) {
             $table->tinyInteger('order_status_option_id')->unsigned()->nullable()->after('payment_option_id');
         });
         Schema::table('order_vendor_products', function (Blueprint $table) {
