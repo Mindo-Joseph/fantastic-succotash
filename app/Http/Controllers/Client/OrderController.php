@@ -23,6 +23,7 @@ class OrderController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function index(){
+        $user = Auth::user();
         $orders = Order::with(['vendors.products','orderStatusVendor', 'address','user'])->orderBy('id', 'DESC');
         if (Auth::user()->is_superadmin == 0) {
             $orders = $orders->whereHas('vendors.vendor.permissionToUser', function ($query) {
@@ -31,6 +32,8 @@ class OrderController extends BaseController{
         }
         $orders = $orders->paginate(10);
         foreach ($orders as $order) {
+            $order->address = $order->address ? $order->address['address'] : '';
+            $order->created_date = convertDateTimeInTimeZone($order->created_at, $user->timezone, 'd-m-Y, H:i A');
             foreach ($order->vendors as $vendor) {
                 $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
                 $vendor->order_status = $vendor_order_status ? $vendor_order_status->OrderStatusOption->title : '';
@@ -49,6 +52,55 @@ class OrderController extends BaseController{
         return view('backend.order.index', compact('orders','return_requests'));
     }
 
+    public function postOrderFilter(Request $request, $domain = ''){
+        $user = Auth::user();
+        $filter_order_status = $request->filter_order_status;
+        $orders = Order::with(['vendors.products','vendors.status','orderStatusVendor', 'address','user'])->orderBy('id', 'DESC');
+        if (Auth::user()->is_superadmin == 0) {
+            $orders = $orders->whereHas('vendors.vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        if($filter_order_status){
+            switch ($filter_order_status) {
+                case 'pending_orders':
+                    $order_status_options = [2,3,4,5,6,7,8];
+                    $orders = $orders->whereDoesntHave('vendors.status', function ($query) use($order_status_options) {
+                        $query->whereIn('order_status_option_id', $order_status_options);
+                    });
+                break;
+                case 'active_orders':
+                    $order_status_options = [6,7,8,3];
+                    $orders = $orders->whereHas('vendors.status', function ($query) use($order_status_options) {
+                        $query->whereNotIn('order_status_option_id', $order_status_options)->whereIn('order_status_option_id',['2,3,4']);
+                    });
+                break;
+                case 'orders_history':
+                    $order_status_options = [6,3];
+                    $orders = $orders->whereHas('vendors.status', function ($query) use($order_status_options) {
+                        $query->whereIn('order_status_option_id', $order_status_options);
+                    });
+                break;
+            }
+        }
+        $orders = $orders->paginate(50);
+        foreach ($orders as $order) {
+            $order->created_date = convertDateTimeInTimeZone($order->created_at, $user->timezone, 'd-m-Y, H:i A');
+            foreach ($order->vendors as $vendor) {
+                $vendor->vendor_detail_url = route('order.show.detail', [$order->id, $vendor->vendor_id]);
+                $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
+                $vendor->order_status = $vendor_order_status ? $vendor_order_status->OrderStatusOption->title : '';
+                $product_total_count = 0;
+                foreach ($vendor->products as $product) {
+                        $product_total_count += $product->quantity * $product->price;
+                        $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
+                }
+                $vendor->product_total_count = $product_total_count;
+                $vendor->final_amount = $vendor->taxable_amount+ $product_total_count;
+            }
+        }
+        return $this->successResponse($orders,'',201);
+    }
     /**
      * Display the order.
      *
