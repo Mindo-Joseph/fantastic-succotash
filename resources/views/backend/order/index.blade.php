@@ -133,10 +133,8 @@
                 </a>
             </div>
         </div>
-    </div>  
-    <div class="loader">
-        <div class="spinner-border avatar-lg text-primary m-2" role="status"></div>
-    </div>  
+    </div>    
+    <div class="error-msg"><p>You have not any order yet now.</p></div>
     <div class="row">
         <div class="col-sm-12 col-lg-12 tab-product pt-0">
             <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
@@ -166,7 +164,9 @@
                 <div class="tab-pane fade" id="active_orders" role="tabpanel"
                     aria-labelledby="active_orders_tab">Active Orders</div>
                 <div class="tab-pane fade past-order" id="orders_history" role="tabpanel"
-                    aria-labelledby="orders_history_tab">Orders History</div>
+                    aria-labelledby="orders_history_tab">
+                    
+                </div>
             </div>
         </div>
     </div>   
