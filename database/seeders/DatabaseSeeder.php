@@ -17,25 +17,18 @@ class DatabaseSeeder extends Seeder
               RoleSeeder::class,
               TypeSeeder::class,
               PaymentOptionSeeder::class,
-              //ClientTableSeeder::class,
               LanguageTableSeeder::class,
               NotificationSeeder::class,
-              //AdminsTableDataSeeder::class,
               MapProviderSeeder::class,
               SmsProviderSeeder::class,
               TemplateSeeder::class,
               PromoTypeSeeder::class,
-              //CategorySeeder::class,
-              //CategoryTranslationSeeder::class,
               CommonDataSeeder::class,
               BannerDataSeeder::class,
               TimezoneSeeder::class,
               AppStylingSeeder::class,
-              /*AddonsetDataSeeder::class,
-              VariantSeeder::class,
-              CatalogSeeder::class,
-              ProductSeeder::class,*/
-
+              PermissionSeeder::class,
+              ReturnReasonSeeder::class,
           ]);
     }
 }

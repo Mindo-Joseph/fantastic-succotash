@@ -8,7 +8,11 @@ use App\Http\Controllers\Client\Accounting\VendorController;
 use App\Http\Controllers\Client\Accounting\LoyaltyController;
 use App\Http\Controllers\Client\Accounting\PromoCodeController;
 
-
+Route::get('email-test', function(){
+    $details['email'] = 'pankaj@yopmail.com';
+    dispatch(new App\Jobs\SendVerifyEmailJob($details))->delay(now()->addSeconds(2))->onQueue('course_interactions');
+    dd('done');
+});
 
 Route::get('admin/login', 'Auth\LoginController@getClientLogin')->name('admin.login')->middleware('domain');
 Route::get('file-download/{filename}', [DownloadFileController::class, 'index'])->name('file.download.index');

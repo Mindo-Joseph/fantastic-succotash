@@ -419,12 +419,10 @@
                 <div class="product-box">
                     <div class="img-wrapper">
                         <div class="front">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/33.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
-                        </div>
-                        <div class="back">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/34.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#">
+                                <img src="{{asset('front-assets/images/pro3/33.jpg')}}"
+                                    class="img-fluid blur-up lazyload bg-img" alt="">
+                            </a>
                         </div>
                         <div class="cart-info cart-wrap">
                             <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i

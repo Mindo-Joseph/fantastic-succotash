@@ -52,19 +52,18 @@
                                                 <li>
                                                     <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
                                                     <label class="m-0 in-progress"><%= vendor.order_status %></label>
+                                                    <%= vendor.order_status_option_id%>
                                                 </li>
                                             </ul>
                                         </div>
                                         <div class="col-7 col-sm-4">
                                             <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
                                                 <% _.each(vendor.products, function(product, pr){%>
-                                                    <% if(vendor.vendor_id == product.vendor_id) { %>
                                                         <li class="text-center">
                                                             <img src="<%= product.image_path.proxy_url %>74/100<%= product.image_path.image_path %>">
                                                             <span class="item_no position-absolute">x<%= product.quantity %></span>
                                                             <label class="items_price">$<%= product.price %></label>
                                                         </li>
-                                                    <% } %>
                                                 <% }); %>                                    
                                             </ul>
                                         </div>
@@ -134,7 +133,11 @@
             </div>
         </div>
     </div>    
-    <div class="error-msg"><p>You have not any order yet now.</p></div>
+    <!-- <div class="error-msg"><p>You have not any order yet now.</p></div> -->
+    </div>  
+    <!-- <div class="loader">
+        <div class="spinner-border avatar-lg text-primary m-2" role="status"></div>
+    </div>   -->
     <div class="row">
         <div class="col-sm-12 col-lg-12 tab-product pt-0">
             <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
@@ -160,13 +163,11 @@
             </ul>
             <div class="tab-content nav-material" id="top-tabContent">
                 <div class="tab-pane fade past-order show active" id="pending_orders" role="tabpanel"
-                    aria-labelledby="pending_order-tab">Pending Orders</div>
+                    aria-labelledby="pending_order-tab"></div>
                 <div class="tab-pane fade" id="active_orders" role="tabpanel"
-                    aria-labelledby="active_orders_tab">Active Orders</div>
+                    aria-labelledby="active_orders_tab"></div>
                 <div class="tab-pane fade past-order" id="orders_history" role="tabpanel"
-                    aria-labelledby="orders_history_tab">
-                    
-                </div>
+                    aria-labelledby="orders_history_tab"></div>
             </div>
         </div>
     </div>   
