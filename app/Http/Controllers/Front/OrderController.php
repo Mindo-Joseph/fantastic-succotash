@@ -33,14 +33,14 @@ class OrderController extends FrontController
         }])->whereHas('orderStatusVendor',function($q){
             $q->where('order_status_option_id', 5);
         })
-        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
+        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(1);
         
         $activeOrders = Order::with(['vendors.products', 'user', 'address', 'orderStatusVendor'=>function($q){
             $q->where('order_status_option_id', '!=', 5);
         }])->whereHas('orderStatusVendor',function($q){
             $q->where('order_status_option_id', '!=', 5);
         })
-        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
+        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(1);
         return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders]);
     }
 

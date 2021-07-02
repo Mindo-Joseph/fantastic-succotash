@@ -1,6 +1,11 @@
 <form id="review-upload-form" class="theme-form" action="javascript:void(0)" method="post" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="order_vendor_product_id" value="{{$order_vendor_product_id}}">
+    <input type="hidden" name="file_set" id="files_set" value="0">
+    <div id="remove_files">
+    </div>
+    
+ 
     <textarea class="form-control" maxlength="500" name="hidden_review" hidden>{{$rating_details->review??''}}</textarea>
     <div class="rating-form">
         <fieldset class="form-group">
@@ -74,6 +79,7 @@
                 @if(isset($rating_details->reviewFiles))
                 @foreach ($rating_details->reviewFiles as $files)
                     <img class="col-6 col-md-3 col-lg-2 update_pic" src="{{$files->file['proxy_url'].'300/300'.$files->file['image_path']}}">
+                    <i class="fa fa-trash server-img-del" aria-hidden="true" data-id={{$files->id}}></i>
                 @endforeach
                 @endif
                 
@@ -102,7 +108,17 @@
 
 
   <script type="text/javascript">
-    $(document).ready(function (e) {
+
+   
+
+$(document).ready(function (e) {
+    $('body').delegate('.local-img-del','click',function() {
+        var img_id = $(this).data('id');
+        $(this).prev().remove();
+        $(this).remove();
+        $("#"+img_id).remove();
+    });
+
 
   $('input[type=radio][name=rating]').on('change', function() {
     $('.rating_files').show(); 
@@ -124,27 +140,85 @@ var filesAmount = input.files.length;
 for (i = 0; i < filesAmount; i++) {
 var reader = new FileReader();
 reader.onload = function(event) {
-$($.parseHTML('<img>')).addClass('col-6 col-md-3 col-lg-2 update_pic').attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
+var file = event.target;
+$("#thumb-output").append("<img class=\"col-6 col-md-3 col-lg-2 update_pic\" src=\"" + event.target.result + "\" title=\"" + file.name + "\"/>" +
+            "<i class='fa fa-trash local-img-del' aria-hidden='true' data-id='"+ i +"'></i>");
+//$($.parseHTML('<img>')).addClass('col-6 col-md-3 col-lg-2 update_pic').attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
 }
 reader.readAsDataURL(input.files[i]);
 }
 }
 };
+
 $('#input-file').on('change', function() {
-ShowMultipleImagePreview(this, 'span.show-multiple-image-preview');
+    $('#files_set').val(1);
+   $(this).closest("form").submit();
 });
+
+$('.server-img-del').on('click',function(e){
+    var img_id = $(this).data('id');
+    $(this).prev().remove();
+     $(this).remove();
+     $("#remove_files").append("<input type='hidden' name='remove_files[]' value='"+ img_id +"'>");
+});
+
+
+
+
+
 });    
 $('#review-upload-form').submit(function(e) {
 e.preventDefault();
 
 var formData = new FormData(this);
-let review = $('#exampleFormControlTextarea1').val();
 let TotalImages = $('#input-file')[0].files.length; //Total Images
+let review = $('#exampleFormControlTextarea1').val();
+if(TotalImages > 0)
+{
+    
 let images = $('#input-file')[0];
 for (let i = 0; i < TotalImages; i++) {
 formData.append('images' + i, images.files[i]);
 }
 formData.append('TotalImages', TotalImages);
+formData.append('folder', '/review');
+
+$.ajax({
+type:'POST',
+url: "{{ route('uploadfile')}}",
+data: formData,
+cache:false,
+contentType: false,
+processData: false,
+beforeSend: function () {
+    if(TotalImages > 0)
+        $("#review_form_button").html('<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop('disabled', true);
+    },
+success: (data) => {
+if(data.status == 'Success')
+    {   
+        $("#input-file").val('');
+        for(var i = 0; i < data.data.length; i++) {
+            console.log(data.data[i]['name']);
+            $("#remove_files").append("<input type='hidden' name='add_files[]' id='"+ data.data[i]['ids'] +"' = value='"+ data.data[i]['name'] +"'>");
+            $("#thumb-output").append("<img class=\"col-6 col-md-3 col-lg-2 update_pic\" src=\"" + data.data[i]['img_path'] + "\" />" +
+            "<i class='fa fa-trash local-img-del' aria-hidden='true' data-id='"+ data.data[i]['ids'] +"'></i>");
+        }
+
+        $("#review_form_button").html('Submit Your Review').prop('disabled', false);
+    }else{
+        $('#error-msg').text(data.message);
+        $("#review_form_button").html('Submit Your Review').prop('disabled', false);
+    }
+},
+error: function(data){
+    $('#error-msg').text(data.message);
+    $("#review_form_button").html('Submit Your Review').prop('disabled', false);
+}
+});
+}
+else
+{
 $.ajax({
 type:'POST',
 url: "{{ route('update.order.rating')}}",
@@ -163,7 +237,10 @@ if(data.status == 'Success')
             $("#review_form_button").html('Submit Your Review').prop('disabled', false);
         }
         else
-        $("#review_form_button").html('Submitted');
+        {
+            $("#review_form_button").html('Submit Your Review');
+            location.reload();
+        }
     }else{
         $('#error-msg').text(data.message);
         $("#review_form_button").html('Submit Your Review').prop('disabled', false);
@@ -174,6 +251,10 @@ error: function(data){
     $("#review_form_button").html('Submit Your Review').prop('disabled', false);
 }
 });
+}
+
+
+
 });
 
 });

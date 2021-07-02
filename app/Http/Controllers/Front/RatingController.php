@@ -23,8 +23,7 @@ class RatingController extends FrontController{
 
      */
     public function updateProductRating(OrderProductRatingRequest $request){
-     
-        try {
+       try {
             $user = Auth::user();
             $order_deliver = 0;
             $order_details = OrderProduct::where('id',$request->order_vendor_product_id)->whereHas('order',function($q){$q->where('user_id',Auth::id());})->first();
@@ -36,18 +35,30 @@ class RatingController extends FrontController{
                 'order_id' => $order_details->order_id,
                 'product_id' => $order_details->product_id,
                 'user_id' => Auth::id()],['rating' => $request->rating,'review' => $request->review??$request->hidden_review]);
-
-               if ($image = $request->file('images')) {
-                    foreach ($image as $files) {
-                    $file =  substr(md5(microtime()), 0, 15).'_'.$files->getClientOriginalName();
-                    $storage = Storage::disk('s3')->put('/review', $files, 'public');
-                    $img = new OrderProductRatingFile();
-                    $img->order_product_rating_id = $ratings->id;
-                    $img->file = $storage;
-                    $img->save();
+                
+                // if ($image = $request->file('images')) {
+                //     foreach ($image as $files) {
+                //     $file =  substr(md5(microtime()), 0, 15).'_'.$files->getClientOriginalName();
+                //     $storage = Storage::disk('s3')->put('/review', $files, 'public');
+                //     $img = new OrderProductRatingFile();
+                //     $img->order_product_rating_id = $ratings->id;
+                //     $img->file = $storage;
+                //     $img->save();
                    
+                //     }
+                // }
+                if(isset($request->add_files) && is_array($request->add_files))    # send  array of insert images 
+                {
+                    foreach ($request->add_files as $storage) {
+                        $img = new OrderProductRatingFile();
+                        $img->order_product_rating_id = $ratings->id;
+                        $img->file = $storage;
+                        $img->save();
+                       
                     }
-                }
+                }  
+                
+                
                
               if(isset($request->remove_files) && is_array($request->remove_files))    # send index array of deleted images 
                 $removefiles = OrderProductRatingFile::where('order_product_rating_id',$ratings->id)->whereIn('id',$request->remove_files)->delete();
@@ -93,20 +104,22 @@ class RatingController extends FrontController{
      */
     public function uploadFile(CheckImageRequest $request){
      try {
-               $files = array();
+               $files_set = [];
                $folder =$request->folder ??'';
                if ($image = $request->file('images')) {
-                    foreach ($image as $files) {
+                    foreach ($image as $key => $files) {
                     $file =  substr(md5(microtime()), 0, 15).'_'.$files->getClientOriginalName();
                     $storage = Storage::disk('s3')->put($folder, $files, 'public');
-                    $files[] = $storage;
-                   
+                    $files_set[$key]['name'] = $storage;
+                    $files_set[$key]['ids'] = uniqid();
+                    $proxy_url = env('IMG_URL1');
+                    $image_path = env('IMG_URL2').'/'.\Storage::disk('s3')->url($storage);
+                    $files_set[$key]['img_path'] = $proxy_url.'300/300'.$image_path;
                     }
                 }
-               
-       
-            if(isset($files)) {
-                return $this->successResponse($files,'Files Submitted.');
+              
+             if(isset($files_set)) {
+                return $this->successResponse($files_set,'Files Submitted.');
             }
             return $this->errorResponse('Invalid order', 200);
             
