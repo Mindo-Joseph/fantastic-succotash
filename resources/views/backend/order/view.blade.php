@@ -56,7 +56,7 @@ $timezone = Auth::user()->timezone;
                                         @if (in_array(2, $vendor_order_status_option_ids) && $order_status_option->id == 3)
                                             @continue
                                         @endif
-                                        <li class="{{$class}}" data-status_option_id="{{$order_status_option->id}}">
+                                        <li class="{{$class}}" data-status_option_id="{{$order_status_option->id}}" data-order_vendor_id="{{$order_status_option->order_vendor_id}}">
                                             <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
                                             <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
                                                 @if($date)
@@ -229,6 +229,7 @@ $timezone = Auth::user()->timezone;
         if(confirm("Are you Sure?")){
             let that = $(this);
         var status_option_id = that.data("status_option_id");
+        var order_vendor_id = that.data("order_vendor_id");
         $.ajax({
             url: "{{ route('order.changeStatus') }}",
             type: "POST",
@@ -237,6 +238,7 @@ $timezone = Auth::user()->timezone;
                 vendor_id: "{{$vendor_id}}",
                 "_token": "{{ csrf_token() }}",
                 status_option_id: status_option_id,
+                order_vendor_id: order_vendor_id,
             },
             success: function(response) {
                 that.addClass("completed");

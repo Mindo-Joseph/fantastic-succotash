@@ -64,7 +64,7 @@ class OrderController extends BaseController{
         if($filter_order_status){
             switch ($filter_order_status) { 
                 case 'pending_orders':
-                    $orders = $orders->with('vendors', function ($query){
+                    $orders = $orders->whereHas('vendors', function ($query){
                         $query->where('order_status_option_id', 1);
                    });
                 break;
@@ -76,7 +76,7 @@ class OrderController extends BaseController{
                 break;
                 case 'orders_history':
                     $order_status_options = [6,3];
-                    $orders = $orders->with('vendors', function ($query) use($order_status_options){
+                    $orders = $orders->whereHas('vendors', function ($query) use($order_status_options){
                         $query->whereIn('order_status_option_id', $order_status_options);
                     });
                 break;
@@ -123,7 +123,6 @@ class OrderController extends BaseController{
                 'vendors.products' => function($query) use ($vendor_id){
                     $query->where('vendor_id', $vendor_id);
                 }))->findOrFail($order_id);
-        // dd($order->vendors[0]->products->toArray());die;
         foreach ($order->vendors as $key => $vendor) {
             foreach ($vendor->products as $key => $product) {
                 $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
@@ -160,8 +159,8 @@ class OrderController extends BaseController{
                 $vendor_order_status = new VendorOrderStatus();
                 $vendor_order_status->order_id = $request->order_id;
                 $vendor_order_status->vendor_id = $request->vendor_id;
+                $vendor_order_status->order_vendor_id = $request->order_vendor_id;
                 $vendor_order_status->order_status_option_id = $request->status_option_id;
-                $vendor_order_status->order_vendor_id = $vendor_order_status_check->order_vendor_id;
                 $vendor_order_status->save();
                 if ($request->status_option_id == 2) {
                     $order_dispatch = $this->checkIfanyProductLastMileon($request);
