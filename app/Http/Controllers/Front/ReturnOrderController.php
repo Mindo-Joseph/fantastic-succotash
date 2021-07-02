@@ -25,11 +25,18 @@ class ReturnOrderController extends FrontController{
     */
     public function getOrderDatainModel(Request $request){
         try { 
-            $order_details = Order::with(['vendors.products.productReturn','products.productRating', 'user', 'address'])->whereHas('vendors',function($q)use($request){
-                $q->where('vendor_id', $request->vendor_id);
+            $order_details = Order::with(['vendors.products.productReturn','products.productRating', 'user', 'address',
+            'vendors'=>function($qw)use($request){
+                $qw->where('vendor_id', $request->vendor_id)->where('order_id', $request->id);
+            },'vendors.products'=>function($qw)use($request){
+                $qw->where('vendor_id', $request->vendor_id)->where('order_id', $request->id);
+            },'products'=>function($qw)use($request){
+                $qw->where('vendor_id', $request->vendor_id)->where('order_id', $request->id);
+            }])->whereHas('vendors',function($q)use($request){
+                $q->where('vendor_id', $request->vendor_id)->where('order_id', $request->id);
             })
             ->where('orders.user_id', Auth::user()->id)->where('orders.id', $request->id)->orderBy('orders.id', 'DESC')->first();
-
+           
             if(isset($order_details)){
               
                 if ($request->ajax()) {

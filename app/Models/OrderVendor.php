@@ -19,7 +19,7 @@ class OrderVendor extends Model{
 	    return $this->hasOne('App\Models\User' , 'id', 'user_id'); 
 	}
     public function products(){
-	    return $this->hasMany('App\Models\OrderProduct' , 'order_id', 'order_id'); 
+	    return $this->hasMany('App\Models\OrderProduct' , 'order_id', 'order_id' , 'vendor_id', 'vendor_id'); 
 	}
 	public function payment(){
 	    return $this->hasOne('App\Models\Payment' , 'order_id', 'order_id'); 
@@ -28,11 +28,10 @@ class OrderVendor extends Model{
 	    return $this->hasOne('App\Models\Promocode' , 'id', 'coupon_id'); 
 	}
 	public function status(){
-	    return $this->hasOne('App\Models\VendorOrderStatus' , 'order_id', 'order_id' , 'vendor_id', 'vendor_id')->latest(); 
+	    return $this->hasMany('App\Models\VendorOrderStatus' , 'vendor_id', 'vendor_id', 'order_id', 'order_id')->latest(); 
 	}
-	
 	public function orderstatus(){
-	    return $this->hasOne('App\Models\VendorOrderStatus' , 'vendor_id', 'vendor_id')->orderBy('id', 'DESC')->latest(); 
+	    return $this->hasOne('App\Models\VendorOrderStatus' , 'order_id', 'order_id' , 'vendor_id', 'vendor_id')->orderBy('id', 'DESC')->latest(); 
 	}
 	public function scopeBetween($query, $from, $to){
         $query->whereBetween('created_at', [$from, $to]);

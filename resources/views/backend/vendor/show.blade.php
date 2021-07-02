@@ -229,7 +229,9 @@
                                         <div class="col-md-12">
                                             <div class="row mb-2">
                                                 <div class="col-md-12">
-                                                    <div id='calendar'></div>
+                                                    <div id='calendar'>
+                                                    
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -625,7 +627,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
 
-        /*var calendar = new FullCalendar.Calendar(calendarEl, {
+        var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
             headerToolbar: {
                 left: 'prev,next',
@@ -685,7 +687,7 @@
                 var day = ev.event.start.getDay();
 
                 document.getElementById('edit_type').value = ev.event.extendedProps.type;
-                document.getElementById('edit_day').value = day + 1;
+                document.getElementById('edit_day').value = day;
                 document.getElementById('edit_type_id').value = ev.event.extendedProps.type_id;
 
                 // Delete Slot Form
@@ -710,7 +712,7 @@
             }
         });
 
-        calendar.render();*/
+        calendar.render();
 
     });
         

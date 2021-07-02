@@ -21,7 +21,7 @@
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
-                            @if($product->productReturn->status)
+                            @if(isset($product->productReturn->status))
                              {{ __($product->productReturn->status) }}
                             @else
                             @php $continue = 1; @endphp

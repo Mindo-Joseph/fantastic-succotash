@@ -60,7 +60,7 @@
 
                 <div class="card-box h-100">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h4 class="header-title text-uppercase mb-0">{{$opt->title}}</h4>
+                        <h4 class="header-title mb-0">{{$opt->title}}</h4>
                     </div>
                     <div class="form-group mb-0 switchery-demo">
                         <label for="" class="mr-3">Enable</label>

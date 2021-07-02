@@ -1800,12 +1800,15 @@ label.logo-size {
     height: auto;
 }
 
-
-
 .dt-buttons.btn-group.flex-wrap {
     position: absolute;
     right: 220px;
-    top: 20px;
+    top: 25px;
+}
+
+.dt-buttons.btn-group.flex-wrap button,#clear_filter_btn_icon {
+    border-radius: 0.2rem;
+    padding: 3.5px 10px;
 }
 
 .return-order .update_pic {
@@ -1833,6 +1836,238 @@ td.product-name,.vendor-name {
 .show-return-product-modal {
     cursor: pointer;
 }
+
+#sidebar-menu > ul > li > a[data-toggle="collapse"]:after {
+    content: "\F0142";
+    transition: transform 0.15s;
+    position: absolute;
+    right: 20px;
+    display: inline-block;
+    font-family: "Material Design Icons";
+    text-rendering: auto;
+    line-height: 1.5rem;
+    font-size: 1.1rem;
+    transform: translate(0, 0);
+    font-weight: 600;
+    /* top: 0; */
+}
+
+#sidebar-menu > ul > li > a[aria-expanded="true"]:after, #sidebar-menu > ul > li.menuitem-active > a:not(.collapsed)[aria-expanded="true"]:after {
+    transform: rotate(
+90deg
+);
+}
+
+
+/* Dark Mood Css */
+.dark a,.dark .tab-product .nav-material.nav-tabs .nav-link.active,.dark .items_price,.dark .top-site-links li:hover a,.dark .nav-second-level li a:focus, .dark .nav-second-level li a:hover,
+.dark #sidebar-menu .menuitem-active > a {
+    color: rgb(247 184 75 / 82%);
+}
+
+.dark .text-primary {
+    color: rgb(247 184 75 / 82%) !important;
+}
+
+.dark .tab-product .nav-material.nav-tabs .nav-link.active ~ .material-border,.dark .order_detail:before {
+    border-color: rgb(247 184 75 / 82%);
+}
+
+.dark .tab-product .nav-material.nav-tabs .nav-item .nav-link {
+    color: #f3f7f9;
+}
+
+.dark .pulse,.dark .item_no {
+    background: rgb(247 184 75 / 82%);
+}
+
+.dark .top-site-links li a,.dark .grand_total label, .dark .grand_total span {
+    color: #acbfd2;
+}
+
+.loader {
+    position: fixed;
+    z-index: 999;
+    width: 100px;
+    height: 100px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @media(min-width:320px){

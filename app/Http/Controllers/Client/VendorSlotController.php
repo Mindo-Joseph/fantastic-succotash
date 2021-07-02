@@ -166,7 +166,7 @@ class VendorSlotController extends BaseController
         }
 
         $lst = count($date) - 1;
-        $slot = VendorSlot::join('slot_days', 'slot_days.slot_id', 'vendor_slots.id')->orderBy('slot_days.day', 'asc')->get();
+        $slot = VendorSlot::join('slot_days', 'slot_days.slot_id', 'vendor_slots.id')->where('vendor_id', $id)->orderBy('slot_days.day', 'asc')->get();
         
         $slotDate = VendorSlotDate::whereBetween('specific_date', [$date[0], $date[$lst]])->orderBy('specific_date','asc')->get();
 
