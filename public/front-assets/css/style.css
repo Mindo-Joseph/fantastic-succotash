@@ -3201,6 +3201,7 @@ button.btn.btn-solid:active, button.btn.btn-outline:active {
   -webkit-transition: 0.5s ease;
   transition: 0.5s ease;
 }
+
   .category-block .category-image.svg-image {
     background-color: #ffffff; }
     .category-block .category-image.svg-image svg {
