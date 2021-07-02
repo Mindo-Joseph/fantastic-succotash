@@ -105,6 +105,8 @@
                                         <label>{{__('Comments (Opitonal)')}}:</label>
                                         <textarea class="form-control" name="" id="comments" cols="20" rows="4"></textarea>
                                     </div>
+                                    <span class="text-danger" id="error-msg"></span>
+                                    <span class="text-success" id="success-msg"></span>
                                     <button class="btn btn-solid mt-3" id="return_form_button">{{__('Request')}}</button>
                                 </form>
                             </div>

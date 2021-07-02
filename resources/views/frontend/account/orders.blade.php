@@ -834,6 +834,18 @@ $timezone = Auth::user()->timezone;
             $('#review-rating-form-modal').html(markup);
         });
     });
+//// ************  return product + Order   *****************  //
+$('body').on('click', '.return-order-product', function (event) {
+        event.preventDefault();
+        var id = $(this).data('id');
+        var vendor_id = $(this).data('vendor_id');
+        $.get('/return-order/get-order-data-in-model?id=' + id +'&vendor_id=' + vendor_id, function(markup)
+                {   
+                    $('#return_order').modal('show'); 
+                    $('#return-order-form-modal').html(markup);
+                });
+    });        
+   
 
     $(document).delegate("#orders_wrapper .nav-tabs .nav-link", "click", function(){
         let id = $(this).attr('id');
@@ -858,6 +870,7 @@ $timezone = Auth::user()->timezone;
                     $('#return-order-form-modal').html(markup);
                 });
     });        
+
 </script>
 
 @endsection

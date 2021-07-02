@@ -48,7 +48,10 @@ class OrderProduct extends Model{
     }
     public function order(){
       return $this->belongsTo('App\Models\Order', 'order_id', 'id')->select('id', 'order_number', 'user_id');
-  }
+    }
+    public function productReturn(){
+      return $this->hasOne('App\Models\OrderReturnRequest', 'order_vendor_product_id', 'id');
+    }
     public function getImageAttribute($value){
       $values = array();
       $img = 'default/default_image.png';

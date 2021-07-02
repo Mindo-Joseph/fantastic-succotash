@@ -24,7 +24,7 @@ $timezone = Auth::user()->timezone;
             <div class="col-12">
                 <div class="page-title-box d-flex align-items-center justify-content-between">
                     <h4 class="page-title">Orders</h4>
-                    <a class="return-btn" href="#"><b>Return Request <span>(5)</span> <i class="fa fa-arrow-circle-right ml-1" aria-hidden="true"></i></b></a>
+                    <a class="return-btn" href="{{route('backend.order.returns',['Pending'])}}"><b>Return Request <span>({{$return_requests}})</span> <i class="fa fa-arrow-circle-right ml-1" aria-hidden="true"></i></b></a>
                 </div>
             </div>
         </div>    
@@ -180,122 +180,7 @@ $timezone = Auth::user()->timezone;
         </div>   
         
         
-        <!-- Return Page Tabbar start from here -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box d-flex align-items-center justify-content-between">
-                    <h4 class="page-title">Return Requests</h4>                    
-                </div>
-            </div>
-        </div>   
-        <div class="row mb-lg-5">
-            <div class="col-sm-12 col-lg-12 tab-product pt-0">
-                <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
-                    <li class="nav-item"><a class="nav-link active" id="awaiting_review" data-toggle="tab"
-                            href="#awaiting-review" role="tab" aria-selected="true"><i
-                                class="icofont icofont-ui-home"></i>Active Orders</a>
-                        <div class="material-border"></div>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" id="processed-tab" data-toggle="tab"
-                            href="#processed" role="tab" aria-selected="false"><i
-                                class="icofont icofont-man-in-glasses"></i>Process Order</a>
-                        <div class="material-border"></div>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" id="rejected-tab" data-toggle="tab"
-                            href="#rejected" role="tab" aria-selected="false"><i
-                                class="icofont icofont-man-in-glasses"></i>Rejected Order</a>
-                        <div class="material-border"></div>
-                    </li>
-                </ul>
-                <div class="tab-content nav-material" id="top-tabContent">
-                    <div class="tab-pane fade show active" id="awaiting-review" role="tabpanel"
-                        aria-labelledby="awaiting_review">
-                        <div class="card">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="w-100 common-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Order id</th>
-                                            <th>Customer Name</th>
-                                            <th>Product Name</th>
-                                            <th>Product Price</th>
-                                            <th>Date & Time</th>
-                                            <th>Request Date & Time</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                #71326615
-                                            </td>
-                                            <td>
-                                                <a href="#">Rahul</a>
-                                            </td>
-                                            <td class="product-name">
-                                                <h2 class="m-0">
-                                                    Pizza
-                                                </h2>
-                                            </td>
-                                            <td class="">
-                                                <b class="text-black">$315.00</b>
-                                            </td>
-                                            <td>11-06-2021, 13:38 PM</td>
-                                            <td>11-06-2021, 13:38 PM</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                #71326615
-                                            </td>
-                                            <td>
-                                                <a href="#">Rahul</a>
-                                            </td>
-                                            <td class="product-name">
-                                                <h2 class="m-0">
-                                                    Pizza
-                                                </h2>
-                                            </td>
-                                            <td class="">
-                                                <b class="text-black">$315.00</b>
-                                            </td>
-                                            <td>11-06-2021, 13:38 PM</td>
-                                            <td>11-06-2021, 13:38 PM</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                #71326615
-                                            </td>
-                                            <td>
-                                                <a href="#">Rahul</a>
-                                            </td>
-                                            <td class="product-name">
-                                                <h2 class="m-0">
-                                                    Pizza
-                                                </h2>
-                                            </td>
-                                            <td class="">
-                                                <b class="text-black">$315.00</b>
-                                            </td>
-                                            <td>11-06-2021, 13:38 PM</td>
-                                            <td>11-06-2021, 13:38 PM</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="processed" role="tabpanel"
-                        aria-labelledby="processed-tab">
-                        processed
-                    </div>
-                    <div class="tab-pane fade" id="rejected" role="tabpanel"
-                        aria-labelledby="rejected-tab">
-                        rejected
-                    </div>
-                </div>
-            </div>
-        </div>   
+        
        
     </div> 
 @endsection

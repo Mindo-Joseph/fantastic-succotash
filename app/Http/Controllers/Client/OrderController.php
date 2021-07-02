@@ -10,10 +10,13 @@ use App\Models\VendorOrderDispatcherStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus,ClientPreference,OrderVendorProduct,OrderVendor,UserAddress,Vendor};
+use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus,ClientPreference,OrderVendorProduct,OrderVendor,UserAddress,Vendor,OrderReturnRequest};
 use DB;
 use GuzzleHttp\Client;
+use App\Http\Traits\ApiResponser;
 class OrderController extends BaseController{
+
+    use ApiResponser;
     /**
      * Display a listing of the resource.
      *
@@ -36,7 +39,14 @@ class OrderController extends BaseController{
                 }
             }
         }
-        return view('backend.order.index', compact('orders'));
+        $return_requests = OrderReturnRequest::where('status','Pending');
+        if (Auth::user()->is_superadmin == 0) {
+            $return_requests = $return_requests->whereHas('order.vendors.vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $return_requests = $return_requests->count();
+        return view('backend.order.index', compact('orders','return_requests'));
     }
 
     /**
@@ -239,5 +249,72 @@ class OrderController extends BaseController{
             return $preference;
         else
             return false;
+    }
+
+
+
+     /**
+     * Display a listing of the order return request.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function returnOrders(Request $request, $domain = '',$status){
+        try {
+            
+            $orders_list = OrderReturnRequest::where('status',$status)->with('product')->orderBy('updated_at','DESC');
+            if (Auth::user()->is_superadmin == 0) {
+                $orders_list = $orders_list->whereHas('order.vendors.vendor.permissionToUser', function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                });
+            }
+            $orders[$status] = $orders_list->paginate(20);
+            return view('backend.order.return'
+            , [
+                'orders' => $orders,
+                'status' => $status
+            ]);
+
+           
+            } catch (\Throwable $th) {
+                return redirect()->back();
+            }
+    }
+
+
+     /**
+     * return orders details
+    */
+    public function getReturnProductModal(Request $request, $domain = ''){
+        try {
+            $return_details = OrderReturnRequest::where('id',$request->id)->with('returnFiles')->first();
+            if(isset($return_details)){
+              
+                if ($request->ajax()) {
+                 return \Response::json(\View::make('frontend.modals.update-return-product-client', array('return_details' => $return_details))->render());
+                }
+            }
+            return $this->errorResponse('Invalid order', 404);
+            
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
+    }
+
+     /**
+     * return  order product 
+    */
+    public function updateProductReturn(Request $request){
+     
+        try {
+           
+            $returns = OrderReturnRequest::where('id',$request->id)->update(['status'=>$request->status??null]);
+            if(isset($returns)) {
+                return $this->successResponse($returns,'Updated.');
+            }
+            return $this->errorResponse('Invalid order', 200);
+            
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 400);
+        }
     }
 }

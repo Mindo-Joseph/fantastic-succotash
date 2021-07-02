@@ -89,6 +89,9 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('vendor/updateArea/{id}', 'Client\ServiceAreaController@update');
     Route::post('vendor/deleteArea/{vid}', 'Client\ServiceAreaController@destroy')->name('vendor.serviceArea.delete');
     Route::resource('order', 'Client\OrderController');
+    Route::get('order/return/{status}', 'Client\OrderController@returnOrders')->name('backend.order.returns');
+    Route::get('order/return-modal/get-return-product-modal', 'Client\OrderController@getReturnProductModal')->name('get-return-product-modal');
+    Route::post('order/update-product-return-client', 'Client\OrderController@updateProductReturn')->name('update.order.return.client');
     Route::get('order/{order_id}/{vendor_id}', 'Client\OrderController@getOrderDetail')->name('order.show.detail');
     Route::post('order/updateStatus', 'Client\OrderController@changeStatus')->name('order.changeStatus');
     Route::resource('customer', 'Client\UserController');

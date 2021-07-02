@@ -118,5 +118,5 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 		
 	});
 
-	Route::post('upload-file', 'Front\ReturnOrderController@uploadFile')->name('uploadfile');
+	Route::post('upload-file', 'Front\RatingController@uploadFile')->name('uploadfile');
 });
