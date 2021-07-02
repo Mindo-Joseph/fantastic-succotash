@@ -2592,7 +2592,68 @@ td.order_address {
     width: 100%;
 }
 
+.review{
+    width:100%;
+    margin:10px 0;
+}
+.review-photo {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.review-author i {
+    color: #f3d779;
+}
+.review-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.review-box {
+    display: inline-block;
+    width: calc(100% - 150px);
+    background: #f8f8f8;
+    padding: 16px;
+    position: relative;
+    border-radius: 8px;
+}
+.review-box:after, .review-box:before {
+    right: 100%;
+    top: 10%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+.review-box:after {
+    border-right-color: #f8f8f8;
+    border-width: 25px;
+}
+.review-comment {
+    color: #9A9999;
+    padding: 10px 0;
+}
+.review-date {
+    color: #C7C7C7;
+    font-size: 14px;
+}
+.review-author{
+    color:#C7C7C7;
+}
+.review-author strong{
+    color:black;
+}
 
+.tab-content.nav-material .review-box p{
+    padding: 0;
+    margin-bottom: 0;
+    line-height: normal;
+    letter-spacing: normal;
+    font-size: 14px;
+}
 
 
 
