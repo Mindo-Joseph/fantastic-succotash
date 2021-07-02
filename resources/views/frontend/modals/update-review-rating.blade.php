@@ -107,10 +107,7 @@
 
 
 
-  <script type="text/javascript">
-
-   
-
+<script type="text/javascript">
 $(document).ready(function (e) {
     $('body').delegate('.local-img-del','click',function() {
         var img_id = $(this).data('id');

@@ -376,10 +376,8 @@ $timezone = Auth::user()->timezone;
                                                                                         <span>$@money($product_subtotal_amount)</span>
                                                                                     </li>
 
-                                                                                    <label class="return-order-product" data-id="{{$order->id??0}}"  data-vendor_id="{{$vendor->vendor_id??0}}"><td class="text-center" colspan="3">
-                                                                                        <button class="btn btn-solid" type="submit">Return</button>
-                                                                                    </td>
-                                                                                    </label>
+                                                                                    <button class="return-order-product btn btn-solid" data-id="{{$order->id??0}}"  data-vendor_id="{{$vendor->vendor_id??0}}"><td class="text-center" colspan="3">Return</button>
+                                                                                    
                                                                                 </ul>
                                                                             </div>
                                                                         </div>
@@ -710,7 +708,7 @@ $timezone = Auth::user()->timezone;
 </div>
 
 <!-- product return modal -->
-<div class="modal fade return-order" id="return_order_model" tabindex="-1" aria-labelledby="return_orderLabel">
+<div class="modal fade return-order" id="return_order_model" tabindex="-1" aria-labelledby="return_orderLabel"  aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
@@ -788,7 +786,7 @@ $('body').on('click', '.return-order-product', function (event) {
                 });
     });        
    
-
+//// ************  end return product + Order   *****************  //
     $(document).delegate("#orders_wrapper .nav-tabs .nav-link", "click", function(){
         let id = $(this).attr('id');
         const params = window.location.search;
@@ -801,18 +799,8 @@ $('body').on('click', '.return-order-product', function (event) {
             }
         }
     });
-//// ************  return product + Order   *****************  //
-    $('body').on('click', '.return-order-product', function (event) {
-        event.preventDefault();
-        var id = $(this).data('id');
-        var vendor_id = $(this).data('vendor_id');
-        $.get('/return-order/get-order-data-in-model?id=' + id +'&vendor_id=' + vendor_id, function(markup)
-                {   
-                    $('#return_order').modal('show'); 
-                    $('#return-order-form-modal').html(markup);
-                });
-    });        
 
+ 
 </script>
 
 @endsection

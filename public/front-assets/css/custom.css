@@ -2592,7 +2592,12 @@ td.order_address {
     width: 100%;
 }
 
-
+button.return-order-product {
+    padding: 0 5px;
+    font-size: 14px;
+    float: right;
+    margin-top: 5px;
+}
 
 
 
