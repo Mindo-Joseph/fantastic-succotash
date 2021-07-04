@@ -64,26 +64,26 @@ class OrderController extends BaseController{
         if($filter_order_status){
             switch ($filter_order_status) { 
                 case 'pending_orders':
-                    $orders = $orders->whereHas('vendors', function ($query){
+                    $orders = $orders->with('vendors', function ($query){
                         $query->where('order_status_option_id', 1);
                    });
                 break;
                 case 'active_orders':
                     $order_status_options = [2,4,5];
-                    $orders = $orders->whereHas('vendors', function ($query) use($order_status_options){
+                    $orders = $orders->with('vendors', function ($query) use($order_status_options){
                         $query->whereIn('order_status_option_id', $order_status_options);
                     });
                 break;
                 case 'orders_history':
                     $order_status_options = [6,3];
-                    $orders = $orders->whereHas('vendors', function ($query) use($order_status_options){
+                    $orders = $orders->with('vendors', function ($query) use($order_status_options){
                         $query->whereIn('order_status_option_id', $order_status_options);
                     });
                 break;
             }
         }
         $orders = $orders->paginate(50);
-        foreach ($orders as $order) {
+        foreach ($orders as $key => $order) {
             $order->created_date = convertDateTimeInTimeZone($order->created_at, $user->timezone, 'd-m-Y, H:i A');
             foreach ($order->vendors as $vendor) {
                 $vendor->vendor_detail_url = route('order.show.detail', [$order->id, $vendor->vendor_id]);
@@ -97,8 +97,8 @@ class OrderController extends BaseController{
                 $vendor->product_total_count = $product_total_count;
                 $vendor->final_amount = $vendor->taxable_amount+ $product_total_count;
             }
-            if($order->vendors){
-              unset($order);
+            if($order->vendors->count() == 0){
+                $orders->forget($key);
             }
         }
         return $this->successResponse($orders,'',201);

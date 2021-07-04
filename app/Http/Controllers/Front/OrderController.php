@@ -229,7 +229,7 @@ class OrderController extends FrontController
                 $OrderVendor->taxable_amount   = $vendor_taxable_amount;
                 $OrderVendor->payment_option_id = $request->payment_option_id;
                 $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
-                $OrderVendor->discount_amount = $this->getDeliveryFeeDispatcher($vendor_id);
+                $OrderVendor->delivery_fee = $this->getDeliveryFeeDispatcher($vendor_id);
                 $vendor_info = Vendor::where('id', $vendor_id)->first();
                 if ($vendor_info) {
                     if (($vendor_info->commission_percent) != null && $vendor_payable_amount > 0) {
