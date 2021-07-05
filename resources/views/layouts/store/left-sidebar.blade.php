@@ -139,6 +139,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
                         </li>
                         @foreach($navCategories as $cate)
+                        @if($cate['name'])
                         <li>
                             <a href="{{route('categoryDetail', $cate['slug'])}}">{{$cate['name']}}</a>
                             @if(!empty($cate['children']))
@@ -159,6 +160,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 </ul>
                             @endif
                         </li>
+                        @endif
                         @endforeach
                     </ul>
                 </div>

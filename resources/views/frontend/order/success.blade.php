@@ -22,7 +22,7 @@
 </section>
 <section class="section-b-space">
     <div class="container position-relative">
-        <div class="error_msg">You have earned {{ (int)$order->loyalty_points_earned }} with this order.</div>
+        <div class="error_msg">You have earned {{ (int)$order->loyalty_points_earned }} points with this order.</div>
         <div class="row">
             <div class="col-lg-6">
                 <div class="product-order">
