@@ -83,7 +83,7 @@ class BrandController extends BaseController{
     public function edit($domain = '', $id)
     {
         $brand = Brand::with('translation', 'bc')->where('id', $id)->firstOrFail();
-        $categories = Category::with('english')
+        $categories = Category::with('translation_one','english')
                         ->select('id', 'slug')
                         ->where('id', '>', '1')
                         ->where('status', '!=', '2')
