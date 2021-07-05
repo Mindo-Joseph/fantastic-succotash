@@ -30,7 +30,7 @@ trait ApiResponser{
 
 	protected function updateaverageRating($product_id, $message = null, $code = 200)
 	{	
-		$ava_rating = OrderProductRating::where(['status' => 1,'product_id' => $product_id])->avg('rating');
+		$ava_rating = OrderProductRating::where(['status' => '1','product_id' => $product_id])->avg('rating');
 		$up_rat = Product::where('id',$product_id)->update(['averageRating' => $ava_rating]);
 		return response()->json([
 			'status'=>'Success',
