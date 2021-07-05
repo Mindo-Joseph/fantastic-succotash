@@ -78,7 +78,8 @@ class FrontController extends Controller
                     if($where !== ''){
             $products = $products->where($where, 1);
         }
-        if(is_array($venderIds) && count($venderIds) > 0){
+        // if(is_array($venderIds) && count($venderIds) > 0){
+        if(is_array($venderIds)){
             $products = $products->whereIn('vendor_id', $venderIds);
         }
         $products = $products->where('is_live', 1)->take(6)->get();

@@ -136,8 +136,8 @@
                             <div class="col-sm-12">
                                 <div class="top-banner-wrapper text-center">
                                     
-                                    @if(!empty($celebrity->image))
-                                      <div class="common-banner"><img alt="" src="{{$celebrity->image['proxy_url'] . '1000/200' . $celebrity->image['image_path']}}" class="img-fluid blur-up lazyload"></div>
+                                    @if(!empty($celebrity->avatar))
+                                      <div class="common-banner"><img alt="" src="{{$celebrity->avatar['proxy_url'] . '1000/200' . $celebrity->avatar['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
                                     <div class="top-banner-content small-section">
                                         <h4>{{ $celebrity->name }}</h4>
@@ -200,10 +200,10 @@
                                         <div class="product-wrapper-grid">
                                             <div class="row margin-res">
 
-                                              @if(!empty($listData))
-                                                @foreach($listData as $key => $data)
-
-                                                <?php $imagePath = $imagePath2 = '';
+                                              @if(!empty($celebrity->products))
+                                                @foreach($celebrity->products as $key => $data)
+                                                <?php
+                                                $imagePath = $imagePath2 = '';
                                                 $mediaCount = count($data->media);
                                                 for ($i = 0; $i < $mediaCount && $i < 2; $i++) { 
                                                     if($i == 0){
@@ -247,9 +247,9 @@
                                             </div>
                                         </div>
                                         <div class="pagination pagination-rounded justify-content-end mb-0">
-                                            @if(!empty($listData))
-                                                {{ $listData->links() }}
-                                            @endif
+                                            {{-- @if(!empty($celebrity))
+                                                {{ $celebrity->links() }}
+                                            @endif --}}
                                         </div>
                                     </div>
                                 </div>
@@ -305,31 +305,7 @@
                 }
             }
         });
-        var range = $('.rangeSliderPrice').val();
 
-        ajaxCall = $.ajax({
-            type: "post",
-            dataType: "json",
-            url: "{{ route('productFilters', $category->id) }}",
-            data: {
-                "_token": "{{ csrf_token() }}",
-                "brands": brands,
-                "variants": variants, 
-                "options": options,
-                "range": range
-            },
-            beforeSend : function() {
-                if(ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
-                    ajaxCall.abort();
-                }
-            },
-            success: function(response) {
-                $('.displayProducts').html(response.html);
-            },
-            error: function (data) {
-                //location.reload();
-            },
-        });
     }
 
 </script>
