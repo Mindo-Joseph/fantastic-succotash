@@ -155,6 +155,8 @@
                                                         </div>
                                                     </div>
                                                     @endforeach
+                                                @else
+                                                    <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">Details Not Available</h5></div>
                                                 @endif
                                             </div>
                                         </div>

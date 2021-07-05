@@ -192,7 +192,7 @@
                                         <div class="categories-wrapper-grid">
                                             <div class="row margin-res">
 
-                                            @if(!empty($listData))
+                                            @if($listData->isNotEmpty())
                                                 @foreach($listData as $key => $cate)
                                                 <div class="col-xl-3 col-6 col-grid-box">
                                                     <div class="product-box">
@@ -209,6 +209,8 @@
                                                     </div>
                                                 </div>
                                                 @endforeach
+                                            @else
+                                                <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">Details Not Available</h5></div>
                                             @endif
                                             </div>
                                         </div>
