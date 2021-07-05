@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Vendor'])
+@extends('layouts.store', ['title' => $vendor->name])
 
 @section('css')
 <style type="text/css">
