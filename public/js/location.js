@@ -512,7 +512,7 @@ function initMap() {
                 if (status === google.maps.GeocoderStatus.OK) {
                     const lat = results[0].geometry.location.lat();
                     const lng = results[0].geometry.location.lng();
-                    $(".location-area span").text(place.formatted_address);
+                    $(".homepage-address span").text(place.formatted_address);
                     setLocationCoordinates(autocomplete.key, lat, lng);
                 }
             });
@@ -542,5 +542,4 @@ function setLocationCoordinates(key, lat, lng) {
     latitudeField.value = lat;
     longitudeField.value = lng;
 }
-initMap();
-// google.maps.event.addDomListener(window, 'load', initMap);
+google.maps.event.addDomListener(window, 'load', initMap);
