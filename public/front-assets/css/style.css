@@ -17456,7 +17456,7 @@ body.dark {
   border-color: #404040; }
 
 .dark .table thead th {
-  border-color: #404040 !important; }
+  border-color: #dee2e6c7 !important; }
 
 .dark .irs-from, .dark .irs-to, .dark .irs-single {
   color: #cbcbcb; }

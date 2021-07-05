@@ -1,23 +1,4 @@
-<style type="text/css">
-    .edit-category input[type="radio"] {
-    display: none;
-}
-.edit-category label{
-    cursor: pointer;
-}
-.edit-category label:before {
-    content: "\f058";
-    font-family: "Font Awesome 5 free";
-    position: absolute;
-    left: 0;
-    top: -3px;
-    color: green;
-    opacity: 0;
-}
-.edit-category input:checked ~ label:before  {
-    opacity: 1;
-}
-</style>
+
 <div class="row ">
     <div class="col-md-12">
         <div class="row mb-6">
@@ -108,9 +89,9 @@
         <div class="row mt-3 edit-category">
             @foreach($typeArray as $type)
                <div class="col">
-                  <div class="card p-0 text-center" id="tooltip-container">
+                  <div class="card p-0 text-center select-category" id="tooltip-container">
                      <input class="form-check-input type-select" for="edit" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
-                     <label for="type_id_{{$type->id}}" class="card-body p-0">
+                     <label for="type_id_{{$type->id}}" class="card-body p-0 1">
                         <div class="category-img">
                             <img src="{{url('images/'.$type->image)}}" alt="">
                         </div>
@@ -172,10 +153,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4" id="warning_page_design_main_div" style="display:none;">
-                {!! Form::label('title', 'Warning Page Design',['class' => 'control-label']) !!}
-                {!! Form::textarea('warning_page_design', $category->warning_page_design, ['class'=>'form-control', 'id' => 'warning_page_design', 'placeholder' => 'Description', 'rows' => '15', 'name' => 'warning_page_design']) !!}
-            </div>
+            
         </div>
         <div class="row">
             @foreach($category->translation as $trans)

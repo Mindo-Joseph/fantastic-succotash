@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'Loyalty', 'title' => 'Loyalty'])
+@extends('layouts.vertical', ['demo' => 'Loyalty', 'title' => 'Accounting | Loyality'])
 @section('css')
 <link href="{{asset('assets/libs/datatables/datatables.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
@@ -10,7 +10,7 @@
                 <div class="page-title-box">
                     <div class="page-title-right">
                     </div>
-                    <h4 class="page-title">Loyalty</h4>
+                    <h4 class="page-title">Loyality</h4>
                 </div>
             </div>
         </div>     
