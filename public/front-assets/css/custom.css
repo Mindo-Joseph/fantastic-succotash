@@ -1870,8 +1870,6 @@ div#test {
     margin-top: 15px;
     /* box-shadow: 0 1px 10px #ddd; */
     height: 200px;
-    display: flex;
-    align-items: center;
 }
 
 .product-box .img-wrapper img {
