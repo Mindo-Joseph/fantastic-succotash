@@ -278,7 +278,7 @@
 <div class="modal fade" id="removeAddressConfirmation" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_addressLabel">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header pb-0">
+      <div class="modal-header border-bottom">
         <h5 class="modal-title" id="remove_addressLabel">Delete Address</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
@@ -296,13 +296,13 @@
 </div>
 
 <script type="text/template" id="add_address_template">
-    <div class="modal-header">
+    <div class="modal-header border-bottom">
         <h5 class="modal-title" id="addedit-addressLabel"><%= title %> Address</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body pt-0">
+    <div class="modal-body">
         <% if(title == 'Edit') { %>
             <form id="add_edit_address_form" method="post" action="{{route('address.update')}}/<%= address.id %>">
         <% }else{ %>

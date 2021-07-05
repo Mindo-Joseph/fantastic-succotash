@@ -126,7 +126,7 @@ $timezone = Auth::user()->timezone;
                             <div class="card-box mb-0">
                                 <div class="row align-items-center">
                                     <div class="col-md-6 text-md-left text-center mb-md-0 mb-4">
-                                        <h5 class="text-17 mb-2">Available Balance</h5>
+                                        <h5 class="text-17 mb-2 mt-0">Available Balance</h5>
                                         <div class="text-36">$<span class="wallet_balance">@money(Auth::user()->balance)</span></div>
                                     </div>
                                     <div class="col-md-6 text-md-right text-center">
@@ -205,21 +205,20 @@ $timezone = Auth::user()->timezone;
 <div class="modal fade" id="topup_wallet" tabindex="-1" aria-labelledby="topup_walletLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <!-- <div class="modal-header"> -->
-        <!-- <h5 class="modal-title" id="topup_walletLabel">Topup Wallet</h5> -->
-        <button type="button" class="close top_right" data-dismiss="modal" aria-label="Close">
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title text-17 mb-0 mt-0" id="topup_walletLabel">Available Balance</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      <!-- </div> -->
+      </div>
       <form action="" id="wallet_topup_form">
         @csrf
         @method('POST')
-        <div class="modal-body">
+        <div class="modal-body pb-0">
             <div class="form-group">
-                <h5 class="text-17 mb-2">Available Balance</h5>
+                <!-- <h5 class="text-17 mb-2 mt-0">Available Balance</h5> -->
                 <div class="text-36">$<span class="wallet_balance">@money(Auth::user()->balance)</span></div>
             </div>
-            <hr />
             <div class="form-group">
                 <h5 class="text-17 mb-2">Topup Wallet</h5>
             </div>
@@ -233,7 +232,7 @@ $timezone = Auth::user()->timezone;
                 <button type="button" class="btn btn-solid mb-2 custom_amount">+20</button>
                 <button type="button" class="btn btn-solid mb-2 custom_amount">+50</button>
             </div>
-            <hr />
+            <hr class="mt-0 mb-1" />
             <div class="payment_response">
                 <div class="alert p-0 m-0" role="alert"></div>
             </div>
@@ -243,8 +242,8 @@ $timezone = Auth::user()->timezone;
         </div>
         <div class="modal-footer d-block text-center">
             <div class="row">
-                <div class="col-sm-6"><button type="button" class="btn btn-block btn-solid mt-2 topup_wallet_confirm">Topup Wallet</button></div>
-                <div class="col-sm-6"><button type="button" class="btn btn-block btn-solid mt-2" data-dismiss="modal">Cancel</button></div>
+                <div class="col-sm-6 pl-sm-0 pr-sm-1"><button type="button" class="btn btn-block btn-solid mt-2 topup_wallet_confirm">Topup Wallet</button></div>
+                <div class="col-sm-6 pr-sm-0 pl-sm-1"><button type="button" class="btn btn-block btn-solid mt-2" data-dismiss="modal">Cancel</button></div>
             </div>
         </div>
       </form>

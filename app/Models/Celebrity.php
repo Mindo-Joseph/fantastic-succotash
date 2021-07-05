@@ -28,6 +28,10 @@ class Celebrity extends Model
         return $this->belongsToMany(Brand::class, 'celebrity_brands');
     }
 
+    public function products(){
+      return $this->hasMany('App\Models\ProductCelebrity','celebrity_id', 'id'); 
+    }
+
     public function country()
     {
         return $this->belongsTo(Country::class)->select('id', 'code', 'name', 'nicename');

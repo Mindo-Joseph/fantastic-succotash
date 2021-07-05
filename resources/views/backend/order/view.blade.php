@@ -56,7 +56,7 @@ $timezone = Auth::user()->timezone;
                                         @if (in_array(2, $vendor_order_status_option_ids) && $order_status_option->id == 3)
                                             @continue
                                         @endif
-                                        <li class="{{$class}}" data-status_option_id="{{$order_status_option->id}}">
+                                        <li class="{{$class}}" data-status_option_id="{{$order_status_option->id}}" data-order_vendor_id="{{$order_status_option->order_vendor_id}}">
                                             <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
                                             <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
                                                 @if($date)
@@ -108,7 +108,7 @@ $timezone = Auth::user()->timezone;
                             <table class="table table-bordered table-centered mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Product name</th>
+                                        <th>Product Name</th>
                                         <th>Product</th>
                                         <th>Quantity</th>
                                         <th>Price</th>
@@ -228,30 +228,32 @@ $timezone = Auth::user()->timezone;
     $("#order_statuses li").click(function() {
         if(confirm("Are you Sure?")){
             let that = $(this);
-        var status_option_id = that.data("status_option_id");
-        $.ajax({
-            url: "{{ route('order.changeStatus') }}",
-            type: "POST",
-            data: {
-                order_id: "{{$order->id}}",
-                vendor_id: "{{$vendor_id}}",
-                "_token": "{{ csrf_token() }}",
-                status_option_id: status_option_id,
-            },
-            success: function(response) {
-                that.addClass("completed");
-                if(status_option_id == 2){
-                    that.next('li').remove();
-                }
-                if(status_option_id == 3){
-                    that.prev('li').remove();
-                    that.nextAll('li').remove();
-                }
-                $('#text_muted_'+status_option_id).html('<small class="text-muted">'+response.created_date+'</small>');
-                if(status_option_id == 2)
-                $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-            },
-        });
+            var status_option_id = that.data("status_option_id");
+            var order_vendor_id = that.data("order_vendor_id");
+            $.ajax({
+                url: "{{ route('order.changeStatus') }}",
+                type: "POST",
+                data: {
+                    order_id: "{{$order->id}}",
+                    vendor_id: "{{$vendor_id}}",
+                    "_token": "{{ csrf_token() }}",
+                    status_option_id: status_option_id,
+                    order_vendor_id: order_vendor_id,
+                },
+                success: function(response) {
+                    that.addClass("completed");
+                    if(status_option_id == 2){
+                        that.next('li').remove();
+                    }
+                    if(status_option_id == 3){
+                        that.prev('li').remove();
+                        that.nextAll('li').remove();
+                    }
+                    $('#text_muted_'+status_option_id).html('<small class="text-muted">'+response.created_date+'</small>');
+                    if(status_option_id == 2)
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                },
+            });
         }
     });
 </script>

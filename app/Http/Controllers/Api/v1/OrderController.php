@@ -184,6 +184,12 @@ class OrderController extends Controller {
                     foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                         $vendor_payable_amount = 0;
                         $vendor_discount_amount = 0;
+                        $order_vendor = new OrderVendor;
+                        $order_vendor->status = 0;
+                        $order_vendor->user_id= $user->id;
+                        $order_vendor->order_id= $order->id;
+                        $order_vendor->vendor_id= $vendor_id;
+                        $order_vendor->save();
                         foreach ($vendor_cart_products as $vendor_cart_product) {
                             $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
                             $quantity_price = 0;
@@ -209,6 +215,7 @@ class OrderController extends Controller {
                             $vendor_taxable_amount += $taxable_amount;
                             $total_amount += $variant->price;
                             $order_product = new OrderProduct;
+                            $order_product->order_vendor_id = $order_vendor->id;
                             $order_product->order_id = $order->id;
                             $order_product->price = $variant->price;
                             $order_product->quantity = $vendor_cart_product->quantity;
@@ -263,11 +270,7 @@ class OrderController extends Controller {
                                 $vendor_discount_amount +=$final_coupon_discount_amount; 
                             }   
                         }
-                        $order_vendor = new OrderVendor;
-                        $order_vendor->status = 0;
-                        $order_vendor->user_id= $user->id;
-                        $order_vendor->order_id= $order->id;
-                        $order_vendor->vendor_id= $vendor_id;
+                        
                         $order_vendor->coupon_id = $coupon_id;
                         $order_vendor->coupon_code = $coupon_name;
                         $order_vendor->subtotal_amount = $actual_amount;
@@ -287,8 +290,9 @@ class OrderController extends Controller {
                         $order_vendor->save();
                         $order_status = new VendorOrderStatus();
                         $order_status->order_id = $order->id;
-                        $order_status->order_status_option_id = 1;
                         $order_status->vendor_id = $vendor_id;
+                        $order_status->order_status_option_id = 1;
+                        $order_status->order_vendor_id = $order_vendor->id;
                         $order_status->save();
                     }
                     $order->total_amount = $total_amount;

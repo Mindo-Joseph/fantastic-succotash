@@ -24,33 +24,33 @@
         <div class="col-md-3 mb-3">
             <div class="card mb-0">
                 <div class="card-body">
-                        <div class="row align-items-center">
-                                <div class="col-12">
-                                    <label class="mr-2 mb-0">Enable</label>
-                                    <input type="checkbox" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1">
+                    <div class="row align-items-center">
+                        <div class="col-12">
+                            <label class="mr-2 mb-0">Enable</label>
+                            <input type="checkbox" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1">
 
-                                </div>
-                                <div class="col-12">
-                                <form id="setRedeem">
+                        </div>
+                        <div class="col-12">
+                        <form id="setRedeem">
                             @csrf
-                                    <div class="row mt-3">
-                                        <div class="col-md-12">
-                                            <div class="form-group mb-0">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text primaryKey" id="basic-addon1"></span>
-                                                    </div>
-                                                    <input type="text" onkeypress="return isNumberKey(event);" class="form-control" name="redeem_points_per_primary_currency" id="redeem_points_per_primary_currency" placeholder="Value" aria-label="Username" aria-describedby="basic-addon1">
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <div class="form-group mb-0">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text primaryKey" id="basic-addon1"></span>
                                                 </div>
+                                                <input type="text" onkeypress="return isNumberKey(event);" class="form-control" name="redeem_points_per_primary_currency" id="redeem_points_per_primary_currency" placeholder="Value" aria-label="Username" aria-describedby="basic-addon1">
                                             </div>
                                         </div>
-                                        <div class="col-md-12 mt-3">
-                                            <button type="button" class="btn btn-primary setredeempoints w-100">Save changes</button>
-                                        </div>
                                     </div>
-                            </form>
+                                    <div class="col-md-12 mt-3">
+                                        <button type="button" class="btn btn-primary setredeempoints w-100">Save changes</button>
+                                    </div>
                                 </div>
-                        </div>    
+                            </form>
+                        </div>
+                    </div>    
                 </div>
             </div>
         </div>

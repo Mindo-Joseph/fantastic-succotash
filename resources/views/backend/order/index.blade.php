@@ -17,106 +17,106 @@
     }
 </style>
 <script type="text/template" id="order_page_template">
-    <div class="row">    
-       <% _.each(orders, function(order, k){%>
-            <div class="col-xl-6 mb-3">
-                <div class="row no-gutters order_head">
-                    <div class="col-md-3"><h4>Order Id</h4></div>
-                    <div class="col-md-3"><h4>Date & Time</h4></div>
-                    <div class="col-md-3"><h4>Customer</h4></div>
-                    <div class="col-md-3"><h4>Address</h4></div>
-                </div>
-                <div class="row no-gutters order_data mb-lg-0">
-                    <div class="col-md-3"><h6>#<%= order.order_number %></h6></div>
-                    <div class="col-md-3"><%= order.created_date %></div>
-                    <div class="col-md-3">
-                        <a href="#"><%= order.user.name %></a>
+    <div class="row">
+        <% _.each(orders, function(order, k){%>
+            <% if(order.vendors.length !== 0) { %>
+                <div class="col-xl-6 mb-3">
+                    <div class="row no-gutters order_head">
+                        <div class="col-md-3"><h4>Order Id</h4></div>
+                        <div class="col-md-3"><h4>Date & Time</h4></div>
+                        <div class="col-md-3"><h4>Customer</h4></div>
+                        <div class="col-md-3"><h4>Address</h4></div>
                     </div>
-                    <div class="col-md-3">
-                        <p class="ellipsis" data-toggle="tooltip" data-placement="top" title="<%= order.address.address %>">
-                            <%= order.address.address %>
-                        </p>
-                    </div>                    
-                </div>
-                <div class="row">
-                    <div class="col-md-9">
-                        <% _.each(order.vendors, function(vendor, ve){%>
-                            <div class="row  <%= ve ==0 ? 'mt-0' : 'mt-3'%>">
-                                <div class="col-12">
-                                    <a href="<%= vendor.vendor_detail_url %>" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters h-100">
-                                        <span class="left_arrow pulse">
-                                        </span>
-                                        <div class="col-5 col-sm-3">
-                                            <h4 class="m-0"><%= vendor.name %></h4>
-                                            <ul class="status_box mt-3 pl-0">
-                                                <li>
-                                                    <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
-                                                    <label class="m-0 in-progress"><%= vendor.order_status %></label>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-7 col-sm-4">
-                                            <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
-                                                <% _.each(vendor.products, function(product, pr){%>
-                                                    <% if(vendor.vendor_id == product.vendor_id) { %>
-                                                        <li class="text-center">
-                                                            <img src="<%= product.image_path.proxy_url %>74/100<%= product.image_path.image_path %>">
-                                                            <span class="item_no position-absolute">x<%= product.quantity %></span>
-                                                            <label class="items_price">$<%= product.price %></label>
-                                                        </li>
-                                                    <% } %>
-                                                <% }); %>                                    
-                                            </ul>
-                                        </div>
-                                        <div class="col-md-5 mt-md-0 mt-sm-2">
-                                            <ul class="price_box_bottom m-0 p-0">
-                                                <li class="d-flex align-items-center justify-content-between">
-                                                    <label class="m-0">Total</label>
-                                                    <span>$<%= vendor.subtotal_amount %></span>
-                                                </li>
-                                                <li class="d-flex align-items-center justify-content-between">
-                                                    <label class="m-0">Promocode</label>
-                                                    <span>$<%= vendor.discount_amount %></span>
-                                                </li>
-                                                <li class="d-flex align-items-center justify-content-between">
-                                                    <label class="m-0">Delivery</label>
-                                                    <span>--</span>
-                                                </li>
-                                                <li class="grand_total d-flex align-items-center justify-content-between">
-                                                    <label class="m-0">Amount</label>
-                                                    <span>$<%= vendor.payable_amount %></span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        <% }); %>
-                    </div>   
-                    <div class="col-md-3 pl-0">
-                        <div class="card-box p-2">
-                            <ul class="price_box_bottom m-0 pl-0 pt-1">
-                                <li class="d-flex align-items-center justify-content-between">
-                                    <label class="m-0">Total</label>
-                                    <span>$<%= order.total_amount %></span>
-                                </li>
-                                <li class="d-flex align-items-center justify-content-between">
-                                    <label class="m-0">Loyalty</label>
-                                    <span><%= order.loyalty_points_earned %></span>
-                                </li>
-                                <li class="d-flex align-items-center justify-content-between">
-                                    <label class="m-0">Tax</label>
-                                    <span>$<%= order.taxable_amount %></span>
-                                </li>
-                                <li class="grand_total d-flex align-items-center justify-content-between">
-                                    <label class="m-0">Payable </label>
-                                    <span>$<%= order.payable_amount %></span>
-                                </li>
-                            </ul>
+                    <div class="row no-gutters order_data mb-lg-0">
+                        <div class="col-md-3"><h6>#<%= order.order_number %></h6></div>
+                        <div class="col-md-3"><%= order.created_date %></div>
+                        <div class="col-md-3">
+                            <a href="#"><%= order.user.name %></a>
                         </div>
-                    </div> 
+                        <div class="col-md-3">
+                            <p class="ellipsis" data-toggle="tooltip" data-placement="top" title="<%= order.address.address %>">
+                                <%= order.address.address %>
+                            </p>
+                        </div>                    
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <% _.each(order.vendors, function(vendor, ve){%>
+                                <div class="row  <%= ve ==0 ? 'mt-0' : 'mt-3'%>">
+                                    <div class="col-12">
+                                        <a href="<%= vendor.vendor_detail_url %>" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters h-100">
+                                            <span class="left_arrow pulse">
+                                            </span>
+                                            <div class="col-5 col-sm-3">
+                                                <h4 class="m-0"><%= vendor.name %></h4>
+                                                <ul class="status_box mt-3 pl-0">
+                                                    <li>
+                                                        <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
+                                                        <label class="m-0 in-progress"><%= vendor.order_status %></label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-7 col-sm-4">
+                                                <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
+                                                    <% _.each(vendor.products, function(product, pr){%>
+                                                            <li class="text-center">
+                                                                <img src="<%= product.image_path.proxy_url %>74/100<%= product.image_path.image_path %>">
+                                                                <span class="item_no position-absolute">x<%= product.quantity %></span>
+                                                                <label class="items_price">$<%= product.price %></label>
+                                                            </li>
+                                                    <% }); %>                                    
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-5 mt-md-0 mt-sm-2">
+                                                <ul class="price_box_bottom m-0 p-0">
+                                                    <li class="d-flex align-items-center justify-content-between">
+                                                        <label class="m-0">Total</label>
+                                                        <span>$<%= vendor.subtotal_amount %></span>
+                                                    </li>
+                                                    <li class="d-flex align-items-center justify-content-between">
+                                                        <label class="m-0">Promocode</label>
+                                                        <span>$<%= vendor.discount_amount %></span>
+                                                    </li>
+                                                    <li class="d-flex align-items-center justify-content-between">
+                                                        <label class="m-0">Delivery</label>
+                                                        <span>--</span>
+                                                    </li>
+                                                    <li class="grand_total d-flex align-items-center justify-content-between">
+                                                        <label class="m-0">Amount</label>
+                                                        <span>$<%= vendor.payable_amount %></span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>   
+                        <div class="col-md-3 pl-0">
+                            <div class="card-box p-2">
+                                <ul class="price_box_bottom m-0 pl-0 pt-1">
+                                    <li class="d-flex align-items-center justify-content-between">
+                                        <label class="m-0">Total</label>
+                                        <span>$<%= order.total_amount %></span>
+                                    </li>
+                                    <li class="d-flex align-items-center justify-content-between">
+                                        <label class="m-0">Loyalty</label>
+                                        <span><%= order.loyalty_points_earned %></span>
+                                    </li>
+                                    <li class="d-flex align-items-center justify-content-between">
+                                        <label class="m-0">Tax</label>
+                                        <span>$<%= order.taxable_amount %></span>
+                                    </li>
+                                    <li class="grand_total d-flex align-items-center justify-content-between">
+                                        <label class="m-0">Payable </label>
+                                        <span>$<%= order.payable_amount %></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div> 
+                    </div>
                 </div>
-            </div>
+            <% } %>
         <% }); %>
         <hr>
     </div>
@@ -133,8 +133,12 @@
                 </a>
             </div>
         </div>
-    </div>  
-    <div class="loader">
+    </div>    
+    </div>
+    <script type="text/template" id="no_order_template">
+        <div class="error-msg"><p>You have not any order yet now.</p></div>
+    </script>
+    <div class="loader" id="order_list_order">
         <div class="spinner-border avatar-lg text-primary m-2" role="status"></div>
     </div>  
     <div class="row">
@@ -162,11 +166,11 @@
             </ul>
             <div class="tab-content nav-material" id="top-tabContent">
                 <div class="tab-pane fade past-order show active" id="pending_orders" role="tabpanel"
-                    aria-labelledby="pending_order-tab">Pending Orders</div>
+                    aria-labelledby="pending_order-tab"></div>
                 <div class="tab-pane fade" id="active_orders" role="tabpanel"
-                    aria-labelledby="active_orders_tab">Active Orders</div>
+                    aria-labelledby="active_orders_tab"></div>
                 <div class="tab-pane fade past-order" id="orders_history" role="tabpanel"
-                    aria-labelledby="orders_history_tab">Orders History</div>
+                    aria-labelledby="orders_history_tab"><div class="error-msg"><p>You have not any order yet now.</p></div></div>
             </div>
         </div>
     </div>   
@@ -180,6 +184,7 @@
         });
         setTimeout(function(){ $("#pending_order-tab").trigger('click'); }, 500);
         $(".nav-link").click(function(){
+            $('#order_list_order').show();
             var filter_order_status = $(this).data('rel');
             $.ajax({
                 type: "POST",
@@ -187,10 +192,16 @@
                 data: {filter_order_status:filter_order_status},
                 url: "{{ route('orders.filter') }}",
                 success: function(response) {
+                    $('#order_list_order').hide();
                     if(response.status == 'Success'){
-                        $("#"+filter_order_status).html('');
-                        let order_page_template = _.template($('#order_page_template').html());
-                        $("#"+filter_order_status).append(order_page_template({orders: response.data.data}));
+                            $(".tab-pane").html('');
+                        if(response.data.data.length != 0){
+                            let order_page_template = _.template($('#order_page_template').html());
+                            $("#"+filter_order_status).append(order_page_template({orders: response.data.data}));
+                        }else{
+                            let no_order_template = _.template($('#no_order_template').html());
+                            $("#"+filter_order_status).html(no_order_template({}));
+                        }
                     }
                 },
                 error: function (data) {
