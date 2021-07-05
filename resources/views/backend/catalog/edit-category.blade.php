@@ -112,7 +112,7 @@
                      <input class="form-check-input type-select" for="edit" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
                      <label for="type_id_{{$type->id}}" class="card-body p-0">
                         <div class="category-img">
-                            <img src="https://www.w3schools.com/tags/img_girl.jpg" alt="">
+                            <img src="{{url('images/'.$type->image)}}" alt="">
                         </div>
                         <div class="form-check form-check-info pl-0">
                             <h6 for="customradio5">{{$type->title}}</h6>
