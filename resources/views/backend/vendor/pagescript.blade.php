@@ -422,8 +422,6 @@ $('.editAddonBtn').on('click', function(e) {
                     from: data.min_select,
                     to: data.max_select
                 });
-                // $("#editAddonForm #max_select").val(data.max_select);
-                // $("#editAddonForm #min_select").val(data.min_select);
                 $d4.on("change", function () {
                     var $inp = $(this);
                     $("#editAddonForm #max_select").val($inp.data("to"));
