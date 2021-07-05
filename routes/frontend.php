@@ -62,6 +62,7 @@ Route::group(['middleware' => ['domain']], function () {
     Route::post('vendor/filters/{id}', 'Front\VendorController@vendorFilters')->name('vendorProductFilters');
     Route::get('brand/{id?}', 'Front\BrandController@brandProducts')->name('brandDetail');
     Route::post('brand/filters/{id}', 'Front\BrandController@brandFilters')->name('brandProductFilters');
+	Route::get('celebrity/{slug?}', 'Front\CelebrityController@celebrityProducts')->name('celebrityProducts');
 	Route::get('auth/{driver}', 'Front\FacebookController@redirectToSocial');
 	Route::get('auth/callback/{driver}', 'Front\FacebookController@handleSocialCallback');
 	Route::get('UserCheck', 'Front\UserController@checkUserLogin')->name('checkUserLogin');

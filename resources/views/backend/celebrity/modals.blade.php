@@ -28,7 +28,16 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-md-6" id="country_list">
+                    <div class="col-md-6" id="slugInput">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
+                            {!! Form::text('slug', null, ['class'=>'form-control', 'required' => 'required', 'onkeypress' => "return alphaNumeric(event)", 'id' => 'slug']) !!}
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="country_list">
                         <div class="form-group">
                             {!! Form::label('title', 'Country',['class' => 'control-label']) !!}
                             <select class="form-control" id="countries" name="countries" data-placeholder="Choose ...">
