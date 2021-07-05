@@ -543,8 +543,10 @@ function closeCart() {
 body_event.on("click", ".theme-layout-version", function () {
     if($(".theme-layout-version").text() == 'Dark'){
         localStorage['theme_color'] = 'dark';
+        window.sessionStorage.setItem("theme", "dark");
     }else{
         localStorage['theme_color'] = '';
+        window.sessionStorage.setItem("theme", "light");
     }
     return (
         $(this).toggleClass("dark"),
