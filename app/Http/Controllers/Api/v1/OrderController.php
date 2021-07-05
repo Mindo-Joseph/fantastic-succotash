@@ -318,19 +318,23 @@ class OrderController extends Controller {
         try {
             $order_id = $request->order_id;
             $vendor_id = $request->vendor_id;
+            $order_vendor_id = $request->order_vendor_id;
             $order_status_option_id = $request->order_status_option_id;
             if($order_status_option_id == 7){
                 $order_status_option_id = 2;
             }else if ($order_status_option_id == 8) {
                 $order_status_option_id = 3;
             }
+            $vendor_order_status = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->first();
             $vendor_order_status_detail = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->where('order_status_option_id', $order_status_option_id)->first();
             if (!$vendor_order_status_detail) {
                 $vendor_order_status = new VendorOrderStatus();
                 $vendor_order_status->order_id = $order_id;
                 $vendor_order_status->vendor_id = $vendor_id;
                 $vendor_order_status->order_status_option_id = $order_status_option_id;
+                $vendor_order_status->order_vendor_id = $vendor_order_status->order_vendor_id;
                 $vendor_order_status->save();
+                OrderVendor::where('vendor_id', $vendor_id)->where('order_id', $order_id)->update(['order_status_option_id' => $order_status_option_id]);
                 $current_status = OrderStatusOption::select('id','title')->find($order_status_option_id);
                 if($order_status_option_id == 2){
                     $upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', 3)->first();

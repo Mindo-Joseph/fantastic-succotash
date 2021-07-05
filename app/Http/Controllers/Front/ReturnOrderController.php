@@ -59,11 +59,15 @@ class ReturnOrderController extends FrontController{
             $langId = Session::get('customerLanguage');
             $navCategories = $this->categoryNav($langId);
             $reasons = ReturnReason::where('status','Active')->orderBy('order','asc')->get();
-            $order_details = Order::with(['vendors.products','products.productRating', 'user', 'address'])->whereHas('products',function($q)use($request){
+            $order_details = Order::with(['vendors.products' => function ($q1)use($request){
+                $q1->where('id', $request->return_ids);
+            },'products' => function ($q1)use($request){
+                $q1->where('id', $request->return_ids);
+            },'products.productRating', 'user', 'address'])
+            ->whereHas('vendors.products',function($q)use($request){
                 $q->where('id', $request->return_ids);
-            })
-            ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->first();
-
+            })->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->first();
+            
             if(isset($order_details)){
               return view('frontend.account.return-order')->with(['order' => $order_details,'navCategories' => $navCategories,'reasons' => $reasons]);
             }

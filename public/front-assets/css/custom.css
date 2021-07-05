@@ -2603,11 +2603,15 @@ button.return-order-product {
     width:100%;
     margin:10px 0;
 }
+.review-wrapper{
+    margin: 0 -5px;
+}
 .review-photo {
-    height: 100px;
-    width: 100px;
-    border-radius: 50%;
-    overflow: hidden;
+    height: 80px;
+    max-width: 79.5px;
+    padding: 0 5px;
+    width: 100%;
+    flex-basis: auto;
 }
 .review-author i {
     color: #f3d779;
@@ -2618,28 +2622,13 @@ button.return-order-product {
     object-fit: cover;
 }
 .review-box {
-    display: inline-block;
-    width: calc(100% - 150px);
     background: #f8f8f8;
     padding: 16px;
     position: relative;
     border-radius: 8px;
+    width: 100%;
 }
-.review-box:after, .review-box:before {
-    right: 100%;
-    top: 10%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-}
-.review-box:after {
-    border-right-color: #f8f8f8;
-    border-width: 25px;
-}
-.review-comment {
+    .review-comment {
     color: #9A9999;
     padding: 10px 0;
 }

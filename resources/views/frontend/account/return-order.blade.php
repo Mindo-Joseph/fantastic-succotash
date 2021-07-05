@@ -303,7 +303,8 @@ error: function(data){
             else
             {
                 $("#return_form_button").html('Request');
-                location.reload();
+                var url = "{{route('user.orders',['pageType' => 'returnOrders'])}}";
+                $(location).prop('href', url); 
             }
         }else{
             $('#error-msg').text(data.message);

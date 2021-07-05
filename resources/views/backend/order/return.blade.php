@@ -25,12 +25,12 @@ $timezone = Auth::user()->timezone;
                 <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
                     <li class="nav-item"><a class="nav-link @if($status == 'Pending') active @endif" id="awaiting_review" 
                             href="{{route('backend.order.returns',['Pending'])}}" role="tab" aria-selected="true"><i
-                                class="icofont icofont-ui-home"></i>{{__('Active Requests')}}</a>
+                                class="icofont icofont-ui-home"></i>{{__('Pending Requests')}}</a>
                         <div class="material-border"></div>
                     </li>
                     <li class="nav-item"><a class="nav-link @if($status == 'Accepted') active @endif" id="processed-tab" 
                             href="{{route('backend.order.returns',['Accepted'])}}" role="tab" aria-selected="false"><i
-                                class="icofont icofont-man-in-glasses"></i>{{__('Process Requests')}}</a>
+                                class="icofont icofont-man-in-glasses"></i>{{__('Active Requests')}}</a>
                         <div class="material-border"></div>
                     </li>
                     <li class="nav-item"><a class="nav-link @if($status == 'Rejected') active @endif" id="rejected-tab" 

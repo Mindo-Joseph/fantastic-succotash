@@ -37,12 +37,14 @@
 
 
             <div class="form-group">
-                    <label>{{ __('Reason for return product:') }}</label><p>{{ $return_details->reason }}</p>
+                    <label>{{ __('Reason for return product :') }}</label> {{ $return_details->reason }}
             </div>
+            @if(isset($return_details->coments))
             <div class="form-group">
                 <label>Comments :</label>
-                <p class="form-control">{{ $return_details->coments ?? '' }}</p>
+                <p>{{ $return_details->coments ?? '' }}</p>
             </div>
+            @endif
             <div class="row form-group">
                 <div class="col-md-12">
                     <label>{{__('Update Status')}}</label>

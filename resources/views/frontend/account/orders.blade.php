@@ -470,7 +470,7 @@ $timezone = Auth::user()->timezone;
                                                                                                 <i class="fa fa-star{{ $pro_rating >= 4 ? '' : '-o' }}" ></i>
                                                                                                 <i class="fa fa-star{{ $pro_rating >= 5 ? '' : '-o' }}" ></i>
                                                                                             </label>
-                                                                                           {{ __($product->productReturn->status) }}
+                                                                                           {{ __($product->productReturn->status??'') }}
                                                                     
                                                                                         </li>
                                                                                         @php

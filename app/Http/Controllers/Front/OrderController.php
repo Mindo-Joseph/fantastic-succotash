@@ -53,9 +53,13 @@ class OrderController extends FrontController
 
         $returnOrders = Order::with(['vendors.products.productReturn','products.productRating', 'user', 'address', 'products'=>function($q){
             $q->whereHas('productReturn');
-        }])->whereHas('products.productReturn')
+        },'vendors.products'=>function($q){
+            $q->whereHas('productReturn');
+        },'vendors'=>function($q){
+            $q->whereHas('products.productReturn');
+        }])->whereHas('vendors.products.productReturn')->whereHas('vendors.products.productReturn')
         ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
-        
+      
         return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders, 'returnOrders'=>$returnOrders]);
     }
 
