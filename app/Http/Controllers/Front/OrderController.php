@@ -261,7 +261,8 @@ class OrderController extends FrontController
             $order->loyalty_points_used = $loyalty_points_used;
             $order->loyalty_amount_saved = $loyalty_amount_saved;
             $order->payable_amount = $delivery_fee + $payable_amount - $total_discount - $loyalty_amount_saved;
-            $order->loyalty_points_earned = $loyalty_points_earned;
+            $order->loyalty_points_earned = $loyalty_points_earned['per_order_points'];
+            $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
             $order->save();
             CartAddon::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();
