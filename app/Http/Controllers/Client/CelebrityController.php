@@ -31,6 +31,7 @@ class CelebrityController extends BaseController
      */
     public function store(Request $request){
         $rules = array(
+            'slug' => 'required|string|max:30|unique:celebrities',
             'name' => 'required|string|max:150',
         );
         /* upload logo file */
@@ -41,6 +42,7 @@ class CelebrityController extends BaseController
         $celebrity = new Celebrity();
         $celebrity->status = '1';
         $celebrity->name = $request->name;
+        $celebrity->slug = $request->slug;
         $celebrity->country_id = $request->countries;
         $celebrity->description = $request->description;
         if ($request->hasFile('image')) {
@@ -87,14 +89,16 @@ class CelebrityController extends BaseController
     public function update($domain = '', Request $request, $id)
     {
         $rules = array(
+            'slug' => 'required|string|max:30|unique:categories,slug,'.$id,
             'name' => 'required|string|max:150',
         );
         if ($request->hasFile('image')) {
             $rules['image'] =  'image|mimes:jpeg,png,jpg,gif';
         }
         $validation  = Validator::make($request->all(), $rules)->validate();
-        $celebrity = Celebrity::where('id', $id)->firstOrFail();;
+        $celebrity = Celebrity::where('id', $id)->firstOrFail();
         $celebrity->name = $request->input('name');
+        $celebrity->slug = $request->input('slug');
         $celebrity->country_id = $request->input('countries');
         $celebrity->description = $request->description;
         $celebrity->status = '1';
