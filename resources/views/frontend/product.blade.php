@@ -254,36 +254,6 @@
                                             </ul>
                                         </div>
                                     </div>
-
-                                    <!--<div class="border-product">
-                                        <h6 class="product-title">share it</h6>
-                                        <div class="product-icon">
-                                            <ul class="product-social">
-                                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-rss"></i></a></li>
-                                            </ul>
-                                            <form class="d-inline-block">
-                                                <button class="wishlist-btn"><i class="fa fa-heart"></i><span
-                                                        class="title-font">Add To WishList</span></button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="border-product">
-                                        <h6 class="product-title">Time Reminder</h6>
-                                        <div class="timer">
-                                            <p id="demo"><span>25 <span class="padding-l">:</span> <span
-                                                class="timer-cal">Days</span> </span><span>22 <span
-                                                class="padding-l">:</span> <span
-                                                class="timer-cal">Hrs</span> </span><span>13 <span
-                                                class="padding-l">:</span> <span
-                                                class="timer-cal">Min</span> </span><span>57 <span
-                                                class="timer-cal">Sec</span></span>
-                                            </p>
-                                        </div>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -302,11 +272,6 @@
                                                 class="icofont icofont-man-in-glasses"></i>Details</a>
                                         <div class="material-border"></div>
                                     </li>
-                                    <!--<li class="nav-item"><a class="nav-link" id="contact-top-tab" data-toggle="tab"
-                                            href="#top-contact" role="tab" aria-selected="false"><i
-                                                class="icofont icofont-contacts"></i>Video</a>
-                                        <div class="material-border"></div>
-                                    </li> -->
                                     <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab"
                                             href="#top-review" role="tab" aria-selected="false"><i
                                                 class="icofont icofont-contacts"></i>Ratings & Reviews</a>
@@ -384,75 +349,51 @@
         <div class="row">
             <div class="col-12 ">
                 <h2>Related products</h2>
-
-                <!-- <div id="starrate" class="starrate mt-3 d-flex align-items-center" data-val="2.5" data-max="5">
-                    <span class="ctrl"></span>
-                    <span class="cont m-1">
-                        <i class="fa fa-star-o" aria-hidden="true"></i>
-                        <i class="fa fa-star-o" aria-hidden="true"></i>
-                        <i class="fa fa-star-o" aria-hidden="true"></i>
-                        <i class="fa fa-star-o" aria-hidden="true"></i>
-                        <i class="fa fa-star-o" aria-hidden="true"></i>
-                    </span>
-                    <div id="test" class="col-3 mr-auto display-4">2.5</div>                    
-                </div> -->
-
             </div>
         </div>
     </div>
 </section>
-
-<!-- product section start -->
 <section class="section-b-space ratio_asos">
     <div class="container">
         <div class="row">
 
         </div>
         <div class="row search-product">
+            @forelse($product->related_products as $related_product)
             <div class="col-xl-2 col-md-4 col-sm-6">
-                <div class="product-box">
-                    <div class="img-wrapper">
-                        <div class="front">
-                            <a href="#">
-                                <img src="{{asset('front-assets/images/pro3/33.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt="">
+                    <div class="product-box">
+                            <div class="img-wrapper">
+                                <div class="front">
+                                    <a href="{{route('productDetail')}}/{{$related_product->url_slug}}">
+                                        <img src="{{$related_product->media ? $related_product->media->first()->image->path['proxy_url'].'600/800'.$related_product->media->first()->image->path['image_path'] : ''}}" class="img-fluid blur-up lazyload bg-img" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                            <a href="{{route('productDetail')}}/{{$related_product->url_slug}}">
+                                <div class="product-detail">
+                                    <div class="rating">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i> 
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <h6>{{ (!empty($related_product->translation) && $related_product->translation->first())? $related_product->translation->first()->title : ''}}</h6>
+                                    <h4>{{Session::get('currencySymbol').($related_product->variant->first()->price * $related_product->variant->first()->multiplier)}}</h4>
+                                    <ul class="color-variant">
+                                        <li class="bg-light0"></li>
+                                        <li class="bg-light1"></li>
+                                        <li class="bg-light2"></li>
+                                    </ul>
+                                </div>
                             </a>
-                        </div>
-                        <div class="cart-info cart-wrap">
-                            <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i
-                                    class="ti-shopping-cart"></i></button> <a href="javascript:void(0)"
-                                title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a> <a href="#"
-                                data-toggle="modal" data-target="#quick-view" title="Quick View"><i class="ti-search"
-                                    aria-hidden="true"></i></a> <a href="compare.html" title="Compare"><i
-                                    class="ti-reload" aria-hidden="true"></i></a>
-                        </div>
                     </div>
-                    <div class="product-detail">
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
-
-                        <a href="product-page(no-sidebar).html">
-                            <h6>Slim Fit Cotton Shirt</h6>
-                        </a>
-                        <h4>$500.00</h4>
-                        <ul class="color-variant">
-                            <li class="bg-light0"></li>
-                            <li class="bg-light1"></li>
-                            <li class="bg-light2"></li>
-                        </ul>
-                    </div>
-                </div>
             </div>
+            @empty
+            @endforelse
         </div>
     </div>
 </section>
-
-
-
-
 <!-- Modal -->
 <div class="modal fade product-rating" id="product_rating" tabindex="-1" aria-labelledby="product_ratingLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -469,13 +410,8 @@
       </div>
     </div>
   </div>
-
-
 @endsection
-
 @section('script')
-
-
 <script>
     var valueHover = 0;
 
