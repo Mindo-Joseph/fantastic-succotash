@@ -81,13 +81,19 @@ class ProductController extends FrontController
                 $query->where('user_wishlists.user_id', $user->id);
             });
         }
-        $product = $product->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory')
+        $product = $product->with('related')->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory')
             ->where('url_slug', $url_slug)
             ->where('is_live', 1)
             ->firstOrFail();
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
+        $product->related_products = $this->metaProduct($langId, $clientCurrency->doller_compare, 'relate', $product->related);
+        foreach ($product->related_products as $key => $related_product) {
+            // pr($related_product->toArray());die;
+        }
         foreach ($product->variant as $key => $value) {
+            if(isset($product->variant[$key])){
             $product->variant[$key]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : '1.00';
+            }
         }
         $vendorIds[] = $product->vendor_id;
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
@@ -97,17 +103,49 @@ class ProductController extends FrontController
                 $v->multiplier = $clientCurrency->doller_compare;
             }
         }
-
-        $order_deliver = 0;
         $rating_details = '';
-        $already_buy = OrderProduct::where('product_id',$product->id)->whereHas('order',function($q){$q->where('user_id',Auth::id());})->first();
-        if($already_buy){
-            $order_deliver = VendorOrderStatus::where(['order_id' => $already_buy->order_id,'vendor_id' => $already_buy->vendor_id,'order_status_option_id' => 5])->count();
-            $rating_details = OrderProductRating::where(['user_id' => Auth::id(),'order_id' => $already_buy->order_id,'order_vendor_product_id' => $already_buy->id])->first();
-        }
-       return view('frontend.product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'order_deliver' => $order_deliver,'rating_details' => $rating_details]);
+        $rating_details = OrderProductRating::select('*','created_at as time_zone_created_at')->where(['product_id' => $product->id])->get();
+        
+       return view('frontend.product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details]);
     }
-
+    public function metaProduct($langId, $multiplier, $for = 'relate', $productArray = []){
+        if(empty($productArray)){
+            return $productArray;
+        }
+        $productIds = array();
+        foreach ($productArray as $key => $value) {
+            if($for == 'relate'){
+                $productIds[] = $value->related_product_id;
+            }
+            if($for == 'upSell'){
+                $productIds[] = $value->upsell_product_id;
+            }
+            if($for == 'cross'){
+                $productIds[] = $value->cross_product_id;
+            }
+        }
+        $products = Product::with(['media' => function($q){
+                            $q->groupBy('product_id');
+                        }, 'media.image',
+                        'translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                        },
+                        'variant' => function($q) use($langId){
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->groupBy('product_id');
+                        },
+                    ])->select('id', 'sku', 'averageRating', 'url_slug')
+                    ->whereIn('id', $productIds);
+        $products = $products->get();
+        if(!empty($products)){
+            foreach ($products as $key => $value) {
+                foreach ($value->variant as $k => $v) {
+                    $value->variant[$k]->multiplier = $multiplier;
+                }
+            }
+        }
+        return $products;
+    }
     /**
      * Display product variant data
      *

@@ -179,7 +179,8 @@
                 // var switchery = new Switchery(categoryShow[0]);
                 
                 autocompletesWraps.push('edit');
-                loadMap(autocompletesWraps);              
+                loadMap(autocompletesWraps); 
+
             },
             error: function (data) {
                 console.log('data2');
@@ -194,8 +195,6 @@
     });
 
     function submitProductImportForm(){ 
-        //console.log("fg4rg");
-        // e.preventDefault();
         var form =  document.getElementById('save_imported_products');
         var formData = new FormData(form);
         var data_uri = "{{route('product.import')}}";
@@ -342,83 +341,25 @@
             }
         });
     }
-
-
-
-   /* 
-
-    $(document).on('change', '.assignToSelect', function(){
-        var val = $(this).val();
-        if(val == 'category'){
-            $('.modal .category_vendor').show();
-            $('.modal .category_list').show();
-            $('.modal .vendor_list').hide();
-        }else if(val == 'vendor'){
-            $('.modal .category_vendor').show();
-            $('.modal .category_list').hide();
-            $('.modal .vendor_list').show();
-        }else{
-            $('.modal .category_vendor').hide();
-            $('.modal .category_list').hide();
-            $('.modal .vendor_list').hide();
-        }
-    });
-
-    $("#banner-datatable tbody").sortable({
-        placeholder : "ui-state-highlight",
-        update  : function(event, ui)
-        {
-            var post_order_ids = new Array();
-            $('#post_list tr').each(function(){
-                post_order_ids.push($(this).data("row-id"));
-            });
-            console.log(post_order_ids);
-            saveOrder(post_order_ids);
-        }
-    });
-    var CSRF_TOKEN = $("input[name=_token]").val();
-    function saveOrder(orderVal){
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type: "post",
-            dataType: "json",
-            url: "{{ url('client/banner/saveOrder') }}",
-            data: {
-                _token: CSRF_TOKEN,
-                order: orderVal
-            },
-            success: function(response) {
-
-                if (response.status == 'success') {
-                }
-                return response;
-            }
-        });
-    }
-
-    */
-/*          Add on  set   script          */
-    
 $(".openAddonModal").click(function (e) {
     $('#addAddonmodal').modal({
         backdrop: 'static',
         keyboard: false
     });
-    
 });
-
 $(document).on('click', '.addOptionRow-Add',function (e) {
     var $tr = $('.optionTableAdd tbody>tr:first').next('tr');
-    console.log('asasd');
     var $clone = $tr.clone();
     $clone.find(':text').val('');
     $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>');
     $('.optionTableAdd').append($clone);
+    var slider = $("#slider-range").data("ionRangeSlider");
+    var from = slider.result.from;
+    var to = $('#banner-datatable >tbody >tr.input_tr').length;
+    slider.update({
+        min: from,
+        max: to,
+    });
 });
 
 $(document).on('click', '.addOptionRow-edit',function (e) {
@@ -428,6 +369,8 @@ $(document).on('click', '.addOptionRow-edit',function (e) {
     $clone.find(':hidden').val('');
     $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>');
     $('.optionTableEdit').append($clone);
+    var max_value = $( "#slider-range" ).slider( "option", "max") +1;
+    $( "#slider-range" ).slider( "option", "max", max_value);
 });
 $("#addAddonmodal").on('click', '.deleteCurRow', function () {
     $(this).closest('tr').remove();
@@ -453,7 +396,6 @@ $('.editAddonBtn').on('click', function(e) {
         }
     });
     e.preventDefault();
-
     var did = $(this).attr('dataid');
     $.ajax({
         type: "get",
@@ -461,17 +403,36 @@ $('.editAddonBtn').on('click', function(e) {
         data: '',
         dataType: 'json',
         success: function (data) {
-
             $('#editdAddonmodal').modal({
                 backdrop: 'static',
                 keyboard: false
             });
             $('#editAddonForm #editAddonBox').html(data.html);
-
+            $('#editdAddonmodal .modal-title').html('Edit AddOn Set');
+            $('#editdAddonmodal .editAddonSubmit').html('Update');
             document.getElementById('editAddonForm').action = data.submitUrl;
+            setTimeout(function(){
+                var max = $('#edit_addon-datatable >tbody >tr.input_tr').length;
+                var $d4 = $("#editAddonForm #slider-range");
+                $d4.ionRangeSlider({ 
+                    type: "double", 
+                    grid: !0, 
+                    min: 0, 
+                    max: max,
+                    from: data.min_select,
+                    to: data.max_select
+                });
+                // $("#editAddonForm #max_select").val(data.max_select);
+                // $("#editAddonForm #min_select").val(data.min_select);
+                $d4.on("change", function () {
+                    var $inp = $(this);
+                    $("#editAddonForm #max_select").val($inp.data("to"));
+                    $("#editAddonForm #min_select").val($inp.data("from"));
+                }); 
+            }, 1000);
         },
         beforeSend: function(){
-                $(".loader_box").show();
+            $(".loader_box").show();
         },
         complete: function(){
             $(".loader_box").hide();

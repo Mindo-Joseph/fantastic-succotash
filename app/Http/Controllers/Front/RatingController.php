@@ -45,7 +45,7 @@ class RatingController extends FrontController{
                 //     $img->file = $storage;
                 //     $img->save();
                    
-                //     }
+                //     } 
                 // }
                 if(isset($request->add_files) && is_array($request->add_files))    # send  array of insert images 
                 {
@@ -58,7 +58,7 @@ class RatingController extends FrontController{
                     }
                 }  
                 
-                
+                $this->updateaverageRating($order_details->product_id);
                
               if(isset($request->remove_files) && is_array($request->remove_files))    # send index array of deleted images 
                 $removefiles = OrderProductRatingFile::where('order_product_rating_id',$ratings->id)->whereIn('id',$request->remove_files)->delete();

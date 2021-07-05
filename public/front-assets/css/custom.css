@@ -2593,6 +2593,16 @@ td.order_address {
     width: 100%;
 }
 
+button.return-order-product {
+    padding: 0 5px;
+    font-size: 14px;
+    float: right;
+    margin-top: 5px;
+}
+.review{
+    width:100%;
+    margin:10px 0;
+}
 .review-wrapper{
     margin: 0 -5px;
 }
@@ -2617,6 +2627,7 @@ td.order_address {
     padding: 16px;
     position: relative;
     border-radius: 8px;
+    width: 100%;
 }
     .review-comment {
     color: #9A9999;
