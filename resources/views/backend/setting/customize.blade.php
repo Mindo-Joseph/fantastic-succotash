@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Configure'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Customize'])
 
 @section('content')
 
@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Customize 21</h4>
+                <h4 class="page-title">Customize</h4>
                 
             </div>
         </div>

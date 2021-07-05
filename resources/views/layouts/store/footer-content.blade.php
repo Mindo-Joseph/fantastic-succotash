@@ -85,7 +85,8 @@
                     <div class="footer-contant">
                         <ul class="contact_link">
                             <li>
-                                <span class="lft-icon"><img src="{{asset('front-assets/images/icon/address.png')}}" class="img-fluid mr-1" alt=""></span>
+                                <!-- <span class="lft-icon"><img src="{{asset('front-assets/images/icon/address.png')}}" class="img-fluid mr-1" alt=""></span> -->
+                                <i class="fa fa-home"></i>
                                 <?=  $client ? $client->company_address : '' ?? 'Level- 26, Dubai World Trade Centre Tower,
                                 Sheikh Rashid Tower, Sheikh Zayed Rd, Dubai, UAE' ?>
                             </li>
