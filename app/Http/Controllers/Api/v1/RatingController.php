@@ -45,6 +45,7 @@ class RatingController extends BaseController{
                    
                     }
                 }
+                $this->updateaverageRating($request->product_id);
                 if(isset($request->remove_files) && is_array($request->remove_files))    # send index array of deleted images 
                 $removefiles = OrderProductRatingFile::where('order_product_rating_id',$ratings->id)->whereIn('id',$request->remove_files)->delete();
        

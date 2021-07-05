@@ -50,8 +50,17 @@ class OrderController extends FrontController
                 $vendor->order_status = $vendor_order_status ? strtolower($vendor_order_status->OrderStatusOption->title) : '';
             }
         }
-        
-        return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders]);
+
+        $returnOrders = Order::with(['vendors.products.productReturn','products.productRating', 'user', 'address', 'products'=>function($q){
+            $q->whereHas('productReturn');
+        },'vendors.products'=>function($q){
+            $q->whereHas('productReturn');
+        },'vendors'=>function($q){
+            $q->whereHas('products.productReturn');
+        }])->whereHas('vendors.products.productReturn')->whereHas('vendors.products.productReturn')
+        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
+      
+        return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders, 'returnOrders'=>$returnOrders]);
     }
 
     public function getOrderSuccessPage(Request $request)
