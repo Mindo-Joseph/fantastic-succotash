@@ -59,6 +59,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('category/{slug?}', 'Front\CategoryController@categoryProduct')->name('categoryDetail');
     Route::post('category/filters/{id}', 'Front\CategoryController@categoryFilters')->name('productFilters');
     Route::get('vendor/{id?}', 'Front\VendorController@vendorProducts')->name('vendorDetail');
+	Route::get('vendor/{slug1}/{slug2}', 'Front\VendorController@vendorCategoryProducts')->name('vendorCategoryProducts');
     Route::post('vendor/filters/{id}', 'Front\VendorController@vendorFilters')->name('vendorProductFilters');
     Route::get('brand/{id?}', 'Front\BrandController@brandProducts')->name('brandDetail');
     Route::post('brand/filters/{id}', 'Front\BrandController@brandFilters')->name('brandProductFilters');
