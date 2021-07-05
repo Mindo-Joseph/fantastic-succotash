@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{VendorSlotDate, Vendor, VendorSlot, SlotDay, ServiceArea};
+use App\Models\{ClientPreference, VendorSlotDate, Vendor, VendorSlot, SlotDay, ServiceArea};
 use Illuminate\Http\Request;
 
 class VendorSlotController extends BaseController
@@ -172,6 +172,14 @@ class VendorSlotController extends BaseController
 
         $showData = array();
         $count = 0;
+
+        $client_preferences = ClientPreference::first();
+        if($client_preferences){
+            $dinein_check = $client_preferences->dinein_check;
+            $takeaway_check = $client_preferences->takeaway_check;
+            $delivery_check = $client_preferences->delivery_check;
+        }
+
         foreach ($day as $key => $value) {
             $exist = 0;
             $title = $start = $end = $color = '';
@@ -181,9 +189,9 @@ class VendorSlotController extends BaseController
 
                     if($date[$key] == $v->specific_date){
                         $exist = 1;
-                        $title .= ($v->dine_in == 1 && $vendor->dine_in == 1) ? ' Dine' : '';
-                        $title .= ($v->takeaway == 1 && $vendor->takeaway == 1) ? ' Takeaway' : '';
-                        $title .= ($v->delivery == 1 && $vendor->delivery == 1) ? ' Delivery' : '';
+                        $title .= ($dinein_check == 1 && $v->dine_in == 1 && $vendor->dine_in == 1) ? ' Dine' : '';
+                        $title .= ($takeaway_check == 1 && $v->takeaway == 1 && $vendor->takeaway == 1) ? ' Takeaway' : '';
+                        $title .= ($delivery_check == 1 && $v->delivery == 1 && $vendor->delivery == 1) ? ' Delivery' : '';
 
                         $showData[$count]['title'] = trim($title);
                         $showData[$count]['start'] = $date[$key].'T'.$v->start_time;
@@ -202,9 +210,9 @@ class VendorSlotController extends BaseController
                 foreach ($slot as $k => $v) {
                     if($value == $v->day){
 
-                        $title .= ($v->dine_in == 1 && $vendor->dine_in == 1) ? ' Dine' : '';
-                        $title .= ($v->takeaway == 1 && $vendor->takeaway == 1) ? ' Takeaway' : '';
-                        $title .= ($v->delivery == 1 && $vendor->delivery == 1) ? ' Delivery' : '';
+                        $title .= ($dinein_check == 1 && $v->dine_in == 1 && $vendor->dine_in == 1) ? ' Dine' : '';
+                        $title .= ($takeaway_check == 1 && $v->takeaway == 1 && $vendor->takeaway == 1) ? ' Takeaway' : '';
+                        $title .= ($delivery_check == 1 && $v->delivery == 1 && $vendor->delivery == 1) ? ' Delivery' : '';
 
                         $showData[$count]['title'] = trim($title);
                         $showData[$count]['start'] = $date[$key].'T'.$v->start_time;
