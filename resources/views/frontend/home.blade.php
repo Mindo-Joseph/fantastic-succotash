@@ -73,9 +73,9 @@
                         <p><%= product.vendor_name %></p>
                         <h4><%= product.price %></h4>
                         <div class="rating">
-                            @for($i = 1; $i < 6; $i++) 
+                            <% _.each([1,2,3,4,5], function(value, k){ %>
                                 <i class="fa fa-star"></i>
-                            @endfor
+                            <% }); %>
                         </div>
                     </div>
                 </div>
