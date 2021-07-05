@@ -106,7 +106,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>{{__('Comments (Opitonal)')}}:</label>
-                                        <textarea class="form-control" name="" id="comments" cols="20" rows="4"></textarea>
+                                        <textarea class="form-control" name="coments" id="comments" cols="20" rows="4"></textarea>
                                     </div>
                                     <span class="text-danger" id="error-msg"></span>
                                     <span class="text-success" id="success-msg"></span>
@@ -129,73 +129,6 @@
 @endsection
 
 @section('script')
-
-{{-- <script type="text/javascript">
-  $(function() {
-var ShowMultipleImagePreview = function(input, imgPreviewPlaceholder) {
-if (input.files) {
-var filesAmount = input.files.length;
-for (i = 0; i < filesAmount; i++) {
-var reader = new FileReader();
-reader.onload = function(event) {
-$($.parseHTML('<img>')).addClass('col-6 col-md-3 col-lg-2 update_pic').attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
-}
-reader.readAsDataURL(input.files[i]);
-}
-}
-};
-$('#input-file').on('change', function() {
-ShowMultipleImagePreview(this, 'span.show-multiple-image-preview');
-});
-}); 
-
-$.ajaxSetup({
-headers: {
-'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-}
-});
-
-$('#return-upload-form').submit(function(e) {
-e.preventDefault();
-
-var formData = new FormData(this);
-let TotalImages = $('#input-file')[0].files.length; //Total Images
-let images = $('#input-file')[0];
-for (let i = 0; i < TotalImages; i++) {
-formData.append('images' + i, images.files[i]);
-}
-formData.append('TotalImages', TotalImages);
-$.ajax({
-type:'POST',
-url: "{{ route('update.order.return')}}",
-data: formData,
-cache:false,
-contentType: false,
-processData: false,
-beforeSend: function () {
-    if(TotalImages > 0)
-        $("#return_form_button").html('<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop('disabled', true);
-    },
-success: (data) => {
-if(data.status == 'Success')
-    {
-      $("#return_form_button").html('Submitted');
-    }else{
-        $('#error-msg').text(data.message);
-        $("#return_form_button").html('Request').prop('disabled', false);
-    }
-},
-error: function(data){
-    $('#error-msg').text(data.message);
-    $("#review_form_button").html('Request').prop('disabled', false);
-}
-});
-});
-       
-</script> --}}
-
-
-
 
 
 <script type="text/javascript">
