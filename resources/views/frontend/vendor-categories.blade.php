@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Vendor Categories'])
+@extends('layouts.store', ['title' => $vendor->name])
 
 @section('css')
 <style type="text/css">
@@ -192,23 +192,25 @@
                                         <div class="categories-wrapper-grid">
                                             <div class="row margin-res">
 
-                                            @if(!empty($listData))
+                                            @if($listData->isNotEmpty())
                                                 @foreach($listData as $key => $cate)
                                                 <div class="col-xl-3 col-6 col-grid-box">
                                                     <div class="product-box">
                                                         <div class="img-wrapper">
-                                                            <a href="{{route('categoryDetail', $cate['id'])}}">
+                                                            <a href="{{route('categoryDetail', $cate['slug'])}}">
                                                                 <div class="category-image "><img alt="" src="{{$cate['icon']['proxy_url'] . '300/300' . $cate['icon']['image_path']}}" ></div>
                                                             </a>
                                                         </div>
                                                         <div class="product-detail">
-                                                            <a href="{{route('categoryDetail', $cate['id'])}}">
+                                                            <a href="{{route('categoryDetail', $cate['slug'])}}">
                                                                 <h5>{{$cate['translation'][0]['name']}}</h5>
                                                             </a>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 @endforeach
+                                            @else
+                                                <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">Details Not Available</h5></div>
                                             @endif
                                             </div>
                                         </div>

@@ -159,6 +159,7 @@ class VendorController extends BaseController
         $active = array();
         $categoryToggle = array();
         $vendor = Vendor::findOrFail($id);
+        $client_preferences = ClientPreference::first();
         $co_ordinates = $all_coordinates = array();
         $areas = ServiceArea::where('vendor_id', $id)->orderBy('created_at', 'DESC')->get();
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
@@ -214,7 +215,7 @@ class VendorController extends BaseController
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes, 'builds' => $build]);
+        return view('backend/vendor/show')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes, 'builds' => $build]);
     }
 
     /**   show vendor page - category tab      */

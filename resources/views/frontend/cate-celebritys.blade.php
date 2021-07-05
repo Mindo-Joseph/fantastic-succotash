@@ -140,21 +140,23 @@
                                     <div class="displayProducts">
                                         <div class="product-wrapper-grid">
                                             <div class="row margin-res">
-                                                @if(!empty($listData))
+                                                @if($listData->isNotEmpty())
                                                     @foreach($listData as $key => $data)
                                                     <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4">
                                                         <div class="product-box">
-                                                            <a href="#">
+                                                            <a href="{{ route('celebrityProducts', $data->slug) }}">
                                                                 <div class="celebrity-avatar text-center"><img width="100%" alt="{{$data->name}}" src="{{$data->avatar['proxy_url'] . '150/150' . $data->avatar['image_path']}}" ></div>
                                                             </a>
                                                             <div class="celebrity-detail">
-                                                                <a href="">
+                                                                <a href="{{ route('celebrityProducts', $data->slug) }}">
                                                                     <h5 class="text-center">{{$data->name}}</h5>
                                                                 </a>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     @endforeach
+                                                @else
+                                                    <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">Details Not Available</h5></div>
                                                 @endif
                                             </div>
                                         </div>

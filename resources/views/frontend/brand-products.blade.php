@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Vendor'])
+@extends('layouts.store', ['title' => isset($brand->translation[0]->title) ? $brand->translation[0]->title : '' ])
 
 @section('css')
 <style type="text/css">

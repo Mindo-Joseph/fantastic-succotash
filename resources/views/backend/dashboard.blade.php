@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Ecommerce Dashboard'])
+@extends('layouts.vertical', ['title' => 'Dashboard'])
 
 @section('css')
 <!-- Plugins css -->
