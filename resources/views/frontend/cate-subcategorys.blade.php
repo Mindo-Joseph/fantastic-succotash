@@ -79,11 +79,11 @@
                                                     <div class="slide-6 no-arrow">
                                                         @foreach($category->childs->toArray() as $cate)
                                                         <div class="category-block">
-                                                            <a href="{{route('categoryDetail', $cate['id'])}}">
+                                                            <a href="{{route('categoryDetail', $cate['slug'])}}">
                                                                 <div class="category-image"><img alt="" src="{{$cate['icon']['proxy_url'] . '100/80' . $cate['icon']['image_path']}}" ></div>
                                                             </a>
                                                             <div class="category-details">
-                                                                <a href="{{route('categoryDetail', $cate['id'])}}">
+                                                                <a href="{{route('categoryDetail', $cate['slug'])}}">
                                                                     <h5>{{$cate['translation'][0]['name']}}</h5>
                                                                 </a>
                                                             </div>
@@ -144,11 +144,11 @@
                                                     @foreach($category->childs->toArray() as $cate)
                                                     <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-xs-6">
                                                         <div class="product-box">
-                                                            <a href="{{route('categoryDetail', $cate['id'])}}">
+                                                            <a href="{{route('categoryDetail', $cate['slug'])}}">
                                                                 <div class="category-image text-center"><img width="100%" alt="" src="{{$cate['icon']['proxy_url'] . '150/150' . $cate['icon']['image_path']}}" ></div>
                                                             </a>
                                                             <div class="category-details">
-                                                                <a href="{{route('categoryDetail', $cate['id'])}}">
+                                                                <a href="{{route('categoryDetail', $cate['slug'])}}">
                                                                     <h5 class="text-center">{{$cate['translation'][0]['name']}}</h5>
                                                                 </a>
                                                             </div>

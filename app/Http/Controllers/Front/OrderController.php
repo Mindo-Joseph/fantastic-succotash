@@ -125,6 +125,12 @@ class OrderController extends FrontController
                 $product_taxable_amount = 0;
                 $product_payable_amount = 0;
                 $vendor_taxable_amount = 0;
+                $OrderVendor = new OrderVendor();
+                $OrderVendor->status = 0;
+                $OrderVendor->user_id= $user->id;
+                $OrderVendor->order_id = $order->id;
+                $OrderVendor->vendor_id = $vendor_id;
+                $OrderVendor->save();
                 foreach ($vendor_cart_products as $vendor_cart_product) {
                     $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
                     $quantity_price = 0;
@@ -155,6 +161,7 @@ class OrderController extends FrontController
                     $order_product->price = $variant->price;
                     $taxable_amount += $product_taxable_amount;
                     $vendor_taxable_amount += $product_taxable_amount;
+                    $order_product->order_vendor_id = $OrderVendor->id;
                     $order_product->taxable_amount = $product_taxable_amount;
                     $order_product->quantity = $vendor_cart_product->quantity;
                     $order_product->vendor_id = $vendor_cart_product->vendor_id;
@@ -212,20 +219,17 @@ class OrderController extends FrontController
                     }
                 }
                 $total_delivery_fee += $delivery_fee;
-                $OrderVendor = new OrderVendor();
-                $OrderVendor->status = 0;
-                $OrderVendor->user_id= $user->id;
-                $OrderVendor->order_id = $order->id;
-                $OrderVendor->vendor_id = $vendor_id;
+                
                 $OrderVendor->coupon_id = $coupon_id;
                 $OrderVendor->coupon_code = $coupon_name;
+                $OrderVendor->order_status_option_id = 1;
                 $OrderVendor->delivery_fee = $delivery_fee;
                 $OrderVendor->subtotal_amount = $actual_amount;
                 $OrderVendor->discount_amount = $vendor_discount_amount;
                 $OrderVendor->taxable_amount   = $vendor_taxable_amount;
                 $OrderVendor->payment_option_id = $request->payment_option_id;
                 $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
-                $OrderVendor->discount_amount = $this->getDeliveryFeeDispatcher($vendor_id);
+                $OrderVendor->delivery_fee = $this->getDeliveryFeeDispatcher($vendor_id);
                 $vendor_info = Vendor::where('id', $vendor_id)->first();
                 if ($vendor_info) {
                     if (($vendor_info->commission_percent) != null && $vendor_payable_amount > 0) {
@@ -239,6 +243,7 @@ class OrderController extends FrontController
                 $order_status = new VendorOrderStatus();
                 $order_status->order_id = $order->id;
                 $order_status->vendor_id = $vendor_id;
+                $order_status->order_vendor_id = $OrderVendor->id;
                 $order_status->order_status_option_id = 1;
                 $order_status->save();
             }
@@ -256,7 +261,8 @@ class OrderController extends FrontController
             $order->loyalty_points_used = $loyalty_points_used;
             $order->loyalty_amount_saved = $loyalty_amount_saved;
             $order->payable_amount = $delivery_fee + $payable_amount - $total_discount - $loyalty_amount_saved;
-            $order->loyalty_points_earned = $loyalty_points_earned;
+            $order->loyalty_points_earned = $loyalty_points_earned['per_order_points'];
+            $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
             $order->save();
             CartAddon::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();

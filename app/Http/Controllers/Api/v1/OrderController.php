@@ -184,6 +184,12 @@ class OrderController extends Controller {
                     foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                         $vendor_payable_amount = 0;
                         $vendor_discount_amount = 0;
+                        $order_vendor = new OrderVendor;
+                        $order_vendor->status = 0;
+                        $order_vendor->user_id= $user->id;
+                        $order_vendor->order_id= $order->id;
+                        $order_vendor->vendor_id= $vendor_id;
+                        $order_vendor->save();
                         foreach ($vendor_cart_products as $vendor_cart_product) {
                             $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
                             $quantity_price = 0;
@@ -209,6 +215,7 @@ class OrderController extends Controller {
                             $vendor_taxable_amount += $taxable_amount;
                             $total_amount += $variant->price;
                             $order_product = new OrderProduct;
+                            $order_product->order_vendor_id = $order_vendor->id;
                             $order_product->order_id = $order->id;
                             $order_product->price = $variant->price;
                             $order_product->quantity = $vendor_cart_product->quantity;
@@ -263,13 +270,10 @@ class OrderController extends Controller {
                                 $vendor_discount_amount +=$final_coupon_discount_amount; 
                             }   
                         }
-                        $order_vendor = new OrderVendor;
-                        $order_vendor->status = 0;
-                        $order_vendor->user_id= $user->id;
-                        $order_vendor->order_id= $order->id;
-                        $order_vendor->vendor_id= $vendor_id;
+                        
                         $order_vendor->coupon_id = $coupon_id;
                         $order_vendor->coupon_code = $coupon_name;
+                        $order_vendor->order_status_option_id = 1;
                         $order_vendor->subtotal_amount = $actual_amount;
                         $order_vendor->payable_amount = $vendor_payable_amount;
                         $order_vendor->taxable_amount = $vendor_taxable_amount;
@@ -287,8 +291,9 @@ class OrderController extends Controller {
                         $order_vendor->save();
                         $order_status = new VendorOrderStatus();
                         $order_status->order_id = $order->id;
-                        $order_status->order_status_option_id = 1;
                         $order_status->vendor_id = $vendor_id;
+                        $order_status->order_status_option_id = 1;
+                        $order_status->order_vendor_id = $order_vendor->id;
                         $order_status->save();
                     }
                     $order->total_amount = $total_amount;
@@ -314,19 +319,23 @@ class OrderController extends Controller {
         try {
             $order_id = $request->order_id;
             $vendor_id = $request->vendor_id;
+            $order_vendor_id = $request->order_vendor_id;
             $order_status_option_id = $request->order_status_option_id;
             if($order_status_option_id == 7){
                 $order_status_option_id = 2;
             }else if ($order_status_option_id == 8) {
                 $order_status_option_id = 3;
             }
+            $vendor_order_status = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->first();
             $vendor_order_status_detail = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->where('order_status_option_id', $order_status_option_id)->first();
             if (!$vendor_order_status_detail) {
                 $vendor_order_status = new VendorOrderStatus();
                 $vendor_order_status->order_id = $order_id;
                 $vendor_order_status->vendor_id = $vendor_id;
                 $vendor_order_status->order_status_option_id = $order_status_option_id;
+                $vendor_order_status->order_vendor_id = $vendor_order_status->order_vendor_id;
                 $vendor_order_status->save();
+                OrderVendor::where('vendor_id', $vendor_id)->where('order_id', $order_id)->update(['order_status_option_id' => $order_status_option_id]);
                 $current_status = OrderStatusOption::select('id','title')->find($order_status_option_id);
                 if($order_status_option_id == 2){
                     $upcoming_status = OrderStatusOption::select('id','title')->where('id', '>', 3)->first();

@@ -1278,11 +1278,11 @@ h1,h2,h3,h4,h5,h6{
 
 .order_detail:before {
     content: "";
-    border: 1px solid #43bee1e8;
+    border-left: 1px solid #43bee1e8;
     background-color: #43bee1e8;
     position: absolute;
-    height: calc(100% - 15px);
-    left: 0;
+    height: calc(100% - 30px);
+    left: -1px;
     top: 15px;
 }
 
@@ -1412,8 +1412,8 @@ h1,h2,h3,h4,h5,h6{
     cursor: pointer;
     box-shadow: 0 0 0 rgb(67 190 225 / 50%);
     position: absolute;
-    left: -3px;
-    top: 0;
+    left: -4px;
+    top: 6px;
     animation: pulse-animation 2s infinite;
 }
 
@@ -1458,6 +1458,7 @@ label{
 
 .dashboard-right .card-box {
     box-shadow: 0 0.75rem 6rem rgb(56 65 74 / 7%);
+    border-radius: 16px;
 }
 
 /* Referral Modal Css Start From Here */
@@ -2592,15 +2593,15 @@ td.order_address {
     width: 100%;
 }
 
-.review{
-    width:100%;
-    margin:10px 0;
+.review-wrapper{
+    margin: 0 -5px;
 }
 .review-photo {
-    height: 100px;
-    width: 100px;
-    border-radius: 50%;
-    overflow: hidden;
+    height: 80px;
+    max-width: 79.5px;
+    padding: 0 5px;
+    width: 100%;
+    flex-basis: auto;
 }
 .review-author i {
     color: #f3d779;
@@ -2611,28 +2612,12 @@ td.order_address {
     object-fit: cover;
 }
 .review-box {
-    display: inline-block;
-    width: calc(100% - 150px);
     background: #f8f8f8;
     padding: 16px;
     position: relative;
     border-radius: 8px;
 }
-.review-box:after, .review-box:before {
-    right: 100%;
-    top: 10%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-}
-.review-box:after {
-    border-right-color: #f8f8f8;
-    border-width: 25px;
-}
-.review-comment {
+    .review-comment {
     color: #9A9999;
     padding: 10px 0;
 }
@@ -2655,7 +2640,10 @@ td.order_address {
     font-size: 14px;
 }
 
-
+button.close {
+    padding: 5px 10px 0 4px;
+    text-align: right;
+}
 
 
 

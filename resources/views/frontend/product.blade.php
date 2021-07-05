@@ -330,12 +330,10 @@
                                         aria-labelledby="review-top-tab">
                                         {{-- <a class="btn btn-solid add_edit_review" href="javascript:void(0)" data-id="8">Rate</a>
                                                --}}
-                                        <div v-for="item in list" class="review d-flex justify-content-between mb-3 mb-lg-4">    
-                                            <div class="review-photo">
-                                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
-                                            </div>
-                                            <div class="review-box">      
-                                                <div class="review-author">
+                                        <div v-for="item in list" class="w-100 d-flex justify-content-between mb-3">  
+                                            <div class="review-box">     
+                                                
+                                                <div class="review-author mb-1">
                                                     <p><strong>CM Azad</strong> - <i class="fa fa-star" aria-hidden="true"></i>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
@@ -346,18 +344,69 @@
                                                 <div class="review-comment">
                                                     <p>Lorem ipsum dolor sit amet, cu pertinax nominati sea, id iriure utamur interpretaris sea, vix ne latine aliquam complectitur. Enim quas his no, mea ferri audire rationibus ei.</p>
                                                 </div>
-
-                                                <div class="review-date">
+                                                <div class="row review-wrapper">
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                </div> 
+                                               
+                                                <div class="review-date mt-2">
                                                     <time>July, 27th, 2016</time>
                                                 </div>      
                                             </div>
-                                        </div>    
-                                        <div v-for="item in list" class="review d-flex justify-content-between mb-3 mb-lg-4">    
-                                            <div class="review-photo">
-                                                <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
-                                            </div>
-                                            <div class="review-box">      
-                                                <div class="review-author">
+                                        </div>      
+                                        <div v-for="item in list" class="w-100 d-flex justify-content-between mb-3">  
+                                            <div class="review-box">     
+                                                
+                                                <div class="review-author mb-1">
                                                     <p><strong>CM Azad</strong> - <i class="fa fa-star" aria-hidden="true"></i>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
@@ -368,12 +417,65 @@
                                                 <div class="review-comment">
                                                     <p>Lorem ipsum dolor sit amet, cu pertinax nominati sea, id iriure utamur interpretaris sea, vix ne latine aliquam complectitur. Enim quas his no, mea ferri audire rationibus ei.</p>
                                                 </div>
-
-                                                <div class="review-date">
+                                                <div class="row review-wrapper">
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                    <a class="col review-photo mt-2" href="">
+                                                        <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/itMxicEDPKgiIlq0uIrIpDWk7UnfSMpXiuPDlorJ.png">
+                                                    </a>
+                                                </div> 
+                                               
+                                                <div class="review-date mt-2">
                                                     <time>July, 27th, 2016</time>
                                                 </div>      
                                             </div>
-                                        </div>    
+                                        </div>      
                                     </div>
                                 </div>
                             </div>
@@ -419,12 +521,10 @@
                 <div class="product-box">
                     <div class="img-wrapper">
                         <div class="front">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/33.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
-                        </div>
-                        <div class="back">
-                            <a href="#"><img src="{{asset('front-assets/images/pro3/34.jpg')}}"
-                                    class="img-fluid blur-up lazyload bg-img" alt=""></a>
+                            <a href="#">
+                                <img src="{{asset('front-assets/images/pro3/33.jpg')}}"
+                                    class="img-fluid blur-up lazyload bg-img" alt="">
+                            </a>
                         </div>
                         <div class="cart-info cart-wrap">
                             <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i

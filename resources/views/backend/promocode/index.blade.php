@@ -73,17 +73,11 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                                         <img class="promo_img" src="{{$promo->image['proxy_url'].'200/100'.$promo->image['image_path']}}" alt="{{$promo->id}}" >
                                     </td>
                                     <td><a class="openPromoModal text-capitalize" userId="{{$promo->id}}" href="#"> {{$promo->name}}</a></td>
-                                    <td style="width:150px"><p class="ellips">{{$promo->title}}</p></td>
-                                    <td style="width:150px"><p class="ellips">{{$promo->short_desc}}</p></td>
+                                    <td style="width:100px"><p class="ellips">{{$promo->title}}</p></td>
+                                    <td style="width:100px"><p class="ellips">{{$promo->short_desc}}</p></td>
                                     <td>{{$promo->type->title}}</td>
                                     <td>{{$promo->amount}}</td>
                                     <td>{{convertDateTimeInTimeZone($promo->expiry_date, $timezone, 'M d Y, H:i A')}}</td>
-                                    <!-- <td>{{$promo->minimum_spend}}</td>
-                                    <td>{{$promo->maximum_spend}}</td>
-                                    <td>{{$promo->limit_per_user}}</td>
-                                    <td>{{$promo->limit_total}}</td>
-                                    <td>{{$promo->restriction_on == 0 ? 'Products' : 'Vendors'}}</td>
-                                    <td>{{$promo->restriction_type == 0 ? 'Include' : 'Exclude'}}</td> -->
                                     <td>
                                         <div class="form-ul" style="width: 60px;">
                                             <div class="inner-div" style="float: left;">
@@ -105,7 +99,6 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                                         </div>
                                     </td>
                                 </tr>
-
                                 @endforeach
                             </tbody>
                         </table>

@@ -62,29 +62,28 @@ class OrderController extends BaseController{
             });
         }
         if($filter_order_status){
-            switch ($filter_order_status) {
+            switch ($filter_order_status) { 
                 case 'pending_orders':
-                    $order_status_options = [2,3,4,5,6,7,8];
-                    $orders = $orders->whereDoesntHave('vendors.status', function ($query) use($order_status_options) {
-                        $query->whereIn('order_status_option_id', $order_status_options);
-                    });
+                    $orders = $orders->with('vendors', function ($query){
+                        $query->where('order_status_option_id', 1);
+                   });
                 break;
                 case 'active_orders':
-                    $order_status_options = [6,7,8,3];
-                    $orders = $orders->whereHas('vendors.status', function ($query) use($order_status_options) {
-                        $query->whereNotIn('order_status_option_id', $order_status_options)->whereIn('order_status_option_id',['2,3,4']);
+                    $order_status_options = [2,4,5];
+                    $orders = $orders->with('vendors', function ($query) use($order_status_options){
+                        $query->whereIn('order_status_option_id', $order_status_options);
                     });
                 break;
                 case 'orders_history':
                     $order_status_options = [6,3];
-                    $orders = $orders->whereHas('vendors.status', function ($query) use($order_status_options) {
+                    $orders = $orders->with('vendors', function ($query) use($order_status_options){
                         $query->whereIn('order_status_option_id', $order_status_options);
                     });
                 break;
             }
         }
         $orders = $orders->paginate(50);
-        foreach ($orders as $order) {
+        foreach ($orders as $key => $order) {
             $order->created_date = convertDateTimeInTimeZone($order->created_at, $user->timezone, 'd-m-Y, H:i A');
             foreach ($order->vendors as $vendor) {
                 $vendor->vendor_detail_url = route('order.show.detail', [$order->id, $vendor->vendor_id]);
@@ -97,6 +96,9 @@ class OrderController extends BaseController{
                 }
                 $vendor->product_total_count = $product_total_count;
                 $vendor->final_amount = $vendor->taxable_amount+ $product_total_count;
+            }
+            if($order->vendors->count() == 0){
+                $orders->forget($key);
             }
         }
         return $this->successResponse($orders,'',201);
@@ -121,7 +123,6 @@ class OrderController extends BaseController{
                 'vendors.products' => function($query) use ($vendor_id){
                     $query->where('vendor_id', $vendor_id);
                 }))->findOrFail($order_id);
-        // dd($order->vendors[0]->products->toArray());die;
         foreach ($order->vendors as $key => $vendor) {
             foreach ($vendor->products as $key => $product) {
                 $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
@@ -149,8 +150,7 @@ class OrderController extends BaseController{
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function changeStatus(Request $request, $domain = '')
-    {   
+    public function changeStatus(Request $request, $domain = ''){   
         DB::beginTransaction();
         try {
             $timezone = Auth::user()->timezone;
@@ -158,14 +158,16 @@ class OrderController extends BaseController{
             if (!$vendor_order_status_check) {
                 $vendor_order_status = new VendorOrderStatus();
                 $vendor_order_status->order_id = $request->order_id;
-                $vendor_order_status->order_status_option_id = $request->status_option_id;
                 $vendor_order_status->vendor_id = $request->vendor_id;
+                $vendor_order_status->order_vendor_id = $request->order_vendor_id;
+                $vendor_order_status->order_status_option_id = $request->status_option_id;
                 $vendor_order_status->save();
                 if ($request->status_option_id == 2) {
                     $order_dispatch = $this->checkIfanyProductLastMileon($request);
                     if($order_dispatch && $order_dispatch == 1)
                     $stats = $this->insertInVendorOrderDispatchStatus($request);
                 }
+                OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id]);
                 DB::commit();
                 return response()->json([
                     'status' => 'success',

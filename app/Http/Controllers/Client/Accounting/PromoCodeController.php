@@ -40,7 +40,7 @@ class PromoCodeController extends Controller{
                 $from_date = $date_date_filter[0];
                 $vendor_orders_query->between($from_date, $to_date);
             }
-            $vendor_orders = $vendor_orders_query->get();
+            $vendor_orders = $vendor_orders_query->orderBy('id', 'desc')->get();
             foreach ($vendor_orders as $vendor_order) {
                 $order_status = '';
                 $vendor_order->created_date = convertDateTimeInTimeZone($vendor_order->created_at, $timezone, 'Y-m-d h:i:s A');

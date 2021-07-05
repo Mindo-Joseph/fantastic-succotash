@@ -50,7 +50,7 @@ class OrderController extends Controller{
             $from_date = $date_date_filter[0];
             $vendor_orders_query->between($from_date, $to_date);
         }
-        $vendor_orders = $vendor_orders_query->get();
+        $vendor_orders = $vendor_orders_query->orderBy('id', 'DESC')->get();
         foreach ($vendor_orders as $vendor_order) {
             $vendor_order->created_date = convertDateTimeInTimeZone($vendor_order->created_at, $timezone, 'Y-m-d h:i:s A');
             $vendor_order->user_name = $vendor_order->user ? $vendor_order->user->name : '';
