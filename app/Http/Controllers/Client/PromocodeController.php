@@ -95,7 +95,13 @@ class PromocodeController extends BaseController
         $promocode->save();
         if($promocode->id){
             PromoCodeDetail::where('promocode_id', $promocode->id)->delete();
-            $productList = $request->restriction_on == 1 ? $request->vendorList : $request->productList;
+            if($request->restriction_on == 0){
+                $productList = $request->productList;
+            }elseif($request->restriction_on == 1){
+                $productList = $request->productList;
+            }elseif($request->restriction_on == 2){
+                $productList = $request->categoryList;
+            }
             if($productList){
                 foreach ($productList as  $refrence_id) {
                     $promo_code_detail = new PromoCodeDetail();
@@ -155,7 +161,10 @@ class PromocodeController extends BaseController
         $vendors = Vendor::select('id', 'name')->where('status', 1)->get();
         $products = Product::select('id', 'sku')->where('is_live', 1)->get();
         $promocode = Promocode::with('restriction')->where('id', $id)->first();
-        $categories = Category::select('id', 'slug')->get();
+        $categories = Category::with('english')->select('id', 'slug')
+            ->where('id', '>', '1')->where('status', '!=', '2')
+            ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
+            ->orderBy('position', 'asc')->get();
         foreach ($promocode->details as $detail) {
             $dataIds[] = $detail->refrence_id;
         }
