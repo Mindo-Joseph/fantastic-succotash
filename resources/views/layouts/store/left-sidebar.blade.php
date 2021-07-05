@@ -129,65 +129,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </div>
                                                              
     </div>
+    @if(count($navCategories) > 0)
     <div class="menu-navigation">
         <div class="container">
-            <!-- <nav class="navbar navbar-expand-lg p-0">
-
-                <ul class="navbar-nav pixelstrap mr-auto align-items-end">
-                    <li class="nav-item has-menu active">
-                        <a class="nav-link" href="#">
-                            <span>Shop By</span>
-                            Department
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-category">
-                            <li><a href="#"><i class="fa fa-home dropdown-menu-category-icon"></i>Home & Garden</a></li>
-                            <li><a href="#"><i class="fa fa-diamond dropdown-menu-category-icon"></i>Jewelry</a></li>
-                            <li><a href="#"><i class="fa fa-child dropdown-menu-category-icon"></i>Toy &amp; Kids</a></li>
-                            <li><a href="#"><i class="fa fa-plug dropdown-menu-category-icon"></i>Electronics</a></li>
-                            <li><a href="#"><i class="fa fa-tags dropdown-menu-category-icon"></i>Clothes &amp; Shoes</a></li>
-                            <li><a href="#"><i class="fa fa-futbol-o dropdown-menu-category-icon"></i>Sports</a></li>
-                            <li><a href="#"><i class="fa fa-music dropdown-menu-category-icon"></i>Entertaiment</a></li>
-                            <li><a href="#"><i class="fa fa-location-arrow dropdown-menu-category-icon"></i>Travel</a></li>
-                            <li><a href="#"><i class="fa fa-picture-o dropdown-menu-category-icon"></i>Art &amp; Design</a></li>
-                            <li><a href="#"><i class="fa fa-motorcycle dropdown-menu-category-icon"></i>Motors</a></li>
-                            <li><a href="#"><i class="fa fa-paw dropdown-menu-category-icon"></i>Pets</a></li>
-                            <li><a href="#"><i class="fa fa-cubes dropdown-menu-category-icon"></i>Hobbies &amp; DIY</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item has-menu active">
-                        <a class="nav-link" href="#">
-                            Pages
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Today Deal</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Gift Cards</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Weakly Ad</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav pixelstrap ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href=""></a>
-                    </li>                                                 
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Shipping</a>
-                    </li>                                                 
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Payment</a>
-                    </li>                                                 
-                </ul>
-            </nav>                                                        -->
-
             <div class="row">
                 <div class="col-12">
                     <ul id="main-menu" class="sm pixelstrap sm-horizontal">
@@ -221,35 +165,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             </div>
         </div>   
     </div>   
-    <!-- <div class="search_warpper">
-        <div class="container">
-            <div class="row no-gutters" id="location_search_wrapper">
-                    <div class="col-lg-3 col-md-4 col">
-                        <div class="d-flex align-items-center justify-content-start px-3 dropdown-toggle" href="#edit-address" data-toggle="modal">
-                            <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-                            <div class="homepage-address text-left">
-                                <h2><span data-placement="top" data-toggle="tooltip" title="{{session('selectedAddress')}}">{{session('selectedAddress')}}</span></h2>
-                            </div>
-                            <div class="down-icon">
-                                <i class="fa fa-angle-down" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-9 col-md-8 col">
-                        <form class="search_form d-flex align-items-center justify-content-between" action="">
-                            <input class="form-control border-0" type="text" placeholder="Search">
-                            <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i></button>
-                        </form>
-                    </div>
-                    <div class="col-lg-12 col-md-12 col">
-                        <form class="search_form d-flex align-items-center justify-content-between" action="">
-                            <input class="form-control border-0" type="text" placeholder="Search">
-                            <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i></button>
-                        </form>
-                    </div>
-            </div>
-        </div>
-    </div> -->
+    @endif
 </header>
 <script type="text/template" id="nav_categories_template">
     <li>
