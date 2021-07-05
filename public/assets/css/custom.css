@@ -1,99 +1,103 @@
 @font-face {
-    font-family: "icomoon";
-    src: url("/assets/css/fonts/icomoon.eot?toxvn6");
-    src: url("/assets/css/fonts/icomoon.eot?toxvn6#iefix")
-            format("embedded-opentype"),
-        url("/assets/css/fonts/icomoon.ttf?toxvn6") format("truetype"),
-        url("/assets/css/fonts/icomoon.woff?toxvn6") format("woff"),
-        url("/assets/css/fonts/icomoon.svg?toxvn6#icomoon") format("svg");
+    font-family: 'icomoon';
+    src:  url('/assets/css/fonts/icomoon.eot?vssgvx');
+    src:  url('/assets/css/fonts/icomoon.eot?vssgvx#iefix') format('embedded-opentype'),
+      url('/assets/css/fonts/icomoon.ttf?vssgvx') format('truetype'),
+      url('/assets/css/fonts/icomoon.woff?vssgvx') format('woff'),
+      url('/assets/css/fonts/icomoon.svg?vssgvx#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
-}
-
-[class^="icon-"],
-[class*=" icon-"] {
+  }
+  
+  [class^="icon-"], [class*=" icon-"] {
     /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: "icomoon" !important;
+    font-family: 'icomoon' !important;
     speak: never;
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
     text-transform: none;
     line-height: 1;
-
+  
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-}
-
-.icon-catalog_icon:before {
+  }
+  
+  .icon-catalog_icon:before {
     content: "\e900";
-}
-
-.icon-celebrities_icon:before {
+  }
+  .icon-celebrities_icon:before {
     content: "\e901";
-}
-
-.icon-configure_icon:before {
+  }
+  .icon-configure_icon:before {
     content: "\e902";
-}
-
-.icon-customer_icon:before {
+  }
+  .icon-customer_icon:before {
     content: "\e903";
-}
-
-.icon-customize_icon:before {
+  }
+  .icon-customize_icon:before {
     content: "\e904";
-}
-
-.icon-dashboard_icon:before {
+  }
+  .icon-dashboard_icon:before {
     content: "\e905";
-}
-
-.icon-loyality_icon:before {
+  }
+  .icon-loyality_icon:before {
     content: "\e906";
-}
-
-.icon-order_icon:before {
+  }
+  .icon-order_icon:before {
     content: "\e907";
-}
-
-.icon-payment_icon:before {
+  }
+  .icon-payment_icon:before {
     content: "\e908";
-}
-
-.icon-payment_options_icon:before {
+  }
+  .icon-payment_options_icon:before {
     content: "\e909";
-}
-
-.icon-profile_icon:before {
+  }
+  .icon-profile_icon:before {
     content: "\e90a";
-}
-
-.icon-promocode_icon:before {
+  }
+  .icon-promocode_icon:before {
     content: "\e90b";
-}
-
-.icon-tax_icon:before {
+  }
+  .icon-tax_icon:before {
     content: "\e90c";
-}
-
-.icon-vendor_icon:before {
+  }
+  .icon-vendor_icon:before {
     content: "\e90d";
-}
-
-.icon-waller_icon:before {
+  }
+  .icon-waller_icon:before {
     content: "\e90e";
-}
-
-.icon-1370259:before {
+  }
+  .icon-1370259:before {
     content: "\e90f";
-}
-
-.icon-banner_icon:before {
+  }
+  .icon-banner_icon:before {
     content: "\e910";
-}
+  }
+  .icon-payment-wallets-icon:before {
+    content: "\e911";
+    color: #fff;
+  }
+  .icon-payment-debitcard-icon:before {
+    content: "\e912";
+    color: #fff;
+  }
+  .icon-payment-netbanking-icon:before {
+    content: "\e913";
+    color: #fff;
+  }
+  .icon-accounting-icon:before {
+    content: "\e914";
+  }
+  .icon-customize-icon:before {
+    content: "\e915";
+  }
+  .icon-theme-icon:before {
+    content: "\e916";
+  }
+  
 
 .table-responsive::-webkit-scrollbar {
     width: 6px !important;
@@ -811,6 +815,14 @@ body[data-sidebar-size="condensed"]
     margin-right: 8px;
 }
 
+#sidebar-menu > ul > li > a span{
+    width: 18px !important;
+}
+
+#sidebar-menu > ul > li > a span.size-20 {
+    font-size: 19px;
+}
+
 body[data-sidebar-size="condensed"]
     .left-side-menu
     #sidebar-menu
@@ -1256,17 +1268,21 @@ i.mdi.mdi-exclamation-thick {
     z-index: 1;
 }
 
-.custom-control-label{
+.custom-control-label,.select-category label{
     cursor: pointer;
 }
 
-.custom-radio.radio_new .custom-control-label::before {
+.form-check-input{
+    display: none;
+}
+
+.custom-radio.radio_new .custom-control-label::before, .select-category label:before {
     border-radius: 0;
     clip-path: polygon(0 0, 0 35%, 35% 0);
     width: 140px;
     height: 120px;
     left: 0;
-    top: -1px;
+    top: 0;
     background-color: transparent;
     opacity: 0;
     content: "\F012C";
@@ -1275,14 +1291,27 @@ i.mdi.mdi-exclamation-thick {
     font-size: 20px;
     z-index: 1;
 }
+.select-category{
+    overflow: hidden;
+}
 
-.custom-radio.radio_new .custom-control-label::before,.radio_new .custom-control-label::after{
+.select-category label:before{
+    position: absolute;
+    text-align: left;
+}
+
+.custom-radio.radio_new .custom-control-label::before, .select-category label:before{
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
     transition: all 0.5s;
 }
+.radio_new .custom-control-label::after,.select-category label::after{
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.7s;
+    transition: all 0.7s;
+}
 
-.radio_new .custom-control-label::after{
+.radio_new .custom-control-label::after,.select-category label::after{
     background: rgb(0 0 0 / 31%);
     background-image: none !important;
     width: 100%;
@@ -1290,14 +1319,16 @@ i.mdi.mdi-exclamation-thick {
     left: 0;
     top: 0;
     opacity: 0;
+    content: "";
+    position: absolute;
 }
 
-.custom-control-input:checked ~ .custom-control-label::before{
+.custom-control-input:checked ~ .custom-control-label::before,.form-check-input:checked ~ label:before{
     background-color: #43bee1 !important;
     opacity: 1;
 }
 
-.custom-radio.radio_new .custom-control-input:checked ~ .custom-control-label::after {
+.custom-radio.radio_new .custom-control-input:checked ~ .custom-control-label::after,.form-check-input:checked ~ label::after {
     opacity: 1;
 }
 
@@ -1768,7 +1799,7 @@ label.logo-size {
 }
 
 .category-img{
-    height: 170px;
+    height: 310px;
 }
 
 .category-img img {
@@ -1908,8 +1939,6 @@ td.product-name,.vendor-name {
     text-align: center;
     font-size: 16px;
 }
-
-
 
 
 

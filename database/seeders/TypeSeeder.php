@@ -26,7 +26,7 @@ class TypeSeeder extends Seeder
             [
                 'id' => 2,
                 'sequence' => 7,
-                'title' => 'Dispatcher',
+                'title' => 'Pickup/Parent',
                 'image' => 'dispatcher.png',
                 'description' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
             ],

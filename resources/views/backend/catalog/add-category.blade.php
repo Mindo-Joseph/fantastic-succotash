@@ -24,7 +24,7 @@
                 <div class="row">
                     <div class="col-md-6">
                          <div class="form-group" id="slugInput">
-                            {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
+                            {!! Form::label('title', 'Url Slug',['class' => 'control-label']) !!} 
                             {!! Form::text('slug', null, ['class'=>'form-control', 'required' => 'required', 'onkeypress' => "return alphaNumeric(event)", 'id' => 'slug']) !!}
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
@@ -88,9 +88,9 @@
         <div class="row mt-3 add-category">
             @foreach($typeArray as $k => $type)
             <div class="col">
-                  <div class="card p-0 text-center" id="tooltip-container">
-                     <input class="form-check-input type-select" for="add" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
-                     <label for="type_id_{{$type->id}}" class="card-body p-0">
+                  <div class="card p-0 text-center select-category" id="tooltip-container">
+                     <input class="form-check-input type-select" for="add" type="radio" id="type_id_{{$type->id}}" {{$type->id == 1 ? 'checked=""' : " "}} name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
+                     <label for="type_id_{{$type->id}}" class="card-body p-0 2">
                         <div class="category-img">
                             <img src="{{url('images/'.$type->image)}}" alt="">
                         </div>
@@ -135,10 +135,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4" id="warning_page_design_main_div" style="display:none;">
-                {!! Form::label('title', 'Warning Page Design',['class' => 'control-label']) !!}
-                {!! Form::textarea('warning_page_design', '', ['class'=>'form-control', 'id' => 'warning_page_design', 'placeholder' => 'Description', 'rows' => '15', 'name' => 'warning_page_design']) !!}
-            </div>
+           
         </div>
         <div class="row">
             @foreach($languages as $langs)

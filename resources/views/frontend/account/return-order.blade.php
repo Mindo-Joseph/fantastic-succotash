@@ -70,6 +70,9 @@
                                 <form id="return-upload-form" class="theme-form" action="javascript:void(0)" method="post" enctype="multipart/form-data">
                                         @csrf
                                     <input type="hidden" name="order_vendor_product_id" value="{{app('request')->input('return_ids')}}">
+                                    <input type="hidden" name="file_set" id="files_set" value="0">
+                                    <div id="remove_files">
+                                    </div>
                                     <div class="row rating_files">
                                         <div class="col-12">
                                         <label>{{__('Upload Images')}}</label>
@@ -103,7 +106,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>{{__('Comments (Opitonal)')}}:</label>
-                                        <textarea class="form-control" name="" id="comments" cols="20" rows="4"></textarea>
+                                        <textarea class="form-control" name="coments" id="comments" cols="20" rows="4"></textarea>
                                     </div>
                                     <span class="text-danger" id="error-msg"></span>
                                     <span class="text-success" id="success-msg"></span>
@@ -127,69 +130,136 @@
 
 @section('script')
 
+
 <script type="text/javascript">
-  $(function() {
-// Multiple images preview with JavaScript
-var ShowMultipleImagePreview = function(input, imgPreviewPlaceholder) {
-if (input.files) {
-var filesAmount = input.files.length;
-for (i = 0; i < filesAmount; i++) {
-var reader = new FileReader();
-reader.onload = function(event) {
-$($.parseHTML('<img>')).addClass('col-6 col-md-3 col-lg-2 update_pic').attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
-}
-reader.readAsDataURL(input.files[i]);
-}
-}
-};
-$('#input-file').on('change', function() {
-ShowMultipleImagePreview(this, 'span.show-multiple-image-preview');
-});
-}); 
-
-$.ajaxSetup({
-headers: {
-'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-}
-});
-
-$('#return-upload-form').submit(function(e) {
-e.preventDefault();
-
-var formData = new FormData(this);
-let TotalImages = $('#input-file')[0].files.length; //Total Images
-let images = $('#input-file')[0];
-for (let i = 0; i < TotalImages; i++) {
-formData.append('images' + i, images.files[i]);
-}
-formData.append('TotalImages', TotalImages);
-$.ajax({
-type:'POST',
-url: "{{ route('update.order.return')}}",
-data: formData,
-cache:false,
-contentType: false,
-processData: false,
-beforeSend: function () {
+    $(document).ready(function (e) {
+        $('body').delegate('.local-img-del','click',function() {
+            var img_id = $(this).data('id');
+            $(this).prev().remove();
+            $(this).remove();
+            $("#"+img_id).remove();
+        });
+     
+    $.ajaxSetup({
+    headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+    });
+    $(function() {
+   
+    
+    $('#input-file').on('change', function() {
+        $('#files_set').val(1); 
+       $(this).closest("form").submit();
+    });
+    
+    $('.server-img-del').on('click',function(e){
+        var img_id = $(this).data('id');
+        $(this).prev().remove();
+         $(this).remove();
+         $("#remove_files").append("<input type='hidden' name='remove_files[]' value='"+ img_id +"'>");
+    });
+    
+    
+    
+    
+    
+    });    
+    $('#return-upload-form').submit(function(e) {
+    e.preventDefault();
+    
+    var formData = new FormData(this);
+    let TotalImages = $('#input-file')[0].files.length; //Total Images
+    let comments = $('#comments').val();
     if(TotalImages > 0)
-        $("#return_form_button").html('<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop('disabled', true);
-    },
-success: (data) => {
-if(data.status == 'Success')
     {
-      $("#return_form_button").html('Submitted');
-    }else{
+        
+    let images = $('#input-file')[0];
+    for (let i = 0; i < TotalImages; i++) {
+    formData.append('images' + i, images.files[i]);
+    }
+    formData.append('TotalImages', TotalImages);
+    formData.append('folder', '/return');
+    
+    $.ajax({
+    type:'POST',
+    url: "{{ route('uploadfile')}}",
+    data: formData,
+    cache:false,
+    contentType: false,
+    processData: false,
+    beforeSend: function () {
+        if(TotalImages > 0)
+            $("#return_form_button").html('<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop('disabled', true);
+        },
+    success: (data) => {
+    if(data.status == 'Success')
+        {   
+            $("#input-file").val('');
+            for(var i = 0; i < data.data.length; i++) {
+                $("#remove_files").append("<input type='hidden' name='add_files[]' id='"+ data.data[i]['ids'] +"' = value='"+ data.data[i]['name'] +"'>");
+                $("#thumb-output").append("<img class=\"col-6 col-md-3 col-lg-2 update_pic\" src=\"" + data.data[i]['img_path'] + "\" />" +
+                "<i class='fa fa-trash local-img-del' aria-hidden='true' data-id='"+ data.data[i]['ids'] +"'></i>");
+            }
+    
+            $("#return_form_button").html('Request').prop('disabled', false);
+        }else{
+            $('#error-msg').text(data.message);
+            $("#return_form_button").html('Request').prop('disabled', false);
+        }
+    },
+    error: function(data){
         $('#error-msg').text(data.message);
         $("#return_form_button").html('Request').prop('disabled', false);
     }
-},
-error: function(data){
-    $('#error-msg').text(data.message);
-    $("#review_form_button").html('Request').prop('disabled', false);
-}
-});
-});
-       
-</script>
+    });
+    }
+    else
+    {
+    $.ajax({
+    type:'POST',
+    url: "{{ route('update.order.return')}}",
+    data: formData,
+    cache:false,
+    contentType: false,
+    processData: false,
+    beforeSend: function () {
+        if(TotalImages > 0 && comments.length > 0)
+            $("#return_form_button").html('<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop('disabled', true);
+        },
+    success: (data) => {
+    if(data.status == 'Success')
+        {
+            if(TotalImages == 0  && comments.length == 0){
+                $("#return_form_button").html('Request').prop('disabled', false);
+            }
+            else
+            {
+                $("#return_form_button").html('Request');
+                var url = "{{route('user.orders',['pageType' => 'returnOrders'])}}";
+                $(location).prop('href', url); 
+            }
+        }else{
+            $('#error-msg').text(data.message);
+            $("#return_form_button").html('Request').prop('disabled', false);
+        }
+    },
+    error: function(data){
+        $('#error-msg').text(data.message);
+        $("#review_form_button").html('Request').prop('disabled', false);
+    }
+    });
+    }
+    
+    
+    
+    });
+    
+    });
+    </script>
+    
+
+
+
 
 @endsection

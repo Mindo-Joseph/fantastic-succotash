@@ -2,6 +2,7 @@
     @csrf
     <input type="hidden" name="order_vendor_product_id" value="{{$order_vendor_product_id}}">
     <input type="hidden" name="file_set" id="files_set" value="0">
+    <input type="hidden" name="only_set_radio" id="only_set_radio" value="0">
     <div id="remove_files">
     </div>
     
@@ -107,10 +108,7 @@
 
 
 
-  <script type="text/javascript">
-
-   
-
+<script type="text/javascript">
 $(document).ready(function (e) {
     $('body').delegate('.local-img-del','click',function() {
         var img_id = $(this).data('id');
@@ -121,9 +119,16 @@ $(document).ready(function (e) {
 
 
   $('input[type=radio][name=rating]').on('change', function() {
+    $('#only_set_radio').val(1);
     $('.rating_files').show(); 
     $('.form-row').show();    
     $(this).closest("form").submit();
+    });
+
+
+    $('#review_form_button').on('click',function(e){
+        $('#only_set_radio').val(0);
+        $(this).closest("form").submit();
     });
 
 
@@ -237,9 +242,15 @@ if(data.status == 'Success')
             $("#review_form_button").html('Submit Your Review').prop('disabled', false);
         }
         else
-        {
-            $("#review_form_button").html('Submit Your Review');
-            location.reload();
+        {   
+           $("#review_form_button").html('Submit Your Review');
+           var set_rating = $('#only_set_radio').val();
+           if(set_rating == 1){
+
+           }else{
+            var url = "{{route('user.orders',['pageType' => 'pastOrders'])}}";
+            $(location).prop('href', url);
+           }
         }
     }else{
         $('#error-msg').text(data.message);

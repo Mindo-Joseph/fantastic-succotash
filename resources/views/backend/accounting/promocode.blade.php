@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'Promo Codes', 'title' => 'Promo Codes'])
+@extends('layouts.vertical', ['demo' => 'Promo Codes', 'title' => 'Accounting - Promo Codes'])
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />

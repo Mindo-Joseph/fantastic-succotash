@@ -37,12 +37,14 @@
 
 
             <div class="form-group">
-                    <label>{{ __('Reason for return product:') }}</label><p>{{ $return_details->reason }}</p>
+                    <label>{{ __('Reason for return product :') }}</label> {{ $return_details->reason }}
             </div>
+            @if(isset($return_details->coments))
             <div class="form-group">
                 <label>Comments :</label>
-                <p class="form-control">{{ $return_details->coments ?? '' }}</p>
+                <p>{{ $return_details->coments ?? '' }}</p>
             </div>
+            @endif
             <div class="row form-group">
                 <div class="col-md-12">
                     <label>{{__('Update Status')}}</label>
@@ -54,6 +56,11 @@
                        <option value="Rejected" @if($return_details->status == 'Rejected') selected="selected" @endif>Rejected</option>
                     </select>
                 </div>     
+            </div>
+
+            <div class="form-group">
+                <label>{{__('Comment By Vendor (Opitonal)')}}:</label>
+                <textarea class="form-control" name="reason_by_vendor" id="reason_by_vendor" cols="20" rows="4">{{$return_details->reason_by_vendor}}</textarea>
             </div>
 
             <span class="text-danger" id="error-msg"></span>

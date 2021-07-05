@@ -361,7 +361,7 @@ class OrderController extends BaseController{
      
         try {
            
-            $returns = OrderReturnRequest::where('id',$request->id)->update(['status'=>$request->status??null]);
+            $returns = OrderReturnRequest::where('id',$request->id)->update(['status'=>$request->status??null,'reason_by_vendor' => $request->reason_by_vendor??null]);
             if(isset($returns)) {
                 return $this->successResponse($returns,'Updated.');
             }

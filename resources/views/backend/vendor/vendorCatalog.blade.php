@@ -127,7 +127,7 @@
                                                         {{ $product->sku }}
                                                         @endif
                                                     </td>
-                                                    <td> <a href="{{ route('product.edit', $product->id) }}" target="_blank">{{ (isset($product->primary->title) && !empty($product->primary->title)) ? $product->primary->title : '' }}</a> </td>
+                                                    <td> <a href="{{ route('product.edit', $product->id) }}" target="_blank">{{ Str::limit((isset($product->primary->title) && !empty($product->primary->title)) ? $product->primary->title : '' , 30)}}</a> </td>
                                                     <td> {{ $product->category ? $product->category->cat->slug: 'N/A' }}</td>
                                                     <td> {{ !empty($product->brand) ? $product->brand->title : 'N/A'  }}</td>
                                                     <td> {{ $product->variant->first() ? $product->variant->first()->quantity : 0 }}</td>

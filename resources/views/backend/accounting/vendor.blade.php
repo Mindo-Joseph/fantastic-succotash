@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'Order list', 'title' => 'Vendors'])
+@extends('layouts.vertical', ['demo' => 'Order list', 'title' => 'Accounting - Vendors'])
 @section('css')
 <link href="{{asset('assets/libs/datatables/datatables.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection

@@ -90,7 +90,7 @@
                 @endif
                 <li>
                     <a href="#sidebaraccounting" data-toggle="collapse">
-                    <span class="icon-customize_icon"></span>
+                        <span class="icon-accounting-icon size-20"></span>
                         <span> Accounting </span>
                     </a>
                     <div class="collapse" id="sidebaraccounting">
@@ -140,14 +140,14 @@
                 @if(in_array('CUSTOMIZE',$allowed) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="{{route('configure.customize')}}">
-                        <span class="icon-customize_icon"></span>
+                        <span class="icon-customize-icon size-20"></span>
                         <span> Customize </span>
                     </a>
                 </li>
                 @endif
                 <li>
                     <a href="#sidebarstyling" data-toggle="collapse">
-                    <span class="icon-customize_icon"></span>
+                        <span class="icon-theme-icon size-20"></span>
                         <span> Styling </span>
                     </a>
                     <div class="collapse" id="sidebarstyling">
