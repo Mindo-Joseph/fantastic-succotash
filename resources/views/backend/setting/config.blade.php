@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Configure'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Configurations'])
 @section('css')
 @endsection
 @section('content')

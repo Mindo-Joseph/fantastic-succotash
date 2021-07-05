@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Loyalty Cards'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Loyality Cards'])
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Loyalty cards</h4>
+                <h4 class="page-title">Loyality cards</h4>
             </div>
         </div>
     </div>
