@@ -118,7 +118,7 @@ class CategoryController extends FrontController
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
         
         if(strtolower($type) == 'vendor'){
-            $vendorData = Vendor::select('vendors.id', 'name', 'logo', 'banner', 'order_pre_time', 'order_min_amount');
+            $vendorData = Vendor::select('vendors.id', 'name', 'slug', 'logo', 'banner', 'order_pre_time', 'order_min_amount');
             $vendorData = $vendorData->join('vendor_categories as vct', 'vct.vendor_id', 'vendors.id')->where('vct.category_id', $cid)->where('vct.status', 1);
             $preferences= Session::get('preferences');
             if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
