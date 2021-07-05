@@ -38,6 +38,7 @@ class FrontController extends Controller
                         ->where('categories.is_visible', 1)
                         ->where('categories.status', '!=', $this->field_status)
                         ->where('cts.language_id', $lang_id)
+                        ->orWhere('categories.type_id', 5)
                         ->orderBy('categories.position', 'asc')
                         ->orderBy('categories.id', 'asc')
                         ->orderBy('categories.parent_id', 'asc')->get();
