@@ -39,7 +39,7 @@
                             <select class="selectize-select form-control parent-category" id="cateSelectBox" name="parent_cate">
                                 <option value="">Select</option>
                                 @foreach($parCategory as $pc)
-                                    <option value="{{$pc->id}}">{{ucfirst($pc->slug)}}</option>
+                                    <option value="{{$pc->id}}">{{ucfirst($pc->translation_one['name'])}}</option>
                                 @endforeach
                             </select>
                             <span class="invalid-feedback" role="alert">

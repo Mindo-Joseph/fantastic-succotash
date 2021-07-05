@@ -28,7 +28,7 @@
                             {!! Form::label('title', 'Select Parent Category',['class' => 'control-label']) !!}
                             <select class="selectize-select1 form-control parent-category" id="cateSelectBox" name="parent_cate">
                                 @foreach($parCategory as $pc)
-                                    <option value="{{$pc->id}}" {{ ($pc->id == $category->parent_id) ? 'selected' : '' }} > {{ucfirst($pc->slug)}}</option>
+                                    <option value="{{$pc->id}}" {{ ($pc->id == $category->parent_id) ? 'selected' : '' }} > {{ucfirst($pc->translation_one['name'])}}</option>
                                 @endforeach
                             </select>
                             <span class="invalid-feedback" role="alert">
