@@ -91,15 +91,15 @@
                <div class="col">
                   <div class="card p-0 text-center select-category" id="tooltip-container">
                      <input class="form-check-input type-select" for="edit" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
-                     <label for="type_id_{{$type->id}}" class="card-body p-0 1">
+                     <label for="type_id_{{$type->id}}" class="card-body p-0 mb-0">
                         <div class="category-img">
                             <img src="{{url('images/'.$type->image)}}" alt="">
                         </div>
-                        <div class="form-check form-check-info pl-0">
-                            <h6 for="customradio5">{{$type->title}}</h6>
-                        </div>
-                        <div class="description-txt">
-                            <p>{{$type->description}}</p>
+                        <div class="form-check form-check-info p-2">
+                            <h6 class="mt-0" for="customradio5">{{$type->title}}</h6>
+                            <div class="description-txt">
+                                <p class="m-0">{{$type->description}}</p>
+                            </div>
                         </div>
                      </label>
                   </div>
