@@ -63,8 +63,9 @@ class VendorController extends BaseController
         $rules = array(
             'name' => 'required|string|max:150|unique:vendors',
             'address' => 'required',
+            'email' => 'required',
+            'phone_no' => 'required',
         );
-
         $validation  = Validator::make($request->all(), $rules)->validate();
         $vendor = new Vendor();
         $saveVendor = $this->save($request, $vendor, 'false');
@@ -219,8 +220,7 @@ class VendorController extends BaseController
     }
 
     /**   show vendor page - category tab      */
-    public function vendorCategory($domain = '', $id)
-    {
+    public function vendorCategory($domain = '', $id){
         $csvVendors = [];
         $vendor = Vendor::findOrFail($id);
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();

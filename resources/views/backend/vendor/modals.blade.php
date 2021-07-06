@@ -16,7 +16,7 @@
                                     <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
                                 </div> 
                                 <div class="col-md-1"></div>
-                                <div class="col-md-6"> <!--  Storage::disk('s3')->url($client->logo)  -->                 
+                                <div class="col-md-6">                 
                                     <input type="file" accept="image/*" data-plugins="dropify" name="banner" class="dropify" data-default-file="" />
                                     <p class="text-muted text-center mt-2 mb-0">Upload banner image</p>
                                 </div>
@@ -43,53 +43,19 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Email</label>
-                                        <input class="form-control" type="text">
+                                        {!! Form::text('email', null, ['class'=>'form-control']) !!}
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Phone Number</label>
-                                        <input class="form-control" type="text">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="">Website</label>
-                                        <input class="form-control" type="text">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row">
-                                    <div class="col-md-4">
-                                    <div class="form-group">
-                                    @if($client_preferences->dinein_check == 1)
-                                        {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
-                                        <div class="mt-md-1">
-                                            <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control validity" data-color="#43bee1" checked='checked'>
-                                        </div>
-                                    @endif
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                    @if($client_preferences->takeaway_check == 1)
-                                        {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
-                                        <div class="mt-md-1">
-                                            <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control validity" data-color="#43bee1" checked='checked'>
-                                        </div>
-                                    @endif
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                    @if($client_preferences->delivery_check == 1)
-                                        {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
-                                        <div class="mt-md-1">
-                                            <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control validity" data-color="#43bee1" checked='checked'>
-                                        </div>
-                                    @endif
-                                    </div>
-                                </div>
+                                        {!! Form::text('phone_no', null, ['class'=>'form-control']) !!}
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
                                     </div>
                                 </div>
                              </div>
@@ -131,7 +97,49 @@
                                         @endif
                                     </div>
                                 </div>
-                             </div>   
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="">Website</label>
+                                        <input class="form-control" type="text" name="website">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                            @if($client_preferences->dinein_check == 1)
+                                                {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
+                                                <div class="mt-md-1">
+                                                    <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                                </div>
+                                            @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                            @if($client_preferences->takeaway_check == 1)
+                                                {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
+                                                <div class="mt-md-1">
+                                                    <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                                </div>
+                                            @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                            @if($client_preferences->delivery_check == 1)
+                                                {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
+                                                <div class="mt-md-1">
+                                                    <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                                </div>
+                                            @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

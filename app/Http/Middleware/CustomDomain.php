@@ -85,7 +85,9 @@ class CustomDomain
           Session::put('login_user_type', 'client');
           if (!session()->has('customerLanguage') || empty(session()->get('customerLanguage'))){
               $primeLang = ClientLanguage::select('language_id', 'is_primary')->where('is_primary', 1)->first();
-              Session::put('customerLanguage', $primeLang->language_id);
+              if($primeLang){
+                Session::put('customerLanguage', $primeLang->language_id);
+              }
           }
           if (!session()->has('customerCurrency') || empty(session()->get('customerCurrency'))){
               $primeCurcy = ClientCurrency::join('currencies as cu', 'cu.id', 'client_currencies.currency_id')
