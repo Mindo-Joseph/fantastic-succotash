@@ -38,6 +38,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
 	Route::post('/homePageData','Front\UserhomeController@postHomePageData')->name('homePageData');
 	Route::post('/homepage','Front\UserhomeController@homepage')->name('homepage');
+	Route::post('getClientPreferences', 'Front\UserhomeController@getClientPreferences')->name('getClientPreferences');
 	Route::post('validateEmail','Front\CustomerAuthController@validateEmail')->name('validateEmail');
 	Route::post('user/loginData','Front\CustomerAuthController@login')->name('customer.loginData');
 	Route::post('user/register','Front\CustomerAuthController@register')->name('customer.register');
