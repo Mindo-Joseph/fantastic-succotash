@@ -185,6 +185,22 @@
                     </a>
                 </li>
                 @endif
+                <li>
+                    <a href="#sidebarsubscriptions" data-toggle="collapse">
+                        <span class="icon-payment_icon size-22"></span>
+                        <span> Subscriptions </span>
+                    </a>
+                    <div class="collapse" id="sidebarsubscriptions">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="{{route('subscriptions.user')}}">Customers</a>
+                            </li>
+                            <li>
+                                <a href="{{route('subscriptions.vendor')}}">Vendors</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 @if(in_array('TAX',$allowed) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="{{route('tax.index')}}">

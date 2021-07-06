@@ -129,6 +129,9 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::resource('promocode', 'Client\PromocodeController');
     Route::resource('payoption', 'Client\PaymentOptionController');
     Route::post('updateAll', 'Client\PaymentOptionController@updateAll')->name('payoption.updateAll');
+    
+    Route::get('subscriptions/user', 'Client\SubscriptionController@userSubscriptions')->name('subscriptions.user');
+    Route::get('subscriptions/vendor', 'Client\SubscriptionController@vendorSubscriptions')->name('subscriptions.vendor');
 });
 
 

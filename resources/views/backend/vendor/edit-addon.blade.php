@@ -96,7 +96,7 @@
             <div class="col-12 mb-2">
                 <div class="price-range-slider"> 
                     {!! Form::label('title', 'Min & Max Range',['class' => 'control-label']) !!}:<input type="text" id="slider_output" readonly="" style="border:0; color:#f6931f; font-weight:bold;">
-                    <div id="slider-range" class="range-bar"></div>
+                    <div id="slider-range1" class="range-bar"></div>
                 </div>
             </div>
             <div class="col-md-12">
