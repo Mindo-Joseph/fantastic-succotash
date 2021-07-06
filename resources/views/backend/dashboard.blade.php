@@ -255,28 +255,7 @@
             <!-- end row-->
 
             <div class="row">
-                <div class="col-lg-4 mb-3">
-                    <div class="card mb-0">
-                        <div class="card-body p-2">
-                            <div class="card-widgets">
-                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh refresh_cataegoryinfo"></i></a>
-                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
-                            </div>
-                            <h4 class="header-title mb-0">Orders (Top Categories)</h4>
-                            <div id="cardCollpase1" class="collapse mt-3 show widget-chart" dir="ltr" style="position: relative;">
-
-                                <div id="total-revenue" class="mt-0" data-colors="#f1556c" style="min-height: 220.7px;">
-                                    <div id="apexchartsfwg700r2" class="apexcharts-canvas apexchartsfwg700r2 apexcharts-theme-light" style="width: 451px; height: 220.7px;">
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div> <!-- end card -->
-                </div> <!-- end col-->
-
-                <div class="col-lg-8 mb-3">
+                <div class="col-lg-12 mb-3">
                     <div class="card mb-0">
                         <div class="card-body p-2">
                             <div class="card-widgets">
@@ -308,7 +287,28 @@
                     </div> <!-- end card -->
                 </div> <!-- end col-->
             </div>
-            <!-- end row -->
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <div class="card mb-0">
+                        <div class="card-body p-2">
+                            <div class="card-widgets">
+                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh refresh_cataegoryinfo"></i></a>
+                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
+                            </div>
+                            <h4 class="header-title mb-0">Orders (Top Categories)</h4>
+                            <div id="cardCollpase1" class="collapse mt-3 show widget-chart" dir="ltr" style="position: relative;">
+
+                                <div id="total-revenue" class="mt-0" data-colors="#f1556c" style="min-height: 220.7px;">
+                                    <div id="apexchartsfwg700r2" class="apexcharts-canvas apexchartsfwg700r2 apexcharts-theme-light" style="width: 451px; height: 220.7px;">
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div> <!-- end card -->
+                </div> <!-- end col-->
+            </div>
 
         </div> <!-- container -->
 

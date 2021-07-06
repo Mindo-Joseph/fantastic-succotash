@@ -369,16 +369,36 @@ $(document).on('click', '.addOptionRow-edit',function (e) {
     $clone.find(':hidden').val('');
     $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>');
     $('.optionTableEdit').append($clone);
-    var max_value = $( "#slider-range" ).slider( "option", "max") +1;
-    $("#slider-range").slider( "option", "max", max_value);
-    var edit_add_on_max_value = $("#editdAddonmodal #slider-range").slider( "option", "max") +1;
-    $("#editdAddonmodal #slider-range" ).slider( "option", "max", edit_add_on_max_value);
+    var slider = $("#slider-range").data("ionRangeSlider");
+    var from = slider.result.from;
+    var to = $('#edit_addon-datatable >tbody >tr.input_tr').length;
+    slider.update({
+        min: from,
+        max: to,
+    });
 });
 $("#addAddonmodal").on('click', '.deleteCurRow', function () {
+    var slider = $("#addAddonmodal #slider-range").data("ionRangeSlider");
+    var from = slider.result.from;
+    var to = $('#addAddonmodal #banner-datatable >tbody >tr.input_tr').length -1 ;
+    slider.update({
+        min: from,
+        max: to,
+    });
     $(this).closest('tr').remove();
 });
 
 $("#editdAddonmodal").on('click', '.deleteCurRow', function () {
+    var slider = $("#editdAddonmodal #slider-range").data("ionRangeSlider");
+    var from = slider.result.from;
+    var to = $('#editdAddonmodal #edit_addon-datatable >tbody >tr.input_tr').length -1 ;
+    if(to == 1){
+        from = 0;
+    }
+    slider.update({
+        min: from,
+        max: to,
+    });
     $(this).closest('tr').remove();
 });
 

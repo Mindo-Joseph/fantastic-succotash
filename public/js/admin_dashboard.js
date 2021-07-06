@@ -106,7 +106,7 @@ $(document).ready(function () {
                 series: response.orders,
                 labels: response.names,
                 chart: {
-                    width: 380,
+                    width: 350,
                     type: 'donut',
                 },
                 dataLabels: {
@@ -124,8 +124,7 @@ $(document).ready(function () {
                     }
                 }],
                 legend: {
-                    position: 'left',
-                    // horizontalAlign: 'center', 
+                    position: 'right',
                     offsetY: 0,
                     height: 230,
                 },

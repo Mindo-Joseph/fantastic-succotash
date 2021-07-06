@@ -35,6 +35,11 @@ class UserhomeController extends FrontController
             $selectedAddress = Session::get('selectedAddress');
             $navCategories = $this->categoryNav($langId);
             Session::put('navCategories', $navCategories);
+            $clientPreferences = ClientPreference::first();
+            $count = 0;
+            if($clientPreferences->dinein_check == 1){$count++;}
+            if($clientPreferences->takeaway_check == 1){$count++;}
+            if($clientPreferences->delivery_check == 1){$count++;}
             if($preferences){
                 if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                     $selectedAddress = $preferences->Default_location_name;
@@ -52,12 +57,13 @@ class UserhomeController extends FrontController
                                     ->whereDate('end_date_time', '>=', Carbon::now());
                             });
                         })->orderBy('sorting', 'asc')->get();
-            return view('frontend.home')->with(['home' => $home, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
+            return view('frontend.home')->with(['home' => $home, 'count' => $count, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
         } catch (Exception $e) {
             pr($e->getCode());die;
         }
     }
-    public function postHomePageData(Request $request, $domain="", $type = 'delivery'){
+    public function postHomePageData(Request $request){
+        // dd($request->all());
         $vendor_ids = [];
         $new_products = [];
         $feature_products = [];
@@ -82,7 +88,7 @@ class UserhomeController extends FrontController
         foreach ($brands as $brand) {
             $brand->redirect_url = route('brandDetail', $brand->id);
         }
-        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where('delivery', 1);
+        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where($request->type, 1);
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                 $selectedAddress = $preferences->Default_location_name;
@@ -108,9 +114,9 @@ class UserhomeController extends FrontController
         }
         $navCategories = $this->categoryNav($language_id);
         Session::put('navCategories', $navCategories);
-        $on_sale_product_details = $this->vendorProducts($vendor_ids, $language_id, 'USD');
-        $new_product_details = $this->vendorProducts($vendor_ids, $language_id, $currency_id, 'is_new');
-        $feature_product_details = $this->vendorProducts($vendor_ids, $language_id, $currency_id, 'is_featured');
+        $on_sale_product_details = $this->vendorProducts($vendor_ids, $language_id, 'USD', '', $request->type);
+        $new_product_details = $this->vendorProducts($vendor_ids, $language_id, $currency_id, 'is_new', $request->type);
+        $feature_product_details = $this->vendorProducts($vendor_ids, $language_id, $currency_id, 'is_featured',$request->type);
         foreach ($new_product_details as  $new_product_detail) {
             $multiply = $new_product_detail->variant->first() ? $new_product_detail->variant->first()->multiplier : 1;
             $title = $new_product_detail->translation ? $new_product_detail->translation->first()->title : $on_sale_product_detail->sku;
@@ -197,9 +203,9 @@ class UserhomeController extends FrontController
             $navCategories = $this->categoryNav($langId);
             Session::put('navCategories', $navCategories);
             $homeData['navCategories'] = $navCategories;
-            $fp = $this->vendorProducts($vendors, $langId, $curId, 'is_featured');
-            $np = $this->vendorProducts($vendors, $langId, $curId, 'is_new');
-            $onSP = $this->vendorProducts($vendors, $langId, 'USD');
+            $fp = $this->vendorProducts($vendors, $langId, $curId, 'is_featured', 'delivery');
+            $np = $this->vendorProducts($vendors, $langId, $curId, 'is_new', 'delivery');
+            $onSP = $this->vendorProducts($vendors, $langId, 'USD', "", 'delivery');
             $homeData['featuredProducts'] = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
             $homeData['newProducts'] = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
             $homeData['onSaleProducts'] = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
@@ -209,10 +215,10 @@ class UserhomeController extends FrontController
         }
     }
 
-    public function vendorProducts($venderIds, $langId, $currency = 'USD', $where = '')
+    public function vendorProducts($venderIds, $langId, $currency = 'USD', $where = '', $type)
     {
-        $products = Product::with(['vendor' => function($q){
-                                        $q->where('delivery', 1);
+        $products = Product::with(['vendor' => function($q) use($type){
+                                        $q->where($type, 1);
                                     },
                                     'media' => function($q){
                                         $q->groupBy('product_id');
@@ -277,5 +283,16 @@ class UserhomeController extends FrontController
         }
         Session::put('cus_paginate', $perPage);
         return response()->json(['status'=>'success', 'message' => 'Saved Successfully!', 'data' => $perPage]);
+    }
+
+    public function getClientPreferences(Request $request)
+    {
+       $clientPreferences = ClientPreference::first();
+       if($clientPreferences){
+           $dinein_check = $clientPreferences->dinein_check;
+           $delivery_check = $clientPreferences->delivery_check;
+           $takeaway_check = $clientPreferences->takeaway_check;
+           return response()->json(["dinein_check" => $dinein_check, "delivery_check" => $delivery_check, "takeaway_check" => $takeaway_check]);
+       }
     }
 }
