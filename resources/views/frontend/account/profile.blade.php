@@ -106,6 +106,10 @@
                     <div class="dashboard">
                         <div class="page-title">
                             <h2>My Profile</h2>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inquery_form">
+                            Launch demo modal
+                            </button>
                         </div>
                         <div class="card-box">
                             <div class="row align-items-center">
@@ -376,6 +380,49 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="inquery_form" tabindex="-1" aria-labelledby="inquery_formLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title" id="inquery_formLabel">Inquery Form</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="inquery-form" action="">
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label>Name</label>
+                    <input class="form-control" type="text">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Email</label>
+                    <input class="form-control" type="text">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Phone Number</label>
+                    <input class="form-control" type="text">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Company Name</label>
+                    <input class="form-control" type="text">
+                </div>
+                <div class="col-12 form-group">
+                    <label>Company Name</label>
+                    <textarea class="form-control" name="" id="" cols="30" rows="8"></textarea>
+                </div>
+                <div class="col-12 mt-2">
+                    <button type="button" class="btn btn-solid w-100" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 
 
