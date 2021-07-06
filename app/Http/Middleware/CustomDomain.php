@@ -92,9 +92,11 @@ class CustomDomain
           if (!session()->has('customerCurrency') || empty(session()->get('customerCurrency'))){
               $primeCurcy = ClientCurrency::join('currencies as cu', 'cu.id', 'client_currencies.currency_id')
                     ->where('client_currencies.is_primary', 1)->first();
-              Session::put('customerCurrency', $primeCurcy->currency_id);
-              Session::put('currencySymbol', $primeCurcy->symbol);
-              Session::put('currencyMultiplier', $primeCurcy->doller_compare);
+              if($primeCurcy){
+                Session::put('customerCurrency', $primeCurcy->currency_id);
+                Session::put('currencySymbol', $primeCurcy->symbol);
+                Session::put('currencyMultiplier', $primeCurcy->doller_compare);
+              }
           }
           $preferData = array();
           if(isset($clientPreference)){
