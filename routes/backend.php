@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Front\SearchController;
+use App\Http\Controllers\Client\SocialMediaController;
 use App\Http\Controllers\Client\DownloadFileController;
 use App\Http\Controllers\Client\Accounting\TaxController;
 use App\Http\Controllers\Client\Accounting\OrderController;
@@ -31,6 +32,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('account/promo-code', [PromoCodeController::class, 'index'])->name('account.promo.code');
     Route::get('account/promo-code/filter', [PromoCodeController::class, 'filter'])->name('account.promo-code.filter');
     Route::get('account/promo-code/export', [PromoCodeController::class, 'export'])->name('account.promo-code.export');
+    Route::get('social/media', [SocialMediaController::class, 'index'])->name('social.media.index');
     Route::get('account/loyalty', [LoyaltyController::class, 'index'])->name('account.loyalty');
     Route::get('account/tax', [TaxController::class, 'index'])->name('account.tax');
     Route::get('account/vendor', [VendorController::class, 'index'])->name('account.vendor');
@@ -127,6 +129,9 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::resource('promocode', 'Client\PromocodeController');
     Route::resource('payoption', 'Client\PaymentOptionController');
     Route::post('updateAll', 'Client\PaymentOptionController@updateAll')->name('payoption.updateAll');
+    
+    Route::get('subscriptions/user', 'Client\SubscriptionController@userSubscriptions')->name('subscriptions.user');
+    Route::get('subscriptions/vendor', 'Client\SubscriptionController@vendorSubscriptions')->name('subscriptions.vendor');
 });
 
 

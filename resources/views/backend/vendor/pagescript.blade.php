@@ -384,6 +384,13 @@ $(document).on('click', '.addOptionRow-edit',function (e) {
     });
 });
 $("#addAddonmodal").on('click', '.deleteCurRow', function () {
+    var slider = $("#addAddonmodal #slider-range").data("ionRangeSlider");
+    var from = slider.result.from;
+    var to = $('#addAddonmodal #banner-datatable >tbody >tr.input_tr').length -1 ;
+    slider.update({
+        min: from,
+        max: to,
+    });
     $(this).closest('tr').remove();
     var slider = $("#slider-range").data("ionRangeSlider");
     var from = slider.result.from;
@@ -395,6 +402,16 @@ $("#addAddonmodal").on('click', '.deleteCurRow', function () {
 });
 
 $("#editdAddonmodal").on('click', '.deleteCurRow', function () {
+    var slider = $("#editdAddonmodal #slider-range").data("ionRangeSlider");
+    var from = slider.result.from;
+    var to = $('#editdAddonmodal #edit_addon-datatable >tbody >tr.input_tr').length -1 ;
+    if(to == 1){
+        from = 0;
+    }
+    slider.update({
+        min: from,
+        max: to,
+    });
     $(this).closest('tr').remove();
     var slider = $("#slider-range1").data("ionRangeSlider");
     var from = slider.result.from;

@@ -185,6 +185,22 @@
                     </a>
                 </li>
                 @endif
+                <li>
+                    <a href="#sidebarsubscriptions" data-toggle="collapse">
+                        <span class="icon-payment_icon size-22"></span>
+                        <span> Subscriptions </span>
+                    </a>
+                    <div class="collapse" id="sidebarsubscriptions">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="{{route('subscriptions.user')}}">Customers</a>
+                            </li>
+                            <li>
+                                <a href="{{route('subscriptions.vendor')}}">Vendors</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 @if(in_array('TAX',$allowed) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="{{route('tax.index')}}">
@@ -230,15 +246,21 @@
                 $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
                 @endphp
                 @if(!empty($brity) && $brity->celebrity_check == 1)
-                @if(in_array('CELEBRITY',$allowed) || Auth::user()->is_superadmin == 1)
+                    @if(in_array('CELEBRITY',$allowed) || Auth::user()->is_superadmin == 1)
+                        <li>
+                            <a href="{{route('celebrity.index')}}">
+                                <span class="icon-celebrities_icon"></span>
+                                <span> Celebrities </span>
+                            </a>
+                        </li>
+                    @endif
+                @endif
                 <li>
-                    <a href="{{route('celebrity.index')}}">
-                        <span class="icon-celebrities_icon"></span>
-                        <span> Celebrities </span>
+                    <a href="{{route('social.media.index')}}">
+                        <span class="icon-vendor_icon"></span>
+                        <span> Social Media </span>
                     </a>
                 </li>
-                @endif
-                @endif
             </ul>
         </div>
         <div id="sidebar-menu" style="display: none;">
