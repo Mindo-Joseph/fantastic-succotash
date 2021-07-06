@@ -159,16 +159,37 @@
                            <input type="checkbox" data-plugin="switchery" name="need_dispacher_ride" id="need_dispacher_ride" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->need_dispacher_ride == '1'))  checked='checked' @endif>
                         </div>
                      </div>
+
                      <div class="form-group mt-3 mb-0 dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_ride == '1')) ? '' : 'display:none;'}}">
-                        <label for="dispatcher_key">Royo Dispatcher API key</label>
-                        <input type="text" name="dispatcher_key" id="dispatcher_key" placeholder="" class="form-control"
-                           value="{{ old('dispatcher_key', $preference->dispatcher_key ?? '')}}">
-                        @if($errors->has('dispatcher_key'))
-                           <span class="text-danger" role="alert">
-                           <strong>{{ $errors->first('dispatcher_key') }}</strong>
-                           </span>
+                        <label for="pickup_delivery_service_key_url">Royo Dispatcher Url</label>
+                        <input type="text" name="pickup_delivery_service_key_url" id="pickup_delivery_service_key_url" placeholder="" class="form-control" value="{{ old('pickup_delivery_service_key_url', $preference->pickup_delivery_service_key_url ?? '')}}">
+                        @if($errors->has('pickup_delivery_service_key_url'))
+                        <span class="text-danger" role="alert">
+                        <strong>{{ $errors->first('pickup_delivery_service_key_url') }}</strong>
+                        </span>
                         @endif
                      </div>
+
+                     <div class="form-group mt-3 mb-0 dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_ride == '1')) ? '' : 'display:none;'}}">
+                        <label for="delivery_service_key_code">Royo Dispatcher Short code</label>
+                        <input type="text" name="pickup_delivery_service_key_code" id="pickup_delivery_service_key_code" placeholder="" class="form-control" value="{{ old('pickup_delivery_service_key_code', $preference->pickup_delivery_service_key_code ?? '')}}">
+                        @if($errors->has('pickup_delivery_service_key_code'))
+                        <span class="text-danger" role="alert">
+                        <strong>{{ $errors->first('pickup_delivery_service_key_code') }}</strong>
+                        </span>
+                        @endif
+                     </div>
+
+                     <div class="form-group mt-3 mb-0 dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_ride == '1')) ? '' : 'display:none;'}}">
+                        <label for="pickup_delivery_service_key">Royo Dispatcher API key</label>
+                        <input type="text" name="pickup_delivery_service_key" id="pickup_delivery_service_key" placeholder="" class="form-control" value="{{ old('pickup_delivery_service_key', $preference->pickup_delivery_service_key ?? '')}}">
+                        @if($errors->has('pickup_delivery_service_key'))
+                        <span class="text-danger" role="alert">
+                        <strong>{{ $errors->first('pickup_delivery_service_key') }}</strong>
+                        </span>
+                        @endif
+                     </div>
+                    
                   </div>
                </div>
             </div>
