@@ -54,7 +54,7 @@ class VendorController extends BaseController
         $total_vendor_count = $vendors->count();
         if(count($vendors) == 1){
             if (Auth::user()->is_superadmin == 1) {
-                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors, 'client_preferences'=> $client_preferences]);
+                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors, 'client_preferences'=> $client_preferences, 'total_vendor_count' => $total_vendor_count, 'available_vendors_count' => $available_vendors_count, 'vendors_product_count' => $vendors_product_count, 'vendors_active_order_count' => $vendors_active_order_count]);
             }else{
                 return Redirect::route('vendor.show', $vendors->first()->id);
             }
