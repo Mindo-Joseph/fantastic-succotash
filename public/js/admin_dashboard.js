@@ -124,8 +124,7 @@ $(document).ready(function () {
                     }
                 }],
                 legend: {
-                    position: 'left',
-                    // horizontalAlign: 'center', 
+                    position: 'right',
                     offsetY: 0,
                     height: 230,
                 },
