@@ -58,7 +58,6 @@ class UserhomeController extends FrontController
         }
     }
     public function postHomePageData(Request $request, $domain="", $type = 'delivery'){
-        dd($type);
         $vendor_ids = [];
         $new_products = [];
         $feature_products = [];

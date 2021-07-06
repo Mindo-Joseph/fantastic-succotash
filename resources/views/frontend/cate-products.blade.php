@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => !empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']])
+@extends('layouts.store', ['title' => !empty($new['translation']) && isset($new['translation'][0]) ? $new['translation'][0]['title'] : $new['sku']])
 
 @section('css')
 <style type="text/css">
