@@ -277,23 +277,20 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
-                <form class="" action="">
+                <form id="save_social_media" action="">
+                    @csrf
                     <div class="form-group">
-                        <label for="">Name</label>
-                        <input class="form-control icp icp-auto iconpicker-component" value="fas fa-anchor" type="text" />
+                        <label for="">Icon</label>
+                        <input class="form-control icp icp-auto" name="icon" value="fas fa-anchor" type="text" />
                     </div>
                     <div class="form-group">
-                        <label for="">Name</label>
-                        <input class="form-control" type="text">
-                    </div>
-                    <div class="form-group">
-                        <label for="">Name</label>
-                        <input class="form-control" type="text">
+                        <label for="">Url</label>
+                        <input class="form-control" name="url" type="text">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary submitSaveSocialForm">Save</button>
             </div>
         </div>
     </div>
@@ -308,23 +305,20 @@
     var options_iconpicker = {
         title: false,
         selected: false,
-        defaultValue: false,
+        trigger: 'hover',
+        defaultValue: true,
         placement: 'bottom',
-        collision: true,
-        animation: true,
+        collision: 'none',
+        trigger : 'hover',
+        animation: false,
         hideOnSelect: false,
         showFooter: false,
         searchInFooter: false,
         mustAccept: false,
         selectedCustomClass: 'bg-primary',
-        icons: [],
-        fullClassFormatter: function(val) {
-            return 'fa ' + val;
-        },
         input: 'input,.icp-auto',
         inputSearch: false,
         container: false,
-        component: '.input-group-addon,.iconpicker-component',
         templates: {
             popover: '<div class="iconpicker-popover popover"><div class="arrow"></div>' +
                 '<div class="popover-title"></div><div class="popover-content"></div></div>',
@@ -341,6 +335,16 @@
             $('.icp-auto').iconpicker(options_iconpicker);
             $('#standard_modal').modal('show');
         });
+    });
+
+    $(document).on('click', '.submitSaveSocialForm', function(e) {
+        e.preventDefault();
+        var form = document.getElementById('save_social_media');
+        var formData = new FormData(form);
+        var url = "{{route('socialMedia.store')}}";
+
+        saveData(formData, 'edit', url);
+
     });
 </script>
 <script type="text/javascript">
