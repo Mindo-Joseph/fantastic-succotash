@@ -2131,6 +2131,20 @@ td.product-name,.vendor-name {
         flex: 0 0 20%;
         max-width: 20%;
     }
+    .style-cols .col-xl-6 {
+        flex: 0 0 70%;
+        max-width: 70%;
+    }
+    .style-cols .col-xl-3 {
+        flex: 0 0 30%;
+        max-width: 30%;
+    }
+}
+@media(min-width:1600px){
+    .style-cols .col-xl-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
 }
 
 
