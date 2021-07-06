@@ -196,7 +196,7 @@ class VendorController extends BaseController
             ];
         }
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
-            ->where('id', '>', '1')
+            ->with('translation_one')->where('id', '>', '1')
             ->where(function ($q) use ($id) {
                 $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
             })->orderBy('position', 'asc')->orderBy('id', 'asc')->orderBy('parent_id', 'asc')->get();

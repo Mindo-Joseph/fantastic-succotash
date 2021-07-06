@@ -64,14 +64,9 @@
                                     <th>Offers</th>
                                     <th class="text-center">Can Add <br> Category</th>
                                     <th class="text-center">Commission <br> Percentage</th>
-                                    <!-- <th>Commission <br> Fixed per Order</th>
-                                    <th>Commission <br> Monthly</th> -->
                                     <th class="text-center">Products</th>
                                     <th class="text-center">Orders</th>
                                     <th class="text-center">Active <br> Orders</th>
-                                    <th class="text-center"></th>
-                                    <!-- <th>Latitude</th>
-                                    <th>Longitude</th> -->
                                     <th class="text-center">Action</th>
                                 </tr>
                             </thead>
@@ -111,14 +106,9 @@
                                         </td>
                                         <td class="text-center">{{($vendor->add_category == 0) ? 'No' : 'Yes' }}</td>
                                         <td class="text-center">{{$vendor->commission_percent }}</td>
-                                        <!-- <td>{{$vendor->commission_fixed_per_order}}</td>
-                                        <td>{{$vendor->commission_monthly }}</td> -->
                                         <td class="text-center">{{$vendor->products_count}}</td>
                                         <td class="text-center">{{$vendor->orders_count}}</td>
                                         <td class="text-center">{{$vendor->active_orders_count}}</td>
-                                        <td class="text-center"> </td>
-                                        <!-- <td> {{ $vendor->latitude }} </td>
-                                        <td> {{ $vendor->longitude }}</td> -->
                                         <td class="text-center"> 
                                             <div class="form-ul">
                                                 <div class="inner-div d-inline-block">
@@ -145,22 +135,17 @@
                         </table>
                     </div>
                     <div class="pagination pagination-rounded justify-content-end mb-0">
-                        {{-- $banners->links() --}}
                     </div>
-                </div> <!-- end card-body-->
-            </div> <!-- end card-->
+                </div>
+            </div>
         </div> 
-
         <div class="row address" id="def" style="display: none;">
             <input type="text" id="def-address" name="test" class="autocomplete form-control def_address">
-        </div><!-- end col -->
+        </div>
     </div>
 </div>
 @include('backend.vendor.modals')
 @endsection
-
 @section('script')
-
 @include('backend.vendor.pagescript')
-
 @endsection
