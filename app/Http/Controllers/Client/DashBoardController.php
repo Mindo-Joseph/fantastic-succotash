@@ -188,9 +188,9 @@ class DashBoardController extends BaseController
                 $category = Category::with('english')->where('id', $product->category_id)->first();
                 if ($category) {
                     if (array_key_exists($category->slug, $categories)) {
-                        $categories[Str::limit($category->english->name, 10, '..')] += 1;
+                        $categories[Str::limit($category->english->name, 5, '..')] += 1;
                     } else {
-                        $categories[Str::limit($category->english->name, 10, '..')] = 1;
+                        $categories[Str::limit($category->english->name, 5, '..')] = 1;
                     }
                 }
             }
