@@ -1,20 +1,13 @@
 @extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Vendor'])
-
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
-
 <style type="text/css">
     .pac-container, .pac-container .pac-item { z-index: 99999 !important; }
 </style>
 @endsection
-
 @section('content')
-
-<!-- Start Content-->
 <div class="container-fluid">
-
-    <!-- start page title -->
     <div class="row align-items-center">
         <div class="col-sm-6">
             <div class="page-title-box">
@@ -30,7 +23,52 @@
             </button>
         </div>
     </div>
-    <!-- end page title -->
+    <div class="row">
+            <div class="col-12">
+                <div class="card widget-inline">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
+                                <div class="text-center">
+                                    <h3>
+                                        <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
+                                        <span data-plugin="counterup" id="total_earnings_by_vendors">{{$total_vendor_count}}</span>
+                                    </h3>
+                                    <p class="text-muted font-15 mb-0">Total Vendors</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
+                                <div class="text-center">
+                                    <h3>
+                                        <i class="mdi mdi-cart-arrow-up text-primary mdi-24px"></i>
+                                        <span data-plugin="counterup" id="total_order_count">{{$available_vendors_count}}</span>
+                                    </h3>
+                                    <p class="text-muted font-15 mb-0">Available Vendors</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
+                                <div class="text-center">
+                                    <h3>
+                                        <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
+                                        <span data-plugin="counterup" id="total_cash_to_collected">{{$vendors_product_count}}</span>
+                                    </h3>
+                                    <p class="text-muted font-15 mb-0">Total Products</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
+                                <div class="text-center">
+                                    <h3>
+                                        <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
+                                        <span data-plugin="counterup" id="total_delivery_fees">{{$vendors_active_order_count}}</span>
+                                    </h3>
+                                    <p class="text-muted font-15 mb-0">Total Active Orders</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -51,7 +89,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="table-responsive">
                         <form name="saveOrder" id="saveOrder"> @csrf </form>
                         <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
@@ -133,8 +170,6 @@
                                @endforeach
                             </tbody>
                         </table>
-                    </div>
-                    <div class="pagination pagination-rounded justify-content-end mb-0">
                     </div>
                 </div>
             </div>
