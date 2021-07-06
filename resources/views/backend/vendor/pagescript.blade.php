@@ -346,6 +346,12 @@ $(".openAddonModal").click(function (e) {
         backdrop: 'static',
         keyboard: false
     });
+    var slider = $("#slider-range").data("ionRangeSlider");
+    var from = slider.result.from;
+    var to = $('#banner-datatable >tbody >tr.input_tr').length;
+    slider.update({
+        grid: false,
+    });
 });
 $(document).on('click', '.addOptionRow-Add',function (e) {
     var $tr = $('.optionTableAdd tbody>tr:first').next('tr');
@@ -369,11 +375,7 @@ $(document).on('click', '.addOptionRow-edit',function (e) {
     $clone.find(':hidden').val('');
     $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>');
     $('.optionTableEdit').append($clone);
-    // var max_value = $( "#slider-range" ).slider( "option", "max") +1;
-    // $("#slider-range").slider( "option", "max", max_value);
-    // var edit_add_on_max_value = $("#editdAddonmodal #slider-range").slider( "option", "max") +1;
-    // $("#editdAddonmodal #slider-range" ).slider( "option", "max", edit_add_on_max_value);
-    var slider = $("#slider-range").data("ionRangeSlider");
+    var slider = $("#slider-range1").data("ionRangeSlider");
     var from = slider.result.from;
     var to = $('#edit_addon-datatable >tbody >tr.input_tr').length;
     slider.update({
@@ -383,10 +385,24 @@ $(document).on('click', '.addOptionRow-edit',function (e) {
 });
 $("#addAddonmodal").on('click', '.deleteCurRow', function () {
     $(this).closest('tr').remove();
+    var slider = $("#slider-range").data("ionRangeSlider");
+    var from = slider.result.from;
+    var to = $('#banner-datatable >tbody >tr.input_tr').length;
+    slider.update({
+        min: from,
+        max: to,
+    });
 });
 
 $("#editdAddonmodal").on('click', '.deleteCurRow', function () {
     $(this).closest('tr').remove();
+    var slider = $("#slider-range1").data("ionRangeSlider");
+    var from = slider.result.from;
+    var to = $('#edit_addon-datatable >tbody >tr.input_tr').length;
+    slider.update({
+        min: from,
+        max: to,
+    });
 });
 
 $(document).on('click', '.deleteAddon', function(){
@@ -422,10 +438,10 @@ $('.editAddonBtn').on('click', function(e) {
             document.getElementById('editAddonForm').action = data.submitUrl;
             setTimeout(function(){
                 var max = $('#edit_addon-datatable >tbody >tr.input_tr').length;
-                var $d4 = $("#editAddonForm #slider-range");
+                var $d4 = $("#editAddonForm #slider-range1");
                 $d4.ionRangeSlider({ 
                     type: "double", 
-                    grid: !0, 
+                    grid: false, 
                     min: 0, 
                     max: max,
                     from: data.min_select,
