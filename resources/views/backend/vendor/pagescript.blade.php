@@ -370,7 +370,9 @@ $(document).on('click', '.addOptionRow-edit',function (e) {
     $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>');
     $('.optionTableEdit').append($clone);
     var max_value = $( "#slider-range" ).slider( "option", "max") +1;
-    $( "#slider-range" ).slider( "option", "max", max_value);
+    $("#slider-range").slider( "option", "max", max_value);
+    var edit_add_on_max_value = $("#editdAddonmodal #slider-range").slider( "option", "max") +1;
+    $("#editdAddonmodal #slider-range" ).slider( "option", "max", edit_add_on_max_value);
 });
 $("#addAddonmodal").on('click', '.deleteCurRow', function () {
     $(this).closest('tr').remove();

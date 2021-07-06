@@ -171,35 +171,13 @@ $timezone = Auth::user()->timezone;
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4 mb-3">
+            <div class="col-lg-6 mb-3">
                 <div class="card mb-0 h-100">
                     <div class="card-body">
                         <h4 class="header-title mb-3">Shipping Information</h4>
                         <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
                         <p class="mb-2"><span class="fw-semibold me-2">Address:</span> {{ $order->address ? $order->address->address : ''}}</p>
                         <p class="mb-0"><span class="fw-semibold me-2">Mobile:</span> {{$order->user->phone_number}}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-8 mb-3">
-                <div class="card mb-0 h-100">
-                    <div class="card-body">
-                        <h4 class="header-title mb-3">Delivery Info</h4>
-                        <div class="text-center">
-                            <i class="mdi mdi-truck-fast h2 text-muted"></i>
-                            <h5><b>UPS Delivery</b></h5>
-                            <p class="mb-1"><span class="fw-semibold">Order ID :</span> #{{$order->order_number}}</p>
-                            @if($order->payment_option_id == 1)
-                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Cash On Delivery</p>
-                            @elseif($order->payment_option_id == 3)
-                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Paypal </p>
-                            @elseif($order->payment_option_id == 4)
-                            <p class="mb-0"><span class="fw-semibold">Payment Mode :</span> Stripe</p>
-                            @endif
-                        </div>
-                        <div class="text-center mt-2">
-                            <a href="javascript::void(0);" class="btn btn-primary" id="delivery_info_button">Delivery Info</a>
-                        </div>
                     </div>
                 </div>
             </div>

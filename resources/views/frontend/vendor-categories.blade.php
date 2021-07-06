@@ -197,12 +197,12 @@
                                                 <div class="col-xl-3 col-6 col-grid-box">
                                                     <div class="product-box">
                                                         <div class="img-wrapper">
-                                                            <a href="{{route('categoryDetail', $cate['slug'])}}">
+                                                            <a href="{{ route('vendorCategoryProducts', [$vendor->slug, $cate['slug']]) }}">
                                                                 <div class="category-image "><img alt="" src="{{$cate['icon']['proxy_url'] . '300/300' . $cate['icon']['image_path']}}" ></div>
                                                             </a>
                                                         </div>
                                                         <div class="product-detail">
-                                                            <a href="{{route('categoryDetail', $cate['slug'])}}">
+                                                            <a href="{{ route('vendorCategoryProducts', [$vendor->slug, $cate['slug']]) }}">
                                                                 <h5>{{$cate['translation'][0]['name']}}</h5>
                                                             </a>
                                                         </div>

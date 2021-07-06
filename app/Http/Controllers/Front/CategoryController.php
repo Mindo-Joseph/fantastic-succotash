@@ -130,9 +130,9 @@ class CategoryController extends FrontController
         }
         elseif(strtolower($type) == 'brand'){
             $brands = Brand::with('bc')
-                ->whereHas('bc',function($q) use($cid){
-                    $q->where('category_id', $cid);
-                })
+                // ->whereHas('bc',function($q) use($cid){
+                //     $q->where('category_id', $cid);
+                // })
                 ->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->paginate($pagiNate);
             foreach ($brands as $brand) {
                 $brand->redirect_url = route('brandDetail', $brand->id);

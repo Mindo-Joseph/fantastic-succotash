@@ -26,7 +26,7 @@
 </section>
 <script type="text/template" id="vendors_template">
     <% _.each(vendors, function(vendor, k){%>
-        <div class="product-box">
+        <div class="product-box scale-effect">
             <div class="img-wrapper">
                 <div class="front">
                     <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
