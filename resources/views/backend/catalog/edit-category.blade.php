@@ -77,7 +77,11 @@
                     <div class="col-md-6" style="{{($category->type_id != 2) ? 'display:none;' : ''}}" id="editDispatcherHide">
                         <div class="form-group mb-0">
                             {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
-                            {!! Form::hidden('tags', implode(',', $tagList), ['class'=>'form-control myTag1']) !!}
+                            <select class="selectize-select1 form-control"  name="tags">
+                                @foreach($agent_dispatcher_tags as $key => $tags)
+                                        <option value="{{ $tags['name'] }}" @if(@$category->categoryTag->tag  == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
+                                @endforeach
+                            </select>
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
                             </span>

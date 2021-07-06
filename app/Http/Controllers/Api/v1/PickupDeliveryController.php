@@ -88,11 +88,11 @@ class PickupDeliveryController extends BaseController{
                 if ($dispatch_domain && $dispatch_domain != false) {
                             $all_location = array();
                             $postdata =  ['locations' => $request->locations];
-                            $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
-                                                        'shortcode' => $dispatch_domain->delivery_service_key_code,
+                            $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,
+                                                        'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,
                                                         'content-type' => 'application/json']
                                                             ]);
-                            $url = $dispatch_domain->delivery_service_key_url;                      
+                            $url = $dispatch_domain->pickup_delivery_service_key_url;                      
                             $res = $client->post($url.'/api/get-delivery-fee',
                                 ['form_params' => ($postdata)]
                             );
