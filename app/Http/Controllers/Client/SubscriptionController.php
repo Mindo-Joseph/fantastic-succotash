@@ -57,7 +57,7 @@ class SubscriptionController extends BaseController
     public function saveUserSubscription(Request $request, $domain = '')
     {
         $rules = array(
-            'title' => 'required|string|max:50',
+            'title' => 'required|string|max:50|unique:user_subscriptions',
             'features' => 'required',
             'price' => 'required',
             'validity' => 'required'
@@ -99,7 +99,7 @@ class SubscriptionController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function editUserSubscription(Request $request, $domain = '')
+    public function editUserSubscription(Request $request, $domain = '', $slug='')
     {
         dd($request->all());
     }
@@ -110,7 +110,7 @@ class SubscriptionController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function updateUserSubscription(Request $request, $domain = '')
+    public function updateUserSubscription(Request $request, $domain = '', $slug='')
     {
         dd($request->all());
     }
