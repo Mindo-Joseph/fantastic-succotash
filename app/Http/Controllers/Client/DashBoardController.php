@@ -185,12 +185,12 @@ class DashBoardController extends BaseController
         $categories = array();
         foreach ($orders as $order) {
             foreach ($order->products as $product) {
-                $category = Category::where('id', $product->category_id)->first();
+                $category = Category::with('english')->where('id', $product->category_id)->first();
                 if ($category) {
                     if (array_key_exists($category->slug, $categories)) {
-                        $categories[$category->slug] += 1;
+                        $categories[$category->english->name] += 1;
                     } else {
-                        $categories[$category->slug] = 1;
+                        $categories[$category->english->name] = 1;
                     }
                 }
             }
