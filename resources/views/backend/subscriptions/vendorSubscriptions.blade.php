@@ -116,7 +116,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group" id="nameInput">
                                         {!! Form::label('title', 'Title',['class' => 'control-label']) !!} 
-                                        {!! Form::text('name', null, ['class'=>'form-control']) !!}
+                                        {!! Form::text('title', null, ['class'=>'form-control']) !!}
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
