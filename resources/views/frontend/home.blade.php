@@ -84,6 +84,52 @@
     <% }); %>
 </script>
 
+<section class="home-tabbar">
+   <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-lg-12 tab-product pt-0">
+                <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pending_order-tab" data-toggle="tab" href="#pending_orders" role="tab" aria-selected="false" data-rel="pending_orders">
+                            <i class="icofont icofont-man-in-glasses"></i>Pending Orders
+                        </a>
+                        <div class="material-border"></div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="active_orders_tab" data-toggle="tab"
+                            href="#active_orders" role="tab" aria-selected="true" data-rel="active_orders">
+                            <i class="icofont icofont-ui-home"></i>Active Orders
+                        </a>
+                        <div class="material-border"></div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="orders_history_tab" data-toggle="tab" href="#orders_history" role="tab" aria-selected="false" data-rel="orders_history">
+                            <i class="icofont icofont-man-in-glasses"></i>Orders History
+                        </a>
+                        <div class="material-border"></div>
+                    </li>
+                </ul>
+                <div class="tab-content nav-material" id="top-tabContent">
+                    <div class="tab-pane fade past-order show active" id="pending_orders" role="tabpanel"
+                        aria-labelledby="pending_order-tab">
+                        First 
+                    </div>
+
+                    <div class="tab-pane fade" id="active_orders" role="tabpanel"
+                        aria-labelledby="active_orders_tab">
+                        2nd
+                    </div>
+
+                    <div class="tab-pane fade past-order" id="orders_history" role="tabpanel"
+                        aria-labelledby="orders_history_tab"><div class="error-msg">
+                        3rd
+                    </div>
+                </div>
+            </div>
+        </div>   
+   </div>
+</section>
+
 <section class="section-b-space p-t-0 pt-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
     <div class="container">
         <div class="row">

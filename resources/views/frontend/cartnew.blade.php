@@ -53,10 +53,10 @@
     <% _.each(cart_details.products, function(product, key){%>
         <thead>
             <tr>
-                <th colspan="3" style="background-color: #f3f7f9">
+                <th colspan="3">
                     <%= product.vendor.name %>
                 </th>
-                <th colspan="4" style="background-color: #f3f7f9">
+                <th colspan="4">
                     <div class="countdownholder alert-danger" id="min_order_validation_error_<%= product.vendor.id %>" style="display:none;">Your cart will be expired in
                 </th>
             </tr>
@@ -87,7 +87,7 @@
                             <span class="minus qty-minus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                                 <i class="fa fa-minus" aria-hidden="true"></i>
                             </span>
-                            <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="number" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>">
+                            <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>">
                             <span class="plus qty-plus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                             </span>

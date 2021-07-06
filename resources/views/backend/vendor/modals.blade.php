@@ -32,8 +32,68 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="form-group" id="descInput">
+                                        {!! Form::label('title', 'Description',['class' => 'control-label']) !!} 
+                                        {!! Form::textarea('desc', null, ['class' => 'form-control', 'rows' => '3']) !!}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="row mb-2" id="add">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="">Email</label>
+                                        <input class="form-control" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="">Phone Number</label>
+                                        <input class="form-control" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="">Website</label>
+                                        <input class="form-control" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                    <div class="col-md-4">
+                                    <div class="form-group">
+                                    @if($client_preferences->dinein_check == 1)
+                                        {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
+                                        <div class="mt-md-1">
+                                            <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                        </div>
+                                    @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                    @if($client_preferences->takeaway_check == 1)
+                                        {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
+                                        <div class="mt-md-1">
+                                            <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                        </div>
+                                    @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                    @if($client_preferences->delivery_check == 1)
+                                        {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
+                                        <div class="mt-md-1">
+                                            <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                        </div>
+                                    @endif
+                                    </div>
+                                </div>
+                                    </div>
+                                </div>
+                             </div>
+                            <div class="row" id="add">
                                 <div class="col-md-4">
                                     <div class="form-group mb-3" id="addressInput">
                                         {!! Form::label('title', 'Address',['class' => 'control-label']) !!} 
@@ -71,52 +131,7 @@
                                         @endif
                                     </div>
                                 </div>
-                             
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                    @if($client_preferences->dinein_check == 1)
-                                        {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
-                                        <div>
-                                            <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control validity" data-color="#43bee1" checked='checked'>
-                                        </div>
-                                    @endif
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                    @if($client_preferences->takeaway_check == 1)
-                                        {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
-                                        <div>
-                                            <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control validity" data-color="#43bee1" checked='checked'>
-                                        </div>
-                                    @endif
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                    @if($client_preferences->delivery_check == 1)
-                                        {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
-                                        <div>
-                                            <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control validity" data-color="#43bee1" checked='checked'>
-                                        </div>
-                                    @endif
-                                    </div>
-                                </div>
-                                <!-- <div class="col-md-3">
-                                    <div class="form-group">
-                                        {!! Form::label('title', 'Show Category',['class' => 'control-label']) !!} 
-                                        <div>
-                                            <input type="checkbox" data-plugin="switchery" name="is_show_category" class="form-control validity" data-color="#43bee1" checked='checked'>
-                                        </div>
-                                    </div>
-                                </div> -->
-                                <div class="col-md-12">
-                                    <div class="form-group" id="descInput">
-                                        {!! Form::label('title', 'Description',['class' => 'control-label']) !!} 
-                                        {!! Form::textarea('desc', null, ['class' => 'form-control', 'rows' => '3']) !!}
-                                    </div>
-                                </div>
-                            </div>
+                             </div>   
                         </div>
                     </div>
                 </div>
