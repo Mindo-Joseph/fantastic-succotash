@@ -1,5 +1,9 @@
 @extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Customize'])
 
+@section('css')
+<link href="https://itsjavi.com/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css" rel="stylesheet" type="text/css" />
+@endsection
+
 @section('content')
 
 <div class="container-fluid">
@@ -9,7 +13,7 @@
         <div class="col-12">
             <div class="page-title-box">
                 <h4 class="page-title">Customize</h4>
-                
+
             </div>
         </div>
     </div>
@@ -54,7 +58,7 @@
                             </span>
                             @endif
                         </div>
-                       
+
                     </div>
                 </div>
             </form>
@@ -177,7 +181,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-lg-4 col-lg-3 mb-3">
+        <div class="col-lg-3 col-lg-3 mb-3">
             <form method="POST" class="h-100" action="{{route('client.updateDomain', Auth::user()->code)}}">
                 @csrf
                 <div class="card-box mb-0 h-100">
@@ -205,8 +209,8 @@
                 </div>
             </form>
         </div>
-       
-        <div class="col-lg-4 col-lg-3 mb-3">
+
+        <div class="col-lg-3 col-lg-3 mb-3">
             <form method="POST" class="h-100" action="{{route('referandearn.update', Auth::user()->code)}}">
                 @csrf
                 <div class="card-box mb-0 h-100 pb-1">
@@ -226,20 +230,124 @@
             </form>
         </div>
 
+        <div class="col-lg-6 col-lg-3 mb-3">
+            <div class="card-box mb-0 h-100 pb-1">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h4 class="header-title mb-0">Social Media</h4>
+                    <button class="btn btn-info d-block" id="add_social_media_modal"> <i class="mdi mdi-plus-circle mr-1"></i>Add </button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Icon</th>
+                                        <th>Url</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="post_list">
+                                    <tr data-row-id="">
+                                        <td></td>
+                                        <td><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></td>
+                                        <td style="width:100px">
+                                            <p class="ellips">Second</p>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 
 </div> <!-- container -->
+
+<div id="standard_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="standard-modalLabel">Social Media</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="save_social_media" action="">
+                    @csrf
+                    <div class="form-group">
+                        <label for="">Icon</label>
+                        <input class="form-control icp icp-auto" name="icon" value="fas fa-anchor" type="text" />
+                    </div>
+                    <div class="form-group">
+                        <label for="">Url</label>
+                        <input class="form-control" name="url" type="text">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary submitSaveSocialForm">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('script')
 <script src="{{asset('assets/js/jscolor.js')}}"></script>
+<script src="https://itsjavi.com/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.js"></script>
 <script type="text/javascript">
-    /*function toggleDisplayCustomDomain(){
-    $("#custom_domain_name").toggle( 'fast', function(){ 
+    var options_iconpicker = {
+        title: false,
+        selected: false,
+        trigger: 'hover',
+        defaultValue: true,
+        placement: 'bottom',
+        collision: 'none',
+        trigger : 'hover',
+        animation: false,
+        hideOnSelect: false,
+        showFooter: false,
+        searchInFooter: false,
+        mustAccept: false,
+        selectedCustomClass: 'bg-primary',
+        input: 'input,.icp-auto',
+        inputSearch: false,
+        container: false,
+        templates: {
+            popover: '<div class="iconpicker-popover popover"><div class="arrow"></div>' +
+                '<div class="popover-title"></div><div class="popover-content"></div></div>',
+            footer: '<div class="popover-footer"></div>',
+            buttons: '<button class="iconpicker-btn iconpicker-btn-cancel btn btn-default btn-sm">Cancel</button>' +
+                ' <button class="iconpicker-btn iconpicker-btn-accept btn btn-primary btn-sm">Accept</button>',
+            search: '<input type="search" class="form-control iconpicker-search" placeholder="Type to filter" />',
+            iconpicker: '<div class="iconpicker"><div class="iconpicker-items"></div></div>',
+            iconpickerItem: '<a role="button" href="#" class="iconpicker-item"><i></i></a>',
+        }
+    };
+    $(document).ready(function() {
+        $(document).on("click", "#add_social_media_modal", function() {
+            $('.icp-auto').iconpicker(options_iconpicker);
+            $('#standard_modal').modal('show');
+        });
+    });
+
+    $(document).on('click', '.submitSaveSocialForm', function(e) {
+        e.preventDefault();
+        var form = document.getElementById('save_social_media');
+        var formData = new FormData(form);
+        var url = "{{route('socialMedia.store')}}";
+
+        saveData(formData, 'edit', url);
 
     });
-}*/
+</script>
+<script type="text/javascript">
     var options = {
         zIndex: 9999
     }

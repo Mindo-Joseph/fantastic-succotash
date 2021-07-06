@@ -193,10 +193,10 @@
                     <div class="collapse" id="sidebarsubscriptions">
                         <ul class="nav-second-level">
                             <li>
-                                <a href="{{route('subscriptions.user')}}">Customers</a>
+                                <a href="{{route('subscriptions.users')}}">Customers</a>
                             </li>
                             <li>
-                                <a href="{{route('subscriptions.vendor')}}">Vendors</a>
+                                <a href="{{route('subscriptions.vendors')}}">Vendors</a>
                             </li>
                         </ul>
                     </div>

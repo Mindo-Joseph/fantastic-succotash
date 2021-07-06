@@ -130,9 +130,13 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::resource('promocode', 'Client\PromocodeController');
     Route::resource('payoption', 'Client\PaymentOptionController');
     Route::post('updateAll', 'Client\PaymentOptionController@updateAll')->name('payoption.updateAll');
-    
-    Route::get('subscriptions/user', 'Client\SubscriptionController@userSubscriptions')->name('subscriptions.user');
-    Route::get('subscriptions/vendor', 'Client\SubscriptionController@vendorSubscriptions')->name('subscriptions.vendor');
+
+    Route::get('subscriptions/users', 'Client\SubscriptionController@userSubscriptions')->name('subscriptions.users');
+    Route::post('subscriptions/users/save', 'Client\SubscriptionController@saveUserSubscription')->name('subscriptions.saveUserSubscription');
+    Route::get('subscriptions/users/edit/{slug}', 'Client\SubscriptionController@editUserSubscription')->name('subscriptions.editUserSubscription');
+    Route::post('subscriptions/users/delete/{slug}', 'Client\SubscriptionController@deleteUserSubscription')->name('subscriptions.deleteUserSubscription');
+    Route::post('subscriptions/users/update/{slug}', 'Client\SubscriptionController@updateUserSubscription')->name('subscriptions.updateUserSubscription');
+    Route::get('subscriptions/vendors', 'Client\SubscriptionController@vendorSubscriptions')->name('subscriptions.vendors');
 });
 
 
