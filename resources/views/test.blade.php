@@ -53,7 +53,7 @@
                     </div>    
                 </div>
                 <div class="form-group">
-                    <label>Comments (Opitonal):</label>
+                    <label>Comments (Optional):</label>
                     <textarea class="form-control" name="" id="" cols="30" rows="10"></textarea>
                 </div>
                 <button class="btn btn-solid mt-3 ">Request</button>

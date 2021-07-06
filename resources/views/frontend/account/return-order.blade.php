@@ -66,7 +66,7 @@
                                 </tr>
                                 @endforeach  
                             @endforeach  
-                                <h2 >{{__('Choose files to share')}}</h2>
+                              
                                 <form id="return-upload-form" class="theme-form" action="javascript:void(0)" method="post" enctype="multipart/form-data">
                                         @csrf
                                     <input type="hidden" name="order_vendor_product_id" value="{{app('request')->input('return_ids')}}">
@@ -105,7 +105,7 @@
                                         </div>    
                                     </div>
                                     <div class="form-group">
-                                        <label>{{__('Comments (Opitonal)')}}:</label>
+                                        <label>{{__('Comments (Optional)')}}:</label>
                                         <textarea class="form-control" name="coments" id="comments" cols="20" rows="4"></textarea>
                                     </div>
                                     <span class="text-danger" id="error-msg"></span>
