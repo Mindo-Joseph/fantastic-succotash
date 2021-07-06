@@ -2,11 +2,11 @@ fontawesome-iconpicker
 ========================
 
 Font Awesome Icon Picker is a fully customizable plugin for Twitter Bootstrap,
-with a powerful base API, based on [bootstrap-popover-picker](https://farbelous.github.io/bootstrap-popover-picker/)
+with a powerful base API, based on [bootstrap-popover-picker](http://mjolnic.github.io/bootstrap-popover-picker/)
 
-You can use Font Awesome 5 or another font icon set of your choice (icon list is totally customizable).
+You can use Font Awesome or another font icon set of your choice (icons options and items are customizable)
 
-[View demos](https://farbelous.github.io/fontawesome-iconpicker/)
+[View demos](http://mjolnic.github.io/fontawesome-iconpicker/)
 
 ## Instantiation
 
@@ -49,13 +49,6 @@ In order of call:
 * iconpickerDestroy
 * iconpickerDestroyed
 
-```javascript
-// Bind iconpicker events to the element
-$('.my').on('iconpickerSelected', function(event){
-  /* event.iconpickerValue */
-});
-```
-
 ## Popover placement extensions
 
 This plugin comes with more placement options than the original Bootstrap Popover.
@@ -66,7 +59,7 @@ Here are all the possibilities in detail:
             F       7
             E       8
             D C B A 9
-
+            
     0.      inline (no placement, display as inline-block)
     1.      topLeftCorner
     2.      topLeft
@@ -89,7 +82,7 @@ Here are all the possibilities in detail:
 ## Available options
 
 ```javascript
-var options = {
+var opts = {
     title: false, // Popover title (optional) only if specified in the template
     selected: false, // use this value as the current item and ignore the original
     defaultValue: false, // use this value as the current item if input or element value is empty
@@ -102,24 +95,30 @@ var options = {
     searchInFooter: false, // If true, the search will be added to the footer instead of the title
     mustAccept: false, // only applicable when there's an iconpicker-btn-accept button in the popover footer
     selectedCustomClass: 'bg-primary', // Appends this class when to the selected item
-    icons: [], // list of icon objects [{title:String, searchTerms:String}]. By default, all Font Awesome icons are included.
-    fullClassFormatter: function(val) {
-        return 'fa ' + val;
-    },
-    input: 'input,.iconpicker-input', // children input selector
-    inputSearch: false, // use the input as a search box too?
+    icons: [], // list of icons (declared at the bottom of this script for maintainability)
+    iconBaseClass: 'fa', // you can customize class prefix and base name, so you can use other icon fonts like the default Bootstrap's
+    iconComponentBaseClass: 'fa fa-fw',
+    iconClassPrefix: 'fa-',
+    input: 'input', // children input selector
     container: false, //  Appends the popover to a specific element. If not set, the selected element or element parent is used
-    component: '.input-group-addon,.iconpicker-component', // children component jQuery selector or object, relative to the container element
+    component: '.input-group-addon', // children component jQuery selector or object, relative to the container element
     // Plugin templates:
     templates: {
         popover: '<div class="iconpicker-popover popover"><div class="arrow"></div>' +
-            '<div class="popover-title"></div><div class="popover-content"></div></div>',
+                '<div class="popover-title"></div><div class="popover-content"></div></div>',
         footer: '<div class="popover-footer"></div>',
         buttons: '<button class="iconpicker-btn iconpicker-btn-cancel btn btn-default btn-sm">Cancel</button>' +
-            ' <button class="iconpicker-btn iconpicker-btn-accept btn btn-primary btn-sm">Accept</button>',
+                ' <button class="iconpicker-btn iconpicker-btn-accept btn btn-primary btn-sm">Accept</button>',
         search: '<input type="search" class="form-control iconpicker-search" placeholder="Type to filter" />',
         iconpicker: '<div class="iconpicker"><div class="iconpicker-items"></div></div>',
-        iconpickerItem: '<a role="button" href="#" class="iconpicker-item"><i></i></a>',
+        iconpickerItem: '<div class="iconpicker-item"><i></i></div>',
     }
 };
 ```
+
+## TO-DO
+- [x] Support other icon fonts
+- [x] Fix: input marked as error when it is empty
+- [ ] Ability to use the user input as the filter instead of the popover input
+- [ ] Fix bottomRight position when using component mode (maybe the popover needs to be
+appended in other element, or use another 'to' in position plugin?)
