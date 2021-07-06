@@ -12,12 +12,37 @@
                 <p class="text-muted text-center mt-2 mb-0">Upload banner image</p>
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group" id="nameInput">
                     {!! Form::label('title', 'Name',['class' => 'control-label']) !!} 
                     {!! Form::text('name', $vendor->name, ['class'=>'form-control']) !!}
+                    <span class="invalid-feedback" role="alert">
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group" id="descInput">
+                    {!! Form::label('title', 'Description',['class' => 'control-label']) !!} 
+                    {!! Form::textarea('desc', $vendor->desc, ['class' => 'form-control', 'rows' => '3']) !!}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group" id="emailInput">
+                    <label for="">Email</label>
+                    {!! Form::text('email', $vendor->email, ['class'=>'form-control']) !!}
+                    <span class="invalid-feedback" role="alert">
+                        <strong></strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group" id="phone_noInput">
+                    <label for="">Phone Number</label>
+                    {!! Form::text('phone_no', $vendor->phone_no, ['class'=>'form-control']) !!}
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>
                     </span>
@@ -61,43 +86,40 @@
                     @endif
                 </div>
             </div>
-         
-            <div class="col-md-4">
-                <div class="form-group" @if($client_preferences->dinein_check == 0) style="display: none;" @endif >
-                    {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
-                    <div>
-                        <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control dine_in" data-color="#43bee1" @if($vendor->dine_in == 1) checked @endif>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group" @if($client_preferences->takeaway_check == 0) style="display: none;" @endif >
-                    {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
-                    <div>
-                        <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control takeaway" data-color="#43bee1" @if($vendor->takeaway == 1) checked @endif>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group" @if($client_preferences->delivery_check == 0) style="display: none;" @endif >
-                    {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
-                    <div>
-                        <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control delivery" data-color="#43bee1" @if($vendor->delivery == 1) checked @endif>
-                    </div>
-                </div>
-            </div>
-            <!-- <div class="col-md-3">
+        </div>
+        <div class="row">
+            <div class="col-md-6">
                 <div class="form-group">
-                    {!! Form::label('title', 'Show Category',['class' => 'control-label']) !!} 
-                    <div>
-                        <input type="checkbox" data-plugin="switchery" name="is_show_category" class="form-control categoryShow" data-color="#43bee1" @if($vendor->is_show_category == 1) checked @endif>
-                    </div>
+                    <label for="">Website</label>
+                    {!! Form::text('website', $vendor->website, ['class'=>'form-control']) !!}
                 </div>
-            </div> -->
-            <div class="col-md-12">
-                <div class="form-group" id="descInput">
-                    {!! Form::label('title', 'Description',['class' => 'control-label']) !!} 
-                    {!! Form::textarea('desc', $vendor->desc, ['class' => 'form-control', 'rows' => '3']) !!}
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group" @if($client_preferences->dinein_check == 0) style="display: none;" @endif >
+                            {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
+                            <div>
+                                <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control dine_in" data-color="#43bee1" @if($vendor->dine_in == 1) checked @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group" @if($client_preferences->takeaway_check == 0) style="display: none;" @endif >
+                            {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
+                            <div>
+                                <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control takeaway" data-color="#43bee1" @if($vendor->takeaway == 1) checked @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group" @if($client_preferences->delivery_check == 0) style="display: none;" @endif >
+                            {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
+                            <div>
+                                <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control delivery" data-color="#43bee1" @if($vendor->delivery == 1) checked @endif>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

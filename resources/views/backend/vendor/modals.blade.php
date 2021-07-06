@@ -21,7 +21,6 @@
                                     <p class="text-muted text-center mt-2 mb-0">Upload banner image</p>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group" id="nameInput">
@@ -41,7 +40,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group" id="emailInput">
                                         <label for="">Email</label>
                                         {!! Form::text('email', null, ['class'=>'form-control']) !!}
                                         <span class="invalid-feedback" role="alert">
@@ -50,15 +49,15 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group" id="phone_noInput">
                                         <label for="">Phone Number</label>
-                                        {!! Form::text('phone_no', null, ['class'=>'form-control']) !!}
+                                        {!! Form::tel('phone_no', null, ['class'=>'form-control']) !!}
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
                                     </div>
                                 </div>
-                             </div>
+                            </div>
                             <div class="row" id="add">
                                 <div class="col-md-4">
                                     <div class="form-group mb-3" id="addressInput">
@@ -150,7 +149,6 @@
         </div>
     </div>
 </div>
-
 <div id="import-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -216,9 +214,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-info waves-effect waves-light submitImportForm">Submit</button>
-                </div> -->
             </form>
         </div>
     </div>
@@ -260,18 +255,15 @@
                 <h4 class="modal-title">Edit Vendor</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-
             <form id="save_edit_banner_form" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-body" id="editCardBox">
                     
                 </div>
-
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info waves-effect waves-light submitEditForm">Submit</button>
                 </div>
-                
             </form>
         </div>
     </div>

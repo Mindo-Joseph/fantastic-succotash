@@ -58,13 +58,12 @@ class VendorController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $rules = array(
             'name' => 'required|string|max:150|unique:vendors',
             'address' => 'required',
-            'email' => 'required',
-            'phone_no' => 'required',
+            'email' => 'required|unique:vendors',
+            'phone_no' => 'required|numeric|between:9,11|unique:vendors'
         );
         $validation  = Validator::make($request->all(), $rules)->validate();
         $vendor = new Vendor();
@@ -84,8 +83,7 @@ class VendorController extends BaseController
      * @param  \App\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function save(Request $request, Vendor $vendor, $update = 'false')
-    {
+    public function save(Request $request, Vendor $vendor, $update = 'false'){
         $checks = array();
         foreach ($request->only('name', 'address', 'latitude', 'longitude', 'desc') as $key => $value) {
             $vendor->{$key} = $value;
@@ -93,22 +91,21 @@ class VendorController extends BaseController
         $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0;
         $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0;
         $vendor->delivery = ($request->has('delivery') && $request->delivery == 'on') ? 1 : 0;
-
         if ($update == 'false') {
             $vendor->logo = 'default/default_logo.png';
             $vendor->banner = 'default/default_image.png';
         }
-
         if ($request->hasFile('logo')) {    /* upload logo file */
             $file = $request->file('logo');
             $vendor->logo = Storage::disk('s3')->put('/vendor', $file, 'public');
         }
-
         if ($request->hasFile('banner')) {    /* upload logo file */
             $file = $request->file('banner');
             $vendor->banner = Storage::disk('s3')->put('/vendor', $file, 'public');
         }
-
+        $vendor->email = $request->email;
+        $vendor->website = $request->website;
+        $vendor->phone_no = $request->phone_no;
         $vendor->slug = Str::slug($request->name, "-");
         $vendor->save();
         return $vendor->id;
@@ -120,8 +117,7 @@ class VendorController extends BaseController
      * @param  \App\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function edit($domain = '', $id)
-    {
+    public function edit($domain = '', $id){
         $client_preferences = ClientPreference::first();
         $vendor = Vendor::where('id', $id)->first();
         $returnHTML = view('backend.vendor.form')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor])->render();
@@ -138,8 +134,10 @@ class VendorController extends BaseController
     public function update(Request $request, $domain = '', $id)
     {
         $rules = array(
-            'name' => 'required|string|max:150|unique:vendors,name,' . $id,
             'address' => 'required',
+            'email' => 'required|unique:vendors,email,'.$id,
+            'phone_no' => 'required|numeric|unique:vendors,phone_no,'.$id,
+            'name' => 'required|string|max:150|unique:vendors,name,' . $id,
         );
         //dd($request->all());
         $validation  = Validator::make($request->all(), $rules)->validate();
