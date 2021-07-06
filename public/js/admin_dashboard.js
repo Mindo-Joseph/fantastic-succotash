@@ -106,7 +106,7 @@ $(document).ready(function () {
                 series: response.orders,
                 labels: response.names,
                 chart: {
-                    width: 360,
+                    width: 350,
                     type: 'donut',
                 },
                 dataLabels: {
