@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use DB;
 use App;
 use Config;
 use Session;
@@ -28,19 +29,31 @@ class FrontController extends Controller
         $preferences = Session::get('preferences');
         $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
                         ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')->distinct('categories.id');
+        $status = $this->field_status;
         if($preferences){
             if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
                 $vendors = (Session::has('vendors')) ? Session::get('vendors') : array();
-                $categories = $categories->join('vendor_categories as vct', 'categories.id', 'vct.category_id')->whereIn('vct.vendor_id', $vendors)->where('vct.status', 1);
+                $categories = $categories->leftJoin('vendor_categories as vct', 'categories.id', 'vct.category_id')
+                            ->where(function($q1) use($vendors, $status, $lang_id) {
+                                $q1->whereIn('vct.vendor_id', $vendors)
+                                ->where('vct.status', 1)
+                                ->where('categories.id', '>', '1')
+                                ->where('categories.is_visible', 1)
+                                ->where('categories.status', '!=', $status)
+                                ->where('cts.language_id', $lang_id);
+                            });
             }
-        }
-        $categories = $categories->where('categories.id', '>', '1')
+        }        
+        $categories = $categories->orWhere(function($q2) use($status, $lang_id) {
+                        $q2->whereIn('categories.type_id', [4,5])
+                        ->where('categories.id', '>', '1')
                         ->where('categories.is_visible', 1)
-                        ->where('categories.status', '!=', $this->field_status)
-                        ->where('cts.language_id', $lang_id)
-                        ->orderBy('categories.position', 'asc')
-                        ->orderBy('categories.id', 'asc')
-                        ->orderBy('categories.parent_id', 'asc')->get();
+                        ->where('categories.status', '!=', $status)
+                        ->where('cts.language_id', $lang_id);
+                    })
+                    ->orderBy('categories.position', 'asc')
+                    ->orderBy('categories.id', 'asc')
+                    ->orderBy('categories.parent_id', 'asc')->get();
         if($categories){
             $categories = $this->buildTree($categories->toArray());
         }
@@ -78,7 +91,8 @@ class FrontController extends Controller
                     if($where !== ''){
             $products = $products->where($where, 1);
         }
-        if(is_array($venderIds) && count($venderIds) > 0){
+        // if(is_array($venderIds) && count($venderIds) > 0){
+        if(is_array($venderIds)){
             $products = $products->whereIn('vendor_id', $venderIds);
         }
         $products = $products->where('is_live', 1)->take(6)->get();

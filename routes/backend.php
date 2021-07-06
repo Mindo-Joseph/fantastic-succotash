@@ -119,6 +119,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('loyalty/changeStatus', 'Client\LoyaltyController@changeStatus')->name('loyalty.changeStatus');
     Route::post('loyalty/getRedeemPoints', 'Client\LoyaltyController@getRedeemPoints')->name('loyalty.getRedeemPoints');
     Route::post('loyalty/setRedeemPoints', 'Client\LoyaltyController@setRedeemPoints')->name('loyalty.setRedeemPoints');
+    Route::post('loyalty/setLoyaltyCheck', 'Client\LoyaltyController@setLoyaltyCheck')->name('loyalty.setLoyaltyCheck');
     Route::resource('celebrity', 'Client\CelebrityController');
     Route::post('celebrity/changeStatus', 'Client\CelebrityController@changeStatus')->name('celebrity.changeStatus');
     Route::post('celebrity/getBrands', 'Client\CelebrityController@getBrandList')->name('celebrity.getBrands');

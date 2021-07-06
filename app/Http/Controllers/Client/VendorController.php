@@ -159,6 +159,7 @@ class VendorController extends BaseController
         $active = array();
         $categoryToggle = array();
         $vendor = Vendor::findOrFail($id);
+        $client_preferences = ClientPreference::first();
         $co_ordinates = $all_coordinates = array();
         $areas = ServiceArea::where('vendor_id', $id)->orderBy('created_at', 'DESC')->get();
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
@@ -195,7 +196,7 @@ class VendorController extends BaseController
             ];
         }
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
-            ->where('id', '>', '1')
+            ->with('translation_one')->where('id', '>', '1')
             ->where(function ($q) use ($id) {
                 $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
             })->orderBy('position', 'asc')->orderBy('id', 'asc')->orderBy('parent_id', 'asc')->get();
@@ -214,7 +215,7 @@ class VendorController extends BaseController
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend/vendor/show')->with(['vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes, 'builds' => $build]);
+        return view('backend/vendor/show')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes, 'builds' => $build]);
     }
 
     /**   show vendor page - category tab      */
@@ -286,7 +287,7 @@ class VendorController extends BaseController
             $v->select('id', 'product_id', 'quantity', 'price')->groupBy('product_id');
         }])->select('id', 'sku', 'vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
             ->where('vendor_id', $id)->get();
-        $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
+        $categories = Category::with('translation_one')->select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
             ->where('id', '>', '1')
             ->where(function ($q) use ($id) {
                 $q->whereNull('vendor_id')->orWhere('vendor_id', $id);

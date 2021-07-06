@@ -199,6 +199,16 @@
                     </select>
                 </div>
             </div>
+            <div class="col-md-6" style="{{($promo->restriction_on == 2) ? '' : 'display: none;'}}" id="categoriesList">
+                <div class="form-group">
+                    {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
+                    <select class="form-control select2-multiple" id="IncludeCategory" name="categoryList[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                        @foreach($categories as $category)
+                        <option value="{{$category->id}}" @if($promo->restriction_on == 2 && in_array($category->id, $dataIds)) selected @endif>{{$category->translation_one->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
 </div>

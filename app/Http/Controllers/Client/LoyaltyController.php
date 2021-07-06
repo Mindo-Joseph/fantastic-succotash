@@ -18,7 +18,8 @@ class LoyaltyController extends BaseController
     public function index()
     {
         $loyaltycards = LoyaltyCard::where('status', '!=', '2')->get();
-        return view('backend/loyality/index')->with(['loyaltycards' => $loyaltycards]);
+        $loyaltyCard = LoyaltyCard::firstOrFail();
+        return view('backend/loyality/index')->with(['loyaltycards' => $loyaltycards, 'status' => $loyaltyCard->loyalty_check]);
     }
 
     /**
@@ -163,6 +164,17 @@ class LoyaltyController extends BaseController
         }else {
             return response()->json(['symbol' => $currency->currency->symbol,'value' => $loyaltyCard->redeem_points_per_primary_currency]);
         }
+    }
+
+     /**
+     * Get the default value of Redeem Point
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function setLoyaltyCheck(Request $request)
+    {
+        $update = LoyaltyCard::where('id', '>', 0)->update(['loyalty_check' => $request->status]);
     }
 
     /**

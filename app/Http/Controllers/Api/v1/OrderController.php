@@ -273,6 +273,7 @@ class OrderController extends Controller {
                         
                         $order_vendor->coupon_id = $coupon_id;
                         $order_vendor->coupon_code = $coupon_name;
+                        $order_vendor->order_status_option_id = 1;
                         $order_vendor->subtotal_amount = $actual_amount;
                         $order_vendor->payable_amount = $vendor_payable_amount;
                         $order_vendor->taxable_amount = $vendor_taxable_amount;

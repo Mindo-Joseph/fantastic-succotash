@@ -34,7 +34,7 @@ class LoyaltyController extends Controller{
             $temp_arr = explode(' ', $month_picker_filter);
             $month_number =  getMonthNumber($temp_arr[0]);
         }
-        $orders_query = Order::with('user','paymentOption');
+        $orders_query = Order::with('user','paymentOption','loyaltyCard');
         if (!empty($request->get('date_filter'))) {
             $date_date_filter = explode('to', $request->get('date_filter'));
             $to_date = $date_date_filter[1];
@@ -43,7 +43,7 @@ class LoyaltyController extends Controller{
         }
         $orders = $orders_query->orderBy('id', 'desc')->get();
         foreach ($orders as $order) {
-            $order->loyalty_membership = '';
+            $order->loyalty_membership = $order->loyaltyCard ? $order->loyaltyCard->name : '';
             $order->loyalty_points_used = $order->loyalty_points_used ? $order->loyalty_points_used : '0.00';
             $order->created_date = convertDateTimeInTimeZone($order->created_at, $timezone, 'Y-m-d h:i:s A');
             $order->loyalty_points_earned = $order->loyalty_points_earned ? $order->loyalty_points_earned : '0.00';

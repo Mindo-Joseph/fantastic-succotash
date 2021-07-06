@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Category'])
+@extends('layouts.store', ['title' => (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug])
 
 @section('css')
 <style type="text/css">
@@ -215,7 +215,7 @@
                                     <div class="displayProducts">
                                         <div class="product-wrapper-grid">
                                             <div class="row margin-res">
-                                            @if(!empty($listData))
+                                            @if($listData->isNotEmpty())
                                                 @foreach($listData as $key => $data)
                                                     <?php $imagePath = $data->logo['proxy_url'] .'300/300'. $data->logo['image_path'];
                                                     $imagePath2 = $data->banner['proxy_url'] .'300/300'. $data->banner['image_path'];
@@ -243,6 +243,8 @@
                                                         </div>
                                                     </div>
                                                 @endforeach
+                                            @else
+                                                <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">Details Not Available</h5></div>
                                             @endif
                                             </div>
                                         </div>

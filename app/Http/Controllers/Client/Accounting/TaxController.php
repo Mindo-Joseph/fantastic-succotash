@@ -7,9 +7,9 @@ use App\Models\Order;
 use App\Models\OrderTax;
 use App\Models\LoyaltyCard;
 use Illuminate\Support\Str; 
+use App\Models\TaxCategory;
 use Illuminate\Http\Request;
 use App\Models\PaymentOption;
-use App\Models\TaxCategory;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,11 +17,10 @@ use App\Exports\OrderVendorTaxExport;
 
 class TaxController extends Controller{
 
-
     public function index(Request $request){
         $tax_category_options = TaxCategory::get();
         $total_tax_collected = Order::sum('taxable_amount');
-        $type_of_taxes_applied_count = OrderTax::count('tax_category_id');
+        $type_of_taxes_applied_count = OrderTax::distinct('tax_category_id')->count('tax_category_id');
         $payment_options = PaymentOption::where('status', 1)->get();
         return view('backend.accounting.tax', compact('total_tax_collected','payment_options','tax_category_options', 'type_of_taxes_applied_count'));
     }

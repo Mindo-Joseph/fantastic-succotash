@@ -20,47 +20,54 @@ class TypeSeeder extends Seeder
                 'id' => 1,
                 'sequence' => 2,
                 'title' => 'Product',
+                'image' => 'product.png',
                 'description' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
             ],
             [
                 'id' => 2,
                 'sequence' => 7,
-                'title' => 'Dispatcher',
+                'title' => 'Pickup/Parent',
+                'image' => 'dispatcher.png',
                 'description' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
             ],
             [
                 'id' => 3,
                 'sequence' => 3,
                 'title' => 'Vendor',
+                'image' => 'vendor.png',
                 'description' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
             ],
             [
                 'id' => 4,
                 'sequence' => 4,
                 'title' => 'Brand',
+                'image' => 'brand.png',
                 'description' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
             ],
             [
                 'id' => 5,
                 'sequence' => 6,
                 'title' => 'Celebrity',
+                'image' => 'celebrity.png',
                 'description' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
             ],
             [
                 'id' => 6,
                 'sequence' => 1,
                 'title' => 'Subcategory',
+                'image' => 'subcategory.png',
                 'description' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
             ],
             [
                 'id' => 7,
                 'sequence' => 6,
                 'title' => 'Pickup/Delivery',
+                'image' => 'dispatcher.png',
                 'description' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
             ],
         );
         foreach ($types as $type) {
-           Type::upsert($type, ['id', 'title','description', 'sequence']);
+           Type::upsert($type, ['id', 'title','description', 'sequence','image']);
         }
     }
 }

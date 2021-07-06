@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Category'])
+@extends('layouts.store', ['title' => !empty($new['translation']) && isset($new['translation'][0]) ? $new['translation'][0]['title'] : $new['sku']])
 
 @section('css')
 <style type="text/css">
@@ -224,7 +224,7 @@
                                         <div class="product-wrapper-grid">
                                             <div class="row margin-res">
 
-                                              @if(!empty($listData))
+                                              @if($listData->isNotEmpty())
                                                 @foreach($listData as $key => $data)
 
                                                 <?php $imagePath = $imagePath2 = '';
@@ -267,6 +267,8 @@
                                                     </div>
                                                 </div>
                                                 @endforeach
+                                              @else
+                                                <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">No Product Found</h5></div>
                                               @endif
                                             </div>
                                         </div>

@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'Loyalty', 'title' => 'Loyalty'])
+@extends('layouts.vertical', ['demo' => 'Loyalty', 'title' => 'Accounting - Loyality'])
 @section('css')
 <link href="{{asset('assets/libs/datatables/datatables.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
@@ -10,7 +10,7 @@
                 <div class="page-title-box">
                     <div class="page-title-right">
                     </div>
-                    <h4 class="page-title">Loyalty</h4>
+                    <h4 class="page-title">Loyality</h4>
                 </div>
             </div>
         </div>     
@@ -90,6 +90,11 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-danger waves-effect waves-light" id="clear_filter_btn_icon">
+                                            <i class="mdi mdi-close"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -126,6 +131,7 @@
                 'X-CSRF-TOKEN': $('input[name="_token"]').val()
             }
         });
+
         getOrderList();
         function getOrderList() {
             $(document).ready(function() {
@@ -135,6 +141,12 @@
                     onClose: function(selectedDates, dateStr, instance) {
                         initDataTable();
                     }
+                });
+                $("#clear_filter_btn_icon").click(function() {
+                    $('#range-datepicker').val('');
+                    $('#loyalty_select_box').val('');
+                    $('#payment_option_select_box').val('');
+                    initDataTable();
                 });
                 $("#loyalty_select_box, #payment_option_select_box").change(function() {
                     initDataTable();

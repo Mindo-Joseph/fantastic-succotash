@@ -24,7 +24,7 @@
                 <div class="row">
                     <div class="col-md-6">
                          <div class="form-group" id="slugInput">
-                            {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
+                            {!! Form::label('title', 'Url Slug',['class' => 'control-label']) !!} 
                             {!! Form::text('slug', null, ['class'=>'form-control', 'required' => 'required', 'onkeypress' => "return alphaNumeric(event)", 'id' => 'slug']) !!}
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
@@ -39,7 +39,7 @@
                             <select class="selectize-select form-control parent-category" id="cateSelectBox" name="parent_cate">
                                 <option value="">Select</option>
                                 @foreach($parCategory as $pc)
-                                    <option value="{{$pc->id}}">{{ucfirst($pc->slug)}}</option>
+                                    <option value="{{$pc->id}}">{{ucfirst($pc->translation_one['name'])}}</option>
                                 @endforeach
                             </select>
                             <span class="invalid-feedback" role="alert">
@@ -88,15 +88,17 @@
         <div class="row mt-3 add-category">
             @foreach($typeArray as $k => $type)
             <div class="col">
-                  <div class="card p-0 text-center" id="tooltip-container">
-                     <input class="form-check-input type-select" for="add" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
-                     <label for="type_id_{{$type->id}}" class="card-body p-0">
+                  <div class="card p-0 text-center select-category" id="tooltip-container">
+                     <input class="form-check-input type-select" for="add" type="radio" id="type_id_{{$type->id}}" {{$type->id == 1 ? 'checked=""' : " "}} name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
+                     <label for="type_id_{{$type->id}}" class="card-body p-0 mb-0">
                         <div class="category-img">
-                            <img src="https://www.w3schools.com/tags/img_girl.jpg" alt="">
+                            <img src="{{url('images/'.$type->image)}}" alt="">
                         </div>
-                        <div class="form-check form-check-info pl-0">
-                            <h5 for="customradio5">{{$type->title}}</h5>
-                            <p>{{$type->description}}</p>
+                        <div class="form-check form-check-info p-2">
+                            <h5 class="mt-0" for="customradio5">{{$type->title}}</h5>
+                            <div class="description-txt">
+                                <p class="m-0">{{$type->description}}</p>
+                            </div>
                         </div>
                      </label>
                   </div>
@@ -135,10 +137,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4" id="warning_page_design_main_div" style="display:none;">
-                {!! Form::label('title', 'Warning Page Design',['class' => 'control-label']) !!}
-                {!! Form::textarea('warning_page_design', '', ['class'=>'form-control', 'id' => 'warning_page_design', 'placeholder' => 'Description', 'rows' => '15', 'name' => 'warning_page_design']) !!}
-            </div>
+           
         </div>
         <div class="row">
             @foreach($languages as $langs)

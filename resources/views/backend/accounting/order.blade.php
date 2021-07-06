@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'Orders', 'title' => 'Orders Accounting'])
+@extends('layouts.vertical', ['demo' => 'Orders', 'title' => 'Accounting - Orders'])
 @section('css')
 <link href="{{asset('assets/libs/datatables/datatables.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
@@ -198,7 +198,9 @@
                             {data: 'admin_commission_percentage_amount', name: 'action', orderable: false, searchable: false},
                             {data: 'payable_amount', name: 'action', orderable: false, searchable: false},
                             {data: 'order_detail.payment_option.title', name: 'action', orderable: false, searchable: false},
-                            {data: 'order_status', name: 'order_status', orderable: false, searchable: false},
+                            {data: 'order_status', name: 'order_status', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
+                              return "<h5><span class='badge bg-success'>"+full.order_status+"</span></h5>";
+                            }},
                         ]
                     });
                 }

@@ -1,8 +1,7 @@
 @extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Vendor'])
-
 @section('css')
 <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
-
+<link href="{{asset('assets/libs/ion-rangeslider/ion-rangeslider.min.css')}}" rel="stylesheet" type="text/css" />
 <style type="text/css">
     .modal-lg {
         max-width: 70%;
@@ -32,11 +31,8 @@
     }
 </style>
 @endsection
-
 @section('content')
     <div class="container-fluid">
-
-        <!-- start page title -->
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
@@ -60,28 +56,10 @@
                 </div>
             </div>
         </div>
-        <!--<div class="row mb-1">
-            <div class="col-sm-12">
-                <div class="text-sm-left">
-                    @if (\Session::has('success'))
-                    <div class="alert alert-success">
-                        <span>{!! \Session::get('success') !!}</span>
-                    </div>
-                    @endif
-                    @if (\Session::has('error_delete'))
-                    <div class="alert alert-danger">
-                        <span>{!! \Session::get('error_delete') !!}</span>
-                    </div>
-                    @endif
-                </div>
-            </div>
-        </div> -->
-
         <div class="row ipad-view">
             <div class="col-lg-3 col-xl-3">
                 @include('backend.vendor.show-md-3')
             </div>
-
             <div class="col-lg-9 col-xl-9">
                 <div class="">
                     <ul class="nav nav-pills navtab-bg nav-justified">
@@ -103,12 +81,9 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} card-body" id="configuration">
-
-                        </div> <!-- end tab-pane -->
-                        <!-- end about me section content -->
+                        </div>
                         <div class="tab-pane {{($tab == 'category') ? 'active show' : '' }}" id="category">
                             <div class="row">
-                                
                                 <div class="col-xl-4">
                                     <div class="card-box">
                                         <div class="row" style="max-height: 600px; overflow-x: auto">
@@ -141,7 +116,8 @@
                                                 <h4 class="mb-4"> Addon Set</h4>
                                             </div>
                                             <div class="col-sm-4 text-right">
-                                                <button class="btn btn-info waves-effect waves-light text-sm-right openAddonModal" dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> Add 
+                                                <button class="btn btn-info waves-effect waves-light text-sm-right openAddonModal" dataid="0">
+                                                    <i class="mdi mdi-plus-circle mr-1"></i> Add 
                                                 </button>
                                             </div> 
                                             <div class="col-md-12">
@@ -194,15 +170,11 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-                        
-                        <div class="tab-pane {{($tab == 'catalog') ? 'active show' : '' }}" id="catalog">
-                            
+                        <div class="tab-pane {{($tab == 'catalog') ? 'active show' : '' }}" id="catalog">  
                         </div>
-                    </div> <!-- end tab-content -->
-                </div> <!-- end card-box-->
-
+                    </div>
+                </div>
             </div> 
         </div>
     </div>
@@ -220,7 +192,6 @@
                 <div class="modal-body" id="AddAddonBox">
                     <div class="row">
                         <div class="col-md-12">
-
                             <div class="row rowYK">
                                 <div class="col-md-12">
                                     <h5>Addon Title</h5>
@@ -243,7 +214,6 @@
                                     </table>
                                 </div>
                             </div>
-
                             <div class="row rowYK mb-2">
                                 <div class="col-md-12">
                                     <h5>Addon Options</h5>
@@ -257,9 +227,8 @@
                                             @endforeach
                                             <th></th>
                                         </tr>
-                                        <tr>
+                                        <tr class="input_tr">
                                             <td>{!! Form::text('price[]', null, ['class' => 'form-control', 'onkeypress' => 'return isNumberKey(event)', 'min' => '1', 'required' => 'required']) !!}</td>
-
                                             @foreach($languages as $k => $langs)
                                                 <td><input type="text" name="opt_value[{{$k}}][]" class="form-control" @if($langs->is_primary == 1) required @endif>
                                                 </td>
@@ -272,17 +241,9 @@
                                     <button type="button" class="btn btn-info waves-effect waves-light addOptionRow-Add">Add Option</button>
                                 </div>
                             </div>
-
                             <div class="row">
-                                <!-- <div class="col-12">
-                                    <div class="form-group">
-                                        <label for="formControlRange">Example Range input</label>
-                                        <input type="range" class="form-control-range" id="formControlRange">
-                                    </div>
-                                </div> -->
-                               
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group" style="display:none;">
                                         {!! Form::label('title', 'Min Select',['class' => 'control-label']) !!}
                                         {!! Form::text('min_select', 1, ['class' => 'form-control', 'id' => 'min', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                         <span class="invalid-feedback" role="alert">
@@ -291,7 +252,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group" style="display:none;">
                                         {!! Form::label('title', 'Max Select',['class' => 'control-label']) !!}
                                         {!! Form::text('max_select', 1, ['class' => 'form-control', 'id' => 'max', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                         <span class="invalid-feedback" role="alert">
@@ -300,9 +261,18 @@
                                     </div>
                                 </div>
                                 <div class="col-12 mb-2">
-                                    <div class="price-range-slider">  
+                                    <div class="price-range-slider"> 
+                                        {!! Form::label('title', 'Min & Max Range',['class' => 'control-label']) !!}:<input type="text" id="slider_output" readonly="" style="border:0; color:#f6931f; font-weight:bold;">
                                         <div id="slider-range" class="range-bar"></div>
                                     </div>
+                                    <div class="row slider-labels">
+                                        <div class="col-xs-6 caption">
+                                          <strong>Min:</strong> <span id="slider-range-value1"></span>
+                                        </div>
+                                        <div class="col-xs-6 text-right caption">
+                                          <strong>Max:</strong> <span id="slider-range-value2"></span>
+                                        </div>
+                                      </div>
                                 </div>
                                 <div class="col-md-12">
                                     <p>If max select is greater than total option than max will be total option</p>
@@ -310,7 +280,6 @@
                             </div>
                         </div>
                     </div>
-                    
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-info waves-effect waves-light addAddonSubmit">Submit</button>
@@ -319,7 +288,6 @@
         </div>
     </div>
 </div>
-
 <div id="editdAddonmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -340,7 +308,6 @@
         </div>
     </div>
 </div>
-
 <div id="add-category-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -351,9 +318,7 @@
             <form id="addCategoryForm" method="post" enctype="multipart/form-data">
                 @csrf
                 {!! Form::hidden('vendor_id', $vendor->id) !!}
-                <div class="modal-body" id="AddCategoryBox">
-                    
-                </div>
+                <div class="modal-body" id="AddCategoryBox"></div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-info waves-effect waves-light addCategorySubmit">Submit</button>
                 </div>
@@ -361,7 +326,6 @@
         </div>
     </div>
 </div>
-
 <div id="edit-category-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -369,15 +333,11 @@
                 <h4 class="modal-title">Edit Category</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-
             <form id="editCategoryForm" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 {!! Form::hidden('vendor_id', $vendor->id) !!}
-                <div class="modal-body" id="editCategoryBox">
-                    
-                </div>
-
+                <div class="modal-body" id="editCategoryBox"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info waves-effect waves-light editCategorySubmit">Submit</button>
                 </div>
@@ -385,23 +345,18 @@
         </div>
     </div>
 </div>
-
 @include('backend.vendor.modals')
-
 @endsection
-
 @section('script')
-    <script src="{{asset('assets/libs/nestable2/nestable2.min.js')}}"></script>
-    <script src="{{asset('assets/js/pages/my-nestable.init.js')}}"></script>
-    <script src="{{asset('assets/js/jscolor.js')}}"></script>
-    <link rel="stylesheet" href="{{ asset('assets/css/jquery.tagsinput-revisited.css') }}" />
-    <script src="{{ asset('assets/js/jquery.tagsinput-revisited.js') }}"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
+<script src="{{asset('assets/libs/nestable2/nestable2.min.js')}}"></script>
+<script src="{{asset('assets/js/pages/my-nestable.init.js')}}"></script>
+<script src="{{asset('assets/js/jscolor.js')}}"></script>
+<script src="{{asset('assets/libs/ion-rangeslider/ion-rangeslider.min.js')}}"></script>
+<link rel="stylesheet" href="{{ asset('assets/css/jquery.tagsinput-revisited.css') }}" />
+<script src="{{ asset('assets/js/jquery.tagsinput-revisited.js') }}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
 @include('backend.vendor.pagescript')
 @include('backend.common.category-script')
-
-
-
 <script type="text/javascript">
     var tagList = "";
     tagList = tagList.split(',');
@@ -414,29 +369,20 @@
         });
     }
 </script>
-
 <script>
-
 $(function() {
-	$( "#slider-range" ).slider({
-	  range: true,
-	  min: 0,
-	  max: 1000,
-	  values: [ 0, 1000 ],
-	  slide: function( event, ui ) {
-		// $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-		$( "#min" ).val( "$" + ui.values[ 0 ] );
-		$( "#max" ).val( "$" + ui.values[ 1 ] );
-	  }
-	});
-	// $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-	//   " - $" + $( "#slider-range" ).slider( "values", 1 ) );
-
-    $( "#min" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) );
-
-    $( "#max" ).val( "$" + $( "#slider-range" ).slider( "values", 1 ) );
+    var $d4 = $("#slider-range");
+    $d4.ionRangeSlider({ 
+        type: "double", 
+        grid: !0, 
+        min: 0, 
+        max: 1,
+    });
+    $d4.on("change", function () {
+        var $inp = $(this);
+        $("#min").val($inp.data("from"));
+        $("#max").val($inp.data("to"));
+    });
 });
 </script>
-
-
 @endsection

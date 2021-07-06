@@ -40,7 +40,7 @@ class CategoryController extends FrontController
         }])
         ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
         ->where('slug', $slug)->firstOrFail();
-        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) && (isset($category->type_id)) && ($category->type_id != 4) && ($category->type_id != 5) ){
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');
                 //remake child categories array
@@ -118,7 +118,7 @@ class CategoryController extends FrontController
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
         
         if(strtolower($type) == 'vendor'){
-            $vendorData = Vendor::select('vendors.id', 'name', 'logo', 'banner', 'order_pre_time', 'order_min_amount');
+            $vendorData = Vendor::select('vendors.id', 'name', 'slug', 'logo', 'banner', 'order_pre_time', 'order_min_amount');
             $vendorData = $vendorData->join('vendor_categories as vct', 'vct.vendor_id', 'vendors.id')->where('vct.category_id', $cid)->where('vct.status', 1);
             $preferences= Session::get('preferences');
             if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
@@ -130,9 +130,9 @@ class CategoryController extends FrontController
         }
         elseif(strtolower($type) == 'brand'){
             $brands = Brand::with('bc')
-                ->whereHas('bc',function($q) use($cid){
-                    $q->where('category_id', $cid);
-                })
+                // ->whereHas('bc',function($q) use($cid){
+                //     $q->where('category_id', $cid);
+                // })
                 ->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->paginate($pagiNate);
             foreach ($brands as $brand) {
                 $brand->redirect_url = route('brandDetail', $brand->id);

@@ -71,19 +71,19 @@
                                 {!! Form::label('title', 'Slot Type',['class' => 'control-label']) !!} 
                             </div>
                             @if($vendor->dine_in == 1)
-                                <div class="checkbox checkbox-success form-check-inline">
+                                <div class="checkbox checkbox-success form-check-inline"  @if($client_preferences->dinein_check == 0) style="display: none;" @endif>
                                     <input name="slot_type[]" type="checkbox" id="dine_in" checked value="dine_in">
                                     <label for="dine_in"> Dine in </label>
                                 </div>
                             @endif
                             @if($vendor->takeaway == 1)
-                                <div class="checkbox checkbox-success form-check-inline">
+                                <div class="checkbox checkbox-success form-check-inline"  @if($client_preferences->takeaway_check == 0) style="display: none;" @endif >
                                     <input name="slot_type[]" type="checkbox" id="takeaway" checked value="takeaway">
                                     <label for="takeaway"> Takeaway </label>
                                 </div>
                             @endif
                             @if($vendor->delivery == 1)
-                                <div class="checkbox checkbox-success form-check-inline">
+                                <div class="checkbox checkbox-success form-check-inline"  @if($client_preferences->delivery_check == 0) style="display: none;" @endif>
                                     <input name="slot_type[]" type="checkbox" id="delivery" checked value="delivery">
                                     <label for="delivery"> Delivery </label>
                                 </div>

@@ -987,7 +987,7 @@ form .btn{
 }
 
 .name_location {
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
     box-shadow: 0 4px 25px 0 rgb(138 129 124 / 3%);
     padding: 10px 16px 15px;
 }
@@ -1032,7 +1032,7 @@ form .btn{
 
 .dashboard-left .block-content ul li.active a,.dashboard-left .block-content ul li:hover a {
     border-color: #ff4c3b;
-    background: linear-gradient(270deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
+    background: linear-gradient(90deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
 }
 
 h1,h2,h3,h4,h5,h6{
@@ -1870,8 +1870,6 @@ div#test {
     margin-top: 15px;
     /* box-shadow: 0 1px 10px #ddd; */
     height: 200px;
-    display: flex;
-    align-items: center;
 }
 
 .product-box .img-wrapper img {
@@ -1967,7 +1965,6 @@ footer .form-control {
     font-size: 1.25rem;
     margin: 0;
     line-height: 75px;
-    color: #323a46;
     font-weight: 700;
     text-transform: uppercase;
 }
@@ -2620,6 +2617,7 @@ button.return-order-product {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 4px;
 }
 .review-box {
     background: #f8f8f8;
@@ -2655,6 +2653,70 @@ button.close {
     padding: 5px 10px 0 4px;
     text-align: right;
 }
+
+
+.dark .inner_spacing h3,.dark .page-title h3 {
+    color: #eaedef;
+}
+.dark .inner_spacing h4,.dark .product-title h4 {
+    color: #e7eaec;
+}
+.dark .product-detail h6,.dark .contact_link i {
+    color: #f1f3f5;
+}
+
+.dark .search_form button.btn.btn-solid{
+    border-radius: 0;
+}
+
+.dark .radio,.dark form label,.dark .price_box_bottom li, .dark .grand_total label, .dark .grand_total span,.dark .table thead th,.dark .table,
+.dark .card-box + h6 {
+    color: #cfd4da;
+}
+
+.dark .outer-box,.dark .dashboard-left .block-content,.dark .delivery_box{
+    background: transparent;
+}
+.dark .dashboard-left .block-content ul li.active a,.dark .dashboard-left .block-content ul li:hover a,.dark .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:hover a,.dark .category-list li:hover a {
+    border-color: #ff4c3b;
+    background: linear-gradient(
+90deg
+, rgb(85 68 69) 0%, rgba(251, 246, 247, 0) 92.47%);
+}
+
+.dark .card-box {
+    background-color: rgb(255 255 255 / 5%);
+}
+
+.dark .review-box {
+    background: rgb(248 248 248 / 5%);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2698,7 +2760,7 @@ button.close {
     .order_detail .modal-dialog{
         max-width: 700px;
     }
-    .refferal_modal .modal-dialog {
+    .refferal_modal .modal-dialog,.pick-address .modal-dialog {
         max-width: 1000px;
     }
     #proceed_to_pay_modal .modal-dialog,.return-order .modal-dialog {

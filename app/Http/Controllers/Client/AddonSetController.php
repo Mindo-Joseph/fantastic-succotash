@@ -80,7 +80,6 @@ class AddonSetController extends BaseController
     public function edit($domain = '', $id)
     {
         $addon = AddonSet::with('translation', 'option.translation')->where('id', $id)->firstOrFail();
-
         $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
                     ->where('is_active', 1)
                     ->orderBy('is_primary', 'desc')->get();
@@ -93,7 +92,7 @@ class AddonSetController extends BaseController
         //dd($addon->toArray());
 
         $returnHTML = view('backend.vendor.edit-addon')->with(['languages' => $langs, 'addon' => $addon])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML, 'submitUrl' => $submitUrl));
+        return response()->json(array('success' => true, 'min_select'=>$addon->min_select, 'max_select'=>$addon->max_select, 'html'=>$returnHTML, 'submitUrl' => $submitUrl));
     }
 
     /**

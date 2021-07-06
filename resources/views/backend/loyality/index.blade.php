@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Loyalty Cards'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Loyality Cards'])
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Loyalty cards</h4>
+                <h4 class="page-title">Loyality cards</h4>
             </div>
         </div>
     </div>
@@ -27,7 +27,7 @@
                     <div class="row align-items-center">
                         <div class="col-12">
                             <label class="mr-2 mb-0">Enable</label>
-                            <input type="checkbox" id="activeCheck" data-plugin="switchery" name="validity_index" class="chk_box" data-color="#43bee1">
+                            <input type="checkbox" id="activeCheck" {{$status == 0 ? 'checked' : ''}} data-plugin="switchery" name="validity_index" class="chk_box1" data-color="#43bee1">
 
                         </div>
                         <div class="col-12">

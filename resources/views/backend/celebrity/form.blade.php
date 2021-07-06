@@ -22,7 +22,7 @@
     <div class="col-md-6" id="slugInput">
         <div class="form-group">
             {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
-            {!! Form::text('slug', null, ['class'=>'form-control', 'required' => 'required', 'onkeypress' => "return alphaNumeric(event)", 'id' => 'slug']) !!}
+            {!! Form::text('slug', $lc->slug, ['class'=>'form-control', 'required' => 'required', 'onkeypress' => "return alphaNumeric(event)", 'id' => 'slug']) !!}
             <span class="invalid-feedback" role="alert">
                 <strong></strong>
             </span>
