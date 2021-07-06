@@ -230,15 +230,21 @@
                 $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
                 @endphp
                 @if(!empty($brity) && $brity->celebrity_check == 1)
-                @if(in_array('CELEBRITY',$allowed) || Auth::user()->is_superadmin == 1)
+                    @if(in_array('CELEBRITY',$allowed) || Auth::user()->is_superadmin == 1)
+                        <li>
+                            <a href="{{route('celebrity.index')}}">
+                                <span class="icon-celebrities_icon"></span>
+                                <span> Celebrities </span>
+                            </a>
+                        </li>
+                    @endif
+                @endif
                 <li>
-                    <a href="{{route('celebrity.index')}}">
-                        <span class="icon-celebrities_icon"></span>
-                        <span> Celebrities </span>
+                    <a href="{{route('social.media.index')}}">
+                        <span class="icon-vendor_icon"></span>
+                        <span> Social Media </span>
                     </a>
                 </li>
-                @endif
-                @endif
             </ul>
         </div>
         <div id="sidebar-menu" style="display: none;">

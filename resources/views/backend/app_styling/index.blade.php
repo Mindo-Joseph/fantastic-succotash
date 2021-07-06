@@ -89,7 +89,7 @@
                                     <div class="col-sm-12 custom-control custom-radio radio_new p-0">
                                         <input type="radio" {{$tab_style->is_selected == 1 ? 'checked' : ''}} onchange="submitTabBarForm(this.id)" value="{{$tab_style->id}}" id="{{$tab_style->id}}" name="tab_bars" class="custom-control-input tab_bar_options" }}>
                                         <label class="custom-control-label" for="{{$tab_style->id}}">
-                                            <img class="card-img-top img-fluid" src="{{$tab_style->image}}" alt="Card image cap">
+                                            <img class="card-img-top img-fluid" src="{{url('images/'.$tab_style->image)}}" alt="Card image cap">
                                         </label>
                                     </div>
                                 </div>
@@ -114,7 +114,7 @@
                                     <div class="col-sm-12 custom-control custom-radio radio_new p-0">
                                         <input type="radio" {{$homepage_style->is_selected == 1 ? 'checked' : ''}} value="{{$homepage_style->id}}" onchange="submitHomePageForm(this.id)" id="{{$homepage_style->id}}" name="home_styles" class="custom-control-input " }}>
                                         <label class="custom-control-label" for="{{$homepage_style->id}}">
-                                            <img class="card-img-top img-fluid" src="{{$homepage_style->image}}" alt="Card image cap">
+                                            <img class="card-img-top img-fluid" src="{{url('images/'.$homepage_style->image)}}" alt="Card image cap">
                                         </label>
                                     </div>
                                 </div>
