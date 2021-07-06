@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Http\Controllers\Client\BaseController;
-use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory};
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Traits\ToasterResponser;
-use App\Http\Traits\ApiResponser;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\VendorImport;
-use App\Models\UserVendor;
-use Redirect;
+use Image;
 use Phumbor;
 use Session;
-use Image;
+use Redirect;
 use Carbon\Carbon;
+use App\Models\UserVendor;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Imports\VendorImport;
+use App\Http\Traits\ApiResponser;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\ToasterResponser;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Client\BaseController;
+use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory};
 
 class VendorController extends BaseController
 {
@@ -29,8 +29,7 @@ class VendorController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $csvVendors = CsvVendorImport::all();
         $client_preferences = ClientPreference::first();
         $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->with('slot')->where('status', '!=', '2')->orderBy('id', 'desc');
@@ -40,14 +39,27 @@ class VendorController extends BaseController
             });
         }
         $vendors = $vendors->get();
+        $available_vendors_count = 0;
+        $vendors_product_count = 0;
+        $vendors_active_order_count = 0;
+        foreach ($vendors as $key => $vendor) {
+            $vendors_product_count += $vendor->products->count();
+            $vendors_active_order_count += $vendor->activeOrders->count();
+            if($vendor->show_slot == 1){
+                $available_vendors_count+=1;
+            }elseif ($vendor->slot->count() > 0) {
+                $available_vendors_count+=1;
+            }
+        }
+        $total_vendor_count = $vendors->count();
         if(count($vendors) == 1){
             if (Auth::user()->is_superadmin == 1) {
-                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors, 'client_preferences'=> $client_preferences]);
+                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors, 'client_preferences'=> $client_preferences, 'total_vendor_count' => $total_vendor_count, 'available_vendors_count' => $available_vendors_count, 'vendors_product_count' => $vendors_product_count, 'vendors_active_order_count' => $vendors_active_order_count]);
             }else{
                 return Redirect::route('vendor.show', $vendors->first()->id);
             }
         }else{
-            return view('backend/vendor/index')->with(['client_preferences' => $client_preferences, 'vendors' => $vendors, 'csvVendors' => $csvVendors]);
+            return view('backend/vendor/index')->with(['client_preferences' => $client_preferences, 'vendors' => $vendors, 'csvVendors' => $csvVendors, 'total_vendor_count' => $total_vendor_count, 'available_vendors_count' => $available_vendors_count, 'vendors_product_count' => $vendors_product_count, 'vendors_active_order_count' => $vendors_active_order_count]);
         }
 
     }

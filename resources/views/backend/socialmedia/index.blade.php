@@ -46,7 +46,7 @@
             </div>
         </div>
     </div>
-    <div id="standard-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+    <div id="standard_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -57,7 +57,7 @@
                     <form class="" action="">
                         <div class="form-group">
                             <label for="">Name</label>
-                            <input class="form-control" type="text">
+                             <input class="form-control icp icp-auto" value="fas fa-anchor" type="text"/>
                         </div>
                         <div class="form-group">
                             <label for="">Name</label>
@@ -76,11 +76,15 @@
         </div>
     </div>
 </div>
+@section('script')
+<link rel="stylesheet" type="text/css" href="{{asset('assets/libs/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.js')}}">
+@endsection
 <script type="text/javascript">
-    $( document ).ready(function() {
+    $(document ).ready(function() {
         $(document).on("click","#add_social_media_modal",function() {
-            $('#standard-modal').modal('show');
+            $('#standard_modal').modal('show');
         });
     });
 </script>
 @endsection
+
