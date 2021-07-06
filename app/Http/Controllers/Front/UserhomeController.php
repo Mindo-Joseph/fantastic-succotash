@@ -57,7 +57,8 @@ class UserhomeController extends FrontController
             pr($e->getCode());die;
         }
     }
-    public function postHomePageData(Request $request){
+    public function postHomePageData(Request $request, $domain="", $type = 'delivery'){
+        dd($type);
         $vendor_ids = [];
         $new_products = [];
         $feature_products = [];
@@ -82,7 +83,7 @@ class UserhomeController extends FrontController
         foreach ($brands as $brand) {
             $brand->redirect_url = route('brandDetail', $brand->id);
         }
-        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug');
+        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where('delivery', 1);
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                 $selectedAddress = $preferences->Default_location_name;
@@ -211,17 +212,20 @@ class UserhomeController extends FrontController
 
     public function vendorProducts($venderIds, $langId, $currency = 'USD', $where = '')
     {
-        $products = Product::with(['vendor','media' => function($q){
-                            $q->groupBy('product_id');
-                        }, 'media.image',
-                        'translation' => function($q) use($langId){
-                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
-                        },
-                        'variant' => function($q) use($langId){
-                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
-                            $q->groupBy('product_id');
-                        },
-                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating');
+        $products = Product::with(['vendor' => function($q){
+                                        $q->where('delivery', 1);
+                                    },
+                                    'media' => function($q){
+                                        $q->groupBy('product_id');
+                                    }, 'media.image',
+                                    'translation' => function($q) use($langId){
+                                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                                    },
+                                    'variant' => function($q) use($langId){
+                                        $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                                        $q->groupBy('product_id');
+                                    },
+                                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating');
         
                     if($where !== ''){
             $products = $products->where($where, 1);
