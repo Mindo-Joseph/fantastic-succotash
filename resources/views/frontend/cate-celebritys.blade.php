@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Category'])
+@extends('layouts.store', ['title' => (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug ])
 
 @section('css')
 <style type="text/css">
