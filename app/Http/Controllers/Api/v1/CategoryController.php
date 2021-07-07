@@ -96,8 +96,7 @@ class CategoryController extends BaseController
         elseif($type == 'product' || $type == 'Product'){
             $vendor_ids = Vendor::where('status', 1)->pluck('id')->toArray();
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
-            $products = Product::has('vendor')->join('product_categories as pc', 'pc.product_id', 'products.id')
-                    ->with(['category.categoryDetail','inwishlist' => function($qry) use($userid){
+            $products = Product::has('vendor')->with(['category.categoryDetail','inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
                     },
                     'media.image', 'translation' => function($q) use($langId){
@@ -107,9 +106,7 @@ class CategoryController extends BaseController
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                     },
-                    ])->whereHas('category', function($q1) use($category_id){
-                        $q1->where('category_id', $category_id);
-                    })->select('products.category_id','products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
+                    ])->select('products.category_id','products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
                     ->where('products.category_id', $category_id)->where('products.is_live', 1)->whereIn('vendor_id', $vendor_ids)->paginate($limit);
             if(!empty($products)){
                 foreach ($products as $key => $product) {
