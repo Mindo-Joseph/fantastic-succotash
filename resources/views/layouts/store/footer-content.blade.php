@@ -72,8 +72,8 @@
                                 @foreach($social_media_details as $social_media_detail)
                                 <li>
                                     <a href="{{$social_media_detail->url}}" target="_blank">
-                                        <i class="fa fa-facebook" aria-hidden="true"></i>
-                                    </a>{{$social_media_detail->icon}}
+                                        <i class="fa {{ substr(strstr($social_media_detail->icon,' '), 1) }}" aria-hidden="true"></i>
+                                    </a>
                                 </li>
                                 @endforeach
                             </ul>
