@@ -8,13 +8,11 @@
     .image-upload>input {
         display: none;
     }
-
     .product-img-box {
         width: 100%;
         height: 150px;
         border: 1px solid #ccc;
     }
-
     .product-img-box img {
         height: 100%;
         width: 100%;
@@ -75,12 +73,8 @@
     }
 </style>
 @endsection
-
 @section('content')
-
-<!-- Start Content-->
 <div class="container-fluid">
-
     <div class="row">
         <div class="col-8">
             <div class="page-title-box">
@@ -107,7 +101,6 @@
             </div>
         </div>
     </div>
-
     <form action="{{route('product.update', $product->id)}}" enctype="multipart/form-data" method="post" class="product_form">
         <div class="row">
             <div class="col-lg-7">
@@ -213,7 +206,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card-box">
                     <div class="row mb-2 bg-light">
                         <div class="col-8" style="margin:auto;">
@@ -226,7 +218,6 @@
                         @endif
                     </div>
                     <p>Select or change category to get variants</p>
-
                     @if(!empty($productVariants))
                     <div class="row" style="width:100%; overflow-x: scroll;">
                         <div id="variantAjaxDiv" class="col-12 mb-2">
@@ -325,11 +316,8 @@
                         @endif
                     </div>
                 </div>
-
-            </div> <!-- end col -->
-
+            </div>
             <div class="col-lg-5">
-
                 <div class="card-box">
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Other Information</h5>
                     <div class="row mb-2">
@@ -360,7 +348,6 @@
                             </div>
                         @endif
                     </div>
-
                     <div class="row">
                         <div class="col-sm-12 mb-2">
                             {!! Form::label('title', 'Live',['class' => 'control-label']) !!}

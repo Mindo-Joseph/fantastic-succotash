@@ -52,7 +52,6 @@ class CategoryController extends BaseController
                                 ->where('category_id', $cid);
                             })
                         ->groupBy('product_variant_sets.variant_type_id')->get();
-
             if(!$category){
                 return response()->json(['error' => 'No record found.'], 200);
             }
@@ -95,10 +94,9 @@ class CategoryController extends BaseController
             return $category_details;
         }
         elseif($type == 'product' || $type == 'Product'){
-            $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
             $vendor_ids = Vendor::where('status', 1)->pluck('id')->toArray();
-            $products = Product::has('vendor')->join('product_categories as pc', 'pc.product_id', 'products.id')
-                    ->with(['category.categoryDetail','inwishlist' => function($qry) use($userid){
+            $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+            $products = Product::has('vendor')->with(['category.categoryDetail','inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
                     },
                     'media.image', 'translation' => function($q) use($langId){
@@ -108,8 +106,8 @@ class CategoryController extends BaseController
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                     },
-                    ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('pc.category_id', $category_id)->where('products.is_live', 1)->whereIn('vendor_id', $vendor_ids)->paginate($limit);
+                    ])->select('products.category_id','products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
+                    ->where('products.category_id', $category_id)->where('products.is_live', 1)->whereIn('products.vendor_id', $vendor_ids)->paginate($limit);
             if(!empty($products)){
                 foreach ($products as $key => $product) {
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
