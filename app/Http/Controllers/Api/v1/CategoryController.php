@@ -109,7 +109,7 @@ class CategoryController extends BaseController
                     },
                     ])->whereHas('category', function($q1) use($category_id){
                         $q1->where('category_id', $category_id);
-                    })->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
+                    })->select('products.category_id','products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
                     ->where('category_id', $category_id)->where('products.is_live', 1)->whereIn('vendor_id', $vendor_ids)->paginate($limit);
             if(!empty($products)){
                 foreach ($products as $key => $product) {
