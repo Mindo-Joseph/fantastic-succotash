@@ -213,7 +213,7 @@ class ProductsImport implements ToCollection{
                     }
 
                     // insert product
-                    $category = CategoryTranslation::where('slug', $da[4])->first();
+                    $category = CategoryTranslation::where('name', $da[4])->first();
                     $product = Product::insertGetId([
                         'is_new' => 1,
                         'type_id' => 1,
