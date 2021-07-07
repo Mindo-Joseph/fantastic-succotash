@@ -255,20 +255,12 @@
                         </li>
                     @endif
                 @endif
-                <li>
-                    <a href="{{route('social.media.index')}}">
-                        <span class="icon-vendor_icon"></span>
-                        <span> Social Media </span>
-                    </a>
-                </li>
             </ul>
         </div>
         <div id="sidebar-menu" style="display: none;">
-
             <ul id="side-menu">
                 @if(env('APP_DEBUG'))
                 <li class="menu-title mt-5">Other Pages</li>
-
                 <li>
                     <a href="{{route('second', ['apps', 'calendar'])}}">
                         <i data-feather="calendar"></i>
