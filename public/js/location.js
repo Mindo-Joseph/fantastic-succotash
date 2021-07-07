@@ -8,12 +8,15 @@ $(document).ready(function() {
                 success: function(response) {
                     console.log(response.dinein_check);
                     if(response.delivery_check == 1){
+                        sessionStorage.setItem("type", "delivery");
                         getHomePage("", "", "delivery");
                     }
                     else if(response.dinein_check == 1){
+                        sessionStorage.setItem("type", "dine_in");
                         getHomePage("", "", "dine_in");
                     }
                     else{
+                        sessionStorage.setItem("type", "takeaway");
                         getHomePage("", "", "takeaway");
                     }
                 },

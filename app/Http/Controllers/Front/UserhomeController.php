@@ -105,7 +105,7 @@ class UserhomeController extends FrontController
                 });
             }
         }
-        $vendors = $vendors->where('status', '!=', $this->field_status)->get();
+        $vendors = $vendors->where('status', '!=', $this->field_status)->inRandomOrder()->get();
         foreach ($vendors as $key => $value) {
             $vendor_ids[] = $value->id;
         }

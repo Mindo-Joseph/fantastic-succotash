@@ -341,9 +341,9 @@
         e.preventDefault();
         var form = document.getElementById('save_social_media');
         var formData = new FormData(form);
-        var url = "{{route('socialMedia.store')}}";
+        // var url = "{{route('socialMedia.store')}}";
 
-        saveData(formData, 'edit', url);
+        // saveData(formData, 'edit', url);
 
     });
 </script>

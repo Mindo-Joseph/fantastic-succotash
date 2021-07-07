@@ -144,7 +144,7 @@
         <div class="row d-none" id="new_products_wrapper">
             <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                 <div class="title1">
-                    <h2 class="title-inner1 mb-0">New Products</h2>
+                    <h2 class="title-inner1 mb-0">{{  Session::get('type') }} New Products</h2>
                 </div>
             </div>
             <div class="col-12 theme-card">
