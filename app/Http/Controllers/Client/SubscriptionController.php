@@ -45,9 +45,9 @@ class SubscriptionController extends BaseController
         $user_subs = UserSubscriptions::with(['features.feature', 'validity'])->get();
         $featuresList = SubscriptionFeaturesList::where('type', 'User')->where('status', 1)->get();
         $validities = SubscriptionValidities::where('status', 1)->get();
-        $features = '';
         if($user_subs){
             foreach($user_subs as $sub){
+                $features = '';
                 if($sub->features->isNotEmpty()){
                     $subFeaturesList = array();
                     foreach($sub->features as $feature){
