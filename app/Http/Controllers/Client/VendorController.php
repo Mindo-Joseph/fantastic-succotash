@@ -6,6 +6,7 @@ use Image;
 use Phumbor;
 use Session;
 use Redirect;
+use DataTables;
 use Carbon\Carbon;
 use App\Models\UserVendor;
 use Illuminate\Support\Str;
@@ -29,6 +30,56 @@ class VendorController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    public function getFilterData(Request $request){
+        $dinein_check = '';
+        $takeaway_check = '';
+        $delivery_check = '';
+        $client_preference = ClientPreference::first();
+        if($client_preference){
+            $dinein_check = $client_preference->dinein_check;
+            $takeaway_check = $client_preference->takeaway_check;
+            $delivery_check = $client_preference->delivery_check;
+        }
+        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->with('slot')->where('status', '!=', '2')->orderBy('id', 'desc');
+        if (Auth::user()->is_superadmin == 0) {
+            $vendors = $vendors->whereHas('permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendors = $vendors->get();
+        foreach ($vendors as $vendor) {
+            $offers = [];
+            $vendor->show_url = route('vendor.show', $vendor->id);
+            $vendor->destroy_url = route('vendor.destroy', $vendor->id);
+            $vendor->add_category_option = ($vendor->add_category == 0) ? 'No' : 'Yes';
+            if($vendor->show_slot == 1){
+                $vendor->show_slot_option ="Open";
+                $vendor->show_slot_label ="success";
+            }elseif ($vendor->slot->count() > 0) {
+                $vendor->show_slot_option = "Open";
+                $vendor->show_slot_label ="success";
+            }else{
+                $vendor->show_slot_label="danger";
+                $vendor->show_slot_option = "Closed";
+            }
+            $offers[]= $dinein_check == 1 && $vendor->dine_in == 1 ? 'Dine In' : '';
+            $offers[]= $takeaway_check == 1 && $vendor->takeaway == 1 ? 'Take Away' : '';
+            $offers[]= $delivery_check == 1 && $vendor->delivery == 1 ? 'Delivery' : '';
+            $vendor->offers = $offers;
+        }
+        return Datatables::of($vendors)
+        ->addIndexColumn()
+        ->filter(function ($instance) use ($request) {
+            if (!empty($request->get('search'))) {
+                $instance->collection = $instance->collection->filter(function ($row) use ($request){
+                    if (Str::contains(Str::lower($row['name']), Str::lower($request->get('search')))){
+                        return true;
+                    }
+                    return false;
+                });
+            }
+        })->make(true);
+    }
     public function index(){
         $csvVendors = CsvVendorImport::all();
         $client_preferences = ClientPreference::first();
@@ -327,10 +378,9 @@ class VendorController extends BaseController
     }
 
     /**       delete vendor       */
-    public function destroy($domain = '', $id)
-    {
+    public function destroy($domain = '', $id){
         $vendor = Vendor::where('id', $id)->first();
-        $vendor->status = 2;
+        // $vendor->status = 2;
         $vendor->save();
         return redirect()->back()->with('success', 'Vendor deleted successfully!');
     }
@@ -435,7 +485,5 @@ class VendorController extends BaseController
         }
     }
 
-    public function downloadSampleFile($domain = ''){
-        dd("reached!");
-    }
+    
 }

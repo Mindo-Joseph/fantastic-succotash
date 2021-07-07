@@ -215,12 +215,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            @else
-                            <div class="row text-center mt-3">
-                                <div class="col-md-12">
-                                    <label class="mb-2">Hyperlocal Configuration is Disabled</label>
-                                </div>
-                            </div>
                             @endif
                             @if($vendor->show_slot == 0)
                                 <div class="card-box">

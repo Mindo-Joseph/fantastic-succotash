@@ -18,113 +18,116 @@
     </div>
 </div>
 <!-- end page title -->
-<div class="row">
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title">Font Styles</h4>
-                <div class="mb-3">
-                    <label class="form-label">Selecting regular font</label>
-                    <select class="form-control" name="fonts" onchange="submitRegularFontForm()" id="save_regular_fonts">
-                        @foreach($regular_font_options as $regular_font)
-                        <option value="{{$regular_font->id}}" {{$regular_font->is_selected == 1 ? 'selected' : ''}}>{{$regular_font->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Selecting medium font</label>
-                    <select class="form-control" name="fonts" onchange="submitMediumFontForm()" id="save_medium_fonts">
-                        @foreach($medium_font_options as $medium_font)
-                        <option value="{{$medium_font->id}}" {{$medium_font->is_selected == 1 ? 'selected' : ''}}>{{$medium_font->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Selecting bold font</label>
-                    <select class="form-control" name="fonts" onchange="submitBoldFontForm()" id="save_bold_fonts">
-                        @foreach($bold_font_options as $bold_font)
-                        <option value="{{$bold_font->id}}" {{$bold_font->is_selected == 1 ? 'selected' : ''}}>{{$bold_font->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
+<div class="style-cols">
+    <div class="row">
+        <div class="col-lg-12 col-xl-6">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="header-title">Font Styles</h4>
+                            <div class="mb-3">
+                                <label class="form-label">Selecting regular font</label>
+                                <select class="form-control" name="fonts" onchange="submitRegularFontForm()" id="save_regular_fonts">
+                                    @foreach($regular_font_options as $regular_font)
+                                    <option value="{{$regular_font->id}}" {{$regular_font->is_selected == 1 ? 'selected' : ''}}>{{$regular_font->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Selecting medium font</label>
+                                <select class="form-control" name="fonts" onchange="submitMediumFontForm()" id="save_medium_fonts">
+                                    @foreach($medium_font_options as $medium_font)
+                                    <option value="{{$medium_font->id}}" {{$medium_font->is_selected == 1 ? 'selected' : ''}}>{{$medium_font->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-0">
+                                <label class="form-label">Selecting bold font</label>
+                                <select class="form-control" name="fonts" onchange="submitBoldFontForm()" id="save_bold_fonts">
+                                    @foreach($bold_font_options as $bold_font)
+                                    <option value="{{$bold_font->id}}" {{$bold_font->is_selected == 1 ? 'selected' : ''}}>{{$bold_font->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title">Color Picker</h4>
-                <div class="mb-3">
-                    <div class="form-group mb-3">
-                        <label for="primary_color">Primary Color</label>
-                        <input type="text" id="primary_color_option" onchange="submitPrimaryColorForm()" name="primary_color" class="form-control" value="{{ old('primary_color', $primary_color_options->name ?? 'cccccc')}}">
                     </div>
                 </div>
-                <div class="mb-3">
-                    <div class="form-group mb-3">
-                        <label for="secondary_color">Secondary Color</label>
-                        <input type="text" id="secondary_color_option" onchange="submitSecondaryColorForm()" name="secondary_color" class="form-control" value="{{ old('secondary_color', $secondary_color_options->name ?? 'cccccc')}}">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="header-title">Color Picker</h4>
+                            <div class="form-group mb-3">
+                                <label for="primary_color">Primary Color</label>
+                                <input type="text" id="primary_color_option" onchange="submitPrimaryColorForm()" name="primary_color" class="form-control" value="{{ old('primary_color', $primary_color_options->name ?? 'cccccc')}}">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="secondary_color">Secondary Color</label>
+                                <input type="text" id="secondary_color_option" onchange="submitSecondaryColorForm()" name="secondary_color" class="form-control" value="{{ old('secondary_color', $secondary_color_options->name ?? 'cccccc')}}">
+                            </div>
+                            <div class="form-group mb-0">
+                                <label for="tertiary_color">Tertiary Color</label>
+                                <input type="text" id="tertiary_color_option" onchange="submitTertiaryColorForm()" name="tertiary_color" class="form-control" value="{{ old('tertiary_color', $tertiary_color_options->name ?? 'cccccc')}}">
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <div class="form-group mb-3">
-                        <label for="tertiary_color">Tertiary Color</label>
-                        <input type="text" id="tertiary_color_option" onchange="submitTertiaryColorForm()" name="tertiary_color" class="form-control" value="{{ old('tertiary_color', $tertiary_color_options->name ?? 'cccccc')}}">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="header-title mb-2">Tab Bar Style</h4>
+                            <div class="row">
+                                @foreach($tab_style_options as $tab_style)
+                                <div class="col-12">
+                                    <div class="card mb-0">
+                                        <div class="card-body px-2 pt-0">
+                                            <div class="row">
+                                                <div class="col-sm-12 custom-control custom-radio radio_new p-0">
+                                                    <input type="radio" {{$tab_style->is_selected == 1 ? 'checked' : ''}} onchange="submitTabBarForm(this.id)" value="{{$tab_style->id}}" id="{{$tab_style->id}}" name="tab_bars" class="custom-control-input tab_bar_options" }}>
+                                                    <label class="custom-control-label w-100" for="{{$tab_style->id}}">
+                                                        <img class="card-img-top img-fluid" src="{{url('images/'.$tab_style->image)}}" alt="Card image cap">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </div>     
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title">Tab Bar Style</h4>
-                <div class="row">
-                    @foreach($tab_style_options as $tab_style)
-                    <div class="col-lg-4">
-                        <div class="card mb-0">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-12 custom-control custom-radio radio_new p-0">
-                                        <input type="radio" {{$tab_style->is_selected == 1 ? 'checked' : ''}} onchange="submitTabBarForm(this.id)" value="{{$tab_style->id}}" id="{{$tab_style->id}}" name="tab_bars" class="custom-control-input tab_bar_options" }}>
-                                        <label class="custom-control-label" for="{{$tab_style->id}}">
-                                            <img class="card-img-top img-fluid" src="{{url('images/'.$tab_style->image)}}" alt="Card image cap">
-                                        </label>
+
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title">Home Page Style</h4>
+                    <div class="row">
+                        @foreach($homepage_style_options as $homepage_style)
+                        <div class="col-lg-4">
+                            <div class="card mb-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-12 custom-control custom-radio radio_new p-0">
+                                            <input type="radio" {{$homepage_style->is_selected == 1 ? 'checked' : ''}} value="{{$homepage_style->id}}" onchange="submitHomePageForm(this.id)" id="{{$homepage_style->id}}" name="home_styles" class="custom-control-input " }}>
+                                            <label class="custom-control-label" for="{{$homepage_style->id}}">
+                                                <img class="card-img-top img-fluid" src="{{url('images/'.$homepage_style->image)}}" alt="Card image cap">
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        @endforeach
                     </div>
-                    @endforeach
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title">Home Page Style</h4>
-                <div class="row">
-                    @foreach($homepage_style_options as $homepage_style)
-                    <div class="col-lg-4">
-                        <div class="card mb-0">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-12 custom-control custom-radio radio_new p-0">
-                                        <input type="radio" {{$homepage_style->is_selected == 1 ? 'checked' : ''}} value="{{$homepage_style->id}}" onchange="submitHomePageForm(this.id)" id="{{$homepage_style->id}}" name="home_styles" class="custom-control-input " }}>
-                                        <label class="custom-control-label" for="{{$homepage_style->id}}">
-                                            <img class="card-img-top img-fluid" src="{{url('images/'.$homepage_style->image)}}" alt="Card image cap">
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
+        </div>  
     </div>
 </div>
 
