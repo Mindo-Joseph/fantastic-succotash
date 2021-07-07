@@ -139,7 +139,7 @@
                                 <div class="media">
                                     <a href="{{route('productDetail', $new['url_slug'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt=""></a>
                                     <div class="media-body align-self-center">
-                                            if($client_preference_detail)
+                                            @if($client_preference_detail)
                                                 @if($client_preference_detail->rating_check == 1)  
                                                 <div class="rating">
                                                     @for($i = 1; $i < 6; $i++)
