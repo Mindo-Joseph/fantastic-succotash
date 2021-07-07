@@ -230,9 +230,6 @@
                                                                 <div class="front">
                                                                     <a href="{{route('vendorDetail', $data->slug)}}"><img class="img-fluid blur-up lazyload" alt="" src="{{$imagePath}}" width="300" height="300"></a>
                                                                 </div>
-                                                                <div class="back">
-                                                                    <a href="{{route('vendorDetail', $data->slug)}}"><img class="img-fluid blur-up lazyload" alt="" src="{{$imagePath2}}" width="300" height="300"></a>
-                                                                </div>
                                                             </div>
                                                             <div class="product-detail">
                                                                 @if($client_preference_detail)
