@@ -208,7 +208,26 @@
                                     </ul>
                                 </div>
                             </li>
-                            @endif
+                            <li>
+                                <a href="#sidebarstyling" data-toggle="collapse">
+                                    <span class="icon-theme-icon size-20"></span>
+                                    <span>Cms</span>
+                                </a>
+                                <div class="collapse" id="sidebarstyling">
+                                    <ul class="nav-second-level">
+                                        @if(in_array('app_styling',$allowed) || Auth::user()->is_superadmin == 1)
+                                            <li>
+                                                <a href="{{route('cms.pages')}}">Pages</a>
+                                            </li>
+                                        @endif
+                                        @if(in_array('web_styling',$allowed) || Auth::user()->is_superadmin == 1)
+                                            <li>
+                                                <a href="{{route('cms.emails')}}">Emails</a>
+                                            </li>
+                                        @endif
+                                    </ul>
+                                </div>
+                            </li>
                             @if(in_array('catalog',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('category.index')}}">

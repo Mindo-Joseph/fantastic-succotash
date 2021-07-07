@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Front\SearchController;
+use App\Http\Controllers\Client\CMS\PageController;
+use App\Http\Controllers\Client\CMS\EmailController;
 use App\Http\Controllers\Client\SocialMediaController;
 use App\Http\Controllers\Client\DownloadFileController;
 use App\Http\Controllers\Client\Accounting\TaxController;
@@ -28,6 +30,8 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('salesInfo/yearly', 'Client\DashBoardController@yearlySalesInfo')->name('client.yearlySalesInfo');
     Route::get('salesInfo/weekly', 'Client\DashBoardController@weeklySalesInfo')->name('client.weeklySalesInfo');
     Route::get('categoryInfo', 'Client\DashBoardController@categoryInfo')->name('client.categoryInfo');
+    Route::get('cms/pages', [PageController::class, 'index'])->name('cms.pages');
+    Route::get('cms/emails', [EmailController::class, 'index'])->name('cms.emails');
     Route::get('account/orders', [OrderController::class, 'index'])->name('account.orders');
     Route::get('account/promo-code', [PromoCodeController::class, 'index'])->name('account.promo.code');
     Route::get('account/promo-code/filter', [PromoCodeController::class, 'filter'])->name('account.promo-code.filter');
@@ -141,6 +145,11 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('subscriptions/users/delete/{slug}', 'Client\SubscriptionController@deleteUserSubscription')->name('subscriptions.deleteUserSubscription');
     Route::post('subscriptions/users/updateStatus/{slug}', 'Client\SubscriptionController@updateUserSubscriptionStatus')->name('subscriptions.updateUserSubscriptionStatus');
     Route::get('subscriptions/vendors', 'Client\SubscriptionController@vendorSubscriptions')->name('subscriptions.vendors');
+    Route::post('subscriptions/vendors/save/{slug?}', 'Client\SubscriptionController@saveVendorSubscription')->name('subscriptions.saveVendorSubscription');
+    Route::get('subscriptions/vendors/edit/{slug}', 'Client\SubscriptionController@editVendorSubscription')->name('subscriptions.editVendorSubscription');
+    Route::get('subscriptions/vendors/delete/{slug}', 'Client\SubscriptionController@deleteVendorSubscription')->name('subscriptions.deleteVendorSubscription');
+    Route::post('subscriptions/vendors/updateStatus/{slug}', 'Client\SubscriptionController@updateVendorSubscriptionStatus')->name('subscriptions.updateVendorSubscriptionStatus');
+    Route::post('subscriptions/vendors/updateOnRequest/{slug}', 'Client\SubscriptionController@updateVendorSubscriptionOnRequest')->name('subscriptions.updateVendorSubscriptionOnRequest');
 });
 
 

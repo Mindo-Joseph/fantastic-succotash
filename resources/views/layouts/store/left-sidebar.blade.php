@@ -85,9 +85,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         </div>
                                     </li><?php */ ?>
                                     <li class="onhover-div">
-                                        <a href="{{route('showCart')}}">
-                                            <img src="{{asset('front-assets/images/icon/cart_.png')}}" class="img-fluid blur-up lazyload" alt=""> 
-                                        </a>
+                                        @if($client_preference_detail)
+                                            @if($client_preference_detail->cart_enable == 1)
+                                                <a href="{{route('showCart')}}">
+                                                    <img src="{{asset('front-assets/images/icon/cart_.png')}}" class="img-fluid blur-up lazyload" alt=""> 
+                                                </a>
+                                            @endif
+                                        @endif
                                         <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span>
                                         <script type="text/template" id="header_cart_template">
                                              <% _.each(cart_details.products, function(product, key){%>
