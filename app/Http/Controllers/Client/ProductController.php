@@ -192,7 +192,7 @@ class ProductController extends BaseController
             }
         }
         $otherProducts = Product::with('primary')->select('id', 'sku')->where('is_live', 1)->where('id', '!=', $product->id)->get();
-        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service')->first();
+        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode')->first();
         $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
         return view('backend/product/edit', ['typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
     }
@@ -230,6 +230,7 @@ class ProductController extends BaseController
         $product->sku = $request->sku;
         $product->url_slug = $request->url_slug;
         $product->category_id = $request->category_id;
+        $product->inquiry_only = ($request->has('inquiry_only') && $request->inquiry_only == 'on') ? 1 : 0;
         $product->tax_category_id = $request->tax_category;
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
         $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;
@@ -239,34 +240,27 @@ class ProductController extends BaseController
         $product->sell_when_out_of_stock    = ($request->has('sell_stock_out') && $request->sell_stock_out == 'on') ? 1 : 0;
         $product->requires_shipping         = ($request->has('require_ship') && $request->require_ship == 'on') ? 1 : 0;
         $product->Requires_last_mile        = ($request->has('last_mile') && $request->last_mile == 'on') ? 1 : 0;
-
         if (empty($product->publish_at)) {
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
         }
         $product->has_variant = ($request->has('variant_ids') && count($request->variant_ids) > 0) ? 1 : 0;
         $product->save();
         if ($product->id > 0) {
-
             $trans = ProductTranslation::where('product_id', $product->id)->where('language_id', $request->language_id)->first();
-
             if (!$trans) {
                 $trans = new ProductTranslation();
                 $trans->product_id = $product->id;
                 $trans->language_id = $request->language_id;
             }
-
             $trans->title               = $request->product_name;
             $trans->body_html           = $request->body_html;
             $trans->meta_title          = $request->meta_title;
             $trans->meta_keyword        = $request->meta_keyword;
             $trans->meta_description    = $request->meta_description;
             $trans->save();
-
             $varOptArray = $prodVarSet = $updateImage = array();
             $i = 0;
-
             $productImageSave = array();
-
             if ($request->has('fileIds')) {
                 foreach ($request->fileIds as $key => $value) {
                     $productImageSave[] = [
@@ -276,11 +270,8 @@ class ProductController extends BaseController
                     ];
                 }
             }
-
             ProductImage::insert($productImageSave);
-
             $cat = $addonsArray = $upArray = $crossArray = $relateArray = array();
-
             $delete = ProductAddon::where('product_id', $product->id)->delete();
             $delete = ProductUpSell::where('product_id', $product->id)->delete();
             $delete = ProductCrossSell::where('product_id', $product->id)->delete();

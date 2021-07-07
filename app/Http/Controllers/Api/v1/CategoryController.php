@@ -52,7 +52,6 @@ class CategoryController extends BaseController
                                 ->where('category_id', $cid);
                             })
                         ->groupBy('product_variant_sets.variant_type_id')->get();
-
             if(!$category){
                 return response()->json(['error' => 'No record found.'], 200);
             }
@@ -108,7 +107,9 @@ class CategoryController extends BaseController
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                     },
-                    ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
+                    ])->whereHas('category', function($q1) use($category_id){
+                        $q1->where('category_id', $category_id);
+                    })->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
                     ->where('pc.category_id', $category_id)->where('products.is_live', 1)->whereIn('vendor_id', $vendor_ids)->paginate($limit);
             if(!empty($products)){
                 foreach ($products as $key => $product) {
