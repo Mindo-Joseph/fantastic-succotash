@@ -149,8 +149,7 @@ class CategoryController extends FrontController
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');
             }
-            $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
-                    ->with(['media.image',
+            $products = Product::with(['media.image', 'category',
                         'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
@@ -158,8 +157,12 @@ class CategoryController extends FrontController
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                         },
-                    ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->whereIn('products.vendor_id', $vendors)->paginate($pagiNate);
+                    ])
+                    ->whereHas('category', function($q1) use($cid){
+                        $q1->where('category_id', $cid);
+                    })
+                    ->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
+                    ->where('products.is_live', 1)->whereIn('products.vendor_id', $vendors)->paginate($pagiNate);
 
             if(!empty($products)){
                 foreach ($products as $key => $value) {

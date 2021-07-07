@@ -141,6 +141,11 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('subscriptions/users/delete/{slug}', 'Client\SubscriptionController@deleteUserSubscription')->name('subscriptions.deleteUserSubscription');
     Route::post('subscriptions/users/updateStatus/{slug}', 'Client\SubscriptionController@updateUserSubscriptionStatus')->name('subscriptions.updateUserSubscriptionStatus');
     Route::get('subscriptions/vendors', 'Client\SubscriptionController@vendorSubscriptions')->name('subscriptions.vendors');
+    Route::post('subscriptions/vendors/save/{slug?}', 'Client\SubscriptionController@saveVendorSubscription')->name('subscriptions.saveVendorSubscription');
+    Route::get('subscriptions/vendors/edit/{slug}', 'Client\SubscriptionController@editVendorSubscription')->name('subscriptions.editVendorSubscription');
+    Route::get('subscriptions/vendors/delete/{slug}', 'Client\SubscriptionController@deleteVendorSubscription')->name('subscriptions.deleteVendorSubscription');
+    Route::post('subscriptions/vendors/updateStatus/{slug}', 'Client\SubscriptionController@updateVendorSubscriptionStatus')->name('subscriptions.updateVendorSubscriptionStatus');
+    Route::post('subscriptions/vendors/updateOnRequest/{slug}', 'Client\SubscriptionController@updateVendorSubscriptionOnRequest')->name('subscriptions.updateVendorSubscriptionOnRequest');
 });
 
 
