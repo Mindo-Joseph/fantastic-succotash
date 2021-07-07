@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference};
-
+use Illuminate\Contracts\Session\Session as SessionSession;
 
 class UserhomeController extends FrontController
 {
@@ -63,7 +63,6 @@ class UserhomeController extends FrontController
         }
     }
     public function postHomePageData(Request $request){
-        // dd($request->all());
         $vendor_ids = [];
         $new_products = [];
         $feature_products = [];
@@ -88,6 +87,8 @@ class UserhomeController extends FrontController
         foreach ($brands as $brand) {
             $brand->redirect_url = route('brandDetail', $brand->id);
         }
+        Session::forget('type');
+        Session::put('type', $request->type);
         $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where($request->type, 1);
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
