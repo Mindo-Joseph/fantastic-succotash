@@ -84,7 +84,7 @@
     <div class="row">
         <div class="col-8">
             <div class="page-title-box">
-                <h4 class="page-title">Add Product</h4>
+                <h4 class="page-title">Edit Product</h4>
             </div>
         </div>
         <div class="col-4 text-right" style="margin: auto;">
@@ -332,14 +332,11 @@
 
                 <div class="card-box">
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Other Information</h5>
-
                     <div class="row mb-2">
-
                         <div class="col-md-6 d-flex justify-content-between mb-2">
                             {!! Form::label('title', 'New',['class' => 'control-label']) !!}
                             <input type="checkbox" id="is_new" data-plugin="switchery" name="is_new" class="chk_box" data-color="#43bee1" @if($product->is_new == 1) checked @endif>
                         </div>
-
                         <div class="col-md-6 d-flex justify-content-between mb-2">
                             {!! Form::label('title', 'Featured',['class' => 'control-label']) !!}
                             <input type="checkbox" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#43bee1" @if($product->is_new == 1) checked @endif>
@@ -351,10 +348,16 @@
                         </div>
                         @endif
                         @if($configData->pharmacy_check == 1)
-                        <div class="col-md-6 d-flex justify-content-between mb-2">
-                            {!! Form::label('title', 'Requires Prescription',['class' => 'control-label']) !!}
-                            <input type="checkbox" bid="" id="pharmacy_check" data-plugin="switchery" name="pharmacy_check" class="chk_box" data-color="#43bee1" @if($product->pharmacy_check == 1) checked @endif>
-                        </div>
+                            <div class="col-md-6 d-flex justify-content-between mb-2">
+                                {!! Form::label('title', 'Requires Prescription',['class' => 'control-label']) !!}
+                                <input type="checkbox" bid="" id="pharmacy_check" data-plugin="switchery" name="pharmacy_check" class="chk_box" data-color="#43bee1" @if($product->pharmacy_check == 1) checked @endif>
+                            </div>
+                        @endif
+                        @if($configData->enquire_mode == 1)
+                            <div class="col-md-6 d-flex justify-content-between mb-2">
+                                {!! Form::label('title', 'Inquiry Only',['class' => 'control-label']) !!}
+                                <input type="checkbox" bid="" id="inquiry_only" data-plugin="switchery" name="inquiry_only" class="chk_box" data-color="#43bee1" @if($product->inquiry_only == 1) checked @endif>
+                            </div>
                         @endif
                     </div>
 
