@@ -17,7 +17,7 @@
     <div class="col-lg-2">
         <div class="card h-100">
             <div class="card-body">
-                <h4 class="header-title mb-3">Cart Enable</h4>
+                <h4 class="header-title mb-3">Cart Toggle</h4>
                 <div class="mb-0">
                     <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
                 </div>
