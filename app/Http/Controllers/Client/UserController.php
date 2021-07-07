@@ -152,10 +152,10 @@ class UserController extends BaseController{
         ];
         $client = User::where('id', $id)->update($data);
         //for updating permissions
+        $removepermissions = UserPermissions::where('user_id', $id)->delete();
         if ($request->permissions) {
             $userpermissions = $request->permissions;
             $addpermission = [];
-            $removepermissions = UserPermissions::where('user_id', $id)->delete();
             for ($i=0;$i<count($userpermissions);$i++) {
                 $addpermission[] =  array('user_id' => $id,'permission_id' => $userpermissions[$i]);
             }

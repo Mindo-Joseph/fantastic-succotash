@@ -6,6 +6,11 @@
             if($clientData){
                 $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'];
             }
+            $marketing_permissions = array("banner", "promocode", "loyalty_cards");
+            $setting_permissions = array("profile", "customize", "app_styling", "web_styling", "catalog", "configurations", "tax", "payment");
+            $styling_permissions = array("app_styling", "web_styling");
+            $order_permissions = array("dashboard", "orders", "vendors", "accounting_orders","accounting_loyality", "accounting_promo_codes", "accounting_taxes","accounting_vendors", "subscriptions_customers", "subscriptions_vendors", "customers");
+            $accounting_permissions = array("accounting_orders", "accounting_loyality", "accounting_promo_codes", "accounting_taxes", "accounting_vendors");
         @endphp
         <a href="{{route('client.dashboard')}}" class="logo logo-dark text-center">
             <span class="logo-sm">
@@ -57,6 +62,7 @@
             }
             ?>
             <ul id="side-menu">
+            @if(count(array_intersect($order_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="#sidebarorders" data-toggle="collapse">
                         <span class="icon-dashboard_icon"></span>
@@ -89,6 +95,7 @@
                                 </li>
                             @endif
                             <li>
+                            @if(count(array_intersect($accounting_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                                 <a href="#sidebaraccounting" data-toggle="collapse">
                                     <span class="icon-accounting-icon size-20"></span>
                                     <span> Accounting </span>
@@ -123,6 +130,7 @@
                                     </ul>
                                 </div>
                             </li>
+                            @endif
                             <li>
                                 <a href="#sidebarsubscriptions" data-toggle="collapse">
                                     <span class="icon-payment_icon size-22"></span>
@@ -154,6 +162,8 @@
                         </ul>
                     </div>
                 </li>
+                @endif
+                @if(count(array_intersect($setting_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
                    <a href="#sidebasettings" data-toggle="collapse">
                         <span class="icon-dashboard_icon"></span>
@@ -177,6 +187,7 @@
                                     </a>
                                 </li>
                             @endif
+                            @if(count(array_intersect($styling_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="#sidebarstyling" data-toggle="collapse">
                                     <span class="icon-theme-icon size-20"></span>
@@ -197,6 +208,7 @@
                                     </ul>
                                 </div>
                             </li>
+                            @endif
                             @if(in_array('catalog',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('category.index')}}">
@@ -232,6 +244,8 @@
                         </ul>
                     </div> 
                 </li>
+                @endif
+                @if(count(array_intersect($marketing_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="#sidebarmarketing" data-toggle="collapse">
                         <span class="icon-dashboard_icon"></span>
@@ -266,6 +280,7 @@
                         </ul>
                     </div>
                 </li>
+                @endif
                 @php
                     $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
                 @endphp

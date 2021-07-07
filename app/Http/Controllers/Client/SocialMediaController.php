@@ -18,8 +18,10 @@ class SocialMediaController extends BaseController{
         try {
             $this->validate($request, [
               'social_media_icon' => 'required',
-              'social_media_url' => 'required'
-            ]);
+              'social_media_url' => 'required|url'
+            ],
+            ['social_media_url.url' => 'Invalid URL format']);
+
             SocialMedia::create(['icon' => $request->social_media_icon, 'url' => $request->social_media_url]);
             return $this->successResponse([], 'Social Media Added Successfully.');
         } catch (Exception $e) {
