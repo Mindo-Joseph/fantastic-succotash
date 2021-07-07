@@ -126,7 +126,7 @@
                                                     <input type="checkbox" data-id="{{$sub->slug}}" data-plugin="switchery" name="vendorSubscriptionStatus" class="chk_box status_check" data-color="#43bee1" {{($sub->status == 1) ? 'checked' : ''}} >
                                                 </td>
                                                 <td>
-                                                    <input type="checkbox" data-id="{{$sub->slug}}" data-plugin="switchery" name="vendorSubscriptionOnRequest" class="chk_box on_request_check" data-color="#43bee1" {{($sub->status == 1) ? 'checked' : ''}} >
+                                                    <input type="checkbox" data-id="{{$sub->slug}}" data-plugin="switchery" name="vendorSubscriptionOnRequest" class="chk_box on_request_check" data-color="#43bee1" {{($sub->on_request == 1) ? 'checked' : ''}} >
                                                 </td>
                                                 <td> 
                                                     <div class="form-ul" style="width: 60px;">
@@ -273,7 +273,8 @@
                 $("#edit-vendor-subscription").modal("show");
                 $('#edit-vendor-subscription .select2-multiple').select2();
                 $('#edit-vendor-subscription .dropify').dropify();
-                var switchery = new Switchery($("#edit-vendor-subscription .status")[0]);
+                var switchery1 = new Switchery($("#edit-vendor-subscription .status")[0]);
+                var switchery2 = new Switchery($("#edit-vendor-subscription .on_request")[0]);
             }
         });
     });

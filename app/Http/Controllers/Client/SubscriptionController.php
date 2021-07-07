@@ -240,7 +240,7 @@ class SubscriptionController extends BaseController
         $subscription->price = $request->price;
         $subscription->validity_id = $request->validity;
         $subscription->status = ($request->has('status') && $request->status == 'on') ? '1' : '0';
-        $subscription->status = ($request->has('on_request') && $request->status == 'on') ? 1 : 0;
+        $subscription->on_request = ($request->has('on_request') && $request->on_request == 'on') ? 1 : 0;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $subscription->image = Storage::disk('s3')->put($this->folderName, $file,'public');

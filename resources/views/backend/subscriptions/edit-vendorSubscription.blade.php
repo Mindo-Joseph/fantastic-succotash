@@ -27,7 +27,7 @@
                         <div class="form-group">
                             {!! Form::label('title', 'On Request',['class' => 'control-label']) !!} 
                             <div class="mt-md-1">
-                                <input type="checkbox" data-plugin="switchery" name="on_request" class="form-control on_request" data-color="#43bee1" checked='checked'>
+                                <input type="checkbox" data-plugin="switchery" name="on_request" class="form-control on_request" data-color="#43bee1" {{($subscription->on_request == 1) ? 'checked' : ''}}>
                             </div>
                         </div>
                     </div>
