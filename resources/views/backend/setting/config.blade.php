@@ -702,8 +702,8 @@
                   </div>
                   <div class="col-md-4">
                      <div class="form-group mb-0">
-                        <label for="enquiry_mode" class="mr-3 mb-0">Enquiry Mode</label>
-                        <input type="checkbox" data-plugin="switchery" name="enquiry_mode" id="enquiry_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1'))  checked='checked' @endif>
+                        <label for="enquire_mode" class="mr-3 mb-0">Enquiry Mode</label>
+                        <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1'))  checked='checked' @endif>
                      </div>
                   </div>
                   <div class="col-md-4">
