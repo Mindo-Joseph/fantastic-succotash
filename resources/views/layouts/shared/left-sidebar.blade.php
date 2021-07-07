@@ -64,8 +64,8 @@
             <ul id="side-menu">
                  @if(count(array_intersect($order_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
-                    <a href="#">
-                        <span class="icon-dashboard_icon"></span>
+                    <a class="menu-title pl-1" href="#">
+                        <span class="icon-order_icon"></span>
                         <span>ORDERS</span>
                     </a>
                     <ul class="nav-second-level">
@@ -163,8 +163,8 @@
                 @endif
                 @if(count(array_intersect($setting_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
-                   <a href="#">
-                        <span class="icon-dashboard_icon"></span>
+                   <a class="menu-title pl-1" href="#">
+                        <span class="icon-customize_icon"></span>
                         <span>SETTINGS</span>
                     </a>
                     <ul class="nav-second-level">
@@ -263,7 +263,7 @@
                 @endif
                 @if(count(array_intersect($marketing_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
-                    <a href="#">
+                    <a class="menu-title pl-1" href="#">
                         <span class="icon-dashboard_icon"></span>
                         <span>MARKETING</span>
                     </a>
@@ -301,7 +301,7 @@
                 @if(!empty($brity) && $brity->celebrity_check == 1)
                     @if(in_array('celebrity',$allowed) || Auth::user()->is_superadmin == 1)
                         <li>
-                            <a>
+                            <a class="menu-title pl-1">
                                 <span class="icon-dashboard_icon"></span>
                                 <span>EXTRA</span>
                             </a>

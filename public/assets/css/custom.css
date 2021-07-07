@@ -1361,14 +1361,28 @@ i.mdi.mdi-exclamation-thick {
     pointer-events: none;
 }
 
-#sidebar-menu > ul > li > a,.notification-list .profile-dropdown .notify-item {
+/* #sidebar-menu > ul > li .nav-second-level li > a,{
     border-left: 3px solid transparent;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
     transition: all 0.5s;
 }
 
-#sidebar-menu > ul > li:hover > a,#sidebar-menu > ul > li.menuitem-active > a,.notification-list .profile-dropdown .notify-item:hover {
+#sidebar-menu > ul > li .nav-second-level li:hover > a,#sidebar-menu > ul > li .nav-second-level li:focus > a,#sidebar-menu > ul > li .nav-second-level li:visited > a,#sidebar-menu > ul > .nav-second-level li.menuitem-active  a,{
+    border-color: #343a40;
+    background: linear-gradient(90deg, rgb(183 179 179 / 12%) 0%, rgb(0 0 0 / 0%) 92.47%);
+} */
+#sidebar-menu > ul > li ul.nav-second-level {
+    padding-left: 20px;
+}
+.notification-list .profile-dropdown .notify-item {
+    border-left: 3px solid transparent;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+ .notification-list .profile-dropdown .notify-item:hover {
     border-color: #343a40;
     background: linear-gradient(90deg, rgb(183 179 179 / 12%) 0%, rgb(0 0 0 / 0%) 92.47%);
 }
@@ -1902,6 +1916,9 @@ td.product-name,.vendor-name {
 
 
 /* Dark Mood Css */
+.dark .menu-navigation {
+    background: #232323;
+}
 .dark a,.dark .tab-product .nav-material.nav-tabs .nav-link.active,.dark .items_price,.dark .top-site-links li:hover a,.dark .nav-second-level li a:focus, 
 .dark .nav-second-level li a:hover,.dark #sidebar-menu .menuitem-active > a,.dark .mdi-icons,.dark label.logo-size,.dark .social_head i,.dark .dd-list .dd3-content:hover {
     color: rgb(247 184 75 / 82%);
@@ -1948,17 +1965,27 @@ td.product-name,.vendor-name {
     margin: auto;
 }
 
-
-
-
 .error-msg {
     text-align: center;
     font-size: 16px;
 }
 
+.menu-title + .nav-second-level > li > a {
+    padding-left: 5px;
+}
 
+.menu-title + .nav-second-level > li > a span:first-child {
+    font-size: 26px;
+    vertical-align: middle;
+}
 
-
+.menu-title + .nav-second-level > li > a span.size-20 {
+    font-size: 16px;
+    vertical-align: middle;
+    width: 24px;
+    display: inline-block;
+    text-align: center;
+}
 
 
 
