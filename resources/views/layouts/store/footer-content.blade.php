@@ -60,6 +60,7 @@
                         </div>
                     </div>
                 </div>
+                @if(count($social_media_details))
                 <div class="col-lg-4 col-md-6 mb-md-0 mb-3 pl-lg-5">
                     <div class="sub-title">
                         <div class="footer-title">
@@ -80,6 +81,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
                 <div class="col-lg-3 col-md-6 mb-md-0 mb-3">
                     <div class="sub-title">
                         <div class="footer-title">
