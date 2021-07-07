@@ -62,7 +62,7 @@
             }
             ?>
             <ul id="side-menu">
-            @if(count(array_intersect($order_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
+                 @if(count(array_intersect($order_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a href="#sidebarorders" data-toggle="collapse">
                         <span class="icon-dashboard_icon"></span>
@@ -208,6 +208,7 @@
                                     </ul>
                                 </div>
                             </li>
+                            @endif
                             <li>
                                 <a href="#sidebarstyling" data-toggle="collapse">
                                     <span class="icon-theme-icon size-20"></span>
