@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
         }
         $this->connectDynamicDb($request);
         Paginator::useBootstrap();
-        $social_media_details = SocialMedia::get();
+        // $social_media_details = SocialMedia::get();
         $favicon_url = asset('assets/images/favicon.png');
         $client_preference_detail = ClientPreference::where(['id' => 1])->first();
         if ($client_preference_detail) {
@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
         view()->share('client', $client);
         view()->share('favicon', $favicon_url);
         view()->share('favicon', $favicon_url);
-        view()->share('social_media_details', $social_media_details);
+        // view()->share('social_media_details', $social_media_details);
         view()->share('client_preference_detail', $client_preference_detail);
     }
 
