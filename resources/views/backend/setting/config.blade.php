@@ -694,10 +694,16 @@
          <div class="col-md-6 col-lx-4">
             <div class="card-box">
                <div class="row align-items-center">
-                  <div class="col-md-8">
+                  <div class="col-md-4">
                      <div class="form-group mb-0">
                         <label for="pharmacy_check" class="mr-3 mb-0">Pharmacy Mod</label>
                         <input type="checkbox" data-plugin="switchery" name="pharmacy_check" id="pharmacy_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1'))  checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="form-group mb-0">
+                        <label for="enquiry_mode" class="mr-3 mb-0">Enquiry Mode</label>
+                        <input type="checkbox" data-plugin="switchery" name="enquiry_mode" id="enquiry_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1'))  checked='checked' @endif>
                      </div>
                   </div>
                   <div class="col-md-4">
