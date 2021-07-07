@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Dashboard'])
+@extends('layouts.vertical', ['title' => 'Subscriptions'])
 
 @section('css')
 <!-- Plugins css -->
@@ -118,11 +118,11 @@
                                                 </td>
                                                 <td><a href="{{route('customer.new.edit', $sub->slug)}}"  class=""> {{$sub->title}}</a></td>
                                                 <td>{{$sub->Description}}</td>
-                                                <td>{{$sub->price}}</td>
+                                                <td>${{$sub->price}}</td>
                                                 <td>{{$sub->features}}</td>
                                                 <td>{{$sub->validity->name}}</td>
                                                 <td>
-                                                    <input type="checkbox" data-id="{{$sub->slug}}" data-plugin="switchery" name="userSubscription" class="chk_box" data-color="#43bee1" {{($sub->status == 1) ? 'checked' : ''}} >
+                                                    <input type="checkbox" data-id="{{$sub->slug}}" data-plugin="switchery" name="userSubscriptionStatus" class="chk_box status_check" data-color="#43bee1" {{($sub->status == 1) ? 'checked' : ''}} >
                                                 </td> 
                                                 <td> 
                                                     <div class="form-ul" style="width: 60px;">
@@ -175,7 +175,7 @@
                                     <div class="form-group">
                                         {!! Form::label('title', 'Enable',['class' => 'control-label']) !!} 
                                         <div class="mt-md-1">
-                                            <input type="checkbox" data-plugin="switchery" name="status" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                            <input type="checkbox" data-plugin="switchery" name="status" class="form-control status" data-color="#43bee1" checked='checked'>
                                         </div>
                                     </div>
                                 </div>
@@ -260,12 +260,12 @@
                 $("#edit-user-subscription").modal("show");
                 $('#edit-user-subscription .select2-multiple').select2();
                 $('#edit-user-subscription .dropify').dropify();
-                var switchery = new Switchery($("#edit-user-subscription .validity")[0]);
+                var switchery = new Switchery($("#edit-user-subscription .status")[0]);
             }
         });
     });
 
-    $("#subscriptions-datatable .chk_box").on("change", function() {
+    $("#subscriptions-datatable .status_check").on("change", function() {
         var slug = $(this).attr('data-id');
         var status = 0;
         if($(this).is(":checked")){
