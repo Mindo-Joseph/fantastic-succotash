@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class UserSubscriptionFeatures extends Model
 {
     use HasFactory;
+
+    public function feature(){
+      return $this->belongsTo('App\Models\SubscriptionFeaturesList'); 
+    }
 }

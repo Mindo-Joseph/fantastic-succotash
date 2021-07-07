@@ -8,9 +8,8 @@ use \DateTimeZone;
 use App\Jobs\UpdateClient;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Jobs\ProcessClientDatabase;
+use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Config;
@@ -22,6 +21,7 @@ use Carbon\Carbon;
 
 class SubscriptionController extends BaseController
 {
+    use ApiResponser;
     private $folderName = '/subscriptions/image';
     /**
      * Handle the incoming request.
@@ -42,9 +42,23 @@ class SubscriptionController extends BaseController
      */
     public function userSubscriptions(Request $request, $domain = '')
     {
-        $user_subs = UserSubscriptions::get();
+        $user_subs = UserSubscriptions::with(['features.feature', 'validity'])->get();
         $featuresList = SubscriptionFeaturesList::where('type', 'User')->where('status', 1)->get();
         $validities = SubscriptionValidities::where('status', 1)->get();
+        $features = '';
+        if($user_subs){
+            foreach($user_subs as $sub){
+                if($sub->features->isNotEmpty()){
+                    $subFeaturesList = array();
+                    foreach($sub->features as $feature){
+                        $subFeaturesList[] = $feature->feature->title;
+                    }
+                    unset($sub->features);
+                    $features = implode(', ', $subFeaturesList);
+                }
+                $sub->features = $features;
+            }
+        }
         return view('backend/subscriptions/userSubscriptions')->with(['validities'=>$validities, 'features'=>$featuresList, 'user_subscriptions'=>$user_subs]);
     }
 
@@ -54,24 +68,35 @@ class SubscriptionController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function saveUserSubscription(Request $request, $domain = '')
+    public function saveUserSubscription(Request $request, $domain = '', $slug='')
     {
+        $message = 'added';
         $rules = array(
             'title' => 'required|string|max:50|unique:user_subscriptions',
             'features' => 'required',
             'price' => 'required',
             'validity' => 'required'
         );
+        if(!empty($slug)){
+            $subscription = UserSubscriptions::where('slug', $slug)->firstOrFail();
+            $rules['title'] = $rules['title'].',id,'.$subscription->id;
+            $message = 'updated';
+        }
+
         $validation  = Validator::make($request->all(), $rules);
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
-        $subscription = new UserSubscriptions;
+        if(!empty($slug)){
+            $subFeatures = UserSubscriptionFeatures::where('subscription_id', $subscription->id)->whereNotIn('feature_id', $request->features)->delete();
+        }else{
+            $subscription = new UserSubscriptions;
+        }
         $subscription->title = $request->title;
         $subscription->slug = strtolower(str_replace(' ', '-', $request->title));
         $subscription->price = $request->price;
         $subscription->validity_id = $request->validity;
-        $subscription->status = ($request->has('status') && $request->status == 'on') ? 1 : 0;
+        $subscription->status = ($request->has('status') && $request->status == 'on') ? '1' : '0';
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $subscription->image = Storage::disk('s3')->put($this->folderName, $file,'public');
@@ -83,14 +108,22 @@ class SubscriptionController extends BaseController
         $subscriptionId = $subscription->id;
         if( ($request->has('features')) && (!empty($request->features)) ){
             foreach($request->features as $key => $val){
+                if(!empty($slug)){
+                    $subFeature = UserSubscriptionFeatures::where('subscription_id', $subscriptionId)->where('feature_id', $val)->first();
+                    if($subFeature){
+                        continue;
+                    }
+                }
                 $feature = array(
                     'subscription_id' => $subscriptionId,
-                    'feature_id' => $val
+                    'feature_id' => $val,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
                 );
                 UserSubscriptionFeatures::insert($feature);
             }
         }
-        return redirect()->back()->with('success', 'Subscription has been successfully added');
+        return redirect()->back()->with('success', 'Subscription has been '.$message.' successfully.');
     }
 
     /**
@@ -101,7 +134,30 @@ class SubscriptionController extends BaseController
      */
     public function editUserSubscription(Request $request, $domain = '', $slug='')
     {
-        dd($request->all());
+        $subscription = UserSubscriptions::where('slug', $slug)->firstOrFail();
+        $subscriptionFeatures = UserSubscriptionFeatures::select('feature_id')->where('subscription_id', $subscription->id)->get();
+        $featuresList = SubscriptionFeaturesList::where('status', 1)->get();
+        $validities = SubscriptionValidities::where('status', 1)->get();
+        $subFeatures = array();
+        foreach($subscriptionFeatures as $feature){
+            $subFeatures[] = $feature->feature_id;
+        }
+        $returnHTML = view('backend.subscriptions.edit-userSubscription')->with(['validities'=>$validities, 'features'=>$featuresList, 'subscription' => $subscription, 'subFeatures'=>$subFeatures])->render();
+        return response()->json(array('success' => true, 'html'=>$returnHTML));
+    }
+
+    /**
+     * update user subscription status
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateUserSubscriptionStatus(Request $request, $domain = '', $slug='')
+    {
+        $subscription = UserSubscriptions::where('slug', $slug)->firstOrFail();
+        $subscription->status = $request->status;
+        $subscription->save();
+        return response()->json(array('success' => true, 'message'=>'Subscription status has been updated.'));
     }
 
     /**
@@ -110,9 +166,15 @@ class SubscriptionController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function updateUserSubscription(Request $request, $domain = '', $slug='')
+    public function deleteUserSubscription(Request $request, $domain = '', $slug='')
     {
-        dd($request->all());
+        try {
+            $subscription = UserSubscriptions::where('slug', $slug)->firstOrFail();
+            $subscription->delete();
+            return redirect()->back()->with('success', 'Subscription has been deleted successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Subscription cannot be deleted.');
+        }
     }
 
     /**
