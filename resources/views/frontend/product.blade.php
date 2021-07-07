@@ -97,6 +97,8 @@
                                     <h2 class="mb-0">
                                         {{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}
                                     </h2>
+                                    @if($client_preference_detail)
+                                        @if($client_preference_detail->rating_check == 1)
                                     <div class="rating">
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
@@ -105,6 +107,8 @@
                                         <i class="fa fa-star"></i>
                                         <a href="#"></a>
                                     </div>
+                                        @endif
+                                    @endif
                                     <div class="description_txt my-3">
                                         <p>It is a long established fact that a reader will be distracted by the
                                             readable content of a page when looking at its layout.</p>
@@ -272,12 +276,15 @@
                                                 class="icofont icofont-man-in-glasses"></i>Details</a>
                                         <div class="material-border"></div>
                                     </li>
+                                    @if($client_preference_detail)
+                                        @if($client_preference_detail->rating_check == 1)
                                     <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab"
                                             href="#top-review" role="tab" aria-selected="false"><i
                                                 class="icofont icofont-contacts"></i>Ratings & Reviews</a>
                                         <div class="material-border"></div>
                                     </li>
-                                   
+                                        @endif
+                                   @endif
                                 </ul>
                                 <div class="tab-content nav-material" id="top-tabContent">
                                     <div class="tab-pane fade show active" id="top-home" role="tabpanel"
