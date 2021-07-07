@@ -35,13 +35,17 @@
                 </div>
             </div>
             <div class="product-detail">
-                <div class="rating">
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i> 
-                    <i class="fa fa-star"></i> 
-                    <i class="fa fa-star"></i> 
-                    <i class="fa fa-star"></i>
-                </div>
+            @if($client_preference_detail)
+                @if($client_preference_detail->rating_check == 1)
+                    <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i> 
+                        <i class="fa fa-star"></i> 
+                        <i class="fa fa-star"></i> 
+                        <i class="fa fa-star"></i>
+                    </div>
+                @endif
+            @endif
                 <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                     <h6><%= vendor.name %></h6>
                 </a>
@@ -72,11 +76,15 @@
                         <h3><%= product.title %></h3>
                         <p><%= product.vendor_name %></p>
                         <h4><%= product.price %></h4>
-                        <div class="rating">
-                            <% _.each([1,2,3,4,5], function(value, k){ %>
-                                <i class="fa fa-star"></i>
-                            <% }); %>
-                        </div>
+                        @if($client_preference_detail)
+                            @if($client_preference_detail->rating_check == 1)
+                                <div class="rating">
+                                    <% _.each([1,2,3,4,5], function(value, k){ %>
+                                        <i class="fa fa-star"></i>
+                                    <% }); %>
+                                </div>
+                            @endif
+                        @endif
                     </div>
                 </div>
             </a>
@@ -90,30 +98,30 @@
         <div class="row">
             <div class="col-sm-12 col-lg-12 tab-product pt-0">
                 <ul class="nav nav-tabs nav-material tab-icons" id="top-tab" role="tablist">
-                @if($clientPreferences->delivery_check == 1)
+                    @if($clientPreferences->delivery_check == 1)
                     <li class="nav-item">
                         <a class="nav-link {{$count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-selected="false" data-rel="delivery_tab">
                             <i><span class="icon-shipped"></span></i> <span>Delivery</span>
                         </a>
                         <div class="material-border"></div>
                     </li>
-                @endif
-                @if($clientPreferences->dinein_check == 1)
+                    @endif
+                    @if($clientPreferences->dinein_check == 1)
                     <li class="nav-item">
                         <a class="nav-link {{$clientPreferences->dinein_check == 1 && $clientPreferences->delivery_check != 1? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-selected="true" data-rel="dinein_tab">
-                        <i><span class="icon-dine-in"></span></i> <span>Dine-In</span>
+                            <i><span class="icon-dine-in"></span></i> <span>Dine-In</span>
                         </a>
                         <div class="material-border"></div>
                     </li>
-                @endif
-                @if($clientPreferences->takeaway_check == 1)
+                    @endif
+                    @if($clientPreferences->takeaway_check == 1)
                     <li class="nav-item">
                         <a class="nav-link {{$count == 1 ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-selected="false" data-rel="takeaway_tab">
                             <i><span class="icon-take-away"></span></i> <span>Takeaway</span>
                         </a>
                         <div class="material-border"></div>
                     </li>
-                @endif
+                    @endif
                 </ul>
             </div>
         </div>
