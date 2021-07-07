@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{UserWishlist, User, Product, UserAddress, UserRefferal, ClientPreference, Client, Order, Transaction};
+use App\Models\{User, UserAddress, ClientPreference, Client, UserSubscriptions, SubscriptionFeaturesList, SubscriptionValidities};
 
 class SubscriptionController extends FrontController
 {
@@ -25,6 +25,20 @@ class SubscriptionController extends FrontController
     {
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        return view('frontend.account.subscriptions')->with(['navCategories' => $navCategories]);
+        $subscriptions = UserSubscriptions::with('features.feature', 'validity')->where('status', '1')->get();
+        $featuresList = SubscriptionFeaturesList::where('type', 'User')->where('status', 1)->get();
+        if($subscriptions){
+            foreach($subscriptions as $sub){
+                $subFeaturesList = array();
+                if($sub->features->isNotEmpty()){
+                    foreach($sub->features as $feature){
+                        $subFeaturesList[] = $feature->feature->title;
+                    }
+                    unset($sub->features);
+                }
+                $sub->features = $subFeaturesList;
+            }
+        }
+        return view('frontend.account.subscriptions')->with(['navCategories' => $navCategories, 'subscriptions'=> $subscriptions]);
     }
 }
