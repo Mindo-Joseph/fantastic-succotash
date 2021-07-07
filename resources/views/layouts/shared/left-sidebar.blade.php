@@ -49,8 +49,8 @@
             <?php
             $allowed = [];
             if (Auth::user()->is_superadmin == 0) {
-                foreach (Auth::user()->getAllPermissions as $key => $value) {
-                    array_push($allowed, $value->permission->name);
+                foreach (Auth::user()->getAllPermissions as $value) {
+                    array_push($allowed, $value->permission->slug);
                 }
             } else {
                 array_push($allowed, '99999');
@@ -64,7 +64,7 @@
                     </a>
                     <div class="collapse" id="sidebarorders">
                         <ul class="nav-second-level">
-                            @if(in_array('DASHBOARD',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('dashboard',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('client.dashboard')}}">
                                         <span class="icon-dashboard_icon"></span>
@@ -72,7 +72,7 @@
                                     </a>
                                 </li>
                             @endif
-                            @if(in_array('ORDERS',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('orders',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('order.index')}}">
                                         <span class="icon-order_icon"></span>
@@ -80,7 +80,7 @@
                                     </a>
                                 </li>
                             @endif
-                            @if(in_array('VENDORS',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('vendors',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('vendor.index')}}">
                                         <span class="icon-vendor_icon"></span>
@@ -95,21 +95,31 @@
                                 </a>
                                 <div class="collapse" id="sidebaraccounting">
                                     <ul class="nav-second-level">
-                                        <li>
-                                            <a href="{{route('account.orders')}}">Orders</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('account.loyalty')}}">Loyality</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('account.promo.code')}}">Promo Codes</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('account.tax')}}">Taxes</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('account.vendor')}}">Vendors</a>
-                                        </li>
+                                        @if(in_array('accounting_orders',$allowed) || Auth::user()->is_superadmin == 1)
+                                            <li>
+                                                <a href="{{route('account.orders')}}">Orders</a>
+                                            </li>
+                                        @endif
+                                        @if(in_array('accounting_loyality',$allowed) || Auth::user()->is_superadmin == 1)
+                                            <li>
+                                                <a href="{{route('account.loyalty')}}">Loyality</a>
+                                            </li>
+                                        @endif
+                                        @if(in_array('accounting_promo_codes',$allowed) || Auth::user()->is_superadmin == 1)
+                                            <li>
+                                                <a href="{{route('account.promo.code')}}">Promo Codes</a>
+                                            </li>
+                                        @endif
+                                        @if(in_array('accounting_taxes',$allowed) || Auth::user()->is_superadmin == 1)
+                                            <li>
+                                                <a href="{{route('account.tax')}}">Taxes</a>
+                                            </li>
+                                        @endif
+                                        @if(in_array('accounting_vendors',$allowed) || Auth::user()->is_superadmin == 1)
+                                            <li>
+                                                <a href="{{route('account.vendor')}}">Vendors</a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </li>
@@ -120,16 +130,20 @@
                                 </a>
                                 <div class="collapse" id="sidebarsubscriptions">
                                     <ul class="nav-second-level">
-                                        <li>
-                                            <a href="{{route('subscriptions.users')}}">Customers</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('subscriptions.vendors')}}">Vendors</a>
-                                        </li>
+                                        @if(in_array('subscriptions_customers',$allowed) || Auth::user()->is_superadmin == 1)
+                                            <li>
+                                                <a href="{{route('subscriptions.users')}}">Customers</a>
+                                            </li>
+                                        @endif
+                                        @if(in_array('subscriptions_vendors',$allowed) || Auth::user()->is_superadmin == 1)
+                                            <li>
+                                                <a href="{{route('subscriptions.vendors')}}">Vendors</a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </li>
-                            @if(in_array('CUSTOMERS',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('customers',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('customer.index')}}">
                                         <span class="icon-customer_icon"></span>
@@ -147,7 +161,7 @@
                     </a>
                     <div class="collapse" id="sidebasettings">
                         <ul class="nav-second-level">
-                            @if(in_array('Profile',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('profile',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('client.profile')}}">
                                         <span class="icon-profile_icon"></span>
@@ -155,7 +169,7 @@
                                     </a>
                                 </li>
                             @endif
-                            @if(in_array('CUSTOMIZE',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('customize',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('configure.customize')}}">
                                         <span class="icon-customize-icon size-20"></span>
@@ -170,16 +184,20 @@
                                 </a>
                                 <div class="collapse" id="sidebarstyling">
                                     <ul class="nav-second-level">
-                                        <li>
-                                            <a href="{{route('appStyling.index')}}">App Styling</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('webStyling.index')}}">Web Styling</a>
-                                        </li>
+                                        @if(in_array('app_styling',$allowed) || Auth::user()->is_superadmin == 1)
+                                            <li>
+                                                <a href="{{route('appStyling.index')}}">App Styling</a>
+                                            </li>
+                                        @endif
+                                        @if(in_array('web_styling',$allowed) || Auth::user()->is_superadmin == 1)
+                                            <li>
+                                                <a href="{{route('webStyling.index')}}">Web Styling</a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </li>
-                            @if(in_array('CATALOG',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('catalog',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('category.index')}}">
                                         <span class="icon-catalog_icon"></span>
@@ -187,7 +205,7 @@
                                     </a>
                                 </li>
                             @endif
-                            @if(in_array('CONFIGURATIONS',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('configurations',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('configure.index')}}">
                                         <span class="icon-configure_icon"></span>
@@ -195,7 +213,7 @@
                                     </a>
                                 </li>
                             @endif
-                            @if(in_array('TAX',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('tax',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('tax.index')}}">
                                         <span class="icon-tax_icon"></span>
@@ -203,7 +221,7 @@
                                     </a>
                                 </li>
                             @endif
-                            @if(in_array('PAYMENT',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('payment',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('payoption.index')}}">
                                         <span class="icon-payment_icon"></span>
@@ -221,7 +239,7 @@
                     </a>
                     <div class="collapse" id="sidebarmarketing">
                         <ul class="nav-second-level">
-                            @if(in_array('BANNER',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('banner',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('banner.index')}}">
                                         <span class="icon-banner_icon"></span>
@@ -229,7 +247,7 @@
                                     </a>
                                 </li>
                             @endif
-                            @if(in_array('PROMOCODE',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('promocode',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('promocode.index')}}">
                                         <span class="icon-promocode_icon"></span>
@@ -237,7 +255,7 @@
                                     </a>
                                 </li>
                             @endif
-                            @if(in_array('LOYALTY CARDS',$allowed) || Auth::user()->is_superadmin == 1)
+                            @if(in_array('loyalty_cards',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('loyalty.index')}}">
                                         <span class="icon-loyality_icon"></span>
@@ -248,29 +266,32 @@
                         </ul>
                     </div>
                 </li>
-                <li>
-                    <a href="#sidebarextra" data-toggle="collapse">
-                        <span class="icon-dashboard_icon"></span>
-                        <span>EXTRA</span>
-                    </a>
-                    <div class="collapse" id="sidebarextra">
-                        <ul class="nav-second-level">
-                            @php
-                            $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
-                            @endphp
-                            @if(!empty($brity) && $brity->celebrity_check == 1)
-                                @if(in_array('CELEBRITY',$allowed) || Auth::user()->is_superadmin == 1)
-                                    <li>
-                                        <a href="{{route('celebrity.index')}}">
-                                            <span class="icon-celebrities_icon"></span>
-                                            <span> Celebrities </span>
-                                        </a>
-                                    </li>
-                                @endif
-                            @endif
-                        </ul>
-                    </div>
-                </li>
+                @php
+                    $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
+                @endphp
+                @if(!empty($brity) && $brity->celebrity_check == 1)
+                    @if(in_array('celebrity',$allowed) || Auth::user()->is_superadmin == 1)
+                        <li>
+                            <a href="#sidebarextra" data-toggle="collapse">
+                                <span class="icon-dashboard_icon"></span>
+                                <span>EXTRA</span>
+                            </a>
+                            <div class="collapse" id="sidebarextra">
+                                <ul class="nav-second-level">
+                                    
+                                        @if(in_array('celebrity',$allowed) || Auth::user()->is_superadmin == 1)
+                                            <li>
+                                                <a href="{{route('celebrity.index')}}">
+                                                    <span class="icon-celebrities_icon"></span>
+                                                    <span> Celebrities </span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                </ul>
+                            </div>
+                        </li>
+                    @endif
+                @endif
             </ul>
         </div>
     </div>

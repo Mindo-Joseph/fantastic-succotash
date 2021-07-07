@@ -60,6 +60,7 @@
                         </div>
                     </div>
                 </div>
+                @if(count($social_media_details))
                 <div class="col-lg-4 col-md-6 mb-md-0 mb-3 pl-lg-5">
                     <div class="sub-title">
                         <div class="footer-title">
@@ -72,14 +73,15 @@
                                 @foreach($social_media_details as $social_media_detail)
                                 <li>
                                     <a href="{{$social_media_detail->url}}" target="_blank">
-                                        <i class="fa fa-facebook" aria-hidden="true"></i>
-                                    </a>{{$social_media_detail->icon}}
+                                        <i class="fa {{ substr(strstr($social_media_detail->icon,' '), 1) }}" aria-hidden="true"></i>
+                                    </a>
                                 </li>
                                 @endforeach
                             </ul>
                         </div>
                     </div>
                 </div>
+                @endif
                 <div class="col-lg-3 col-md-6 mb-md-0 mb-3">
                     <div class="sub-title">
                         <div class="footer-title">
