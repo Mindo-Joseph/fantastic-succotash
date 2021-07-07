@@ -270,13 +270,11 @@
                                             </td>
                                         </tr>
                                     @empty
-                                    @endforelse
-                                </tbody>
-                                <tfoot>
                                     <tr align="center">
                                         <td colspan="4" style="padding: 40px 0 0">Result not found.</td>
                                     </tr>
-                                </tfoot>
+                                    @endforelse
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -302,6 +300,7 @@
                     <div class="form-group">
                         <label for="">Url</label>
                         <input class="form-control" name="url" type="text">
+                        <span class="text-danger error-text social_media_url_err"></span>
                     </div>
                 </div>
             </div>
@@ -384,8 +383,8 @@
                     $('#add_or_edit_social_media_modal #standard-modalLabel').html('Update Social Media');
                   }
                },
-               error:function(error){
-                  console.log(error)
+               error:function(){
+                
                }
             });
             
@@ -417,8 +416,8 @@
                       $.NotificationApp.send("Error", response.message, "top-right", "#ab0535", "error");
                   }
                },
-               error:function(error){
-                  console.log(error)
+               error:function(response){
+                $('.social_media_url_err').html(response.responseJSON.errors.social_media_url[0]);
                }
             });
         });

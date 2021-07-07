@@ -16,6 +16,10 @@ class SocialMediaController extends BaseController{
 
     public function create(Request $request){
         try {
+            $this->validate($request, [
+              'social_media_icon' => 'required',
+              'social_media_url' => 'required'
+            ]);
             SocialMedia::create(['icon' => $request->social_media_icon, 'url' => $request->social_media_url]);
             return $this->successResponse([], 'Social Media Added Successfully.');
         } catch (Exception $e) {
@@ -24,6 +28,7 @@ class SocialMediaController extends BaseController{
     }
     public function edit(Request $request){
         try {
+
             $social_media = SocialMedia::where(['id' => $request->social_media_detail_id])->firstOrFail();
             return $this->successResponse($social_media, 'Social Media Added Successfully.');
         } catch (Exception $e) {
@@ -32,6 +37,11 @@ class SocialMediaController extends BaseController{
     }
     public function update(Request $request){
         try {
+            $this->validate($request, [
+              'social_media_id' => 'required',
+              'social_media_url' => 'required',
+              'social_media_icon' => 'required',
+            ]);
             SocialMedia::where('id', $request->social_media_id)->update(['icon' => $request->social_media_icon, 'url' => $request->social_media_url]);
             return $this->successResponse([], 'Social Media Updated Successfully.');
         } catch (Exception $e) {
