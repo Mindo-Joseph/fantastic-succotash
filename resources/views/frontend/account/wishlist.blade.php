@@ -78,17 +78,7 @@
                 <div class="account-sidebar"><a class="popup-btn">my account</a></div>
                 <div class="dashboard-left">
                     <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i> back</span></div>
-                    <div class="block-content">
-                        <ul>
-                            <li><a href="{{route('user.profile')}}">Account Info</a></li>
-                            <li><a href="{{route('user.addressBook')}}">Address Book</a></li>
-                            <li><a href="{{route('user.orders')}}">My Orders</a></li>
-                            <li class="active"><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
-                            <li><a href="{{route('user.wallet')}}">My Wallet</a></li>
-                            <li><a href="{{route('user.changePassword')}}">Change Password</a></li>
-                            <li class="last"><a href="{{route('user.logout')}}" >Log Out</a></li>
-                        </ul>
-                    </div>
+                    @include('layouts.store/profile-sidebar')
                 </div>
             </div>
             <div class="col-lg-9">
