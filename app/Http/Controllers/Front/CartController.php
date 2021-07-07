@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor,CartCoupon, UserWishlist};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor,CartCoupon, LuxuryOption, UserWishlist};
 use Illuminate\Http\Request;
 use Session;
 use Auth;
@@ -37,6 +37,7 @@ class CartController extends FrontController
     }
 
     public function postAddToCart(Request $request, $domain = ''){
+        $luxury_option = LuxuryOption::where('title', Session::get('type'))->first();
         try {
             $cart_detail = [];
             $user = Auth::user();
@@ -61,6 +62,16 @@ class CartController extends FrontController
             }else{
                 $cart_detail = Cart::updateOrCreate(['unique_identifier' => $new_session_token], $cart_detail);
             }
+            $checkCartLuxuryOption = CartProduct::where('luxury_option_id' ,'!=', $luxury_option->id)->where('cart_id', $cart_detail->id)->first();
+            if($checkCartLuxuryOption){
+                CartProduct::where('cart_id', $cart_detail->id)->delete();
+            }
+            if($luxury_option->id == 2 || $luxury_option->id == 3){
+                $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $request->vendor_id)->first();
+                if($checkVendorId){
+                    CartProduct::where('cart_id', $cart_detail->id)->delete();
+                }
+            }
             $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cart_detail->id)->first();
             if ($checkIfExist) {
                 $checkIfExist->quantity = (int)$checkIfExist->quantity + $request->quantity;
@@ -77,6 +88,7 @@ class CartController extends FrontController
                     'product_id' => $request->product_id,
                     'variant_id'  => $request->variant_id,
                     'currency_id' => $client_currency->currency_id,
+                    'luxury_option_id' => $luxury_option->id,
                 ];
                 $cart_product = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id, 'product_id' => $request->product_id], $cart_product_detail);
                 $create_cart_addons = [];
@@ -318,7 +330,7 @@ class CartController extends FrontController
                     'vendorProducts.addon.option' => function($qry) use($langId){
                         $qry->where('language_id', $langId);
                     }, 'vendorProducts.product.taxCategory.taxRate', 
-                    ])->select('vendor_id')->where('status', [0,1])->where('cart_id', $cart_id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
+                    ])->select('vendor_id', 'luxury_option_id')->where('status', [0,1])->where('cart_id', $cart_id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if($cartData){
             foreach ($cartData as $ven_key => $vendorData) {
