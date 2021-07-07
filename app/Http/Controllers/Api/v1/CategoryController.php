@@ -57,7 +57,7 @@ class CategoryController extends BaseController
             }
             $response['category'] = $category;
             $response['filterData'] = $variantSets;
-            $response['listData'] = $this->listData($langId, $cid, $category->type->redirect_to, $paginate, $userid);
+            $response['listData'] = $this->listData($langId, $cid, strtolower($category->type->redirect_to), $paginate, $userid, $category->can_add_product);
             return $this->successResponse($response);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
@@ -65,8 +65,8 @@ class CategoryController extends BaseController
         
     }
 
-    public function listData($langId, $category_id, $type = '', $limit = 12, $userid){
-        if($type == 'vendor' || $type == 'Vendor'){
+    public function listData($langId, $category_id, $type = '', $limit = 12, $userid, $can_add_product){
+        if($type == 'vendor' && $can_add_product == 0){
             $vendor_ids = [];
             $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
             foreach ($vendor_categories as $vendor_category) {
@@ -108,6 +108,7 @@ class CategoryController extends BaseController
                     },
                     ])->select('products.category_id','products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
                     ->where('products.category_id', $category_id)->where('products.is_live', 1)->whereIn('products.vendor_id', $vendor_ids)->paginate($limit);
+                    pr($products);die;
             if(!empty($products)){
                 foreach ($products as $key => $product) {
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
