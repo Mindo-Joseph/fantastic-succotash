@@ -2,15 +2,16 @@
 
 namespace App\Providers;
 
-use Illuminate\Pagination\Paginator;
-use Illuminate\Http\Request;
 use DB;
 use Auth;
 use URL;
 use Route;
 use Config;
 use App\Models\Client;
+use App\Models\SocialMedia;
+use Illuminate\Http\Request;
 use App\Models\ClientPreference;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\ServiceProvider;
 
@@ -38,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         }
         $this->connectDynamicDb($request);
         Paginator::useBootstrap();
+        $social_media_details = SocialMedia::get();
         $favicon_url = asset('assets/images/favicon.png');
         $client_preference_detail = ClientPreference::where(['id' => 1])->first();
         if ($client_preference_detail) {
@@ -46,6 +48,8 @@ class AppServiceProvider extends ServiceProvider
         $client = Client::where(['id' => 1])->first();
         view()->share('client', $client);
         view()->share('favicon', $favicon_url);
+        view()->share('favicon', $favicon_url);
+        view()->share('social_media_details', $social_media_details);
         view()->share('client_preference_detail', $client_preference_detail);
     }
 
