@@ -94,8 +94,8 @@ class CategoryController extends BaseController
             return $category_details;
         }
         elseif($type == 'product' || $type == 'Product'){
-            $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
             $vendor_ids = Vendor::where('status', 1)->pluck('id')->toArray();
+            $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
             $products = Product::has('vendor')->join('product_categories as pc', 'pc.product_id', 'products.id')
                     ->with(['category.categoryDetail','inwishlist' => function($qry) use($userid){
                         $qry->where('user_id', $userid);
@@ -110,7 +110,7 @@ class CategoryController extends BaseController
                     ])->whereHas('category', function($q1) use($category_id){
                         $q1->where('category_id', $category_id);
                     })->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('products.category_id', $category_id)->where('products.is_live', 1)->whereIn('vendor_id', $vendor_ids)->paginate($limit);
+                    ->where('category_id', $category_id)->where('products.is_live', 1)->whereIn('vendor_id', $vendor_ids)->paginate($limit);
             if(!empty($products)){
                 foreach ($products as $key => $product) {
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
