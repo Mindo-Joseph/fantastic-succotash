@@ -252,7 +252,7 @@
                                                 </a>
                                             </td>
                                             <td style="width:100px">
-                                                <p class="ellips">{{$social_media_detail->url}}</p>
+                                                <a href="{{$social_media_detail->url}}" target="_blank">{{$social_media_detail->url}}</a>
                                             </td>
                                             <td>
                                                 <div class="form-ul" style="width: 60px;">
