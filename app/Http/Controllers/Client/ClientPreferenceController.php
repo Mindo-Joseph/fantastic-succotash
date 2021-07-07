@@ -36,51 +36,54 @@ class ClientPreferenceController extends BaseController
      * @param  \App\ClientPreference  $clientPreference
      * @return \Illuminate\Http\Response
      */
-    public function customize(ClientPreference $clientPreference)
-    {
+    public function customize(ClientPreference $clientPreference){
+        $curArray = [];
+        $cli_langs = [];
+        $reffer_by = "";
+        $reffer_to = "";
+        $cli_currencies = [];
+        $client = Auth::user();
         $webTemplates = Template::where('for', '1')->get();
         $appTemplates = Template::where('for', '2')->get();
-        $curArray = array();
-        $primaryCurrency = ClientCurrency::where('is_primary', 1)->first();
+        $languages = Language::where('id', '>', '0')->get();
         $currencies = Currency::where('id', '>', '0')->get();
         $curtableData = array_chunk($currencies->toArray(), 2);
-        $languages = Language::where('id', '>', '0')->get(); /*  cprimary - currency primary*/
-        $preference = ClientPreference::with('language', 'primarylang', 'domain', 'currency.currency', 'primary.currency')->select('client_code', 'theme_admin', 'distance_unit', 'date_format', 'time_format', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'verify_email', 'verify_phone', 'web_template_id', 'app_template_id', 'primary_color', 'secondary_color', 'reffered_by_amount', 'reffered_to_amount')
-                        ->where('client_code', Auth::user()->code)->first();
-
-        // dd($preference->toArray());
-        $client = Auth::user();
-        $cli_langs = array();
-        $cli_currencies = array();
-
+        $primaryCurrency = ClientCurrency::where('is_primary', 1)->first();
+        $preference = ClientPreference::with('language', 'primarylang', 'domain', 'currency.currency', 'primary.currency')->select('client_code', 'theme_admin', 'distance_unit', 'date_format', 'time_format', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'verify_email', 'verify_phone', 'web_template_id', 'app_template_id', 'primary_color', 'secondary_color', 'reffered_by_amount', 'reffered_to_amount')->where('client_code', $client->code)->first();
         if(!$preference){
             $preference = new ClientPreference();
         }else{
-            foreach ($preference->currency as $key => $value) {
+            foreach ($preference->currency as $value) {
                 $cli_currencies[] = $value->currency_id;
             }
-            foreach ($preference->language as $key => $value) {
+            foreach ($preference->language as $value) {
                 $cli_langs[] = $value->language_id;
             }
         }
-
-        $reffer_by = " ";
-        $reffer_to = " ";
         if($preference->reffered_by_amount == null){
             $reffer_by = 0;
-        }
-        else{
+        }else{
             $reffer_by = $preference->reffered_by_amount;
         }
-
         if($preference->reffered_to_amount == null){
             $reffer_to = 0;
-        }
-        else{
+        }else{
             $reffer_to = $preference->reffered_to_amount;
         }
-
-        return view('backend/setting/customize')->with(['reffer_by' => $reffer_by,'reffer_to' => $reffer_to, 'client' => $client, 'preference' => $preference, 'webTemplates' => $webTemplates, 'appTemplates' => $appTemplates, 'currencies' => $currencies, 'languages' => $languages, 'cli_langs' => $cli_langs, 'cli_currs' => $cli_currencies, 'primaryCurrency' => $primaryCurrency, 'curtableData' => $curtableData]);
+        return view('backend/setting/customize')->with([
+            'client' => $client,
+            'cli_langs' => $cli_langs, 
+            'reffer_by' => $reffer_by,
+            'languages' => $languages, 
+            'reffer_to' => $reffer_to, 
+            'currencies' => $currencies, 
+            'preference' => $preference, 
+            'cli_currs' => $cli_currencies, 
+            'curtableData' => $curtableData,
+            'webTemplates' => $webTemplates, 
+            'appTemplates' => $appTemplates, 
+            'primaryCurrency' => $primaryCurrency, 
+        ]);
     }
 
      /**

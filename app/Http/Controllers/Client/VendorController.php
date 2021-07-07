@@ -380,9 +380,9 @@ class VendorController extends BaseController
     /**       delete vendor       */
     public function destroy($domain = '', $id){
         $vendor = Vendor::where('id', $id)->first();
-        // $vendor->status = 2;
+        $vendor->status = 2;
         $vendor->save();
-        return redirect()->back()->with('success', 'Vendor deleted successfully!');
+        return $this->successResponse($vendor, 'Vendor deleted successfully!');
     }
 
     /**     update vendor configuration data     */

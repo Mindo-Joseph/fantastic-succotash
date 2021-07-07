@@ -57,7 +57,7 @@ class AppStylingSeeder extends Seeder
 
         $app_styling_option = AppStylingOption::insert([
             'app_styling_id' => $app_styling,
-            'name' => '#fff',
+            'name' => '#41A2E6',
             'is_selected' => '1'
         ]);
 

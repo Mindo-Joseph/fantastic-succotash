@@ -73,24 +73,8 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="row mb-2">
-                        <div class="col-sm-12">
-                            <div class="text-sm-left">
-                                @if (\Session::has('success'))
-                                <div class="alert alert-success">
-                                    <span>{!! \Session::get('success') !!}</span>
-                                </div>
-                                @endif
-                                @if (\Session::has('error_delete'))
-                                <div class="alert alert-danger">
-                                    <span>{!! \Session::get('error_delete') !!}</span>
-                                </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
                     <div class="table-responsive">
-                        <form name="saveOrder" id="saveOrder"> @csrf </form>
+                        <form name="saveOrder" id="saveOrder"> @csrf</form>
                         <table class="table table-centered table-nowrap table-striped" id="vendor_datatable" width="100%">
                             <thead>
                                 <tr>
@@ -135,12 +119,13 @@
             var id = $(this).data('rel');
             if (confirm('Are you sure?')) {
               $.ajax({
-                data: {id:id},
-                type: "DELETE",
+                type: "POST",
                 dataType: 'json',
                 url: destroy_url,
+                data:{'_method':'DELETE'},
                 success: function(response) {
                     if (response.status == "Success") {
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
                         window.location.reload();
                     }
                 }
