@@ -27,19 +27,19 @@ class WebStylingController extends BaseController{
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function updateWebStyles(Request $request)
-    {
+    public function updateWebStyles(Request $request){
         $client_preferences = ClientPreference::first();
         if($client_preferences){
             if($request->has('favicon')){
                 $client_preferences->favicon = Storage::disk('s3')->put('favicon', $request->favicon, 'public');
             }
             $client_preferences->web_color = $request->primary_color;
+            $client_preferences->cart_enable = $request->cart_enable == 'on' ? 1 : 0;
             $client_preferences->save();
         }
         return response()->json([
             'status' => 'success',
-            'message' => 'Updated successfully!'
+            'message' => 'Web Styling Updated Successfully!'
         ]);
     }
 }
