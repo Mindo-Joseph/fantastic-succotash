@@ -118,4 +118,101 @@ class PickupDeliveryController extends BaseController{
 
 
 
+    
+    /**
+     * create order for booking
+    */
+     public function createOrder(Request $request){
+        DB::beginTransaction();
+        try {
+            $data = [];
+            $request_to_dispatch = $this->placeRequestToDispatch($request);
+            DB::commit();
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $data,
+                    'message' => 'Order Successfully.'
+                ]);
+            }
+            catch(\Exception $e){
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+           
+        }
+     
+    }
+     // place Request To Dispatch
+    public function placeRequestToDispatch($request){
+        try {
+            $dispatch_domain = $this->checkIfPickupDeliveryOn();
+            $customer = Auth::user();
+            if ($dispatch_domain && $dispatch_domain != false) {
+                $tasks = array();
+                if ($request->payment_method == 2) {
+                    $cash_to_be_collected = 'Yes';
+                    $payable_amount = $request->amount;
+                } else {
+                    $cash_to_be_collected = 'No';
+                    $payable_amount = 0.00;
+                }
+                $dynamic = uniqid();
+                $call_back_url = route('dispatch-pickup-delivery', $dynamic);
+
+                $tasks = array();
+                $meta_data = '';
+               
+                               
+                $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
+                                                    'customer_phone_number' => $customer->phone_number ?? '',
+                                                    'customer_email' => $customer->email ?? '',
+                                                    'recipient_phone' => $request->phone_number ?? $customer->phone_number,
+                                                    'recipient_email' => $request->email ?? $customer->email,
+                                                    'task_description' => "Pickup & Delivery From order",
+                                                    'allocation_type' => 'u',
+                                                    'task_type' => $request->task_type,
+                                                    'schedule_time' => $request->schedule_time ?? null,
+                                                    'cash_to_be_collected' => $payable_amount??0.00,
+                                                    'barcode' => '',
+                                                    'call_back_url' => $call_back_url??null,
+                                                    'task' => $request->tasks
+                                                    ];
+
+                  
+                $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,
+                                                    'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,
+                                                    'content-type' => 'application/json']
+                                                        ]);
+                                            
+                $url = $dispatch_domain->pickup_delivery_service_key_url;
+                $res = $client->post(
+                    $url.'/api/task/create',
+                    ['form_params' => (
+                            $postdata
+                        )]
+                );
+                $response = json_decode($res->getBody(), true);
+                if ($response && $response['task_id'] > 0) {
+                   
+                    return 1;
+                }
+                return 2;
+            }
+            }    
+                    catch(\Exception $e)
+                    {
+                        return 2;
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => $e->getMessage()
+                        ]);
+                                
+                    }
+                
+            
+           
+    }
+
 }

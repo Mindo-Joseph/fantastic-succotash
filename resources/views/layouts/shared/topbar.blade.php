@@ -7,7 +7,7 @@
                 <div class="logo-box">
                     @php
                         $urlImg = URL::to('/').'/assets/images/users/user-1.jpg';
-                        $clientData = \App\Models\Client::select('id', 'logo','custom_domain')->where('id', '>', 0)->first();
+                        $clientData = \App\Models\Client::select('id', 'logo','custom_domain','code')->with('getPreference')->where('id', '>', 0)->first();
                         if($clientData){
                             $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'];
                         }
@@ -42,6 +42,14 @@
             <li class="m-hide"><a href="{{route('userHome')}}" target="_blank"><i class="fa fa-globe" aria-hidden="true"></i><span class="align-middle">View Website</span></a></li>
             <li class="m-hide"><a href="#" target="_blank"><i class="fab fa-apple" aria-hidden="true"></i><span class="align-middle">iOS App</span></a></li>
             <li class="m-hide"><a href="#" target="_blank"><i class="fab fa-android" aria-hidden="true"></i><span class="align-middle">Android App</span></a></li>
+            
+           
+            @if($clientData->getPreference->need_delivery_service  == 1 && isset($clientData->getPreference->delivery_service_key_url))
+                <li class="m-hide"><a href="{{ $clientData->getPreference->delivery_service_key_url }}" target="_blank"><i class="fa fa-globe" aria-hidden="true"></i><span class="align-middle">{{ __('Last Mile Delivery Dashboard')}}</span></a></li>
+            @endif
+            @if($clientData->getPreference->need_dispacher_ride == 1 && isset($clientData->getPreference->pickup_delivery_service_key_url))
+                <li class="m-hide"><a href="{{ $clientData->getPreference->pickup_delivery_service_key_url }}" target="_blank"><i class="fa fa-globe" aria-hidden="true"></i><span class="align-middle">{{ __('Pickup & Delivery  Dashboard')}}</span></a></li>
+            @endif
         </ul>
 
         <!-- <ul class=" list-unstyled topnav-menu topnav-menu-left m-0">
