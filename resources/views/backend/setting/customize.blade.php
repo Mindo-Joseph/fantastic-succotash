@@ -272,6 +272,11 @@
                                     @empty
                                     @endforelse
                                 </tbody>
+                                <tfoot>
+                                    <tr align="center">
+                                        <td colspan="4" style="padding: 40px 0 0">Result not found.</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>

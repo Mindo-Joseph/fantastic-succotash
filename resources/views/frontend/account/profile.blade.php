@@ -108,7 +108,7 @@
                             <h2>My Profile</h2>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inquery_form">
-                            Launch demo modal
+                                Launch demo modal
                             </button>
                         </div>
                         <div class="card-box">
@@ -382,7 +382,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- inquery Form Modal -->
 <div class="modal fade" id="inquery_form" tabindex="-1" aria-labelledby="inquery_formLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">

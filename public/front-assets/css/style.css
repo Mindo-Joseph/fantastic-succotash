@@ -16839,8 +16839,8 @@ header.stickycls {
 ==========================**/
 body.dark {
   background-color: #2b2b2b;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
   color: #cfd4da; }
 
 .dark h1 {
@@ -18934,6 +18934,15 @@ body.dark {
           box-shadow: 0px 0px 5px 0px rgba(154, 154, 154, 0.54);
   top: calc(50% + 34px);
   cursor: pointer; }
+
+  .dark-light:before {
+    content: "\f013";
+    font-family: 'FontAwesome';
+    position: absolute;
+    left: 10px;
+    top: calc(50% + 1px);
+    transform: translateY(-50%);
+}
 
 .setting-sidebar {
   z-index: 9; }
