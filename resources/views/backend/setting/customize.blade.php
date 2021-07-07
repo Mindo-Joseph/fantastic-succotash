@@ -226,8 +226,8 @@
             <div class="card-box mb-0 h-100 pb-1">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <h4 class="header-title mb-0">Social Media</h4>
-                    <button class="btn btn-info d-block" id="add_social_media_modal_btn"> 
-                        <i class="mdi mdi-plus-circle mr-1"></i>Add 
+                    <button class="btn btn-info d-block" id="add_social_media_modal_btn">
+                        <i class="mdi mdi-plus-circle mr-1"></i>Add
                     </button>
                 </div>
                 <div class="card">
@@ -244,31 +244,31 @@
                                 </thead>
                                 <tbody id="post_list">
                                     @forelse($social_media_details as $social_media_detail)
-                                        <tr>
-                                            <td></td>
-                                            <td>
-                                                <a href="#">
-                                                    <i class="{{$social_media_detail->icon}}" aria-hidden="true"></i>
-                                                </a>
-                                            </td>
-                                            <td style="width:100px">
-                                                <a href="{{$social_media_detail->url}}" target="_blank">{{$social_media_detail->url}}</a>
-                                            </td>
-                                            <td>
-                                                <div class="form-ul" style="width: 60px;">
-                                                    <div class="inner-div" style="float: left;">
-                                                        <a class="action-icon edit_social_media_option_btn" data-social_media_detail_id="{{$social_media_detail->id}}">
-                                                            <i class="mdi mdi-square-edit-outline"></i>
-                                                        </a>
-                                                    </div>
-                                                    <div class="inner-div">
-                                                        <button type="button" class="btn btn-primary-outline action-icon delete_social_media_option_btn" data-social_media_detail_id="{{$social_media_detail->id}}">
-                                                            <i class="mdi mdi-delete"></i>
-                                                        </button>
-                                                    </div>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <a href="#">
+                                                <i class="{{$social_media_detail->icon}}" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                        <td style="width:100px">
+                                            <a href="{{$social_media_detail->url}}" target="_blank">{{$social_media_detail->url}}</a>
+                                        </td>
+                                        <td>
+                                            <div class="form-ul" style="width: 60px;">
+                                                <div class="inner-div" style="float: left;">
+                                                    <a class="action-icon edit_social_media_option_btn" data-social_media_detail_id="{{$social_media_detail->id}}">
+                                                        <i class="mdi mdi-square-edit-outline"></i>
+                                                    </a>
                                                 </div>
-                                            </td>
-                                        </tr>
+                                                <div class="inner-div">
+                                                    <button type="button" class="btn btn-primary-outline action-icon delete_social_media_option_btn" data-social_media_detail_id="{{$social_media_detail->id}}">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
                                     @empty
                                     <tr align="center">
                                         <td colspan="4" style="padding: 40px 0 0">Result not found.</td>
@@ -295,7 +295,13 @@
                     <input type="hidden" name="social_media_id" value="">
                     <div class="form-group">
                         <label for="">Icon</label>
-                        <input class="form-control icp icp-auto" name="icon" value="fas fa-anchor" type="text" />
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">@</div>
+                            </div>
+                            <input class="form-control icp icp-auto" name="icon" value="fas fa-anchor" type="text" >
+                        </div>
+
                     </div>
                     <div class="form-group">
                         <label for="">Url</label>
@@ -322,7 +328,7 @@
         defaultValue: true,
         placement: 'bottom',
         collision: 'none',
-        trigger : 'hover',
+        trigger: 'hover',
         animation: false,
         hideOnSelect: false,
         showFooter: false,
@@ -332,6 +338,7 @@
         input: 'input,.icp-auto',
         inputSearch: false,
         container: false,
+        component: '.input-group-text,.iconpicker-component',
         templates: {
             popover: '<div class="iconpicker-popover popover"><div class="arrow"></div>' +
                 '<div class="popover-title"></div><div class="popover-content"></div></div>',
@@ -349,18 +356,22 @@
                 'X-CSRF-TOKEN': $('input[name="_token"]').val()
             }
         });
-        $(document).on("click",".delete_social_media_option_btn",function() {
+        $(document).on("click", ".delete_social_media_option_btn", function() {
             var social_media_detail_id = $(this).data('social_media_detail_id');
             if (confirm('Are you sure?')) {
                 $.ajax({
                     type: "POST",
                     dataType: 'json',
                     url: "{{ route('social.media.delete') }}",
-                    data:{social_media_detail_id:social_media_detail_id},
+                    data: {
+                        social_media_detail_id: social_media_detail_id
+                    },
                     success: function(response) {
                         if (response.status == "Success") {
                             $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                            setTimeout(function(){ location.reload() }, 2000);
+                            setTimeout(function() {
+                                location.reload()
+                            }, 2000);
                         }
                     }
                 });
@@ -371,23 +382,25 @@
             let social_media_detail_id = $(this).data('social_media_detail_id');
             $('#add_or_edit_social_media_modal input[name=social_media_id]').val(social_media_detail_id);
             $.ajax({
-               method:'GET',
-               data:{social_media_detail_id:social_media_detail_id},
-               url:"{{ route('social.media.edit') }}",
-               success:function(response){
-                  if(response.status = 'Success'){
-                    $("#add_or_edit_social_media_modal input[name=url]").val(response.data.url);
-                    $("#add_or_edit_social_media_modal .iconpicker-input").val(response.data.icon);
-                    $("#add_or_edit_social_media_modal input[name=social_media_id]").val(response.data.id);
-                    $('#add_or_edit_social_media_modal').modal('show');
-                    $('#add_or_edit_social_media_modal #standard-modalLabel').html('Update Social Media');
-                  }
-               },
-               error:function(){
-                
-               }
+                method: 'GET',
+                data: {
+                    social_media_detail_id: social_media_detail_id
+                },
+                url: "{{ route('social.media.edit') }}",
+                success: function(response) {
+                    if (response.status = 'Success') {
+                        $("#add_or_edit_social_media_modal input[name=url]").val(response.data.url);
+                        $("#add_or_edit_social_media_modal .iconpicker-input").val(response.data.icon);
+                        $("#add_or_edit_social_media_modal input[name=social_media_id]").val(response.data.id);
+                        $('#add_or_edit_social_media_modal').modal('show');
+                        $('#add_or_edit_social_media_modal #standard-modalLabel').html('Update Social Media');
+                    }
+                },
+                error: function() {
+
+                }
             });
-            
+
         });
         $(document).on("click", "#add_social_media_modal_btn", function() {
             $('.icp-auto').iconpicker(options_iconpicker);
@@ -398,27 +411,33 @@
             var social_media_url = $("#add_or_edit_social_media_modal input[name=url]").val();
             var social_media_icon = $("#add_or_edit_social_media_modal .iconpicker-input").val();
             var social_media_id = $("#add_or_edit_social_media_modal input[name=social_media_id]").val();
-            if(social_media_id){
+            if (social_media_id) {
                 var post_url = "{{ route('social.media.update') }}";
-            }else{
+            } else {
                 var post_url = "{{ route('social.media.create') }}";
             }
             $.ajax({
-               url:post_url,
-               method:'POST',
-               data:{social_media_id:social_media_id, social_media_url:social_media_url, social_media_icon:social_media_icon},
-               success:function(response){
-                  if(response.status =='Success'){
-                    $('#add_or_edit_social_media_modal').modal('hide');
-                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                    setTimeout(function(){ location.reload() }, 2000);
-                  }else{
-                      $.NotificationApp.send("Error", response.message, "top-right", "#ab0535", "error");
-                  }
-               },
-               error:function(response){
-                $('.social_media_url_err').html(response.responseJSON.errors.social_media_url[0]);
-               }
+                url: post_url,
+                method: 'POST',
+                data: {
+                    social_media_id: social_media_id,
+                    social_media_url: social_media_url,
+                    social_media_icon: social_media_icon
+                },
+                success: function(response) {
+                    if (response.status == 'Success') {
+                        $('#add_or_edit_social_media_modal').modal('hide');
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                        setTimeout(function() {
+                            location.reload()
+                        }, 2000);
+                    } else {
+                        $.NotificationApp.send("Error", response.message, "top-right", "#ab0535", "error");
+                    }
+                },
+                error: function(response) {
+                    $('.social_media_url_err').html(response.responseJSON.errors.social_media_url[0]);
+                }
             });
         });
     });
@@ -431,6 +450,7 @@
         var color1 = new jscolor('#primary_color', options);
         var color2 = new jscolor('#secondary_color', options);
     });
+
     function generateRandomString(length) {
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -438,6 +458,7 @@
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         return text;
     }
+
     function genrateKeyAndToken() {
         var key = generateRandomString(30);
         var token = generateRandomString(60);

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Front\SearchController;
+use App\Http\Controllers\Client\CMS\PageController;
+use App\Http\Controllers\Client\CMS\EmailController;
 use App\Http\Controllers\Client\SocialMediaController;
 use App\Http\Controllers\Client\DownloadFileController;
 use App\Http\Controllers\Client\Accounting\TaxController;
@@ -28,6 +30,8 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('salesInfo/yearly', 'Client\DashBoardController@yearlySalesInfo')->name('client.yearlySalesInfo');
     Route::get('salesInfo/weekly', 'Client\DashBoardController@weeklySalesInfo')->name('client.weeklySalesInfo');
     Route::get('categoryInfo', 'Client\DashBoardController@categoryInfo')->name('client.categoryInfo');
+    Route::get('cms/pages', [PageController::class, 'index'])->name('cms.pages');
+    Route::get('cms/emails', [EmailController::class, 'index'])->name('cms.emails');
     Route::get('account/orders', [OrderController::class, 'index'])->name('account.orders');
     Route::get('account/promo-code', [PromoCodeController::class, 'index'])->name('account.promo.code');
     Route::get('account/promo-code/filter', [PromoCodeController::class, 'filter'])->name('account.promo-code.filter');
