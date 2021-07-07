@@ -117,7 +117,7 @@
                                                 <td> 
                                                     <img src="{{$sub->image['proxy_url'].'40/40'.$sub->image['image_path']}}" class="rounded-circle" alt="{{$sub->slug}}" >
                                                 </td>
-                                                <td><a href="{{route('customer.new.edit', $sub->slug)}}"  class=""> {{$sub->title}}</a></td>
+                                                <td><a href="javascript:void(0)" class="editVendorSubscriptionBtn" data-id="{{$sub->slug}}">{{$sub->title}}</a></td>
                                                 <td>{{$sub->Description}}</td>
                                                 <td>${{$sub->price}}</td>
                                                 <td>{{$sub->features}}</td>
