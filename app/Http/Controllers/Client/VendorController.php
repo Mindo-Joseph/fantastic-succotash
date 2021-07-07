@@ -313,6 +313,7 @@ class VendorController extends BaseController
         $product_categories = VendorCategory::with('category')->where('status', 1)->where('vendor_id', $id)->get();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
         $client_preferences = ClientPreference::first();
+      //  dd($product_categories->toArray());
         return view('backend.vendor.vendorCatalog')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
     }
 
