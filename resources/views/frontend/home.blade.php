@@ -89,11 +89,11 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-lg-12 tab-product pt-0">
-                <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
+                <ul class="nav nav-tabs nav-material tab-icons" id="top-tab" role="tablist">
                 @if($clientPreferences->delivery_check == 1)
                     <li class="nav-item">
                         <a class="nav-link {{$count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-selected="false" data-rel="delivery_tab">
-                            <i class="icofont icofont-man-in-glasses"></i>Delivery
+                            <i><span class="icon-shipped"></span></i> <span>Delivery</span>
                         </a>
                         <div class="material-border"></div>
                     </li>
@@ -101,7 +101,7 @@
                 @if($clientPreferences->dinein_check == 1)
                     <li class="nav-item">
                         <a class="nav-link {{$clientPreferences->dinein_check == 1 && $clientPreferences->delivery_check != 1? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-selected="true" data-rel="dinein_tab">
-                            <i class="icofont icofont-ui-home"></i>Dine-In
+                        <i><span class="icon-dine-in"></span></i> <span>Dine-In</span>
                         </a>
                         <div class="material-border"></div>
                     </li>
@@ -109,7 +109,7 @@
                 @if($clientPreferences->takeaway_check == 1)
                     <li class="nav-item">
                         <a class="nav-link {{$count == 1 ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-selected="false" data-rel="takeaway_tab">
-                            <i class="icofont icofont-man-in-glasses"></i>Takeaway
+                            <i><span class="icon-take-away"></span></i> <span>Takeaway</span>
                         </a>
                         <div class="material-border"></div>
                     </li>

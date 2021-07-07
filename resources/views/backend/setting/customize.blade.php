@@ -271,7 +271,7 @@
                                     </tr>
                                     @empty
                                     <tr align="center">
-                                        <td colspan="4" style="padding: 40px 0 0">Result not found.</td>
+                                        <td colspan="4" style="padding: 20px 0">Result not found.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>

@@ -14,7 +14,7 @@
 </div>
 <form id="favicon-form" method="post" enctype="multipart/form-data">
 <div class="row">
-    <div class="col-lg-2">
+    <div class="col-md-4 col-xl-2">
         <div class="card h-100">
             <div class="card-body">
                 <h4 class="header-title mb-3">Cart Toggle</h4>

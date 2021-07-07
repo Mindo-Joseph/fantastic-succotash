@@ -1,10 +1,11 @@
-@font-face {
+
+  @font-face {
     font-family: 'icomoon';
-    src:  url('/assets/css/fonts/icomoon.eot?vssgvx');
-    src:  url('/assets/css/fonts/icomoon.eot?vssgvx#iefix') format('embedded-opentype'),
-      url('/assets/css/fonts/icomoon.ttf?vssgvx') format('truetype'),
-      url('/assets/css/fonts/icomoon.woff?vssgvx') format('woff'),
-      url('/assets/css/fonts/icomoon.svg?vssgvx#icomoon') format('svg');
+    src:  url('/assets/css/fonts/icomoon.eot?3s9cu5');
+    src:  url('/assets/css/fonts/icomoon.eot?3s9cu5#iefix') format('embedded-opentype'),
+      url('/assets/css/fonts/icomoon.ttf?3s9cu5') format('truetype'),
+      url('/assets/css/fonts/icomoon.woff?3s9cu5') format('woff'),
+      url('/assets/css/fonts/icomoon.svg?3s9cu5#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -97,6 +98,16 @@
   .icon-theme-icon:before {
     content: "\e916";
   }
+  .icon-shipped:before {
+    content: "\e917";
+  }
+  .icon-dine-in:before {
+    content: "\e918";
+  }
+  .icon-take-away:before {
+    content: "\e919";
+  }
+  
   
 
 .table-responsive::-webkit-scrollbar {
@@ -1466,7 +1477,7 @@ i.mdi.mdi-exclamation-thick {
     position: relative;
 }
 
-.nav-second-level li a:before {
+.nav-second-level li .collapse li a:before {
     content: "";
     width: 6px;
     height: 6px;
@@ -1868,7 +1879,7 @@ td.product-name,.vendor-name {
     cursor: pointer;
 }
 
-#sidebar-menu > ul > li > a[data-toggle="collapse"]:after {
+#sidebar-menu > ul > li a[data-toggle="collapse"]:after {
     content: "\F0142";
     transition: transform 0.15s;
     position: absolute;
@@ -1883,7 +1894,7 @@ td.product-name,.vendor-name {
     /* top: 0; */
 }
 
-#sidebar-menu > ul > li > a[aria-expanded="true"]:after, #sidebar-menu > ul > li.menuitem-active > a:not(.collapsed)[aria-expanded="true"]:after {
+#sidebar-menu > ul > li  a[aria-expanded="true"]:after, #sidebar-menu > ul > li.menuitem-active  a:not(.collapsed)[aria-expanded="true"]:after {
     transform: rotate(
 90deg
 );
