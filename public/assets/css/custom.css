@@ -1895,7 +1895,12 @@ td.product-name,.vendor-name {
 .dark .nav-second-level li a:hover,.dark #sidebar-menu .menuitem-active > a,.dark .mdi-icons,.dark label.logo-size,.dark .social_head i,.dark .dd-list .dd3-content:hover {
     color: rgb(247 184 75 / 82%);
 }
-
+.dark .card {
+    background: rgb(255 255 255 / 5%);
+}
+.dark .text-dark,.dark .text-muted, .dark .header-title {
+    color: #98a6ad!important;
+}
 .dark .text-primary {
     color: rgb(247 184 75 / 82%) !important;
 }

@@ -33,6 +33,10 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('account/promo-code/filter', [PromoCodeController::class, 'filter'])->name('account.promo-code.filter');
     Route::get('account/promo-code/export', [PromoCodeController::class, 'export'])->name('account.promo-code.export');
     Route::get('social/media', [SocialMediaController::class, 'index'])->name('social.media.index');
+    Route::post('social/media/create', [SocialMediaController::class, 'create'])->name('social.media.create');
+    Route::post('social/media/update', [SocialMediaController::class, 'update'])->name('social.media.update');
+    Route::get('social/media/edit', [SocialMediaController::class, 'edit'])->name('social.media.edit');
+    Route::post('social/media/delete', [SocialMediaController::class, 'delete'])->name('social.media.delete');
     Route::get('account/loyalty', [LoyaltyController::class, 'index'])->name('account.loyalty');
     Route::get('account/tax', [TaxController::class, 'index'])->name('account.tax');
     Route::get('account/vendor', [VendorController::class, 'index'])->name('account.vendor');
@@ -46,10 +50,10 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::put('profile/{id}', 'Client\DashBoardController@updateProfile')->name('client.profile.update');
     Route::post('password/update', 'Client\DashBoardController@changePassword')->name('client.password.update');
     Route::get('configure', 'Client\ClientPreferenceController@index')->name('configure.index');
-    Route::get('customize', 'Client\ClientPreferenceController@customize')->name('configure.customize');
+    Route::get('customize', 'Client\ClientPreferenceController@getCustomizePage')->name('configure.customize');
     Route::post('configUpdate/{code}', 'Client\ClientPreferenceController@update')->name('configure.update');
     Route::post('referandearnUpdate/{code}', 'Client\ClientPreferenceController@referandearnUpdate')->name('referandearn.update');
-    Route::post('updateDomain/{code}', 'Client\ClientPreferenceController@updateDomain')->name('client.updateDomain');
+    Route::post('updateDomain/{code}', 'Client\ClientPreferenceController@postUpdateDomain')->name('client.updateDomain');
     Route::resource('banner', 'Client\BannerController');
     Route::post('banner/saveOrder', 'Client\BannerController@saveOrder');
     Route::post('banner/changeValidity', 'Client\BannerController@validity');
