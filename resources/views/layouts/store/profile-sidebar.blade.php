@@ -8,7 +8,7 @@
             <li class="{{ (request()->is('user/orders*')) ? 'active' : '' }}"><a href="{{route('user.orders')}}">My Orders</a></li>
             <li class="{{ (request()->is('user/wishlists')) ? 'active' : '' }}"><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
             <li class="{{ (request()->is('user/wallet')) ? 'active' : '' }}"><a href="{{route('user.wallet')}}">My Wallet</a></li>
-            <li class="{{ (request()->is('user/subscription')) ? 'active' : '' }}"><a href="{{route('user.profile')}}">My Subscription</a></li>
+            <li class="{{ (request()->is('user/subscription')) ? 'active' : '' }}"><a href="{{route('user.subscriptions')}}">My Subscription</a></li>
             <li class="{{ (request()->is('user/changePassword')) ? 'active' : '' }}"><a href="{{route('user.changePassword')}}">Change Password</a></li>
             <li class="last {{ (request()->is('user/logout')) ? 'active' : '' }}"><a href="{{route('user.logout')}}">Log Out</a></li>
         </ul>
