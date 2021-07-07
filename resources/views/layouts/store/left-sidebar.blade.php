@@ -90,9 +90,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                 <a href="{{route('showCart')}}">
                                                     <img src="{{asset('front-assets/images/icon/cart_.png')}}" class="img-fluid blur-up lazyload" alt=""> 
                                                 </a>
+                                                <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span>
                                             @endif
                                         @endif
-                                        <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span>
                                         <script type="text/template" id="header_cart_template">
                                              <% _.each(cart_details.products, function(product, key){%>
                                               <% _.each(product.vendor_products, function(vendor_product, vp){%>
