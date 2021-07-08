@@ -131,66 +131,7 @@
                         {!! Form::label('title', 'Vendor Category',['class' => 'control-label']) !!}
                         <div class="custom-dd dd nestable_list_1" id="nestable_list_1">
                             <ol class="dd-list">
-                                @forelse($builds as $build)
-                                <li class="dd-item dd3-item" data-category_id="{{$build['id']}}">
-                                    <div class="dd3-content"> 
-                                        <img class="rounded-circle mr-1" src="{{$build['icon']['proxy_url']}}30/30{{$build['icon']['image_path']}}"> {{$build['translation_one']['name']}}
-                                        <span class="inner-div text-right">
-                                            <a class="action-icon" data-id="3" href="javascript:void(0)">
-                                                @if(in_array($build['id'], $VendorCategory))
-                                                    <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked>
-                                                @else
-                                                    <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery">
-                                                @endif
-                                                <input type="hidden" value="{{ $build['id'] }}">
-                                            </a>
-                                        </span> 
-                                    </div>
-                                    @if(isset($build['children']))
-                                    <ol class="dd-list">
-                                        @forelse($build['children']  as $first_child)
-                                        <li class="dd-item dd3-item" data-id="{{$first_child['id']}}">
-                                            <div class="dd3-content"> 
-                                                <img class="rounded-circle mr-1" src="{{$first_child['icon']['proxy_url']}}30/30{{$first_child['icon']['image_path']}}"> {{$first_child['translation_one']['name']}} 
-                                                <span class="inner-div text-right">
-                                                    <a class="action-icon" data-id="2" href="javascript:void(0)">
-                                                        @if(in_array($first_child['id'], $VendorCategory))
-                                                            <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="">
-                                                        @else
-                                                            <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery">
-                                                        @endif
-                                                    </a>
-                                                </span>
-                                            </div>
-                                            @if(isset($first_child['children']))
-                                                <ol class="dd-list">
-                                                    @forelse($first_child['children'] as $second_child)
-                                                        <li class="dd-item dd3-item" data-id="6">
-                                                            <div class="dd3-content">
-                                                                <img class="rounded-circle mr-1" src="{{$second_child['icon']['proxy_url']}}30/30{{$second_child['icon']['image_path']}}">{{$second_child['translation_one']['name']}}
-                                                                    <span class="inner-div text-right">
-                                                                        <a class="action-icon" data-id="6" href="javascript:void(0)">
-                                                                            @if(in_array($second_child['id'], $VendorCategory))
-                                                                                <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="">
-                                                                            @else
-                                                                                <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery">
-                                                                            @endif
-                                                                        </a>
-                                                                    </span> 
-                                                            </div>
-                                                        </li>
-                                                    @empty
-                                                    @endforelse
-                                                </ol>
-                                            @endif
-                                        </li>
-                                        @empty
-                                        @endforelse
-                                    </ol>
-                                    @endif
-                                </li>
-                                @empty
-                                @endforelse
+                               
                             </ol>
                         </div>
                     </div>
@@ -198,6 +139,27 @@
         </div>
     </div>
 </div>
+ 
+@if(count($vendor->permissionToUser))
+ <div class="card-box">
+    <h4 class="header-title mb-3">Users</h4>
+    <div class="inbox-widget" data-simplebar style="max-height: 350px;">
+        @foreach($vendor->permissionToUser as $users)
+        <div class="inbox-item">
+            <div class="inbox-item-img">
+                <img src="{{$users->user->image['proxy_url'].'40/40'.$users->user->image['image_path']}}" class="rounded-circle" alt="" >
+                                
+                {{-- <img src="{{asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt=""> --}}
+            </div>
+            <p class="inbox-item-author">{{ $users->user->name??'' }}</p>
+            <p class="inbox-item-text"><i class="fa fa-envelope" aria-hidden="true"> {{ $users->user->email??'' }}</i> <i class="fa fa-phone" aria-hidden="true"> {{ $users->user->phone_number??'' }}</i></p>
+           
+        </div>
+        @endforeach
+    </div>
+</div> 
+@endif
+
 <script type="text/javascript">
     $( document ).ready(function() {
     $.ajaxSetup({
