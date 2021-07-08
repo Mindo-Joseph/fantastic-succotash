@@ -166,46 +166,38 @@
                         <div class="page-title">
                             <h2>My Subscriptions</h2>
                         </div>
-                        <div class="card-box">
-                            <div class="row align-items-center">
-                                <div class="col-sm-6 d-flex align-items-center">
-                                    
-                                </div>
-                                <div class="col-sm-6 text-center text-md-right mt-3 mt-md-0">
-                                    <a class="btn btn-solid openProfileModal" data-toggle="modal" data-target="#profile-modal" href="javascript:void(0)">Buy Subscription</a>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                
+                <div class="card-box">
                 <div class="row justify-content-center">
-                    @foreach($subscriptions as $sub)
-                    <div class="col-sm-4">
-                        <div class="price-card text-center">
-                            <div class="title">
-                                <img src="{{ $sub->image['proxy_url'].'100/100'.$sub->image['image_path'] }}">
-                                <h2>{{ $sub->title }}</h2>
-                            </div>
-                            <div class="price">
-                                <h4><sup>$</sup>{{ $sub->price }}</h4>
-                            </div>
-                            <div class="option">
-                                <ul>
-                                    @foreach($sub->features as $feature)
-                                    <li class="d-block"><i class="fa fa-check" aria-hidden="true"></i> {{ $feature }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            <div>
-                                <button type="button" class="btn btn-outline text-white openProfileModal" href="javascript:void(0)">Buy Now</button>
+                    @if($subscriptions->isNotEmpty())
+                        @foreach($subscriptions as $sub)
+                        <div class="col-sm-4">
+                            <div class="price-card text-center">
+                                <div class="title">
+                                    <img src="{{ $sub->image['proxy_url'].'100/100'.$sub->image['image_path'] }}">
+                                    <h2>{{ $sub->title }}</h2>
+                                </div>
+                                <div class="price">
+                                    <h4><sup>$</sup>{{ $sub->price }}</h4>
+                                </div>
+                                <div class="option">
+                                    <ul>
+                                        @foreach($sub->features as $feature)
+                                        <li class="d-block"><i class="fa fa-check" aria-hidden="true"></i> {{ $feature }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-outline text-white openProfileModal" href="javascript:void(0)">Buy Now</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    @endforeach
+                        @endforeach
+                    @endif
                     <!-- END Col -->
                 </div>
-
+                </div>
             </div>
         </div>
     </div>

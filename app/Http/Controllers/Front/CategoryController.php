@@ -110,7 +110,11 @@ class CategoryController extends FrontController
         $page = (strtolower($redirect_to) != '') ? strtolower($redirect_to) : 'product';
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-        return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
+        if(view()->exists('frontend/cate-'.$page.'s')){
+            return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
+        }else{
+            abort(404);
+        }
     }
 
     public function listData($langId, $category_id, $type = ''){
