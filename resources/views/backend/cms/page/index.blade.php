@@ -227,8 +227,8 @@
               $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
               $('#text_body_'+response.data.id).html(response.data.title);
             }).fail(function(response) {
-                $('.updatetitleError').html(response.responseJSON.errors.title[0]);
-                $('.updatedescrpitionError').html(response.responseJSON.errors.description[0]);
+                $('.updatetitleError').html(response.responseJSON.errors.edit_title[0]);
+                $('.updatedescrpitionError').html(response.responseJSON.errors.edit_description[0]);
             });
         });
     });
