@@ -92,10 +92,11 @@
                     <div class="dashboard">
                         <div class="page-title">
                             <h2>My Profile</h2>
-                            <!-- Button trigger modal 
+                            
+                            <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inquiry_form">
                                 Launch demo modal
-                            </button> -->
+                            </button> 
                         </div>
                         <div class="card-box">
                             <div class="row align-items-center">
