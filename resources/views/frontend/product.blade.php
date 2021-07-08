@@ -238,7 +238,11 @@
                                             <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
                                                 {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? 'Remove from Wishlist' : 'Add To Wishlist' }}
                                             </button>
+                                            @if($product->inquiry_only == 0)
                                             <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a>
+                                            @else
+                                            <a href="#" data-toggle="modal" data-target="#inquiry_mode" class="btn btn-solid inquiry_mode">inquiry mode</a>
+                                            @endif
                                         @endif
                                     </div>
                                     <div class="border-product">
