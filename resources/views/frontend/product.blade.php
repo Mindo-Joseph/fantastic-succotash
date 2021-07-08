@@ -241,7 +241,7 @@
                                             @if($product->inquiry_only == 0)
                                             <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a>
                                             @else
-                                            <a href="#" data-toggle="modal" data-target="#inquiry_mode" class="btn btn-solid inquiry_mode">inquiry mode</a>
+                                            <a href="#" data-toggle="modal" data-target="#inquiry_form" class="btn btn-solid inquiry_mode">inquiry mode</a>
                                             @endif
                                         @endif
                                     </div>
@@ -421,9 +421,100 @@
       </div>
     </div>
   </div>
+
+
+<!-- inquiry Form Modal -->
+<div class="modal fade" id="inquiry_form" tabindex="-1" aria-labelledby="inquiry_formLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title" id="inquiry_formLabel">inquiry Form</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      @php
+      $user = Auth::user();
+      @endphp
+        <form id="inquiry-form">
+            <div class="row">
+                <input type="hidden" name="vendor_id" value="{{$product->vendor_id}}" />
+                <input type="hidden" name="product_id" value="{{$product->id}}" />
+                <div class="col-md-6 form-group">
+                    <label>Name</label>
+                    <input class="form-control" name="name" id="name" value="{{$user ? $user->name : '' }}" type="text">
+                    <span class="text-danger error-text nameError"></span>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Email</label>
+                    <input class="form-control" name="email" id="email" value="{{$user ? $user->email : '' }}" type="text">
+                    <span class="text-danger error-text emailError"></span>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Phone Number</label>
+                    <input class="form-control" name="number" id="number" value="{{$user ? $user->phone_number : '' }}" type="text">
+                    <span class="text-danger error-text numberError"></span>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Company Name</label>
+                    <input class="form-control" name="company_name" id="company_name" type="text">
+                </div>
+                <div class="col-12 form-group">
+                    <label>Message</label>
+                    <textarea class="form-control" name="message" id="message" cols="30" rows="8"></textarea>
+                    <span class="text-danger error-text messageError"></span>
+                </div>
+                <div class="col-12 mt-2">
+                    <button type="button" class="btn btn-solid w-100 submitInquiryForm">Submit</button>
+                </div>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection
 @section('script')
 <script>
+
+    $(document).on('click', '.submitInquiryForm', function(e) {
+        e.preventDefault();
+        var formData = new FormData(document.getElementById("inquiry-form"));
+        formData.append("variant_id", $('#prod_variant_id').val());
+        var submit_url = "{{ route('inquiryMode.store') }}";
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: submit_url,
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+               $('#inquiry_form').modal('hide');
+            },
+            error: function(response) {
+                console.log(response);
+                $('.messageError').html(response.responseJSON.errors.message[0]);
+                $('.numberError').html(response.responseJSON.errors.number[0]);
+                $('.emailError').html(response.responseJSON.errors.email[0]);
+                $('.nameError').html(response.responseJSON.errors.name[0]);
+            },
+            complete: function() {
+            }
+        });
+    });
+
+
     var valueHover = 0;
 
     function calcSliderPos(e, maxV) {
@@ -448,7 +539,6 @@
 
 
     function upStars(val) {
-
         var val = parseFloat(val);
         $("#test").html(val.toFixed(1));
 
@@ -462,10 +552,6 @@
             val++
         }
         stars.slice(val, 5).attr("class", "fa fa-star-o");
-
-
-
-
     }
 
 

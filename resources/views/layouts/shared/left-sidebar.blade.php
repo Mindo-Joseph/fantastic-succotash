@@ -314,6 +314,12 @@
                                         </a>
                                     </li>
                                 @endif
+                                <li>
+                                    <a href="{{route('inquiry.index')}}">
+                                        <span class="fa-question-circle"></span>
+                                        <span> Inquiries </span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     @endif

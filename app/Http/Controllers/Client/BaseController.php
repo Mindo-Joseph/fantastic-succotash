@@ -169,18 +169,6 @@ class BaseController extends Controller
             ];
             UserLoyaltyPoint::insert($loyalty);
         }
-        $wallet = Wallet::where('user_id', $userid)->first();
-        if(!$wallet){
-            $walletData[] = [
-                'user_id' => $userid,
-                'type' => 1,
-                'balance' => 0,
-                'card_id' => $this->randomData('wallets', 6, 'card_id'),
-                'card_qr_code' => $this->randomBarcode('wallets'),
-                'meta_field' => '',
-            ];
-            Wallet::insert($walletData);
-        }
         return 1;
     }
 

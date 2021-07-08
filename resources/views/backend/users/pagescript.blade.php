@@ -106,6 +106,7 @@
             contentType: false,
             processData: false,
             success: function(response) {
+                console.log(response);
                 if (response.status == 'success') {
                     $("#" + modal + " .close").click();
                     location.reload(); 

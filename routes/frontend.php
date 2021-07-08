@@ -71,6 +71,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('UserCheck', 'Front\UserController@checkUserLogin')->name('checkUserLogin');
 	Route::get('stripe/showForm/{token}', 'Front\PaymentController@showFormApp')->name('stripe.formApp');
     Route::post('stripe/make', 'Front\PaymentController@makePayment')->name('stripe.makePayment');
+	Route::post('inquiryMode/store', 'Front\ProductInquiryController@store')->name('inquiryMode.store');
 
 });
 

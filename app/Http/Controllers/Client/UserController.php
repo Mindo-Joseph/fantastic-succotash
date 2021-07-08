@@ -113,6 +113,7 @@ class UserController extends BaseController{
             $user->image = Storage::disk('s3')->put('/profile', $file,'public');
         }
         $user->save();
+        $wallet = $user->wallet;
         $userCustomData = $this->userMetaData($user->id, 'web', 'web');
         return $user->id;
     }

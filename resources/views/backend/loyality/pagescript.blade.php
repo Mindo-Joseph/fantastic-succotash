@@ -133,7 +133,6 @@
 
     $(document).on('click', '.submitEditForm', function(e) {
         e.preventDefault();
-        console.log("aagya");
         var form = document.getElementById('update_loyality_form');
         var formData = new FormData(form);
         var url = document.getElementById('lc_id').getAttribute('url');
