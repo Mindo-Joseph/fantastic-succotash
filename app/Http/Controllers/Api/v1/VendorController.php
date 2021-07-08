@@ -88,7 +88,7 @@ class VendorController extends BaseController{
                             $qry->where('user_id', $userid);
                         },
                         'media.image', 'translation' => function($q) use($langId){
-                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description','category_id')->where('language_id', $langId);
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
                         'variant' => function($q) use($langId){
                             $q->select('id','sku', 'product_id', 'quantity', 'price', 'barcode');
