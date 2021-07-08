@@ -49,4 +49,29 @@ class DispatcherController extends FrontController
             
         }
     }
+
+
+    /******************    ---- pickup delivery status update (Need to dispatcher_status_option_id ) -----   ******************/
+    public function dispatchPickupDeliveryUpdate(Request $request, $domain = '', $web_hook_code)
+    {
+        try {
+            DB::beginTransaction();
+            if(1==1)
+            {       $update = 1;
+                    DB::commit();
+                    $message = "Order status updated.";
+                    return $this->successResponse($update, $message);
+                   
+            }else{
+                DB::rollback();
+                $message = "Invalid Order Token";
+                return $this->errorResponse($message, 400);
+               }
+            
+        } catch (Exception $e) {
+            DB::rollback();
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+            
+        }
+    }
 }

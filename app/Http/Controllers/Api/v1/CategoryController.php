@@ -80,6 +80,20 @@ class CategoryController extends BaseController
                 $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
             }
             return $vendorData;
+        }elseif($type == 'Pickup/Delivery' || $type == 'Pickup/Delivery'){
+            $vendor_ids = [];
+            $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
+            foreach ($vendor_categories as $vendor_category) {
+               if(!in_array($vendor_category->vendor_id, $vendor_ids)){
+                    $vendor_ids[] = $vendor_category->vendor_id;
+               }
+            }
+            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('status', '!=', $this->field_status)->whereIn('id', $vendor_ids)->paginate($limit);
+            foreach ($vendorData as $vendor) {
+                unset($vendor->products);
+                $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
+            }
+            return $vendorData;
         }elseif (strtolower($type) == 'subcategory') {
             $category_details = [];
             $category_list = Category::where('parent_id', $category_id)->get();

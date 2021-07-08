@@ -76,11 +76,7 @@
                     </div>
                     <div class="col-md-6" style="{{($category->type_id != 2) ? 'display:none;' : ''}}" id="editDispatcherHide">
                         <div class="form-group mb-0">
-                            {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
-                            {!! Form::hidden('tags', implode(',', $tagList), ['class'=>'form-control myTag1']) !!}
-                            <span class="invalid-feedback" role="alert">
-                                <strong></strong>
-                            </span>
+                          
                         </div>
                     </div>
                 </div>

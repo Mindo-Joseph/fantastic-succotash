@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag, Vendor, DispatcherWarningPage, DispatcherTemplateTypeOption};
-
+use GuzzleHttp\Client as GCLIENT;
 class CategoryController extends BaseController{
     private $blocking = '2';
     private $folderName = 'category/icon';
@@ -53,6 +53,7 @@ class CategoryController extends BaseController{
                     ->orderBy('client_languages.is_primary', 'desc')->get();
         $dispatcher_warning_page_options = DispatcherWarningPage::where('status', 1)->get();
         $dispatcher_template_type_options = DispatcherTemplateTypeOption::where('status', 1)->get();
+      
         $returnHTML = view('backend.catalog.add-category')->with(['category' => $category, 'is_vendor' => $is_vendor, 'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type, 'vendor_list' => $vendor_list,'dispatcher_template_type_options'=> $dispatcher_template_type_options, 'dispatcher_warning_page_options' => $dispatcher_warning_page_options])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
@@ -112,11 +113,11 @@ class CategoryController extends BaseController{
         $tagList = array();
         $type = Type::orderBY('sequence', 'ASC')->get();
         $category = Category::with('translation', 'tags')->where('id', $id)->first();
-        if(!empty($category->tags)){
-            foreach ($category->tags as $key => $value) {
-                $tagList[] = $value->tag;
-            }
-        }
+        // if(!empty($category->tags)){
+        //     foreach ($category->tags as $key => $value) {
+        //         $tagList[] = $value->tag;
+        //     }
+        // }
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
                     ->where('client_languages.client_code', Auth::user()->code)
@@ -133,8 +134,10 @@ class CategoryController extends BaseController{
         $parCategory = Category::with('translation_one')->select('id', 'slug')->where('categories.id', '!=', $id)->where('status', '!=', $this->blocking)->where('deleted_at', NULL)->get();
         $dispatcher_warning_page_options = DispatcherWarningPage::where('status', 1)->get();
         $dispatcher_template_type_options = DispatcherTemplateTypeOption::where('status', 1)->get();
+        
+       
         $returnHTML = view('backend.catalog.edit-category')->with(['typeArray' => $type, 'category' => $category,  'languages' => $langs, 'is_vendor' => $is_vendor, 'parCategory' => $parCategory, 'langIds' => $langIds, 'existlangs' => $existlangs, 'tagList' => $tagList,'dispatcher_warning_page_options' => $dispatcher_warning_page_options, 'dispatcher_template_type_options' => $dispatcher_template_type_options])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML, 'tagList' => $tagList));
+        return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
     /**
@@ -274,4 +277,44 @@ class CategoryController extends BaseController{
         ]);
         return redirect()->back()->with('success', 'Category deleted successfully!');
     }
+
+
+
+
+
+
+
+
+
+      # get dispatcher tags from dispatcher panel  
+      public function getDispatcherTags(){
+        try {   
+            $dispatch_domain = $this->checkIfPickupDeliveryOn();
+                if ($dispatch_domain && $dispatch_domain != false) {
+                            $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,
+                                                        'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,
+                                                        'content-type' => 'application/json']
+                                                            ]);
+                            $url = $dispatch_domain->pickup_delivery_service_key_url;                      
+                            $res = $client->get($url.'/api/get-agent-tags');
+                            $response = json_decode($res->getBody(), true); 
+                            if($response && $response['message'] == 'success'){
+                                return $response['tags'];
+                            }
+                    
+                }
+            }    
+            catch(\Exception $e){
+              
+            }
+    }
+    # check if last mile delivery on 
+    public function checkIfPickupDeliveryOn(){
+        $preference = ClientPreference::first();
+        if($preference->need_dispacher_ride == 1 && !empty($preference->pickup_delivery_service_key) && !empty($preference->pickup_delivery_service_key_code) && !empty($preference->pickup_delivery_service_key_url))
+            return $preference;
+        else
+            return false;
+    }
+
 }

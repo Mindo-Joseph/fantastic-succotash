@@ -52,6 +52,11 @@ class Category extends Model
       return $this->belongsTo('App\Models\Type')->select('id', 'title'); 
     }
 
+    public function categoryTag()
+    {
+        return $this->hasOne(CategoryTag::class)->select('category_id', 'tag');
+    }
+
     public function getImageAttribute($value)
     {
       $values = array();
