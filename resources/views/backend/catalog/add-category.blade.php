@@ -75,16 +75,7 @@
                     </div>
                     <div class="col-md-6" id="addDispatcherHide" style="display: none;">
                         <div class="form-group mb-0">
-                            {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
-                            <select class="selectize-select1 form-control"  name="tags">
-                                @foreach($agent_dispatcher_tags as $key => $tags)
-                                        <option value="{{ $tags['name'] }}">{{ ucfirst($tags['name']) }}</option>
-                                @endforeach
-                            </select>
-                            {{-- {!! Form::hidden('tags', null, ['class'=>'form-control myTag1']) !!} --}}
-                            <span class="invalid-feedback" role="alert">
-                                <strong></strong>
-                            </span>
+                           
                         </div>
                     </div>
                 </div>

@@ -53,9 +53,8 @@ class CategoryController extends BaseController{
                     ->orderBy('client_languages.is_primary', 'desc')->get();
         $dispatcher_warning_page_options = DispatcherWarningPage::where('status', 1)->get();
         $dispatcher_template_type_options = DispatcherTemplateTypeOption::where('status', 1)->get();
-        $agent_dispatcher_tags = [];
-        $agent_dispatcher_tags = $this->getDispatcherTags();
-        $returnHTML = view('backend.catalog.add-category')->with(['agent_dispatcher_tags' => $agent_dispatcher_tags,'category' => $category, 'is_vendor' => $is_vendor, 'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type, 'vendor_list' => $vendor_list,'dispatcher_template_type_options'=> $dispatcher_template_type_options, 'dispatcher_warning_page_options' => $dispatcher_warning_page_options])->render();
+      
+        $returnHTML = view('backend.catalog.add-category')->with(['category' => $category, 'is_vendor' => $is_vendor, 'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type, 'vendor_list' => $vendor_list,'dispatcher_template_type_options'=> $dispatcher_template_type_options, 'dispatcher_warning_page_options' => $dispatcher_warning_page_options])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -136,11 +135,8 @@ class CategoryController extends BaseController{
         $dispatcher_warning_page_options = DispatcherWarningPage::where('status', 1)->get();
         $dispatcher_template_type_options = DispatcherTemplateTypeOption::where('status', 1)->get();
         
-        $agent_dispatcher_tags = [];
-        if($category->type_id == 2  || $category->type_id == 7) # get dispatcher tages if category exists in pickupdelivery
-        $agent_dispatcher_tags = $this->getDispatcherTags();
-        
-        $returnHTML = view('backend.catalog.edit-category')->with(['agent_dispatcher_tags' => $agent_dispatcher_tags,'typeArray' => $type, 'category' => $category,  'languages' => $langs, 'is_vendor' => $is_vendor, 'parCategory' => $parCategory, 'langIds' => $langIds, 'existlangs' => $existlangs, 'tagList' => $tagList,'dispatcher_warning_page_options' => $dispatcher_warning_page_options, 'dispatcher_template_type_options' => $dispatcher_template_type_options])->render();
+       
+        $returnHTML = view('backend.catalog.edit-category')->with(['typeArray' => $type, 'category' => $category,  'languages' => $langs, 'is_vendor' => $is_vendor, 'parCategory' => $parCategory, 'langIds' => $langIds, 'existlangs' => $existlangs, 'tagList' => $tagList,'dispatcher_warning_page_options' => $dispatcher_warning_page_options, 'dispatcher_template_type_options' => $dispatcher_template_type_options])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
