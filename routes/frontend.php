@@ -37,6 +37,7 @@ Route::group(['middleware' => ['domain']], function () {
 	]);
 	Route::get('/search','Front\SearchController@search');
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
+	Route::get('extra-page/{slug}','Front\UserhomeController@getExtraPage')->name('extrapage');
 	Route::post('/homePageData','Front\UserhomeController@postHomePageData')->name('homePageData');
 	Route::post('/homepage','Front\UserhomeController@homepage')->name('homepage');
 	Route::post('getClientPreferences', 'Front\UserhomeController@getClientPreferences')->name('getClientPreferences');

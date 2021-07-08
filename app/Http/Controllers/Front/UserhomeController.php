@@ -10,8 +10,8 @@ use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference};
 use Illuminate\Contracts\Session\Session as SessionSession;
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference, Page};
 
 class UserhomeController extends FrontController
 {
@@ -22,6 +22,12 @@ class UserhomeController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
+    public function getExtraPage(Request $request){
+        $language_id = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($language_id);
+        $page_detail = Page::where('slug', $request->slug)->first();
+        return view('frontend.extrapage', compact('page_detail', 'navCategories'));
+    }
     public function index(Request $request){
         try {
             $home = array();
@@ -188,7 +194,6 @@ class UserhomeController extends FrontController
                 });
             }
             $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
-            
             $isVendorArea = 0;
             $langId = (isset(Auth::user()->language)) ? Auth::user()->language : Session::get('customerLanguage');
             $homeData = array();
