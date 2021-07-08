@@ -91,7 +91,7 @@ $timezone = Auth::user()->timezone;
                                         <div class="material-border"></div>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link {{ (Request::query('pageType') == 'returnOrders') ? 'active show' : '' }}" id="return_order-tab" data-toggle="tab" href="#return_order" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Return Orders</a>
+                                        <a class="nav-link {{ (Request::query('pageType') == 'returnOrders') ? 'active show' : '' }}" id="return_order-tab" data-toggle="tab" href="#return_order" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Return Requests</a>
                                         <div class="material-border"></div>
                                     </li>
                                 </ul>
@@ -537,7 +537,7 @@ $timezone = Auth::user()->timezone;
                                         @else
                                             <div class="col-12">
                                                 <div class="no-gutters order_head">
-                                                    <h4 class="text-center">No Return Order</h4>
+                                                    <h4 class="text-center">No Return Requests</h4>
                                                 </div>
                                             </div>
                                         @endif

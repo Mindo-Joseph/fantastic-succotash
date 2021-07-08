@@ -339,7 +339,7 @@ td.items-details h4 {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #ff4c3b;
+    background: var(--theme-deafult);
 }
 
 .delivery_box {
@@ -440,7 +440,7 @@ body .main-menu .brand-logo {
 }
 
 body .main-menu .brand-logo a {
-    height: 50px;
+    height: 80px;
 }
 
 .brand-logo img.img-fluid {

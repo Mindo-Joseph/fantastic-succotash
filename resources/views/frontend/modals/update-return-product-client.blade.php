@@ -59,7 +59,7 @@
             </div>
 
             <div class="form-group">
-                <label>{{__('Comment By Vendor (Opitonal)')}}:</label>
+                <label>{{__('Comment By Vendor (Optional)')}}:</label>
                 <textarea class="form-control" name="reason_by_vendor" id="reason_by_vendor" cols="20" rows="4">{{$return_details->reason_by_vendor}}</textarea>
             </div>
 

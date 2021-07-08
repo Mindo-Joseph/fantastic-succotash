@@ -7,7 +7,7 @@ use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCur
 use Illuminate\Http\Request;
 use Session;
 use Auth;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Support\Facades\Storage;
 class CartController extends FrontController
 { 
@@ -62,9 +62,11 @@ class CartController extends FrontController
             }else{
                 $cart_detail = Cart::updateOrCreate(['unique_identifier' => $new_session_token], $cart_detail);
             }
-            $checkCartLuxuryOption = CartProduct::where('luxury_option_id' ,'!=', $luxury_option->id)->where('cart_id', $cart_detail->id)->first();
-            if($checkCartLuxuryOption){
-                CartProduct::where('cart_id', $cart_detail->id)->delete();
+            if($luxury_option){
+                $checkCartLuxuryOption = CartProduct::where('luxury_option_id' ,'!=', $luxury_option->id)->where('cart_id', $cart_detail->id)->first();
+                if($checkCartLuxuryOption){
+                    CartProduct::where('cart_id', $cart_detail->id)->delete();
+                }
             }
             if($luxury_option->id == 2 || $luxury_option->id == 3){
                 $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $request->vendor_id)->first();
@@ -533,7 +535,7 @@ class CartController extends FrontController
                                               'longitude' => $cus_address->longitude??76.803508700000
                                             );
                             $postdata =  ['locations' => $location];
-                            $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
+                            $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
                                                         'shortcode' => $dispatch_domain->delivery_service_key_code,
                                                         'content-type' => 'application/json']
                                                             ]);

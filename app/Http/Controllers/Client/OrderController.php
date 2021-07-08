@@ -10,9 +10,10 @@ use App\Models\VendorOrderDispatcherStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus,ClientPreference,OrderVendorProduct,OrderVendor,UserAddress,Vendor,OrderReturnRequest};
+use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus,ClientPreference,OrderProduct,OrderVendor,UserAddress,Vendor,OrderReturnRequest};
 use DB;
 use GuzzleHttp\Client;
+use App\Models\Transaction;
 use App\Http\Traits\ApiResponser;
 class OrderController extends BaseController{
 
@@ -358,16 +359,25 @@ class OrderController extends BaseController{
      * return  order product 
     */
     public function updateProductReturn(Request $request){
-     
+        DB::beginTransaction();
         try {
-           
+            $return = OrderReturnRequest::find($request->id);
             $returns = OrderReturnRequest::where('id',$request->id)->update(['status'=>$request->status??null,'reason_by_vendor' => $request->reason_by_vendor??null]);
             if(isset($returns)) {
+                if($request->status == 'Accepted' && $return->status != 'Accepted' ){
+                    $user = User::find($return->return_by);
+                    $wallet = $user->wallet;
+                    $order_product = OrderProduct::find($return->order_vendor_product_id);
+                    $credit_amount = $order_product->price + $order_product->taxable_amount;
+                    $wallet->deposit($credit_amount, ['Wallet has been <b>Credited</b> for return '.$order_product->product_name]);
+                    DB::commit();
+                }
                 return $this->successResponse($returns,'Updated.');
             }
             return $this->errorResponse('Invalid order', 200);
             
         } catch (Exception $e) {
+            DB::rollback();
             return $this->errorResponse($e->getMessage(), 400);
         }
     }
