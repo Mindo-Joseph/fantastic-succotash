@@ -80,7 +80,7 @@ class CategoryController extends BaseController
                 $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
             }
             return $vendorData;
-        }elseif($type == 'Pickup/Delivery' || $type == 'Pickup/Delivery'){
+        }elseif($type == 'Pickup/Delivery' || $type == 'pickup/delivery'){
             $vendor_ids = [];
             $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
             foreach ($vendor_categories as $vendor_category) {
