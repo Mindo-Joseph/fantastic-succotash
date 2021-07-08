@@ -35,11 +35,11 @@
                                 @foreach($pages as $page)
                                     <tr class="active-page">
                                         <td>
-                                            <a class="text-body page-title" href="javascript:void(0)" data-page_id="{{$page->id}}" data-show_url="{{route('cms.page.show', ['id'=> $page->id])}}">{{$page->title}}</a>
+                                            <a class="page-title" href="javascript:void(0)" data-page_id="{{$page->id}}" data-show_url="{{route('cms.page.show', ['id'=> $page->id])}}">{{$page->title}}</a>
                                         </td>
                                         <td align="right">
                                             @if(!in_array($page->id, [1,2]))
-                                                <a class="text-body" href="javascript:void(0)" data-page_id="{{$page->id}}">
+                                                <a class="" href="javascript:void(0)" data-page_id="{{$page->id}}">
                                                     <i class="mdi mdi-delete"></i>
                                                 </a>
                                             @endif

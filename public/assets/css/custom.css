@@ -1991,6 +1991,9 @@ td.product-name,.vendor-name {
     font-weight: 600;
 }
 
+.active-page .page-title {
+    color: #5AC2ED !important;
+}
 
 
 
