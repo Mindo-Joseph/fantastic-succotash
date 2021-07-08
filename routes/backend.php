@@ -33,6 +33,8 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('cms/pages', [PageController::class, 'index'])->name('cms.pages');
     Route::get('cms/page/{id}', [PageController::class, 'show'])->name('cms.page.show');
     Route::post('cms/page/update', [PageController::class, 'update'])->name('cms.page.update');
+    Route::post('cms/page/create', [PageController::class, 'store'])->name('cms.page.create');
+    Route::post('cms/page/delete', [PageController::class, 'destroy'])->name('cms.page.delete');
     Route::get('cms/emails', [EmailController::class, 'index'])->name('cms.emails');
     Route::get('account/orders', [OrderController::class, 'index'])->name('account.orders');
     Route::get('account/promo-code', [PromoCodeController::class, 'index'])->name('account.promo.code');

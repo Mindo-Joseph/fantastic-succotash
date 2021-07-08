@@ -14,18 +14,8 @@ class PageController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $pages = Page::all();
+        $pages = Page::orderBy('id', 'DESC')->get();
         return view('backend.cms.page.index', compact('pages'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -34,9 +24,15 @@ class PageController extends Controller{
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request, $domain = ''){
+        $page = new Page();
+        $page->title = $request->title;
+        $page->meta_title = $request->meta_title;
+        $page->description = $request->description;
+        $page->meta_keyword = $request->meta_keyword;
+        $page->meta_description = $request->meta_description;
+        $page->save();
+        return $this->successResponse($page, 'Page Data Saved Successfully.');
     }
 
     /**
@@ -48,17 +44,6 @@ class PageController extends Controller{
     public function show(Request $request, $domain = '', $id){
         $page = Page::findOrFail($id);
         return $this->successResponse($page);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -85,8 +70,8 @@ class PageController extends Controller{
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy(Request $request, $domain = ''){
+        Page::destroy($request->page_id);
+        return $this->successResponse([], 'Page Deleted Successfully.');
     }
 }
