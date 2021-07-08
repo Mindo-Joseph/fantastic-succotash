@@ -62,9 +62,11 @@ class CartController extends FrontController
             }else{
                 $cart_detail = Cart::updateOrCreate(['unique_identifier' => $new_session_token], $cart_detail);
             }
-            $checkCartLuxuryOption = CartProduct::where('luxury_option_id' ,'!=', $luxury_option->id)->where('cart_id', $cart_detail->id)->first();
-            if($checkCartLuxuryOption){
-                CartProduct::where('cart_id', $cart_detail->id)->delete();
+            if($luxury_option){
+                $checkCartLuxuryOption = CartProduct::where('luxury_option_id' ,'!=', $luxury_option->id)->where('cart_id', $cart_detail->id)->first();
+                if($checkCartLuxuryOption){
+                    CartProduct::where('cart_id', $cart_detail->id)->delete();
+                }
             }
             if($luxury_option->id == 2 || $luxury_option->id == 3){
                 $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $request->vendor_id)->first();
