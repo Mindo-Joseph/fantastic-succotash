@@ -2683,6 +2683,7 @@ button.close {
 }
 
 
+
 /* Website Dark Mood Css Start Form Here */
 .dark .inner_spacing h3,.dark .page-title h3 {
     color: #eaedef;
@@ -2721,6 +2722,9 @@ button.close {
     background: rgb(248 248 248 / 5%);
 }
 
+.dark .coupon_box {
+    background: rgb(255 255 255 / 7%);
+}
 
 
 

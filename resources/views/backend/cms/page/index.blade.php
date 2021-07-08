@@ -56,24 +56,43 @@
         <div class="col-lg-7 col-xl-9 mb-2">
             <div class="card">
                 <div class="card-body p-3" id="edit_page_content">
-                    <div class="row mb-2 align-items-center">
-                        <div class="col-8">
-                            <h4 class="m-0">Page Content</h4>
+                    <div class="row mb-2">                        
+                        <div class="offset-xl-6 col-md-4 col-xl-2">
+                            <div class="form-group mb-0">
+                                <select class="form-control" name="" id="">
+                                    <option value="">Select Language</option>
+                                    <option value="">English</option>
+                                    <option value="">English</option>
+                                    <option value="">English</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-4 text-right" style="margin: auto;">
-                            <button type="button" class="btn btn-info waves-effect waves-light text-sm-right" id="update_page_btn"> Update</button>
+                        <div class="col-md-4 col-xl-2">
+                            <div class="form-group mb-0">
+                                <select class="form-control" name="" id="">
+                                    <option value="">Publish</option>
+                                    <option value="">Save Draft</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-xl-2 text-right">
+                            <!-- <div class="form-group mb-0 mr-3">
+                                <label class="mb-0 mr-2">Publish</label>
+                                <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1">
+                            </div> -->
+                            <button type="button" class="btn btn-info w-100" id="update_page_btn"> Update</button>
                         </div>
                     </div>
                     <div class="row">
                         <input type="hidden" id="page_id" value="">
                         <div class="col-lg-6">
                             <div class="row">
-                                <div class="col-12 mb-2">
+                                <div class="col-12 mb-3">
                                     <label for="title" class="control-label">Title</label>
                                     <input class="form-control" id="edit_title" placeholder="Meta Title" name="meta_title" type="text">
                                     <span class="text-danger error-text updatetitleError"></span>
                                 </div>
-                                <div class="col-12 mb-2">
+                                <div class="col-12 mb-3">
                                     <label for="title" class="control-label">Meta Keyword</label>
                                     <textarea class="form-control" id="edit_meta_keyword" placeholder="Meta Keyword" rows="3" name="meta_keyword" cols="10"></textarea>
                                 </div>
@@ -81,18 +100,18 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="row">
-                                <div class="col-12 mb-2">
+                                <div class="col-12 mb-3">
                                     <label for="title" class="control-label">Meta Title</label>
                                     <input class="form-control" id="edit_meta_title" placeholder="Meta Title" name="meta_title" type="text">
                                 </div>
                                 
-                                <div class="col-12 mb-2">
+                                <div class="col-12 mb-3">
                                     <label for="title" class="control-label">Meta Description</label>
                                     <textarea class="form-control" id="edit_meta_description" placeholder="Meta Description" rows="3" name="meta_description" cols="10"></textarea>
                                 </div>                               
                             </div>         
                         </div>
-                        <div class="col-12 mb-2">
+                        <div class="col-12 mb-3">
                             <label for="title" class="control-label">Description</label>
                             <textarea class="form-control" id="edit_description" placeholder="Meta Description" rows="9" name="meta_description" cols="100"></textarea>
                             <span class="text-danger error-text updatedescrpitionError"></span>

@@ -264,7 +264,7 @@
                 @if(count(array_intersect($marketing_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a class="menu-title pl-1" href="#">
-                        <span class="icon-dashboard_icon"></span>
+                        <span class="icon-accounting size-20"></span>
                         <span>MARKETING</span>
                     </a>
                     <ul class="nav-second-level">
