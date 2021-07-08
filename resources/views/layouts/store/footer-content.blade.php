@@ -44,6 +44,7 @@
                         </div>
                     </div>
                 </div>
+                @if(count($pages))
                 <div class="col-lg-3 col-md-6 mb-md-0 mb-3 pl-lg-5">
                     <div class="sub-title">
                         <div class="footer-title">
@@ -51,15 +52,14 @@
                         </div>
                         <div class="footer-contant">
                             <ul>
-                                <li><a href="#">shipping & return</a></li>
-                                <li><a href="#">secure shopping</a></li>
-                                <li><a href="#">gallary</a></li>
-                                <li><a href="#">affiliates</a></li>
-                                <li><a href="#">contacts</a></li>
+                                @foreach($pages as $page)
+                                    <li><a href="{{$page->slug}}">{{$page->title}}</a></li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
                 </div>
+                @endif
                 @if(count($social_media_details))
                 <div class="col-lg-4 col-md-6 mb-md-0 mb-3 pl-lg-5">
                     <div class="sub-title">

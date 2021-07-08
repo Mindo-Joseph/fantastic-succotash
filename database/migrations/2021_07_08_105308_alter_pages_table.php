@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreatePagesTable extends Migration
+class AlterPagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,6 +12,7 @@ class CreatePagesTable extends Migration
      * @return void
      */
     public function up(){
+        Schema::dropIfExists('pages');
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
             $table->mediumText('title');
@@ -20,6 +21,7 @@ class CreatePagesTable extends Migration
             $table->mediumText('meta_title')->nullable();
             $table->mediumText('meta_keyword')->nullable();;
             $table->mediumText('meta_description')->nullable();
+            $table->tinyInteger('is_published')->default(0)->comment('0 draft and 1 for published');
             $table->timestamps();
         });
     }
@@ -29,7 +31,8 @@ class CreatePagesTable extends Migration
      *
      * @return void
      */
-    public function down(){
-        Schema::dropIfExists('pages');
+    public function down()
+    {
+        //
     }
 }

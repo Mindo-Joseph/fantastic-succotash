@@ -7,6 +7,7 @@ use Auth;
 use URL;
 use Route;
 use Config,Schema;
+use App\Models\Page;
 use App\Models\Client;
 use App\Models\SocialMedia;
 use Illuminate\Http\Request;
@@ -32,13 +33,16 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(Request $request)
-    {
+    public function boot(Request $request){
         if (config('app.env') != 'local') {
             \URL::forceScheme('https');
         }
         $this->connectDynamicDb($request);
         Paginator::useBootstrap();
+        $pages = '';
+        if(Schema::hasTable('pages')){
+            $pages = Page::where('is_published', 1)->get();
+        }
         $social_media_details = '';
         if(Schema::hasTable('social_media'))
         $social_media_details = SocialMedia::get();
@@ -48,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
             $favicon_url = $client_preference_detail->favicon['proxy_url'] . '600/400' . $client_preference_detail->favicon['image_path'];
         }
         $client = Client::where(['id' => 1])->first();
+        view()->share('pages', $pages);
         view()->share('client', $client);
         view()->share('favicon', $favicon_url);
         view()->share('favicon', $favicon_url);
