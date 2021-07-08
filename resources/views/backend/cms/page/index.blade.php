@@ -33,7 +33,7 @@
                             </thead>
                             <tbody>
                                 @foreach($pages as $page)
-                                    <tr>
+                                    <tr class="active-page">
                                         <td>
                                             <a class="text-body page-title" href="javascript:void(0)" data-page_id="{{$page->id}}" data-show_url="{{route('cms.page.show', ['id'=> $page->id])}}">{{$page->title}}</a>
                                         </td>
