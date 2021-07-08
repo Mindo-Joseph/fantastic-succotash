@@ -5,6 +5,7 @@ use App\Models\Page;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class PageController extends Controller{
     use ApiResponser;
@@ -25,6 +26,12 @@ class PageController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, $domain = ''){
+        $rules = array(
+            'title' => 'required',
+            'description' => 'required',
+        );
+        $validation  = Validator::make($request->all(), $rules)->validate();
+
         $page = new Page();
         $page->title = $request->title;
         $page->meta_title = $request->meta_title;
@@ -54,6 +61,12 @@ class PageController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $domain = ''){
+        $rules = array(
+            'edit_title' => 'required',
+            'edit_description' => 'required',
+        );
+        $validation  = Validator::make($request->all(), $rules)->validate();
+
         $page = Page::findOrFail($request->page_id);
         $page->title = $request->edit_title;
         $page->meta_title = $request->edit_meta_title;

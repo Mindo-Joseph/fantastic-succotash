@@ -71,6 +71,7 @@
                                 <div class="col-12 mb-2">
                                     <label for="title" class="control-label">Title</label>
                                     <input class="form-control" id="edit_title" placeholder="Meta Title" name="meta_title" type="text">
+                                    <span class="text-danger error-text updatetitleError"></span>
                                 </div>
                                 <div class="col-12 mb-2">
                                     <label for="title" class="control-label">Meta Keyword</label>
@@ -94,6 +95,7 @@
                         <div class="col-12 mb-2">
                             <label for="title" class="control-label">Description</label>
                             <textarea class="form-control" id="edit_description" placeholder="Meta Description" rows="9" name="meta_description" cols="100"></textarea>
+                            <span class="text-danger error-text updatedescrpitionError"></span>
                         </div>
                     </div>
                 </div>            
@@ -117,6 +119,7 @@
                             <div class="col-12 mb-2">
                                 <label for="title" class="control-label">Title</label>
                                 <input class="form-control" id="title" placeholder="Meta Title" name="meta_title" type="text">
+                                <span class="text-danger error-text titleError"></span>
                             </div>
                             <div class="col-12 mb-2">
                                 <label for="title" class="control-label">Meta Keyword</label>
@@ -139,6 +142,7 @@
                     <div class="col-12 mb-2">
                             <label for="title" class="control-label">Description</label>
                             <textarea class="form-control" id="description" placeholder="Meta Description" rows="9" cols="50"></textarea>
+                            <span class="text-danger error-text descrpitionError"></span>
                     </div>
                     <div class="col-12 mt-3">
                         <button type="button" class="btn btn-info w-100" id="save_page_btn">Done</button>
@@ -183,9 +187,11 @@
             var data = {title: title,description:description, meta_title:meta_title, meta_keyword:meta_keyword, meta_description:meta_description};
             $.post(create_url, data, function(response) {
               $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-              setTimeout(function(){ location.reload() }, 2000);
-            }).fail(function() {
-                
+            //   setTimeout(function(){ location.reload() }, 2000);
+            }).fail(function(response) {
+                console.log(response);
+                $('.titleError').html(response.responseJSON.errors.title[0]);
+                $('.descrpitionError').html(response.responseJSON.errors.description[0]);
             });
         });
         $(document).on("click",".delete-page",function() {
@@ -220,8 +226,9 @@
             $.post(update_url, data, function(response) {
               $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
               $('#text_body_'+response.data.id).html(response.data.title);
-            }).fail(function() {
-                alert( "error" );
+            }).fail(function(response) {
+                $('.updatetitleError').html(response.responseJSON.errors.title[0]);
+                $('.updatedescrpitionError').html(response.responseJSON.errors.description[0]);
             });
         });
     });
