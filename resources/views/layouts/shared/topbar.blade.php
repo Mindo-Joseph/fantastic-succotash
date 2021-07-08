@@ -1,6 +1,6 @@
 <!-- Topbar Start -->
 <div class="navbar-custom">
-    <div class="container-fluid d-flex align-items-center justify-content-end">
+    <div class="container-fluid d-flex align-items-center justify-content-between justify-content-lg-end">
         
         <ul class="top-site-links d-flex align-items-center p-0 mb-0 mr-3">
             <li class="d_none">

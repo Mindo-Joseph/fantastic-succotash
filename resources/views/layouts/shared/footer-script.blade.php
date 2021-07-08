@@ -32,7 +32,7 @@ if (Session::has('toaster')) {
 <script src="{{asset('assets/js/pages/my-form-advanced.init.js')}}"></script>
 <script src="{{asset('assets/libs/jquery-toast-plugin/jquery-toast-plugin.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/toastr.init.js')}}"></script>
-
+<script src="{{asset('assets/libs/datatables/datatables.min.js')}}"></script>
 <script>
     let is_hyperlocal = 0;
     @if(Session::has('preferences'))

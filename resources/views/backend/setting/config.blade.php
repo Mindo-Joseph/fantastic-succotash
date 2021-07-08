@@ -715,13 +715,25 @@
          <div class="col-md-6 col-lx-4">
             <div class="card-box">
                <div class="row align-items-center">
-                  <div class="col-md-8">
+                  <div class="col-md-4">
                      <div class="form-group mb-0">
                         <label for="pharmacy_check" class="mr-3 mb-0">Pharmacy Mod</label>
                         <input type="checkbox" data-plugin="switchery" name="pharmacy_check" id="pharmacy_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1'))  checked='checked' @endif>
                      </div>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-3">
+                     <div class="form-group mb-0">
+                        <label for="enquire_mode" class="mr-3 mb-0">Enquiry Mode</label>
+                        <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1'))  checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-3">
+                     <div class="form-group mb-0">
+                        <label for="rating_check" class="mr-3 mb-0">Rating</label>
+                        <input type="checkbox" data-plugin="switchery" name="rating_check" id="rating_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->rating_check == '1'))  checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-2">
                      <div class="form-group mb-0 text-md-right">
                         <button class="btn btn-info d-block ml-md-auto" type="submit"> Save </button>
                      </div>

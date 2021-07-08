@@ -83,11 +83,15 @@
                                 </div>                                
                             </div>
                             <div class="product-detail">
-                                <div class="rating">
-                                    @for($i = 1; $i < 6; $i++)
-                                        <i class="fa fa-star"></i>
-                                    @endfor
-                                </div>
+                                @if($client_preference_detail)
+                                    @if($client_preference_detail->rating_check == 1)  
+                                    <div class="rating">
+                                        @for($i = 1; $i < 6; $i++)
+                                            <i class="fa fa-star"></i>
+                                        @endfor
+                                    </div>
+                                    @endif
+                                @endif
                                 <a href="{{route('vendorDetail', $data->id)}}">
                                     <h6>{{$data->name}}</h6>
                                 </a>

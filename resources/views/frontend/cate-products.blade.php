@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => !empty($new['translation']) && isset($new['translation'][0]) ? $new['translation'][0]['title'] : $new['sku']])
+@extends('layouts.store', ['title' => (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug])
 
 @section('css')
 <style type="text/css">
@@ -109,11 +109,15 @@
                                         <div class="media">
                                             <a href="{{route('productDetail', $new['url_slug'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                             <div class="media-body align-self-center">
-                                                <div class="rating">
-                                                    @for($i = 1; $i < 6; $i++)
-                                                        <i class="fa fa-star"></i>
-                                                    @endfor
-                                                </div>
+                                                @if($client_preference_detail)
+                                                    @if($client_preference_detail->rating_check == 1)  
+                                                    <div class="rating">
+                                                        @for($i = 1; $i < 6; $i++)
+                                                            <i class="fa fa-star"></i>
+                                                        @endfor
+                                                    </div>
+                                                    @endif
+                                                @endif
                                                 <a href="{{route('productDetail', $new['url_slug'])}}">
                                                     <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                                 </a>
@@ -241,9 +245,6 @@
                                                             <div class="front">
                                                                 <a href="{{route('productDetail', $data->url_slug)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
                                                             </div>
-                                                            <div class="back">
-                                                                <a href="{{route('productDetail', $data->url_slug)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath2}}" alt=""></a>
-                                                            </div>
                                                             <div class="cart-info cart-wrap">
                                                                 <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> 
                                                                 <a href="javascript:void(0)" title="Add to Wishlist" class="addWishList" proSku="{{$data->sku}}"><i class="ti-heart" aria-hidden="true"></i></a>
@@ -253,11 +254,15 @@
                                                         </div>
                                                         <div class="product-detail">
                                                             <div>
-                                                                <div class="rating">
-                                                                @for($i = 1; $i < 6; $i++)
-                                                                    <i class="fa fa-star"></i>
-                                                                @endfor
-                                                            </div>
+                                                                @if($client_preference_detail)
+                                                                    @if($client_preference_detail->rating_check == 1)  
+                                                                    <div class="rating">
+                                                                        @for($i = 1; $i < 6; $i++)
+                                                                            <i class="fa fa-star"></i>
+                                                                        @endfor
+                                                                    </div>
+                                                                    @endif
+                                                                @endif
                                                             <a href="{{route('productDetail', $data->url_slug)}}">
                                                                 <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
                                                             </a>

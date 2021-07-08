@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
               AppStylingSeeder::class,
               PermissionSeeder::class,
               ReturnReasonSeeder::class,
+              LuxuryOptionsSeeder::class,
           ]);
     }
 }

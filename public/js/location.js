@@ -1,14 +1,24 @@
 $(document).ready(function() {
-    /*$(".select_address").click(function () {
-        addressInputDisplay(".select_address", ".address-input-field", "#address-input");
-    });
-
-    $(document).delegate("#address-input", "focusout", function(){
-        addressInputHide(".select_address", ".address-input-field", "#address-input");
-    });*/
 
     if(window.location.pathname == '/'){
-        getHomePage();
+        $(document).ready(function() {
+            $.ajax({
+                url: client_preferences_url,
+                type: "POST",
+                success: function(response) {
+                    console.log(response.dinein_check);
+                    if(response.delivery_check == 1){
+                        getHomePage("", "", "delivery");
+                    }
+                    else if(response.dinein_check == 1){
+                        getHomePage("", "", "dine_in");
+                    }
+                    else{
+                        getHomePage("", "", "takeaway");
+                    }
+                },
+            });
+        });
     }
     function initializeSlider(){
         $(".slide-6").slick({
@@ -63,7 +73,22 @@ $(document).ready(function() {
             ]
         });
     }
-    function getHomePage(latitude, longitude){
+
+    $( "#dinein_tab" ).click(function() {
+        var url = "dine_in";
+        getHomePage("", "", url);
+    });
+
+    $( "#delivery_tab" ).click(function() {
+        getHomePage();
+    });
+
+    $( "#takeaway_tab" ).click(function() {
+        var url = "takeaway";
+        getHomePage("", "", url);
+    });
+
+    function getHomePage(latitude, longitude, url="delivery"){
         let selected_address = $("#address-input").val();
         $("#location_search_wrapper .homepage-address span").text(selected_address).attr({"title": selected_address, "data-original-title": selected_address});
         $("#edit-address").modal('hide');
@@ -76,6 +101,9 @@ $(document).ready(function() {
             type: "POST",
             dataType: 'json',
             url: home_page_data_url,
+            data: {
+                type: url
+            },
             success: function (response) {
                 if(response.status == "Success"){
                     $("#main-menu").html('');

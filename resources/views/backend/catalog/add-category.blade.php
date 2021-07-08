@@ -92,9 +92,6 @@
                         </div>
                         <div class="form-check form-check-info p-2">
                             <h5 class="mt-0" for="customradio5">{{$type->title}}</h5>
-                            <div class="description-txt">
-                                <p class="m-0">{{$type->description}}</p>
-                            </div>
                         </div>
                      </label>
                   </div>

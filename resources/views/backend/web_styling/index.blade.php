@@ -1,15 +1,10 @@
 @extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Styling - Web Styling'])
-
 @section('css')
-<link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
-<link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.css">
-
+    <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.css">
 @endsection
-
 @section('content')
-
-<!-- start page title -->
 <div class="row">
     <div class="col-12">
         <div class="page-title-box">
@@ -19,6 +14,16 @@
 </div>
 <form id="favicon-form" method="post" enctype="multipart/form-data">
 <div class="row">
+    <div class="col-md-4 col-xl-2">
+        <div class="card h-100">
+            <div class="card-body">
+                <h4 class="header-title mb-3">Cart Toggle</h4>
+                <div class="mb-0">
+                    <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="col-lg-2">
         <div class="card h-100">
             <div class="card-body">
@@ -33,7 +38,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-2">
         <div class="card h-100">
             <div class="card-body">
                 <h4 class="header-title">Color</h4>
@@ -65,10 +70,12 @@
         submitData();
     });
 
-    $("#image").change(function() {
-       submitData();
+    $("#cart_enable").change(function() {
+        submitData();
     });
-
+    $("#image").change(function() {
+       
+    });
     function submitData(){
         var form = document.getElementById('favicon-form');
         var formData = new FormData(form);
@@ -80,13 +87,11 @@
         });
         $.ajax({
             type: "post",
-            headers: {
-                Accept: "application/json"
-            },
             url: data_uri,
             data: formData,
             contentType: false,
             processData: false,
+            headers: {Accept: "application/json"},
             success: function(response) {
                 if (response.status == 'success') {
                     console.log(response.message);

@@ -110,16 +110,20 @@ class CategoryController extends FrontController
         $page = (strtolower($redirect_to) != '') ? strtolower($redirect_to) : 'product';
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-        return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
+        if(view()->exists('frontend/cate-'.$page.'s')){
+            return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
+        }else{
+            abort(404);
+        }
     }
 
-    public function listData($langId, $cid, $type = ''){
+    public function listData($langId, $category_id, $type = ''){
 
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
         
         if(strtolower($type) == 'vendor'){
             $vendorData = Vendor::select('vendors.id', 'name', 'slug', 'logo', 'banner', 'order_pre_time', 'order_min_amount');
-            $vendorData = $vendorData->join('vendor_categories as vct', 'vct.vendor_id', 'vendors.id')->where('vct.category_id', $cid)->where('vct.status', 1);
+            $vendorData = $vendorData->join('vendor_categories as vct', 'vct.vendor_id', 'vendors.id')->where('vct.category_id', $category_id)->where('vct.status', 1);
             $preferences= Session::get('preferences');
             if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
                 $vendors= (Session::has('vendors')) ? Session::get('vendors') : array();
@@ -130,9 +134,6 @@ class CategoryController extends FrontController
         }
         elseif(strtolower($type) == 'brand'){
             $brands = Brand::with('bc')
-                // ->whereHas('bc',function($q) use($cid){
-                //     $q->where('category_id', $cid);
-                // })
                 ->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->paginate($pagiNate);
             foreach ($brands as $brand) {
                 $brand->redirect_url = route('brandDetail', $brand->id);
@@ -149,8 +150,7 @@ class CategoryController extends FrontController
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');
             }
-            $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
-                    ->with(['media.image',
+            $products = Product::with(['media.image', 'category',
                         'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
@@ -158,8 +158,7 @@ class CategoryController extends FrontController
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                         },
-                    ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                    ->where('pc.category_id', $cid)->where('products.is_live', 1)->whereIn('products.vendor_id', $vendors)->paginate($pagiNate);
+                    ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')->where('products.is_live', 1)->where('category_id', $category_id)->whereIn('products.vendor_id', $vendors)->paginate($pagiNate);
 
             if(!empty($products)){
                 foreach ($products as $key => $value) {

@@ -34,6 +34,7 @@
     var add_to_whishlist_url = "{{ route('addWishlist') }}";
     var show_cart_url = "{{ route('showCart') }}";
     var home_page_data_url = "{{ route('homePageData') }}";
+    var client_preferences_url = "{{ route('getClientPreferences') }}";
     let empty_cart_url = "{{route('emptyCartData')}}";
     var cart_details_url = "{{ route('cartDetails') }}";
     var delete_cart_url = "{{ route('emptyCartData') }}";

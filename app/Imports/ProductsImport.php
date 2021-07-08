@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use App\Models\{Brand, Category, ClientLanguage, CsvProductImport, Product, ProductCategory, ProductTranslation, ProductVariant, ProductVariantSet, TaxCategory, Variant, VariantOption, VendorCategory, VendorMedia};
+use App\Models\{Brand, Category, ClientLanguage, CategoryTranslation, CsvProductImport, Product, ProductCategory, ProductTranslation, ProductVariant, ProductVariantSet, TaxCategory, Variant, VariantOption, VendorCategory, VendorMedia};
 
 class ProductsImport implements ToCollection{
     private $folderName = 'prods';
@@ -42,7 +42,7 @@ class ProductsImport implements ToCollection{
                     $checker = 1;
                 }
                 if ($row[4] != "") {
-                    $category_check = Category::where('slug', "LIKE", $row[4])->first();
+                    $category_check = CategoryTranslation::where('name', "LIKE", $row[4])->first();
                     if (!$category_check) { //check if category doesn't exist
                         $error[] = "Row " . $i . " : Category doesn't exist";
                         $checker = 1;
@@ -213,7 +213,7 @@ class ProductsImport implements ToCollection{
                     }
 
                     // insert product
-                    $category = Category::where('slug', $da[4])->first();
+                    $category = CategoryTranslation::where('name', $da[4])->first();
                     $product = Product::insertGetId([
                         'is_new' => 1,
                         'type_id' => 1,
@@ -227,7 +227,7 @@ class ProductsImport implements ToCollection{
                         'Requires_last_mile' => 0,
                         'sell_when_out_of_stock' => 0,
                         'vendor_id' => $this->vendor_id,
-                        'category_id' => $category->id,
+                        'category_id' => $category->category_id,
                         'tax_category_id' => $tax_category_id,
                         'title' => ($da[1] == "") ? "" : $da[1],
                         'is_live' => ($da[3] == 'TRUE') ? 1 : 0,
@@ -237,7 +237,7 @@ class ProductsImport implements ToCollection{
                     //insertion into product category
                     $cat[] = [
                         'product_id' => $product,
-                        'Category_id' => $category->id,
+                        'Category_id' => $category->category_id,
                     ];
                     ProductCategory::insert($cat);
 

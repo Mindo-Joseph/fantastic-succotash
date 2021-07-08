@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Http\Controllers\Client\BaseController;
-use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory};
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Traits\ToasterResponser;
-use App\Http\Traits\ApiResponser;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\VendorImport;
-use App\Models\UserVendor;
-use Redirect;
+use Image;
 use Phumbor;
 use Session;
-use Image;
+use Redirect;
+use DataTables;
 use Carbon\Carbon;
+use App\Models\UserVendor;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Imports\VendorImport;
+use App\Http\Traits\ApiResponser;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\ToasterResponser;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Client\BaseController;
+use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory};
 
 class VendorController extends BaseController
 {
@@ -29,8 +30,57 @@ class VendorController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function getFilterData(Request $request){
+        $dinein_check = '';
+        $takeaway_check = '';
+        $delivery_check = '';
+        $client_preference = ClientPreference::first();
+        if($client_preference){
+            $dinein_check = $client_preference->dinein_check;
+            $takeaway_check = $client_preference->takeaway_check;
+            $delivery_check = $client_preference->delivery_check;
+        }
+        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->with('slot')->where('status', '!=', '2')->orderBy('id', 'desc');
+        if (Auth::user()->is_superadmin == 0) {
+            $vendors = $vendors->whereHas('permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendors = $vendors->get();
+        foreach ($vendors as $vendor) {
+            $offers = [];
+            $vendor->show_url = route('vendor.show', $vendor->id);
+            $vendor->destroy_url = route('vendor.destroy', $vendor->id);
+            $vendor->add_category_option = ($vendor->add_category == 0) ? 'No' : 'Yes';
+            if($vendor->show_slot == 1){
+                $vendor->show_slot_option ="Open";
+                $vendor->show_slot_label ="success";
+            }elseif ($vendor->slot->count() > 0) {
+                $vendor->show_slot_option = "Open";
+                $vendor->show_slot_label ="success";
+            }else{
+                $vendor->show_slot_label="danger";
+                $vendor->show_slot_option = "Closed";
+            }
+            $offers[]= $dinein_check == 1 && $vendor->dine_in == 1 ? 'Dine In' : '';
+            $offers[]= $takeaway_check == 1 && $vendor->takeaway == 1 ? 'Take Away' : '';
+            $offers[]= $delivery_check == 1 && $vendor->delivery == 1 ? 'Delivery' : '';
+            $vendor->offers = $offers;
+        }
+        return Datatables::of($vendors)
+        ->addIndexColumn()
+        ->filter(function ($instance) use ($request) {
+            if (!empty($request->get('search'))) {
+                $instance->collection = $instance->collection->filter(function ($row) use ($request){
+                    if (Str::contains(Str::lower($row['name']), Str::lower($request->get('search')))){
+                        return true;
+                    }
+                    return false;
+                });
+            }
+        })->make(true);
+    }
+    public function index(){
         $csvVendors = CsvVendorImport::all();
         $client_preferences = ClientPreference::first();
         $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->with('slot')->where('status', '!=', '2')->orderBy('id', 'desc');
@@ -40,14 +90,27 @@ class VendorController extends BaseController
             });
         }
         $vendors = $vendors->get();
+        $available_vendors_count = 0;
+        $vendors_product_count = 0;
+        $vendors_active_order_count = 0;
+        foreach ($vendors as $key => $vendor) {
+            $vendors_product_count += $vendor->products->count();
+            $vendors_active_order_count += $vendor->activeOrders->count();
+            if($vendor->show_slot == 1){
+                $available_vendors_count+=1;
+            }elseif ($vendor->slot->count() > 0) {
+                $available_vendors_count+=1;
+            }
+        }
+        $total_vendor_count = $vendors->count();
         if(count($vendors) == 1){
             if (Auth::user()->is_superadmin == 1) {
-                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors, 'client_preferences'=> $client_preferences]);
+                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors, 'client_preferences'=> $client_preferences, 'total_vendor_count' => $total_vendor_count, 'available_vendors_count' => $available_vendors_count, 'vendors_product_count' => $vendors_product_count, 'vendors_active_order_count' => $vendors_active_order_count]);
             }else{
                 return Redirect::route('vendor.show', $vendors->first()->id);
             }
         }else{
-            return view('backend/vendor/index')->with(['client_preferences' => $client_preferences, 'vendors' => $vendors, 'csvVendors' => $csvVendors]);
+            return view('backend/vendor/index')->with(['client_preferences' => $client_preferences, 'vendors' => $vendors, 'csvVendors' => $csvVendors, 'total_vendor_count' => $total_vendor_count, 'available_vendors_count' => $available_vendors_count, 'vendors_product_count' => $vendors_product_count, 'vendors_active_order_count' => $vendors_active_order_count]);
         }
 
     }
@@ -58,13 +121,13 @@ class VendorController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $rules = array(
             'name' => 'required|string|max:150|unique:vendors',
             'address' => 'required',
+            'email' => 'required|unique:vendors',
+            'phone_no' => 'required|numeric|between:9,11|unique:vendors'
         );
-
         $validation  = Validator::make($request->all(), $rules)->validate();
         $vendor = new Vendor();
         $saveVendor = $this->save($request, $vendor, 'false');
@@ -83,8 +146,7 @@ class VendorController extends BaseController
      * @param  \App\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function save(Request $request, Vendor $vendor, $update = 'false')
-    {
+    public function save(Request $request, Vendor $vendor, $update = 'false'){
         $checks = array();
         foreach ($request->only('name', 'address', 'latitude', 'longitude', 'desc') as $key => $value) {
             $vendor->{$key} = $value;
@@ -92,22 +154,21 @@ class VendorController extends BaseController
         $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0;
         $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0;
         $vendor->delivery = ($request->has('delivery') && $request->delivery == 'on') ? 1 : 0;
-
         if ($update == 'false') {
             $vendor->logo = 'default/default_logo.png';
             $vendor->banner = 'default/default_image.png';
         }
-
         if ($request->hasFile('logo')) {    /* upload logo file */
             $file = $request->file('logo');
             $vendor->logo = Storage::disk('s3')->put('/vendor', $file, 'public');
         }
-
         if ($request->hasFile('banner')) {    /* upload logo file */
             $file = $request->file('banner');
             $vendor->banner = Storage::disk('s3')->put('/vendor', $file, 'public');
         }
-
+        $vendor->email = $request->email;
+        $vendor->website = $request->website;
+        $vendor->phone_no = $request->phone_no;
         $vendor->slug = Str::slug($request->name, "-");
         $vendor->save();
         return $vendor->id;
@@ -119,8 +180,7 @@ class VendorController extends BaseController
      * @param  \App\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function edit($domain = '', $id)
-    {
+    public function edit($domain = '', $id){
         $client_preferences = ClientPreference::first();
         $vendor = Vendor::where('id', $id)->first();
         $returnHTML = view('backend.vendor.form')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor])->render();
@@ -137,8 +197,10 @@ class VendorController extends BaseController
     public function update(Request $request, $domain = '', $id)
     {
         $rules = array(
-            'name' => 'required|string|max:150|unique:vendors,name,' . $id,
             'address' => 'required',
+            'email' => 'required|unique:vendors,email,'.$id,
+            'phone_no' => 'required|numeric|unique:vendors,phone_no,'.$id,
+            'name' => 'required|string|max:150|unique:vendors,name,' . $id,
         );
         //dd($request->all());
         $validation  = Validator::make($request->all(), $rules)->validate();
@@ -219,8 +281,7 @@ class VendorController extends BaseController
     }
 
     /**   show vendor page - category tab      */
-    public function vendorCategory($domain = '', $id)
-    {
+    public function vendorCategory($domain = '', $id){
         $csvVendors = [];
         $vendor = Vendor::findOrFail($id);
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
@@ -318,12 +379,11 @@ class VendorController extends BaseController
     }
 
     /**       delete vendor       */
-    public function destroy($domain = '', $id)
-    {
+    public function destroy($domain = '', $id){
         $vendor = Vendor::where('id', $id)->first();
         $vendor->status = 2;
         $vendor->save();
-        return redirect()->back()->with('success', 'Vendor deleted successfully!');
+        return $this->successResponse($vendor, 'Vendor deleted successfully!');
     }
 
     /**     update vendor configuration data     */
@@ -426,7 +486,5 @@ class VendorController extends BaseController
         }
     }
 
-    public function downloadSampleFile($domain = ''){
-        dd("reached!");
-    }
+    
 }

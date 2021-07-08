@@ -1,15 +1,13 @@
 @extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Customize'])
-
+@section('css')
+<link href="https://itsjavi.com/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css" rel="stylesheet" type="text/css" />
+@endsection
 @section('content')
-
 <div class="container-fluid">
-
-    <!-- start page title -->
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
                 <h4 class="page-title">Customize</h4>
-                
             </div>
         </div>
     </div>
@@ -54,7 +52,7 @@
                             </span>
                             @endif
                         </div>
-                       
+
                     </div>
                 </div>
             </form>
@@ -177,7 +175,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-lg-4 col-lg-3 mb-3">
+        <div class="col-lg-3 col-lg-3 mb-3">
             <form method="POST" class="h-100" action="{{route('client.updateDomain', Auth::user()->code)}}">
                 @csrf
                 <div class="card-box mb-0 h-100">
@@ -205,8 +203,7 @@
                 </div>
             </form>
         </div>
-       
-        <div class="col-lg-4 col-lg-3 mb-3">
+        <div class="col-lg-3 col-lg-3 mb-3">
             <form method="POST" class="h-100" action="{{route('referandearn.update', Auth::user()->code)}}">
                 @csrf
                 <div class="card-box mb-0 h-100 pb-1">
@@ -225,21 +222,227 @@
                 </div>
             </form>
         </div>
-
-
+        <div class="col-lg-6 col-lg-3 mb-3">
+            <div class="card-box mb-0 h-100 pb-1">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h4 class="header-title mb-0">Social Media</h4>
+                    <button class="btn btn-info d-block" id="add_social_media_modal_btn">
+                        <i class="mdi mdi-plus-circle mr-1"></i>Add
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Icon</th>
+                                        <th>Url</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="post_list">
+                                    @forelse($social_media_details as $social_media_detail)
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <a href="#">
+                                                <i class="{{$social_media_detail->icon}}" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                        <td style="width:100px">
+                                            <a href="{{$social_media_detail->url}}" target="_blank">{{$social_media_detail->url}}</a>
+                                        </td>
+                                        <td>
+                                            <div class="form-ul" style="width: 60px;">
+                                                <div class="inner-div" style="float: left;">
+                                                    <a class="action-icon edit_social_media_option_btn" data-social_media_detail_id="{{$social_media_detail->id}}">
+                                                        <i class="mdi mdi-square-edit-outline"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="inner-div">
+                                                    <button type="button" class="btn btn-primary-outline action-icon delete_social_media_option_btn" data-social_media_detail_id="{{$social_media_detail->id}}">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr align="center">
+                                        <td colspan="4" style="padding: 20px 0">Result not found.</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+<div id="add_or_edit_social_media_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="standard-modalLabel">Add Social Media</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="save_social_media">
+                    <input type="hidden" name="social_media_id" value="">
+                    <div class="form-group">
+                        <label for="">Icon</label>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">@</div>
+                            </div>
+                            <input class="form-control icp icp-auto" name="icon" value="fas fa-anchor" type="text" >
+                        </div>
 
-</div> <!-- container -->
+                    </div>
+                    <div class="form-group">
+                        <label for="">Url</label>
+                        <input class="form-control" name="url" type="text">
+                        <span class="text-danger error-text social_media_url_err"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary submitSaveSocialForm">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
-
 @section('script')
 <script src="{{asset('assets/js/jscolor.js')}}"></script>
+<script src="https://itsjavi.com/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.js"></script>
 <script type="text/javascript">
-    /*function toggleDisplayCustomDomain(){
-    $("#custom_domain_name").toggle( 'fast', function(){ 
+    var options_iconpicker = {
+        title: false,
+        selected: false,
+        trigger: 'hover',
+        defaultValue: true,
+        placement: 'bottom',
+        collision: 'none',
+        trigger: 'hover',
+        animation: false,
+        hideOnSelect: false,
+        showFooter: false,
+        searchInFooter: false,
+        mustAccept: false,
+        selectedCustomClass: 'bg-primary',
+        input: 'input,.icp-auto',
+        inputSearch: false,
+        container: false,
+        component: '.input-group-text,.iconpicker-component',
+        templates: {
+            popover: '<div class="iconpicker-popover popover"><div class="arrow"></div>' +
+                '<div class="popover-title"></div><div class="popover-content"></div></div>',
+            footer: '<div class="popover-footer"></div>',
+            buttons: '<button class="iconpicker-btn iconpicker-btn-cancel btn btn-default btn-sm">Cancel</button>' +
+                ' <button class="iconpicker-btn iconpicker-btn-accept btn btn-primary btn-sm">Accept</button>',
+            search: '<input type="search" class="form-control iconpicker-search" placeholder="Type to filter" />',
+            iconpicker: '<div class="iconpicker"><div class="iconpicker-items"></div></div>',
+            iconpickerItem: '<a role="button" href="#" class="iconpicker-item"><i></i></a>',
+        }
+    };
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+        $(document).on("click", ".delete_social_media_option_btn", function() {
+            var social_media_detail_id = $(this).data('social_media_detail_id');
+            if (confirm('Are you sure?')) {
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    url: "{{ route('social.media.delete') }}",
+                    data: {
+                        social_media_detail_id: social_media_detail_id
+                    },
+                    success: function(response) {
+                        if (response.status == "Success") {
+                            $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                            setTimeout(function() {
+                                location.reload()
+                            }, 2000);
+                        }
+                    }
+                });
+            }
+        });
+        $(document).on("click", ".edit_social_media_option_btn", function() {
+            $('.icp-auto').iconpicker(options_iconpicker);
+            let social_media_detail_id = $(this).data('social_media_detail_id');
+            $('#add_or_edit_social_media_modal input[name=social_media_id]').val(social_media_detail_id);
+            $.ajax({
+                method: 'GET',
+                data: {
+                    social_media_detail_id: social_media_detail_id
+                },
+                url: "{{ route('social.media.edit') }}",
+                success: function(response) {
+                    if (response.status = 'Success') {
+                        $("#add_or_edit_social_media_modal input[name=url]").val(response.data.url);
+                        $("#add_or_edit_social_media_modal .iconpicker-input").val(response.data.icon);
+                        $("#add_or_edit_social_media_modal input[name=social_media_id]").val(response.data.id);
+                        $('#add_or_edit_social_media_modal').modal('show');
+                        $('#add_or_edit_social_media_modal #standard-modalLabel').html('Update Social Media');
+                    }
+                },
+                error: function() {
 
+                }
+            });
+
+        });
+        $(document).on("click", "#add_social_media_modal_btn", function() {
+            $('.icp-auto').iconpicker(options_iconpicker);
+            $('#add_or_edit_social_media_modal #standard-modalLabel').html('Add Social Media');
+            $('#add_or_edit_social_media_modal').modal('show');
+        });
+        $(document).on('click', '.submitSaveSocialForm', function(e) {
+            var social_media_url = $("#add_or_edit_social_media_modal input[name=url]").val();
+            var social_media_icon = $("#add_or_edit_social_media_modal .iconpicker-input").val();
+            var social_media_id = $("#add_or_edit_social_media_modal input[name=social_media_id]").val();
+            if (social_media_id) {
+                var post_url = "{{ route('social.media.update') }}";
+            } else {
+                var post_url = "{{ route('social.media.create') }}";
+            }
+            $.ajax({
+                url: post_url,
+                method: 'POST',
+                data: {
+                    social_media_id: social_media_id,
+                    social_media_url: social_media_url,
+                    social_media_icon: social_media_icon
+                },
+                success: function(response) {
+                    if (response.status == 'Success') {
+                        $('#add_or_edit_social_media_modal').modal('hide');
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                        setTimeout(function() {
+                            location.reload()
+                        }, 2000);
+                    } else {
+                        $.NotificationApp.send("Error", response.message, "top-right", "#ab0535", "error");
+                    }
+                },
+                error: function(response) {
+                    $('.social_media_url_err').html(response.responseJSON.errors.social_media_url[0]);
+                }
+            });
+        });
     });
-}*/
+</script>
+<script type="text/javascript">
     var options = {
         zIndex: 9999
     }
@@ -251,63 +454,47 @@
     function generateRandomString(length) {
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
         for (var i = 0; i < length; i++)
             text += possible.charAt(Math.floor(Math.random() * possible.length));
-
         return text;
     }
 
     function genrateKeyAndToken() {
         var key = generateRandomString(30);
         var token = generateRandomString(60);
-
         $('#personal_access_token_v1').val(key);
         $('#personal_access_token_v2').val(token);
     }
-
     var existCid = [];
-
     $('#primary_currency').change(function() {
         var pri_curr = $('#primary_currency option:selected').text();
         console.log(pri_curr);
         $(document).find('.primaryCurText').html('1 ' + pri_curr + '  = ');
     });
-
     $('#currency').change(function() {
-        var pri_curr = $('#primary_currency option:selected').text();
-
-        var cidText = $('#currency').select2('data');
-
         var activeCur = [];
-
+        var pri_curr = $('#primary_currency option:selected').text();
+        var cidText = $('#currency').select2('data');
         for (i = 0; i < cidText.length; i++) {
             activeCur.push(cidText[i].id);
         }
-
         $(".curr_id").each(function() {
             var cv = $(this).val();
-
             if (existCid.indexOf(cv) === -1) {
                 existCid.push(cv);
             }
         });
-
         for (i = 0; i < existCid.length; i++) {
             if (activeCur.indexOf(existCid[i]) === -1) {
                 $('#addCur-' + existCid[i]).remove();
             }
         }
-
         for (i = 0; i < cidText.length; i++) {
-
             if (existCid.indexOf(cidText[i].id) === -1) {
                 var text = '<div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 col-xl-8 offset-xl-4 mb-2" id="addCur-' + cidText[i].id + '"><label class="primaryCurText">1 ' + pri_curr + '  = </label> <input type="number" name="multiply_by[]" min="0.01" value="0" step=".01">' + cidText[i].text + '<input type="hidden" name="cuid[]" class="curr_id" value="' + cidText[i].id + '"></div>';
                 $('.multiplierData').append(text);
             }
-
         }
     });
 </script>
-
 @endsection

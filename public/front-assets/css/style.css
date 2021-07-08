@@ -1,3 +1,40 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot?9r1tw8');
+  src:  url('../fonts/icomoon.eot?9r1tw8#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?9r1tw8') format('truetype'),
+    url('../fonts/icomoon.woff?9r1tw8') format('woff'),
+    url('../fonts/icomoon.svg?9r1tw8#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-shipped:before {
+  content: "\e917";
+}
+.icon-dine-in:before {
+  content: "\e918";
+}
+.icon-take-away:before {
+  content: "\e919";
+}
+
 /* latin-ext */
 @font-face {
   font-family: 'Lato';
@@ -12554,7 +12591,7 @@ header.stickycls {
   padding: 7px;
   cursor: pointer; }
   .tap-top.top-cls {
-    bottom: 130px; }
+    bottom: 80px; }
   .tap-top.green-top {
     background-image: -webkit-gradient(linear, left top, right top, from(var(--theme-deafult)), to(var(--theme-deafult2)));
     background-image: linear-gradient(to right, var(--theme-deafult), var(--theme-deafult2));
@@ -16839,8 +16876,8 @@ header.stickycls {
 ==========================**/
 body.dark {
   background-color: #2b2b2b;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
   color: #cfd4da; }
 
 .dark h1 {
@@ -18912,7 +18949,7 @@ body.dark {
 .dark-light {
   position: fixed;
   right: 0;
-  width: 40px;
+  width: 80px;
   height: 38px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -18929,11 +18966,36 @@ body.dark {
   border-radius: 5px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-  background-color: #f7f7f7;
+  color: #fff;
+  background-color: var(--theme-deafult);
   -webkit-box-shadow: 0px 0px 5px 0px rgba(154, 154, 154, 0.54);
           box-shadow: 0px 0px 5px 0px rgba(154, 154, 154, 0.54);
   top: calc(50% + 34px);
   cursor: pointer; }
+
+  .theme-layout-version:before {
+    content: "\f013";
+    font-family: 'FontAwesome';
+    position: absolute;
+    left: 8px;
+    color: #fff;
+    top: calc(50% - 10px);
+    transform: translateY(-50%);
+    animation-name: spin;
+  animation-duration: 5000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear; 
+ }
+   
+ @keyframes spin {
+  from {
+      transform:rotate(0deg);
+  }
+  to {
+      transform:rotate(360deg);
+  }
+}
+
 
 .setting-sidebar {
   z-index: 9; }
