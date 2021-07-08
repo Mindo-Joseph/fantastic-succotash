@@ -20,7 +20,7 @@
                 <div class="card-body p-3">
                     <div class="d-flex align-items-center justify-content-between mb-3">
                         <h4>List</h4>
-                        <button class="btn btn-info" data-toggle="modal" data-target="#add_cms_page">
+                        <button class="btn btn-info add_cms_page" data-toggle="modal">
                             <i class="mdi mdi-plus-circle"></i> Add
                         </button>
                     </div> 
@@ -58,7 +58,7 @@
                 <div class="card-body p-3" id="edit_page_content">
                     <div class="row mb-2 align-items-center">
                         <div class="col-8">
-                            <h4 class="m-0">Page Content</h4>
+                            <h4 class="m-0 page-heading">Page Content</h4>
                         </div>
                         <div class="col-4 d-flex align-items-center justify-content-end" style="margin: auto;">
                             <div class="form-group mb-0 mr-3">
@@ -191,13 +191,23 @@
             var data = {title: title,description:description, meta_title:meta_title, meta_keyword:meta_keyword, meta_description:meta_description};
             $.post(create_url, data, function(response) {
               $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-            //   setTimeout(function(){ location.reload() }, 2000);
+              setTimeout(function(){ location.reload() }, 2000);
             }).fail(function(response) {
                 console.log(response);
                 $('.titleError').html(response.responseJSON.errors.title[0]);
                 $('.descrpitionError').html(response.responseJSON.errors.description[0]);
             });
         });
+        $(document).on("click",".add_cms_page",function() {
+            $('.page-heading').html('Add Page Content');
+            $("#update_page_btn").html('Add');
+            $('#edit_page_content #page_id').val('');
+            $('#edit_page_content #edit_title').val('');
+            $('#edit_page_content #edit_meta_title').val('');
+            $('#edit_page_content #edit_description').summernote('reset');
+            $('#edit_page_content #edit_meta_keyword').val('');
+            $('#edit_page_content #edit_meta_description').val('');
+        });  
         $(document).on("click",".delete-page",function() {
             var page_id = $(this).data('page_id');
             let destroy_url = "{{route('cms.page.delete')}}";
@@ -219,8 +229,11 @@
             }
         });
         $(document).on("click","#update_page_btn",function() {
-            let update_url = "{{route('cms.page.update')}}";
+            var update_url = "{{route('cms.page.update')}}";
             let page_id = $('#edit_page_content #page_id').val();
+            if(page_id == ''){
+                var update_url = "{{route('cms.page.create')}}";
+            }
             let edit_title = $('#edit_page_content #edit_title').val();
             let edit_meta_title = $('#edit_page_content #edit_meta_title').val();
             let edit_description = $('#edit_page_content #edit_description').val();
@@ -230,6 +243,9 @@
             $.post(update_url, data, function(response) {
               $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
               $('#text_body_'+response.data.id).html(response.data.title);
+              setTimeout(function() {
+                    location.reload()
+                }, 2000);
             }).fail(function(response) {
                 $('.updatetitleError').html(response.responseJSON.errors.edit_title[0]);
                 $('.updatedescrpitionError').html(response.responseJSON.errors.edit_description[0]);

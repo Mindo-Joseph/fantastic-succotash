@@ -46,7 +46,6 @@ class BaseController extends Controller
                 }else{
                     $this->htmlData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node['translation_one']["name"].'<span class="inner-div text-right">';
                 }
-
                 if(!in_array($node["id"], $blockedCategory)){
                     $status = 2; //$icon = 'mdi-lock-open-variant';
                     $title = 'Delete'; $icon = 'mdi-delete';
