@@ -20,7 +20,7 @@
                 <div class="card-body p-3">
                     <div class="d-flex align-items-center justify-content-between mb-3">
                         <h4>List</h4>
-                        <button class="btn btn-info" data-toggle="modal" data-target="#add_cms_page">
+                        <button class="btn btn-info add_cms_page" data-toggle="modal">
                             <i class="mdi mdi-plus-circle"></i> Add
                         </button>
                     </div> 
@@ -69,9 +69,9 @@
                         </div>
                         <div class="col-md-4 col-xl-2">
                             <div class="form-group mb-0">
-                                <select class="form-control" name="" id="">
-                                    <option value="">Publish</option>
-                                    <option value="">Save Draft</option>
+                                <select class="form-control" name="published" id="published">
+                                    <option value="1">Publish</option>
+                                    <option value="0">Draft</option>
                                 </select>
                             </div>
                         </div>
@@ -181,11 +181,17 @@
         setTimeout(function(){ 
             $('tr.page-title:first').trigger('click');
         }, 500);
-        $(document).on("click",".page-title",function() {
+        $(document).on("click",".page-git",function() {
             $('#edit_page_content #edit_description').summernote('destroy');
             let url = $(this).data('show_url');
             $.get(url, function(response) {
               if(response.status == 'Success'){
+                  if(response.data.is_published == 0){
+                    $("#edit_page_content #published").val('0');
+                  }
+                  else{
+                    $("#edit_page_content #published").val('1');
+                  }
                 $('#edit_page_content #page_id').val(response.data.id);
                 $('#edit_page_content #edit_title').val(response.data.title);
                 $('#edit_page_content #edit_meta_title').val(response.data.meta_title);
@@ -206,13 +212,23 @@
             var data = {title: title,description:description, meta_title:meta_title, meta_keyword:meta_keyword, meta_description:meta_description};
             $.post(create_url, data, function(response) {
               $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-            //   setTimeout(function(){ location.reload() }, 2000);
+              setTimeout(function(){ location.reload() }, 2000);
             }).fail(function(response) {
                 console.log(response);
                 $('.titleError').html(response.responseJSON.errors.title[0]);
                 $('.descrpitionError').html(response.responseJSON.errors.description[0]);
             });
         });
+        $(document).on("click",".add_cms_page",function() {
+            $('.page-heading').html('Add Page Content');
+            $("#update_page_btn").html('Add');
+            $('#edit_page_content #page_id').val('');
+            $('#edit_page_content #edit_title').val('');
+            $('#edit_page_content #edit_meta_title').val('');
+            $('#edit_page_content #edit_description').summernote('reset');
+            $('#edit_page_content #edit_meta_keyword').val('');
+            $('#edit_page_content #edit_meta_description').val('');
+        });  
         $(document).on("click",".delete-page",function() {
             var page_id = $(this).data('page_id');
             let destroy_url = "{{route('cms.page.delete')}}";
@@ -234,17 +250,24 @@
             }
         });
         $(document).on("click","#update_page_btn",function() {
-            let update_url = "{{route('cms.page.update')}}";
+            var update_url = "{{route('cms.page.update')}}";
             let page_id = $('#edit_page_content #page_id').val();
+            if(page_id == ''){
+                var update_url = "{{route('cms.page.create')}}";
+            }
             let edit_title = $('#edit_page_content #edit_title').val();
+            let is_published = $('#edit_page_content #published').val();
             let edit_meta_title = $('#edit_page_content #edit_meta_title').val();
             let edit_description = $('#edit_page_content #edit_description').val();
             let edit_meta_keyword = $('#edit_page_content #edit_meta_keyword').val();
             let edit_meta_description = $('#edit_page_content #edit_meta_description').val();
-            var data = { page_id: page_id, edit_title: edit_title,edit_meta_title:edit_meta_title, edit_description:edit_description, edit_meta_keyword:edit_meta_keyword, edit_meta_description:edit_meta_description};
+            var data = { page_id: page_id, is_published: is_published, edit_title: edit_title,edit_meta_title:edit_meta_title, edit_description:edit_description, edit_meta_keyword:edit_meta_keyword, edit_meta_description:edit_meta_description};
             $.post(update_url, data, function(response) {
               $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
               $('#text_body_'+response.data.id).html(response.data.title);
+              setTimeout(function() {
+                    location.reload()
+                }, 2000);
             }).fail(function(response) {
                 $('.updatetitleError').html(response.responseJSON.errors.edit_title[0]);
                 $('.updatedescrpitionError').html(response.responseJSON.errors.edit_description[0]);

@@ -53,6 +53,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('get-list-of-vehicles-old/{id}', 'Api\v1\PickupDeliveryController@getListOfVehicles');
             Route::post('get-list-of-vehicles/{id}', 'Api\v1\PickupDeliveryController@productsByVendorInPickupDelivery');
             Route::post('create-order', 'Api\v1\PickupDeliveryController@createOrder');
+            
         });
        
     });

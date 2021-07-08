@@ -48,7 +48,7 @@
                 <div class="col-lg-3 col-md-6 mb-md-0 mb-3 pl-lg-5">
                     <div class="sub-title">
                         <div class="footer-title">
-                            <h4>why we choose</h4>
+                            <h4>Links</h4>
                         </div>
                         <div class="footer-contant">
                             <ul>

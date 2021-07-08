@@ -27,17 +27,18 @@ class PageController extends Controller{
      */
     public function store(Request $request, $domain = ''){
         $rules = array(
-            'title' => 'required',
-            'description' => 'required',
+            'edit_title' => 'required',
+            'edit_description' => 'required',
         );
         $validation  = Validator::make($request->all(), $rules)->validate();
 
         $page = new Page();
-        $page->title = $request->title;
-        $page->meta_title = $request->meta_title;
-        $page->description = $request->description;
-        $page->meta_keyword = $request->meta_keyword;
-        $page->meta_description = $request->meta_description;
+        $page->title = $request->edit_title;
+        $page->is_published = $request->is_published;
+        $page->meta_title = $request->edit_meta_title;
+        $page->description = $request->edit_description;
+        $page->meta_keyword = $request->edit_meta_keyword;
+        $page->meta_description = $request->edit_meta_description;
         $page->save();
         return $this->successResponse($page, 'Page Data Saved Successfully.');
     }
@@ -69,6 +70,7 @@ class PageController extends Controller{
 
         $page = Page::findOrFail($request->page_id);
         $page->title = $request->edit_title;
+        $page->is_published = $request->is_published;
         $page->meta_title = $request->edit_meta_title;
         $page->description = $request->edit_description;
         $page->meta_keyword = $request->edit_meta_keyword;
