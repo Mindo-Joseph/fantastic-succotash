@@ -155,6 +155,14 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('subscriptions/vendors/delete/{slug}', 'Client\SubscriptionController@deleteVendorSubscription')->name('subscriptions.deleteVendorSubscription');
     Route::post('subscriptions/vendors/updateStatus/{slug}', 'Client\SubscriptionController@updateVendorSubscriptionStatus')->name('subscriptions.updateVendorSubscriptionStatus');
     Route::post('subscriptions/vendors/updateOnRequest/{slug}', 'Client\SubscriptionController@updateVendorSubscriptionOnRequest')->name('subscriptions.updateVendorSubscriptionOnRequest');
+
+
+    // pickup & delivery 
+    Route::group(['prefix' => 'vendor/dispatcher'], function () {
+        Route::post('updateCreateVendorInDispatch', 'Client\VendorController@updateCreateVendorInDispatch')->name('update.Create.Vendor.In.Dispatch');
+    });
+    
+
 });
 
 
