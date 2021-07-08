@@ -7,7 +7,7 @@ use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCur
 use Illuminate\Http\Request;
 use Session;
 use Auth;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Support\Facades\Storage;
 class CartController extends FrontController
 { 
@@ -533,7 +533,7 @@ class CartController extends FrontController
                                               'longitude' => $cus_address->longitude??76.803508700000
                                             );
                             $postdata =  ['locations' => $location];
-                            $client = new Client(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
+                            $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
                                                         'shortcode' => $dispatch_domain->delivery_service_key_code,
                                                         'content-type' => 'application/json']
                                                             ]);

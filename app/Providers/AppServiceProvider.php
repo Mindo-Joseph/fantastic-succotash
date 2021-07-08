@@ -6,7 +6,7 @@ use DB;
 use Auth;
 use URL;
 use Route;
-use Config;
+use Config,Schema;
 use App\Models\Client;
 use App\Models\SocialMedia;
 use Illuminate\Http\Request;
@@ -39,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
         }
         $this->connectDynamicDb($request);
         Paginator::useBootstrap();
+        $social_media_details = '';
+        if(Schema::hasTable('social_media'))
         $social_media_details = SocialMedia::get();
         $favicon_url = asset('assets/images/favicon.png');
         $client_preference_detail = ClientPreference::where(['id' => 1])->first();
