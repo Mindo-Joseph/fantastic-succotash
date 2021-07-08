@@ -146,7 +146,7 @@ class VendorController extends BaseController{
         if(!empty($multiArray)){
             foreach ($multiArray as $key => $value) {
                 $new_pIds = $new_vIds = array();
-                $vResult = ProductVariantSet::join('product_categories as pc', 'product_variant_sets.product_id', 'pc.product_id')->select('product_variant_sets.product_variant_id', 'product_variant_sets.product_id')
+                $vResult = ProductVariantSet::select('product_variant_sets.product_variant_id', 'product_variant_sets.product_id')
                     ->where('product_variant_sets.variant_type_id', $key)
                     ->whereIn('product_variant_sets.variant_option_id', $value);
                 if(!empty($variantIds)){
