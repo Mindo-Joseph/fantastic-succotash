@@ -134,6 +134,7 @@
                                 @forelse($builds as $build)
                                 <li class="dd-item dd3-item" data-category_id="{{$build['id']}}">
                                     <div class="dd3-content"> 
+                                        <img class="rounded-circle mr-1" src="{{$build['icon']['proxy_url']}}30/30{{$build['icon']['image_path']}}"> {{$build['translation_one']['name']}}
                                         <span class="inner-div text-right">
                                             <a class="action-icon" data-id="3" href="javascript:void(0)">
                                                 @if(in_array($build['id'], $VendorCategory))
@@ -150,6 +151,7 @@
                                         @forelse($build['children']  as $first_child)
                                         <li class="dd-item dd3-item" data-id="{{$first_child['id']}}">
                                             <div class="dd3-content"> 
+                                                <img class="rounded-circle mr-1" src="{{$first_child['icon']['proxy_url']}}30/30{{$first_child['icon']['image_path']}}"> {{$first_child['translation_one']['name']}} 
                                                 <span class="inner-div text-right">
                                                     <a class="action-icon" data-id="2" href="javascript:void(0)">
                                                         @if(in_array($first_child['id'], $VendorCategory))
@@ -165,6 +167,7 @@
                                                     @forelse($first_child['children'] as $second_child)
                                                         <li class="dd-item dd3-item" data-id="6">
                                                             <div class="dd3-content">
+                                                                <img class="rounded-circle mr-1" src="{{$second_child['icon']['proxy_url']}}30/30{{$second_child['icon']['image_path']}}">{{$second_child['translation_one']['name']}}
                                                                     <span class="inner-div text-right">
                                                                         <a class="action-icon" data-id="6" href="javascript:void(0)">
                                                                             @if(in_array($second_child['id'], $VendorCategory))

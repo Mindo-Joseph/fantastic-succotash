@@ -44,8 +44,9 @@ class BaseController extends Controller
                 if(isset($node['translation_one'])){
                     $this->htmlData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'"><a class="openCategoryModal" dataid="'.$node["id"].'" is_vendor="0" href="#"> '.$node['translation_one']["name"].'</a><span class="inner-div text-right">';
                 }else{
-                    $this->htmlData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node['slug'].'<span class="inner-div text-right">';
+                    $this->htmlData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node['translation_one']["name"].'<span class="inner-div text-right">';
                 }
+
                 if(!in_array($node["id"], $blockedCategory)){
                     $status = 2; //$icon = 'mdi-lock-open-variant';
                     $title = 'Delete'; $icon = 'mdi-delete';
