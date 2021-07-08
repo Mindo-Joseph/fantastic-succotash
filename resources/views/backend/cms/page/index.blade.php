@@ -99,22 +99,32 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-12">
+                            <h3>Terms & Conditions</h3>
+                        </div>
                         <div class="col">
                             <div class="page-content mb-3">
-                                <h6 class="text-uppercase mb-2">Lorem ipsum dolor sit amet. </h6>
-                                <p>We provide Visitors (as defined below) with access to the Website and Registered Members (as defined below) with access to the Platform subject to the following Terms of Use. By browsing the public areas of the Website, you acknowledge that you have read, understood, and agree to be legally bound by these Terms of Use and our Privacy Policy, which is hereby incorporated by reference (collectively, this “Agreement”). If you do not agree to any of these terms, then please do not use the Website, the App, and/or the Platform. We may change the terms and conditions of these Terms of Use from time to time with or without notice to you.</p>
-                                <p>We provide Visitors (as defined below) with access to the Website and Registered Members (as defined below) with access to the Platform subject to the following Terms of Use.</p>
+                                <h5 class="text-uppercase mb-1">Title </h5>
+                                <p>Lorem ipsum dolor sit amet.</p>
                             </div>
                             <div class="page-content mb-3">
-                                <h6 class="text-uppercase mb-2">DESCRIPTION AND USE OF PLATFORM</h6>
-                                <p>We provide Visitors (as defined below) with access to the Website and Registered Members (as defined below) with access to the Platform subject to the following Terms of Use.</p>
+                                <h5 class="text-uppercase mb-1">Meta Title</h5>
+                                <p>Lorem ipsum dolor.</p>
                             </div>
                             <div class="page-content mb-3">
-                                <h6 class="text-uppercase mb-2">DESCRIPTION AND USE OF PLATFORM</h6>
-                                <p>We provide Visitors (as defined below) with access to the Website and Registered Members (as defined below) with access to the Platform subject to the following Terms of Use. By browsing the public areas of the Website, you acknowledge that you have read, understood, and agree to be legally bound by these Terms of Use and our Privacy Policy, which is hereby incorporated by reference (collectively, this “Agreement”). If you do not agree to any of these terms, then please do not use the Website, the App, and/or the Platform. We may change the terms and conditions of these Terms of Use from time to time with or without notice to you.</p>
-                                <div class="upadted_date text-uppercase">
-                                    Updated on 12/07/2020
-                                </div>
+                                <h5 class="text-uppercase mb-1">Meta Keyword</h5>
+                                <p>Lorem, ipsum dolor.</p>
+                            </div>
+                            <div class="page-content mb-3">
+                                <h5 class="text-uppercase mb-1">Meta Description</h5>
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio officia quasi distinctio adipisci, nisi et!</p>
+                            </div>
+                            <div class="page-content mb-3">
+                                <h5 class="text-uppercase mb-1">Description</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis et illum ipsa. Omnis mollitia non aperiam iure voluptates numquam exercitationem modi porro unde reiciendis vitae, nesciunt temporibus magni culpa pariatur praesentium veniam minus provident sequi.</p>
+                            </div>
+                            <div class="upadted_date text-uppercase">
+                                Updated on 12/07/2020
                             </div>
                         </div>
                     </div>
