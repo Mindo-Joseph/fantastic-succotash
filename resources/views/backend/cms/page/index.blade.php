@@ -60,7 +60,10 @@
                         <div class="col-8">
                             <h4 class="m-0">Page Content</h4>
                         </div>
-                        <div class="col-4 text-right" style="margin: auto;">
+                        <div class="col-4 d-flex align-items-center justify-content-end" style="margin: auto;">
+                            <div class="form-group mb-0 mr-3">
+                                <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1">
+                            </div>
                             <button type="button" class="btn btn-info waves-effect waves-light text-sm-right" id="update_page_btn"> Update</button>
                         </div>
                     </div>

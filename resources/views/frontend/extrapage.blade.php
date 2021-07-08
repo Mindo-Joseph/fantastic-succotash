@@ -13,8 +13,16 @@
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-{{$page_detail->title}}
-{!!$page_detail->description!!}
+<section class="section-b-space new-pages">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-3">{{$page_detail->title}}</h2>
+                <p>{!!$page_detail->description!!}</p>
+            </div>
+        </div>
+    </div>
+</section>
 @endsection
 @section('script')
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>

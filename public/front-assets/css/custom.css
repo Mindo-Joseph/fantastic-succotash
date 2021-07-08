@@ -2721,6 +2721,9 @@ button.close {
     background: rgb(248 248 248 / 5%);
 }
 
+.dark .coupon_box {
+    background: rgb(255 255 255 / 7%);
+}
 
 
 
