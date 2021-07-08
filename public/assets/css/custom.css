@@ -1996,7 +1996,11 @@ td.product-name,.vendor-name {
     color: #5AC2ED !important;
 }
 
-
+.error-text {
+    position: absolute;
+    bottom: -22px;
+    left: 15px;
+}
 
 
 

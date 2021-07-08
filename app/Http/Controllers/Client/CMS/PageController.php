@@ -34,6 +34,7 @@ class PageController extends Controller{
 
         $page = new Page();
         $page->title = $request->edit_title;
+        $page->is_published = $request->is_published;
         $page->meta_title = $request->edit_meta_title;
         $page->description = $request->edit_description;
         $page->meta_keyword = $request->edit_meta_keyword;
@@ -69,6 +70,7 @@ class PageController extends Controller{
 
         $page = Page::findOrFail($request->page_id);
         $page->title = $request->edit_title;
+        $page->is_published = $request->is_published;
         $page->meta_title = $request->edit_meta_title;
         $page->description = $request->edit_description;
         $page->meta_keyword = $request->edit_meta_keyword;
