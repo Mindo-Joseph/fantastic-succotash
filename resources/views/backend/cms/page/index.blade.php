@@ -98,6 +98,7 @@
                             <textarea class="form-control" id="meta_description" placeholder="Meta Description" rows="9" name="meta_description" cols="50"></textarea>
                         </div>
                     </div>
+                    
                     <div class="row">
                         <div class="col-12">
                             <h3>Terms & Conditions</h3>
