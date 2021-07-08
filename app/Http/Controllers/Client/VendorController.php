@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory};
-
+use GuzzleHttp\Client as GCLIENT;
+use DB;
 class VendorController extends BaseController
 {
     use ToasterResponser;
@@ -485,6 +486,91 @@ class VendorController extends BaseController
             ]);
         }
     }
+
+     /**
+     *update Create Vendor In Dispatch
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateCreateVendorInDispatch(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+                    $dispatch_domain = $this->checkIfPickupDeliveryOnCommon();
+                    if ($dispatch_domain && $dispatch_domain != false) {
+                        $dispatch_domain['vendor_id'] = $request->id;
+                        $data = [];
+                        $request_from_dispatch = $this->checkUpdateVendorToDispatch($dispatch_domain);
+                        if ($request_from_dispatch && isset($request_from_dispatch['status']) && $request_from_dispatch['status'] == 200) {
+                            DB::commit();
+                            return $request_from_dispatch;
+                        } else {
+                            DB::rollback();
+                            return $request_from_dispatch;
+                        }
+                    } else {
+                        return response()->json([
+                        'status' => 'error',
+                        'message' => 'Pickup & Delivery service in not available.'
+                    ]);
+                    }
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+            }
+    }
+
+
+     // check and update in dispatcher panel
+     public function checkUpdateVendorToDispatch($dispatch_domain){
+        try {
+                $dynamic = uniqid();
+                $call_back_url = route('dispatch-pickup-delivery', $dynamic);
+
+                $tasks = array();
+                $meta_data = '';
+                $vendor = Vendor::find($dispatch_domain->vendor_id);
+                $postdata =  ['vendor_id' => $dispatch_domain->vendor_id ?? 0,
+                'name' => $vendor->name ?? "Manager".$dispatch_domain->vendor_id,
+                'phone_number' =>  $vendor->phone_no ?? rand('11111'.'458965'),
+                'email' => "969648".$vendor->id."_royodispatch@dispatch.com",
+                'team_tag' => "tag-set".$vendor->id];
+           
+                $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,
+                                                    'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,
+                                                    'content-type' => 'application/json']
+                                                        ]);
+                                            
+                $url = $dispatch_domain->pickup_delivery_service_key_url;
+                $res = $client->post(
+                    $url.'/api/update-create-vendor-order',
+                    ['form_params' => (
+                            $postdata
+                        )]
+                );
+                $response = json_decode($res->getBody(), true);
+                if ($response) {
+                   return $response;
+                }
+                return $response;
+                
+            }catch(\Exception $e)
+                    {   
+                        $data = [];
+                        $data['status'] = 400;
+                        $data['message'] =  $e->getMessage();
+                        return $data;
+                                
+                    }
+                
+            
+           
+    }
+    
 
     
 }

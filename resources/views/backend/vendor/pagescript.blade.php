@@ -482,4 +482,39 @@ $('.editAddonBtn').on('click', function(e) {
         }
     });
 });
+
+///// **************** 1.1  check vendor exists in dispatcher or not ********** //////////
+
+$(".openConfirmDispatcher").click(function (e) {
+
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+    }
+});
+e.preventDefault();
+
+var uri =  "{{route('update.Create.Vendor.In.Dispatch')}}";
+var id =    $(this).data('id');
+
+$.ajax({
+    type: "post",
+    url: uri,
+    data: {id:id},
+    dataType: 'json',
+    success: function (data) {
+    console.log(data);   
+    },
+    error: function (data) {
+        console.log('data');
+    },
+    beforeSend: function(){
+        $(".loader_box").show();
+    },
+    complete: function(){
+        $(".loader_box").hide();
+    }
+});
+});
+/////////////// **************   end 1.1 *****************************///////////////
 </script>

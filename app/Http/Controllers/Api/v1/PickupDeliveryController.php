@@ -194,12 +194,18 @@ class PickupDeliveryController extends BaseController{
         try {
             $data = [];
             $request_to_dispatch = $this->placeRequestToDispatch($request);
-            DB::commit();
-                return response()->json([
-                    'status' => 'success',
-                    'data' => $data,
-                    'message' => 'Order Successfully.'
-                ]);
+                if($request_to_dispatch && isset($request_to_dispatch['task_id']) && $request_to_dispatch['task_id'] > 0){
+                    DB::commit();
+                    return response()->json([
+                        'status' => 200,
+                        'data' => $data,
+                        'message' => 'Order Successfully.'
+                    ]);
+                }else{
+                    DB::rollback();
+                    return $request_to_dispatch;
+                }
+              
             }
             catch(\Exception $e){
             DB::rollback();
@@ -233,7 +239,7 @@ class PickupDeliveryController extends BaseController{
                
                                
                 $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
-                                                    'customer_phone_number' => $customer->phone_number ?? '',
+                                                    'customer_phone_number' => $customer->phone_number??rand(111111,11111),
                                                     'customer_email' => $customer->email ?? '',
                                                     'recipient_phone' => $request->phone_number ?? $customer->phone_number,
                                                     'recipient_email' => $request->email ?? $customer->email,
@@ -261,20 +267,17 @@ class PickupDeliveryController extends BaseController{
                         )]
                 );
                 $response = json_decode($res->getBody(), true);
-                if ($response && $response['task_id'] > 0) {
-                   
-                    return 1;
+                if ($response && isset($response['task_id']) && $response['task_id'] > 0) {
+                   return $response;
                 }
-                return 2;
-            }
-            }    
-                    catch(\Exception $e)
-                    {
-                        return 2;
-                        return response()->json([
-                            'status' => 'error',
-                            'message' => $e->getMessage()
-                        ]);
+                return $response;
+                }
+            }catch(\Exception $e)
+                    {   
+                        $data = [];
+                        $data['status'] = 400;
+                        $data['message'] =  $e->getMessage();
+                        return $data;
                                 
                     }
                 
