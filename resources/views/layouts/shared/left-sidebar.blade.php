@@ -209,7 +209,7 @@
                         <li>
                             <a href="#sidebarcms" data-toggle="collapse">
                                 <span class="icon-theme-icon size-20"></span>
-                                <span>Cms</span>
+                                <span>CMS</span>
                             </a>
                             <div class="collapse" id="sidebarcms">
                                 <ul class="nav-second-level">
