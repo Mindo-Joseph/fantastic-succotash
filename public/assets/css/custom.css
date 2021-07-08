@@ -1987,7 +1987,9 @@ td.product-name,.vendor-name {
     text-align: center;
 }
 
-
+.pages-list-data td a {
+    font-weight: 600;
+}
 
 
 
