@@ -108,7 +108,6 @@ class CategoryController extends BaseController
                     },
                     ])->select('products.category_id','products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
                     ->where('products.category_id', $category_id)->where('products.is_live', 1)->whereIn('products.vendor_id', $vendor_ids)->paginate($limit);
-                    pr($products);die;
             if(!empty($products)){
                 foreach ($products as $key => $product) {
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
