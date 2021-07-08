@@ -149,23 +149,23 @@
                     <div class="row mb-2">
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Product Name',['class' => 'control-label']) !!}
-                            {!! Form::text('product_name', $product->primary->title, ['class'=>'form-control', 'id' => 'product_name', 'placeholder' => 'Apple iMac']) !!}
+                            {!! Form::text('product_name', $product->primary ? $product->primary->title : '', ['class'=>'form-control', 'id' => 'product_name', 'placeholder' => 'Apple iMac']) !!}
                         </div>
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Product Description',['class' => 'control-label']) !!}
-                            {!! Form::textarea('body_html', $product->primary->body_html, ['class'=>'form-control', 'id' => 'body_html', 'placeholder' => 'Description', 'rows' => '5']) !!}
+                            {!! Form::textarea('body_html', $product->primary ? $product->primary->body_html : '', ['class'=>'form-control', 'id' => 'body_html', 'placeholder' => 'Description', 'rows' => '5']) !!}
                         </div>
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!}
-                            {!! Form::text('meta_title', $product->primary->meta_title, ['class'=>'form-control', 'id' => 'meta_title', 'placeholder' => 'Meta Title']) !!}
+                            {!! Form::text('meta_title', $product->primary ? $product->primary->meta_title : '', ['class'=>'form-control', 'id' => 'meta_title', 'placeholder' => 'Meta Title']) !!}
                         </div>
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Meta Keyword',['class' => 'control-label']) !!}
-                            {!! Form::textarea('meta_keyword', $product->primary->meta_keyword, ['class'=>'form-control', 'id' => 'meta_keyword', 'placeholder' => 'Meta Keyword', 'rows' => '3']) !!}
+                            {!! Form::textarea('meta_keyword', $product->primary ? $product->primary->meta_keyword : '', ['class'=>'form-control', 'id' => 'meta_keyword', 'placeholder' => 'Meta Keyword', 'rows' => '3']) !!}
                         </div>
                         <div class="col-12 mb-2">
                             {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!}
-                            {!! Form::textarea('meta_description', $product->primary->meta_description, ['class'=>'form-control', 'id' => 'meta_description', 'placeholder' => 'Meta Description', 'rows' => '3']) !!}
+                            {!! Form::textarea('meta_description', $product->primary ? $product->primary->meta_description : '', ['class'=>'form-control', 'id' => 'meta_description', 'placeholder' => 'Meta Description', 'rows' => '3']) !!}
                         </div>
                     </div>
                 </div>
