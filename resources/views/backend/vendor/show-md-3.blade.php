@@ -198,27 +198,6 @@
         </div>
     </div>
 </div>
- 
-@if(count($vendor->permissionToUser))
- <div class="card-box">
-    <h4 class="header-title mb-3">Users</h4>
-    <div class="inbox-widget" data-simplebar style="max-height: 350px;">
-        @foreach($vendor->permissionToUser as $users)
-        <div class="inbox-item">
-            <div class="inbox-item-img">
-                <img src="{{$users->user->image['proxy_url'].'40/40'.$users->user->image['image_path']}}" class="rounded-circle" alt="" >
-                                
-                {{-- <img src="{{asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt=""> --}}
-            </div>
-            <p class="inbox-item-author">{{ $users->user->name??'' }}</p>
-            <p class="inbox-item-text"><i class="fa fa-envelope" aria-hidden="true"> {{ $users->user->email??'' }}</i> <i class="fa fa-phone" aria-hidden="true"> {{ $users->user->phone_number??'' }}</i></p>
-           
-        </div>
-        @endforeach
-    </div>
-</div> 
-@endif
-
 <script type="text/javascript">
     $( document ).ready(function() {
     $.ajaxSetup({
