@@ -42,8 +42,9 @@ class CategoryController extends BaseController{
     public function create(Request $request){
         $is_vendor = ($request->has('is_vendor')) ? $request->is_vendor : 0;
         $vendors = array();
-        $type = Type::orderBY('sequence', 'ASC')->get();
         $category = new Category();
+        $preference = ClientPreference::first();
+        $type = Type::where('title','!=', 'Pickup/Parent')->orderBY('sequence', 'ASC')->get();
         $parCategory = Category::with('translation_one')->select('id', 'slug')->where('deleted_at', NULL)->get();
         $vendor_list = Vendor::select('id', 'name')->where('status', '!=', $this->blocking)->get();
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
@@ -53,8 +54,7 @@ class CategoryController extends BaseController{
                     ->orderBy('client_languages.is_primary', 'desc')->get();
         $dispatcher_warning_page_options = DispatcherWarningPage::where('status', 1)->get();
         $dispatcher_template_type_options = DispatcherTemplateTypeOption::where('status', 1)->get();
-      
-        $returnHTML = view('backend.catalog.add-category')->with(['category' => $category, 'is_vendor' => $is_vendor, 'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type, 'vendor_list' => $vendor_list,'dispatcher_template_type_options'=> $dispatcher_template_type_options, 'dispatcher_warning_page_options' => $dispatcher_warning_page_options])->render();
+        $returnHTML = view('backend.catalog.add-category')->with(['category' => $category, 'is_vendor' => $is_vendor, 'languages' => $langs, 'parCategory' => $parCategory, 'typeArray' => $type, 'vendor_list' => $vendor_list,'dispatcher_template_type_options'=> $dispatcher_template_type_options, 'dispatcher_warning_page_options' => $dispatcher_warning_page_options, 'preference' => $preference])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -111,19 +111,14 @@ class CategoryController extends BaseController{
         $is_vendor = ($request->has('is_vendor')) ? $request->is_vendor : 0;
         $vendors = array();
         $tagList = array();
-        $type = Type::orderBY('sequence', 'ASC')->get();
+        $preference = ClientPreference::first();
+        $type = Type::where('title','!=', 'Pickup/Parent')->orderBY('sequence', 'ASC')->get();
         $category = Category::with('translation', 'tags')->where('id', $id)->first();
-        // if(!empty($category->tags)){
-        //     foreach ($category->tags as $key => $value) {
-        //         $tagList[] = $value->tag;
-        //     }
-        // }
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
-
         $existlangs = $langIds = array();
         foreach ($langs as $key => $value) {
             $langIds[] = $langs[$key]->langId;
@@ -134,9 +129,7 @@ class CategoryController extends BaseController{
         $parCategory = Category::with('translation_one')->select('id', 'slug')->where('categories.id', '!=', $id)->where('status', '!=', $this->blocking)->where('deleted_at', NULL)->get();
         $dispatcher_warning_page_options = DispatcherWarningPage::where('status', 1)->get();
         $dispatcher_template_type_options = DispatcherTemplateTypeOption::where('status', 1)->get();
-        
-       
-        $returnHTML = view('backend.catalog.edit-category')->with(['typeArray' => $type, 'category' => $category,  'languages' => $langs, 'is_vendor' => $is_vendor, 'parCategory' => $parCategory, 'langIds' => $langIds, 'existlangs' => $existlangs, 'tagList' => $tagList,'dispatcher_warning_page_options' => $dispatcher_warning_page_options, 'dispatcher_template_type_options' => $dispatcher_template_type_options])->render();
+        $returnHTML = view('backend.catalog.edit-category')->with(['typeArray' => $type, 'category' => $category,  'languages' => $langs, 'is_vendor' => $is_vendor, 'parCategory' => $parCategory, 'langIds' => $langIds, 'existlangs' => $existlangs, 'tagList' => $tagList,'dispatcher_warning_page_options' => $dispatcher_warning_page_options, 'dispatcher_template_type_options' => $dispatcher_template_type_options, 'preference' => $preference])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 

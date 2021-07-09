@@ -461,7 +461,7 @@
                   <div class="col-12">
                      <div class="form-group mb-3">
                         <label for="map_key">API KEY</label>
-                        <input type="text" name="map_key" id="map_key" placeholder=""
+                        <input type="password" name="map_key" id="map_key" placeholder=""
                            class="form-control" value="{{ old('map_key', $preference->map_key ?? '')}}">
                         @if($errors->has('map_key'))
                         <span class="text-danger" role="alert">
@@ -700,7 +700,7 @@
                <div class="row align-items-center">
                   <div class="col-md-8">
                      <div class="form-group mb-0">
-                        <label for="celebrity_check" class="mr-3 mb-0"> Celebrity Mode</label>
+                        <label for="celebrity_check" class="mr-3 mb-0"> Celebrity Mod</label>
                         <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1'))  checked='checked' @endif>
                      </div>
                   </div>
@@ -723,7 +723,7 @@
                   </div>
                   <div class="col-md-3">
                      <div class="form-group mb-0">
-                        <label for="enquire_mode" class="mr-3 mb-0">Enquiry Mode</label>
+                        <label for="enquire_mode" class="mr-3 mb-0">Enquiry Mod</label>
                         <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1'))  checked='checked' @endif>
                      </div>
                   </div>

@@ -7,6 +7,7 @@
                 $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'];
             }
             $marketing_permissions = array("banner", "promocode", "loyalty_cards");
+            $extra_permissions = array("celebrity", "inquiries");
             $setting_permissions = array("profile", "customize", "app_styling", "web_styling", "catalog", "configurations", "tax", "payment");
             $styling_permissions = array("app_styling", "web_styling");
             $order_permissions = array("dashboard", "orders", "vendors", "accounting_orders","accounting_loyality", "accounting_promo_codes", "accounting_taxes","accounting_vendors", "subscriptions_customers", "subscriptions_vendors", "customers");
@@ -296,30 +297,36 @@
                 </li>
                 @endif
                 @php
-                    $brity = \App\Models\ClientPreference::where(['id' => 1])->first('celebrity_check');
+                    $client_preference = \App\Models\ClientPreference::where(['id' => 1])->first();
                 @endphp
-                @if(!empty($brity) && $brity->celebrity_check == 1)
-                    @if(in_array('celebrity',$allowed) || Auth::user()->is_superadmin == 1)
+                @if(count(array_intersect($extra_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
+                    @if($client_preference->celebrity_check == 1 || $client_preference->enquire_mode == 1)
                         <li>
                             <a class="menu-title pl-1">
                                 <span class="icon-extra"></span>
                                 <span>EXTRA</span>
                             </a>
                             <ul class="nav-second-level">
-                                @if(in_array('celebrity',$allowed) || Auth::user()->is_superadmin == 1)
-                                    <li>
-                                        <a href="{{route('celebrity.index')}}">
-                                            <span class="icon-celebrity"></span>
-                                            <span> Celebrities </span>
-                                        </a>
-                                    </li>
+                                @if(!empty($client_preference) && $client_preference->celebrity_check == 1)
+                                    @if(in_array('celebrity',$allowed) || Auth::user()->is_superadmin == 1)
+                                        <li>
+                                            <a href="{{ route('celebrity.index') }}">
+                                                <span class="icon-celebrity"></span>
+                                                <span> Celebrities </span>
+                                            </a>
+                                        </li>
+                                    @endif
                                 @endif
-                                <li>
-                                    <a href="{{route('inquiry.index')}}">
-                                        <span class="icon-question"></span>
-                                        <span> Inquiries </span>
-                                    </a>
-                                </li>
+                                @if(!empty($client_preference) && $client_preference->enquire_mode == 1)
+                                    @if(in_array('inquiries',$allowed) || Auth::user()->is_superadmin == 1)
+                                        <li>
+                                            <a href="{{ route('inquiry.index') }}">
+                                                <span class="icon-question"></span>
+                                                <span> Inquiries </span>
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endif
                             </ul>
                         </li>
                     @endif
