@@ -170,6 +170,11 @@ class BaseController extends Controller{
     /**     * check if cookie already exist     */
     public function getLoyaltyPoints($userid, $multiplier){
         $loyalty_earned_amount = 0;
+        $redeem_points_per_primary_currency = '';
+        $loyalty_card = LoyaltyCard::where('status', '0')->first();
+        if ($loyalty_card) {
+            $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
+        }
         $order_loyalty_points_earned_detail = Order::where('user_id', $userid)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
         if ($order_loyalty_points_earned_detail) {
             $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
