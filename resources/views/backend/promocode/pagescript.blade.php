@@ -118,7 +118,6 @@
         var form = document.getElementById('editPromoForm');
         var formData = new FormData(form);
         var urls = document.getElementById('promocode_id').getAttribute('url');
-
         saveData(formData, 'edit', urls);
 
     });

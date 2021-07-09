@@ -98,7 +98,7 @@ class PromocodeController extends BaseController
             if($request->restriction_on == 0){
                 $productList = $request->productList;
             }elseif($request->restriction_on == 1){
-                $productList = $request->productList;
+                $productList = $request->vendorList;
             }elseif($request->restriction_on == 2){
                 $productList = $request->categoryList;
             }

@@ -166,7 +166,7 @@
                     <select class="selectize-select form-control inlineRadioOptions" name="restriction_on" for="{{(isset($promo->id) && $promo->id > 0) ? 'edit' : 'add'}}">
                         <option value='0' @if($promo->restriction_on == 0) selected @endif>Products</option>
                         <option value='1' @if($promo->restriction_on == 1) selected @endif>Vendors</option>
-                        <option value='2' @if($promo->restriction_on == 2) selected @endif>Category</option>
+                        <!-- <option value='2' @if($promo->restriction_on == 2) selected @endif>Category</option> -->
                     </select>
                 </div>
             </div>
