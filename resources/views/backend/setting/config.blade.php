@@ -237,7 +237,7 @@
                   <div class="col-12">
                      <div class="form-group mb-2">
                         <label for="fb_client_secret">Facebook Client Secret</label>
-                        <input type="text" name="fb_client_secret" id="fb_client_secret" placeholder=""
+                        <input type="password" name="fb_client_secret" id="fb_client_secret" placeholder=""
                            class="form-control" value="{{ old('fb_client_secret', $preference->fb_client_secret ?? '')}}">
                         @if($errors->has('fb_client_secret'))
                         <span class="text-danger" role="alert">
@@ -292,7 +292,7 @@
                   <div class="col-12">
                      <div class="form-group mb-2">
                         <label for="twitter_client_secret">Twitter Client Secret</label>
-                        <input type="text" name="twitter_client_secret" id="twitter_client_secret" placeholder=""
+                        <input type="password" name="twitter_client_secret" id="twitter_client_secret" placeholder=""
                            class="form-control" value="{{ old('twitter_client_secret', $preference->twitter_client_secret ?? '')}}">
                         @if($errors->has('twitter_client_secret'))
                         <span class="text-danger" role="alert">
@@ -346,7 +346,7 @@
                   <div class="col-md-12">
                      <div class="form-group mb-2">
                         <label for="google_client_secret">Google Client Secret</label>
-                        <input type="text" name="google_client_secret" id="google_client_secret" placeholder=""
+                        <input type="password" name="google_client_secret" id="google_client_secret" placeholder=""
                            class="form-control" value="{{ old('google_client_secret', $preference->google_client_secret ?? '')}}">
                         @if($errors->has('google_client_secret'))
                         <span class="text-danger" role="alert">
@@ -400,7 +400,7 @@
                   <div class="col-12">
                      <div class="form-group mb-2">
                         <label for="apple_client_secret">Apple Client Secret</label>
-                        <input type="text" name="apple_client_secret" id="apple_client_secret" placeholder=""
+                        <input type="password" name="apple_client_secret" id="apple_client_secret" placeholder=""
                            class="form-control" value="{{ old('apple_client_secret', $preference->apple_client_secret ?? '')}}">
                         @if($errors->has('apple_client_secret'))
                         <span class="text-danger" role="alert">
@@ -461,7 +461,7 @@
                   <div class="col-12">
                      <div class="form-group mb-3">
                         <label for="map_key">API KEY</label>
-                        <input type="text" name="map_key" id="map_key" placeholder=""
+                        <input type="password" name="map_key" id="map_key" placeholder=""
                            class="form-control" value="{{ old('map_key', $preference->map_key ?? '')}}">
                         @if($errors->has('map_key'))
                         <span class="text-danger" role="alert">
@@ -528,7 +528,7 @@
                   <div class="col-12">
                      <div class="form-group mb-3">
                         <label for="sms_secret">API Secret</label>
-                        <input type="text" name="sms_secret" id="sms_secret" placeholder="" class="form-control"
+                        <input type="password" name="sms_secret" id="sms_secret" placeholder="" class="form-control"
                            value="{{ old('sms_secret', $preference->sms_secret ?? '')}}">
                         @if($errors->has('sms_secret'))
                         <span class="text-danger" role="alert">
@@ -616,7 +616,7 @@
                   <div class="col-md-6">
                      <div class="form-group mb-3">
                         <label for="mail_password">Mail Password</label>
-                        <input type="text" name="mail_password" id="mail_password" placeholder=""
+                        <input type="password" name="mail_password" id="mail_password" placeholder=""
                            class="form-control" value="{{ old('mail_password', $preference->mail_password ?? '')}}">
                         @if($errors->has('mail_password'))
                         <span class="text-danger" role="alert">
@@ -700,7 +700,7 @@
                <div class="row align-items-center">
                   <div class="col-md-8">
                      <div class="form-group mb-0">
-                        <label for="celebrity_check" class="mr-3 mb-0"> Celebrity Mode</label>
+                        <label for="celebrity_check" class="mr-3 mb-0"> Celebrity Mod</label>
                         <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1'))  checked='checked' @endif>
                      </div>
                   </div>
@@ -723,7 +723,7 @@
                   </div>
                   <div class="col-md-3">
                      <div class="form-group mb-0">
-                        <label for="enquire_mode" class="mr-3 mb-0">Enquiry Mode</label>
+                        <label for="enquire_mode" class="mr-3 mb-0">Inquiry Mod</label>
                         <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1'))  checked='checked' @endif>
                      </div>
                   </div>
@@ -868,49 +868,38 @@
 @endsection
 @section('script')
 <script type="text/javascript">
-   
    function generateRandomString(length) {
      var text = "";
      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      
      for (var i = 0; i < length; i++)
        text += possible.charAt(Math.floor(Math.random() * possible.length));
-      
      return text;
    }
    
    function genrateKeyAndToken(){
        var key = generateRandomString(30);
        var token = generateRandomString(60);
-   
        $('#personal_access_token_v1').val(key);
        $('#personal_access_token_v2').val(token);
    }
-   
    var autocomplete = {};
-       var autocompletesWraps = [];
-       var count = 1; editCount = 0;
+   var autocompletesWraps = [];
+   var count = 1; editCount = 0;
    $(document).ready(function(){
        autocompletesWraps.push('Default_location_name');
        loadMap(autocompletesWraps);
    });
    
    function loadMap(autocompletesWraps){
-   
        $.each(autocompletesWraps, function(index, name) {
            const geocoder = new google.maps.Geocoder;
-       
            if($('#'+name).length == 0) {
                return;
            }
            autocomplete[name] = new google.maps.places.Autocomplete(document.getElementById(name), { types: ['geocode'] });
-               
            google.maps.event.addListener(autocomplete[name], 'place_changed', function() {
-               
                var place = autocomplete[name].getPlace();
-   
                geocoder.geocode({'placeId': place.place_id}, function (results, status) {
-                   
                    if (status === google.maps.GeocoderStatus.OK) {
                        const lat = results[0].geometry.location.lat();
                        const lng = results[0].geometry.location.lng();

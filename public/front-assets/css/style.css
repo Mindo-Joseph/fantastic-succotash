@@ -12858,7 +12858,7 @@ header.stickycls {
 
 .collection-filter-block {
   margin-bottom: 30px;
-  padding: 0 30px;
+  padding: 20px 20px 10px;
   border: 1px solid white;
   background-color: #f9f9f9; }
   .collection-filter-block .product-service {
@@ -12887,7 +12887,7 @@ header.stickycls {
 .collection-collapse-block {
   padding-bottom: 24px; }
   .collection-collapse-block.open {
-    margin-bottom: 12px; }
+    margin-bottom: 0; }
   .collection-collapse-block .collapse-block-title {
     position: relative;
     cursor: pointer;
@@ -12895,7 +12895,7 @@ header.stickycls {
     font-size: 16px;
     color: #444444;
     font-weight: 600;
-    margin: 30px 0 0 0; }
+    margin: 0; }
     .collection-collapse-block .collapse-block-title:after {
       position: absolute;
       display: block;
@@ -12923,7 +12923,7 @@ header.stickycls {
   .collection-collapse-block .collection-collapse-block-content .collection-brand-filter .collection-filter-checkbox {
     margin-bottom: 12px; }
     .collection-collapse-block .collection-collapse-block-content .collection-brand-filter .collection-filter-checkbox:first-child {
-      margin-top: 30px; }
+      margin-top: 20px; }
     .collection-collapse-block .collection-collapse-block-content .collection-brand-filter .collection-filter-checkbox:last-child {
       margin-bottom: 0; }
     .collection-collapse-block .collection-collapse-block-content .collection-brand-filter .collection-filter-checkbox label {
@@ -12933,7 +12933,7 @@ header.stickycls {
       color: #777777;
       font-weight: 600;
       letter-spacing: 0.5px;
-      padding-left: 10px; }
+      padding-left: 0; }
       .collection-collapse-block .collection-collapse-block-content .collection-brand-filter .collection-filter-checkbox label:before {
         top: 1px;
         height: 15px;
@@ -13133,7 +13133,7 @@ header.stickycls {
         margin-bottom: 0; }
     .collection-product-wrapper .product-top-filter .product-filter-content .collection-view,
     .collection-product-wrapper .product-top-filter .popup-filter .collection-view {
-      padding: 20px;
+      padding: 5px 20px;
       width: 10%; }
       .collection-product-wrapper .product-top-filter .product-filter-content .collection-view ul li,
       .collection-product-wrapper .product-top-filter .popup-filter .collection-view ul li {
@@ -13145,7 +13145,7 @@ header.stickycls {
           margin-right: 14px; }
     .collection-product-wrapper .product-top-filter .product-filter-content .collection-grid-view,
     .collection-product-wrapper .product-top-filter .popup-filter .collection-grid-view {
-      padding: 20px;
+      padding: 5px 20px;
       width: 20%;
       border-right: 1px solid #dddddd; }
       .collection-product-wrapper .product-top-filter .product-filter-content .collection-grid-view ul,
@@ -13174,7 +13174,7 @@ header.stickycls {
       .collection-product-wrapper .product-top-filter .popup-filter .product-page-per-view select,
       .collection-product-wrapper .product-top-filter .popup-filter .product-page-filter select {
         border: 0;
-        padding: 20px;
+        padding: 5px 20px;
         border-right: 1px solid #dddddd;
         width: 100%;
         -webkit-appearance: none;
@@ -17571,6 +17571,7 @@ body.dark {
 .dark .collection-filter-block {
   border-color: #404040;
   background-color: #2b2b2b;
+  border-radius: 4px;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease; }
 

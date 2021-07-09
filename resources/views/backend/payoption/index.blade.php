@@ -73,7 +73,7 @@
                             <div class="col-12">
                                 <div class="form-group mb-0">
                                     <label for="stripe_api_key" class="mr-3">API Key</label>
-                                    <input type="textbox" name="stripe_api_key" id="stripe_api_key" class="form-control" value="{{$api_key}}" @if($opt->status == 1) required @endif>
+                                    <input type="password" name="stripe_api_key" id="stripe_api_key" class="form-control" value="{{$api_key}}" @if($opt->status == 1) required @endif>
                                 </div>
                             </div>
                         </div>
@@ -92,13 +92,13 @@
                             <div class="col-12">
                                 <div class="form-group mb-0">
                                     <label for="paypal_password" class="mr-3">Password</label>
-                                    <input type="textbox" name="paypal_password" id="paypal_password" class="form-control" value="{{$password}}" @if($opt->status == 1) required @endif>
+                                    <input type="password" name="paypal_password" id="paypal_password" class="form-control" value="{{$password}}" @if($opt->status == 1) required @endif>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group mb-0">
                                     <label for="paypal_signature" class="mr-3">Signature</label>
-                                    <input type="textbox" name="paypal_signature" id="paypal_signature" class="form-control" value="{{$signature}}" @if($opt->status == 1) required @endif>
+                                    <input type="password" name="paypal_signature" id="paypal_signature" class="form-control" value="{{$signature}}" @if($opt->status == 1) required @endif>
                                 </div>
                             </div>
                         </div>

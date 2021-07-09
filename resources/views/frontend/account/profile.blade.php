@@ -180,13 +180,13 @@
                                 <div class="card-box py-4 px-0 mb-3">
                                     
                                     <div class="d-flex align-items-center justify-content-between px-4 mb-2">
-                                        <h6 class="m-0">Shipping Details</h6>
+                                        <label>Shipping Details</label>
                                     </div>
                                     @if($userAddresses->isNotEmpty())
                                     @foreach($userAddresses as $key => $address)
                                         <div class="row px-4 align-items-center pb-1">
                                             <div class="col-md-8">
-                                                <div class="address_txt">
+                                                <div class="address_txt text-capitalize">
                                                     <p class="m-0 text-16">{{$user->name}}</p>
                                                 </div>
                                                 <div class="address_box mt-1 p-0">

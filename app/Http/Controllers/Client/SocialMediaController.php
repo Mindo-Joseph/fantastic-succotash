@@ -18,7 +18,7 @@ class SocialMediaController extends BaseController{
         try {
             $this->validate($request, [
               'social_media_icon' => 'required',
-              'social_media_url' => 'required|url'
+              'social_media_url' => 'required'
             ],
             ['social_media_url.url' => 'Invalid URL format']);
 

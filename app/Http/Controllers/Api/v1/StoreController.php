@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency};
+use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation};
 
 class StoreController extends Controller{
     use ApiResponser;
@@ -29,18 +29,23 @@ class StoreController extends Controller{
 			foreach ($vendor_list as $vendor) {
 				$vendor->is_selected = ($is_selected_vendor_id == $vendor->id) ? true : false;
 			}
-			$vendor_categories = VendorCategory::where('vendor_id', $is_selected_vendor_id)->whereHas('category', function($query) {
-						   $query->whereIn('type_id', [1]);
-						})->get('category_id');
+			$vendor_categories = VendorCategory::where('vendor_id', $is_selected_vendor_id)
+							->whereHas('category', function($query) {
+							   	$query->whereIn('type_id', [1]);
+							})->get('category_id');
 			$vendor_category_id = 0;
 			if($vendor_categories->count()){
 				$vendor_category_id = $vendor_categories->first()->category_id;
 			}
 			$is_selected_category_id = $selected_category_id ? $selected_category_id : $vendor_category_id;
 			foreach ($vendor_categories as $vendor_category) {
+				$Category_translation = Category_translation::where('category_id', $vendor_category->category->id)->where('language_id', $langId)->first();
+				if(!$Category_translation){
+					$Category_translation = Category_translation::where('category_id', $vendor_category->category->id)->first();
+				}
 				$category_list []= array(
 					'id' => $vendor_category->category->id,
-					'name' => $vendor_category->category->slug,
+					'name' => $Category_translation ? $Category_translation->name : $vendor_category->category->slug,
 					'type_id' => $vendor_category->category->type_id,
 					'is_selected' => $is_selected_category_id == $vendor_category->category_id ? true : false
 				);

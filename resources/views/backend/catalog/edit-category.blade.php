@@ -74,7 +74,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6" style="{{($category->type_id != 2) ? 'display:none;' : ''}}" id="editDispatcherHide">
+                    <div class="col-md-6" style="{{ ($category->type_id != 2) ? 'display:none;' : '' }}" id="editDispatcherHide">
                         <div class="form-group mb-0">
                           
                         </div>
@@ -84,6 +84,12 @@
         </div> 
         <div class="row mt-3 edit-category">
             @foreach($typeArray as $type)
+                @if($type->title == 'Celebrity' && $preference->celebrity_check == 0)
+                    @continue
+                @endif
+                @if($type->title == 'Pickup/Delivery' && $preference->takeaway_check == 0)
+                    @continue
+                @endif
                <div class="col">
                   <div class="card p-0 text-center select-category" id="tooltip-container">
                      <input class="form-check-input type-select" for="edit" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
