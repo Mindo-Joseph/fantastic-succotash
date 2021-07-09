@@ -171,7 +171,7 @@ class BaseController extends Controller{
     public function getLoyaltyPoints($userid, $multiplier){
         $loyalty_earned_amount = 0;
         $redeem_points_per_primary_currency = '';
-        $loyalty_card = LoyaltyCard::where('status', '0')->first();
+        $loyalty_card = LoyaltyCard::first();
         if ($loyalty_card) {
             $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
         }
