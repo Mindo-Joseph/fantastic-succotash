@@ -514,13 +514,13 @@ class CartController extends BaseController{
         $cart->tax_details = $tax_details;
         $cart->gross_paybale_amount = $total_paying;
         $cart->total_discount_amount = $total_disc_amount;
-        $cart->total_payable_amount = $total_paying + $total_tax - $total_disc_amount;
         if($cart->user_id > 0){
             $cart->loyalty_amount = $this->getLoyaltyPoints($cart->user_id, $clientCurrency->doller_compare);
             // $cart->wallet = $this->getWallet($cart->user_id, $clientCurrency->doller_compare, $currency);
         }
         $cart->products = $cartData;
         $cart->item_count = $item_count;
+        $cart->total_payable_amount = $total_paying + $total_tax - $total_disc_amount - $cart->loyalty_amount;
         return $cart;
     }
 }
