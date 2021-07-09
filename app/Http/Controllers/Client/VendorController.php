@@ -126,8 +126,6 @@ class VendorController extends BaseController
         $rules = array(
             'name' => 'required|string|max:150|unique:vendors',
             'address' => 'required',
-            'email' => 'required|unique:vendors',
-            'phone_no' => 'required|numeric|between:9,11|unique:vendors'
         );
         $validation  = Validator::make($request->all(), $rules)->validate();
         $vendor = new Vendor();
@@ -199,8 +197,6 @@ class VendorController extends BaseController
     {
         $rules = array(
             'address' => 'required',
-            'email' => 'required|unique:vendors,email,'.$id,
-            'phone_no' => 'required|numeric|unique:vendors,phone_no,'.$id,
             'name' => 'required|string|max:150|unique:vendors,name,' . $id,
         );
         //dd($request->all());
