@@ -33,9 +33,8 @@ $(document).ready(function() {
         $.ajax({
             type: "post",
             dataType: "json",
-            url: "{{ route('changePrimaryData') }}",
+            url: change_primary_data_url,
             data: {
-                "_token": "{{ csrf_token() }}",
                 "type": type,
                 "value1": v1, 
                 "value2": v2
