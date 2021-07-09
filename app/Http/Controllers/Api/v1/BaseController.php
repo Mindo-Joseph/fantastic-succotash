@@ -179,7 +179,7 @@ class BaseController extends Controller{
         if ($order_loyalty_points_earned_detail) {
             $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
             if ($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0) {
-                $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
+                $loyalty_earned_amount = $loyalty_points_used / $redeem_points_per_primary_currency;
             }
         }
         return $loyalty_earned_amount;
