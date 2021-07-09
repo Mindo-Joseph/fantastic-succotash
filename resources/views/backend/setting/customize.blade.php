@@ -337,6 +337,27 @@
         {
             title: "fab fa-twitch",
             searchTerms: ['social']
+        },
+        {
+            title: "fab fa-twitter",
+            searchTerms: ['social']
+        },{
+            title: "fab fa-pinterest",
+            searchTerms: ['social']
+        },{
+            title: "fab fa-youtube",
+            searchTerms: ['social']
+        },{
+            title: "fab fa-snapchat",
+            searchTerms: ['social']
+        },
+        {
+            title: "fab fa-google-plus-g",
+            searchTerms: ['social']
+        },
+        {
+            title: "fab fa-linkedin-in",
+            searchTerms: ['social']
         }
     ],
         title: false,
@@ -406,10 +427,11 @@
                 url: "{{ route('social.media.edit') }}",
                 success: function(response) {
                     if (response.status = 'Success') {
+                        $('#add_or_edit_social_media_modal').modal('show');
                         $("#add_or_edit_social_media_modal input[name=url]").val(response.data.url);
+                        $("#add_or_edit_social_media_modal .input-group-text i").val(response.data.icon);
                         $("#add_or_edit_social_media_modal .iconpicker-input").val(response.data.icon);
                         $("#add_or_edit_social_media_modal input[name=social_media_id]").val(response.data.id);
-                        $('#add_or_edit_social_media_modal').modal('show');
                         $('#add_or_edit_social_media_modal #standard-modalLabel').html('Update Social Media');
                     }
                 },
