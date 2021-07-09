@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{User, UserAddress, ClientPreference, Client, UserSubscriptions, SubscriptionFeaturesList, SubscriptionValidities};
+use App\Models\{User, UserAddress, ClientPreference, Client, UserSubscriptions, SubscriptionFeaturesList, SubscriptionValidities, PaymentOption};
 
 class SubscriptionController extends FrontController
 {
@@ -40,5 +40,22 @@ class SubscriptionController extends FrontController
             }
         }
         return view('frontend.account.subscriptions')->with(['navCategories' => $navCategories, 'subscriptions'=> $subscriptions]);
+    }
+    
+    /**
+     * buy user subscription.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function buySubscription(Request $request, $domain = '', $slug = '')
+    {
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+        $subscription = UserSubscriptions::with('features.feature', 'validity')->where('slug', $slug)->where('status', '1')->firstOrFail();
+        $payment_options = PaymentOption::select('id', 'code', 'title')->where('status', 1)->get();
+        foreach ($payment_options as $payment_option) {
+           $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
+        }
+        return view('frontend.account.buysubscription')->with(['navCategories' => $navCategories, 'subscription'=> $subscription, 'payment_options'=>$payment_options]);
     }
 }
