@@ -537,7 +537,7 @@ class VendorController extends BaseController
                 'phone_number' =>  $vendor->phone_no ?? rand('11111'.'458965'),
                 'email' => "969648".$vendor->id."_royodispatch@dispatch.com",
                 'team_tag' => "tag-set".$vendor->id,
-                'public_session' => $dispatch_domain->public_login_session];
+                'public_session' => $dispatch_domain->token];
            
                 $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,
                                                     'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,
