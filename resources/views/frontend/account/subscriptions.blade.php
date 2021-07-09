@@ -39,22 +39,16 @@
     }
     .price-card:hover{
         -webkit-transform: scale(1.1);
-            transform: scale(1.1);
+        transform: scale(1.1);
     }
-    .col-sm-4:nth-child(1) .price-card ,
-    .col-sm-4:nth-child(1) .price-card .title .fa{
+    .col-sm-4:nth-child(1) .price-card{
         background: linear-gradient(-45deg,#f403d1,#64b5f6);
-
     }
-    .col-sm-4:nth-child(2) .price-card,
-    .col-sm-4:nth-child(2) .price-card .title .fa{
+    .col-sm-4:nth-child(2) .price-card{
         background: linear-gradient(-45deg,#ffec61,#f321d7);
-
     }
-    .col-sm-4:nth-child(3) .price-card,
-    .col-sm-4:nth-child(3) .price-card .title .fa{
+    .col-sm-4:nth-child(3) .price-card{
         background: linear-gradient(-45deg,#24ff72,#9a4eff);
-
     }
     .price-card::before{
         content: '';
@@ -68,24 +62,12 @@
         -webkit-transform: skewY(-5deg) scale(1.5);
         transform: skewY(-5deg) scale(1.5);
     }
-    .title .fa{
-        color:#fff;
-        font-size: 60px;
-        width: 100px;
-        height: 100px;
-        border-radius:  50%;
-        text-align: center;
-        line-height: 100px;
-        -webkit-box-shadow: 0 10px 10px rgba(0,0,0,.1) ;
-            box-shadow: 0 10px 10px rgba(0,0,0,.1) ;
-
-    }
     .title h2 {
         position: relative;
         margin: 20px  0 0;
         padding: 0;
         color: #fff;
-        font-size: 28px;
+        font-size: 20px;
         z-index: 2;
     }
     .price,.option{
@@ -96,7 +78,7 @@
         margin: 0;
         padding: 20px 0 ;
         color: #fff;
-        font-size: 60px;
+        font-size: 40px;
     }
     .option ul {
         margin: 0;
@@ -125,8 +107,7 @@
         font-size: 16px;
         cursor: pointer;
         -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
-
+        box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
     }
     .price-card a:hover{
         text-decoration: none;
