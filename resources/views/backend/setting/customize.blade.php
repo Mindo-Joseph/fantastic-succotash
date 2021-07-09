@@ -302,7 +302,7 @@
                             <input class="form-control icp icp-auto" name="icon" value="fab fa-facebook" type="text" >
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group position-relative">
                         <label for="">Url</label>
                         <input class="form-control" name="url" type="text">
                         <span class="text-danger error-text social_media_url_err"></span>
