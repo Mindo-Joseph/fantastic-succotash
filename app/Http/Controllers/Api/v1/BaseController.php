@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\v1;
-
+use DB;
 use App;
 use Mail;
 use Config;
