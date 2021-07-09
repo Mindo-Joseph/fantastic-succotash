@@ -46,7 +46,6 @@ class BaseController extends Controller
                 }else{
                     $this->htmlData .='<div class="dd3-content"><img class="rounded-circle mr-1" src="'.$icon.'">'.$node['translation_one']["name"].'<span class="inner-div text-right">';
                 }
-
                 if(!in_array($node["id"], $blockedCategory)){
                     $status = 2; //$icon = 'mdi-lock-open-variant';
                     $title = 'Delete'; $icon = 'mdi-delete';
@@ -168,18 +167,6 @@ class BaseController extends Controller
                 'points' => 0
             ];
             UserLoyaltyPoint::insert($loyalty);
-        }
-        $wallet = Wallet::where('user_id', $userid)->first();
-        if(!$wallet){
-            $walletData[] = [
-                'user_id' => $userid,
-                'type' => 1,
-                'balance' => 0,
-                'card_id' => $this->randomData('wallets', 6, 'card_id'),
-                'card_qr_code' => $this->randomBarcode('wallets'),
-                'meta_field' => '',
-            ];
-            Wallet::insert($walletData);
         }
         return 1;
     }

@@ -37,6 +37,7 @@ Route::group(['middleware' => ['domain']], function () {
 	]);
 	Route::get('/search','Front\SearchController@search');
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
+	Route::get('extra-page/{slug}','Front\UserhomeController@getExtraPage')->name('extrapage');
 	Route::post('/homePageData','Front\UserhomeController@postHomePageData')->name('homePageData');
 	Route::post('/homepage','Front\UserhomeController@homepage')->name('homepage');
 	Route::post('getClientPreferences', 'Front\UserhomeController@getClientPreferences')->name('getClientPreferences');
@@ -71,6 +72,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('UserCheck', 'Front\UserController@checkUserLogin')->name('checkUserLogin');
 	Route::get('stripe/showForm/{token}', 'Front\PaymentController@showFormApp')->name('stripe.formApp');
     Route::post('stripe/make', 'Front\PaymentController@makePayment')->name('stripe.makePayment');
+	Route::post('inquiryMode/store', 'Front\ProductInquiryController@store')->name('inquiryMode.store');
 
 });
 
@@ -116,20 +118,16 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::post('user/submitPassword','Front\ProfileController@submitChangePassword')->name('user.submitChangePassword');
 	Route::get('user/wallet/history','Front\WalletController@index')->name('user.walletHistory');
 	Route::get('user/subscriptions', 'Front\SubscriptionController@subscriptions')->name('user.subscriptions');
-
 	 // Rating & review 
-	 Route::group(['prefix' => 'rating'], function () {
+ 	Route::group(['prefix' => 'rating'], function () {
 		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');
 		Route::get('get-product-rating', 'Front\RatingController@getProductRating')->name('get-product-rating-details');
 	});
-
 	// Return product 
 	Route::group(['prefix' => 'return-order'], function () {
 		Route::get('get-order-data-in-model', 'Front\ReturnOrderController@getOrderDatainModel')->name('getOrderDatainModel');
 		Route::get('get-return-products', 'Front\ReturnOrderController@getReturnProducts')->name('get-return-products');
 		Route::post('update-product-return', 'Front\ReturnOrderController@updateProductReturn')->name('update.order.return');
-		
 	});
-
 	Route::post('upload-file', 'Front\RatingController@uploadFile')->name('uploadfile');
 });

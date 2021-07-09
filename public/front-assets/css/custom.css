@@ -3,7 +3,7 @@ body{
 }
 
 a{
-    color: #ff4c3b;
+    color: var(--theme-deafult);
 }
 
 .productVariants .firstChild{
@@ -207,13 +207,13 @@ a{
 }*/
 
 .coupon_box button {
-    border-color: #ff4c3b;
-    color: #ff4c3b;
+    border-color: var(--theme-deafult);
+    color: var(--theme-deafult);
 }
 
 .coupon_box button:hover {
-    border-color: #ff4c3b;
-    background: #ff4c3b;
+    border-color: var(--theme-deafult);
+    background: var(--theme-deafult);
 }
 
 .items-details h4 {
@@ -339,7 +339,7 @@ td.items-details h4 {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #ff4c3b;
+    background: var(--theme-deafult);
 }
 
 .delivery_box {
@@ -440,7 +440,7 @@ body .main-menu .brand-logo {
 }
 
 body .main-menu .brand-logo a {
-    height: 50px;
+    height: 80px;
 }
 
 .brand-logo img.img-fluid {
@@ -713,7 +713,7 @@ form .btn{
 }
 
 .outer-box h6 i {
-    color: #ff4c3b;
+    color: var(--theme-deafult);
     font-size: 20px;
 }
 
@@ -740,7 +740,7 @@ form .btn{
 
 .outer-box .fa-plus-circle.d-block {
     font-size: 26px;
-    color: #ff4c3b;
+    color: var(--theme-deafult);
 }
 
 .order_details p{
@@ -842,8 +842,8 @@ form .btn{
 }
 
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
-    background-color: #ff4c3b;
-    border-color: #ff4c3b;
+    background-color: var(--theme-deafult);
+    border-color: var(--theme-deafult);
 }
 
 .cart-table .btn.btn-solid {
@@ -974,7 +974,7 @@ form .btn{
 }
 
 .file--upload>label .plus_icon .img-txt {
-    background: #ff4c3b;
+    background: var(--theme-deafult);
     height: 30px;
     line-height: 30px;
     border-radius: 4px;
@@ -1031,7 +1031,7 @@ form .btn{
 }
 
 .dashboard-left .block-content ul li.active a,.dashboard-left .block-content ul li:hover a {
-    border-color: #ff4c3b;
+    border-color: var(--theme-deafult);
     background: linear-gradient(90deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
 }
 
@@ -1116,7 +1116,7 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .close.top_right:hover {
-    color: #ff4c3b;
+    color: var(--theme-deafult);
 }
 
 .edit_address .modal-content {
@@ -1137,7 +1137,7 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .location-area i {
-    color: #ff4c3b;
+    color: var(--theme-deafult);
     font-size: 22px;
     vertical-align: middle;
 }
@@ -1148,7 +1148,7 @@ h1,h2,h3,h4,h5,h6{
 
 .location-area + label,.address-input-field label {
     font-weight: 400;
-    color: #ff4c3b;
+    color: var(--theme-deafult);
 }
 
 /* #step-two {
@@ -1500,7 +1500,7 @@ label{
 }
 
 .code-outer label {
-    border: 2px dashed #ff4c3b;
+    border: 2px dashed var(--theme-deafult);
     padding: 5px 15px;
     font-size: 16px;
     letter-spacing: 3px;
@@ -1595,7 +1595,7 @@ label{
 
 #v_pills_tab {
     height: 380px;
-    background: #ff4c3b;
+    background: var(--theme-deafult);
     padding: 50px 0 0 20px;
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
@@ -1607,7 +1607,7 @@ label{
     padding: 20px;
 }
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-    color: #ff4c3b;
+    color: var(--theme-deafult);
     background: #fff;
 }
 
@@ -1687,7 +1687,7 @@ label{
     z-index: 9999;
 }
 .down-icon .fa.fa-angle-down {
-    color: #ff4c3b;
+    color: var(--theme-deafult);
     font-size: 30px;
 }
 #address-map-container{
@@ -1856,13 +1856,13 @@ div#test {
 } */
 
 .bg-orange {
-    background: #ff4c3b !important;
+    background: var(--theme-deafult) !important;
 }
 
 
 .bg-orange button#mc-submit {
     background: #fff;
-    color: #ff4c3b !important;
+    color: var(--theme-deafult) !important;
 }
 
 .product-box .img-wrapper, .product-wrap .img-wrapper {
@@ -2043,7 +2043,7 @@ footer .form-control {
 }
 
 .footer-theme .sub-title .contact_link li:hover a,.contact_link li:hover i {
-    color: #ff4c3b;
+    color: var(--theme-deafult);
 }
 
 .footer-theme .sub-title .contact_link li a:before{
@@ -2107,7 +2107,7 @@ footer .form-control {
 }
 
 .navbar ul.navbar-nav.pixelstrap li .dropdown-menu li:hover a {
-    border-color: #ff4c3b !important;
+    border-color: var(--theme-deafult) !important;
     background: linear-gradient(270deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
 }
 
@@ -2125,7 +2125,7 @@ footer .form-control {
 }
 
 .navbar ul.navbar-nav.pixelstrap li .dropdown-menu li:first-child {
-    border-top: 2px solid #ff4c3b !important;
+    border-top: 2px solid var(--theme-deafult) !important;
 }
 
 .navbar ul.navbar-nav.pixelstrap li .dropdown-menu li:hover{
@@ -2133,7 +2133,7 @@ footer .form-control {
 }
 
 .navbar ul.navbar-nav.pixelstrap > li:hover > a {
-    background: #ff4c3b;
+    background: var(--theme-deafult);
     color: #fff;
 }
 
@@ -2155,7 +2155,7 @@ footer .form-control {
 }
 
 .pixelstrap ul a:hover {
-    border-color: #ff4c3b !important;
+    border-color: var(--theme-deafult) !important;
     background: linear-gradient(
 270deg
 , rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
@@ -2437,7 +2437,7 @@ body .rating-form .btn-reset {
 }
 
 .accordion .card-header button:hover,.accordion .card-header button[aria-expanded="true"]    {
-    border-color: #ff4c3b;
+    border-color: var(--theme-deafult);
     background: linear-gradient(270deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
 }
 
@@ -2682,6 +2682,41 @@ button.close {
     padding-left: 5px;
 }
 
+.btn.promo_code_list_btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.pb-250 {
+    padding-bottom: 250px;
+}
+
+.btn-outline-secondary {
+    color: var(--theme-deafult);
+    background-color: #2b2b2b;
+}
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Website Dark Mood Css Start Form Here */
 .dark .inner_spacing h3,.dark .page-title h3 {
@@ -2690,7 +2725,7 @@ button.close {
 .dark .inner_spacing h4,.dark .product-title h4 {
     color: #e7eaec;
 }
-.dark .product-detail h6,.dark .contact_link i {
+.dark .product-detail h6,.dark .contact_link i,.dark .org_price {
     color: #f1f3f5;
 }
 
@@ -2699,15 +2734,15 @@ button.close {
 }
 
 .dark .radio,.dark form label,.dark .price_box_bottom li, .dark .grand_total label, .dark .grand_total span,.dark .table thead th,.dark .table,
-.dark .card-box + h6 {
-    color: #cfd4da;
+.dark .card-box + h6,.dark .info-text p,.dark p {
+    color: #cfd4da !important;
 }
 
 .dark .outer-box,.dark .dashboard-left .block-content,.dark .delivery_box{
     background: transparent;
 }
 .dark .dashboard-left .block-content ul li.active a,.dark .dashboard-left .block-content ul li:hover a,.dark .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:hover a,.dark .category-list li:hover a {
-    border-color: #ff4c3b;
+    border-color: var(--theme-deafult);
     background: linear-gradient(
 90deg
 , rgb(85 68 69) 0%, rgba(251, 246, 247, 0) 92.47%);
@@ -2721,8 +2756,13 @@ button.close {
     background: rgb(248 248 248 / 5%);
 }
 
+.dark .coupon_box {
+    background: rgb(255 255 255 / 7%);
+}
 
-
+.dark .btn-outline-secondary {
+    border-color: #404040;
+}
 
 
 

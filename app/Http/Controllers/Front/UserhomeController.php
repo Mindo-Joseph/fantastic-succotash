@@ -10,8 +10,8 @@ use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference};
 use Illuminate\Contracts\Session\Session as SessionSession;
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference, Page};
 
 class UserhomeController extends FrontController
 {
@@ -22,6 +22,12 @@ class UserhomeController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
+    public function getExtraPage(Request $request){
+        $language_id = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($language_id);
+        $page_detail = Page::where('slug', $request->slug)->first();
+        return view('frontend.extrapage', compact('page_detail', 'navCategories'));
+    }
     public function index(Request $request){
         try {
             $home = array();
@@ -120,7 +126,7 @@ class UserhomeController extends FrontController
         $feature_product_details = $this->vendorProducts($vendor_ids, $language_id, $currency_id, 'is_featured',$request->type);
         foreach ($new_product_details as  $new_product_detail) {
             $multiply = $new_product_detail->variant->first() ? $new_product_detail->variant->first()->multiplier : 1;
-            $title = $new_product_detail->translation ? $new_product_detail->translation->first()->title : $on_sale_product_detail->sku;
+            $title = $new_product_detail->translation->first() ? $new_product_detail->translation->first()->title : $new_product_detail->sku;
             $image_url = $new_product_detail->media->first() ? $new_product_detail->media->first()->image->path['proxy_url'].'300/300'.$new_product_detail->media->first()->image->path['image_path'] : '';
             $new_products[]=array(
                 'image_url' => $image_url,
@@ -133,7 +139,7 @@ class UserhomeController extends FrontController
         }
         foreach ($feature_product_details as  $feature_product_detail) {
             $multiply = $feature_product_detail->variant->first() ? $feature_product_detail->variant->first()->multiplier : 1;
-            $title = $feature_product_detail->translation ? $feature_product_detail->translation->first()->title : $on_sale_product_detail->sku;
+            $title = $feature_product_detail->translation->first() ? $feature_product_detail->translation->first()->title : $feature_product_detail->sku;
             $image_url = $feature_product_detail->media->first() ? $feature_product_detail->media->first()->image->path['proxy_url'].'300/300'.$feature_product_detail->media->first()->image->path['image_path'] : '';
             $feature_products[]=array(
                 'image_url' => $image_url,
@@ -146,7 +152,7 @@ class UserhomeController extends FrontController
         }
         foreach ($on_sale_product_details as  $on_sale_product_detail) {
             $multiply = $on_sale_product_detail->variant->first() ? $on_sale_product_detail->variant->first()->multiplier : 1;
-            $title = $on_sale_product_detail->translation ? $on_sale_product_detail->translation->first()->title : $on_sale_product_detail->sku;
+            $title = $on_sale_product_detail->translation->first() ? $on_sale_product_detail->translation->first()->title : $on_sale_product_detail->sku;
             $image_url = $on_sale_product_detail->media->first() ? $on_sale_product_detail->media->first()->image->path['proxy_url'].'300/300'.$on_sale_product_detail->media->first()->image->path['image_path'] : '';
             $on_sale_products[]=array(
                 'image_url' => $image_url,
@@ -188,7 +194,6 @@ class UserhomeController extends FrontController
                 });
             }
             $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
-            
             $isVendorArea = 0;
             $langId = (isset(Auth::user()->language)) ? Auth::user()->language : Session::get('customerLanguage');
             $homeData = array();

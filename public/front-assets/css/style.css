@@ -1,3 +1,4 @@
+
 @font-face {
   font-family: 'icomoon';
   src:  url('../fonts/icomoon.eot?9r1tw8');
@@ -34,6 +35,7 @@
 .icon-take-away:before {
   content: "\e919";
 }
+
 
 /* latin-ext */
 @font-face {
@@ -403,9 +405,9 @@ li {
   display: inline-block; }
 
 p {
-  font-size: 14px;
+  font-size: 16px;
   color: #777777;
-  line-height: 1; }
+  line-height: 22px; }
 
 a {
   -webkit-transition: 0.5s ease;

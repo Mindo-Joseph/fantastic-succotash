@@ -92,11 +92,6 @@
                     <div class="dashboard">
                         <div class="page-title">
                             <h2>My Profile</h2>
-                            
-                            <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inquiry_form">
-                                Launch demo modal
-                            </button> 
                         </div>
                         <div class="card-box">
                             <div class="row align-items-center">
@@ -129,12 +124,19 @@
                             </div>
                         </div>
                         <hr class="mt-2">
-                        <div class="welcome-msg">
-                            <h4 class="d-flex align-items-center justify-content-between m-0">
-                                <span>Your Refferal Code:
-                                    {{(isset($userRefferal['refferal_code'])) ? $userRefferal['refferal_code'] : ''}}</span>
-                                <a href="{{route('user.sendRefferal')}}">Send Refferal</a>
-                            </h4>
+                        <div class="row welcome-msg justify-content-between">
+                            <div class="col">
+                                <h4 class="m-0">
+                                    <span>Your Refferal Code: {{(isset($userRefferal['refferal_code'])) ? $userRefferal['refferal_code'] : ''}}</span>
+                                    <a class="link-text" href="{{route('user.sendRefferal')}}">123456</a>
+                                </h4>
+                            </div>
+                            <div class="col text-right">
+                                    
+                                    <label class="copy-icon m-0">
+                                        <i class="fa fa-copy"></i>
+                                    </label>
+                            </div>
                         </div>
 
                         <div class="row mt-3 profile-page">
@@ -367,49 +369,6 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- inquiry Form Modal -->
-<div class="modal fade" id="inquiry_form" tabindex="-1" aria-labelledby="inquiry_formLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header border-bottom">
-        <h5 class="modal-title" id="inquiry_formLabel">inquiry Form</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form class="inquiry-form" action="">
-            <div class="row">
-                <div class="col-md-6 form-group">
-                    <label>Name</label>
-                    <input class="form-control" type="text">
-                </div>
-                <div class="col-md-6 form-group">
-                    <label>Email</label>
-                    <input class="form-control" type="text">
-                </div>
-                <div class="col-md-6 form-group">
-                    <label>Phone Number</label>
-                    <input class="form-control" type="text">
-                </div>
-                <div class="col-md-6 form-group">
-                    <label>Company Name</label>
-                    <input class="form-control" type="text">
-                </div>
-                <div class="col-12 form-group">
-                    <label>Message</label>
-                    <textarea class="form-control" name="" id="" cols="30" rows="8"></textarea>
-                </div>
-                <div class="col-12 mt-2">
-                    <button type="button" class="btn btn-solid w-100" data-dismiss="modal">Submit</button>
-                </div>
-            </div>
-        </form>
-      </div>
-    </div>
-  </div>
 </div>
 
 

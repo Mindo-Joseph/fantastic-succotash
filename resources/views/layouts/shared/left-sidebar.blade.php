@@ -209,7 +209,7 @@
                         <li>
                             <a href="#sidebarcms" data-toggle="collapse">
                                 <span class="icon-theme-icon size-20"></span>
-                                <span>Cms</span>
+                                <span>CMS</span>
                             </a>
                             <div class="collapse" id="sidebarcms">
                                 <ul class="nav-second-level">
@@ -264,7 +264,7 @@
                 @if(count(array_intersect($marketing_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a class="menu-title pl-1" href="#">
-                        <span class="icon-dashboard_icon"></span>
+                        <span class="icon-accounting size-20"></span>
                         <span>MARKETING</span>
                     </a>
                     <ul class="nav-second-level">
@@ -314,6 +314,12 @@
                                         </a>
                                     </li>
                                 @endif
+                                <li>
+                                    <a href="{{route('inquiry.index')}}">
+                                        <span class="fa-question-circle"></span>
+                                        <span> Inquiries </span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     @endif
