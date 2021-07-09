@@ -53,7 +53,7 @@ class PromoCodeController extends Controller{
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $language_id);
                     },
-                    'vendorProducts'=> function($qry) use($cartID){
+                    'vendorProducts'=> function($qry) use($cart_id){
                         $qry->where('cart_id', $cart_id);
                     },                    
                     'vendorProducts.addon.set' => function($qry) use($language_id){
