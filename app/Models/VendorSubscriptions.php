@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class VendorSubscriptions extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     public function features(){
       return $this->hasMany('App\Models\VendorSubscriptionFeatures', 'subscription_id', 'id')->select('id','subscription_id', 'feature_id'); 

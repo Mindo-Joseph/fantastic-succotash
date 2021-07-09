@@ -124,12 +124,19 @@
                             </div>
                         </div>
                         <hr class="mt-2">
-                        <div class="welcome-msg">
-                            <h4 class="d-flex align-items-center justify-content-between m-0">
-                                <span>Your Refferal Code:
-                                    {{(isset($userRefferal['refferal_code'])) ? $userRefferal['refferal_code'] : ''}}</span>
-                                <a href="{{route('user.sendRefferal')}}">Send Refferal</a>
-                            </h4>
+                        <div class="row welcome-msg justify-content-between">
+                            <div class="col">
+                                <h4 class="m-0">
+                                    <span>Your Refferal Code: {{(isset($userRefferal['refferal_code'])) ? $userRefferal['refferal_code'] : ''}}</span>
+                                    <a class="link-text" href="{{route('user.sendRefferal')}}">123456</a>
+                                </h4>
+                            </div>
+                            <div class="col text-right">
+                                    
+                                    <label class="copy-icon m-0">
+                                        <i class="fa fa-copy"></i>
+                                    </label>
+                            </div>
                         </div>
 
                         <div class="row mt-3 profile-page">

@@ -13,7 +13,7 @@
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-<section class="section-b-space new-pages">
+<section class="section-b-space new-pages pb-250">
     <div class="container">
         <div class="row">
             <div class="col-12">
