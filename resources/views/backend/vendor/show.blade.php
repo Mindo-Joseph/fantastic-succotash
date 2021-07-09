@@ -194,7 +194,7 @@
                                                                         <form action="{{route('vendor.serviceArea.delete', $vendor->id)}}" method="POST" class="action-icon">
                                                                             @csrf
                                                                             <input type="hidden" value="{{$geo->id}}" name="area_id">
-                                                                            <button type="submit" onclick="return confirm('Are you sure? You want to delete the banner.')" class="btn btn-primary-outline action-icon"><i class="mdi mdi-delete"></i></button> 
+                                                                            <button type="submit" onclick="return confirm('Are you sure? You want to delete the service area.')" class="btn btn-primary-outline action-icon"><i class="mdi mdi-delete"></i></button> 
 
                                                                         </form>
                                                                     </td>
