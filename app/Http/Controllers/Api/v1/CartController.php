@@ -11,7 +11,7 @@ use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet,UserAddress, ClientPreference};
+use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet,UserAddress, ClientPreference, Vendor};
 use GuzzleHttp\Client as GCLIENT;
 class CartController extends BaseController{
     use ApiResponser;
