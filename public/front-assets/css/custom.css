@@ -1524,19 +1524,12 @@ label{
     background-size: cover;
 }
 
-.info-text label {
-    font-weight: 100;
-}
-
 .info-text p {
-    font-weight: 700;
-    color: #000;
     margin-bottom: 0;
     margin-block-end: 0;
 }
 
 .profile-edit {
-    color: #000000;
     font-size: 16px;
     font-weight: 300;
     line-height: 24px;
@@ -1547,25 +1540,13 @@ label{
     margin: 0;
 }
 
-.text-16 {
-    color: #000000 !important;
-    font-size: 16px !important;
-    font-weight: 300;
-    letter-spacing: 0 !important;
-    line-height: 24px !important;
-}
-
 .address_box p {
     margin: 0;
-    color: #000000;
-    font-size: 14px;
-    font-weight: 300;
     letter-spacing: 0;
     line-height: 24px;
 }
 
 .address_btn a {
-    color: #000000;
     font-size: 16px;
     font-weight: 300;
     letter-spacing: 0;
@@ -1681,7 +1662,7 @@ label{
     display: none;
 }
 .map-icon .fa.fa-map-marker {
-    color: #000;
+    color: var(--theme-deafult);
 }
 .pac-container{
     z-index: 9999;
@@ -1813,7 +1794,7 @@ div#test {
 
 .inner_spacing h3 + p {
     font-size: 14px;
-    margin: 10px 0 0;
+    margin: 5px 0 0;
     white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1823,7 +1804,7 @@ div#test {
     font-size: 16px;
     font-weight: 700;
     color: rgb(0 0 0 / 41%);
-    line-height: 50px;
+    line-height: 24px;
     margin: 0;
 }
 
@@ -2693,13 +2674,20 @@ button.close {
 
 .btn-outline-secondary {
     color: var(--theme-deafult);
-    background-color: #2b2b2b;
 }
     
+.collection-collapse-block:last-child {
+    padding: 0;
+}
 
+.image_mask img {
+    width: 100%;
+}
 
-
-
+form input.form-control[placeholder="Address"] {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
 
 
 
@@ -2719,6 +2707,9 @@ button.close {
 
 
 /* Website Dark Mood Css Start Form Here */
+.dark .menu-navigation {
+    background: #232323;
+}
 .dark .inner_spacing h3,.dark .page-title h3 {
     color: #eaedef;
 }
@@ -2762,8 +2753,8 @@ button.close {
 
 .dark .btn-outline-secondary {
     border-color: #404040;
+    background-color: #2b2b2b;
 }
-
 
 
 

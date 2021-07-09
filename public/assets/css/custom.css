@@ -1,11 +1,10 @@
-
   @font-face {
     font-family: 'icomoon';
-    src:  url('/assets/css/fonts/icomoon.eot?fj59ii');
-    src:  url('/assets/css/fonts/icomoon.eot?fj59ii#iefix') format('embedded-opentype'),
-      url('/assets/css/fonts/icomoon.ttf?fj59ii') format('truetype'),
-      url('/assets/css/fonts/icomoon.woff?fj59ii') format('woff'),
-      url('/assets/css/fonts/icomoon.svg?fj59ii#icomoon') format('svg');
+    src:  url('/assets/css/fonts/icomoon.eot?rwbipu');
+    src:  url('/assets/css/fonts/icomoon.eot?rwbipu#iefix') format('embedded-opentype'),
+      url('/assets/css/fonts/icomoon.ttf?rwbipu') format('truetype'),
+      url('/assets/css/fonts/icomoon.woff?rwbipu') format('woff'),
+      url('/assets/css/fonts/icomoon.svg?rwbipu#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -26,86 +25,71 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
-  .icon-celebrities_icon:before {
-    content: "\e901";
-  }
-  .icon-configure_icon:before {
-    content: "\e902";
-  }
-  .icon-customer_icon:before {
-    content: "\e903";
-  }
-  .icon-customize_icon:before {
-    content: "\e904";
-  }
-  .icon-dashboard_icon:before {
-    content: "\e905";
-  }
-  .icon-loyality_icon:before {
-    content: "\e906";
-  }
-  .icon-order_icon:before {
-    content: "\e907";
-  }
-  .icon-payment_icon:before {
-    content: "\e908";
-  }
-  .icon-payment_options_icon:before {
-    content: "\e909";
-  }
-  .icon-profile_icon:before {
-    content: "\e90a";
-  }
-  .icon-promocode_icon:before {
-    content: "\e90b";
-  }
-  .icon-tax_icon:before {
-    content: "\e90c";
-  }
-  .icon-vendor_icon:before {
-    content: "\e90d";
-  }
-  .icon-waller_icon:before {
-    content: "\e90e";
-  }
-  .icon-1370259:before {
-    content: "\e90f";
-  }
-  .icon-banner_icon:before {
-    content: "\e910";
-  }
-  .icon-payment-wallets-icon:before {
-    content: "\e911";
-    color: #fff;
-  }
-  .icon-payment-debitcard-icon:before {
-    content: "\e912";
-    color: #fff;
-  }
-  .icon-payment-netbanking-icon:before {
-    content: "\e913";
-    color: #fff;
-  }
-  .icon-accounting-icon:before {
-    content: "\e914";
-  }
-  .icon-customize-icon:before {
-    content: "\e915";
-  }
-  .icon-theme-icon:before {
-    content: "\e916";
-  }
-  .icon-accounting:before {
+  .icon-orders:before {
     content: "\e900";
   }
-  .icon-customers:before {
-    content: "\e917";
+  .icon-dash:before {
+    content: "\e907";
   }
-  .icon-orders:before {
-    content: "\e918";
+  .icon-vendor:before {
+    content: "\e912";
   }
-  .icon-customize:before {
-    content: "\e919";
+  .icon-customzie:before {
+    content: "\e906";
+  }
+  .icon-accounting:before {
+    content: "\e913";
+  }
+  .icon-customer-2:before {
+    content: "\e905";
+  }
+  .icon-subscribe:before {
+    content: "\e910";
+  }
+  .icon-settings-1-1:before {
+    content: "\e90e";
+  }
+  .icon-profile:before {
+    content: "\e90d";
+  }
+  .icon-styling:before {
+    content: "\e90f";
+  }
+  .icon-cms:before {
+    content: "\e903";
+  }
+  .icon-catalogue:before {
+    content: "\e901";
+  }
+  .icon-configuration:before {
+    content: "\e904";
+  }
+  .icon-tax:before {
+    content: "\e911";
+  }
+  .icon-payment-options:before {
+    content: "\e90c";
+  }
+  .icon-marketing:before {
+    content: "\e90b";
+  }
+  .icon-banners:before {
+    content: "\e914";
+  }
+  .icon-loyaltycard:before {
+    content: "\e90a";
+  }
+  .icon-extra:before {
+    content: "\e909";
+  }
+  .icon-celebrity:before {
+    content: "\e902";
+  }
+  .icon-discount-voucher:before {
+    content: "\e908";
+  }
+  .icon-question:before {
+    content: "\e915";
   }
   
   
@@ -820,19 +804,9 @@ body[data-sidebar-size="condensed"]
 }
 
 #sidebar-menu > ul > li > a span:first-child {
-    width: 18px;
+    width: 22px;
     display: inline-block;
-    text-align: center;
-    font-size: 28px;
-    margin-right: 8px;
-}
-
-#sidebar-menu > ul > li > a span{
-    width: 18px !important;
-}
-
-#sidebar-menu > ul > li > a span.size-20 {
-    font-size: 19px;
+    font-size: 18px;
 }
 
 body[data-sidebar-size="condensed"]
@@ -1375,6 +1349,7 @@ i.mdi.mdi-exclamation-thick {
 } */
 #sidebar-menu > ul > li ul.nav-second-level {
     padding-left: 20px;
+    margin: 0 0 10px;
 }
 .notification-list .profile-dropdown .notify-item {
     border-left: 3px solid transparent;
@@ -1976,8 +1951,10 @@ td.product-name,.vendor-name {
 }
 
 .menu-title + .nav-second-level > li > a span:first-child {
-    font-size: 26px;
+    font-size: 18px;
     vertical-align: middle;
+    width: 22px;
+    display: inline-block;
 }
 
 .menu-title + .nav-second-level > li > a span.size-20 {

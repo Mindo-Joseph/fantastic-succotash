@@ -65,14 +65,14 @@
                  @if(count(array_intersect($order_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a class="menu-title pl-1" href="#">
-                        <span class="icon-order_icon"></span>
+                        <span class="icon-orders"></span>
                         <span>ORDERS</span>
                     </a>
                     <ul class="nav-second-level">
                             @if(in_array('dashboard',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('client.dashboard')}}">
-                                        <span class="icon-dashboard_icon"></span>
+                                        <span class="icon-dash"></span>
                                         <span>Dashboard</span>
                                     </a>
                                 </li>
@@ -80,7 +80,7 @@
                             @if(in_array('orders',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('order.index')}}">
-                                        <span class="icon-order_icon"></span>
+                                        <span class="icon-orders"></span>
                                         <span> Orders </span>
                                     </a>
                                 </li>
@@ -88,7 +88,7 @@
                             @if(in_array('vendors',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('vendor.index')}}">
-                                        <span class="icon-vendor_icon"></span>
+                                    <span class="icon-vendor"></span>
                                         <span> Vendors </span>
                                     </a>
                                 </li>
@@ -96,7 +96,7 @@
                             @if(count(array_intersect($accounting_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="#sidebaraccounting" data-toggle="collapse">
-                                        <span class="icon-accounting-icon size-20"></span>
+                                    <span class="icon-accounting"></span>
                                         <span> Accounting </span>
                                     </a>
                                     <div class="collapse" id="sidebaraccounting">
@@ -132,7 +132,7 @@
                             @endif
                             <li>
                                 <a href="#sidebarsubscriptions" data-toggle="collapse">
-                                    <span class="icon-payment_icon size-22"></span>
+                                    <span class="icon-subscribe"></span>
                                     <span> Subscriptions </span>
                                 </a>
                                 <div class="collapse" id="sidebarsubscriptions">
@@ -153,7 +153,7 @@
                             @if(in_array('customers',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('customer.index')}}">
-                                        <span class="icon-customer_icon"></span>
+                                        <span class="icon-customer-2"></span>
                                         <span> Customers </span>
                                     </a>
                                 </li>
@@ -164,14 +164,14 @@
                 @if(count(array_intersect($setting_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
                    <a class="menu-title pl-1" href="#">
-                        <span class="icon-customize_icon"></span>
+                        <span class="icon-settings-1-1"></span>
                         <span>SETTINGS</span>
                     </a>
                     <ul class="nav-second-level">
                         @if(in_array('profile',$allowed) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="{{route('client.profile')}}">
-                                    <span class="icon-profile_icon"></span>
+                                    <span class="icon-profile"></span>
                                     <span> Profile </span>
                                 </a>
                             </li>
@@ -179,7 +179,7 @@
                         @if(in_array('customize',$allowed) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="{{route('configure.customize')}}">
-                                    <span class="icon-customize-icon size-20"></span>
+                                    <span class="icon-customzie"></span>
                                     <span> Customize </span>
                                 </a>
                             </li>
@@ -187,7 +187,7 @@
                         @if(count(array_intersect($styling_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="#sidebarstyling" data-toggle="collapse">
-                                    <span class="icon-theme-icon size-20"></span>
+                                    <span class="icon-styling"></span>
                                     <span> Styling </span>
                                 </a>
                                 <div class="collapse" id="sidebarstyling">
@@ -208,7 +208,7 @@
                         @endif
                         <li>
                             <a href="#sidebarcms" data-toggle="collapse">
-                                <span class="icon-theme-icon size-20"></span>
+                                <span class="icon-cms"></span>
                                 <span>CMS</span>
                             </a>
                             <div class="collapse" id="sidebarcms">
@@ -229,7 +229,7 @@
                         @if(in_array('catalog',$allowed) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="{{route('category.index')}}">
-                                    <span class="icon-catalog_icon"></span>
+                                    <span class="icon-catalogue"></span>
                                     <span> Catalog </span>
                                 </a>
                             </li>
@@ -237,7 +237,7 @@
                         @if(in_array('configurations',$allowed) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="{{route('configure.index')}}">
-                                    <span class="icon-configure_icon"></span>
+                                    <span class="icon-configuration"></span>
                                     <span> Configurations </span>
                                 </a>
                             </li>
@@ -245,7 +245,7 @@
                         @if(in_array('tax',$allowed) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="{{route('tax.index')}}">
-                                    <span class="icon-tax_icon"></span>
+                                    <span class="icon-tax"></span>
                                     <span> Tax </span>
                                 </a>
                             </li>
@@ -253,7 +253,7 @@
                         @if(in_array('payment',$allowed) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="{{route('payoption.index')}}">
-                                    <span class="icon-payment_icon"></span>
+                                    <span class="icon-payment-options"></span>
                                     <span> Payment Options </span>
                                 </a>
                             </li>
@@ -264,14 +264,14 @@
                 @if(count(array_intersect($marketing_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a class="menu-title pl-1" href="#">
-                        <span class="icon-accounting size-20"></span>
+                        <span class="icon-marketing"></span>
                         <span>MARKETING</span>
                     </a>
                     <ul class="nav-second-level">
                         @if(in_array('banner',$allowed) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="{{route('banner.index')}}">
-                                    <span class="icon-banner_icon"></span>
+                                    <span class="icon-banners"></span>
                                     <span> Banner </span>
                                 </a>
                             </li>
@@ -279,7 +279,7 @@
                         @if(in_array('promocode',$allowed) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="{{route('promocode.index')}}">
-                                    <span class="icon-promocode_icon"></span>
+                                    <span class="icon-discount-voucher"></span>
                                     <span> Promocode </span>
                                 </a>
                             </li>
@@ -287,7 +287,7 @@
                         @if(in_array('loyalty_cards',$allowed) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="{{route('loyalty.index')}}">
-                                    <span class="icon-loyality_icon"></span>
+                                    <span class="icon-loyaltycard"></span>
                                     <span> Loyalty Cards </span>
                                 </a>
                             </li>
@@ -302,21 +302,21 @@
                     @if(in_array('celebrity',$allowed) || Auth::user()->is_superadmin == 1)
                         <li>
                             <a class="menu-title pl-1">
-                                <span class="icon-dashboard_icon"></span>
+                                <span class="icon-extra"></span>
                                 <span>EXTRA</span>
                             </a>
                             <ul class="nav-second-level">
                                 @if(in_array('celebrity',$allowed) || Auth::user()->is_superadmin == 1)
                                     <li>
                                         <a href="{{route('celebrity.index')}}">
-                                            <span class="icon-celebrities_icon"></span>
+                                            <span class="icon-celebrity"></span>
                                             <span> Celebrities </span>
                                         </a>
                                     </li>
                                 @endif
                                 <li>
                                     <a href="{{route('inquiry.index')}}">
-                                        <span class="fa-question-circle"></span>
+                                        <span class="icon-question"></span>
                                         <span> Inquiries </span>
                                     </a>
                                 </li>
