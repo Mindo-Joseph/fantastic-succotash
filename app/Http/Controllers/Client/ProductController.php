@@ -235,6 +235,7 @@ class ProductController extends BaseController
         }
         $product->sku = $request->sku;
         $product->url_slug = $request->url_slug;
+        $product->tags        = $request->tags??null;
         $product->category_id = $request->category_id;
         $product->inquiry_only = ($request->has('inquiry_only') && $request->inquiry_only == 'on') ? 1 : 0;
         $product->tax_category_id = $request->tax_category;
@@ -246,7 +247,6 @@ class ProductController extends BaseController
         $product->sell_when_out_of_stock    = ($request->has('sell_stock_out') && $request->sell_stock_out == 'on') ? 1 : 0;
         $product->requires_shipping         = ($request->has('require_ship') && $request->require_ship == 'on') ? 1 : 0;
         $product->Requires_last_mile        = ($request->has('last_mile') && $request->last_mile == 'on') ? 1 : 0;
-        $product->tags        = $request->tags??null;
 
         if (empty($product->publish_at)) {
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';

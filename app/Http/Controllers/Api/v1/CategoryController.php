@@ -96,11 +96,21 @@ class CategoryController extends BaseController
             return $vendorData;
         }elseif (strtolower($type) == 'subcategory') {
             $category_details = [];
-            $category_list = Category::where('parent_id', $category_id)->get();
+            $category_list = Category::with(['tags','type'  => function($q){
+                            $q->select('id', 'title as redirect_to');
+                        },
+                        'childs.translation'  => function($q) use($langId){
+                            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+                            ->where('category_translations.language_id', $langId);
+                        },
+                        'translation' => function($q) use($langId){
+                            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+                            ->where('category_translations.language_id', $langId);
+                        }])->where('parent_id', $category_id)->get();
             foreach ($category_list as $category) {
                 $category_details[] = array(
                     'id' => $category->id,
-                    'name' => $category->slug,
+                    'name' => $category->translation ? $category->translation->first()->name : $category->slug,
                     'icon' => $category->icon,
                     'image' => $category->image
                 );
