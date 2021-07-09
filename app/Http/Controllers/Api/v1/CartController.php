@@ -11,7 +11,7 @@ use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet};
+use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet,UserAddress, ClientPreference};
 use GuzzleHttp\Client as GCLIENT;
 class CartController extends BaseController{
     use ApiResponser;
@@ -527,5 +527,46 @@ class CartController extends BaseController{
         $cart->item_count = $item_count;
         $cart->total_payable_amount = $total_paying + $total_tax - $total_disc_amount - $cart->loyalty_amount;
         return $cart;
+    }
+    public function getDeliveryFeeDispatcher($vendor_id){
+        try {
+                $dispatch_domain = $this->checkIfLastMileOn();
+                if ($dispatch_domain && $dispatch_domain != false) {
+                    $customer = User::find(Auth::id());
+                    $cus_address = UserAddress::where('user_id',Auth::id())->orderBy('is_primary','desc')->first();
+                    if($cus_address){
+                        $tasks = array();
+                        $vendor_details = Vendor::find($vendor_id);
+                            $location[] = array('latitude' => $vendor_details->latitude??30.71728880,
+                                                'longitude' => $vendor_details->longitude??76.80350870
+                                                );
+                            $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
+                                              'longitude' => $cus_address->longitude??76.803508700000
+                                            );
+                            $postdata =  ['locations' => $location];
+                            $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
+                                                        'shortcode' => $dispatch_domain->delivery_service_key_code,
+                                                        'content-type' => 'application/json']
+                                                            ]);
+                            $url = $dispatch_domain->delivery_service_key_url;                      
+                            $res = $client->post($url.'/api/get-delivery-fee',
+                                ['form_params' => ($postdata)]
+                            );
+                            $response = json_decode($res->getBody(), true);
+                            if($response && $response['message'] == 'success'){
+                                return $response['total'];
+                            }
+                    }
+                }
+            }    
+            catch(\Exception $e){}
+    }
+    # check if last mile delivery on 
+    public function checkIfLastMileOn(){
+        $preference = ClientPreference::first();
+        if($preference->need_delivery_service == 1 && !empty($preference->delivery_service_key) && !empty($preference->delivery_service_key_code) && !empty($preference->delivery_service_key_url))
+            return $preference;
+        else
+            return false;
     }
 }
