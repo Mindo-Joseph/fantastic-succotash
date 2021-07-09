@@ -40,6 +40,7 @@
         "predis/predis": "^1.1",
         "r0bdiablo/laravel5-phumbor": "^1.0",
         "rap2hpoutre/laravel-log-viewer": "^1.7",
+        "rinvex/laravel-subscriptions": "^5.0",
         "rivalex/laravel-intl": "^1.1",
         "sentry/sentry-laravel": "^2.7",
         "socialiteproviders/apple": "^5.0",
