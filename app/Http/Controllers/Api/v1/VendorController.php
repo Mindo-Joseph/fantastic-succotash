@@ -21,15 +21,6 @@ class VendorController extends BaseController{
             $vendor_ids = [];
             $category_details = [];
             $vendor_id = $request->vendor_id;
-            // $vendor_categories = VendorCategory::with('category')->where('vendor_id', $vendor_id)->get();
-            // foreach ($vendor_categories as $vendor_category) {
-            //     $category_details[] = array(
-            //         'id' => $vendor_category->category->id,
-            //         'name' => $vendor_category->category->slug,
-            //         'icon' => $vendor_category->category->icon,
-            //         'image' => $vendor_category->category->image
-            //     );
-            // }
             $type = Type::where('title' ,'Vendor')->first();
             $vendor_products = Product::with('category.categoryDetail')->where('vendor_id', $vendor_id)->where('is_live', 1)->get(['id']);
             foreach ($vendor_products as $vendor_product) {
@@ -38,7 +29,7 @@ class VendorController extends BaseController{
                         $vendor_ids[] = $vendor_product->category->categoryDetail->id;
                         $category_details[] = array(
                             'id' => $vendor_product->category->categoryDetail->id,
-                            'name' => $vendor_product->category->categoryDetail->slug,
+                            'name' => $vendor_product->category->categoryDetail->translation_one ? $vendor_product->category->categoryDetail->translation_one->name :$vendor_product->category->categoryDetail->slug,
                             'icon' => $vendor_product->category->categoryDetail->icon,
                             'image' => $vendor_product->category->categoryDetail->image
                         );
