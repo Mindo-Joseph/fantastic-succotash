@@ -369,6 +369,7 @@ class CartController extends BaseController{
                         }
                     }
                 }
+                $deliver_charge = "";
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
                     $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0; 
                     $variantsData = $taxData = $vendorAddons = array();
@@ -434,6 +435,10 @@ class CartController extends BaseController{
                             }
                         }
                         $prod->taxdata = $taxData;
+
+                        if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1){   
+                            $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
+                        }
                         if(!empty($prod->addon)){
                             foreach ($prod->addon as $ck => $addons) {
                                 $opt_quantity_price = 0;
@@ -466,7 +471,6 @@ class CartController extends BaseController{
                             );
                         }
                     }
-                    $deliver_charge = 0;
                     $prod->variants = $variantsData;
                     $prod->variant_options = $variant_options;
                     $prod->deliver_charge = $deliver_charge;
@@ -488,9 +492,10 @@ class CartController extends BaseController{
                 }
                 $vendorData->proSum = $proSum;
                 $vendorData->addonSum = $ttAddon;
+                $vendorData->deliver_charge = $deliver_charge;
                 $vendorData->coupon_apply_on_vendor = $couponApplied;
                 $vendorData->is_coupon_applied = $is_coupon_applied;
-
+                $vendorData->is_coupon_applied = $is_coupon_applied;
                 if(empty($couponData)){
                     $vendorData->couponData = NULL;
                 }else{
