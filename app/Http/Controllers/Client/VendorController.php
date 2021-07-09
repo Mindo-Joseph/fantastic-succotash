@@ -506,6 +506,7 @@ class VendorController extends BaseController
                         $request_from_dispatch = $this->checkUpdateVendorToDispatch($dispatch_domain);
                         if ($request_from_dispatch && isset($request_from_dispatch['status']) && $request_from_dispatch['status'] == 200) {
                             DB::commit();
+                            $request_from_dispatch['url'] = $request_from_dispatch['url']."?set_unique_order_login=".$token;
                             return $request_from_dispatch;
                         } else {
                             DB::rollback();
@@ -532,18 +533,19 @@ class VendorController extends BaseController
         try {
                  
                 $vendor = Vendor::find($dispatch_domain->vendor_id);
+                $unique = Auth::user()->code??rand('11111'.'458965');
                 $postdata =  ['vendor_id' => $dispatch_domain->vendor_id ?? 0,
                 'name' => $vendor->name ?? "Manager".$dispatch_domain->vendor_id,
                 'phone_number' =>  $vendor->phone_no ?? rand('11111'.'458965'),
-                'email' => "969648".$vendor->id."_royodispatch@dispatch.com",
-                'team_tag' => "tag-set".$vendor->id,
+                'email' => $unique.$vendor->id."_royodispatch@dispatch.com",
+                'team_tag' => $unique."_".$vendor->id,
                 'public_session' => $dispatch_domain->token];
            
                 $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,
                                                     'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,
                                                     'content-type' => 'application/json']
                                                         ]);
-                                            
+                                     
                 $url = $dispatch_domain->pickup_delivery_service_key_url;
                 $res = $client->post(
                     $url.'/api/update-create-vendor-order',

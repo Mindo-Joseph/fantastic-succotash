@@ -492,7 +492,9 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
     }
 });
+
 e.preventDefault();
+
 
 var uri =  "{{route('update.Create.Vendor.In.Dispatch')}}";
 var id =    $(this).data('id');
@@ -503,13 +505,18 @@ $.ajax({
     data: {id:id},
     dataType: 'json',
     success: function (data) {
-    console.log(data);   
+    var url = data.url;
+    window.open(url, '_blank');
     },
     error: function (data) {
-        console.log('data');
+        alert(data.message);
     },
     beforeSend: function(){
         $(".loader_box").show();
+        var token = $('meta[name="csrf_token"]').attr('content');
+            if (token) {
+                  return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            } 
     },
     complete: function(){
         $(".loader_box").hide();
