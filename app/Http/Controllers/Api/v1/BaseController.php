@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\v1;
-
+use DB;
 use App;
 use Mail;
 use Config;
@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Twilio\Rest\Client as TwilioClient;
-use App\Models\{Client, Category, Product, ClientPreference, Wallet, UserLoyaltyPoint, LoyaltyCard};
+use App\Models\{Client, Category, Product, ClientPreference, Wallet, UserLoyaltyPoint, LoyaltyCard, Order};
 
 class BaseController extends Controller{
     private $field_status = 2;
@@ -168,28 +168,21 @@ class BaseController extends Controller{
     }
 
     /**     * check if cookie already exist     */
-    public function getLoyaltyPoints($userid, $multiplier)
-    {
-        $loyaltyPoints = UserLoyaltyPoint::where('user_id', $userid)->first();
-        $data = array();
-        if(!$loyaltyPoints){
-            $data['point'] = 0;
-            $data['amount'] = 0;
-        }elseif ($loyaltyPoints->points == 0) {
-            $data['point'] = 0;
-            $data['amount'] = 0;
-        }else{
-            $card = LoyaltyCard::select('id', 'redeem_points_per_primary_currency')->where('id', '>', 0)->first();
-            if(!$card){
-                $data['point'] = 0;
-                $data['amount'] = 0;
-            }else{
-                $data['point'] = $loyaltyPoints->points;
-                $amount = $loyaltyPoints->points / $card->redeem_points_per_primary_currency;
-                $data['amount'] = $amount * $multiplier;
+    public function getLoyaltyPoints($userid, $multiplier){
+        $loyalty_earned_amount = 0;
+        $redeem_points_per_primary_currency = '';
+        $loyalty_card = LoyaltyCard::first();
+        if ($loyalty_card) {
+            $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
+        }
+        $order_loyalty_points_earned_detail = Order::where('user_id', $userid)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
+        if ($order_loyalty_points_earned_detail) {
+            $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
+            if ($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0) {
+                $loyalty_earned_amount = $loyalty_points_used / $redeem_points_per_primary_currency;
             }
         }
-        return $data;
+        return $loyalty_earned_amount;
     }
 
     /**     * check if cookie already exist     */
