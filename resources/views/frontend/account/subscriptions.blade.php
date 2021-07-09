@@ -172,6 +172,8 @@
                             </div>
                         </div>
                         @endforeach
+                    @else
+                        <h5>No Subscription Plan Found</h5>
                     @endif
                     <!-- END Col -->
                 </div>

@@ -41,6 +41,7 @@
     var user_checkout_url= "{{ route('user.checkout') }}";
     var cart_product_url= "{{ route('getCartProducts') }}";
     var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
+    var change_primary_data_url = "{{ route('changePrimaryData') }}"
     @if(Session::has('selectedAddress'))
         selected_address = 1;
     @endif
