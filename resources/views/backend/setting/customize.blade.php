@@ -245,17 +245,17 @@
                                 <tbody id="post_list">
                                     @forelse($social_media_details as $social_media_detail)
                                     <tr>
-                                        <td></td>
+                                        <td>{{$loop->iteration}}</td>
                                         <td>
                                             <a href="#">
                                                 <i class="{{$social_media_detail->icon}}" aria-hidden="true"></i>
                                             </a>
                                         </td>
-                                        <td style="width:100px">
+                                        <td>
                                             <a href="{{$social_media_detail->url}}" target="_blank">{{$social_media_detail->url}}</a>
                                         </td>
                                         <td>
-                                            <div class="form-ul" style="width: 60px;">
+                                            <div>
                                                 <div class="inner-div" style="float: left;">
                                                     <a class="action-icon edit_social_media_option_btn" data-social_media_detail_id="{{$social_media_detail->id}}">
                                                         <i class="mdi mdi-square-edit-outline"></i>
@@ -299,9 +299,8 @@
                             <div class="input-group-prepend">
                                 <div class="input-group-text">@</div>
                             </div>
-                            <input class="form-control icp icp-auto" name="icon" value="fas fa-anchor" type="text" >
+                            <input class="form-control icp icp-auto" name="icon" value="fab fa-facebook" type="text" >
                         </div>
-
                     </div>
                     <div class="form-group">
                         <label for="">Url</label>
@@ -322,6 +321,24 @@
 <script src="https://itsjavi.com/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.js"></script>
 <script type="text/javascript">
     var options_iconpicker = {
+        icons: [
+        {
+            title: "fab fa-facebook",
+            searchTerms: ['social']
+        },
+        {
+            title: "fab fa-instagram",
+            searchTerms: ['social']
+        },
+        {
+            title: "fab fa-tumblr",
+            searchTerms: ['social']
+        },
+        {
+            title: "fab fa-twitch",
+            searchTerms: ['social']
+        }
+    ],
         title: false,
         selected: false,
         trigger: 'hover',
