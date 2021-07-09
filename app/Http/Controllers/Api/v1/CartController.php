@@ -369,7 +369,7 @@ class CartController extends BaseController{
                         }
                     }
                 }
-                $deliver_charge = "";
+                $deliver_charge = 0;
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
                     $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0; 
                     $variantsData = $taxData = $vendorAddons = array();
