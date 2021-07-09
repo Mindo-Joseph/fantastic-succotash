@@ -723,7 +723,7 @@
                   </div>
                   <div class="col-md-3">
                      <div class="form-group mb-0">
-                        <label for="enquire_mode" class="mr-3 mb-0">Enquiry Mod</label>
+                        <label for="enquire_mode" class="mr-3 mb-0">Inquiry Mod</label>
                         <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1'))  checked='checked' @endif>
                      </div>
                   </div>
@@ -868,49 +868,38 @@
 @endsection
 @section('script')
 <script type="text/javascript">
-   
    function generateRandomString(length) {
      var text = "";
      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      
      for (var i = 0; i < length; i++)
        text += possible.charAt(Math.floor(Math.random() * possible.length));
-      
      return text;
    }
    
    function genrateKeyAndToken(){
        var key = generateRandomString(30);
        var token = generateRandomString(60);
-   
        $('#personal_access_token_v1').val(key);
        $('#personal_access_token_v2').val(token);
    }
-   
    var autocomplete = {};
-       var autocompletesWraps = [];
-       var count = 1; editCount = 0;
+   var autocompletesWraps = [];
+   var count = 1; editCount = 0;
    $(document).ready(function(){
        autocompletesWraps.push('Default_location_name');
        loadMap(autocompletesWraps);
    });
    
    function loadMap(autocompletesWraps){
-   
        $.each(autocompletesWraps, function(index, name) {
            const geocoder = new google.maps.Geocoder;
-       
            if($('#'+name).length == 0) {
                return;
            }
            autocomplete[name] = new google.maps.places.Autocomplete(document.getElementById(name), { types: ['geocode'] });
-               
            google.maps.event.addListener(autocomplete[name], 'place_changed', function() {
-               
                var place = autocomplete[name].getPlace();
-   
                geocoder.geocode({'placeId': place.place_id}, function (results, status) {
-                   
                    if (status === google.maps.GeocoderStatus.OK) {
                        const lat = results[0].geometry.location.lat();
                        const lng = results[0].geometry.location.lng();
