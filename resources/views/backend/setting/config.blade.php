@@ -700,7 +700,7 @@
                <div class="row align-items-center">
                   <div class="col-md-8">
                      <div class="form-group mb-0">
-                        <label for="celebrity_check" class="mr-3 mb-0">Influencer Mod</label>
+                        <label for="celebrity_check" class="mr-3 mb-0"> Celebrity Mode</label>
                         <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1'))  checked='checked' @endif>
                      </div>
                   </div>

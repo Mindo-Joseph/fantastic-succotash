@@ -72,7 +72,7 @@ class SubscriptionController extends BaseController
     {
         $message = 'added';
         $rules = array(
-            'title' => 'required|string|max:50|unique:user_subscriptions',
+            'title' => 'required|string|max:50',
             'features' => 'required',
             'price' => 'required',
             'validity' => 'required'
@@ -91,9 +91,9 @@ class SubscriptionController extends BaseController
             $subFeatures = UserSubscriptionFeatures::where('subscription_id', $subscription->id)->whereNotIn('feature_id', $request->features)->delete();
         }else{
             $subscription = new UserSubscriptions;
+            $subscription->slug = uniqid();
         }
         $subscription->title = $request->title;
-        $subscription->slug = strtolower(str_replace(' ', '-', $request->title));
         $subscription->price = $request->price;
         $subscription->validity_id = $request->validity;
         $subscription->status = ($request->has('status') && $request->status == 'on') ? '1' : '0';
@@ -215,7 +215,7 @@ class SubscriptionController extends BaseController
     {
         $message = 'added';
         $rules = array(
-            'title' => 'required|string|max:50|unique:vendor_subscriptions',
+            'title' => 'required|string|max:50',
             'features' => 'required',
             'price' => 'required',
             'validity' => 'required'
@@ -234,9 +234,9 @@ class SubscriptionController extends BaseController
             $subFeatures = VendorSubscriptionFeatures::where('subscription_id', $subscription->id)->whereNotIn('feature_id', $request->features)->delete();
         }else{
             $subscription = new VendorSubscriptions;
+            $subscription->slug = uniqid();
         }
         $subscription->title = $request->title;
-        $subscription->slug = strtolower(str_replace(' ', '-', $request->title));
         $subscription->price = $request->price;
         $subscription->validity_id = $request->validity;
         $subscription->status = ($request->has('status') && $request->status == 'on') ? '1' : '0';
