@@ -90,7 +90,7 @@ class AppServiceProvider extends ServiceProvider
                             $database_name = 'royo_' . $redisData->database_name;
                             $database_host = !empty($redisData->database_host) ? $redisData->database_host : env('DB_HOST', '127.0.0.1');
                             $database_port = !empty($redisData->database_port) ? $redisData->database_port : env('DB_PORT', '3306');
-                            $database_username = !empty($redisData->database_username) ? $redisData->database_username : env('DB_USERNAME', 'royodelivery_db');
+                            $database_username = !empty($redisData->database_username) ? $redisData->database_username : env('DB_USERNAME', 'royoorders');
                             $database_password = !empty($redisData->database_password) ? $redisData->database_password : env('DB_PASSWORD', '');
                             $default = [
                                 'driver' => env('DB_CONNECTION', 'mysql'),
