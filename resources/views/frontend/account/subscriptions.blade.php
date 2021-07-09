@@ -27,7 +27,7 @@
         position: relative;
         max-width: 300px;
         height: auto;
-        background: linear-gradient(-45deg,#fe0847,#feae3f);
+        background: linear-gradient(-5deg, transparent 0%, var(--theme-deafult) 50%, var(--theme-deafult) 100%);
         border-radius: 15px;
         margin: 0 auto;
         padding: 40px 20px;
@@ -41,15 +41,12 @@
         -webkit-transform: scale(1.1);
         transform: scale(1.1);
     }
-    .col-sm-4:nth-child(1) .price-card{
+    /* .col-sm-4:nth-child(1) .price-card{
         background: linear-gradient(-45deg,#f403d1,#64b5f6);
     }
     .col-sm-4:nth-child(2) .price-card{
         background: linear-gradient(-45deg,#ffec61,#f321d7);
-    }
-    .col-sm-4:nth-child(3) .price-card{
-        background: linear-gradient(-45deg,#24ff72,#9a4eff);
-    }
+    } */
     .price-card::before{
         content: '';
         position: absolute;
@@ -149,8 +146,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-box">
-                <div class="row justify-content-center">
+                
+                <div class="row mt-4 justify-content-center">
                     @if($subscriptions->isNotEmpty())
                         @foreach($subscriptions as $sub)
                         <div class="col-sm-4">
@@ -178,7 +175,7 @@
                     @endif
                     <!-- END Col -->
                 </div>
-                </div>
+                
             </div>
         </div>
     </div>
