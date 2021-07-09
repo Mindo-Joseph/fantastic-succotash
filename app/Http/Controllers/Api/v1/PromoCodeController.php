@@ -59,7 +59,7 @@ class PromoCodeController extends Controller{
                     if($total_minimum_spend < $promo_code->minimum_spend){
                         $promo_codes->forget($key);
                     }
-                    if($promo_code->maximum_spend > $total_minimum_spend){
+                    if($total_minimum_spend > $promo_code->maximum_spend){
                         $promo_codes->forget($key);
                     }
                 }
