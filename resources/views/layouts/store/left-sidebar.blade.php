@@ -199,14 +199,14 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <% }); %>
 </script>
 <div class="modal fade edit_address" id="edit-address" tabindex="-1" aria-labelledby="edit-addressLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body p-0">
         <div id="address-map-container">
             <div id="address-map"></div>
         </div>
         <div class="delivery_address p-2 mb-2 position-relative">
-            <button type="button" class="close edit-close position-absolute" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close edit-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <div class="form-group">
                 <label class="delivery-head mb-2">SELECT YOUR LOCATION</label>
                 <div class="address-input-field d-flex align-items-center justify-content-between">
