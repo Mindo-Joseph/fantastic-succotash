@@ -16,20 +16,19 @@ class CMSPageController extends Controller{
                     }))->latest('id')->get();
         foreach ($pages as $page) {
             $page->title = $page->primary->title;
-            $page->url = url('extra-page/'.$page->slug);
             unset($page->primary);
         }
         return $this->successResponse($pages, '', 201);
     }
+
     public function getPageDetail(Request $request){
-        $pages = Page::select('id', 'slug')->with(['primary' => function($query) {
-                    $query->where('is_published', 1)->where('page_id', $request->page_id);
-                }])->latest('id')->first();
-        foreach ($pages as $page) {
-            $page->title = $page->primary->title;
-            $page->description = $page->primary->description;
-            unset($page->primary);
-        }
-        return $this->successResponse($pages, '', 201);
+        $page_id = $request->page_id;
+        $page = Page::select('id', 'slug')->with(['primary' => function($query) use($page_id) {
+                    $query->where('is_published', 1)->where('page_id', $page_id);
+                }])->firstOrFail();
+        $page->title = $page->primary->title;
+        $page->description = $page->primary->description;
+        unset($page->primary);
+        return $this->successResponse($page, '', 201);
     }
 }
