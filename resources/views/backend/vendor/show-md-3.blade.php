@@ -10,7 +10,9 @@
 
             <button type="button" class="btn btn-success btn-sm waves-effect mb-2 waves-light openEditModal"> Edit </button>
             <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light"> Block </button>
+            @if($client_preferences->need_dispacher_ride == 1)
             <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcher" data-id="{{ $vendor->id }}"> Login Into Dispatcher </button>
+            @endif
         </div>
     </div>
     <div class="text-left mt-0 p-3">

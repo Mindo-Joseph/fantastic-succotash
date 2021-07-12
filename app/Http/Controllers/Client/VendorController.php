@@ -490,16 +490,19 @@ class VendorController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function updateCreateVendorInDispatch(Request $request)
-    {
+    {  
         DB::beginTransaction();
         try {
                     $dispatch_domain = $this->checkIfPickupDeliveryOnCommon();
                     if ($dispatch_domain && $dispatch_domain != false) {
                         $dispatch_domain['vendor_id'] = $request->id;
+                        $token = $request->input('_token') ?: $request->header('X-CSRF-TOKEN');
+                        $dispatch_domain['token'] = $token;
                         $data = [];
                         $request_from_dispatch = $this->checkUpdateVendorToDispatch($dispatch_domain);
                         if ($request_from_dispatch && isset($request_from_dispatch['status']) && $request_from_dispatch['status'] == 200) {
                             DB::commit();
+                            $request_from_dispatch['url'] = $request_from_dispatch['url']."?set_unique_order_login=".$token;
                             return $request_from_dispatch;
                         } else {
                             DB::rollback();
@@ -524,23 +527,21 @@ class VendorController extends BaseController
      // check and update in dispatcher panel
      public function checkUpdateVendorToDispatch($dispatch_domain){
         try {
-                $dynamic = uniqid();
-                $call_back_url = route('dispatch-pickup-delivery', $dynamic);
-
-                $tasks = array();
-                $meta_data = '';
+                 
                 $vendor = Vendor::find($dispatch_domain->vendor_id);
+                $unique = Auth::user()->code??rand('11111'.'458965');
                 $postdata =  ['vendor_id' => $dispatch_domain->vendor_id ?? 0,
                 'name' => $vendor->name ?? "Manager".$dispatch_domain->vendor_id,
                 'phone_number' =>  $vendor->phone_no ?? rand('11111'.'458965'),
-                'email' => "969648".$vendor->id."_royodispatch@dispatch.com",
-                'team_tag' => "tag-set".$vendor->id];
+                'email' => $unique.$vendor->id."_royodispatch@dispatch.com",
+                'team_tag' => $unique."_".$vendor->id,
+                'public_session' => $dispatch_domain->token];
            
                 $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,
                                                     'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,
                                                     'content-type' => 'application/json']
                                                         ]);
-                                            
+                                     
                 $url = $dispatch_domain->pickup_delivery_service_key_url;
                 $res = $client->post(
                     $url.'/api/update-create-vendor-order',
@@ -563,9 +564,7 @@ class VendorController extends BaseController
                                 
                     }
                 
-            
-           
-    }
+        }
     
 
     
