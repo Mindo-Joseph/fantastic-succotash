@@ -63,8 +63,14 @@
                 
                 <div class="row mt-4" id="subscription_payment_methods">
                 @if($payment_options == '')
-                    <h6>Payment Methods Not Avaialable</h6>
+                    <div class="col-md-12">
+                        <h6>Payment Methods Not Avaialable</h6>
+                    </div>
                 @else
+                    <div class="col-md-12">
+                        <h5><b>Plan :</b> {{ $subscription->title }}</h5>
+                        <h5><b>Price :</b> ${{ $subscription->price }}</h5>
+                    </div>
                     @foreach($payment_options as $payment_option)
                         @if( ($payment_option->slug != 'cash_on_delivery') && ($payment_option->slug != 'loyalty_points') )
                         <div class="col-md-12">
@@ -88,7 +94,7 @@
                     @endforeach
                     <div class="col-md-12">
                         <button type="button" class="btn btn-solid mt-2 buy_subscription_confirm">Buy Now</button>
-                        <button type="button" class="btn btn-solid mt-2" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-solid mt-2">Cancel</button>
                     </div>
                 @endif
                 </div>

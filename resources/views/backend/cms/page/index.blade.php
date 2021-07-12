@@ -153,6 +153,7 @@
                     }
                 }else{
                     $(':input:text').val('');
+                    $(':input:textarea').val('');
                     $('#edit_page_content #page_id').val('');
                 }
               }
