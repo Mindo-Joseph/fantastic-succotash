@@ -52,6 +52,7 @@ class UserController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function sendToken(Request $request, $domain = '', $uid = 0){
+        $notified = 0;
         $user = User::where('id', Auth::user()->id)->first();
         if (!$user) {
             return redirect()->back()->with('err_user', 'User not found.');
@@ -61,7 +62,6 @@ class UserController extends FrontController
         }
         $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
         $data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from', 'mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
-        $notified = 0;
         $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
         if ($request->type == "phone") {
             $message = "An otp has been sent to your phone. Please check";
@@ -94,14 +94,14 @@ class UserController extends FrontController
                         $data = [
                             'code' => $otp,
                             'link' => "link",
-                            'email' => 'mail2ppundir@gmail.com',
+                            'email' => 'pankaj.pundir@codebrewinnovations.com',
                             'mail_from' => $mail_from,
                             'client_name' => $client_name,
                             'logo' => $client->logo['original'],
                             'customer_name' => ucwords($user->name),
                             'code_text' => 'Enter below code to verify yoour account',
                         ];
-                        dispatch(new \App\Jobs\SendVerifyEmailJob($data))->onQueue('verify_email');;
+                        dispatch(new \App\Jobs\SendVerifyEmailJob($data))->onQueue('verify_email');
                         $notified = 1;
                     } catch (\Exception $e) {
                         $user->save();
