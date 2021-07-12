@@ -53,7 +53,7 @@
                         <div class="footer-contant">
                             <ul>
                                 @foreach($pages as $page)
-                                    <li><a href="{{route('extrapage',['slug' => $page->slug])}}">{{$page->title}}</a></li>
+                                    <li><a href="{{route('extrapage',['slug' => $page->slug])}}">{{$page->primary->title}}</a></li>
                                 @endforeach
                             </ul>
                         </div>

@@ -81,7 +81,7 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-3 add-category">
+        <div class="row mt-3 add-category catalog-cols">
             @foreach($typeArray as $k => $type)
                 @if($type->title == 'Celebrity' && $preference->celebrity_check == 0)
                     @continue
@@ -89,7 +89,7 @@
                 @if($type->title == 'Pickup/Delivery' && $preference->takeaway_check == 0)
                     @continue
                 @endif
-                <div class="col">
+                <div class="col-sm-6 col-md-4">
                   <div class="card p-0 text-center select-category" id="tooltip-container">
                      <input class="form-check-input type-select" for="add" type="radio" id="type_id_{{$type->id}}" {{$type->id == 1 ? 'checked=""' : " "}} name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
                      <label for="type_id_{{$type->id}}" class="card-body p-0 mb-0">

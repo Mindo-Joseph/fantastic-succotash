@@ -8,6 +8,7 @@ use App\Models\Vendor;
 use App\Models\Product;
 use App\Models\Promocode;
 use App\Models\CartCoupon;
+use App\Models\CartProduct;
 use Illuminate\Http\Request;
 use App\Models\PromoCodeDetail;
 use App\Http\Traits\ApiResponser;
@@ -35,6 +36,14 @@ class PromoCodeController extends Controller{
             }
             $now = Carbon::now()->toDateTimeString();
             $product_ids = Product::where('vendor_id', $request->vendor_id)->pluck("id");
+            $cart_products = CartProduct::with(['product.variant' => function($q){
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->groupBy('product_id');
+                        }])->where('vendor_id', $request->vendor_id)->where('cart_id', $request->cart_id)->get();
+            $total_minimum_spend = 0;
+            foreach ($cart_products as $cart_product) {
+                $total_minimum_spend += $cart_product->product->variant->first() ? $cart_product->product->variant->first()->price * $cart_product->quantity : 0;
+            }
             if($product_ids){
                 $promo_code_details = PromoCodeDetail::whereIn('refrence_id', $product_ids->toArray())->pluck('promocode_id');
                 if($promo_code_details->count() > 0){
@@ -46,6 +55,14 @@ class PromoCodeController extends Controller{
                     $q->where('refrence_id', $vendor_id);
                 })->where('restriction_on', 1)->where('is_deleted', 0)->whereDate('expiry_date', '>=', $now)->get();
                 $promo_codes = $promo_codes->merge($result2);
+                foreach ($promo_codes as $key => $promo_code) {
+                    if($total_minimum_spend < $promo_code->minimum_spend){
+                        $promo_codes->forget($key);
+                    }
+                    if($total_minimum_spend > $promo_code->maximum_spend){
+                        $promo_codes->forget($key);
+                    }
+                }
             }
             return $this->successResponse($promo_codes, '', 200);
         } catch (Exception $e) {

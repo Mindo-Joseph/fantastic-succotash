@@ -2,15 +2,15 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
-use Illuminate\Support\Facades\View;
-use App\Models\{Client, ClientPreference, ClientLanguage};
-use Config;
 use Cache;
+use Config;
 use Session;
-use Illuminate\Support\Facades\Auth;
+use Closure;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Redis;
+use App\Models\{Client, ClientPreference, ClientLanguage};
 
 class CustomDomain
 {
@@ -21,13 +21,9 @@ class CustomDomain
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
+    public function handle($request, Closure $next){
       $domain = $request->getHost();
       $subDomain = explode('.', $domain);
-
-      //$existRedis = Redis::get($domain);
-
       return $next($request);
     }
 }

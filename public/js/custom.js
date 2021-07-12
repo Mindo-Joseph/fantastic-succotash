@@ -33,9 +33,8 @@ $(document).ready(function() {
         $.ajax({
             type: "post",
             dataType: "json",
-            url: "{{ route('changePrimaryData') }}",
+            url: change_primary_data_url,
             data: {
-                "_token": "{{ csrf_token() }}",
                 "type": type,
                 "value1": v1, 
                 "value2": v2
@@ -93,6 +92,11 @@ $(document).ready(function() {
         var changSymbol = $(this).attr('currSymbol');
         settingData('currency', changcurrId, changSymbol);
     });
+
+    if($("#stripe-card-element").length > 0){
+        stripeInitialize();
+    }
+
     function stripeInitialize(){
         stripe = Stripe('pk_test_51J0nVZSBx0AFwevbSTIDlYAaLjdsg4V4yoHpSo4BCZqGBzzGeU8Mnw1o0spfOYfMtyCXC11wEn6vBqbJeSNnAkw600U6jkzS3R');
         var elements = stripe.elements();

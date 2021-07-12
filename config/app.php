@@ -165,6 +165,7 @@ return [
         
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Orangehill\Iseed\IseedServiceProvider::class,
 
 
 

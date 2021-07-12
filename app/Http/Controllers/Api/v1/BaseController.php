@@ -1,17 +1,20 @@
 <?php
 
 namespace App\Http\Controllers\Api\v1;
-
+use DB;
 use App;
 use Mail;
 use Config;
 use Session;
+use App\Models\User;
 use ConvertCurrency;
+use App\Models\Cart;
+use App\Models\UserDevice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Twilio\Rest\Client as TwilioClient;
-use App\Models\{Client, Category, Product, ClientPreference, Wallet, UserLoyaltyPoint, LoyaltyCard};
+use App\Models\{Client, Category, Product, ClientPreference, Wallet, UserLoyaltyPoint, LoyaltyCard, Order};
 
 class BaseController extends Controller{
     private $field_status = 2;
@@ -111,7 +114,6 @@ class BaseController extends Controller{
             'Authorization: key=' . $SERVER_API_KEY,
             'Content-Type: application/json',
         ];
-
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
         curl_setopt($ch, CURLOPT_POST, true);
@@ -119,7 +121,6 @@ class BaseController extends Controller{
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-
         $response = curl_exec($ch);
         dd($response);
 
@@ -131,8 +132,7 @@ class BaseController extends Controller{
         return $currency[0]['convertedAmount'];
     }
 
-    public function setMailDetail($mail_driver, $mail_host, $mail_port, $mail_username, $mail_password, $mail_encryption)
-    {
+    public function setMailDetail($mail_driver, $mail_host, $mail_port, $mail_username, $mail_password, $mail_encryption){
         $config = array(
             'driver' => $mail_driver,
             'host' => $mail_host,
@@ -150,10 +150,8 @@ class BaseController extends Controller{
     }
 
     /**     * check if cookie already exist     */
-    public function checkCookies($userid)
-    {
+    public function checkCookies($userid){
         if (isset(Auth::user()->system_user) && !empty(Auth::user()->system_user)) {
-
             $userFind = User::where('system_id', Auth::user()->system_user)->first();
             if($userFind){
                 $cart = Cart::where('user_id', $userFind->id)->first();
@@ -168,33 +166,25 @@ class BaseController extends Controller{
     }
 
     /**     * check if cookie already exist     */
-    public function getLoyaltyPoints($userid, $multiplier)
-    {
-        $loyaltyPoints = UserLoyaltyPoint::where('user_id', $userid)->first();
-        $data = array();
-        if(!$loyaltyPoints){
-            $data['point'] = 0;
-            $data['amount'] = 0;
-        }elseif ($loyaltyPoints->points == 0) {
-            $data['point'] = 0;
-            $data['amount'] = 0;
-        }else{
-            $card = LoyaltyCard::select('id', 'redeem_points_per_primary_currency')->where('id', '>', 0)->first();
-            if(!$card){
-                $data['point'] = 0;
-                $data['amount'] = 0;
-            }else{
-                $data['point'] = $loyaltyPoints->points;
-                $amount = $loyaltyPoints->points / $card->redeem_points_per_primary_currency;
-                $data['amount'] = $amount * $multiplier;
+    public function getLoyaltyPoints($userid, $multiplier){
+        $loyalty_earned_amount = 0;
+        $redeem_points_per_primary_currency = '';
+        $loyalty_card = LoyaltyCard::first();
+        if ($loyalty_card) {
+            $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
+        }
+        $order_loyalty_points_earned_detail = Order::where('user_id', $userid)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
+        if ($order_loyalty_points_earned_detail) {
+            $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
+            if ($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0) {
+                $loyalty_earned_amount = $loyalty_points_used / $redeem_points_per_primary_currency;
             }
         }
-        return $data;
+        return $loyalty_earned_amount;
     }
 
     /**     * check if cookie already exist     */
-    public function getWallet($userid, $multiplier, $currency = 147)
-    {
+    public function getWallet($userid, $multiplier, $currency = 147){
         $wallet = Wallet::where('user_id', $userid)->first();
         if(!$wallet){
             $wallet = new Wallet();

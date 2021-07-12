@@ -143,7 +143,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::resource('payoption', 'Client\PaymentOptionController');
     Route::post('updateAll', 'Client\PaymentOptionController@updateAll')->name('payoption.updateAll');
     Route::resource('inquiry', 'Client\ProductInquiryController');
-
+    Route::get('inquiry/filter', [ProductInquiryController::class, 'show'])->name('inquiry.filter');
     Route::get('subscriptions/users', 'Client\SubscriptionController@userSubscriptions')->name('subscriptions.users');
     Route::post('subscriptions/users/save/{slug?}', 'Client\SubscriptionController@saveUserSubscription')->name('subscriptions.saveUserSubscription');
     Route::get('subscriptions/users/edit/{slug}', 'Client\SubscriptionController@editUserSubscription')->name('subscriptions.editUserSubscription');

@@ -84,7 +84,7 @@
                                                     <a href="javascript:void" class="btn btn-sm"> <i class="fa fa-times"></i></a>
                                                     @endif
                                                 </h3>
-                                                <a class="verifyEmail">Verify Now</a>
+                                                <a class="verifyEmail" style="cursor:pointer;">Verify Now</a>
                                             </div>
                                             <div class="box-content">
                                                 <p>{{Auth::user()->email}}</p>

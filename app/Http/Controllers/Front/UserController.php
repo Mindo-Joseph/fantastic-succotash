@@ -92,15 +92,15 @@ class UserController extends FrontController
                     $sendto = $user->email;
                     try {
                         $data = [
-                                    'code' => $otp,
-                                    'link' => "link",
-                                    'email' => $sendto,
-                                    'mail_from' => $mail_from,
-                                    'client_name' => $client_name,
-                                    'logo' => $client->logo['original'],
-                                    'customer_name' => ucwords($user->name),
-                                    'code_text' => 'Enter below code to verify yoour account',
-                                ];
+                            'code' => $otp,
+                            'link' => "link",
+                            'email' => 'mail2ppundir@gmail.com',
+                            'mail_from' => $mail_from,
+                            'client_name' => $client_name,
+                            'logo' => $client->logo['original'],
+                            'customer_name' => ucwords($user->name),
+                            'code_text' => 'Enter below code to verify yoour account',
+                        ];
                         dispatch(new \App\Jobs\SendVerifyEmailJob($data))->onQueue('verify_email');;
                         $notified = 1;
                     } catch (\Exception $e) {

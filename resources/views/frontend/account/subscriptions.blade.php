@@ -167,11 +167,13 @@
                                     </ul>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-outline text-white openProfileModal" href="javascript:void(0)">Buy Now</button>
+                                    <button type="button" class="btn btn-outline text-white" onclick="return window.open(&quot;{{ route('user.buySubscription', $sub->slug) }}&quot;)">Buy Now</button>
                                 </div>
                             </div>
                         </div>
                         @endforeach
+                    @else
+                        <h5>No Subscription Plan Found</h5>
                     @endif
                     <!-- END Col -->
                 </div>

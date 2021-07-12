@@ -14,7 +14,7 @@
                  <div class="row">
                     <div class="col-md-6">
                          <div class="form-group" id="slugInputEdit">
-                            {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
+                            {!! Form::label('title', 'Url Slug',['class' => 'control-label']) !!} 
                             {!! Form::text('slug', $category->slug, ['class'=>'form-control','id' => 'slug', 'onkeypress' => "return alphaNumeric(event)"]) !!}
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
@@ -82,7 +82,7 @@
                 </div>
             </div>
         </div> 
-        <div class="row mt-3 edit-category">
+        <div class="row mt-3 edit-category catalog-cols">
             @foreach($typeArray as $type)
                 @if($type->title == 'Celebrity' && $preference->celebrity_check == 0)
                     @continue
@@ -90,7 +90,7 @@
                 @if($type->title == 'Pickup/Delivery' && $preference->takeaway_check == 0)
                     @continue
                 @endif
-               <div class="col">
+               <div class="col-sm-6 col-md-4">
                   <div class="card p-0 text-center select-category" id="tooltip-container">
                      <input class="form-check-input type-select" for="edit" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">
                      <label for="type_id_{{$type->id}}" class="card-body p-0 mb-0">

@@ -19,15 +19,28 @@ use App\Http\Controllers\Front\FrontController;
 use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption};
 use Omnipay\Omnipay;
 use Omnipay\Common\CreditCard;
+use App\Http\Traits\ApiResponser;
 
 class CustomerAuthController extends FrontController
 {
 
     public function getTestHtmlPage()
     {
-        
-        $active_methods = PaymentOption::select('id', 'code', 'title')->where('status', 1)->get();
-        return view('test')->with('active_methods', $active_methods);
+        $monthlysales = \DB::table('orders')
+            ->select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'))
+            ->whereRaw('MONTH(created_at) = ?', [date('m')])
+            ->groupBy('x')
+            ->get();
+        $dates = array();
+        $revenue = array();
+        $sales = array();
+        foreach ($monthlysales as $monthly) {
+            $dates[] = $monthly->x;
+            $revenue[] = $monthly->y;
+            $sales[] = $monthly->z;
+        }
+        $data = ['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales];
+        return $this->successResponse($data, '', 200);
     }
 
     public function loginForm($domain = '')
@@ -43,10 +56,10 @@ class CustomerAuthController extends FrontController
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-        if ($request->refferal_code == null) {
+        if (!Session::get('referrer')) {
             return view('frontend.account.registernew')->with(['navCategories' => $navCategories]);
         } else {
-            return view('frontend.account.registernew')->with(['navCategories' => $navCategories, 'code' => $request->refferal_code]);
+            return view('frontend.account.registernew')->with(['navCategories' => $navCategories, 'code' => Session::get('referrer')]);
         }
     }
 
@@ -189,6 +202,7 @@ class CustomerAuthController extends FrontController
                 }
                 Auth::login($user);
                 $this->checkCookies($user->id);
+                Session::forget('referrer');
                 return redirect()->route('user.verify');
             }
         } catch (Exception $e) {

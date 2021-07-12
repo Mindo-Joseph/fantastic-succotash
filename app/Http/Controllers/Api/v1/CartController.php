@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Api\v1;
 use DB;
 use Validation;
 use Carbon\Carbon;
-use App\Model\Client;
+use Client;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet};
+use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet,UserAddress, ClientPreference, Vendor};
 use GuzzleHttp\Client as GCLIENT;
 class CartController extends BaseController{
     use ApiResponser;
@@ -332,9 +332,10 @@ class CartController extends BaseController{
         $total_tax = $total_paying = $total_disc_amount = 0.00; $item_count = 0;
         if($cartData){
             $tax_details = [];
+
             foreach ($cartData as $ven_key => $vendorData) {
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
-                $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
+                $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';$deliver_charge = 0;
                 $couponData = $couponProducts = array();
                 if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->vendor_id == $vendorData->vendor_id)){
                     $now = Carbon::now()->toDateTimeString();
@@ -434,6 +435,9 @@ class CartController extends BaseController{
                             }
                         }
                         $prod->taxdata = $taxData;
+                        if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1){   
+                            $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
+                        }
                         if(!empty($prod->addon)){
                             foreach ($prod->addon as $ck => $addons) {
                                 $opt_quantity_price = 0;
@@ -466,11 +470,10 @@ class CartController extends BaseController{
                             );
                         }
                     }
-                    $deliver_charge = 0;
                     $prod->variants = $variantsData;
                     $prod->variant_options = $variant_options;
                     $prod->deliver_charge = $deliver_charge;
-                    $payable_amount = $payable_amount + $deliver_charge;
+                    $payable_amount = $payable_amount;
                     $prod->product_addons = $vendorAddons;
                 }
                 $couponApplied = 0;
@@ -488,9 +491,10 @@ class CartController extends BaseController{
                 }
                 $vendorData->proSum = $proSum;
                 $vendorData->addonSum = $ttAddon;
+                $vendorData->deliver_charge = $deliver_charge;
                 $vendorData->coupon_apply_on_vendor = $couponApplied;
                 $vendorData->is_coupon_applied = $is_coupon_applied;
-
+                $vendorData->is_coupon_applied = $is_coupon_applied;
                 if(empty($couponData)){
                     $vendorData->couponData = NULL;
                 }else{
@@ -500,7 +504,7 @@ class CartController extends BaseController{
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
                 $vendorData->taxable_amount = $taxable_amount;
-                $vendorData->payable_amount = $payable_amount - $discount_amount;
+                $vendorData->payable_amount = $payable_amount - $discount_amount + $deliver_charge;
                 $total_paying = $total_paying + $payable_amount;
                 $total_tax = $total_tax + $taxable_amount;
                 $total_disc_amount = $total_disc_amount + $discount_amount;
@@ -514,13 +518,54 @@ class CartController extends BaseController{
         $cart->tax_details = $tax_details;
         $cart->gross_paybale_amount = $total_paying;
         $cart->total_discount_amount = $total_disc_amount;
-        $cart->total_payable_amount = $total_paying + $total_tax - $total_disc_amount;
         if($cart->user_id > 0){
-            $cart->loyaltyPoints = $this->getLoyaltyPoints($cart->user_id, $clientCurrency->doller_compare);
+            $cart->loyalty_amount = $this->getLoyaltyPoints($cart->user_id, $clientCurrency->doller_compare);
             // $cart->wallet = $this->getWallet($cart->user_id, $clientCurrency->doller_compare, $currency);
         }
         $cart->products = $cartData;
         $cart->item_count = $item_count;
+        $cart->total_payable_amount = $total_paying + $total_tax - $total_disc_amount - $cart->loyalty_amount;
         return $cart;
+    }
+    public function getDeliveryFeeDispatcher($vendor_id){
+        try {
+                $dispatch_domain = $this->checkIfLastMileOn();
+                if ($dispatch_domain && $dispatch_domain != false) {
+                    $customer = User::find(Auth::id());
+                    $cus_address = UserAddress::where('user_id',Auth::id())->orderBy('is_primary','desc')->first();
+                    if($cus_address){
+                        $tasks = array();
+                        $vendor_details = Vendor::find($vendor_id);
+                            $location[] = array('latitude' => $vendor_details->latitude??30.71728880,
+                                                'longitude' => $vendor_details->longitude??76.80350870
+                                                );
+                            $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
+                                              'longitude' => $cus_address->longitude??76.803508700000
+                                            );
+                            $postdata =  ['locations' => $location];
+                            $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
+                                                        'shortcode' => $dispatch_domain->delivery_service_key_code,
+                                                        'content-type' => 'application/json']
+                                                            ]);
+                            $url = $dispatch_domain->delivery_service_key_url;                      
+                            $res = $client->post($url.'/api/get-delivery-fee',
+                                ['form_params' => ($postdata)]
+                            );
+                            $response = json_decode($res->getBody(), true);
+                            if($response && $response['message'] == 'success'){
+                                return $response['total'];
+                            }
+                    }
+                }
+            }    
+            catch(\Exception $e){}
+    }
+    # check if last mile delivery on 
+    public function checkIfLastMileOn(){
+        $preference = ClientPreference::first();
+        if($preference->need_delivery_service == 1 && !empty($preference->delivery_service_key) && !empty($preference->delivery_service_key_code) && !empty($preference->delivery_service_key_url))
+            return $preference;
+        else
+            return false;
     }
 }

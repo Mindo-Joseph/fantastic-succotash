@@ -141,46 +141,31 @@
     });
 
     $(".openEditModal").click(function (e) {
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
             }
         });
         e.preventDefault();
-
         var uri =  "{{ isset($vendor) ? route('vendor.edit', $vendor->id) : '' }}";
-
-        console.log(uri);
         $.ajax({
             type: "get",
             url: uri,
             data: '',
             dataType: 'json',
             success: function (data) {
-                $('#edit-form #editCardBox').html(data.html);
-
-                $('#edit-form').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-
                 $('.dropify').dropify();
+                $('#edit-form').modal('show');
+                $('#edit-form #editCardBox').html(data.html);
                 $('.selectize-select').selectize();
                 dine = document.getElementsByClassName('dine_in');
                 var switchery = new Switchery(dine[0]);
-
                 take = document.getElementsByClassName('takeaway');
                 var switchery = new Switchery(take[0]);
-
                 delivery = document.getElementsByClassName('delivery');
                 var switchery = new Switchery(delivery[0]);
-                // categoryShow = document.getElementsByClassName('categoryShow');
-                // var switchery = new Switchery(categoryShow[0]);
-                
                 autocompletesWraps.push('edit');
                 loadMap(autocompletesWraps); 
-
             },
             error: function (data) {
                 console.log('data2');
@@ -492,7 +477,9 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
     }
 });
+
 e.preventDefault();
+
 
 var uri =  "{{route('update.Create.Vendor.In.Dispatch')}}";
 var id =    $(this).data('id');
@@ -503,13 +490,18 @@ $.ajax({
     data: {id:id},
     dataType: 'json',
     success: function (data) {
-    console.log(data);   
+    var url = data.url;
+    window.open(url, '_blank');
     },
     error: function (data) {
-        console.log('data');
+        alert(data.message);
     },
     beforeSend: function(){
         $(".loader_box").show();
+        var token = $('meta[name="csrf_token"]').attr('content');
+            if (token) {
+                  return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            } 
     },
     complete: function(){
         $(".loader_box").hide();

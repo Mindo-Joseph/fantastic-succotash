@@ -2690,6 +2690,50 @@ form input.form-control[placeholder="Address"] {
 }
 
 
+.checkbox-input input[type="checkbox"] {
+  padding: 0;
+  height: initial;
+  width: initial;
+  margin-bottom: 0;
+  display: none;
+  cursor: pointer;
+}
+
+.checkbox-input label {
+  position: relative;
+  cursor: pointer;
+}
+
+.checkbox-input label:before {
+    content: '';
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 2px solid var(--theme-deafult);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 5%), inset 0px -15px 10px -12px rgb(0 0 0 / 5%);
+    padding: 5px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 6px;
+    margin-top: -3px;
+    border-radius: 2px;
+}
+
+.checkbox-input input:checked + label:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 5px;
+    left: 4px;
+    width: 5px;
+    height: 8px;
+    border: solid var(--theme-deafult);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+
 
 
 

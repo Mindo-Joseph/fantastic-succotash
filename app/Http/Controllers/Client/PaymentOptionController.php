@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Models\Brand;
 use App\Http\Controllers\Client\BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
