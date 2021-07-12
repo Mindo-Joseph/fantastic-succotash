@@ -17,9 +17,11 @@ class LoyaltyController extends BaseController
      */
     public function index()
     {
+        $status = 0;
+        $loyaltyCard = LoyaltyCard::first();
         $loyaltycards = LoyaltyCard::where('status', '!=', '2')->get();
-        $loyaltyCard = LoyaltyCard::firstOrFail();
-        return view('backend/loyality/index')->with(['loyaltycards' => $loyaltycards, 'status' => $loyaltyCard->loyalty_check]);
+        $status = $loyaltyCard ? $loyaltyCard->loyalty_check : 0;
+        return view('backend/loyality/index')->with(['loyaltycards' => $loyaltycards, 'status' => $status]);
     }
 
     /**
