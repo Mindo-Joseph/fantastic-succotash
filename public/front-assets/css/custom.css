@@ -1278,8 +1278,8 @@ h1,h2,h3,h4,h5,h6{
 
 .order_detail:before {
     content: "";
-    border-left: 1px solid #43bee1e8;
-    background-color: #43bee1e8;
+    border-left: 1px solid var(--theme-deafult)e8;
+    background-color: var(--theme-deafult)e8;
     position: absolute;
     height: calc(100% - 30px);
     left: -1px;
@@ -1293,7 +1293,7 @@ h1,h2,h3,h4,h5,h6{
     position: absolute;
     left: -23px;
     top: 5px;
-    background: #53c3e3;
+    background: var(--theme-deafult);
     border-radius: 50%;
 }
 
@@ -1328,14 +1328,14 @@ h1,h2,h3,h4,h5,h6{
 .items_price {
     font-weight: 700;
     font-size: 12px;
-    color: #53c3e3;
+    color: var(--theme-deafult);
     margin: 0;
 }
 
 .item_no {
     top: -7px;
     right: -6px;
-    background: #43bee1;
+    background: var(--theme-deafult);
     width: 22px;
     height: 22px;
     line-height: 22px;
@@ -1408,7 +1408,7 @@ h1,h2,h3,h4,h5,h6{
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #43bee1;
+    background: var(--theme-deafult);
     cursor: pointer;
     box-shadow: 0 0 0 rgb(67 190 225 / 50%);
     position: absolute;
@@ -1438,7 +1438,7 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .order_detail:hover{
-    color: #53c3e3;
+    color: var(--theme-deafult);
 }
 
 .status_box li img {
@@ -2049,10 +2049,6 @@ footer .form-control {
     color: var(--theme-deafult);
 }
 
-.box-info .name_ b {
-    color:#000000;
-}
-
 .change-language:before,.change-currency:before {
     content: none;
 }
@@ -2489,7 +2485,7 @@ body .rating-form .btn-reset {
     top: 0;
     height: 12px;
     width: 12px;
-    background-color: #43bee1;
+    background-color: var(--theme-deafult);
     border-radius: 50%;
     border: 3px solid #fff;
     animation: pulse-animation 2s infinite;
@@ -2547,7 +2543,7 @@ td.order_address {
 
 .return-order th {
     padding: 10px 0;
-    color: #000;
+    /* color: #000; */
     text-transform: capitalize;
     font-weight: 600;
 }
@@ -2724,7 +2720,7 @@ form input.form-control[placeholder="Address"] {
     content: '';
     display: block;
     position: absolute;
-    top: 5px;
+    top: 6px;
     left: 4px;
     width: 5px;
     height: 8px;
@@ -2733,7 +2729,11 @@ form input.form-control[placeholder="Address"] {
     transform: rotate(45deg);
 }
 
-
+.hide {
+    opacity: 0;
+    right: 0;
+    z-index: -1;
+}
 
 
 

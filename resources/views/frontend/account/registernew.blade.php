@@ -113,8 +113,12 @@
                                     @enderror
                                 </div>                                    
                             </div>
-                            <div class="row form-group mb-0 align-items-end">
-                                <div class="col-md-6 mb-3">
+                            <div class="row form-group mb-0 align-items-center">
+                                <div class="col-md-6 checkbox-input">
+                                    <input type="checkbox" id="html">
+                                    <label for="html">I agree to share my contact details <a href="#">terms and conditions</a>.</label>
+                                </div>
+                                <div class="col-md-6 hide position-absolute">
                                     <label for="">Referral Code</label>
                                     <input type="text" class="form-control" id="refferal_code" placeholder="Refferal Code" name="refferal_code" value="{{ old('refferal_code', $code ?? '')}}">
                                     @if($errors->first('refferal_code'))
@@ -122,13 +126,15 @@
                                             <strong>{{ $errors->first('refferal_code') }}</strong>
                                         </span>
                                     @endif
-                                </div>
-                                <div class="col-md-6 mb-3">
+                                </div>                                
+                            </div> 
+                            <div class="row mt-3">
+                                <div class="col-md-12">
                                     <input type="hidden" name="device_type" value="web">
                                     <input type="hidden" name="device_token" value="web">
                                     <button type="submit" class="btn btn-solid submitLogin w-100">Create An Account</button>
                                 </div>                                    
-                            </div>                               
+                            </div>                              
                         </form>
                     </div>
                 </div>                        
