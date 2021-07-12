@@ -142,11 +142,23 @@ class StoreController extends Controller{
         $dates = [];
         $sales = [];
         $revenue = [];
- 		$monthlysales = \DB::table('orders')
-            ->select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'))
-            ->whereRaw('MONTH(created_at) = ?', [date('m')])
-            ->groupBy('x')
-            ->get();
+        $monthly_sales_query = OrderVendor::select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'));
+        switch (variable) {
+        	case 'monthly':
+        		$created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')])
+    		break;
+    		case 'weekly':
+    			Carbon::setWeekStartsAt(Carbon::SUNDAY);
+        		$created_at = $monthly_sales_query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]); 
+    		break;
+    		case 'yearly':
+        		$created_at = $monthly_sales_query->whereRaw('YEAR(created_at) = ?', [date('Y')]);
+    		break;
+        	default:
+    			$created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')])
+    		break;
+        }
+ 		$monthlysales = $monthly_sales_query->groupBy('x')->get();
         foreach ($monthlysales as $monthly) {
             $dates[] = $monthly->x;
             $sales[] = $monthly->z;

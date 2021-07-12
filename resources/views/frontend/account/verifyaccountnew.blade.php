@@ -1,10 +1,10 @@
 @extends('layouts.store', ['title' => 'Verify Account'])
 @section('content')
 <style type="text/css">
-a.disabled {
-  pointer-events: none;
-  cursor: default;
-}
+    a.disabled {
+      pointer-events: none;
+      cursor: default;
+    }
 </style>
 <header>
     <div class="mobile-fix-option"></div>
@@ -143,13 +143,22 @@ a.disabled {
         verifyUser('phone');
     });
     function verifyUser($type = 'email') {
-        $('.verifyEmail').addClass('disabled').html('SENDING...');
+        if($type == 'email'){
+            $('.verifyEmail').addClass('disabled').html('SENDING...');
+        }else if ($type == 'phone') {
+            $('.verifyPhone').addClass('disabled').html('SENDING...');
+        }
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
             url: "{{ route('email.send', Auth::user()->id) }}",
             data: {"_token": "{{ csrf_token() }}",type: $type,},
             success: function(response) {
+                if($type == 'email'){
+                    $('.verifyEmail').removeClass('disabled').html('RESEND');
+                }else{
+                    $('.verifyPhone').removeClass('disabled').html('RESEND');
+                }
                 if($type == 'email'){
                  $('.edit_email_feedback').html(response.message);
                 }else{
