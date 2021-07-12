@@ -9,7 +9,6 @@
         <meta name="keywords" content="{{$category->translation->first()->meta_keywords}}">
     @endif
 @else
-    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
     <meta name="keywords" content="Royoorders">
 @endif
 <meta name="author" content="Royoorders">

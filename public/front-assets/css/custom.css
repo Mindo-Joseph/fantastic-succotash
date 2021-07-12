@@ -2732,8 +2732,23 @@ form input.form-control[placeholder="Address"] {
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
-
-
+.hide {
+    right: 0;
+    opacity: 0;
+    z-index: -1;
+}
+.dashboard .copy-message {
+    position: absolute;
+    bottom: -25px;
+    right: 10px;
+    background: var(--theme-deafult);
+    opacity: 0.7;
+    color: #ffff;
+    padding: 0 10px;
+    border-radius: 50px;
+    line-height: 24px;
+    font-size: 14px;
+}
 
 
 
@@ -2806,7 +2821,23 @@ form input.form-control[placeholder="Address"] {
 
 
 
-
+.iti__flag-container li,
+    .flag-container li {
+        display: block;
+    }
+    .iti.iti--allow-dropdown,
+    .allow-dropdown {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+    .iti.iti--allow-dropdown .phone,
+    .flag-container .phone {
+        padding: 17px 0 17px 100px !important;
+    }
+    .invalid-feedback {
+        display: block;
+    }
 
 
 

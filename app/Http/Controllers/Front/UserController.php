@@ -70,7 +70,7 @@ class UserController extends FrontController
                 $user->phone_token = $otp;
                 $user->phone_token_valid_till = $newDateTime;
                 $provider = $data->sms_provider;
-                $to = $user->dial_code.$user->phone_number;
+                $to = '+'.$user->dial_code.$user->phone_number;
                 $body = "Dear " . ucwords($user->name) . ", Please enter OTP " . $otp . " to verify your account.";
                 if (!empty($data->sms_key) && !empty($data->sms_secret) && !empty($data->sms_from)) {
                     $send = $this->sendSms($provider, $data->sms_key, $data->sms_secret, $data->sms_from, $to, $body);
@@ -94,7 +94,7 @@ class UserController extends FrontController
                         $data = [
                             'code' => $otp,
                             'link' => "link",
-                            'email' => 'pankaj.pundir@codebrewinnovations.com',
+                            'email' => $sendto,
                             'mail_from' => $mail_from,
                             'client_name' => $client_name,
                             'logo' => $client->logo['original'],
