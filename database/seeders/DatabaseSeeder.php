@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
               SubscriptionFeaturesListSeeder::class,
               SubscribedStatusOptionsSeeder::class
           ]);
-        $this->call(UsersTableSeeder::class);
+        // $this->call(UsersTableSeeder::class);
         $this->call(AppStylingOptionsTableSeeder::class);
     }
 }

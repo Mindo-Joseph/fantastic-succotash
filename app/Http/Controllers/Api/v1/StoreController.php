@@ -138,4 +138,21 @@ class StoreController extends Controller{
             return $this->errorResponse($e->getMessage(), $e->getCode());
     	}
     }
+    public function getMyStoreRevenueDetails(){
+        $dates = [];
+        $sales = [];
+        $revenue = [];
+ 		$monthlysales = \DB::table('orders')
+            ->select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'))
+            ->whereRaw('MONTH(created_at) = ?', [date('m')])
+            ->groupBy('x')
+            ->get();
+        foreach ($monthlysales as $monthly) {
+            $dates[] = $monthly->x;
+            $sales[] = $monthly->z;
+            $revenue[] = $monthly->y;
+        }
+        $data = ['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales];
+        return $this->successResponse($data, '', 200);
+    }
 }
