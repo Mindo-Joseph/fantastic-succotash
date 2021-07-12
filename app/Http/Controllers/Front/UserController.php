@@ -94,7 +94,7 @@ class UserController extends FrontController
                         $data = [
                             'code' => $otp,
                             'link' => "link",
-                            'email' => 'pankaj.pundir@codebrewinnovations.com',
+                            'email' => $sendto,
                             'mail_from' => $mail_from,
                             'client_name' => $client_name,
                             'logo' => $client->logo['original'],
