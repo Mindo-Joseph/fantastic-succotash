@@ -44,6 +44,9 @@
                             </ul>
                         </div>
                     @endif
+                    <div class="payment_response">
+                        <div class="alert p-0 m-0" role="alert"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -76,13 +79,13 @@
                         <div class="col-md-12">
                             <label class="radio mt-2">
                                 {{ $payment_option->title }}
-                                <input type="radio" name="subscription_payment_method" id="radio-{{ $payment_option->slug }}" value="{{ $payment_option->slug }}" data-payment_option_id="{{ $payment_option->id }}">
+                                <input type="radio" name="subscription_payment_method" id="radio-{{ $payment_option->slug }}" value="{{ $payment_option->slug }}">
                                 <span class="checkround"></span>
                             </label>
                             @if($payment_option->slug == 'stripe')
                                 <div class="col-md-12 mt-3 mb-3 stripe_element_wrapper d-none">
                                     <div class="form-control">
-                                        <label class="d-flex flex-row pt-1 pb-1 mb-0">
+                                        <label class="d-flex flex-row mb-0">
                                             <div id="stripe-card-element"></div>
                                         </label>
                                     </div>
@@ -93,8 +96,8 @@
                         @endif
                     @endforeach
                     <div class="col-md-12">
-                        <button type="button" class="btn btn-solid mt-2 buy_subscription_confirm">Buy Now</button>
-                        <button type="button" class="btn btn-solid mt-2">Cancel</button>
+                        <button type="button" class="btn btn-solid mt-2 buy_subscription">Buy Now</button>
+                        <button type="button" class="btn btn-solid mt-2 black-btn">Cancel</button>
                     </div>
                 @endif
                 </div>
@@ -103,6 +106,26 @@
         </div>
     </div>
 </section>
+
+<div class="modal fade" id="confirm-buy-subscription" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="confirm_buy_subscriptionLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="confirm_buy_subscriptionLabel">Confirm Subscription</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="m-0">Do you really want to buy this subscription ?</h6>
+      </div>
+      <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+        <button type="button" class="btn btn-solid" id="continue_buy_subscription_btn" data-id="{{ $subscription->slug }}">Continue</button>
+        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 @endsection
 
