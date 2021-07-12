@@ -2804,6 +2804,9 @@ form input.form-control[placeholder="Address"] {
     background-color: rgb(255 255 255 / 0%);
 }
 
+.dark .divider_line{
+    opacity: 1;
+}
 
 
 
