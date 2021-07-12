@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Model\Agent;
-use App\Model\Client;
+use Client;
 use App\Model\Customer;
 use App\Model\Geo;
 use App\Model\Location;
-use App\Model\Order;
+use Order;
 use App\Model\Roster;
 use App\Model\Task;
 use App\Model\TaskReject;

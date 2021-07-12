@@ -41,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         $pages = '';
         if(Schema::hasTable('pages')){
-            $pages = Page::get();
+            $pages = Page::with('primary')->get();
         }
         $social_media_details = '';
         if(Schema::hasTable('social_media'))

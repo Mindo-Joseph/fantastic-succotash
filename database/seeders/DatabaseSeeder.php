@@ -31,5 +31,7 @@ class DatabaseSeeder extends Seeder
               ReturnReasonSeeder::class,
               LuxuryOptionsSeeder::class,
           ]);
+        $this->call(UsersTableSeeder::class);
+        $this->call(AppStylingOptionsTableSeeder::class);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Models\Country;
 use DB;
 use Config;
 use Validation;

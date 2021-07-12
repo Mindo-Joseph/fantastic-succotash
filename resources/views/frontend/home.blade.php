@@ -16,11 +16,11 @@
 <section class="p-0 small-slider">
     <div class="slide-1 home-slider">
         @foreach($banners as $banner)
-        <div>
-            <div class="home text-center">
-                <img src="{{$banner->image['proxy_url'] . '1500/600' . $banner->image['image_path']}}" class="bg-img blur-up lazyload" alt="">
+            <div>
+                <div class="home text-center">
+                    <img src="{{$banner->image['proxy_url'] . '1500/600' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
+                </div>
             </div>
-        </div>
         @endforeach
     </div>
 </section>
@@ -75,7 +75,11 @@
                     <div class="inner_spacing">
                         <h3><%= product.title %></h3>
                         <p><%= product.vendor_name %></p>
-                        <h4><%= product.price %></h4>
+                        <h4>
+                            <% if(product.inquiry_only == 0) { %>
+                                <%= product.price %>
+                            <% } %>
+                        </h4>
                         @if($client_preference_detail)
                             @if($client_preference_detail->rating_check == 1)
                                 <div class="rating">
@@ -91,7 +95,6 @@
         </div>
     <% }); %>
 </script>
-
 @if($count > 1)
 <section class="home-tabbar">
     <div class="container">
@@ -101,7 +104,8 @@
                     @if($clientPreferences->delivery_check == 1)
                     <li class="nav-item">
                         <a class="nav-link {{$count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-selected="false" data-rel="delivery_tab">
-                            <i><span class="icon-shipped"></span></i> <span>Delivery</span>
+                            <i><span class="icon-shipped"></span></i>
+                            <span>Delivery</span>
                         </a>
                         <div class="material-border"></div>
                     </li>
@@ -109,7 +113,8 @@
                     @if($clientPreferences->dinein_check == 1)
                     <li class="nav-item">
                         <a class="nav-link {{$clientPreferences->dinein_check == 1 && $clientPreferences->delivery_check != 1? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-selected="true" data-rel="dinein_tab">
-                            <i><span class="icon-dine-in"></span></i> <span>Dine-In</span>
+                            <i><span class="icon-dine-in"></span></i>
+                            <span>Dine-In</span>
                         </a>
                         <div class="material-border"></div>
                     </li>
@@ -117,7 +122,8 @@
                     @if($clientPreferences->takeaway_check == 1)
                     <li class="nav-item">
                         <a class="nav-link {{$count == 1 ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-selected="false" data-rel="takeaway_tab">
-                            <i><span class="icon-take-away"></span></i> <span>Takeaway</span>
+                            <i><span class="icon-take-away"></span></i> 
+                            <span>Takeaway</span>
                         </a>
                         <div class="material-border"></div>
                     </li>
@@ -127,7 +133,6 @@
         </div>
 </section>
 @endif
-
 <section class="section-b-space p-t-0 pt-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
     <div class="container">
         <div class="row">
@@ -145,8 +150,6 @@
         </div>
     </div>
 </section>
-
-
 <section class="section-b-space">
     <div class="container">
         <div class="row d-none" id="new_products_wrapper">
@@ -182,7 +185,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row d-none mt-4" id="onsale_products_wrapper">
             <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                 <div class="title1">

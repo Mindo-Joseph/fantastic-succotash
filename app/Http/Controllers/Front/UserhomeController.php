@@ -25,13 +25,16 @@ class UserhomeController extends FrontController
     public function getExtraPage(Request $request){
         $language_id = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($language_id);
-        $page_detail = Page::where('slug', $request->slug)->first();
+        $page_detail = Page::with('primary')->where('slug', $request->slug)->first();
         return view('frontend.extrapage', compact('page_detail', 'navCategories'));
     }
     public function index(Request $request){
         try {
             $home = array();
             $vendor_ids = array();
+            if ($request->has('ref')) {
+                session(['referrer' => $request->query('ref')]);
+            }
             $latitude = Session::get('latitude');
             $longitude = Session::get('longitude');
             $curId = Session::get('customerCurrency');
@@ -133,6 +136,7 @@ class UserhomeController extends FrontController
                 'sku' => $new_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
                 'url_slug' => $new_product_detail->url_slug,
+                'inquiry_only' => $new_product_detail->inquiry_only,
                 'vendor_name' => $new_product_detail->vendor ? $new_product_detail->vendor->name : '',
                 'price' => Session::get('currencySymbol').' '.($new_product_detail->variant->first()->price * $multiply),
             );
@@ -146,6 +150,7 @@ class UserhomeController extends FrontController
                 'sku' => $feature_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
                 'url_slug' => $feature_product_detail->url_slug,
+                'inquiry_only' => $feature_product_detail->inquiry_only,
                 'vendor_name' => $feature_product_detail->vendor ? $feature_product_detail->vendor->name : '',
                 'price' => Session::get('currencySymbol').' '.($feature_product_detail->variant->first()->price * $multiply),
             );
@@ -159,6 +164,7 @@ class UserhomeController extends FrontController
                 'sku' => $on_sale_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
                 'url_slug' => $on_sale_product_detail->url_slug,
+                'inquiry_only' => $on_sale_product_detail->inquiry_only,
                 'vendor_name' => $on_sale_product_detail->vendor ? $on_sale_product_detail->vendor->name : '',
                 'price' => Session::get('currencySymbol').' '.($on_sale_product_detail->variant->first()->price * $multiply),
             );
@@ -236,7 +242,7 @@ class UserhomeController extends FrontController
                                         $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                                         $q->groupBy('product_id');
                                     },
-                                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating');
+                                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating', 'inquiry_only');
         
                     if($where !== ''){
             $products = $products->where($where, 1);
@@ -281,8 +287,7 @@ class UserhomeController extends FrontController
         return response()->json(['status'=>'success', 'message' => 'Saved Successfully!', 'data' => $data]);
     }
 
-    public function changePaginate(Request $request)
-    {
+    public function changePaginate(Request $request){
         $perPage = 12;
         if($request->has('itemPerPage')){
              $perPage = $request->itemPerPage;
@@ -291,8 +296,7 @@ class UserhomeController extends FrontController
         return response()->json(['status'=>'success', 'message' => 'Saved Successfully!', 'data' => $perPage]);
     }
 
-    public function getClientPreferences(Request $request)
-    {
+    public function getClientPreferences(Request $request){
        $clientPreferences = ClientPreference::first();
        if($clientPreferences){
            $dinein_check = $clientPreferences->dinein_check;

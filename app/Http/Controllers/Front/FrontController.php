@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Models\Cart;
+use App\Models\User;
 use DB;
 use App;
 use Config;
