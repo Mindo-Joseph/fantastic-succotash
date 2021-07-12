@@ -115,9 +115,8 @@
                                 </div>                                    
                             </div>
                             <div class="row form-group mb-0 align-items-center">
-                                <div class="col-md-6 checkbox-input">
-                                <input type="checkbox" id="html">
-                                <label for="html">I accept the Terms and Conditions and Privacy Policy.</label>
+                                <div class="col-md-12">
+                                    <label for="html">By creating an account you agree to the <a href="{{url('extra-page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and <a href="{{url('extra-page/privacy-policy')}}" target="_blank">Privacy Policy.</a></label>
                                 </div>
                                 <div class="col-md-6 hide position-absolute">
                                 <label for="">Referral Code</label>
