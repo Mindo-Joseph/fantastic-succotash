@@ -22,8 +22,9 @@ class CMSPageController extends Controller{
     }
 
     public function getPageDetail(Request $request){
-        $page = Page::select('id', 'slug')->with(['primary' => function($query) {
-                    $query->where('is_published', 1)->where('page_id', $request->page_id);
+        $page_id = $request->page_id;
+        $page = Page::select('id', 'slug')->with(['primary' => function($query) use($page_id) {
+                    $query->where('is_published', 1)->where('page_id', $page_id);
                 }])->firstOrFail();
         $page->title = $page->primary->title;
         $page->description = $page->primary->description;
