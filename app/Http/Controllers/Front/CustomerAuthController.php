@@ -151,7 +151,6 @@ class CustomerAuthController extends FrontController
     /**     * Display register Form     */
     public function register(SignupRequest $req, $domain = '')
     {
-        dd($req->all());
         try {
             $user = new User();
             $county = Country::where('code', strtoupper($req->countryData))->first();
