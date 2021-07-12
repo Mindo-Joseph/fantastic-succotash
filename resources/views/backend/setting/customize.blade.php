@@ -323,6 +323,26 @@
     var options_iconpicker = {
         icons: [
         {
+            title: "fas fa-blog",
+            searchTerms: ['social']
+        },
+        {
+            title: "fab fa-vk",
+            searchTerms: ['social']
+        },
+        {
+            title: "fab fa-github",
+            searchTerms: ['social']
+        },
+        {
+            title: "fab fa-reddit",
+            searchTerms: ['social']
+        },
+        {
+            title: "fab fa-whatsapp",
+            searchTerms: ['social']
+        },
+        {
             title: "fab fa-facebook",
             searchTerms: ['social']
         },
