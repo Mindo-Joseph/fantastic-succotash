@@ -143,6 +143,7 @@ class StoreController extends Controller{
         $sales = [];
         $revenue = [];
         $type = $request->type;
+        $vendor_id = $request->vendor_id;
         $monthly_sales_query = OrderVendor::select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'));
         switch ($type) {
         	case 'monthly':
@@ -159,7 +160,7 @@ class StoreController extends Controller{
     			$created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')]);
     		break;
         }
- 		$monthlysales = $monthly_sales_query->groupBy('x')->get();
+ 		$monthlysales = $monthly_sales_query->where('vendor_id', $vendor_id)->groupBy('x')->get();
         foreach ($monthlysales as $monthly) {
             $dates[] = $monthly->x;
             $sales[] = $monthly->z;
