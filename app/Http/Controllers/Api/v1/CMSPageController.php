@@ -16,11 +16,12 @@ class CMSPageController extends Controller{
                     }))->latest('id')->get();
         foreach ($pages as $page) {
             $page->title = $page->primary->title;
-            $page->url = asset('extra-page/'.$page->slug);
+            $page->url = url('extra-page', [$page->slug]);
             unset($page->primary);
         }
         return $this->successResponse($pages, '', 201);
     }
+    
     public function getPageDetail(Request $request){
         $pages = Page::select('id', 'slug')->with(['primary' => function($query) {
                     $query->where('is_published', 1)->where('page_id', $request->page_id);
