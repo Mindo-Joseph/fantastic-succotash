@@ -127,7 +127,7 @@
                                 <a class="copy-icon m-0" id="copy_icon" data-url="{{url('/'.'?ref=')}}{{(isset($userRefferal['refferal_code'])) ? $userRefferal['refferal_code'] : ''}}" style="cursor:pointer;">
                                     <i class="fa fa-copy"></i>
                                 </a>
-                                <p id="copy_message"></p>
+                                <p id="copy_message" class="copy-message"></p>
                             </div>
                         </div>
                         <div class="row mt-3 profile-page">

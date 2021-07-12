@@ -1,5 +1,11 @@
 @extends('layouts.store', ['title' => 'Verify Account'])
 @section('content')
+<style type="text/css">
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+</style>
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -48,10 +54,6 @@
                                         <p class="mb-1">If you didn’t receive a code?</p>
                                         <a class="verifyEmail" href="javascript:void(0)"><u>RESEND</u></a>
                                     </div>
-                                    <button class="btn btn-primary" type="button" disabled>
-  <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-  <span class="sr-only">Loading...</span>
-</button>
                                     <div class="col-md-12 mt-3">
                                         <button type="button" class="btn btn-solid" id="verify_email_token">Verify</button>
                                     </div>
@@ -141,6 +143,7 @@
         verifyUser('phone');
     });
     function verifyUser($type = 'email') {
+        $('.verifyEmail').addClass('disabled').html('SENDING...');
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
