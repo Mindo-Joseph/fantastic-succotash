@@ -119,6 +119,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/wallet/history','Front\WalletController@index')->name('user.walletHistory');
 	Route::get('user/subscriptions', 'Front\SubscriptionController@subscriptions')->name('user.subscriptions');
 	Route::get('user/subscriptions/buy/{slug}', 'Front\SubscriptionController@buySubscription')->name('user.buySubscription');
+	Route::get('payment/paypal/completeCheckout', 'Front\PaymentController@paypalCompleteCheckout')->name('payment.paypalCompleteCheckout');
 	 // Rating & review 
  	Route::group(['prefix' => 'rating'], function () {
 		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');
