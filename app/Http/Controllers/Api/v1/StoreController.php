@@ -138,7 +138,7 @@ class StoreController extends Controller{
             return $this->errorResponse($e->getMessage(), $e->getCode());
     	}
     }
-    public function getMyStoreRevenueDetails(){
+    public function getMyStoreRevenueDetails(Request $request){
         $dates = [];
         $sales = [];
         $revenue = [];
