@@ -146,7 +146,7 @@ class StoreController extends Controller{
         $monthly_sales_query = OrderVendor::select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'));
         switch ($type) {
         	case 'monthly':
-        		$created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')])
+        		$created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')]);
     		break;
     		case 'weekly':
     			Carbon::setWeekStartsAt(Carbon::SUNDAY);
@@ -156,7 +156,7 @@ class StoreController extends Controller{
         		$created_at = $monthly_sales_query->whereRaw('YEAR(created_at) = ?', [date('Y')]);
     		break;
         	default:
-    			$created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')])
+    			$created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')]);
     		break;
         }
  		$monthlysales = $monthly_sales_query->groupBy('x')->get();
