@@ -151,6 +151,7 @@ class CustomerAuthController extends FrontController
     /**     * Display register Form     */
     public function register(SignupRequest $req, $domain = '')
     {
+        dd($req->all());
         try {
             $user = new User();
             $county = Country::where('code', strtoupper($req->countryData))->first();
@@ -168,7 +169,7 @@ class CustomerAuthController extends FrontController
             $user->phone_token = $phoneCode;
             $user->phone_code = $req->dialCode;
             $user->email_token = $emailCode;
-            $user->phone_number = $req->full_number;
+            $user->phone_number = $req->phone_number;
             $user->phone_token_valid_till = $sendTime;
             $user->email_token_valid_till = $sendTime;
             $user->password = Hash::make($req->password);
