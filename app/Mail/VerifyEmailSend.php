@@ -16,9 +16,9 @@ class VerifyEmailSend extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($mailData)
     {
-        
+        $this->mailData = $mailData;
     }
 
     /**
@@ -28,6 +28,6 @@ class VerifyEmailSend extends Mailable
      */
     public function build()
     {
-        return $this->view('email.verify');
+        return $this->view('email.verify')->from($this->mailData['mail_from'])->with('mailData', $this->mailData);
     }
 }

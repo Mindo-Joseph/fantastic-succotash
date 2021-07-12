@@ -32,40 +32,42 @@
         <div class="row">
             <div class="col-lg-12 mb-lg-0 mb-3 text-center">
                 <h3 class="mb-2">New Customer</h3>
-                @if(session('preferences')->fb_login == 1 || session('preferences')->twitter_login == 1 || session('preferences')->google_login == 1 || session('preferences')->apple_login == 1)
-                <ul class="social-links d-flex align-items-center mx-auto mb-4 mt-3">
-                    @if(session('preferences')->google_login == 1)
-                    <li>
-                        <a href="{{url('auth/google')}}">
-                            <img src="{{asset('front-assets/images/google.svg')}}" alt="">
-                        </a>
-                    </li>
+                @if(session('preferences'))
+                    @if(session('preferences')->fb_login == 1 || session('preferences')->twitter_login == 1 || session('preferences')->google_login == 1 || session('preferences')->apple_login == 1)
+                    <ul class="social-links d-flex align-items-center mx-auto mb-4 mt-3">
+                        @if(session('preferences')->google_login == 1)
+                            <li>
+                                <a href="{{url('auth/google')}}">
+                                    <img src="{{asset('front-assets/images/google.svg')}}" alt="">
+                                </a>
+                            </li>
+                        @endif
+                        @if(session('preferences')->fb_login == 1)
+                            <li>
+                                <a href="{{url('auth/facebook')}}">
+                                    <img src="{{asset('front-assets/images/facebook.svg')}}" alt="">
+                                </a>
+                            </li>
+                        @endif
+                        @if(session('preferences')->twitter_login)
+                            <li>
+                                <a href="{{url('auth/twitter')}}">
+                                    <img src="{{asset('front-assets/images/twitter.svg')}}" alt="">
+                                </a>
+                            </li>
+                        @endif
+                        @if(session('preferences')->apple_login == 1)
+                            <li>
+                                <a href="javascript::void(0);">
+                                    <img src="{{asset('front-assets/images/apple.svg')}}">
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
+                    <div class="divider_line m-auto">
+                        <span>OR</span>
+                    </div>
                     @endif
-                    @if(session('preferences')->fb_login == 1)
-                    <li>
-                        <a href="{{url('auth/facebook')}}">
-                            <img src="{{asset('front-assets/images/facebook.svg')}}" alt="">
-                        </a>
-                    </li>
-                    @endif
-                    @if(session('preferences')->twitter_login)
-                    <li>
-                        <a href="{{url('auth/twitter')}}">
-                            <img src="{{asset('front-assets/images/twitter.svg')}}" alt="">
-                        </a>
-                    </li>
-                    @endif
-                    @if(session('preferences')->apple_login == 1)
-                    <li>
-                        <a href="javascript::void(0);">
-                            <img src="{{asset('front-assets/images/apple.svg')}}">
-                        </a>
-                    </li>
-                    @endif
-                </ul>
-                <div class="divider_line m-auto">
-                    <span>OR</span>
-                </div>
                 @endif
                 <div class="row mt-3">
                     <div class="offset-xl-2 col-xl-8 text-left">

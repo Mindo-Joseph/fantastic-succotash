@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use DB;
 use Validation;
 use Carbon\Carbon;
-use App\Model\Client;
+use Client;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Hash;
@@ -332,9 +332,10 @@ class CartController extends BaseController{
         $total_tax = $total_paying = $total_disc_amount = 0.00; $item_count = 0;
         if($cartData){
             $tax_details = [];
+
             foreach ($cartData as $ven_key => $vendorData) {
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
-                $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
+                $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';$deliver_charge = 0;
                 $couponData = $couponProducts = array();
                 if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->vendor_id == $vendorData->vendor_id)){
                     $now = Carbon::now()->toDateTimeString();
@@ -369,7 +370,6 @@ class CartController extends BaseController{
                         }
                     }
                 }
-                $deliver_charge = 0;
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
                     $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0; 
                     $variantsData = $taxData = $vendorAddons = array();
@@ -435,7 +435,6 @@ class CartController extends BaseController{
                             }
                         }
                         $prod->taxdata = $taxData;
-
                         if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1){   
                             $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                         }
@@ -474,7 +473,7 @@ class CartController extends BaseController{
                     $prod->variants = $variantsData;
                     $prod->variant_options = $variant_options;
                     $prod->deliver_charge = $deliver_charge;
-                    $payable_amount = $payable_amount + $deliver_charge;
+                    $payable_amount = $payable_amount;
                     $prod->product_addons = $vendorAddons;
                 }
                 $couponApplied = 0;
@@ -505,7 +504,7 @@ class CartController extends BaseController{
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
                 $vendorData->taxable_amount = $taxable_amount;
-                $vendorData->payable_amount = $payable_amount - $discount_amount - $deliver_charge;
+                $vendorData->payable_amount = $payable_amount - $discount_amount + $deliver_charge;
                 $total_paying = $total_paying + $payable_amount;
                 $total_tax = $total_tax + $taxable_amount;
                 $total_disc_amount = $total_disc_amount + $discount_amount;

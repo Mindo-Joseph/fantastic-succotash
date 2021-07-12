@@ -6,7 +6,10 @@ use App;
 use Mail;
 use Config;
 use Session;
+use App\Models\User;
 use ConvertCurrency;
+use App\Models\Cart;
+use App\Models\UserDevice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -111,7 +114,6 @@ class BaseController extends Controller{
             'Authorization: key=' . $SERVER_API_KEY,
             'Content-Type: application/json',
         ];
-
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
         curl_setopt($ch, CURLOPT_POST, true);
@@ -119,7 +121,6 @@ class BaseController extends Controller{
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-
         $response = curl_exec($ch);
         dd($response);
 
@@ -131,8 +132,7 @@ class BaseController extends Controller{
         return $currency[0]['convertedAmount'];
     }
 
-    public function setMailDetail($mail_driver, $mail_host, $mail_port, $mail_username, $mail_password, $mail_encryption)
-    {
+    public function setMailDetail($mail_driver, $mail_host, $mail_port, $mail_username, $mail_password, $mail_encryption){
         $config = array(
             'driver' => $mail_driver,
             'host' => $mail_host,
@@ -150,10 +150,8 @@ class BaseController extends Controller{
     }
 
     /**     * check if cookie already exist     */
-    public function checkCookies($userid)
-    {
+    public function checkCookies($userid){
         if (isset(Auth::user()->system_user) && !empty(Auth::user()->system_user)) {
-
             $userFind = User::where('system_id', Auth::user()->system_user)->first();
             if($userFind){
                 $cart = Cart::where('user_id', $userFind->id)->first();
@@ -186,8 +184,7 @@ class BaseController extends Controller{
     }
 
     /**     * check if cookie already exist     */
-    public function getWallet($userid, $multiplier, $currency = 147)
-    {
+    public function getWallet($userid, $multiplier, $currency = 147){
         $wallet = Wallet::where('user_id', $userid)->first();
         if(!$wallet){
             $wallet = new Wallet();

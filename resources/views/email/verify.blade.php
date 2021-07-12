@@ -1,82 +1,109 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>Prescription</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style type="text/css">
-        * {
-            padding: 0px;
-            margin: 0px;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .wrapper {
-            background: #eee;
-            padding: 6vh 6vw;
-            min-height: 100vh;
-        }
-
-        .container {
+   <head>
+      <meta charset="utf-8">
+      <title>Verify Mail</title>
+      <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+      <style type="text/css">
+         body{
+            padding: 0;
+            margin: 0;font-family: 'Lato', sans-serif;
+            font-weight: 400;
+         }
+         a{
+            text-decoration: none;
+         }
+         h1,h2,h3,h4{
+            font-weight: 700;
+            margin: 0;
+         }
+         p{
+            font-size: 16px;
+            line-height: 22px;
+            margin: 0 0 5px;
+         }
+         .container {
             background: #fff;
-            padding: 20px;
-            max-width: 730px;
+            padding: 0;
+            max-width: 560px;
             margin: 0 auto;
             border-radius: 4px;
             background-repeat: repeat;
-            width: 600px;
-        }
-    </style>
-</head>
+            width: 700px;
+         }
+         table {
+            border-collapse: separate;
+            text-indent: initial;
+            border-spacing: 0;
+            text-align: left;
+         }
+         table th,table td{
+            padding: 10px 15px;
+         }
+         ul {
+            margin: 0;padding: 0;
+         }
+         ul li{
+            list-style: none;
+         }
+      </style>
+   </head>
+   <body>
+      <section class="wrapper">
+         <div class="container" style="background: #fff;border-radius: 10px;">
+            <table style="width: 100%;">
+              <thead>
+                 <tr>
+                    <th style="text-align: center;">
+                        <a style="display: block;" href="#">
+                           <img src="images/logo.png" alt="">
+                        </a>
+                    </th>
+                 </tr>
+              </thead>
+              <tbody style="text-align: center;">
+                 <tr>
+                    <td style="height: 400px;padding-top: 0;padding-bottom: 0;">
+                     <img style="width: 100%;height: 100%;object-fit: cover;" src="{{url('images/food-banner.jpg')}}" alt="">
+                    </td>
+                 </tr>
+                 <tr>
+                    <td style="padding-top: 0;">
+                     <div style="background: #fff;box-shadow: 0 3px 4px #ddd;border-bottom-left-radius: 20px;border-bottom-right-radius: 20px;padding: 15px 40px 30px;">
+                       <b style="margin-bottom: 10px; display: block;">Hi {{$mailData['customer_name']}},</b>
+                       <p>You can also verify manually by entering the following OTP</p>
+                        <div style="padding:10px;border: 2px dashed #cb202d;word-break:keep-all!important;width: calc(100% - 40px);margin: 25px auto;">
+                        <p style="Margin:0;Margin-bottom:16px;color:#cb202d;font-family:-apple-system,Helvetica,Arial,sans-serif;font-size:20px;font-weight:600;line-height:1.5;margin:0;margin-bottom:0;padding:0;text-align:center;word-break:keep-all!important">{{$mailData['code']}}</p>
+                        </div>
+                        <p>Note: The OTP will expire in 10 minutes and can only be used once.</p>
+                    
+                        <div style="margin: 30px 0 0;color: #ddd;">
+                           Thank you, <br>
+                           Team Royo <br><br>
 
-<body>
-    <section class="wrapper">
-        <div class="container" style="background: #fff;border-radius: 10px;padding: 50px 0 0;">
-
-            <table style="width: 100%;text-align: center;">
-                <thead style="padding: 0 30px;">
-                    <tr>
-                        <th style="padding: 0 0 30px 30px;">
-                            <img style="width: 100px;" src="" alt="">
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="text-align: left;padding: 0 30px;">
-                            <p style="font-size: 14px; margin-bottom: 15px;"><b> {{'Hi '.$customer_name.','}} </b></p>
-                            <p style="width: 85%;max-width: 100%; font-size: 14px;line-height: 30px; margin-bottom: 15px;">{{$code_text}}</p>
-                            <!-- <p style="width: 85%;max-width: 100%; font-size: 14px;line-height: 30px; margin-bottom: 15px;">{{$code}}</p> -->
-                            <a href="{{$link}}" style="width: 85%;max-width: 100%; font-size: 14px;line-height: 30px; margin-bottom: 15px;">Click here</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 40px 30px 20px;">
-                            <div class="driver_deatil">
-                                <div class="left-icon" style="width: 60px;height: 60px;overflow: hidden;border-radius: 50%;display: inline-block;vertical-align: middle;">
-                                    <img src="" alt=""
-                                        style="width: 100%;height: 100%;object-fit: cover;">
-                                </div>
-                                <div class="right_text" style="text-align: left;display: inline-block;vertical-align: middle;padding: 0 0 0 15px;">
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-                <tfoot style="background:#fafafa">
-                    <tr>
-                        <td style="padding: 20px 30px;font-size: 14px;">
-                            © Copyright 2021. All Rights Reserved.
-                        </td>
-                    </tr>
-                </tfoot>
+                           If you did not make this request, you can safely ignore this email.
+                        </div>
+                     </div>
+                    </td>
+                 </tr>
+              </tbody>
+              <tfoot style="text-align: center;">
+               <tr>
+                  <td colspan="2" style="padding: 0 15px 20px;">
+                     <div style="background: #fff;box-shadow: 0 -2px 4px #ddd;border-radius: 20px;padding: 15px 0 0;margin-top: 20px;">
+                        <p colspan="2" style="padding: 0 35px 20px;color: #1F2431;font-size: 18px;letter-spacing: 0;line-height: 24px;text-align: center;font-weight: 400;">
+                           Please download <b>sales.royoorders.com</b> app <br> to start your consultation.
+                        </p>
+                        <a href="#"><img src="images/ic_App_Store_Badgex48.png" alt=""></a>
+                        <a href="#"><img src="images/ic_App_Store_Badgex48.png" alt=""></a>
+                        <p style="background-color: #8142ff;padding:5px 0;text-align:center;color: #fff;margin-top: 30px; ">Powered by <b>sales.royoorders.com</b></p>
+                     </div>
+                  </td>
+               </tr>
+            </tfoot>
             </table>
-
-        </div>
-    </section>
-
-
-</body>
-
+         </div>
+      </section>
+   </body>
 </html>

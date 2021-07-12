@@ -116,14 +116,15 @@
 
                                     <input type="hidden" name="variant_id" id="prod_variant_id"
                                         value="{{$product->variant[0]->id}}">
-                                    <!--<h4><del>$459.00</del><span>55% off</span></h4> -->
+                                    @if($product->inquiry_only == 0)
                                     <h3 id="productPriceValue" class="mb-md-3">
                                         <b class="mr-1">{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</b>
                                         @if($product->variant[0]->compare_at_price > 0 )
+
                                         <span class="org_price">{{Session::get('currencySymbol').($product->variant[0]->compare_at_price * $product->variant[0]->multiplier)}}</span>
                                         @endif
                                     </h3>
-
+                                    @endif
                                     @if(!empty($product->variantSet))
                                     @php
                                     $selectedVariant = isset($product->variant[0]) ? $product->variant[0]->id : 0;
@@ -176,35 +177,40 @@
                                     @endif
                                     @endforeach
                                     @endif
-
-                                    <div class="product-description border-product">
-                                        <h6 class="product-title mt-0">quantity: 
+                                    @if($product->inquiry_only == 0)
+                                        <div class="product-description border-product">
+                                            <h6 class="product-title mt-0">quantity: 
+                                                @if($product->variant[0]->quantity > 0)
+                                                    <span id="instock" style="color: green;">In Stock ({{$product->variant[0]->quantity}})</span>
+                                                @else
+                                                    <span id="outofstock" style="color: red;">Out of Stock</span>
+                                                @endif
+                                            </h6>
                                             @if($product->variant[0]->quantity > 0)
-                                                <span id="instock" style="color: green;">In Stock ({{$product->variant[0]->quantity}})</span>
-                                            @else
-                                                <span id="outofstock" style="color: red;">Out of Stock</span>
-                                            @endif
-                                        </h6>
-                                        @if($product->variant[0]->quantity > 0)
-                                        <div class="qty-box">
-                                            <div class="input-group">
-                                                <span class="input-group-prepend"><button type="button"
-                                                        class="btn quantity-left-minus" data-type="minus"
-                                                        data-field=""><i class="ti-angle-left"></i></button> </span>
-                                                <input type="text" name="quantity" id="quantity"
-                                                    class="form-control input-number quantity_count" value="1">
-                                                <span class="input-group-prepend quant-plus"><button type="button"
-                                                        class="btn quantity-right-plus " data-type="plus"
-                                                        data-field=""><i class="ti-angle-right"></i></button></span>
-                                            </div>
-                                        </div>
-                                        @endif
-                                    </div>
 
-                                    @if(!empty($product->addOn))
+                                                <div class="qty-box">
+                                                    <div class="input-group">
+                                                        <span class="input-group-prepend">
+                                                            <button type="button"
+                                                                class="btn quantity-left-minus" data-type="minus"
+                                                                data-field=""><i class="ti-angle-left"></i>
+                                                            </button> 
+                                                        </span>
+                                                        <input type="text" name="quantity" id="quantity" class="form-control input-number quantity_count" value="1">
+                                                        <span class="input-group-prepend quant-plus">
+                                                            <button type="button" class="btn quantity-right-plus " data-type="plus" data-field="">
+                                                                <i class="ti-angle-right"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                
+                                            @endif
+                                        </div>
+                                    @endif
+                                    @if(!empty($product->addOn) && $product->addOn->count() > 0)
                                     <div class="border-product">
                                         <h6 class="product-title">Addon List</h6>
-
                                         <table class="table table-centered table-nowrap table-striped"
                                             id="banner-datatable">
                                             <tbody>

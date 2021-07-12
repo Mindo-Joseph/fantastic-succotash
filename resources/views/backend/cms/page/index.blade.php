@@ -33,7 +33,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($pages as $page)
+                                @forelse($pages as $page)
                                     <tr class="page-title active-page page-detail" data-page_id="{{$page->id}}" data-show_url="{{route('cms.page.show', ['id'=> $page->id])}}">
                                         <td>
                                             <a class="text-body" href="javascript:void(0)" id="text_body_{{$page->id}}">{{$page->primary->title}}</a>
@@ -46,7 +46,8 @@
                                             @endif
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                @endforelse
                             </tbody>
                         </table>
                    </div>
@@ -152,6 +153,7 @@
                     }
                 }else{
                     $(':input:text').val('');
+                    $(':input:textarea').val('');
                     $('#edit_page_content #page_id').val('');
                 }
               }

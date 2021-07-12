@@ -43,10 +43,10 @@ class CustomerAuthController extends FrontController
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
-        if ($request->refferal_code == null) {
+        if (!Session::get('referrer')) {
             return view('frontend.account.registernew')->with(['navCategories' => $navCategories]);
         } else {
-            return view('frontend.account.registernew')->with(['navCategories' => $navCategories, 'code' => $request->refferal_code]);
+            return view('frontend.account.registernew')->with(['navCategories' => $navCategories, 'code' => Session::get('referrer')]);
         }
     }
 
@@ -189,6 +189,7 @@ class CustomerAuthController extends FrontController
                 }
                 Auth::login($user);
                 $this->checkCookies($user->id);
+                Session::forget('referrer');
                 return redirect()->route('user.verify');
             }
         } catch (Exception $e) {

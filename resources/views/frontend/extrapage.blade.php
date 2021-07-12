@@ -17,8 +17,8 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h2 class="mb-3">{{$page_detail->title}}</h2>
-                <p>{!!$page_detail->description!!}</p>
+                <h2 class="mb-3">{{$page_detail->primary->title}}</h2>
+                <p>{!!$page_detail->primary->description!!}</p>
             </div>
         </div>
     </div>
