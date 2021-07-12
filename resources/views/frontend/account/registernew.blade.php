@@ -1,25 +1,5 @@
 @extends('layouts.store', ['title' => 'Register'])
 @section('css')
-
-<style type="text/css">
-    .iti__flag-container li,
-    .flag-container li {
-        display: block;
-    }
-    .iti.iti--allow-dropdown,
-    .allow-dropdown {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-    }
-    .iti.iti--allow-dropdown .phone,
-    .flag-container .phone {
-        padding: 17px 0 17px 100px !important;
-    }
-    .invalid-feedback {
-        display: block;
-    }
-</style>
 <link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
 @endsection
 @section('content')

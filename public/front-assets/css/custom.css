@@ -2806,7 +2806,23 @@ form input.form-control[placeholder="Address"] {
 
 
 
-
+.iti__flag-container li,
+    .flag-container li {
+        display: block;
+    }
+    .iti.iti--allow-dropdown,
+    .allow-dropdown {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+    .iti.iti--allow-dropdown .phone,
+    .flag-container .phone {
+        padding: 17px 0 17px 100px !important;
+    }
+    .invalid-feedback {
+        display: block;
+    }
 
 
 
