@@ -30,6 +30,9 @@ class DatabaseSeeder extends Seeder
               PermissionSeeder::class,
               ReturnReasonSeeder::class,
               LuxuryOptionsSeeder::class,
+              SubscriptionValiditiesSeeder::class,
+              SubscriptionFeaturesListSeeder::class,
+              SubscribedStatusOptionsSeeder::class
           ]);
         $this->call(UsersTableSeeder::class);
         $this->call(AppStylingOptionsTableSeeder::class);
