@@ -142,8 +142,9 @@ class StoreController extends Controller{
         $dates = [];
         $sales = [];
         $revenue = [];
+        $type = $request->type;
         $monthly_sales_query = OrderVendor::select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'));
-        switch (variable) {
+        switch ($type) {
         	case 'monthly':
         		$created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')])
     		break;
