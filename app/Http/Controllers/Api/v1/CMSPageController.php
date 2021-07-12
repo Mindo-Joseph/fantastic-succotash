@@ -16,7 +16,7 @@ class CMSPageController extends Controller{
                     }))->latest('id')->get();
         foreach ($pages as $page) {
             $page->title = $page->primary->title;
-            $page->url = url('extrapage/'.$page->slug);
+            $page->url = url('extra-page/'.$page->slug);
             unset($page->primary);
         }
         return $this->successResponse($pages, '', 201);

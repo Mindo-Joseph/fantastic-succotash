@@ -46,8 +46,12 @@
                                 <div class="row text-center mt-2">
                                     <div class="col-12 resend_txt">
                                         <p class="mb-1">If you didn’t receive a code?</p>
-                                        <a class="verifyEmail"><u>RESEND</u></a>
+                                        <a class="verifyEmail" href="javascript:void(0)"><u>RESEND</u></a>
                                     </div>
+                                    <button class="btn btn-primary" type="button" disabled>
+  <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+  <span class="sr-only">Loading...</span>
+</button>
                                     <div class="col-md-12 mt-3">
                                         <button type="button" class="btn btn-solid" id="verify_email_token">Verify</button>
                                     </div>
