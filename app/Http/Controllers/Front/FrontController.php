@@ -17,9 +17,9 @@ class FrontController extends Controller
 {
     private $field_status = 2;
     protected function sendSms($provider, $sms_key, $sms_secret, $sms_from, $to, $body){
-        $to = "+918950473361";
         try{
-            $client = new TwilioClient($sms_key, $sms_secret);
+
+            $client = new TwilioClient($sms_key, '1c649b9207c16c58cd610654ac81025f');
             $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
         }
         catch(\Exception $e){

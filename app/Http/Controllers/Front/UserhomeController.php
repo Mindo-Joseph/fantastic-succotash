@@ -13,8 +13,7 @@ use App\Http\Controllers\Front\FrontController;
 use Illuminate\Contracts\Session\Session as SessionSession;
 use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference, Page};
 
-class UserhomeController extends FrontController
-{
+class UserhomeController extends FrontController{
     use ApiResponser;
     private $field_status = 2;
     /**
@@ -243,15 +242,13 @@ class UserhomeController extends FrontController
                                         $q->groupBy('product_id');
                                     },
                                     ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating', 'inquiry_only');
-        
-                    if($where !== ''){
+        if($where !== ''){
             $products = $products->where($where, 1);
         }
         if(is_array($venderIds)){
             $products = $products->whereIn('vendor_id', $venderIds);
         }
         $products = $products->where('is_live', 1)->take(6)->inRandomOrder()->get();
-
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
@@ -262,15 +259,13 @@ class UserhomeController extends FrontController
         return $products;
     }
 
-    public function changePrimaryData(Request $request)
-    {
+    public function changePrimaryData(Request $request){
         if($request->has('type') && $request->type == 'language'){
             $clientLanguage = ClientLanguage::where('language_id', $request->value1)->first();
             if($clientLanguage){
                 Session::put('customerLanguage', $request->value1);
             }
         }
-
         if($request->has('type') && $request->type == 'currency'){
             $clientCurrency = ClientCurrency::where('currency_id', $request->value1)->first();
             if($clientCurrency){
@@ -279,11 +274,9 @@ class UserhomeController extends FrontController
                 Session::put('currencyMultiplier', $clientCurrency->doller_compare);
             }
         }
-
         $data['customerLanguage'] = Session::get('customerLanguage');
         $data['customerCurrency'] = Session::get('customerCurrency');
         $data['currencySymbol'] = Session::get('currencySymbol');
-
         return response()->json(['status'=>'success', 'message' => 'Saved Successfully!', 'data' => $data]);
     }
 
