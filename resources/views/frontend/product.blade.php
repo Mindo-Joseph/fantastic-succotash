@@ -388,7 +388,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
           <div class="modal-header border-bottom">
-            <h5 class="modal-title" id="inquiry_formLabel">inquiry Form</h5>
+            <h5 class="modal-title" id="inquiry_formLabel">Inquiry</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -423,11 +423,12 @@
                 <div class="col-12 form-group">
                     <label>Message</label>
                     <textarea class="form-control" name="message" id="message" cols="30" rows="8"></textarea>
-                    <span class="text-danger error-text messageError"></span>
+                    <span class="text-danger error-texprapt messageError"></span>
                 </div>
                  <div class="col-12 form-group checkbox-input">
-                    <input type="checkbox" id="html">
-                    <label for="html">I agree to share my contact details.</label>
+                    <input type="checkbox" id="agree" name="agree" required>
+                    <label for="agree">I agree to share my contact details.</label>
+                    <span class="d-block text-danger error-text agreeError"></span>
                 </div>
                 <div class="col-12 mt-2">
                     <button type="button" class="btn btn-solid w-100 submitInquiryForm">Submit</button>
@@ -466,6 +467,7 @@
             error: function(response) {
                 console.log(response);
                 $('.messageError').html(response.responseJSON.errors.message[0]);
+                $('.agreeError').html(response.responseJSON.errors.agree[0]);
                 $('.numberError').html(response.responseJSON.errors.number[0]);
                 $('.emailError').html(response.responseJSON.errors.email[0]);
                 $('.nameError').html(response.responseJSON.errors.name[0]);

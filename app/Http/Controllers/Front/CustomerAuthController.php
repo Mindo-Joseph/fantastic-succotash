@@ -166,6 +166,7 @@ class CustomerAuthController extends FrontController
             $user->is_phone_verified = 0;
             $user->country_id = $county->id;
             $user->phone_token = $phoneCode;
+            $user->phone_code = $req->dialCode;
             $user->email_token = $emailCode;
             $user->phone_number = $req->full_number;
             $user->phone_token_valid_till = $sendTime;
