@@ -86,6 +86,7 @@
                                     <label for="">Phone No.</label>
                                     <input type="tel" class="form-control phone @error('phone_number') is-invalid @enderror" id="phone" placeholder="Phone Number" name="phone_number" value="{{ old('phone_number')}}">
                                     <input type="hidden" id="countryData" name="countryData" value="us">
+                                    <input type="hidden" id="dialCode" name="dialCode" value="+1">
                                     @error('phone_number')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -157,6 +158,8 @@
     $('.iti__country').click(function() {
         var code = $(this).attr('data-country-code');
         $('#countryData').val(code);
+        var dial_code = $(this).attr('data-dial-code');
+        $('#dialCode').val(dial_code);
     });
 </script>
 @endsection

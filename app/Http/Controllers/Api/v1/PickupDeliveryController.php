@@ -67,7 +67,8 @@ class PickupDeliveryController extends BaseController{
                     })
                     ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id','products.tags as tags_price')
                     ->where('products.vendor_id', $vid)
-                    ->where('products.is_live', 1)->paginate($paginate);
+                    ->where('products.is_live', 1)->distinct()->paginate($paginate); 
+                   
             if(!empty($products)){
                 foreach ($products as $key => $product) {
                     $product->tags_price = $this->getDeliveryFeeDispatcher($request);
@@ -77,6 +78,7 @@ class PickupDeliveryController extends BaseController{
                     }
                 }
             }
+           
             $response['vendor'] = $vendor;
             $response['products'] = $products;
            // $response['filterData'] = $variantSets;

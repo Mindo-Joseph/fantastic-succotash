@@ -21,7 +21,6 @@
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-
 <style type="text/css">
     .productVariants .firstChild {
         min-width: 150px;
@@ -62,20 +61,22 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-xl-12">
-                                <div class="filter-main-btn mb-2"><span class="filter-btn"><i class="fa fa-filter"
-                                            aria-hidden="true"></i> filter</span></div>
+                                <div class="filter-main-btn mb-2">
+                                    <span class="filter-btn">
+                                        <i class="fa fa-filter" aria-hidden="true"></i> filter
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="product-slick">
                                     @if(!empty($product->media))
-                                    @foreach($product->media as $k => $img)
-                                    <div class="image_mask"><img
-                                            class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" alt=""
-                                            src="{{$img->image->path['proxy_url'].'600/800'.$img->image->path['image_path']}}">
-                                    </div>
-                                    @endforeach
+                                        @foreach($product->media as $k => $img)
+                                            <div class="image_mask">
+                                                <img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" src="{{$img->image->path['proxy_url'].'600/800'.$img->image->path['image_path']}}">
+                                            </div>
+                                        @endforeach
                                     @endif
                                 </div>
                                 <div class="row">
@@ -83,8 +84,8 @@
                                         <div class="slider-nav">
                                             @if(!empty($product->media))
                                             @foreach($product->media as $k => $img)
-                                            <div><img class="img-fluid blur-up lazyload" alt=""
-                                                    src="{{$img->image->path['proxy_url'].'300/300'.$img->image->path['image_path']}}">
+                                            <div>
+                                                <img class="img-fluid blur-up lazyload" src="{{$img->image->path['proxy_url'].'300/300'.$img->image->path['image_path']}}">
                                             </div>
                                             @endforeach
                                             @endif
@@ -99,82 +100,60 @@
                                     </h2>
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->rating_check == 1)
-                                    <div class="rating">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <a href="#"></a>
-                                    </div>
+                                            <div class="rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <a href="#"></a>
+                                            </div>
                                         @endif
                                     @endif
                                     <div class="description_txt my-3">
                                         <p>It is a long established fact that a reader will be distracted by the
                                             readable content of a page when looking at its layout.</p>
                                     </div>
-
                                     <input type="hidden" name="variant_id" id="prod_variant_id"
                                         value="{{$product->variant[0]->id}}">
                                     @if($product->inquiry_only == 0)
                                     <h3 id="productPriceValue" class="mb-md-3">
                                         <b class="mr-1">{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</b>
                                         @if($product->variant[0]->compare_at_price > 0 )
-
-                                        <span class="org_price">{{Session::get('currencySymbol').($product->variant[0]->compare_at_price * $product->variant[0]->multiplier)}}</span>
+                                            <span class="org_price">{{Session::get('currencySymbol').($product->variant[0]->compare_at_price * $product->variant[0]->multiplier)}}</span>
                                         @endif
                                     </h3>
                                     @endif
                                     @if(!empty($product->variantSet))
                                     @php
-                                    $selectedVariant = isset($product->variant[0]) ? $product->variant[0]->id : 0;
+                                        $selectedVariant = isset($product->variant[0]) ? $product->variant[0]->id : 0;
                                     @endphp
-
                                     @foreach($product->variantSet as $key => $variant)
-                                    @if($variant->type == 1 || $variant->type == 2)
-
-                                    <div class="size-box">
-                                        <ul class="productVariants">
-                                            <li class="firstChild">{{$variant->title}}</li>
-                                            <li class="otherSize">
-                                                @foreach($variant->option2 as $k => $optn)
-
-                                                <?php $var_id = $variant->variant_type_id;
-                                                $opt_id = $optn->variant_option_id;
-                                                $checked = ($selectedVariant == $optn->product_variant_id) ? 'checked' : '';
-                                                ?>
-                                                <label class="radio d-inline-block txt-14 mr-2">{{$optn->title}}
-                                                    <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}"
-                                                        vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}"
-                                                        type="radio" {{$checked}}
-                                                        class="changeVariant dataVar{{$var_id}}">
-                                                    <span class="checkround"></span>
-                                                </label>
-
-                                                @endforeach
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    @else
-                                    <!-- <div class="size-box">
+                                        @if($variant->type == 1 || $variant->type == 2)
+                                            <div class="size-box">
                                                 <ul class="productVariants">
                                                     <li class="firstChild">{{$variant->title}}</li>
-                                                    @foreach($variant->option2 as $k => $optn)
                                                     <li class="otherSize">
-                                                        <?php /*$var_id = $variant->variant_type_id;
-                                                            $opt_id = $optn->variant_option_id;
-                                                            $checked = ($product->variant[0]->set[$key]->variant_option_id == $optn->variant_option_id) ? 'checked' : '';*/
+                                                        @foreach($variant->option2 as $k => $optn)
+
+                                                        <?php $var_id = $variant->variant_type_id;
+                                                        $opt_id = $optn->variant_option_id;
+                                                        $checked = ($selectedVariant == $optn->product_variant_id) ? 'checked' : '';
                                                         ?>
-                                                        <div class="radio radio-info form-check-inline">
-                                                            <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="changeVariant dataVar{{$var_id}}">
-                                                            <label for="lineRadio-{{$opt_id}}">{{$optn->title}}</label>
-                                                        </div>
+                                                        <label class="radio d-inline-block txt-14 mr-2">{{$optn->title}}
+                                                            <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}"
+                                                                vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}"
+                                                                type="radio" {{$checked}}
+                                                                class="changeVariant dataVar{{$var_id}}">
+                                                            <span class="checkround"></span>
+                                                        </label>
+
+                                                        @endforeach
                                                     </li>
-                                                    @endforeach
                                                 </ul>
-                                            </div> -->
-                                    @endif
+                                            </div>
+                                        @else
+                                        @endif
                                     @endforeach
                                     @endif
                                     @if($product->inquiry_only == 0)
@@ -187,7 +166,6 @@
                                                 @endif
                                             </h6>
                                             @if($product->variant[0]->quantity > 0)
-
                                                 <div class="qty-box">
                                                     <div class="input-group">
                                                         <span class="input-group-prepend">
@@ -204,7 +182,6 @@
                                                         </span>
                                                     </div>
                                                 </div>
-                                                
                                             @endif
                                         </div>
                                     @endif
@@ -238,7 +215,6 @@
                                         </table>
                                     </div>
                                     @endif
-
                                     <div class="product-buttons">
                                         @if($product->variant[0]->quantity > 0)
                                             <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
@@ -256,14 +232,13 @@
                                         <p>{!!(!empty($product->translation) && isset($product->translation[0])) ?
                                             $product->translation[0]->body_html : ''!!}</p>
                                     </div>
-
                                     <div class="border-product">
                                         <h6 class="product-title">share it</h6>
                                         <div class="product-icon w-100">
                                             <ul class="product-social">
+                                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                                 <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                                                 <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                                 <li><a href="#"><i class="fa fa-instagram"></i></a></li>
                                             </ul>
                                         </div>
@@ -288,11 +263,11 @@
                                     </li>
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->rating_check == 1)
-                                    <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab"
-                                            href="#top-review" role="tab" aria-selected="false"><i
-                                                class="icofont icofont-contacts"></i>Ratings & Reviews</a>
-                                        <div class="material-border"></div>
-                                    </li>
+                                            <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab"
+                                                    href="#top-review" role="tab" aria-selected="false"><i
+                                                        class="icofont icofont-contacts"></i>Ratings & Reviews</a>
+                                                <div class="material-border"></div>
+                                            </li>
                                         @endif
                                    @endif
                                 </ul>
@@ -307,8 +282,6 @@
                                         <p>{!! (!empty($product->translation) && isset($product->translation[0])) ?
                                             $product->translation[0]->body_html : ''!!}</p>
                                     </div>
-                                   
-                                    
                                     <div class="tab-pane fade" id="top-review" role="tabpanel"
                                         aria-labelledby="review-top-tab">
                                         @foreach ($rating_details as $rating)
@@ -321,7 +294,6 @@
                                                     <i class="fa fa-star{{ $rating->rating >= 3 ? '' : '-o' }}" aria-hidden="true"></i>
                                                     <i class="fa fa-star{{ $rating->rating >= 4 ? '' : '-o' }}" aria-hidden="true"></i>
                                                     <i class="fa fa-star{{ $rating->rating >= 5 ? '' : '-o' }}" aria-hidden="true"></i>
-                                                    {{-- - Chandigrah --}}
                                                 </p>
                                                 </div>
                                                 <div class="review-comment">
@@ -330,26 +302,18 @@
                                                 <div class="row review-wrapper">
                                                     @if(isset($rating->reviewFiles))
                                                     @foreach ($rating->reviewFiles as $files)
-                                                    <a target="_blank" href="{{$files->file['proxy_url'].'900/900'.$files->file['image_path']}}" class="col review-photo mt-2 lightBoxGallery" data-gallery="">
-                                                        <img src="{{$files->file['proxy_url'].'300/300'.$files->file['image_path']}}">
-                                                    </a>
-                                                   
+                                                        <a target="_blank" href="{{$files->file['proxy_url'].'900/900'.$files->file['image_path']}}" class="col review-photo mt-2 lightBoxGallery" data-gallery="">
+                                                            <img src="{{$files->file['proxy_url'].'300/300'.$files->file['image_path']}}">
+                                                        </a>
                                                     @endforeach
                                                     @endif
-                                                    
-                                                    
                                                 </div> 
-                                               
                                                 <div class="review-date mt-2">
-                                                   
                                                   <time> {{ $rating->time_zone_created_at->diffForHumans();}} </time>
-                                                   
                                                 </div>      
                                             </div>
                                         </div>   
                                         @endforeach
-                                            
-                                          
                                     </div>
                                 </div>
                             </div>
@@ -360,7 +324,6 @@
         </div>
     </div>
 </section>
-
 <section class="">
     <div class="container">
         <div class="row">
@@ -372,12 +335,10 @@
 </section>
 <section class="section-b-space ratio_asos">
     <div class="container">
-        <div class="row">
-
-        </div>
+        <div class="row"></div>
         <div class="row search-product">
             @forelse($product->related_products as $related_product)
-            <div class="col-xl-2 col-md-4 col-sm-6">
+                <div class="col-xl-2 col-md-4 col-sm-6">
                     <div class="product-box">
                             <div class="img-wrapper">
                                 <div class="front">
@@ -405,40 +366,33 @@
                                 </div>
                             </a>
                     </div>
-            </div>
+                </div>
             @empty
             @endforelse
         </div>
     </div>
 </section>
-<!-- Modal -->
 <div class="modal fade product-rating" id="product_rating" tabindex="-1" aria-labelledby="product_ratingLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <div id="review-rating-form-modal">
-          
-          </div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+            </button>
+            <div id="review-rating-form-modal"></div>
         </div>
-       
       </div>
     </div>
-  </div>
-
-
-<!-- inquiry Form Modal -->
+</div>
 <div class="modal fade" id="inquiry_form" tabindex="-1" aria-labelledby="inquiry_formLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header border-bottom">
-        <h5 class="modal-title" id="inquiry_formLabel">inquiry Form</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+          <div class="modal-header border-bottom">
+            <h5 class="modal-title" id="inquiry_formLabel">Inquiry</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
       <div class="modal-body">
       @php
       $user = Auth::user();
@@ -469,7 +423,12 @@
                 <div class="col-12 form-group">
                     <label>Message</label>
                     <textarea class="form-control" name="message" id="message" cols="30" rows="8"></textarea>
-                    <span class="text-danger error-text messageError"></span>
+                    <span class="text-danger error-texprapt messageError"></span>
+                </div>
+                 <div class="col-12 form-group checkbox-input">
+                    <input type="checkbox" id="agree" name="agree" required>
+                    <label for="agree">I agree to share my contact details.</label>
+                    <span class="d-block text-danger error-text agreeError"></span>
                 </div>
                 <div class="col-12 mt-2">
                     <button type="button" class="btn btn-solid w-100 submitInquiryForm">Submit</button>
@@ -480,11 +439,9 @@
     </div>
   </div>
 </div>
-
 @endsection
 @section('script')
 <script>
-
     $(document).on('click', '.submitInquiryForm', function(e) {
         e.preventDefault();
         var formData = new FormData(document.getElementById("inquiry-form"));
@@ -495,7 +452,6 @@
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
             }
         });
-
         $.ajax({
             type: "post",
             headers: {
@@ -511,6 +467,7 @@
             error: function(response) {
                 console.log(response);
                 $('.messageError').html(response.responseJSON.errors.message[0]);
+                $('.agreeError').html(response.responseJSON.errors.agree[0]);
                 $('.numberError').html(response.responseJSON.errors.number[0]);
                 $('.emailError').html(response.responseJSON.errors.email[0]);
                 $('.nameError').html(response.responseJSON.errors.name[0]);
@@ -632,24 +589,18 @@
 
 <script type="text/javascript">
 $(document).ready(function (e) {
-
     $('.rating-star-click').click(function(){
         $('.rating_files').show(); 
         $('.form-row').show();    
         $('#product_rating').modal('show'); 
-        
     });
-
-
-
 $('body').on('click', '.add_edit_review', function (event) {
-event.preventDefault();
-var id = $(this).data('id');
-$.get('/rating/get-product-rating?id=' + id , function(markup)
-          {   
-             $('#product_rating').modal('show'); 
-              $('#review-rating-form-modal').html(markup);
-          });
+    event.preventDefault();
+    var id = $(this).data('id');
+    $.get('/rating/get-product-rating?id=' + id , function(markup){   
+        $('#product_rating').modal('show'); 
+        $('#review-rating-form-modal').html(markup);
+    });
 });
 });
 </script>
