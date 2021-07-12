@@ -10,9 +10,9 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('demo', 'Front\CustomerAuthController@getTestHtmlPage');
 	Route::get('test/email', function(){
   
-		$send_mail = 'test@gmail.com';
-		App\Jobs\SendRefferalCodeEmailJob::dispatch($send_mail);
-		// dispatch(new App\Jobs\SendRefferalCodeEmailJob($send_mail));
+		$send_mail = 'test@yopmail.com';
+		// App\Jobs\SendRefferalCodeEmailJob::dispatch($send_mail);
+		dispatch(new App\Jobs\SendRefferalCodeEmailJob($send_mail));
 	  
 		dd('send mail successfully !!');
 	});
