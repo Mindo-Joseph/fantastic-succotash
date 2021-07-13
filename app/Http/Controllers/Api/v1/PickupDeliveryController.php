@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\OrderProductRatingRequest;
-use App\Models\{Category,ClientPreference,ClientCurrency,Vendor,ProductVariantSet,Product,LoyaltyCard,UserAddress,Order,OrderVendor,OrderProduct,VendorOrderStatus};
+use App\Models\{Category,ClientPreference,ClientCurrency,Vendor,ProductVariantSet,Product,LoyaltyCard,UserAddress,Order,OrderVendor,OrderProduct,VendorOrderStatus,Client};
 use App\Http\Traits\ApiResponser;
 use GuzzleHttp\Client as GCLIENT;
 class PickupDeliveryController extends BaseController{
@@ -436,8 +436,10 @@ class PickupDeliveryController extends BaseController{
                     $payable_amount = 0.00;
                 }
                 $dynamic = uniqid($order->id.$vendor);
-                $call_back_url = route('dispatch-pickup-delivery', $dynamic);
+               
                 $unique = Auth::user()->code;
+                $client_do = Client::where('code',$unique)->first();
+                $call_back_url = "https://".$client_do->sub_domain.env('SUBMAINDOMAIN')."/dispatch-pickup-delivery/".$dynamic; 
                 $tasks = array();
                 $meta_data = '';
                 $team_tag = $unique."_".$vendor;

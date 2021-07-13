@@ -33,11 +33,13 @@
                         <div class="col-md-3">
                             <a href="#"><%= order.user.name %></a>
                         </div>
+                        <% if(order.address !== null) { %>
                         <div class="col-md-3">
                             <p class="ellipsis" data-toggle="tooltip" data-placement="top" title="<%= order.address.address %>">
                                 <%= order.address.address %>
                             </p>
-                        </div>                    
+                        </div>  
+                        <% } %>                  
                     </div>
                     <div class="row">
                         <div class="col-md-9">
