@@ -1,6 +1,144 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
 
+    <!-- Vendor Sign Up Form -->
+    <section class="vendor-signup">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    
+                <div class="row">
+                    <div class="col-12">
+                        <h2>Personal Details.</h2>
+                    </div>    
+                </div>
+
+                <form class="needs-validation vendor-signup" novalidate>
+                    <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Full name</label>
+                            <input type="text" class="form-control" id="validationCustom01" value="Mark" required>
+                            <div class="valid-feedback">
+                                Enter Full Name!
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom02">Phone No.</label>
+                            <input type="text" class="form-control" id="validationCustom02" value="Otto" required>
+                            <div class="valid-feedback">
+                                Enter Vaild Number!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Email</label>
+                            <input type="text" class="form-control" id="validationCustom03" value="Mark" required>
+                            <div class="valid-feedback">
+                                Enter Vaild E-mail!
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom02">Password</label>
+                            <input type="text" class="form-control" id="validationCustom04" value="Otto" required>
+                            <div class="valid-feedback">
+                                Enter Correct Password!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <h2>Store Details.</h2>
+                        </div>    
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3">
+                            <label for="">Upload Logo</label>
+                            <div class='file file--upload'>
+                                <label for='input-file'>
+                                    <span class="update_pic">
+                                        <img src="" alt="" id="output">
+                                    </span>
+                                        <span class="plus_icon"><i class="fas fa-plus"></i></span>
+                                </label>
+                                <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
+                            </div>
+                        </div>      
+                        <div class="col-md-8 mb-3">
+                            <label for="">Upload Banner</label>
+                            <div class='file file--upload'>
+                                <label for='input-file'>
+                                    <span class="update_pic">
+                                        <img src="" alt="" id="banner">
+                                    </span>
+                                        <span class="plus_icon"><i class="fas fa-plus"></i></span>
+                                </label>
+                                <input id='input-file' type='file' name="profile_image" accept="image/*" onchange="loadFile(event)"/>
+                            </div>
+                        </div>      
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="validationCustom01">Name</label>
+                            <input type="text" class="form-control" id="validationCustom05" value="Mark" required>
+                            <div class="valid-feedback">
+                                Enter Full Name!
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="validationCustom02">Description</label>
+                            <textarea class="form-control" name="" id="validationCustom06" cols="30" rows="3"></textarea>
+                            <div class="valid-feedback">
+                                Enter Vaild Number!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Address</label>
+                            <input type="text" class="form-control" id="validationCustom07" value="Mark" required>
+                            <div class="valid-feedback">
+                                Enter Full Name!
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom02">Website</label>
+                            <input type="text" class="form-control" id="validationCustom08" value="Otto" required>
+                            <div class="valid-feedback">
+                                Enter Vaild Number!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-2 mb-3">
+                            <label for="">Dine In</label>
+                            <div class="toggle-icon">
+                                <input type="checkbox" id="dine-in" /><label for="dine-in">Toggle</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="">Takeaway</label>
+                            <div class="toggle-icon">
+                                <input type="checkbox" id="takeaway" /><label for="takeaway">Toggle</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="">Delivery</label>
+                            <div class="toggle-icon">
+                                <input type="checkbox" id="delivery" /><label for="delivery">Toggle</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-solid mt-3 w-100" type="submit">Submit form</button>
+                </form>
+                
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Order Return Page -->
     <section class="return-page">
         <div class="container">
@@ -676,5 +814,37 @@
         </div>
     </section>
 
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+            });
+        }, false);
+        })();
+    </script>
+    <script>
+  var loadFile = function(event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+   };
+    </script>
+    <script>
+  var loadFile = function(event) {
+    var banner = document.getElementById('banner');
+    banner.src = URL.createObjectURL(event.target.files[0]);
+   };
+    </script>
     
 @endsection
