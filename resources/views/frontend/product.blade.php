@@ -324,6 +324,7 @@
         </div>
     </div>
 </section>
+@if($product->related_products->count() > 0)
 <section class="">
     <div class="container">
         <div class="row">
@@ -333,6 +334,7 @@
         </div>
     </div>
 </section>
+@endif
 <section class="section-b-space ratio_asos">
     <div class="container">
         <div class="row"></div>

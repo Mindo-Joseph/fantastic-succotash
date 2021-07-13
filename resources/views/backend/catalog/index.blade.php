@@ -90,7 +90,6 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Name</th>
-                                        <!-- <th>Category</th> -->
                                         <th>Options</th>
                                         <th>Action</th>
                                     </tr>
@@ -162,7 +161,6 @@
                                         <th>#</th>
                                         <th>Icon</th>
                                         <th>Name</th>
-                                        <!-- <th>Category</th> -->
                                         <th>Action</th>
                                     </tr>
                                 </thead>
