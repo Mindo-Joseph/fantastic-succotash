@@ -250,6 +250,7 @@ class CustomerAuthController extends FrontController
             $vendor->phone_no = $request->phone_no;
             $vendor->slug = Str::slug($request->name, "-");
             $vendor->save();
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Vendor created Successfully!',
