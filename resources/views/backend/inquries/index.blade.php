@@ -99,8 +99,8 @@
                     {data: 'phone_number', name: 'phone_number',orderable: false, searchable: false},
                     {data: 'company_name', name: 'company_name',orderable: false, searchable: false},
                     {data: 'message', name: 'message',orderable: false, searchable: false},
-                    {data: 'product.sku', name: 'product.sku', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
-                        return "<a href='"+full.view_url+"' target='_blank'>"+full.sku+"</a> ";
+                    {data: 'sku', name: 'sku', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
+                        return "<a href='"+full.view_url+"' target='_blank'>"+full.product.primary.title+"</a> ";
                     }},
                 ]
             });

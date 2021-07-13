@@ -26,9 +26,9 @@ class ProductInquiryController extends BaseController{
         ]);
     }
     public function show(Request $request){
-        $product_inquiries = ProductInquiry::with('product')->get();
+        $product_inquiries = ProductInquiry::with('product.primary')->get();
         foreach ($product_inquiries as $product_inquiry) {
-            $product_inquiry->view_url = route('productDetail');
+            $product_inquiry->view_url = route('productDetail', [$product_inquiry->product->sku]);
         }
         return Datatables::of($product_inquiries)
             ->addIndexColumn()
