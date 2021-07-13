@@ -236,14 +236,15 @@ class CustomerAuthController extends FrontController
             $vendor->delivery = ($request->has('delivery') && $request->delivery == 'on') ? 1 : 0;
             $vendor->logo = 'default/default_logo.png';
             $vendor->banner = 'default/default_image.png';
-            if ($request->hasFile('logo')) {    /* upload logo file */
-                $file = $request->file('logo');
+            if ($request->hasFile('upload_logo')) {
+                $file = $request->file('upload_logo');
                 $vendor->logo = Storage::disk('s3')->put('/vendor', $file, 'public');
             }
-            if ($request->hasFile('banner')) {    /* upload logo file */
-                $file = $request->file('banner');
+            if ($request->hasFile('upload_banner')) {
+                $file = $request->file('upload_banner');
                 $vendor->banner = Storage::disk('s3')->put('/vendor', $file, 'public');
             }
+            $vendor->name = $request->name;
             $vendor->email = $request->email;
             $vendor->website = $request->website;
             $vendor->phone_no = $request->phone_no;

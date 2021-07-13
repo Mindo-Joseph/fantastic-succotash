@@ -66,7 +66,7 @@
                                 <div class="file file--upload">
                                     <label for="input-file">
                                         <span class="update_pic">
-                                            <img src="" alt="" id="output">
+                                            <img src="" id="output">
                                         </span>
                                         <span class="plus_icon">
                                             <i class="fas fa-plus"></i>
@@ -80,10 +80,11 @@
                                 <div class="file file--upload">
                                     <label for="input-file">
                                         <span class="update_pic">
-                                            <img src="" alt="" id="banner">
+                                            <img src="" id="upload_banner_preview">
                                         </span>
-                                            <span class="plus_icon"><i class="fas fa-plus"></i></span>
+                                        <span class="plus_icon"><i class="fas fa-plus"></i></span>
                                     </label>
+                                    <input id="input-file" type="file" name="upload_banner" accept="image/*" onchange="document.getElementById('upload_banner_preview').src = window.URL.createObjectURL(this.files[0])">
                                 </div>
                             </div>      
                         </div>
