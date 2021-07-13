@@ -196,7 +196,17 @@ class CustomerAuthController extends FrontController
             die();
         }
     }
-
+    public function postVendorregister(Request $request, $domain = ''){
+        try {
+           $request->validate([
+                'full_name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:6',
+            ]); 
+        } catch (Exception $e) {
+            
+        }
+    }
     public function forgotPassword(Request $request, $domain = '')
     {
         $validator = Validator::make($request->all(), [

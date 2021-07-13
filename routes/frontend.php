@@ -44,6 +44,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('validateEmail','Front\CustomerAuthController@validateEmail')->name('validateEmail');
 	Route::post('user/loginData','Front\CustomerAuthController@login')->name('customer.loginData');
 	Route::post('user/register','Front\CustomerAuthController@register')->name('customer.register');
+	Route::post('vendor/register','Front\CustomerAuthController@postVendorregister')->name('vendor.register');
 	Route::post('user/forgotPassword','Front\CustomerAuthController@forgotPassword')->name('customer.forgotPass');
 	Route::post('user/resetPassword','Front\CustomerAuthController@resetPassword')->name('customer.resetPass');
 	Route::post('primaryData', 'Front\UserhomeController@changePrimaryData')->name('changePrimaryData');
