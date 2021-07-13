@@ -66,9 +66,15 @@ class PaymentOptionController extends Controller{
 
     public function postPaymentVia_stripe(Request $request){
         try{
+            $paypal_creds = PaymentOption::select('credentials')->where('code', 'stripe')->where('status', 1)->first();
+            $creds_arr = json_decode($paypal_creds->credentials);
+            $api_key = (isset($creds_arr->api_key)) ? $creds_arr->api_key : '';
+            $this->gateway = Omnipay::create('Stripe');
+            $this->gateway->setApiKey($api_key);
+            $this->gateway->setTestMode(true); //set it to 'false' when go live
             $token = $request->stripe_token;
             $response = $this->gateway->purchase([
-                'currency' => 'USD',
+                'currency' => 'INR',
                 'token' => $token,
                 'amount' => $request->amount,
                 'metadata' => [],
