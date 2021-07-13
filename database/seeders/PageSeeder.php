@@ -17,6 +17,7 @@ class PageSeeder extends Seeder{
     public function run(){
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('pages')->truncate();
+        DB::table('page_translations')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $page_array = ['Privacy Policy', 'Terms & Conditions', 'Vendor Registration'];
         $client_language = ClientLanguage::where('is_primary', 1)->first();
