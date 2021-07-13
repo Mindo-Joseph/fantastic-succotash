@@ -18,7 +18,22 @@ class PaymentOptionController extends Controller{
         return $this->successResponse($payment_options, '', 201);
     }
 
-    public function postPaymentViaPaypal(Request $request){
+    public function postPayment(Request $request, $gateway = ''){
+        if(!empty($gateway)){
+            $function = 'postPaymentVia_'.$gateway;
+            if(method_exists($this, $function)) {
+                $response = $this->$function($request);
+                return $response;
+            }
+            else{
+                return $this->errorResponse("Invalid Gateway Request", 400);
+            }
+        }else{
+            return $this->errorResponse("Invalid Gateway Request", 400);
+        }
+    }
+
+    public function postPaymentVia_paypal(Request $request){
         try{
             $paypal_creds = PaymentOption::select('credentials')->where('code', 'paypal')->where('status', 1)->first();
             $creds_arr = json_decode($paypal_creds->credentials);
@@ -45,6 +60,27 @@ class PaymentOptionController extends Controller{
             }
         }
         catch(\Exception $ex){
+            return $this->errorResponse($ex->getMessage(), 400);
+        }
+    }
+
+    public function postPaymentVia_stripe(Request $request){
+        try{
+            $token = $request->stripe_token;
+            $response = $this->gateway->purchase([
+                'currency' => 'USD',
+                'token' => $token,
+                'amount' => $request->amount,
+                'metadata' => [],
+                'description' => 'Transaction type purchase',
+            ])->send();
+            if ($response->isSuccessful()) {
+                return $this->successResponse($response->getData());
+            }
+            else {
+                return $this->errorResponse($response->getMessage(), 400);
+            }
+        }catch(\Exception $ex){
             return $this->errorResponse($ex->getMessage(), 400);
         }
     }

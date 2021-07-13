@@ -44,8 +44,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('primary/address/{id}', 'Api\v1\AddressController@postUpdatePrimaryAddress');
         Route::post('update/order/status', 'Api\v1\OrderController@postVendorOrderStatusUpdate');
         Route::get('payment/options', 'Api\v1\PaymentOptionController@getPaymentOptions');
-        Route::get('payment/paypal', 'Api\v1\PaymentOptionController@postPaymentViaPaypal');
-        Route::get('payment/paypalSuccess', 'Front\PaypalGatewayController@paypalSuccess');
+        Route::get('payment/{gateway}', 'Api\v1\PaymentOptionController@postPayment');
         // Rating & review 
         Route::group(['prefix' => 'rating'], function () {
             Route::post('update-product-rating', 'Api\v1\RatingController@updateProductRating');

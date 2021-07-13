@@ -17,7 +17,7 @@
 <section class="section-b-space">
     <div class="container-fluid">
         <div class="payment_response">
-            <div class="alert p-0 m-0" role="alert"></div>
+            <div class="alert p-0 mt-2" role="alert"></div>
         </div>
         <div class="row">
             <div class="col-lg-12"> 
@@ -95,6 +95,7 @@
                 $(".processing").hide();
                 if (response.status == "Success") {
                     // window.location.href = base_url+'/order/success/'+response.data.order.id;
+                    success_error_alert('success', "Thank you for your order.", ".payment_response");
                 }else{
                     
                 }
@@ -115,7 +116,7 @@
             success: function(response) {
                 $(".processing").hide();
                 if (response.status == "Success") {
-                    success_error_alert('success', response.message, ".payment_response");
+                    success_error_alert('success', "Thank you for your payment.", ".payment_response");
                 }else{
                     success_error_alert('error', response.message, ".payment_response");
                 }
