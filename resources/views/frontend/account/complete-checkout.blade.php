@@ -29,15 +29,17 @@
 
 <script src="{{asset('front-assets/js/jquery-3.3.1.min.js')}}"></script>
 <script>
-    var place_order_url = "{{route('user.placeorder')}}";
+    var place_order_url = "{{route('user.placeorder', $token)}}";
     var credit_wallet_url = "{{route('user.creditWallet', $token)}}";
     var payment_success_paypal_url = "{{route('payment.paypalSuccess')}}";
+    var checkout_success_url = "{{route('payment.getCheckoutSuccess', ':id')}}";
     let path = window.location.pathname;
     let queryString = window.location.search;
     let urlParams = new URLSearchParams(queryString);
-    let address_id = "{{ $address_id }}";
     let amount = 0;
     let action = "{{ $action }}";
+    let authToken = "{{ $token }}";
+    let address_id = "{{ $address_id }}";
 
     $.ajaxSetup({
         headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') }
@@ -56,6 +58,7 @@
             data: {'amount': amount, 'token': token, 'PayerID': payer_id},
             success: function (response) {
                 if(response.status == "Success"){
+                    checkout_success_url.replace(':id', response.data);
                     if(action == "cart"){
                         placeOrder(addressID, 3, response.data);
                     }
@@ -90,14 +93,14 @@
             type: "POST",
             dataType: 'json',
             url: place_order_url,
-            data: {address_id:addressID, payment_option_id:payment_option_id, transaction_id:transaction_id},
+            data: {auth_token: authToken, address_id:addressID, payment_option_id:payment_option_id, transaction_id:transaction_id},
             success: function(response) {
                 $(".processing").hide();
                 if (response.status == "Success") {
-                    // window.location.href = base_url+'/order/success/'+response.data.order.id;
+                    window.location.href = checkout_success_url;
                     success_error_alert('success', "Thank you for your order.", ".payment_response");
                 }else{
-                    
+                    success_error_alert('error', response.message, ".payment_response");
                 }
             },
             error: function(error){
@@ -116,6 +119,7 @@
             success: function(response) {
                 $(".processing").hide();
                 if (response.status == "Success") {
+                    window.location.href = checkout_success_url;
                     success_error_alert('success', "Thank you for your payment.", ".payment_response");
                 }else{
                     success_error_alert('error', response.message, ".payment_response");

@@ -7,6 +7,8 @@ use App\Models\PaymentOption;
 use Omnipay\Common\CreditCard;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\v1\OrderController;
+use App\Http\Controllers\Api\v1\WalletController;
 
 class PaymentOptionController extends Controller{
     use ApiResponser;
@@ -22,8 +24,21 @@ class PaymentOptionController extends Controller{
         if(!empty($gateway)){
             $function = 'postPaymentVia_'.$gateway;
             if(method_exists($this, $function)) {
-                $response = $this->$function($request);
-                return $response;
+                if(!empty($request->action)){
+                    $response = $this->$function($request); // call related gateway for payment processing
+                    // if($response->status == 'Success'){
+                    //     if($gateway != 'paypal'){
+                    //         $request->transaction_id = $response->data;
+                    //         if($request->action == 'cart'){
+                    //             $orderResponse = OrderController::postPlaceOrder($request);
+                    //         }
+                    //         else if($request->action == 'wallet'){
+                    //             $walletResponse = WalletController::creditMyWallet($request);
+                    //         }
+                    //     }
+                    // }
+                    return $response;
+                }
             }
             else{
                 return $this->errorResponse("Invalid Gateway Request", 400);
@@ -66,8 +81,8 @@ class PaymentOptionController extends Controller{
 
     public function postPaymentVia_stripe(Request $request){
         try{
-            $paypal_creds = PaymentOption::select('credentials')->where('code', 'stripe')->where('status', 1)->first();
-            $creds_arr = json_decode($paypal_creds->credentials);
+            $stripe_creds = PaymentOption::select('credentials')->where('code', 'stripe')->where('status', 1)->first();
+            $creds_arr = json_decode($stripe_creds->credentials);
             $api_key = (isset($creds_arr->api_key)) ? $creds_arr->api_key : '';
             $this->gateway = Omnipay::create('Stripe');
             $this->gateway->setApiKey($api_key);
@@ -77,11 +92,11 @@ class PaymentOptionController extends Controller{
                 'currency' => 'INR',
                 'token' => $token,
                 'amount' => $request->amount,
-                'metadata' => [],
+                'metadata' => ['order_id'=>'11'],
                 'description' => 'Transaction type purchase',
             ])->send();
             if ($response->isSuccessful()) {
-                return $this->successResponse($response->getData());
+                return $this->successResponse($response->getTransactionReference());
             }
             else {
                 return $this->errorResponse($response->getMessage(), 400);
