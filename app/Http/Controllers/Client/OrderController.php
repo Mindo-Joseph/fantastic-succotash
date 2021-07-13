@@ -83,7 +83,7 @@ class OrderController extends BaseController{
                 break;
             }
         }
-        $orders = $orders->paginate(50);
+        $orders = $orders->whereHas('vendors')->paginate(50);
         foreach ($orders as $key => $order) {
             $order->created_date = convertDateTimeInTimeZone($order->created_at, $user->timezone, 'd-m-Y, H:i A');
             foreach ($order->vendors as $vendor) {
