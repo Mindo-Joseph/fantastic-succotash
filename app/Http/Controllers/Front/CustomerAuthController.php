@@ -245,11 +245,13 @@ class CustomerAuthController extends FrontController
                 $file = $request->file('upload_banner');
                 $vendor->banner = Storage::disk('s3')->put('/vendor', $file, 'public');
             }
-            $vendor->address = $request->address;
             $vendor->name = $request->name;
             $vendor->email = $request->email;
+            $vendor->address = $request->address;
             $vendor->website = $request->website;
+            $vendor->latitude = $request->latitude;
             $vendor->phone_no = $request->phone_no;
+            $vendor->longitude = $request->longitude;
             $vendor->slug = Str::slug($request->name, "-");
             $vendor->save();
             DB::commit();
