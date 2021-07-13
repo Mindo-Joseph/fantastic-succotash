@@ -20,7 +20,18 @@
                     </span>
                 </div>
             </div>
-            <div class="col-lg-12">
+            <div class="col-md-12 mb-3">
+                <label for="">Phone No.</label>
+                <input type="tel" class="form-control phone @error('phone_number') is-invalid @enderror" id="phone" placeholder="Phone Number" name="phone_number" value="{{ $user ? $user->phone_number : old('phone_number')}}">
+                <input type="hidden" id="countryData" name="countryData" value="us">
+                <input type="hidden" id="dialCode" name="dialCode" value="1">
+                @error('phone_number')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div> 
+            <!-- <div class="col-lg-12">
                 <div class="form-group" id="phoneInputEdit">
                     {!! Form::label('title', 'Phone Number',['class' => 'control-label']) !!}
                     {!! Form::text('phone_number', $user->phone_number, ['class'=>'form-control', 'required' => 'required']) !!}
@@ -28,7 +39,7 @@
                         <strong></strong>
                     </span>
                 </div>
-            </div>
+            </div> -->
             <div class="col-lg-12">
                 <div class="form-group" id="descriptionInputEdit">
                     {!! Form::label('title', 'About Me',['class' => 'control-label']) !!}
@@ -38,6 +49,11 @@
                     </span>
                 </div>
             </div>
+            <div class="col-lg-12">
+                <label class="mb-1">Time Zone</label>
+                {!! $timezone_list !!}
+            </div>
         </div>
     </div>
 </div>
+

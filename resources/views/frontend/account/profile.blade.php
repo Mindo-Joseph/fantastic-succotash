@@ -9,6 +9,7 @@
         padding-bottom: 20px;
     }
 </style>
+<link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
 @endsection
 @section('content')
 <header>
@@ -127,7 +128,7 @@
                                 <a class="copy-icon m-0" id="copy_icon" data-url="{{url('/'.'?ref=')}}{{(isset($userRefferal['refferal_code'])) ? $userRefferal['refferal_code'] : ''}}" style="cursor:pointer;">
                                     <i class="fa fa-copy"></i>
                                 </a>
-                                <p id="copy_message"></p>
+                                <p id="copy_message" class="copy-message"></p>
                             </div>
                         </div>
                         <div class="row mt-3 profile-page">
@@ -184,7 +185,7 @@
                 <div class="modal-body" id="editProfileBox">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-info waves-effect waves-light editProfileSubmit">Save</button>
+                    <button type="submit" class="btn btn-solid w-100">Save</button>
                 </div>
             </form>
         </div>
@@ -195,6 +196,8 @@
 <script src="{{asset('assets/libs/dropzone/dropzone.min.js')}}"></script>
 <script src="{{asset('assets/libs/dropify/dropify.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
+<script src="{{asset('assets/js/intlTelInput.js')}}"></script>
+
 <script type="text/javascript">
     var ajaxCall = 'ToCancelPrevReq';
     $('.verifyEmail').click(function() {
@@ -236,6 +239,12 @@
             success: function (data) {
                 $('#editProfileForm #editProfileBox').html(data.html);
                 $('.dropify').dropify();
+                var input = document.querySelector("#phone");
+                window.intlTelInput(input, {
+                    separateDialCode: true,
+                    hiddenInput: "full_number",
+                    utilsScript: "{{asset('assets/js/utils.js')}}",
+                });
             },
             error: function (data) {
             }
@@ -263,5 +272,24 @@
         var output = document.getElementById('output');
         output.src = URL.createObjectURL(event.target.files[0]);
     };
+</script>
+
+
+<script>
+   
+    $(document).ready(function() {
+        $("#phone").keypress(function(e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+            return true;
+        });
+    });
+    $('.iti__country').click(function() {
+        var code = $(this).attr('data-country-code');
+        $('#countryData').val(code);
+        var dial_code = $(this).attr('data-dial-code');
+        $('#dialCode').val(dial_code);
+    });
 </script>
 @endsection

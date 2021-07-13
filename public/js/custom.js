@@ -93,10 +93,6 @@ $(document).ready(function() {
         settingData('currency', changcurrId, changSymbol);
     });
 
-    if($("#stripe-card-element").length > 0){
-        stripeInitialize();
-    }
-
     function stripeInitialize(){
         stripe = Stripe('pk_test_51J0nVZSBx0AFwevbSTIDlYAaLjdsg4V4yoHpSo4BCZqGBzzGeU8Mnw1o0spfOYfMtyCXC11wEn6vBqbJeSNnAkw600U6jkzS3R');
         var elements = stripe.elements();
@@ -106,6 +102,24 @@ $(document).ready(function() {
         card = elements.create('card', {hidePostalCode: true, style: style});
         card.mount('#stripe-card-element');
     }
+
+    if($("#stripe-card-element").length > 0){
+        stripeInitialize();
+    }
+
+    $(document).delegate(".buy_subscription", "click", function(){
+        var payment_method = $("input[name='subscription_payment_method']:checked");
+        if(payment_method.length > 0){
+            if( (payment_method.val() == 'stripe') ){
+                if($('#stripe-card-element').hasClass('StripeElement--complete')){
+                    $("#confirm-buy-subscription").modal('show');
+                }
+            }else{
+                $("#confirm-buy-subscription").modal('show');
+            }
+        }
+    });
+
     function productRemove(cartproduct_id, vendor_id){
         $.ajax({
             type: "POST",

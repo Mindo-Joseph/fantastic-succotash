@@ -1,5 +1,11 @@
 @extends('layouts.store', ['title' => 'Verify Account'])
 @section('content')
+<style type="text/css">
+    a.disabled {
+      pointer-events: none;
+      cursor: default;
+    }
+</style>
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -46,7 +52,7 @@
                                 <div class="row text-center mt-2">
                                     <div class="col-12 resend_txt">
                                         <p class="mb-1">If you didn’t receive a code?</p>
-                                        <a class="verifyEmail"><u>RESEND</u></a>
+                                        <a class="verifyEmail" href="javascript:void(0)"><u>RESEND</u></a>
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <button type="button" class="btn btn-solid" id="verify_email_token">Verify</button>
@@ -137,12 +143,22 @@
         verifyUser('phone');
     });
     function verifyUser($type = 'email') {
+        if($type == 'email'){
+            $('.verifyEmail').addClass('disabled').html('SENDING...');
+        }else if ($type == 'phone') {
+            $('.verifyPhone').addClass('disabled').html('SENDING...');
+        }
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
             url: "{{ route('email.send', Auth::user()->id) }}",
             data: {"_token": "{{ csrf_token() }}",type: $type,},
             success: function(response) {
+                if($type == 'email'){
+                    $('.verifyEmail').removeClass('disabled').html('RESEND');
+                }else{
+                    $('.verifyPhone').removeClass('disabled').html('RESEND');
+                }
                 if($type == 'email'){
                  $('.edit_email_feedback').html(response.message);
                 }else{

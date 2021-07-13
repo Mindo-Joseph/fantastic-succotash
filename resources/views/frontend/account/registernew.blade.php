@@ -1,25 +1,5 @@
 @extends('layouts.store', ['title' => 'Register'])
 @section('css')
-
-<style type="text/css">
-    .iti__flag-container li,
-    .flag-container li {
-        display: block;
-    }
-    .iti.iti--allow-dropdown,
-    .allow-dropdown {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-    }
-    .iti.iti--allow-dropdown .phone,
-    .flag-container .phone {
-        padding: 17px 0 17px 100px !important;
-    }
-    .invalid-feedback {
-        display: block;
-    }
-</style>
 <link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
 @endsection
 @section('content')
@@ -86,6 +66,7 @@
                                     <label for="">Phone No.</label>
                                     <input type="tel" class="form-control phone @error('phone_number') is-invalid @enderror" id="phone" placeholder="Phone Number" name="phone_number" value="{{ old('phone_number')}}">
                                     <input type="hidden" id="countryData" name="countryData" value="us">
+                                    <input type="hidden" id="dialCode" name="dialCode" value="1">
                                     @error('phone_number')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -114,6 +95,7 @@
                                 </div>                                    
                             </div>
                             <div class="row form-group mb-0 align-items-center">
+<<<<<<< HEAD
                                 <div class="col-md-6 checkbox-input">
                                     <input type="checkbox" id="html">
                                     <label for="html">I agree to share my contact details <a href="#">terms and conditions</a>.</label>
@@ -135,6 +117,28 @@
                                     <button type="submit" class="btn btn-solid submitLogin w-100">Create An Account</button>
                                 </div>                                    
                             </div>                              
+=======
+                                <div class="col-md-12">
+                                    <label for="html">By creating an account you agree to the <a href="{{url('extra-page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and <a href="{{url('extra-page/privacy-policy')}}" target="_blank">Privacy Policy.</a></label>
+                                </div>
+                                <div class="col-md-6 hide position-absolute">
+                                <label for="">Referral Code</label>
+                                <input type="text" class="form-control" id="refferal_code" placeholder="Refferal Code" name="refferal_code" value="{{ old('refferal_code', $code ?? '')}}">
+                                @if($errors->first('refferal_code'))
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('refferal_code') }}</strong>
+                                </span>
+                                @endif
+                                </div>
+                                </div>
+                                <div class="row mt-3">
+                                <div class="col-md-12">
+                                <input type="hidden" name="device_type" value="web">
+                                <input type="hidden" name="device_token" value="web">
+                                <button type="submit" class="btn btn-solid submitLogin w-100">Create An Account</button>
+                                </div>
+                                </div>                              
+>>>>>>> f59b82fe45c04f020d19ed67144d5a98b182ecb6
                         </form>
                     </div>
                 </div>                        
@@ -163,6 +167,8 @@
     $('.iti__country').click(function() {
         var code = $(this).attr('data-country-code');
         $('#countryData').val(code);
+        var dial_code = $(this).attr('data-dial-code');
+        $('#dialCode').val(dial_code);
     });
 </script>
 @endsection

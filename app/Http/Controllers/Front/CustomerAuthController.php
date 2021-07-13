@@ -26,18 +26,38 @@ class CustomerAuthController extends FrontController
 
     public function getTestHtmlPage()
     {
-        $monthlysales = \DB::table('orders')
-            ->select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'))
-            ->whereRaw('MONTH(created_at) = ?', [date('m')])
-            ->groupBy('x')
-            ->get();
+        $type = "monthly";
+
+        if ($type == "monthly") {
+            $total_sales = \DB::table('orders')
+                ->select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'))
+                ->whereRaw('MONTH(created_at) = ?', [date('m')])
+                ->groupBy('x')
+                ->get();
+        } else if ($type == "yearly") {
+            $total_sales = \DB::table('orders')
+                ->select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('monthname(created_at) as x'))
+                ->whereRaw('YEAR(created_at) = ?', [date('Y')])
+                ->groupBy('x')
+                ->orderBy('x', 'desc')
+                ->get();
+        } else if ($type == "weekly") {
+            Carbon::setWeekStartsAt(Carbon::SUNDAY);
+            $total_sales = \DB::table('orders')
+                ->select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'))
+                ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+                ->groupBy('x')
+                ->orderBy('x', 'asc')
+                ->get();
+        }
+
         $dates = array();
         $revenue = array();
         $sales = array();
-        foreach ($monthlysales as $monthly) {
-            $dates[] = $monthly->x;
-            $revenue[] = $monthly->y;
-            $sales[] = $monthly->z;
+        foreach ($total_sales as $sale) {
+            $dates[] = $sale->x;
+            $revenue[] = $sale->y;
+            $sales[] = $sale->z;
         }
         $data = ['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales];
         return $this->successResponse($data, '', 200);
@@ -166,8 +186,9 @@ class CustomerAuthController extends FrontController
             $user->is_phone_verified = 0;
             $user->country_id = $county->id;
             $user->phone_token = $phoneCode;
+            $user->dial_code = $req->dialCode;
             $user->email_token = $emailCode;
-            $user->phone_number = $req->full_number;
+            $user->phone_number = $req->phone_number;
             $user->phone_token_valid_till = $sendTime;
             $user->email_token_valid_till = $sendTime;
             $user->password = Hash::make($req->password);

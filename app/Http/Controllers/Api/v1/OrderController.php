@@ -251,7 +251,9 @@ class OrderController extends Controller {
                 }else{
                     return $this->errorResponse(['error' => 'Empty cart.'], 404);
                 }
-        } catch (Exception $e) {
+        
+            }
+            catch (Exception $e) {
             DB::rollback();
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }

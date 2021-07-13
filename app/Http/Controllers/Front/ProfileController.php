@@ -113,6 +113,8 @@ class ProfileController extends FrontController
             }
             $user->name = $request->name;
             $user->phone_number = $request->phone_number;
+            $user->dial_code = $request->dialCode;
+            $user->timezone = $request->timezone;
             $user->description = $request->description;
             $user->save();
             return redirect()->back()->with('success', 'Profile has been updated');
@@ -148,7 +150,11 @@ class ProfileController extends FrontController
     public function editAccount(Request $request){
         $user = User::select('id', 'name', 'email', 'description', 'phone_number', 'image', 'type', 'country_id')->where('id', Auth::user()->id)->first();
         $user_addresses = UserAddress::where('user_id', Auth::user()->id)->get();
-        $returnHTML = view('frontend.account.edit-profile')->with(['user' => $user, 'userAddresses' => $user_addresses])->render();
+        $timezone_list = Timezonelist::create('timezone', $user->timezone, [
+            'id'    => 'timezone',
+            'class' => 'styled form-control',
+        ]);
+        $returnHTML = view('frontend.account.edit-profile')->with(['user' => $user, 'userAddresses' => $user_addresses, 'timezone_list' => $timezone_list])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 

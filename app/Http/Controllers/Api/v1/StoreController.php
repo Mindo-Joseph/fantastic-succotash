@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Api\v1;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation};
+use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation, OrderVendor};
 
 class StoreController extends Controller{
     use ApiResponser;
@@ -138,15 +138,29 @@ class StoreController extends Controller{
             return $this->errorResponse($e->getMessage(), $e->getCode());
     	}
     }
-    public function getMyStoreRevenueDetails(){
+    public function getMyStoreRevenueDetails(Request $request){
         $dates = [];
         $sales = [];
         $revenue = [];
- 		$monthlysales = \DB::table('orders')
-            ->select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'))
-            ->whereRaw('MONTH(created_at) = ?', [date('m')])
-            ->groupBy('x')
-            ->get();
+        $type = $request->type;
+        $vendor_id = $request->vendor_id;
+        $monthly_sales_query = OrderVendor::select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'));
+        switch ($type) {
+        	case 'monthly':
+        		$created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')]);
+    		break;
+    		case 'weekly':
+    			Carbon::setWeekStartsAt(Carbon::SUNDAY);
+        		$created_at = $monthly_sales_query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]); 
+    		break;
+    		case 'yearly':
+        		$created_at = $monthly_sales_query->whereRaw('YEAR(created_at) = ?', [date('Y')]);
+    		break;
+        	default:
+    			$created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')]);
+    		break;
+        }
+ 		$monthlysales = $monthly_sales_query->where('vendor_id', $vendor_id)->groupBy('x')->get();
         foreach ($monthlysales as $monthly) {
             $dates[] = $monthly->x;
             $sales[] = $monthly->z;

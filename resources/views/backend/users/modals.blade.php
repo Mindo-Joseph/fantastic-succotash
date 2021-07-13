@@ -104,7 +104,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" id="addCountryData" name="countryData" value="us">
-                    <button type="submit" class="btn btn-info waves-effect waves-light submitCustomerForm">Submit</button>
+                    <button type="submit" class="btn btn-info w-100">Submit</button>
                 </div>
             </form>
         </div>
@@ -201,7 +201,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" id="editCountryData" name="editCountryData" value="us">
-                    <button type="submit" class="btn btn-info waves-effect waves-light updateCustomerForm">Submit</button>
+                    <button type="submit" class="btn btn-info w-100">Submit</button>
                 </div>
             </form>
         </div>
