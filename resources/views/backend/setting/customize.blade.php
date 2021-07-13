@@ -236,7 +236,6 @@
                             <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
                                 <thead>
                                     <tr>
-                                        <!-- <th>#</th> -->
                                         <th>Icon</th>
                                         <th>URL</th>
                                         <th>Action</th>
@@ -245,11 +244,8 @@
                                 <tbody id="post_list">
                                     @forelse($social_media_details as $social_media_detail)
                                     <tr>
-                                        <!-- <td>{{$loop->iteration}}</td> -->
                                         <td>
-                                            <!-- <a href="#"> -->
-                                                <i class="fab fa-{{$social_media_detail->icon}}" aria-hidden="true"></i>
-                                            <!-- </a> -->
+                                            <i class="fab fa-{{$social_media_detail->icon}}" aria-hidden="true"></i>
                                         </td>
                                         <td>
                                             <a href="{{$social_media_detail->url}}" target="_blank">{{$social_media_detail->url}}</a>
