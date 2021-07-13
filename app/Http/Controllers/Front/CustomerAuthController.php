@@ -50,7 +50,6 @@ class CustomerAuthController extends FrontController
                 ->orderBy('x', 'asc')
                 ->get();
         }
-
         $dates = array();
         $revenue = array();
         $sales = array();
