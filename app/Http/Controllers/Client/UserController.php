@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use Image;
 use Password;
+use DataTables;
 use App\Models\Vendor;
 use App\Models\UserVendor;
 use App\Models\Permissions;
@@ -28,8 +29,43 @@ class UserController extends BaseController{
     public function index(){
         $roles = Role::all();
         $countries = Country::all();
-        $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->paginate(20);
+        $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->paginate(10);
         return view('backend/users/index')->with(['users' => $users, 'roles' => $roles, 'countries' => $countries]);
+    }
+    public function getFilterData(Request $request){
+        $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->get();
+        foreach ($users as  $user) {
+            $user->edit_url = route('customer.new.edit', $user->id);
+            $user->delete_url = route('customer.account.action', [$user->id, 3]);
+            $user->image_url = $user->image['proxy_url'].'40/40'.$user->image['image_path'];
+            $user->login_type = 'Email'; 
+            $user->login_type_value = $user->email;
+            if(!empty($user->facebook_auth_id)){
+                $user->login_type = 'Facebook';
+                $user->login_type_value = $user->facebook_auth_id;
+            }elseif(!empty($user->twitter_auth_id)){
+                $user->login_type = 'Twitter';
+                $user->login_type_value = $user->twitter_auth_id;
+            }elseif(!empty($user->google_auth_id)){
+                $user->login_type = 'Google';
+                $user->login_type_value = $user->google_auth_id;
+            }elseif(!empty($user->apple_auth_id)){
+                $user->login_type = 'Apple';
+                $user->login_type_value = $user->apple_auth_id;
+            } 
+        }
+        return Datatables::of($users)
+        ->addIndexColumn()
+        ->filter(function ($instance) use ($request) {
+            if (!empty($request->get('search'))) {
+                $instance->collection = $instance->collection->filter(function ($row) use ($request){
+                    if (Str::contains(Str::lower($row['name']), Str::lower($request->get('search')))){
+                        return true;
+                    }
+                    return false;
+                });
+            }
+        })->make(true);
     }
 
     /**
