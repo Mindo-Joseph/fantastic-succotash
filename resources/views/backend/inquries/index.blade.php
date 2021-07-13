@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'PRODUCT INQURIES'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Product Inquiries'])
 @section('css')
 <link href="{{asset('assets/libs/datatables/datatables.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
@@ -7,7 +7,7 @@
     <div class="row align-items-center">
         <div class="col-sm-6">
             <div class="page-title-box">
-                <h4 class="page-title">Product Inquries</h4>
+                <h4 class="page-title">Product Inquiries</h4>
             </div>
         </div>
     </div>
@@ -99,7 +99,9 @@
                     {data: 'phone_number', name: 'phone_number',orderable: false, searchable: false},
                     {data: 'company_name', name: 'company_name',orderable: false, searchable: false},
                     {data: 'message', name: 'message',orderable: false, searchable: false},
-                    {data: 'product.sku', name: 'sku',orderable: false, searchable: false},
+                    {data: 'product.sku', name: 'product.sku', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
+                        return "<a href='"+full.view_url+"' target='_blank'>"+full.sku+"</a> ";
+                    }},
                 ]
             });
         }

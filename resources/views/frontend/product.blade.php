@@ -217,9 +217,9 @@
                                     <div class="product-buttons">
                                         @if($product->variant[0]->quantity > 0)
                                             @if($is_inwishlist_btn)
-                                            <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
-                                                {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? 'Remove from Wishlist' : 'Add To Wishlist' }}
-                                            </button>
+                                                <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
+                                                    {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? 'Remove from Wishlist' : 'Add To Wishlist' }}
+                                                </button>
                                             @endif
                                             @if($product->inquiry_only == 0)
                                             <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a>
@@ -257,11 +257,11 @@
                                                 class="icofont icofont-ui-home"></i>Description</a>
                                         <div class="material-border"></div>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-toggle="tab"
+                                    <!-- <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-toggle="tab"
                                             href="#top-profile" role="tab" aria-selected="false"><i
                                                 class="icofont icofont-man-in-glasses"></i>Details</a>
                                         <div class="material-border"></div>
-                                    </li>
+                                    </li> -->
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->rating_check == 1)
                                             <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab"
