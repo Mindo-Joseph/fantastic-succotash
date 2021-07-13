@@ -30,14 +30,13 @@ class PaypalGatewayController extends Controller
         $this->gateway->setTestMode(true); //set it to 'false' when go live
     }
 
-    public function postPaymentViaPaypal(Request $request)
-    {
+    public function postPaymentViaPaypal(Request $request){
         try{
             $response = $this->gateway->purchase([
-                'amount' => $request->input('amount'),
                 'currency' => 'USD',
+                'amount' => $request->input('amount'),
+                'cancelUrl' => url($request->cancelUrl),
                 'returnUrl' => url($request->returnUrl . '?amount=' . $request->input('amount')),
-                'cancelUrl' => url($request->cancelUrl)
             ])->send();
             if ($response->isSuccessful()) {
                 return $this->successResponse($response->getData());

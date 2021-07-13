@@ -58,6 +58,7 @@ class AppServiceProvider extends ServiceProvider
         view()->share('favicon', $favicon_url);
         view()->share('social_media_details', $social_media_details);
         view()->share('client_preference_detail', $client_preference_detail);
+       
     }
 
     public function connectDynamicDb($request)

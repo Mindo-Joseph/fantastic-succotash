@@ -21,6 +21,7 @@ class ProductInquiryController extends FrontController
                 'email' => 'required',
                 'number' => 'required',
                 'message' => 'required',
+                'agree' =>'accepted'
             );
             $validation  = Validator::make($request->all(), $rules)->validate();
             ProductInquiry::create(['name' => $request->name, 'email' => $request->email, 'phone_number' => $request->number, 'company_name' => $request->company_name, 'message' => $request->message, 'product_id' => $request->product_id, 'vendor_id' => $request->vendor_id, 'product_variant_id' => $request->variant_id]);
