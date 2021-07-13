@@ -236,20 +236,20 @@
                             <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <!-- <th>#</th> -->
                                         <th>Icon</th>
-                                        <th>Url</th>
+                                        <th>URL</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="post_list">
                                     @forelse($social_media_details as $social_media_detail)
                                     <tr>
-                                        <td>{{$loop->iteration}}</td>
+                                        <!-- <td>{{$loop->iteration}}</td> -->
                                         <td>
-                                            <a href="#">
-                                                <i class="{{$social_media_detail->icon}}" aria-hidden="true"></i>
-                                            </a>
+                                            <!-- <a href="#"> -->
+                                                <i class="fab fa-{{$social_media_detail->icon}}" aria-hidden="true"></i>
+                                            <!-- </a> -->
                                         </td>
                                         <td>
                                             <a href="{{$social_media_detail->url}}" target="_blank">{{$social_media_detail->url}}</a>
@@ -297,13 +297,27 @@
                         <label for="">Icon</label>
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
-                                <div class="input-group-text">@</div>
+                                <div class="input-group-text"><i class="fab fa-facebook"></i></div>
                             </div>
-                            <input class="form-control icp icp-auto" name="icon" value="fab fa-facebook" type="text" >
+                            <select class="form-control" id="social_icons" name="icon">
+                                <option value="facebook"> Facebook </option>
+                                <option value="github"> Github </option>
+                                <option value="reddit"> Reddit </option>
+                                <option value="whatsapp"> Whatsapp </option>
+                                <option value="instagram"> Instagram </option>
+                                <option value="tumblr"> Tumblr </option>
+                                <option value="twitch"> Twitch </option>
+                                <option value="twitter"> Twitter </option>
+                                <option value="pinterest"> Pinterest </option>
+                                <option value="youtube"> Youtube </option>
+                                <option value="snapchat"> Snapchat </option>
+                                <option value="google-plus-g"> Google-plus-g </option>
+                                <option value="linkedin-in"> Linkedin-in </option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group position-relative">
-                        <label for="">Url</label>
+                        <label for="">URL</label>
                         <input class="form-control" name="url" type="text">
                         <span class="text-danger error-text social_media_url_err"></span>
                     </div>
@@ -320,94 +334,10 @@
 <script src="{{asset('assets/js/jscolor.js')}}"></script>
 <script src="https://itsjavi.com/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.js"></script>
 <script type="text/javascript">
-    var options_iconpicker = {
-        icons: [
-        {
-            title: "fas fa-blog",
-            searchTerms: ['social']
-        },
-        {
-            title: "fab fa-vk",
-            searchTerms: ['social']
-        },
-        {
-            title: "fab fa-github",
-            searchTerms: ['social']
-        },
-        {
-            title: "fab fa-reddit",
-            searchTerms: ['social']
-        },
-        {
-            title: "fab fa-whatsapp",
-            searchTerms: ['social']
-        },
-        {
-            title: "fab fa-facebook",
-            searchTerms: ['social']
-        },
-        {
-            title: "fab fa-instagram",
-            searchTerms: ['social']
-        },
-        {
-            title: "fab fa-tumblr",
-            searchTerms: ['social']
-        },
-        {
-            title: "fab fa-twitch",
-            searchTerms: ['social']
-        },
-        {
-            title: "fab fa-twitter",
-            searchTerms: ['social']
-        },{
-            title: "fab fa-pinterest",
-            searchTerms: ['social']
-        },{
-            title: "fab fa-youtube",
-            searchTerms: ['social']
-        },{
-            title: "fab fa-snapchat",
-            searchTerms: ['social']
-        },
-        {
-            title: "fab fa-google-plus-g",
-            searchTerms: ['social']
-        },
-        {
-            title: "fab fa-linkedin-in",
-            searchTerms: ['social']
-        }
-    ],
-        title: false,
-        selected: false,
-        trigger: 'hover',
-        defaultValue: true,
-        placement: 'bottom',
-        collision: 'none',
-        trigger: 'hover',
-        animation: false,
-        hideOnSelect: false,
-        showFooter: false,
-        searchInFooter: false,
-        mustAccept: false,
-        selectedCustomClass: 'bg-primary',
-        input: 'input,.icp-auto',
-        inputSearch: false,
-        container: false,
-        component: '.input-group-text,.iconpicker-component',
-        templates: {
-            popover: '<div class="iconpicker-popover popover"><div class="arrow"></div>' +
-                '<div class="popover-title"></div><div class="popover-content"></div></div>',
-            footer: '<div class="popover-footer"></div>',
-            buttons: '<button class="iconpicker-btn iconpicker-btn-cancel btn btn-default btn-sm">Cancel</button>' +
-                ' <button class="iconpicker-btn iconpicker-btn-accept btn btn-primary btn-sm">Accept</button>',
-            search: '<input type="search" class="form-control iconpicker-search" placeholder="Type to filter" />',
-            iconpicker: '<div class="iconpicker"><div class="iconpicker-items"></div></div>',
-            iconpickerItem: '<a role="button" href="#" class="iconpicker-item"><i></i></a>',
-        }
-    };
+    $('#social_icons').on('change', function() {
+        $(".input-group-text").html('<i class="fab fa-'+this.value+'"></i>');
+    });
+
     $(document).ready(function() {
         $.ajaxSetup({
             headers: {
@@ -436,7 +366,6 @@
             }
         });
         $(document).on("click", ".edit_social_media_option_btn", function() {
-            $('.icp-auto').iconpicker(options_iconpicker);
             let social_media_detail_id = $(this).data('social_media_detail_id');
             $('#add_or_edit_social_media_modal input[name=social_media_id]').val(social_media_detail_id);
             $.ajax({
@@ -449,8 +378,8 @@
                     if (response.status = 'Success') {
                         $('#add_or_edit_social_media_modal').modal('show');
                         $("#add_or_edit_social_media_modal input[name=url]").val(response.data.url);
-                        $("#add_or_edit_social_media_modal .input-group-text i").val(response.data.icon);
-                        $("#add_or_edit_social_media_modal .iconpicker-input").val(response.data.icon);
+                        $("#add_or_edit_social_media_modal .input-group-text").html('<i class="fab fa-'+response.data.icon+'"></i>');
+                        $("#add_or_edit_social_media_modal #social_icons").val(response.data.icon);
                         $("#add_or_edit_social_media_modal input[name=social_media_id]").val(response.data.id);
                         $('#add_or_edit_social_media_modal #standard-modalLabel').html('Update Social Media');
                     }
@@ -462,13 +391,12 @@
 
         });
         $(document).on("click", "#add_social_media_modal_btn", function() {
-            $('.icp-auto').iconpicker(options_iconpicker);
             $('#add_or_edit_social_media_modal #standard-modalLabel').html('Add Social Media');
             $('#add_or_edit_social_media_modal').modal('show');
         });
         $(document).on('click', '.submitSaveSocialForm', function(e) {
             var social_media_url = $("#add_or_edit_social_media_modal input[name=url]").val();
-            var social_media_icon = $("#add_or_edit_social_media_modal .iconpicker-input").val();
+            var social_media_icon = $("#add_or_edit_social_media_modal #social_icons").val();
             var social_media_id = $("#add_or_edit_social_media_modal input[name=social_media_id]").val();
             if (social_media_id) {
                 var post_url = "{{ route('social.media.update') }}";
