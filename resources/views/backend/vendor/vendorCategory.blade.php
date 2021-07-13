@@ -3,9 +3,6 @@
 <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/ion-rangeslider/ion-rangeslider.min.css')}}" rel="stylesheet" type="text/css" />
 <style type="text/css">
-    .modal-lg {
-        max-width: 70%;
-    }
     span.inner-div{
         float: right;
         display: block;
@@ -64,6 +61,11 @@
                 <div class="">
                     <ul class="nav nav-pills navtab-bg nav-justified">
                         <li class="nav-item">
+                            <a href="{{ route('vendor.catalogs', $vendor->id) }}"  aria-expanded="false" class="nav-link {{($tab == 'catalog') ? 'active' : '' }}">
+                                Catalog
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('vendor.show', $vendor->id) }}"  aria-expanded="false" class="nav-link {{($tab == 'configuration') ? 'active' : '' }}">
                                 Configuration
                             </a>
@@ -71,11 +73,6 @@
                         <li class="nav-item">
                             <a href="{{ route('vendor.categories', $vendor->id) }}"  aria-expanded="true" class="nav-link {{($tab == 'category') ? 'active' : '' }}">
                                 Category
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('vendor.catalogs', $vendor->id) }}"  aria-expanded="false" class="nav-link {{($tab == 'catalog') ? 'active' : '' }}">
-                                Catalog
                             </a>
                         </li>
                     </ul>

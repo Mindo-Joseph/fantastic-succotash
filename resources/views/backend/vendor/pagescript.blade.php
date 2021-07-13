@@ -63,7 +63,6 @@
                 });
             });
         });
-
     }
     $('#show-map-modal').on('hide.bs.modal', function () {
          $('#add-customer-modal').removeClass('fadeIn');
@@ -166,15 +165,15 @@
                 var switchery = new Switchery(delivery[0]);
                 autocompletesWraps.push('edit');
                 loadMap(autocompletesWraps); 
-            },
-            error: function (data) {
-                console.log('data2');
-            },
-            beforeSend: function(){
-                $(".loader_box").show();
-            },
-            complete: function(){
-                $(".loader_box").hide();
+            // },
+            // error: function (data) {
+            //     console.log('data2');
+            // },
+            // beforeSend: function(){
+            //     $(".loader_box").show();
+            // },
+            // complete: function(){
+            //     $(".loader_box").hide();
             }
         });
     });

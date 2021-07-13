@@ -22,7 +22,6 @@
 }
 </style>
 @endsection
-
 @section('content')
 <div class="container-fluid">
     <div class="row align-items-center">
@@ -57,9 +56,36 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card widget-inline">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 mb-3 mb-md-0">
+                                            <div class="text-center">
+                                                <h3>
+                                                    <i class="mdi mdi-storefront text-primary mdi-24px"></i>
+                                                    <span data-plugin="counterup" id="total_vendor">1</span>
+                                                </h3>
+                                                <p class="text-muted font-15 mb-0">Total Unique Vendor Count</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 mb-3 mb-md-0">
+                                            <div class="text-center">
+                                                <h3>
+                                                    <i class="mdi mdi-dump-truck text-primary mdi-24px"></i>
+                                                    <span data-plugin="counterup" id="total_product">1</span>
+                                                </h3>
+                                                <p class="text-muted font-15 mb-0">Total Unique Product Count</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="table-responsive">
-                        <form name="saveOrder" id="saveOrder"> @csrf </form>
-                        <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
+                        <table class="table table-centered table-nowrap table-striped" id="user_datatable">
                             <thead>
                                 <tr>
                                     <th>Image</th>
@@ -76,70 +102,9 @@
                                 </tr>
                             </thead>
                             <tbody id="post_list">
-                                @foreach($users as $user)
-                                <?php 
-                                    $loginType = 'Email'; 
-                                    $loginTypeValue = $user->email;
-                                    if(!empty($user->facebook_auth_id)){
-                                        $loginType = 'Facebook';
-                                        $loginTypeValue = $user->facebook_auth_id;
-
-                                    }elseif(!empty($user->twitter_auth_id)){
-                                        $loginType = 'Twitter';
-                                        $loginTypeValue = $user->twitter_auth_id;
-
-                                    }elseif(!empty($user->google_auth_id)){
-                                        $loginType = 'Google';
-                                        $loginTypeValue = $user->google_auth_id;
-
-                                    }elseif(!empty($user->apple_auth_id)){
-                                        $loginType = 'Apple';
-                                        $loginTypeValue = $user->apple_auth_id;
-                                    } 
-                                ?>
-                                <tr data-row-id="{{$user->id}}">
-                                    <td> 
-                                        <img src="{{$user->image['proxy_url'].'40/40'.$user->image['image_path']}}" class="rounded-circle" alt="{{$user->id}}" >
-                                    </td>
-                                    <td><a href="{{route('customer.new.edit', $user->id)}}"  class=""> {{$user->name}}</a></td>
-                                    <td>{{$loginType}}</td>
-                                    <td> 
-                                        @if($user->is_email_verified == 1)
-                                          <i class="mdi mdi-email-check mr-1 mdi-icons"></i>
-                                        @endif
-                                        {{$loginTypeValue}}
-                                    </td>
-                                    <td>
-                                        @if($user->is_phone_verified == 1)
-                                          <i class="mdi mdi-phone-check mr-1 mdi-icons"></i>
-                                        @endif
-                                        {{ $user->phone_number }} 
-                                    </td>
-                                    <td>{{$user->email_token}}</td>
-                                    <td>{{$user->phone_token}}</td>
-                                    <td>{{$user->orders_count}}</td>
-                                    <td>{{$user->active_orders_count}}</td>
-                                    <td>
-                                        <input type="checkbox" data-id="{{$user->id}}" id="cur_{{$user->id}}" data-plugin="switchery" name="userAccount" class="chk_box" data-color="#43bee1" {{($user->status == 1) ? 'checked' : ''}} >
-                                    </td> 
-                                    <td> 
-                                        <div class="form-ul" style="width: 60px;">
-                                            <div class="inner-div" >
-                                                @if(Auth::user()->is_superadmin == 1)<a href="{{route('customer.new.edit', $user->id)}}"  class="action-icon editIconBtn"> 
-                                                <i class="mdi mdi-square-edit-outline"></i></a>
-
-                                                <a href="{{route('customer.account.action', [$user->id, 3])}}" onclick="return confirm('Are you sure? You want to delete the user.')" class="action-icon"> <i class="mdi mdi-delete" title="Delete user"></i></a>
-                                                @endif    
-                                            </div>
-                                        </div>
-                                    </td> 
-                                </tr>
-                               @endforeach
+                                
                             </tbody>
                         </table>
-                    </div>
-                    <div class="pagination pagination-rounded justify-content-end mb-0">
-                        {{ $users->links() }}
                     </div>
                 </div>
             </div>
@@ -147,6 +112,101 @@
     </div>
 </div>
 @include('backend.users.modals')
+<script type="text/javascript">
+    $(document).ready(function() {
+        var table;
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+        initDataTable();
+        $(document).on("click",".delete-vendor",function() {
+            var destroy_url = $(this).data('destroy_url');
+            var id = $(this).data('rel');
+            if (confirm('Are you sure?')) {
+              $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: destroy_url,
+                data:{'_method':'DELETE'},
+                success: function(response) {
+                    if (response.status == "Success") {
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                        window.location.reload();
+                    }
+                }
+            });
+            }
+        });
+        function initDataTable() {
+            $('#user_datatable').DataTable({
+                "dom": '<"toolbar">Bfrtip',
+                "destroy": true,
+                "scrollX": true,
+                "processing": true,
+                "serverSide": true,
+                "iDisplayLength": 10,
+                language: {
+                    search: "",
+                    paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
+                    searchPlaceholder: "Search By Vendor Name"
+                },
+                drawCallback: function () {
+                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                },
+                buttons: [],
+                ajax: {
+                  url: "{{route('user.filterdata')}}",
+                  data: function (d) {
+                    d.search = $('input[type="search"]').val();
+                    d.date_filter = $('#range-datepicker').val();
+                    d.payment_option = $('#payment_option_select_box option:selected').val();
+                    d.tax_type_filter = $('#tax_type_select_box option:selected').val();
+                  }
+                },
+                columns: [
+                    {data: 'image_url', name: 'image_url', orderable: false, searchable: false,"mRender": function ( data, type, full ) {
+                        return "<img src='"+full.image_url+"' class='rounded-circle' alt='"+full.id+"' >";
+                    }},
+                    {data: 'name', name: 'name', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
+                        return "<a href='"+full.edit_url+"'>"+full.name+"</a> ";
+                    }},
+                    {data: 'login_type', name: 'login_type', orderable: false, searchable: false},
+                    {data: 'login_type_value', name: 'login_type_value', orderable: false, searchable: false, "mRender": function ( data, type, full) {
+                        if(full.is_email_verified == 1){
+                            return "<i class='mdi mdi-email-check mr-1 mdi-icons'></i>"+full.login_type_value;
+                        }else{
+                            return "<i class='mdi mdi-email-remove mr-1 mdi-icons'></i>"+full.login_type_value;
+                        }
+                    }},
+                    {data: 'is_phone_verified', name: 'is_phone_verified', orderable: false, searchable: false, "mRender": function ( data, type, full) {
+                        if(full.is_phone_verified == 1){
+                            return "<i class='mdi mdi-phone-check mr-1 mdi-icons'></i>"+full.login_type_value;
+                        }else{
+                            return full.login_type_value;
+                        }
+                    }},
+                    {data: 'email_token', name: 'email_token', orderable: false, searchable: false},
+                    {data: 'phone_token', name: 'phone_token', orderable: false, searchable: false},
+                    {data: 'orders_count', name: 'orders_count', orderable: false, searchable: false},
+                    {data: 'active_orders_count', name: 'active_orders_count', orderable: false, searchable: false},
+                    {data: 'status', name: 'status', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
+                        if(full.status == 1){
+                            return "<input type='checkbox' data-id='"+full.id+"' id='cur_"+full.id+"' data-plugin='switchery' name='userAccount' class='chk_box' data-color='#43bee1' checked>";
+
+                        }else{
+                            return "<input type='checkbox' data-id='"+full.id+"' id='cur_"+full.id+"' data-plugin='switchery' name='userAccount' class='chk_box' data-color='#43bee1'>";
+                        }
+                    }},
+                    {data: 'action', name: 'action', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
+                         return "<div class='form-ul'><div class='inner-div'><a href='"+full.edit_url+"' class='action-icon editIconBtn'><i class='mdi mdi-square-edit-outline'></i></a><a href='"+full.delete_url+"' class='action-icon'><i class='mdi mdi-delete' title='Delete user'></i></a></div></div>";
+                    }},
+                ]
+            });
+        }
+    });
+</script>
 @endsection
 @section('script')
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>

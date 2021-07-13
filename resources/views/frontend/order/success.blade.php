@@ -13,7 +13,7 @@
                     <h2>thank you</h2>
                     <p>Payment is successfully processsed and your order is on the way</p>
                     @if($order->payment_method != 2)
-                    	<p>Transaction ID: {{$order->payment->transaction_id}}</p>
+                    	<p>Transaction ID: {{$order->payment ? $order->payment->transaction_id : ''}}</p>
                     @endif
                 </div>
             </div>

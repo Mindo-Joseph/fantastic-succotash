@@ -1,3 +1,7 @@
+@php
+$clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
+$urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'];
+@endphp
 <footer class="footer-light">
     <div class="light-layout bg-orange d-none">
         <div class="container">
@@ -30,7 +34,9 @@
             <div class="row footer-theme partition-f align-items-center">
                 <div class="col-lg-2 col-md-6 mb-md-0 mb-3">
                     <div class="footer-logo mb-0">
-                        <a href="{{ route('userHome') }}"><img class="img-fluid blur-up lazyload" alt="" src="https://imgproxy.royoorders.com/insecure/fit/200/80/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/Clientlogo/60c730778af50.png" ></a>
+                        <a href="{{ route('userHome') }}">
+                            <img class="img-fluid blur-up lazyload" src="{{$urlImg}}">
+                        </a>
                     </div>
                 </div>
                 @if(count($pages))
@@ -62,7 +68,7 @@
                                 @foreach($social_media_details as $social_media_detail)
                                 <li>
                                     <a href="{{$social_media_detail->url}}" target="_blank">
-                                        <i class="fa {{ substr(strstr($social_media_detail->icon,' '), 1) }}" aria-hidden="true"></i>
+                                        <i class="fa fa-{{$social_media_detail->icon}}" aria-hidden="true"></i>
                                     </a>
                                 </li>
                                 @endforeach

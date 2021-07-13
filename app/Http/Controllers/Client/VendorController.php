@@ -50,7 +50,7 @@ class VendorController extends BaseController
         $vendors = $vendors->get();
         foreach ($vendors as $vendor) {
             $offers = [];
-            $vendor->show_url = route('vendor.show', $vendor->id);
+            $vendor->show_url = route('vendor.catalogs', $vendor->id);
             $vendor->destroy_url = route('vendor.destroy', $vendor->id);
             $vendor->add_category_option = ($vendor->add_category == 0) ? 'No' : 'Yes';
             if($vendor->show_slot == 1){
@@ -529,7 +529,7 @@ class VendorController extends BaseController
         try {
                  
                 $vendor = Vendor::find($dispatch_domain->vendor_id);
-                $unique = Auth::user()->code??rand('11111'.'458965');
+                $unique = Auth::user()->code;
                 $postdata =  ['vendor_id' => $dispatch_domain->vendor_id ?? 0,
                 'name' => $vendor->name ?? "Manager".$dispatch_domain->vendor_id,
                 'phone_number' =>  $vendor->phone_no ?? rand('11111'.'458965'),
