@@ -91,7 +91,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/wishlists', 'Front\WishlistController@wishlists')->name('user.wishlists');
 	Route::post('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
     Route::post('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInformation');
-	Route::post('user/placeorder', 'Front\OrderController@placeOrder')->name('user.placeorder');
+	Route::post('user/placeorder/{token?}', 'Front\OrderController@placeOrder')->name('user.placeorder');
     Route::get('user/newsLetter', 'Front\ProfileController@newsLetter')->name('user.newsLetter');
     Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
     Route::post('wishlist/update', 'Front\WishlistController@updateWishlist')->name('addWishlist');
@@ -120,6 +120,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/subscriptions', 'Front\SubscriptionController@subscriptions')->name('user.subscriptions');
 	Route::get('user/subscriptions/buy/{slug}', 'Front\SubscriptionController@buySubscription')->name('user.buySubscription');
 	Route::get('payment/paypal/completeCheckout/{token?}/{address?}/{action?}', 'Front\PaymentController@paypalCompleteCheckout')->name('payment.paypalCompleteCheckout');
+	Route::get('payment/checkoutSuccess/{id}', 'Front\PaymentController@getCheckoutSuccess')->name('payment.getCheckoutSuccess');
 	 // Rating & review 
  	Route::group(['prefix' => 'rating'], function () {
 		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');
