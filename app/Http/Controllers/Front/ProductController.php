@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
@@ -105,8 +105,14 @@ class ProductController extends FrontController
         }
         $rating_details = '';
         $rating_details = OrderProductRating::select('*','created_at as time_zone_created_at')->where(['product_id' => $product->id])->get();
-
-        return view('frontend.product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details]);
+        $is_inwishlist_btn = 0;
+        if($product->category){
+            $category_detail = Category::select()->where('id',$product->category->category_id)->first();
+            if($category_detail){
+                $is_inwishlist_btn = $category_detail ? $category_detail->show_wishlist : 0;
+            }
+        }
+        return view('frontend.product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn]);
     }
     public function metaProduct($langId, $multiplier, $for = 'relate', $productArray = []){
         if(empty($productArray)){

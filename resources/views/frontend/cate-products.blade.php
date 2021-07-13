@@ -31,8 +31,8 @@
                         <!-- brand filter start -->
                         <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left"
                                     aria-hidden="true"></i> back</span></div>
+                        @if(!empty($category->brands) && count($category->brands) > 0)
                         <div class="collection-collapse-block open">
-                            @if(!empty($category->brands) && count($category->brands) > 0)
                             <h3 class="collapse-block-title">brand</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="collection-brand-filter">
@@ -46,8 +46,8 @@
                                     @endforeach
                                 </div>
                             </div>
-                            @endif
                         </div>
+                        @endif
 
                         @if(!empty($variantSets) && count($variantSets) > 0)
                           @foreach($variantSets as $key => $sets)
@@ -83,7 +83,7 @@
 
                           @endforeach
                         @endif
-                        <div class="collection-collapse-block border-0 open">
+                       <!--  <div class="collection-collapse-block border-0 open">
                             <h3 class="collapse-block-title">price</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="wrapper mt-3">
@@ -92,7 +92,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <!-- side-bar single product slider start -->
                     <div class="theme-card">

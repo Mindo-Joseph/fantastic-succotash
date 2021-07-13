@@ -50,7 +50,7 @@ class VendorController extends BaseController
         $vendors = $vendors->get();
         foreach ($vendors as $vendor) {
             $offers = [];
-            $vendor->show_url = route('vendor.show', $vendor->id);
+            $vendor->show_url = route('vendor.catalogs', $vendor->id);
             $vendor->destroy_url = route('vendor.destroy', $vendor->id);
             $vendor->add_category_option = ($vendor->add_category == 0) ? 'No' : 'Yes';
             if($vendor->show_slot == 1){

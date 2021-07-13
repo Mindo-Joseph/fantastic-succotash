@@ -23,7 +23,7 @@ class WalletController extends FrontController
         $user = User::with('country')->find(Auth::user()->id);
         $navCategories = $this->categoryNav($langId);
         $auth_user = Auth::user();
-        $user_transactions = Transaction::where('payable_id', $auth_user->id)->get();
+        $user_transactions = Transaction::where('payable_id', $auth_user->id)->orderBy('id', 'desc')->paginate(10);
         return view('frontend/account/wallet')->with(['user' => $user, 'navCategories' => $navCategories, 'user_transactions' => $user_transactions]);
     }
 
@@ -32,10 +32,10 @@ class WalletController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function creditWallet(Request $request, $domain = '', $id = '')
+    public function creditWallet(Request $request, $domain = '', $token = '')
     {
-        if(!empty($id)){
-            $user = User::where('id', $id)->first();
+        if(!empty($token)){
+            $user = User::where('auth_token', $token)->first();
         }else{
             $user = Auth::user();
         }
@@ -45,9 +45,9 @@ class WalletController extends FrontController
             $wallet = $user->wallet;
             // dd($wallet->toArray());
             if ($credit_amount > 0) {
-                $wallet->deposit($credit_amount, ['Wallet has been <b>Credited</b> by transaction reference <b>'.$request->transaction_id.'</b>']);
+                $wallet->depositFloat($credit_amount, ['Wallet has been <b>Credited</b> by transaction reference <b>'.$request->transaction_id.'</b>']);
                 $transactions = Transaction::where('payable_id', $user->id)->get();
-                $response['wallet_balance'] = $wallet->balance;
+                $response['wallet_balance'] = $wallet->balanceFloat;
                 $response['transactions'] = $transactions;
                 $message = 'Wallet has been credited successfully';
                 Session::put('success', $message);

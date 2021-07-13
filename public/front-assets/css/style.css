@@ -105,7 +105,7 @@
 
 @charset "UTF-8";
 .theme-color-1 {
-  --theme-deafult: #ff4c3b; }
+  --theme-deafult: var(--theme-deafult); }
 
 .theme-color-2 {
   --theme-deafult: #f0583d; }
@@ -196,7 +196,7 @@
   --theme-deafult2: #F7BB97; }
 
 :root {
-  --theme-deafult: #ff4c3b; }
+  --theme-deafult: var(--theme-deafult); }
 
 @-webkit-keyframes textNoise1 {
   0% {
@@ -6504,7 +6504,7 @@ header {
       top: -12px;
       background-color: #eeeeee; }
       header.left-header .sidenav .pixelstrap > li .lable-nav:before {
-        border-top: 5px solid #ff4c3b; }
+        border-top: 5px solid var(--theme-deafult); }
       header.left-header .sidenav .pixelstrap > li .lable-nav.grey-lable {
         background-color: #4d6171; }
         header.left-header .sidenav .pixelstrap > li .lable-nav.grey-lable:before {
@@ -6536,7 +6536,7 @@ header {
         header.left-header .sidenav .bottom-section .icon_settings .shopping-cart .shopping-count {
           width: 18px;
           height: 18px;
-          background-color: #ff4c3b;
+          background-color: var(--theme-deafult);
           color: white;
           position: absolute;
           border-radius: 100%;
@@ -6984,8 +6984,8 @@ header {
       .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:last-child a{
         margin-bottom: 5px; }
       .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:hover a,.category-list li:hover a {
-        border-color: #ff4c3b;
-        background: linear-gradient(270deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
+        border-color: var(--theme-deafult);
+        background: linear-gradient(90deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
       }
   .top-header.top-header-dark {
     background-color: #222222; }
@@ -8920,7 +8920,7 @@ header.stickycls {
     font-size: 14px;
     text-shadow: none; }
   .pixelstrap ul a.current {
-    background: #ff4c3b;
+    background: var(--theme-deafult);
     color: #fff; }
   .pixelstrap ul a.disabled {
     color: #b3b3b3; }
@@ -9059,9 +9059,9 @@ header.stickycls {
     top: 15px;
     left: 22px; }
   .pixelstrap li .lable-nav.lable-red {
-    background-color: #ff4c3b; }
+    background-color: var(--theme-deafult); }
     .pixelstrap li .lable-nav.lable-red:before {
-      border-top: 5px solid #ff4c3b; }
+      border-top: 5px solid var(--theme-deafult); }
 
 .sm-vertical {
   background-color: #ffffff; }

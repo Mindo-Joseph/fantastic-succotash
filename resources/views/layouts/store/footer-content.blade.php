@@ -27,21 +27,10 @@
     </div>
     <section class="section-b-space light-layout py-4">
         <div class="container">
-            <div class="row footer-theme partition-f">
+            <div class="row footer-theme partition-f align-items-center">
                 <div class="col-lg-2 col-md-6 mb-md-0 mb-3">
-                    <div class="sub-title">
-                        <div class="footer-title">
-                            <h4>my account</h4>
-                        </div>
-                        <div class="footer-contant">
-                            <ul>
-                                <li><a href="#">mens</a></li>
-                                <li><a href="#">womens</a></li>
-                                <li><a href="#">clothing</a></li>
-                                <li><a href="#">accessories</a></li>
-                                <li><a href="#">featured</a></li>
-                            </ul>
-                        </div>
+                    <div class="footer-logo mb-0">
+                        <a href="{{ route('userHome') }}"><img class="img-fluid blur-up lazyload" alt="" src="https://imgproxy.royoorders.com/insecure/fit/200/80/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/Clientlogo/60c730778af50.png" ></a>
                     </div>
                 </div>
                 @if(count($pages))

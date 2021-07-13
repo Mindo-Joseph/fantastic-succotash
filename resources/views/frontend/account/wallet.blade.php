@@ -117,7 +117,7 @@ $timezone = Auth::user()->timezone;
                                 <div class="row align-items-center">
                                     <div class="col-md-6 text-md-left text-center mb-md-0 mb-4">
                                         <h5 class="text-17 mb-2 mt-0">Available Balance</h5>
-                                        <div class="text-36">$<span class="wallet_balance">@money(Auth::user()->balance)</span></div>
+                                        <div class="text-36">$<span class="wallet_balance">@money(Auth::user()->balanceFloat)</span></div>
                                     </div>
                                     <div class="col-md-6 text-md-right text-center">
                                         <button type="button" class="btn btn-solid" id="topup_wallet_btn" data-toggle="modal" data-target="#topup_wallet">Topup Wallet</button>
@@ -142,7 +142,7 @@ $timezone = Auth::user()->timezone;
                                           <tr>
                                               <td>{{convertDateTimeInTimeZone($ut->created_at, $timezone, 'l, F d, Y, H:i A')}}</td>
                                               <td  class="name_">{!!$reason[0]!!}</td>
-                                              <td class="text-right {{ ($ut->type == 'deposit') ? 'text-success' : (($ut->type == 'deposit') ? 'text-danger' : '') }}"><b>$@money($ut->amount)</b></td>
+                                              <td class="text-right {{ ($ut->type == 'deposit') ? 'text-success' : (($ut->type == 'deposit') ? 'text-danger' : '') }}"><b>$@money(sprintf("%.2f", $ut->amount / 100))</b></td>
                                           </tr>
                                         @endforeach
                                     </tbody>
@@ -207,7 +207,7 @@ $timezone = Auth::user()->timezone;
         <div class="modal-body pb-0">
             <div class="form-group">
                 <!-- <h5 class="text-17 mb-2 mt-0">Available Balance</h5> -->
-                <div class="text-36">$<span class="wallet_balance">@money(Auth::user()->balance)</span></div>
+                <div class="text-36">$<span class="wallet_balance">@money(Auth::user()->balanceFloat)</span></div>
             </div>
             <div class="form-group">
                 <h5 class="text-17 mb-2">Topup Wallet</h5>

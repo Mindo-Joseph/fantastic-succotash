@@ -64,6 +64,11 @@
             <div class="">
                 <ul class="nav nav-pills navtab-bg nav-justified">
                     <li class="nav-item">
+                        <a href="{{ route('vendor.catalogs', $vendor->id) }}" aria-expanded="false" class="nav-link {{($tab == 'catalog') ? 'active' : '' }}">
+                            Catalog
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('vendor.show', $vendor->id) }}" aria-expanded="false" class="nav-link {{($tab == 'configuration') ? 'active' : '' }}">
                             Configuration
                         </a>
@@ -73,11 +78,7 @@
                             Category
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="{{ route('vendor.catalogs', $vendor->id) }}" aria-expanded="false" class="nav-link {{($tab == 'catalog') ? 'active' : '' }}">
-                            Catalog
-                        </a>
-                    </li>
+                    
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} card-body" id="configuration">
