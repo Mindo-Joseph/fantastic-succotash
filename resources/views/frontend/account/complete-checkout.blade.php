@@ -30,7 +30,7 @@
 <script src="{{asset('front-assets/js/jquery-3.3.1.min.js')}}"></script>
 <script>
     var place_order_url = "{{route('user.placeorder')}}";
-    var credit_wallet_url = "{{route('user.creditWallet', $user_id)}}";
+    var credit_wallet_url = "{{route('user.creditWallet', $token)}}";
     var payment_success_paypal_url = "{{route('payment.paypalSuccess')}}";
     let path = window.location.pathname;
     let queryString = window.location.search;

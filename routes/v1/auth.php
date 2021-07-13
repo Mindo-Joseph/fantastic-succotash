@@ -31,7 +31,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');
         Route::get('myWallet', 'Api\v1\WalletController@getFindMyWalletDetails');
-        Route::get('myWallet/credit/{id?}', 'Api\v1\WalletController@creditMyWallet');
+        Route::get('myWallet/credit/{token?}', 'Api\v1\WalletController@creditMyWallet');
         Route::post('store/revenue', 'Api\v1\StoreController@getMyStoreRevenueDetails');
         Route::post('changePassword', 'Api\v1\ProfileController@changePassword');
         Route::get('addressBook/{id?}', 'Api\v1\AddressController@getAddressList');

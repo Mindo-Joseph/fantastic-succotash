@@ -135,7 +135,6 @@
                                                     <li class="firstChild">{{$variant->title}}</li>
                                                     <li class="otherSize">
                                                         @foreach($variant->option2 as $k => $optn)
-
                                                         <?php $var_id = $variant->variant_type_id;
                                                         $opt_id = $optn->variant_option_id;
                                                         $checked = ($selectedVariant == $optn->product_variant_id) ? 'checked' : '';
@@ -217,13 +216,15 @@
                                     @endif
                                     <div class="product-buttons">
                                         @if($product->variant[0]->quantity > 0)
-                                            <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
-                                                {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? 'Remove from Wishlist' : 'Add To Wishlist' }}
-                                            </button>
+                                            @if($is_inwishlist_btn)
+                                                <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
+                                                    {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? 'Remove from Wishlist' : 'Add To Wishlist' }}
+                                                </button>
+                                            @endif
                                             @if($product->inquiry_only == 0)
                                             <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a>
                                             @else
-                                            <a href="#" data-toggle="modal" data-target="#inquiry_form" class="btn btn-solid inquiry_mode">inquiry mode</a>
+                                            <a href="#" data-toggle="modal" data-target="#inquiry_form" class="btn btn-solid inquiry_mode">Inquire Now</a>
                                             @endif
                                         @endif
                                     </div>
@@ -256,11 +257,11 @@
                                                 class="icofont icofont-ui-home"></i>Description</a>
                                         <div class="material-border"></div>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-toggle="tab"
+                                    <!-- <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-toggle="tab"
                                             href="#top-profile" role="tab" aria-selected="false"><i
                                                 class="icofont icofont-man-in-glasses"></i>Details</a>
                                         <div class="material-border"></div>
-                                    </li>
+                                    </li> -->
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->rating_check == 1)
                                             <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab"
