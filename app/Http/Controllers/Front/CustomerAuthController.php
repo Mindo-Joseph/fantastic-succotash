@@ -6,8 +6,11 @@ use Auth;
 use Session;
 use Password;
 use Carbon\Carbon;
+use Omnipay\Omnipay;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Omnipay\Common\CreditCard;
+use App\Http\Traits\ApiResponser;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
 use Illuminate\Support\Facades\Hash;
@@ -15,12 +18,10 @@ use Illuminate\Support\Facades\Mail;
 use App\Notifications\PasswordReset;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption};
-use Omnipay\Omnipay;
-use Omnipay\Common\CreditCard;
-use App\Http\Traits\ApiResponser;
 
 class CustomerAuthController extends FrontController
 {
