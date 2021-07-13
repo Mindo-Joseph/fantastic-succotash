@@ -192,23 +192,27 @@ class PickupDeliveryController extends BaseController{
      * create order for booking
     */
      public function createOrder(Request $request){
+
         DB::beginTransaction();
         try {
             
             $order_place = $this->orderPlaceForPickupDelivery($request);
-            $data = [];
-            $request_to_dispatch = $this->placeRequestToDispatch($request);
-                if($request_to_dispatch && isset($request_to_dispatch['task_id']) && $request_to_dispatch['task_id'] > 0){
-                    DB::commit();
-                    return response()->json([
-                        'status' => 200,
-                        'data' => $data,
-                        'message' => 'Order Successfully.'
-                    ]);
-                }else{
-                    DB::rollback();
-                    return $request_to_dispatch;
-                }
+            if($order_place && $order_place['status'] == 200){
+                $data = [];
+                $order = $order_place['data'];
+                $request_to_dispatch = $this->placeRequestToDispatch($request,$order,$request->vendor_id);
+                    if($request_to_dispatch && isset($request_to_dispatch['task_id']) && $request_to_dispatch['task_id'] > 0){
+                        DB::commit();
+                        return  $order_place;
+                    }else{
+                        DB::rollback();
+                        return $request_to_dispatch;
+                    }
+            }else{
+                DB::rollback();
+                return $order_place;
+            }
+          
               
             }
             catch(\Exception $e){
@@ -244,12 +248,19 @@ class PickupDeliveryController extends BaseController{
             $client_preference = ClientPreference::first();
             if ($client_preference->verify_email == 1) {
                 if ($user->is_email_verified == 0) {
-                    return response()->json(['error' => 'Your account is not verified.'], 404);
-                }
+                        $data = [];
+                        $data['status'] = 404;
+                        $data['message'] =  'Your account is not verified.';
+                        return $data;
+                    }
             }
             if ($client_preference->verify_phone == 1) {
                 if ($user->is_phone_verified == 0) {
-                    return response()->json(['error' => 'Your phone is not verified.'], 404);
+                    $data = [];
+                        $data['status'] = 404;
+                        $data['message'] =  'Your phone is not verified.';
+                        return $data;
+                    
                 }
             }
            
@@ -401,11 +412,17 @@ class PickupDeliveryController extends BaseController{
                 $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
                 $order->save();
             }
+
+                        $data = [];
+                        $data['status'] = 200;
+                        $data['message'] =  'Order Placed';
+                        $data['data'] =  $order;
+                        return $data;
         }
     }
 
      // place Request To Dispatch
-    public function placeRequestToDispatch($request){
+    public function placeRequestToDispatch($request,$order,$vendor){
         try {
             $dispatch_domain = $this->checkIfPickupDeliveryOn();
             $customer = Auth::user();
@@ -418,13 +435,12 @@ class PickupDeliveryController extends BaseController{
                     $cash_to_be_collected = 'No';
                     $payable_amount = 0.00;
                 }
-                $dynamic = uniqid();
+                $dynamic = uniqid($order->id.$vendor);
                 $call_back_url = route('dispatch-pickup-delivery', $dynamic);
-
+                $unique = Auth::user()->code;
                 $tasks = array();
                 $meta_data = '';
-               
-                               
+                $team_tag = $unique."_".$vendor;
                 $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
                                                     'customer_phone_number' => $customer->phone_number??rand(111111,11111),
                                                     'customer_email' => $customer->email ?? '',
@@ -437,6 +453,7 @@ class PickupDeliveryController extends BaseController{
                                                     'cash_to_be_collected' => $payable_amount??0.00,
                                                     'barcode' => '',
                                                     'call_back_url' => $call_back_url??null,
+                                                    'order_team_tag' => $team_tag,
                                                     'task' => $request->tasks
                                                     ];
 
@@ -455,6 +472,8 @@ class PickupDeliveryController extends BaseController{
                 );
                 $response = json_decode($res->getBody(), true);
                 if ($response && isset($response['task_id']) && $response['task_id'] > 0) {
+                    $up_web_hook_code = OrderVendor::where(['order_id' => $order->id,'vendor_id' => $vendor])
+                                    ->update(['web_hook_code' => $dynamic]);
                    return $response;
                 }
                 return $response;
