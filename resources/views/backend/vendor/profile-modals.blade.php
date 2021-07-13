@@ -1,4 +1,4 @@
-<div id="edit-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<!-- <div id="edit-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -20,7 +20,7 @@
             </form>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="modal fade" id="standard-modal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg" style="min-width: 530px;">

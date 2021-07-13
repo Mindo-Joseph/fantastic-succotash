@@ -3,9 +3,6 @@
 <link href="{{asset('assets/libs/nestable2/nestable2.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/ion-rangeslider/ion-rangeslider.min.css')}}" rel="stylesheet" type="text/css" />
 <style type="text/css">
-    .modal-lg {
-        max-width: 70%;
-    }
     span.inner-div{
         float: right;
         display: block;

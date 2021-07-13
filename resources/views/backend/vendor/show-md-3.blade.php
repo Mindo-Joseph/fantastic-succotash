@@ -8,7 +8,7 @@
             <h4 class="mb-0 text-white">{{ucfirst($vendor->name)}}</h4>
             <p class="text-white">{{$vendor->address}}</p>
 
-            <button type="button" class="btn btn-success btn-sm waves-effect mb-2 waves-light openEditModal"> Edit </button>
+            <button type="button" class="btn btn-success btn-sm waves-effect mb-2 waves-light openEditModal"  data-toggle="modal" data-target="#exampleModal"> Edit </button>
             <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light"> Block </button>
             @if($client_preferences->need_dispacher_ride == 1)
             <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcher" data-id="{{ $vendor->id }}"> Login Into Dispatcher </button>
@@ -201,6 +201,7 @@
         </div>
     </div>
 </div>
+
  
 @if(count($vendor->permissionToUser))
  <div class="card-box">
@@ -221,6 +222,27 @@
     </div>
 </div> 
 @endif
+
+<div id="edit-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Vendor</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form id="save_edit_banner_form" method="post" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="modal-body" id="editCardBox">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info waves-effect waves-light submitEditForm">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     $( document ).ready(function() {
