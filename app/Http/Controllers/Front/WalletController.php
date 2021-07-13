@@ -32,10 +32,10 @@ class WalletController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function creditWallet(Request $request, $domain = '', $id = '')
+    public function creditWallet(Request $request, $domain = '', $token = '')
     {
-        if(!empty($id)){
-            $user = User::where('id', $id)->first();
+        if(!empty($token)){
+            $user = User::where('auth_token', $token)->first();
         }else{
             $user = Auth::user();
         }

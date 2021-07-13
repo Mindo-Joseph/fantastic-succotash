@@ -21,9 +21,9 @@ class WalletController extends Controller{
         return $this->successResponse($data, '', 200);
     }
 
-    public function creditMyWallet(Request $request, $id = '')
+    public function creditMyWallet(Request $request, $token = '')
     {
-        $user = User::where('id', $id)->first();
+        $user = User::where('auth_token', $token)->first();
         if($user){
             $credit_amount = $request->wallet_amount;
             $wallet = $user->wallet;
