@@ -17,20 +17,20 @@ class WalletController extends Controller{
         $user = User::with('country')->find($user->id);
         $paginate = $request->has('limit') ? $request->limit : 12;
         $transactions = Transaction::where('payable_id', $user->id)->paginate($paginate);
-        $data = ['wallet_amount' => $user->balance, 'transactions' => $transactions];
+        $data = ['wallet_amount' => $user->balanceFloat, 'transactions' => $transactions];
         return $this->successResponse($data, '', 200);
     }
 
-    public function creditMyWallet(Request $request, $id = '')
+    public function creditMyWallet(Request $request, $token = '')
     {
-        $user = User::where('id', $id)->first();
+        $user = User::where('auth_token', $token)->first();
         if($user){
             $credit_amount = $request->wallet_amount;
             $wallet = $user->wallet;
             if ($credit_amount > 0) {
-                $wallet->deposit($credit_amount, ['Wallet has been <b>Credited</b> by transaction reference <b>'.$request->transaction_id.'</b>']);
+                $wallet->depositFloat($credit_amount, ['Wallet has been <b>Credited</b> by transaction reference <b>'.$request->transaction_id.'</b>']);
                 $transactions = Transaction::where('payable_id', $user->id)->get();
-                $response['wallet_balance'] = $wallet->balance;
+                $response['wallet_balance'] = $wallet->balanceFloat;
                 $response['transactions'] = $transactions;
                 $message = 'Wallet has been credited successfully';
                 Session::put('success', $message);
