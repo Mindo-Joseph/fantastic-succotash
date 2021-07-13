@@ -16,6 +16,7 @@
             </div>
         </div>
         <form class="vendor-signup" id="vendor_signup_form">
+            <div class="alert alert-success" role="alert" id="success_msg" style="display:none;"></div>
             <div class="row">
                 <div class="col-lg-8 offset-lg-2">
                     <div class="row">
@@ -224,17 +225,10 @@
                 url: "{{ route('vendor.register') }}",
                 headers: {Accept: "application/json"},
                 success: function(data) {
-                    console.log(data);
-                    if (data.res == "null") {
-                        $(".checkout-products").html(data.html);
-                    } else {
-                        var products = data.products;
-                        let checkout_products_template = _.template($('#checkout_products_template').html());
-                        if(products.length > 0){
-                            $("#checkout_products_main_div").html(checkout_products_template({products:products}));
-                        }
-                        $('#total_payable_amount').html('$'+data.total_payable_amount)
-                        $('#total_payable_amount_input').html('$'+data.total_payable_amount)
+                    if(data.status =='success'){
+                        $("#vendor_signup_form")[0].reset();
+                        $('#success_msg').html(data.message).show();
+                        setTimeout(function(){ $('#success_msg').html('').hide(); }, 3000);
                     }
                 },
                 error: function(response) {

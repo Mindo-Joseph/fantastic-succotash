@@ -245,6 +245,7 @@ class CustomerAuthController extends FrontController
                 $file = $request->file('upload_banner');
                 $vendor->banner = Storage::disk('s3')->put('/vendor', $file, 'public');
             }
+            $vendor->address = $request->address;
             $vendor->name = $request->name;
             $vendor->email = $request->email;
             $vendor->website = $request->website;
