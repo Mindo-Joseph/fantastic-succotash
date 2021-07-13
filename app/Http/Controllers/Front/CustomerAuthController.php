@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Front;
-
+use DB;
 use Auth;
 use Session;
 use Password;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
@@ -198,13 +199,62 @@ class CustomerAuthController extends FrontController
     }
     public function postVendorregister(Request $request, $domain = ''){
         try {
-           $request->validate([
+            DB::beginTransaction();
+            $request->validate([
+                'address' => 'required',
+                'phone_no' => 'required',
                 'full_name' => 'required',
                 'email' => 'required|email|unique:users',
-                'password' => 'required|min:6',
-            ]); 
+                'name' => 'required|string|max:150|unique:vendors',
+                'password' => 'required|string|min:6|max:50',
+                'confirm_password' => 'required|same:password',
+            ]);
+            $user = new User();
+            $county = Country::where('code', strtoupper($request->countryData))->first();
+            $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
+            $user->type = 1;
+            $user->status = 1;
+            $user->role_id = 1;
+            $user->is_admin = 1;
+            $user->is_email_verified = 0;
+            $user->is_phone_verified = 0;
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->country_id = $county->id;
+            $user->dial_code = $request->dialCode;
+            $user->phone_token_valid_till = $sendTime;
+            $user->email_token_valid_till = $sendTime;
+            $user->email_token = mt_rand(100000, 999999);
+            $user->phone_token = mt_rand(100000, 999999);
+            $user->phone_number = $request->phone_number;
+            $user->password = Hash::make($request->password);
+            $user->save();
+            $wallet = $user->wallet;
+            $vendor = new Vendor();
+            $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0;
+            $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0;
+            $vendor->delivery = ($request->has('delivery') && $request->delivery == 'on') ? 1 : 0;
+            $vendor->logo = 'default/default_logo.png';
+            $vendor->banner = 'default/default_image.png';
+            if ($request->hasFile('logo')) {    /* upload logo file */
+                $file = $request->file('logo');
+                $vendor->logo = Storage::disk('s3')->put('/vendor', $file, 'public');
+            }
+            if ($request->hasFile('banner')) {    /* upload logo file */
+                $file = $request->file('banner');
+                $vendor->banner = Storage::disk('s3')->put('/vendor', $file, 'public');
+            }
+            $vendor->email = $request->email;
+            $vendor->website = $request->website;
+            $vendor->phone_no = $request->phone_no;
+            $vendor->slug = Str::slug($request->name, "-");
+            $vendor->save();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Vendor created Successfully!',
+            ]);
         } catch (Exception $e) {
-            
+            DB::rollback();
         }
     }
     public function forgotPassword(Request $request, $domain = '')
