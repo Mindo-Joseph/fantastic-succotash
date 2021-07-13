@@ -2728,14 +2728,6 @@ form input.form-control[placeholder="Address"] {
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
-<<<<<<< HEAD
-
-.hide {
-    opacity: 0;
-    right: 0;
-    z-index: -1;
-}
-=======
 .hide {
     right: 0;
     opacity: 0;
@@ -2753,10 +2745,16 @@ form input.form-control[placeholder="Address"] {
     line-height: 24px;
     font-size: 14px;
 }
->>>>>>> f59b82fe45c04f020d19ed67144d5a98b182ecb6
 
 
+.footer-logo img {
+    width: 90px;
+    filter: grayscale(100%);
+}
 
+.footer-logo a {
+    filter: grayscale(100%);
+}
 
 
 
@@ -2828,44 +2826,24 @@ form input.form-control[placeholder="Address"] {
     opacity: 1;
 }
 
-
+/* Country Dropdown Css */
 .iti__flag-container li,
-    .flag-container li {
-        display: block;
-    }
-    .iti.iti--allow-dropdown,
-    .allow-dropdown {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-    }
-    .iti.iti--allow-dropdown .phone,
-    .flag-container .phone {
-        padding: 17px 0 17px 100px !important;
-    }
-    .invalid-feedback {
-        display: block;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.flag-container li {
+    display: block;
+}
+.iti.iti--allow-dropdown,
+.allow-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.iti.iti--allow-dropdown .phone,
+.flag-container .phone {
+    padding: 17px 0 17px 100px !important;
+}
+.invalid-feedback {
+    display: block;
+}
 
 /* Responsiveness Css Start From Here */
 @media (max-width: 1919px){
