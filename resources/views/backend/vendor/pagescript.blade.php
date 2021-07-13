@@ -63,7 +63,6 @@
                 });
             });
         });
-
     }
     $('#show-map-modal').on('hide.bs.modal', function () {
          $('#add-customer-modal').removeClass('fadeIn');
