@@ -56,6 +56,34 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card widget-inline">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 mb-3 mb-md-0">
+                                            <div class="text-center">
+                                                <h3>
+                                                    <i class="mdi mdi-storefront text-primary mdi-24px"></i>
+                                                    <span data-plugin="counterup" id="total_vendor">1</span>
+                                                </h3>
+                                                <p class="text-muted font-15 mb-0">Total Unique Vendor Count</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 mb-3 mb-md-0">
+                                            <div class="text-center">
+                                                <h3>
+                                                    <i class="mdi mdi-dump-truck text-primary mdi-24px"></i>
+                                                    <span data-plugin="counterup" id="total_product">1</span>
+                                                </h3>
+                                                <p class="text-muted font-15 mb-0">Total Unique Product Count</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-striped" id="user_datatable">
                             <thead>
