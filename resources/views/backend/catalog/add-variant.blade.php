@@ -71,7 +71,7 @@
                     </tr>
                     <tr>
                         <td style="min-width: 200px; display:none;" class="hexacodeClass-add">
-                            <input type="text" name="hexacode[]" class="form-control hexa-colorpicker" value="cccccc" id="hexa-colorpicker-1">
+                            <input type="text" name="hexacode[]" class="form-control hexa-colorpicker" value="cccccc" id="add-hexa-colorpicker-1">
                         </td>
                        @foreach($languages as $key => $langs)
                         <td>
