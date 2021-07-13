@@ -27,6 +27,9 @@ class ProductInquiryController extends BaseController{
     }
     public function show(Request $request){
         $product_inquiries = ProductInquiry::with('product')->get();
+        foreach ($product_inquiries as $product_inquiry) {
+            $product_inquiry->view_url = route('productDetail');
+        }
         return Datatables::of($product_inquiries)
             ->addIndexColumn()
             ->filter(function ($instance) use ($request) {
