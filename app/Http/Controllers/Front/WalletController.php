@@ -32,9 +32,13 @@ class WalletController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function creditWallet(Request $request, $domain = '')
+    public function creditWallet(Request $request, $domain = '', $id = '')
     {
-        $user = Auth::user();
+        if(!empty($id)){
+            $user = User::where('id', $id)->first();
+        }else{
+            $user = Auth::user();
+        }
         if($user){
             // $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
             $credit_amount = $request->wallet_amount;
@@ -47,7 +51,7 @@ class WalletController extends FrontController
                 $response['transactions'] = $transactions;
                 $message = 'Wallet has been credited successfully';
                 Session::put('success', $message);
-                return $this->successResponse($response, $message);
+                return $this->successResponse($response, $message, 201);
             }
             else{
                 return $this->errorResponse('Amount is not sufficient', 402);
