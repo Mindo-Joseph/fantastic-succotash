@@ -72,16 +72,16 @@ class OrderController extends FrontController
     }
     public function placeOrder(Request $request, $domain = '')
     {
-        if ($request->input("payment-group") == '1') {
-            $langId = Session::get('customerLanguage');
-            $navCategories = $this->categoryNav($langId);
-            return view('frontend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone, 'total_amount' => $request->total_amount, 'address_id' => $request->address_id]);
-        }
-        $order = $this->orderSave($request, "1", "2");
+        // if ($request->input("payment-group") == '1') {
+        //     $langId = Session::get('customerLanguage');
+        //     $navCategories = $this->categoryNav($langId);
+        //     return view('frontend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone, 'total_amount' => $request->total_amount, 'address_id' => $request->address_id]);
+        // }
+        $order = $this->orderSave($request, "1");
         
         return $this->successResponse(['status' => 'success', 'order' => $order, 'message' => 'Order placed successfully.']);
     }
-    public function orderSave($request, $paymentStatus, $paymentMethod)
+    public function orderSave($request, $paymentStatus)
     {
         try {
             DB::beginTransaction();
@@ -107,7 +107,6 @@ class OrderController extends FrontController
             $order = new Order;
             $order->user_id = $user->id;
             $order->order_number = generateOrderNo();
-            $order->payment_method = $paymentMethod;
             $order->address_id = $request->address_id;
             $order->payment_option_id = $request->payment_option_id;
             $order->save();

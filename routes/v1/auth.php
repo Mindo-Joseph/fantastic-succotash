@@ -31,8 +31,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');
         Route::get('myWallet', 'Api\v1\WalletController@getFindMyWalletDetails');
-        Route::get('store/revenue', 'Api\v1\StoreController@getMyStoreRevenueDetails');
-        Route::get('payment/options', 'Api\v1\PaymentOptionController@getPaymentOptions');
+        Route::get('myWallet/credit/{id?}', 'Api\v1\WalletController@creditMyWallet');
+        Route::post('store/revenue', 'Api\v1\StoreController@getMyStoreRevenueDetails');
         Route::post('changePassword', 'Api\v1\ProfileController@changePassword');
         Route::get('addressBook/{id?}', 'Api\v1\AddressController@getAddressList');
         Route::get('revenue-details', 'Api\v1\RevenueController@getRevenueDetails');
@@ -43,6 +43,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('mystore/product/list', 'Api\v1\StoreController@getMyStoreProductList');
         Route::get('primary/address/{id}', 'Api\v1\AddressController@postUpdatePrimaryAddress');
         Route::post('update/order/status', 'Api\v1\OrderController@postVendorOrderStatusUpdate');
+        Route::get('payment/options', 'Api\v1\PaymentOptionController@getPaymentOptions');
+        Route::get('payment/paypal', 'Api\v1\PaymentOptionController@postPaymentViaPaypal');
+        Route::get('payment/paypalSuccess', 'Front\PaypalGatewayController@paypalSuccess');
         // Rating & review 
         Route::group(['prefix' => 'rating'], function () {
             Route::post('update-product-rating', 'Api\v1\RatingController@updateProductRating');

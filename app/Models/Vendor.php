@@ -62,4 +62,9 @@ class Vendor extends Model{
     public function permissionToUser(){
       return $this->hasMany('App\Models\UserVendor');
     }
+
+
+    public function product(){
+      return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
+    }
 }

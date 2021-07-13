@@ -98,7 +98,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::post('verifTokenProcess', 'Front\UserController@verifyToken')->name('user.verifyToken');
     Route::get('user/addressBook', 'Front\AddressController@index')->name('user.addressBook');
 	Route::get('user/wallet', 'Front\WalletController@index')->name('user.wallet');
-	Route::post('user/wallet/credit', 'Front\WalletController@creditWallet')->name('user.creditWallet');
+	Route::post('user/wallet/credit/{id?}', 'Front\WalletController@creditWallet')->name('user.creditWallet');
 	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
 	Route::post('user/updateAccount', 'Front\ProfileController@updateAccount')->name('user.updateAccount');
 	Route::post('user/updateTimezone', 'Front\ProfileController@updateTimezone')->name('user.updateTimezone');
@@ -119,6 +119,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/wallet/history','Front\WalletController@index')->name('user.walletHistory');
 	Route::get('user/subscriptions', 'Front\SubscriptionController@subscriptions')->name('user.subscriptions');
 	Route::get('user/subscriptions/buy/{slug}', 'Front\SubscriptionController@buySubscription')->name('user.buySubscription');
+	Route::get('payment/paypal/completeCheckout/{user?}/{address?}/{action?}', 'Front\PaymentController@paypalCompleteCheckout')->name('payment.paypalCompleteCheckout');
 	 // Rating & review 
  	Route::group(['prefix' => 'rating'], function () {
 		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');
