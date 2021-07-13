@@ -150,10 +150,11 @@
                         $('#edit_page_content #edit_description').summernote({'height':300});
                     }else{
                       $(':input:text').val('');
+                      $('textarea').val('');
                     }
                 }else{
                     $(':input:text').val('');
-                    $(':input:textarea').val('');
+                    $('textarea').val('');
                     $('#edit_page_content #page_id').val('');
                 }
               }
