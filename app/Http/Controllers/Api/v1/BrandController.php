@@ -34,11 +34,9 @@ class BrandController extends BaseController
                         }])->select('id', 'image')
                         ->where('status', '!=', 2)
                         ->where('id', $brandId)->first();
-
             if(!$brand){
                 return response()->json(['error' => 'No record found.'], 200);
             }
-
             $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
                                 $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
                                 $zx->select('variant_options.*', 'vt.title');
@@ -168,7 +166,7 @@ class BrandController extends BaseController
         $order_type = $request->has('order_type') ? $request->order_type : '';
         $products = Product::with(['category.categoryDetail','media.image', 'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
-                        },'variant' => function($q) use($langId, $variantIds, $order_type){
+                    },'variant' => function($q) use($langId, $variantIds, $order_type){
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             if(!empty($variantIds)){
                                 $q->whereIn('id', $variantIds);
@@ -180,16 +178,12 @@ class BrandController extends BaseController
                             if(!empty($order_type) && $order_type == 'high_to_low'){
                                 $q->orderBy('price', 'desc');
                             }
-                        },
-                    ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating')
+                    }])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating')
                     ->where('brand_id', $brandId)
                     ->where('is_live', 1)
                     ->whereIn('id', function($qr) use($startRange, $endRange){ 
-                        $qr->select('product_id')->from('product_variants')
-                            ->where('price',  '>=', $startRange)
-                            ->where('price',  '<=', $endRange);
-                        });
-
+                        $qr->select('product_id')->from('product_variants')->where('price',  '>=', $startRange)->where('price',  '<=', $endRange);
+                    });
         if(!empty($productIds)){
             $products = $products->whereIn('id', $productIds);
         }
@@ -205,7 +199,7 @@ class BrandController extends BaseController
                 }
             }
         }
-            return $this->successResponse($products);
+        return $this->successResponse($products);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }

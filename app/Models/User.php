@@ -3,15 +3,18 @@
 namespace App\Models;
 use Bavix\Wallet\Traits\HasWallet;
 use Bavix\Wallet\Interfaces\Wallet;
+use Bavix\Wallet\Traits\HasWalletFloat;
+use Bavix\Wallet\Interfaces\WalletFloat;
 use App\Notifications\PasswordReset;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable implements Wallet
+class User extends Authenticatable implements Wallet, WalletFloat
 {
-    use HasWallet;
     use Notifiable;
+    use HasWallet;
+    use HasWalletFloat;
 
     /**
      * The attributes that are mass assignable.

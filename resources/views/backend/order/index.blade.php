@@ -16,6 +16,7 @@
         padding: 20px 20px 5px !important;
     }
 </style>
+
 <script type="text/template" id="order_page_template">
     <div class="row">
         <% _.each(orders, function(order, k){%>
@@ -118,8 +119,18 @@
                 </div>
             <% } %>
         <% }); %>
-        <hr>
     </div>
+    <% if(next_page_url) { %>
+        <div class="row mt-4">
+            <div class="col-md-4 offset-md-4 text-center">
+                <button class="ladda-button btn btn-primary load-more-btn" dir="ltr" data-style="expand-left" data-url="<%= next_page_url%>" data-rel="<%= filter_order_status %>">
+                    <span class="ladda-label">Load More</span>
+                    <span class="ladda-spinner"></span>
+                    <div class="ladda-progress" style="width: 0px;"></div>
+                </button>
+            </div>
+        </div>
+    <% } %>
 </script>
 <div class="container-fluid order-page">
     <div class="row">
@@ -183,21 +194,32 @@
             }
         });
         setTimeout(function(){ $("#pending_order-tab").trigger('click'); }, 500);
+        $(document).on("click", ".load-more-btn",function() {
+            $('#order_list_order').show();
+            var url = $(this).data('url');
+            var rel = $(this).data('rel');
+            init(rel, url);
+            $(this).remove();
+        });
         $(".nav-link").click(function(){
             $('#order_list_order').show();
-            var filter_order_status = $(this).data('rel');
+            var rel = $(this).data('rel');
+            var url = "{{ route('orders.filter') }}";
+            $(".tab-pane").html('');
+            init(rel, url);
+        });
+        function init(filter_order_status, url){
             $.ajax({
+                url: url,
                 type: "POST",
-                dataType: "json",
+                dataType: "JSON",
                 data: {filter_order_status:filter_order_status},
-                url: "{{ route('orders.filter') }}",
                 success: function(response) {
                     $('#order_list_order').hide();
                     if(response.status == 'Success'){
-                            $(".tab-pane").html('');
                         if(response.data.data.length != 0){
                             let order_page_template = _.template($('#order_page_template').html());
-                            $("#"+filter_order_status).append(order_page_template({orders: response.data.data}));
+                            $("#"+filter_order_status).append(order_page_template({orders: response.data.data, next_page_url:response.data.next_page_url , filter_order_status:filter_order_status}));
                         }else{
                             let no_order_template = _.template($('#no_order_template').html());
                             $("#"+filter_order_status).html(no_order_template({}));
@@ -208,7 +230,7 @@
 
                 },
             });
-        });
+        }
     });
 </script>
 @endsection
