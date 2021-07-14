@@ -153,10 +153,10 @@
             data: '',
             dataType: 'json',
             success: function (data) {
-                $('.dropify').dropify();
                 $('#edit-form').modal('show');
                 $('#edit-form #editCardBox').html(data.html);
                 $('.selectize-select').selectize();
+                $('.dropify').dropify();
                 dine = document.getElementsByClassName('dine_in');
                 var switchery = new Switchery(dine[0]);
                 take = document.getElementsByClassName('takeaway');
