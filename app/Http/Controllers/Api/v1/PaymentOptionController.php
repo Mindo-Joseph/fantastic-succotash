@@ -72,8 +72,8 @@ class PaymentOptionController extends Controller{
             $response = $this->gateway->purchase([
                 'currency' => 'USD',
                 'amount' => $request->amount,
-                'cancelUrl' => url($request->serverUrl . $request->cancelUrl),
-                'returnUrl' => url($request->serverUrl . $request->returnUrl . '?amount='.$request->amount),
+                'cancelUrl' => url('http://local.myorder.com' . $request->cancelUrl),
+                'returnUrl' => url('http://local.myorder.com' . $request->returnUrl . '?amount='.$request->amount),
             ])->send();
             if ($response->isSuccessful()) {
                 return $this->successResponse($response->getData());
@@ -138,12 +138,12 @@ class PaymentOptionController extends Controller{
         }
     }
 
-    public function getDeliveryFeeDispatcher($vendor_id){
+    public function getDeliveryFeeDispatcher($vendor_id, $user_id){
         try {
                 $dispatch_domain = $this->checkIfLastMileOn();
                 if ($dispatch_domain && $dispatch_domain != false) {
-                    $customer = User::find(Auth::id());
-                    $cus_address = UserAddress::where('user_id',Auth::id())->orderBy('is_primary','desc')->first();
+                    $customer = User::find($user_id);
+                    $cus_address = UserAddress::where('user_id', $user_id)->orderBy('is_primary','desc')->first();
                     if($cus_address){
                         $tasks = array();
                         $vendor_details = Vendor::find($vendor_id);
@@ -179,7 +179,7 @@ class PaymentOptionController extends Controller{
         else
             return false;
     }
-     public function postPlaceOrder(Request $request){
+    public function postPlaceOrder(Request $request){
         try {
             $total_amount = 0;
             $total_discount = 0;
@@ -261,7 +261,7 @@ class PaymentOptionController extends Controller{
                                 }
                             }
                             if (!empty($vendor_cart_product->product->Requires_last_mile) && $vendor_cart_product->product->Requires_last_mile == 1) {
-                                $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id);
+                                $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
                             }
                             $vendor_taxable_amount += $taxable_amount;
                             $total_amount += $variant->price;
