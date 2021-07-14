@@ -39,20 +39,16 @@ class FrontController extends Controller
                             ->where(function($q1) use($vendors, $status, $lang_id) {
                                 $q1->whereIn('vct.vendor_id', $vendors)
                                 ->where('vct.status', 1)
-                                ->where('categories.id', '>', '1')
-                                ->where('categories.is_visible', 1)
-                                ->where('categories.status', '!=', $status)
-                                ->where('cts.language_id', $lang_id);
+                                ->orWhere(function($q2) {
+                                    $q2->whereIn('categories.type_id', [4,5]);
+                                });
                             });
             }
         }        
-        $categories = $categories->orWhere(function($q2) use($status, $lang_id) {
-                        $q2->whereIn('categories.type_id', [4,5])
-                        ->where('categories.id', '>', '1')
-                        ->where('categories.is_visible', 1)
-                        ->where('categories.status', '!=', $status)
-                        ->where('cts.language_id', $lang_id);
-                    })
+        $categories = $categories->where('categories.id', '>', '1')
+                    ->where('categories.is_visible', 1)
+                    ->where('categories.status', '!=', $status)
+                    ->where('cts.language_id', $lang_id)
                     ->orderBy('categories.position', 'asc')
                     ->orderBy('categories.id', 'asc')
                     ->orderBy('categories.parent_id', 'asc')->get();
