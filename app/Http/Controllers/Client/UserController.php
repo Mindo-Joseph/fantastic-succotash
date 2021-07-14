@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Client;
-
+use Auth;
 use Image;
 use Password;
 use DataTables;
@@ -33,12 +33,14 @@ class UserController extends BaseController{
         return view('backend/users/index')->with(['users' => $users, 'roles' => $roles, 'countries' => $countries]);
     }
     public function getFilterData(Request $request){
+        $current_user = Auth::user();
         $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->get();
         foreach ($users as  $user) {
             $user->edit_url = route('customer.new.edit', $user->id);
             $user->delete_url = route('customer.account.action', [$user->id, 3]);
             $user->image_url = $user->image['proxy_url'].'40/40'.$user->image['image_path'];
             $user->login_type = 'Email'; 
+            $user->is_superadmin = $current_user->is_superadmin; 
             $user->login_type_value = $user->email;
             if(!empty($user->facebook_auth_id)){
                 $user->login_type = 'Facebook';
@@ -52,7 +54,8 @@ class UserController extends BaseController{
             }elseif(!empty($user->apple_auth_id)){
                 $user->login_type = 'Apple';
                 $user->login_type_value = $user->apple_auth_id;
-            } 
+            }
+
         }
         return Datatables::of($users)
         ->addIndexColumn()
