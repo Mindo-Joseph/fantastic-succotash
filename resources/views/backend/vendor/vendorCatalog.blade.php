@@ -64,21 +64,20 @@
             <div class="">
                 <ul class="nav nav-pills navtab-bg nav-justified">
                     <li class="nav-item">
-                        <a href="{{ route('vendor.catalogs', $vendor->id) }}" aria-expanded="false" class="nav-link {{($tab == 'catalog') ? 'active' : '' }}">
+                        <a href="{{ route('vendor.catalogs', $vendor->id) }}" aria-expanded="false" class="nav-link {{($tab == 'catalog') ? 'active' : '' }} {{$vendor->status == 1 ? '' : 'disabled'}}">
                             Catalog
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('vendor.show', $vendor->id) }}" aria-expanded="false" class="nav-link {{($tab == 'configuration') ? 'active' : '' }}">
+                        <a href="{{ route('vendor.show', $vendor->id) }}" aria-expanded="false" class="nav-link {{($tab == 'configuration') ? 'active' : '' }} {{$vendor->status == 1 ? '' : 'disabled'}}">
                             Configuration
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('vendor.categories', $vendor->id) }}" aria-expanded="true" class="nav-link {{($tab == 'category') ? 'active' : '' }}">
+                        <a href="{{ route('vendor.categories', $vendor->id) }}" aria-expanded="true" class="nav-link {{($tab == 'category') ? 'active' : '' }} {{$vendor->status == 1 ? '' : 'disabled'}}">
                             Category
                         </a>
                     </li>
-                    
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} card-body" id="configuration">
@@ -90,16 +89,15 @@
                     <div class="tab-pane {{($tab == 'catalog') ? 'active show' : '' }}" id="catalog">
                         <div class="card-box">
                             <div class="row">
-                                    <div class="col-12 d-flex align-items-center justify-content-between mb-3">
-                                        <h4 class="mb-0"> Catalog</h4>
-                                        <div class="">
-                                                <a class="btn btn-info waves-effect waves-light text-sm-right importProductBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1"></i> Import
-                                                </a>
-                                                <a class="btn btn-info waves-effect waves-light text-sm-right addProductBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1"></i> Add Product
-                                                </a>
-                                        </div>
+                                <div class="col-12 d-flex align-items-center justify-content-between mb-3">
+                                    <h4 class="mb-0"> Catalog</h4>
+                                    <div class="">
+                                        <a class="btn btn-info waves-effect waves-light text-sm-right importProductBtn {{$vendor->status == 1 ? '' : 'disabled'}}" dataid="0" href="javascript:void(0);" {{$vendor->status == 1 ? '' : 'disabled'}}><i class="mdi mdi-plus-circle mr-1"></i> Import
+                                        </a>
+                                        <a class="btn btn-info waves-effect waves-light text-sm-right addProductBtn {{$vendor->status == 1 ? '' : 'disabled'}}" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1" ></i> Add Product
+                                        </a>
                                     </div>
-                                
+                                </div>
                                 <div class="col-md-12">
                                     <div class="table-responsive">
                                         <table class="table table-centered table-nowrap table-striped" id="">
@@ -170,7 +168,6 @@
 <div class="row address" id="def" style="display: none;">
     <input type="text" id="def-address" name="test" class="autocomplete form-control def_address">
 </div>
-
 <div id="add-product" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">

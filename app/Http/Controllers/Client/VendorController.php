@@ -84,13 +84,16 @@ class VendorController extends BaseController
     public function index(){
         $csvVendors = CsvVendorImport::all();
         $client_preferences = ClientPreference::first();
-        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->with('slot')->where('status', '!=', '2')->orderBy('id', 'desc');
+        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->with('slot')->orderBy('id', 'desc');
         if (Auth::user()->is_superadmin == 0) {
             $vendors = $vendors->whereHas('permissionToUser', function ($query) {
                 $query->where('user_id', Auth::user()->id);
             });
         }
         $vendors = $vendors->get();
+        $active_vendor_count = $vendors->where('status', 1)->count();
+        $blocked_vendor_count = $vendors->where('status', 2)->count();
+        $awaiting__Approval_vendor_count = $vendors->where('status', 0)->count();
         $available_vendors_count = 0;
         $vendors_product_count = 0;
         $vendors_active_order_count = 0;
@@ -106,12 +109,29 @@ class VendorController extends BaseController
         $total_vendor_count = $vendors->count();
         if(count($vendors) == 1){
             if (Auth::user()->is_superadmin == 1) {
-                return view('backend/vendor/index')->with(['vendors' => $vendors, 'csvVendors' => $csvVendors, 'client_preferences'=> $client_preferences, 'total_vendor_count' => $total_vendor_count, 'available_vendors_count' => $available_vendors_count, 'vendors_product_count' => $vendors_product_count, 'vendors_active_order_count' => $vendors_active_order_count]);
+                return view('backend/vendor/index')->with([
+                    'vendors' => $vendors,
+                    'csvVendors' => $csvVendors,
+                    'client_preferences'=> $client_preferences, 
+                    'total_vendor_count' => $total_vendor_count, 
+                    'vendors_product_count' => $vendors_product_count, 
+                    'available_vendors_count' => $available_vendors_count, 
+                    'vendors_active_order_count' => $vendors_active_order_count
+                ]);
             }else{
                 return Redirect::route('vendor.show', $vendors->first()->id);
             }
         }else{
-            return view('backend/vendor/index')->with(['client_preferences' => $client_preferences, 'vendors' => $vendors, 'csvVendors' => $csvVendors, 'total_vendor_count' => $total_vendor_count, 'available_vendors_count' => $available_vendors_count, 'vendors_product_count' => $vendors_product_count, 'vendors_active_order_count' => $vendors_active_order_count]);
+            return view('backend/vendor/index')->with([
+                'vendors' => $vendors, 
+                'csvVendors' => $csvVendors, 
+                'total_vendor_count' => $total_vendor_count, 
+                'client_preferences' => $client_preferences, 
+                'active_vendor_count' => $active_vendor_count, 
+                'blocked_vendor_count' => $blocked_vendor_count, 
+                'available_vendors_count' => $available_vendors_count, 
+                'awaiting__Approval_vendor_count' => $awaiting__Approval_vendor_count, 
+                'vendors_product_count' => $vendors_product_count, 'vendors_active_order_count' => $vendors_active_order_count]);
         }
 
     }
@@ -211,7 +231,13 @@ class VendorController extends BaseController
             ]);
         }
     }
-
+    public function postUpdateStatus(Request $request, $domain = ''){
+        Vendor::where('id', $request->vendor_id)->update(['status' => $request->status]);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Vendor Status Updated Successfully!',
+        ]);
+    }
     /*  /**   show vendor page - config tab      */
     public function show($domain = '', $id)
     {

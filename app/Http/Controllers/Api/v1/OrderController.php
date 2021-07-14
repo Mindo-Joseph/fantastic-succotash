@@ -275,9 +275,7 @@ class OrderController extends Controller {
         switch ($type) {
             case 'active':
                 $order_status_options = [6,3];
-                $orders->whereDoesntHave('status', function ($query) use($order_status_options) {
-                    $query->whereIn('order_status_option_id', $order_status_options);
-                });
+                $orders->where('order_status_option_id', 1);
             break;
             case 'past':
                 $order_status_options = [6,3];
