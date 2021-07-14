@@ -210,7 +210,7 @@
         @foreach($vendor->permissionToUser as $users)
         <div class="inbox-item">
             <div class="inbox-item-img">
-                <img src="{{$users->user->image['proxy_url'].'40/40'.$users->user->image['image_path']}}" class="rounded-circle" alt="" >
+                <img src="{{$users->user ? $users->user->image['proxy_url'].'40/40'.$users->user->image['image_path'] : asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt="" >
                                 
                 {{-- <img src="{{asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt=""> --}}
             </div>

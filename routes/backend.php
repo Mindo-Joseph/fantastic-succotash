@@ -59,6 +59,8 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('password/update', 'Client\DashBoardController@changePassword')->name('client.password.update');
     Route::get('configure', 'Client\ClientPreferenceController@index')->name('configure.index');
     Route::post('cleanSoftDeleted', 'Client\ManageContentController@deleteAllSoftDeleted')->name('config.cleanSoftDeleted');
+    Route::post('importDemoContent', 'Client\ManageContentController@importDemoContent')->name('config.importDemoContent');
+    Route::post('hardDeleteEverything', 'Client\ManageContentController@hardDeleteEverything')->name('config.hardDeleteEverything');
     Route::get('customize', 'Client\ClientPreferenceController@getCustomizePage')->name('configure.customize');
     Route::post('configUpdate/{code}', 'Client\ClientPreferenceController@update')->name('configure.update');
     Route::post('referandearnUpdate/{code}', 'Client\ClientPreferenceController@referandearnUpdate')->name('referandearn.update');

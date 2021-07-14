@@ -751,7 +751,10 @@
                      <button class="btn btn-danger cleanSoftDeleted">Clean All Soft Deleted</button>
                   </div>
                   <div class="col-md-3">
-                     <!-- <button>nekjrnge</button> -->
+                     <button class="btn btn-danger importDemoContent">Import Demo Content</button>
+                  </div>
+                  <div class="col-md-3">
+                     <button class="btn btn-danger hardDeleteEverything">Hard Delete Everything</button>
                   </div>
                </div>
             </div>
@@ -853,17 +856,51 @@
 @section('script')
 <script type="text/javascript">
    $('.cleanSoftDeleted').click(function(e) {
-      e.preventDefault();
-      $.ajax({
-         url: "{{ route('config.cleanSoftDeleted') }}",
-         type: "POST",
-         data: {
-            "_token": "{{ csrf_token() }}"
-         },
-         success: function(response) {
-            $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
-         },
-      });
+      if (confirm('Are you Sure?')) {
+         e.preventDefault();
+         $.ajax({
+            url: "{{ route('config.cleanSoftDeleted') }}",
+            type: "POST",
+            data: {
+               "_token": "{{ csrf_token() }}"
+            },
+            success: function(response) {
+               $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
+            },
+         });
+      }
+   });
+
+   $('.importDemoContent').click(function(e) {
+      if (confirm('Are you Sure you want to hard delete?')) {
+         e.preventDefault();
+         $.ajax({
+            url: "{{ route('config.importDemoContent') }}",
+            type: "POST",
+            data: {
+               "_token": "{{ csrf_token() }}"
+            },
+            success: function(response) {
+               $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
+            },
+         });
+      }
+   });
+
+   $('.hardDeleteEverything').click(function(e) {
+      if (confirm('Are you Sure you want to proceed?')) {
+         e.preventDefault();
+         $.ajax({
+            url: "{{ route('config.hardDeleteEverything') }}",
+            type: "POST",
+            data: {
+               "_token": "{{ csrf_token() }}"
+            },
+            success: function(response) {
+               $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
+            },
+         });
+      }
    });
 
    function generateRandomString(length) {
