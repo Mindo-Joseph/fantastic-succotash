@@ -1,17 +1,22 @@
 <div class="card-box text-center p-0 overflow-hidden" style="">
-    
     <div class="background pt-3 pb-2 px-2" style="background:url({{$vendor->banner['proxy_url'] . '200/100' . $vendor->banner['image_path']}}) no-repeat center center;background-size:cover;">
         <div class="vendor_text">
             <img src="{{$vendor->logo['proxy_url'] . '90/90' . $vendor->logo['image_path']}}" class="rounded-circle avatar-lg img-thumbnail"
                 alt="profile-image">
-
+                {{$vendor->status}}
             <h4 class="mb-0 text-white">{{ucfirst($vendor->name)}}</h4>
             <p class="text-white">{{$vendor->address}}</p>
-
             <button type="button" class="btn btn-success btn-sm waves-effect mb-2 waves-light openEditModal"  data-toggle="modal" data-target="#exampleModal"> Edit </button>
-            <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light"> Block </button>
-            @if($client_preferences->need_dispacher_ride == 1)
-            <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcher" data-id="{{ $vendor->id }}"> Login Into Dispatcher </button>
+            @if($vendor->status == 0 && Auth::user()->is_superadmin == 1)
+                <button type="button" class="btn btn-success btn-sm waves-effect mb-2 waves-light" id="approve_btn" data-vendor_id="{{$vendor->id}}" data-status="1">Accept</button>
+                <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light" id="reject_btn" data-vendor_id="{{$vendor->id}}" data-status="2">Reject</button>
+            @else
+                @if(Auth::user()->is_superadmin == 1)
+                    <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light" id="block_btn" data-vendor_id="{{$vendor->id}}" data-status="{{$vendor->status == 2  ? '1' : '2'}}">{{$vendor->status == 2 ? 'Unblock' : 'Block'}}</button>
+                @endif
+                @if($client_preferences->need_dispacher_ride == 1)
+                    <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcher" data-id="{{ $vendor->id }}"> Login Into Dispatcher </button>
+                @endif
             @endif
         </div>
     </div>
@@ -52,7 +57,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <button class="btn btn-info waves-effect waves-light w-100">Save</button>
+                        <button class="btn btn-info waves-effect waves-light w-100" {{$vendor->status == 1 ? '' : 'disabled'}}>Save</button>
                     </div>
                 </div>
             </form>
@@ -93,7 +98,7 @@
                         </div>
                     </div> -->
                     <div class="col-12">
-                        <button class="btn btn-info waves-effect waves-light w-100">Save</button>
+                        <button class="btn btn-info waves-effect waves-light w-100" {{$vendor->status == 1 ? '' : 'disabled'}}>Save</button>
                     </div>
                 </div>
             </form>
@@ -116,7 +121,7 @@
                 <div class="row mb-2">
                     <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
                         {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!} 
-                        <input type="checkbox" data-plugin="switchery" name="can_add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif >
+                        <input type="checkbox" data-plugin="switchery" name="can_add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -124,7 +129,7 @@
                         {!! Form::label('title', 'Vendor Detail To Show',['class' => 'control-label ']) !!}
                     </div>
                     <div class="col-md-6 mb-3">
-                        <select class="selectize-select form-control assignToSelect" id="assignTo">
+                        <select class="selectize-select form-control assignToSelect" id="assignTo" {{$vendor->status == 1 ? '' : 'disabled'}}>
                             @foreach($templetes as $templete)
                                 <option value="{{$templete->id}}" {{$vendor->vendor_templete_id == $templete->id ? 'selected="selected"' : ''}}>{{$templete->title}}</option>
                             @endforeach
@@ -141,9 +146,9 @@
                                         <span class="inner-div text-right">
                                             <a class="action-icon" data-id="3" href="javascript:void(0)">
                                                 @if(in_array($build['id'], $VendorCategory))
-                                                    <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked>
+                                                    <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked {{$vendor->status == 1 ? '' : 'disabled'}}>
                                                 @else
-                                                    <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery">
+                                                    <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
                                                 @endif
                                                 <input type="hidden" value="{{ $build['id'] }}">
                                             </a>
@@ -158,9 +163,9 @@
                                                 <span class="inner-div text-right">
                                                     <a class="action-icon" data-id="2" href="javascript:void(0)">
                                                         @if(in_array($first_child['id'], $VendorCategory))
-                                                            <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="">
+                                                            <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="" {{$vendor->status == 1 ? '' : 'disabled'}}>
                                                         @else
-                                                            <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery">
+                                                            <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
                                                         @endif
                                                     </a>
                                                 </span>
@@ -174,9 +179,9 @@
                                                                     <span class="inner-div text-right">
                                                                         <a class="action-icon" data-id="6" href="javascript:void(0)">
                                                                             @if(in_array($second_child['id'], $VendorCategory))
-                                                                                <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="">
+                                                                                <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="" {{$vendor->status == 1 ? '' : 'disabled'}}>
                                                                             @else
-                                                                                <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery">
+                                                                                <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
                                                                             @endif
                                                                         </a>
                                                                     </span> 
@@ -201,8 +206,6 @@
         </div>
     </div>
 </div>
-
- 
 @if(count($vendor->permissionToUser))
  <div class="card-box">
     <h4 class="header-title mb-3">Users</h4>
@@ -216,13 +219,11 @@
             </div>
             <p class="inbox-item-author">{{ $users->user->name??'' }}</p>
             <p class="inbox-item-text"><i class="fa fa-envelope" aria-hidden="true"> {{ $users->user->email??'' }}</i> <i class="fa fa-phone" aria-hidden="true"> {{ $users->user->phone_number??'' }}</i></p>
-           
         </div>
         @endforeach
     </div>
 </div> 
 @endif
-
 <div id="edit-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -243,13 +244,32 @@
         </div>
     </div>
 </div>
-
 <script type="text/javascript">
     $( document ).ready(function() {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('input[name="_token"]').val()
         }
+    });
+    $(document).on('click', '#approve_btn, #reject_btn, #block_btn', function(){
+        var that  = $(this);
+        var status = that.data('status');
+        var vendor_id = that.data('vendor_id');
+        var text = that.text().toLowerCase();
+        var message = "Are you sure want to "+text+" this vendor?";
+        if(confirm(message)){
+            $.ajax({
+                type: "POST",
+                url: "{{route('vendor.status')}}",
+                data: { vendor_id: vendor_id , status:status},
+                success: function(data) {
+                    if(data.status == 'success'){
+                       $.NotificationApp.send("Success", data.message, "top-right", "#5ba035", "success");
+                       window.location.href = "{{ route('vendor.index') }}";
+                    }
+                }
+            });
+        }       
     });
     $(document).on('change', '.can_add_category1', function(){
         var vendor_id = "{{$vendor->id}}";

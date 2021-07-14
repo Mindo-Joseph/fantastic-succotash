@@ -92,6 +92,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::resource('payment', 'Client\PaymentController');
     Route::resource('accounting', 'Client\AccountController');
     Route::get('vendor/filterdata', 'Client\VendorController@getFilterData')->name('vendor.filterdata');
+    Route::post('vendor/status/update', 'Client\VendorController@postUpdateStatus')->name('vendor.status');
     Route::get('user/filterdata', 'Client\UserController@getFilterData')->name('user.filterdata');
     Route::resource('vendor', 'Client\VendorController');
     Route::get('vendor/categories/{id}', 'Client\VendorController@vendorCategory')->name('vendor.categories');

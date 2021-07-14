@@ -61,17 +61,17 @@
                 <div class="">
                     <ul class="nav nav-pills navtab-bg nav-justified">
                         <li class="nav-item">
-                            <a href="{{ route('vendor.catalogs', $vendor->id) }}"  aria-expanded="false" class="nav-link {{($tab == 'catalog') ? 'active' : '' }}">
+                            <a href="{{ route('vendor.catalogs', $vendor->id) }}"  aria-expanded="false" class="nav-link {{($tab == 'catalog') ? 'active' : '' }} {{$vendor->status == 1 ? '' : 'disabled'}}">
                                 Catalog
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('vendor.show', $vendor->id) }}"  aria-expanded="false" class="nav-link {{($tab == 'configuration') ? 'active' : '' }}">
+                            <a href="{{ route('vendor.show', $vendor->id) }}"  aria-expanded="false" class="nav-link {{($tab == 'configuration') ? 'active' : '' }} {{$vendor->status == 1 ? '' : 'disabled'}}">
                                 Configuration
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('vendor.categories', $vendor->id) }}"  aria-expanded="true" class="nav-link {{($tab == 'category') ? 'active' : '' }}">
+                            <a href="{{ route('vendor.categories', $vendor->id) }}"  aria-expanded="true" class="nav-link {{($tab == 'category') ? 'active' : '' }} {{$vendor->status == 1 ? '' : 'disabled'}}">
                                 Category
                             </a>
                         </li>
@@ -89,7 +89,7 @@
                                             </div>
                                             <div class="col-sm-6 text-right">
                                                 @if($vendor->add_category == 1)
-                                                <button class="btn btn-info waves-effect waves-light text-sm-right openCategoryModal" dataid="0" is_vendor="1"><i class="mdi mdi-plus-circle mr-1"></i> Add
+                                                <button class="btn btn-info waves-effect waves-light text-sm-right openCategoryModal" dataid="0" is_vendor="1" {{$vendor->status == 1 ? '' : 'disabled'}}><i class="mdi mdi-plus-circle mr-1"></i> Add
                                                 </button>
                                                 @endif
                                             </div> 
@@ -113,7 +113,7 @@
                                                 <h4 class="mb-4"> Addon Set</h4>
                                             </div>
                                             <div class="col-sm-4 text-right">
-                                                <button class="btn btn-info waves-effect waves-light text-sm-right openAddonModal" dataid="0">
+                                                <button class="btn btn-info waves-effect waves-light text-sm-right openAddonModal" dataid="0" {{$vendor->status == 1 ? '' : 'disabled'}}>
                                                     <i class="mdi mdi-plus-circle mr-1"></i> Add 
                                                 </button>
                                             </div> 

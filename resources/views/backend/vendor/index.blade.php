@@ -74,19 +74,19 @@
             <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="active-vendor" data-toggle="tab" href="#active_vendor" role="tab" aria-selected="false" data-rel="vendor_active_datatable" data-status="1">
-                        <i class="icofont icofont-man-in-glasses"></i>Active Vendors
+                        <i class="icofont icofont-man-in-glasses"></i>Active<sup class="total-items" id="active_vendor_count">({{$active_vendor_count}})</sup>
                     </a>
                     <div class="material-border"></div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="awaiting-vendor" data-toggle="tab" href="#awaiting_vendor" role="tab" aria-selected="true" data-rel="awaiting__Approval_vendor_datatble" data-status="0">
-                        <i class="icofont icofont-ui-home"></i>Awaiting Approval Vendors
+                        <i class="icofont icofont-ui-home"></i>Awaiting Approval<sup class="total-items">({{$awaiting__Approval_vendor_count}})</sup>
                     </a>
                     <div class="material-border"></div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="block-vendor" data-toggle="tab" href="#block_vendor" role="tab" aria-selected="false" data-rel="blocked_vendor_datatble" data-rel="blocked_vendor_datatble" data-status="2">
-                        <i class="icofont icofont-man-in-glasses"></i>Blocked Vendors
+                        <i class="icofont icofont-man-in-glasses"></i>Blocked<sup class="total-items">({{$blocked_vendor_count}})</sup>
                     </a>
                     <div class="material-border"></div>
                 </li>

@@ -258,6 +258,7 @@ class CustomerAuthController extends FrontController
                 $file = $request->file('upload_banner');
                 $vendor->banner = Storage::disk('s3')->put('/vendor', $file, 'public');
             }
+            $vendor->status = 0;
             $vendor->name = $request->name;
             $vendor->email = $request->email;
             $vendor->phone_no = $user->phone_no;
@@ -268,9 +269,9 @@ class CustomerAuthController extends FrontController
             $vendor->slug = Str::slug($request->name, "-");
             $vendor->desc = $request->vendor_description;
             $vendor->save();
-            // $permission_detail = Permissions::where('slug', 'vendors')->first();
-            // UserVendor::create(['user_id' => $user->id, 'vendor_id' => $vendor->id]);
-            // UserPermissions::create(['user_id' => $user->id, 'permission_id' => $permission_detail->id]);
+            $permission_detail = Permissions::where('slug', 'vendors')->first();
+            UserVendor::create(['user_id' => $user->id, 'vendor_id' => $vendor->id]);
+            UserPermissions::create(['user_id' => $user->id, 'permission_id' => $permission_detail->id]);
             $email_data = [
                 'email' => 'pankaj.pundir@codebrewinnovations.com',
                 'powered_by' => url('/'),

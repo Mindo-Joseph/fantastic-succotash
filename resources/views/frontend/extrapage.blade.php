@@ -270,6 +270,8 @@
                     that.attr('disabled', false);
                     if (data.status == 'success') {
                         $("#vendor_signup_form")[0].reset();
+                        $('#upload_logo_preview').attr('src', '');
+                        $('#upload_banner_preview').attr('src', '');
                         $('#success_msg').html(data.message).show();
                         setTimeout(function() {
                             $('#success_msg').html('').hide();
