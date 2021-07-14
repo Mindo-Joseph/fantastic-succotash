@@ -57,21 +57,23 @@
             url: payment_success_paypal_url,
             data: {'amount': amount, 'token': token, 'PayerID': payer_id},
             success: function (response) {
+                $(".processing").hide();
                 if(response.status == "Success"){
+                    document.location.href = checkout_success_url;
+                    // success_error_alert('success', "Thank you for your payment.", ".payment_response");
                     if(action == "cart"){
-                        placeOrder(addressID, 3, response.data);
+                        // placeOrder(addressID, 3, response.data);
                     }
                     else if(action = "wallet"){
-                        creditWallet(amount, 3, response.data);
+                        // creditWallet(amount, 3, response.data);
                     }
                 }else{
+                    // $(".processing").hide();
                     if(action == "cart"){
                         success_error_alert('error', response.message, ".payment_response");
-                        $(".processing").hide();
                     }
                     else if(action = "wallet"){
                         success_error_alert('error', response.message, ".payment_response");
-                        $(".processing").hide();
                     }
                 }
             },
