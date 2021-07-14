@@ -274,10 +274,7 @@ class OrderController extends Controller {
         $orders = OrderVendor::where('user_id', $user->id)->orderBy('id', 'DESC');
         switch ($type) {
             case 'active':
-                $order_status_options = [6,3];
-                $orders->whereDoesntHave('status', function ($query) use($order_status_options) {
-                    $query->whereIn('order_status_option_id', $order_status_options);
-                });
+                $orders->whereNotIn('order_status_option_id',[6,3]);
             break;
             case 'past':
                 $order_status_options = [6,3];
