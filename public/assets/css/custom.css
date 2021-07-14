@@ -1317,8 +1317,8 @@ i.mdi.mdi-exclamation-thick {
     opacity: 1;
 }
 
-.address_txt {
-    width: 120px !important;
+.address_txt, .address_txt .ellips_txt {
+    width: 300px !important;
 }
 
 .ellips_txt {
@@ -1978,7 +1978,16 @@ td.product-name,.vendor-name {
     left: 15px;
 }
 
-
+.total-items {
+    min-width: 25px;
+    min-height: 25px;
+    line-height: 25px;
+    border-radius: 50%;
+    color: #43bee1;
+    display: inline-block;
+    top: -10px;
+    font-weight: 900;
+}
 
 
 

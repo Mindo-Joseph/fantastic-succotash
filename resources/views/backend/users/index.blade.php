@@ -94,7 +94,7 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-centered table-nowrap table-striped" id="user_datatable">
+                        <table class="table table-centered table-nowrap table-striped" id="user_datatable" width="100%">
                             <thead>
                                 <tr>
                                     <th>Image</th>

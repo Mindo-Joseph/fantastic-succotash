@@ -76,25 +76,25 @@
             <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="active-vendor" data-toggle="tab" href="#active_vendor" role="tab" aria-selected="false" data-rel="active_vendor">
-                        <i class="icofont icofont-man-in-glasses"></i>Active Vendors
+                        <i class="icofont icofont-man-in-glasses"></i>Active Vendors <sup class="total-items">10</sup>
                     </a>
                     <div class="material-border"></div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="awaiting-vendor" data-toggle="tab"
                         href="#awaiting_vendor" role="tab" aria-selected="true" data-rel="awaiting_vendor">
-                        <i class="icofont icofont-ui-home"></i>Awaiting Vendors
+                        <i class="icofont icofont-ui-home"></i>Awaiting Approval <sup class="total-items">05</sup>
                     </a>
                     <div class="material-border"></div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="block-vendor" data-toggle="tab" href="#block_vendor" role="tab" aria-selected="false" data-rel="block_vendor">
-                        <i class="icofont icofont-man-in-glasses"></i>Block Vendors
+                        <i class="icofont icofont-man-in-glasses"></i>Block Vendors <sup class="total-items">45</sup>
                     </a>
                     <div class="material-border"></div>
                 </li>
             </ul>
-            <div class="tab-content nav-material" id="top-tabContent">
+            <div class="tab-content nav-material pt-0   " id="top-tabContent">
                 <div class="tab-pane fade past-order show active" id="active_vendor" role="tabpanel"
                     aria-labelledby="active-vendor">
 

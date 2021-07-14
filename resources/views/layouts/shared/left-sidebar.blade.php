@@ -222,11 +222,11 @@
                                             <a href="{{route('cms.pages')}}">Pages</a>
                                         </li>
                                     @endif
-                                    <!-- @if(in_array('cms_emails',$allowed) || Auth::user()->is_superadmin == 1)
+                                    @if(in_array('cms_emails',$allowed) || Auth::user()->is_superadmin == 1)
                                         <li>
                                             <a href="{{route('cms.emails')}}">Emails</a>
                                         </li>
-                                    @endif -->
+                                    @endif
                                 </ul>
                             </div>
                         </li>
