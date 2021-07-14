@@ -34,18 +34,18 @@ class PaymentOptionController extends Controller{
             if(method_exists($this, $function)) {
                 if(!empty($request->action)){
                     $response = $this->$function($request); // call related gateway for payment processing
-                    $responseArray = $response->getOriginalContent();
-                    if($responseArray['status'] == 'Success'){
-                        if($gateway != 'paypal'){
-                            $request->transaction_id = $responseArray['data'];
-                            if($request->action == 'cart'){
-                                $orderResponse = $this->postPlaceOrder($request);
-                            }
-                            else if($request->action == 'wallet'){
-                                $walletResponse = $this->creditMyWallet($request);
-                            }
-                        }
-                    }
+                    // $responseArray = $response->getOriginalContent();
+                    // if($responseArray['status'] == 'Success'){
+                    //     if($gateway != 'paypal'){
+                    //         $request->transaction_id = $responseArray['data'];
+                    //         if($request->action == 'cart'){
+                    //             $orderResponse = $this->postPlaceOrder($request);
+                    //         }
+                    //         else if($request->action == 'wallet'){
+                    //             $walletResponse = $this->creditMyWallet($request);
+                    //         }
+                    //     }
+                    // }
                     return $response;
                 }
             }
@@ -225,7 +225,7 @@ class PaymentOptionController extends Controller{
                     $order->address_id = $request->address_id;
                     $order->payment_option_id = $request->payment_option_id;
                     $order->save();
-                    $clientCurrency = ClientCurrency::where('currency_id', $request->currencyId)->first();
+                    $clientCurrency = ClientCurrency::where('currency_id', $request->header('currency'))->first();
                     $cart_products = CartProduct::with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon', 'product.addon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
                     $total_delivery_fee = 0;
                     foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {

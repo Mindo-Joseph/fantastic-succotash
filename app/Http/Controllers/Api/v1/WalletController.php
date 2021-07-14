@@ -17,6 +17,9 @@ class WalletController extends Controller{
         $user = User::with('country')->find($user->id);
         $paginate = $request->has('limit') ? $request->limit : 12;
         $transactions = Transaction::where('payable_id', $user->id)->paginate($paginate);
+        foreach($transactions as $trans){
+            $trans->meta = json_decode($trans->meta);
+        }
         $data = ['wallet_amount' => $user->balanceFloat, 'transactions' => $transactions];
         return $this->successResponse($data, '', 200);
     }
@@ -25,7 +28,7 @@ class WalletController extends Controller{
     {
         $user = User::where('auth_token', $request->auth_token)->first();
         if($user){
-            $credit_amount = $request->wallet_amount;
+            $credit_amount = $request->amount;
             $wallet = $user->wallet;
             if ($credit_amount > 0) {
                 $wallet->depositFloat($credit_amount, ['Wallet has been <b>Credited</b> by transaction reference <b>'.$request->transaction_id.'</b>']);
