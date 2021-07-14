@@ -266,14 +266,14 @@ class CustomerAuthController extends FrontController
             $vendor->website = $request->website;
             $vendor->latitude = $request->latitude;
             $vendor->longitude = $request->longitude;
-            $vendor->slug = Str::slug($request->name, "-");
             $vendor->desc = $request->vendor_description;
+            $vendor->slug = Str::slug($request->name, "-");
             $vendor->save();
             $permission_detail = Permissions::where('slug', 'vendors')->first();
             UserVendor::create(['user_id' => $user->id, 'vendor_id' => $vendor->id]);
             UserPermissions::create(['user_id' => $user->id, 'permission_id' => $permission_detail->id]);
             $email_data = [
-                'email' => 'pankaj.pundir@codebrewinnovations.com',
+                'email' => $user->email,
                 'powered_by' => url('/'),
                 'website' => $vendor->website,
                 'address' => $vendor->address,
@@ -292,8 +292,11 @@ class CustomerAuthController extends FrontController
                 'message' => 'Vendor Registration Created Successfully!',
             ]);
         } catch (Exception $e) {
-            pr($e->getMessage());die;
             DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ]);
         }
     }
     public function forgotPassword(Request $request, $domain = '')
