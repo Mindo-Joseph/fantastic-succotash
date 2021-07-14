@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\v1;
+use DB;
 use Carbon\Carbon;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
@@ -28,6 +29,7 @@ class PaymentOptionController extends Controller{
             $client = Client::where('code',$code)->first();
             $server_url = "https://".$client->sub_domain.env('SUBMAINDOMAIN');
             $request->serverUrl = $server_url;
+            $request->currencyId = $request->header('currency');
             $function = 'postPaymentVia_'.$gateway;
             if(method_exists($this, $function)) {
                 if(!empty($request->action)){
@@ -37,7 +39,7 @@ class PaymentOptionController extends Controller{
                         if($gateway != 'paypal'){
                             $request->transaction_id = $responseArray['data'];
                             if($request->action == 'cart'){
-                                // $orderResponse = $this->postPlaceOrder($request);
+                                $orderResponse = $this->postPlaceOrder($request);
                             }
                             else if($request->action == 'wallet'){
                                 $walletResponse = $this->creditMyWallet($request);
@@ -177,13 +179,13 @@ class PaymentOptionController extends Controller{
         else
             return false;
     }
-     public function postPlaceOrder(OrderStoreRequest $request){
+     public function postPlaceOrder(Request $request){
         try {
             $total_amount = 0;
             $total_discount = 0;
             $taxable_amount = 0;
             $payable_amount = 0;
-            $user = Auth::user();
+            $user = User::where('auth_token', $request->auth_token)->first();
             if($user){
                 DB::beginTransaction();
                 $loyalty_amount_saved = 0;
@@ -223,7 +225,7 @@ class PaymentOptionController extends Controller{
                     $order->address_id = $request->address_id;
                     $order->payment_option_id = $request->payment_option_id;
                     $order->save();
-                    $clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
+                    $clientCurrency = ClientCurrency::where('currency_id', $request->currencyId)->first();
                     $cart_products = CartProduct::with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon', 'product.addon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
                     $total_delivery_fee = 0;
                     foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
