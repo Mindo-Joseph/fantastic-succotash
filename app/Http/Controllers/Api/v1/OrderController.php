@@ -47,8 +47,9 @@ class OrderController extends Controller {
                             }
                     }
                 }
-            }    
-            catch(\Exception $e){}
+            } catch(\Exception $e){
+                
+            }
     }
     # check if last mile delivery on 
     public function checkIfLastMileOn(){
@@ -200,7 +201,6 @@ class OrderController extends Controller {
                                 $vendor_discount_amount +=$final_coupon_discount_amount; 
                             }   
                         }
-                        
                         $order_vendor->coupon_id = $coupon_id;
                         $order_vendor->coupon_code = $coupon_name;
                         $order_vendor->order_status_option_id = 1;

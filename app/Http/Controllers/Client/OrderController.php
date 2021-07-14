@@ -31,7 +31,7 @@ class OrderController extends BaseController{
                 $query->where('user_id', Auth::user()->id);
             });
         }
-        $orders = $orders->paginate(10);
+        $orders = $orders->get();
         foreach ($orders as $order) {
             $order->address = $order->address ? $order->address['address'] : '';
             $order->created_date = convertDateTimeInTimeZone($order->created_at, $user->timezone, 'd-m-Y, H:i A');
@@ -50,7 +50,10 @@ class OrderController extends BaseController{
             });
         }
         $return_requests = $return_requests->count();
-        return view('backend.order.index', compact('orders','return_requests'));
+        $pending_order_count = OrderVendor::where('order_status_option_id',1)->count();
+        $past_order_count = OrderVendor::whereIn('order_status_option_id',[6,3])->count();
+        $active_order_count = OrderVendor::whereIn('order_status_option_id',[2,4,5])->count();
+        return view('backend.order.index', compact('orders','return_requests', 'pending_order_count', 'active_order_count', 'past_order_count'));
     }
 
     public function postOrderFilter(Request $request, $domain = ''){
