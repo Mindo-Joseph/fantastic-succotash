@@ -161,43 +161,44 @@
             }
         });
         var input = document.querySelector("#phone");
-                window.intlTelInput(input, {
-                    separateDialCode: true,
-                    hiddenInput: "full_number",
-                    utilsScript: "{{asset('assets/js/utils.js')}}",
-                });
-          function initialize() {
-              var input = document.getElementById('address');
-              var autocomplete = new google.maps.places.Autocomplete(input);
-              google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        window.intlTelInput(input, {
+            separateDialCode: true,
+            hiddenInput: "full_number",
+            utilsScript: "{{asset('assets/js/utils.js')}}",
+        });
+
+        function initialize() {
+            var input = document.getElementById('address');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+            google.maps.event.addListener(autocomplete, 'place_changed', function() {
                 var place = autocomplete.getPlace();
                 document.getElementById('longitude').value = place.geometry.location.lng();
                 document.getElementById('latitude').value = place.geometry.location.lat();
-                for(let i=1; i < place.address_components.length; i++){
+                for (let i = 1; i < place.address_components.length; i++) {
                     let mapAddress = place.address_components[i];
-                    if(mapAddress.long_name !=''){
+                    if (mapAddress.long_name != '') {
                         let streetAddress = '';
-                        if (mapAddress.types[0] =="street_number") {
+                        if (mapAddress.types[0] == "street_number") {
                             streetAddress += mapAddress.long_name;
                         }
-                        if (mapAddress.types[0] =="route") {
+                        if (mapAddress.types[0] == "route") {
                             streetAddress += mapAddress.short_name;
                         }
-                        if($('#street').length > 0){
+                        if ($('#street').length > 0) {
                             document.getElementById('street').value = streetAddress;
                         }
-                        if (mapAddress.types[0] =="locality") {
+                        if (mapAddress.types[0] == "locality") {
                             document.getElementById('city').value = mapAddress.long_name;
                         }
-                        if(mapAddress.types[0] =="administrative_area_level_1"){
+                        if (mapAddress.types[0] == "administrative_area_level_1") {
                             document.getElementById('state').value = mapAddress.long_name;
                         }
-                        if(mapAddress.types[0] =="postal_code"){
+                        if (mapAddress.types[0] == "postal_code") {
                             document.getElementById('pincode').value = mapAddress.long_name;
-                        }else{
+                        } else {
                             document.getElementById('pincode').value = '';
                         }
-                        if(mapAddress.types[0] == "country"){
+                        if (mapAddress.types[0] == "country") {
                             var country = document.getElementById('country');
                             for (let i = 0; i < country.options.length; i++) {
                                 if (country.options[i].text.toUpperCase() == mapAddress.long_name.toUpperCase()) {
@@ -208,16 +209,16 @@
                         }
                     }
                 }
-              });
-            }
+            });
+        }
         $('.iti__country').click(function() {
             var code = $(this).attr('data-country-code');
             $('#countryData').val(code);
             var dial_code = $(this).attr('data-dial-code');
             $('#dialCode').val(dial_code);
         });
-        $('#register_btn').click(function(){
-            var form =  document.getElementById('vendor_signup_form');
+        $('#register_btn').click(function() {
+            var form = document.getElementById('vendor_signup_form');
             var formData = new FormData(form);
             $.ajax({
                 type: "POST",
@@ -225,21 +226,25 @@
                 contentType: false,
                 processData: false,
                 url: "{{ route('vendor.register') }}",
-                headers: {Accept: "application/json"},
+                headers: {
+                    Accept: "application/json"
+                },
                 success: function(data) {
-                    if(data.status =='success'){
+                    if (data.status == 'success') {
                         $("#vendor_signup_form")[0].reset();
                         $('#success_msg').html(data.message).show();
-                        setTimeout(function(){ $('#success_msg').html('').hide(); }, 3000);
+                        setTimeout(function() {
+                            $('#success_msg').html('').hide();
+                        }, 3000);
                     }
                 },
                 error: function(response) {
                     if (response.status === 422) {
                         let errors = response.responseJSON.errors;
                         Object.keys(errors).forEach(function(key) {
-                            $("#"+ key + "Input input").addClass("is-invalid");
-                            $("#"+ key + "_error").children("strong").text(errors[key][0]).show();
-                            $("#"+ key +"Input div.invalid-feedback").show();
+                            $("#" + key + "Input input").addClass("is-invalid");
+                            $("#" + key + "_error").children("strong").text(errors[key][0]).show();
+                            $("#" + key + "Input div.invalid-feedback").show();
                         });
                     } else {
                         $(".show_all_error.invalid-feedback").show();
