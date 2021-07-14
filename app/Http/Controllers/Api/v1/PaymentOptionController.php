@@ -72,8 +72,8 @@ class PaymentOptionController extends Controller{
             $response = $this->gateway->purchase([
                 'currency' => 'USD',
                 'amount' => $request->amount,
-                'cancelUrl' => url('http://local.myorder.com' . $request->cancelUrl),
-                'returnUrl' => url('http://local.myorder.com' . $request->returnUrl . '?amount='.$request->amount),
+                'cancelUrl' => url($request->serverUrl . $request->cancelUrl),
+                'returnUrl' => url($request->serverUrl . $request->returnUrl . '?amount='.$request->amount),
             ])->send();
             if ($response->isSuccessful()) {
                 return $this->successResponse($response->getData());
