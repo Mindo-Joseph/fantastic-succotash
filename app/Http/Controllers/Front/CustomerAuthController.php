@@ -257,6 +257,19 @@ class CustomerAuthController extends FrontController
             $permission_detail = Permissions::where('slug', 'vendors')->first();
             UserVendor::create(['user_id' => $user->id, 'vendor_id' => $vendor->id]);
             UserPermissions::create(['user_id' => $user->id, 'permission_id' => $permission_detail->id]);
+            $client_detail = Client::first();
+            $client_preference = ClientPreference::first();
+            $data = [
+                'code' => $otp,
+                'link' => "link",
+                'email' => $user->email,
+                'mail_from' => $mail_from,
+                'client_name' => $client_detail->name,
+                'logo' => $client->logo['original'],
+                'customer_name' => ucwords($user->name),
+                'code_text' => 'Enter below code to verify yoour account',
+            ];
+            dispatch(new \App\Jobs\SendVerifyEmailJob($data))->onQueue('verify_email');
             DB::commit();
             return response()->json([
                 'status' => 'success',

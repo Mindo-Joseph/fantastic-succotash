@@ -16,8 +16,7 @@ class VendorRegistrationMail extends Mailable
      *
      * @return void
      */
-    public function __construct($mailData)
-    {
+    public function __construct($mailData){
         $this->mailData = $mailData;
     }
 
@@ -26,8 +25,7 @@ class VendorRegistrationMail extends Mailable
      *
      * @return $this
      */
-    public function build()
-    {
+    public function build(){
         return $this->view('email.vendor_signup')->from($this->mailData['mail_from'])->with('mailData', $this->mailData);
     }
 }
