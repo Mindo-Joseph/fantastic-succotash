@@ -23,6 +23,7 @@ class CustomDomain
      */
     public function handle($request, Closure $next)
     {
+      die('i mhere');
       $path = $request->path();
       $domain = $request->getHost();
       $domain = str_replace(array('http://', '.test.com/login'), '', $domain);
