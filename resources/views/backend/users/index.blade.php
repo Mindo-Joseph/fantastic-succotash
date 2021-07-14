@@ -61,22 +61,31 @@
                             <div class="card widget-inline">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-6 col-md-6 mb-3 mb-md-0">
+                                        <div class="col-sm-4 col-md-4 mb-3 mb-md-0">
                                             <div class="text-center">
                                                 <h3>
-                                                    <i class="mdi mdi-storefront text-primary mdi-24px"></i>
-                                                    <span data-plugin="counterup" id="total_vendor">1</span>
+                                                    <i class="fa fa-user text-primary mdi-24px"></i>
+                                                    <span data-plugin="counterup" id="total_vendor">{{$active_users}}</span>
                                                 </h3>
-                                                <p class="text-muted font-15 mb-0">Total Unique Vendor Count</p>
+                                                <p class="text-muted font-15 mb-0">Active User Count</p>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 col-md-6 mb-3 mb-md-0">
+                                        <div class="col-sm-4 col-md-4 mb-3 mb-md-0">
                                             <div class="text-center">
                                                 <h3>
-                                                    <i class="mdi mdi-dump-truck text-primary mdi-24px"></i>
-                                                    <span data-plugin="counterup" id="total_product">1</span>
+                                                    <i class="fas fa-user-clock text-primary mdi-24px"></i>
+                                                    <span data-plugin="counterup" id="total_product">{{ $inactive_users }}</span>
                                                 </h3>
-                                                <p class="text-muted font-15 mb-0">Total Unique Product Count</p>
+                                                <p class="text-muted font-15 mb-0">Inactive User Count</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 col-md-4 mb-3 mb-md-0">
+                                            <div class="text-center">
+                                                <h3>
+                                                    <i class="mdi mdi-login text-primary mdi-24px"></i>
+                                                    <span data-plugin="counterup" id="total_product">{{ $social_logins }}</span>
+                                                </h3>
+                                                <p class="text-muted font-15 mb-0">Social Login Count</p>
                                             </div>
                                         </div>
                                     </div>
@@ -150,7 +159,7 @@
                 language: {
                     search: "",
                     paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
-                    searchPlaceholder: "Search By Vendor Name"
+                    searchPlaceholder: "Search By Name, Email, Phone Number"
                 },
                 drawCallback: function () {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
@@ -199,8 +208,10 @@
                             return "<input type='checkbox' data-id='"+full.id+"' id='cur_"+full.id+"' data-plugin='switchery' name='userAccount' class='chk_box' data-color='#43bee1'>";
                         }
                     }},
-                    {data: 'action', name: 'action', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
-                         return "<div class='form-ul'><div class='inner-div'><a href='"+full.edit_url+"' class='action-icon editIconBtn'><i class='mdi mdi-square-edit-outline'></i></a><a href='"+full.delete_url+"' class='action-icon'><i class='mdi mdi-delete' title='Delete user'></i></a></div></div>";
+                    {data: 'is_superadmin', name: 'is_superadmin', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
+                        if(full.is_superadmin == 1){
+                            return "<div class='form-ul'><div class='inner-div'><a href='"+full.edit_url+"' class='action-icon editIconBtn'><i class='mdi mdi-square-edit-outline'></i></a><a href='"+full.delete_url+"' class='action-icon'><i class='mdi mdi-delete' title='Delete user'></i></a></div></div>";
+                        }
                     }},
                 ]
             });

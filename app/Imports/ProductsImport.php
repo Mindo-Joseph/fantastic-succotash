@@ -47,7 +47,7 @@ class ProductsImport implements ToCollection{
                         $error[] = "Row " . $i . " : Category doesn't exist";
                         $checker = 1;
                     } else {
-                        $category_id = $category_check->id;
+                        $category_id = $category_check->category_id;
                         if (!VendorCategory::where([['vendor_id', '=', $this->vendor_id], ['category_id', '=', $category_id]])->exists()) { //check if category is activated for this vendor
                             $error[] = "Row " . $i . " : This category is not activated for this vendor";
                             $checker = 1;

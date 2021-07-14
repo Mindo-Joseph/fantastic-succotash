@@ -7,6 +7,7 @@
                 $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'];
             }
             $marketing_permissions = array("banner", "promocode", "loyalty_cards");
+            $subscription_permissions = array("subscriptions_customers", "subscriptions_vendors");
             $extra_permissions = array("celebrity", "inquiries");
             $setting_permissions = array("profile", "customize", "app_styling", "web_styling", "catalog", "configurations", "tax", "payment");
             $styling_permissions = array("app_styling", "web_styling");
@@ -131,6 +132,7 @@
                                     </div>
                                 </li>
                             @endif
+                            @if(count(array_intersect($subscription_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="#sidebarsubscriptions" data-toggle="collapse">
                                     <span class="icon-subscribe"></span>
@@ -151,6 +153,7 @@
                                     </ul>
                                 </div>
                             </li>
+                            @endif
                             @if(in_array('customers',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('customer.index')}}">

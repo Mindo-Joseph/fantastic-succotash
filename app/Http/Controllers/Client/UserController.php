@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Client;
-
+use Auth;
 use Image;
 use Password;
 use DataTables;
@@ -10,6 +10,7 @@ use App\Models\UserVendor;
 use App\Models\Permissions;
 use Illuminate\Http\Request;
 use App\Models\UserPermissions;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\PasswordReset;
@@ -29,16 +30,32 @@ class UserController extends BaseController{
     public function index(){
         $roles = Role::all();
         $countries = Country::all();
+        $active_users = User::where('status', 1)->count();
+        $inactive_users = User::where('status', 3)->count();
         $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->paginate(10);
-        return view('backend/users/index')->with(['users' => $users, 'roles' => $roles, 'countries' => $countries]);
+        $social_logins = 0;
+        foreach ($users as  $user) {
+            if(!empty($user->facebook_auth_id)){
+                $social_logins++;
+            }elseif(!empty($user->twitter_auth_id)){
+                $social_logins++;
+            }elseif(!empty($user->google_auth_id)){
+                $social_logins++;
+            }elseif(!empty($user->apple_auth_id)){
+                $social_logins++;
+            }
+        }
+        return view('backend/users/index')->with(['inactive_users' => $inactive_users, 'social_logins' => $social_logins, 'active_users' => $active_users, 'users' => $users, 'roles' => $roles, 'countries' => $countries]);
     }
     public function getFilterData(Request $request){
+        $current_user = Auth::user();
         $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->get();
         foreach ($users as  $user) {
             $user->edit_url = route('customer.new.edit', $user->id);
             $user->delete_url = route('customer.account.action', [$user->id, 3]);
             $user->image_url = $user->image['proxy_url'].'40/40'.$user->image['image_path'];
             $user->login_type = 'Email'; 
+            $user->is_superadmin = $current_user->is_superadmin; 
             $user->login_type_value = $user->email;
             if(!empty($user->facebook_auth_id)){
                 $user->login_type = 'Facebook';
@@ -52,7 +69,7 @@ class UserController extends BaseController{
             }elseif(!empty($user->apple_auth_id)){
                 $user->login_type = 'Apple';
                 $user->login_type_value = $user->apple_auth_id;
-            } 
+            }
         }
         return Datatables::of($users)
         ->addIndexColumn()
@@ -60,6 +77,8 @@ class UserController extends BaseController{
             if (!empty($request->get('search'))) {
                 $instance->collection = $instance->collection->filter(function ($row) use ($request){
                     if (Str::contains(Str::lower($row['name']), Str::lower($request->get('search')))){
+                        return true;
+                    }elseif (Str::contains(Str::lower($row['email']), Str::lower($request->get('search')))) {
                         return true;
                     }
                     return false;

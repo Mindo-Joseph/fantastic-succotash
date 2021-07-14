@@ -19,6 +19,8 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('payment/stripe', 'Front\StripeGatewayController@postPaymentViaStripe')->name('payment.stripe');
 	Route::post('payment/paypal', 'Front\PaypalGatewayController@postPaymentViaPaypal')->name('payment.paypal');
 	Route::get('payment/paypalSuccess', 'Front\PaypalGatewayController@paypalSuccess')->name('payment.paypalSuccess');
+	Route::get('payment/paypal/completeCheckout/{token?}/{address?}/{action?}', 'Front\PaymentController@paypalCompleteCheckout')->name('payment.paypalCompleteCheckout');
+	Route::get('payment/checkoutSuccess', 'Front\PaymentController@getCheckoutSuccess')->name('payment.getCheckoutSuccess');
 	Route::get('user/login', [
 		'as' => 'customer.login',
 		'uses' => 'Front\CustomerAuthController@loginForm'
@@ -44,6 +46,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('validateEmail','Front\CustomerAuthController@validateEmail')->name('validateEmail');
 	Route::post('user/loginData','Front\CustomerAuthController@login')->name('customer.loginData');
 	Route::post('user/register','Front\CustomerAuthController@register')->name('customer.register');
+	Route::post('vendor/register','Front\CustomerAuthController@postVendorregister')->name('vendor.register');
 	Route::post('user/forgotPassword','Front\CustomerAuthController@forgotPassword')->name('customer.forgotPass');
 	Route::post('user/resetPassword','Front\CustomerAuthController@resetPassword')->name('customer.resetPass');
 	Route::post('primaryData', 'Front\UserhomeController@changePrimaryData')->name('changePrimaryData');
@@ -91,7 +94,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/wishlists', 'Front\WishlistController@wishlists')->name('user.wishlists');
 	Route::post('verifyAccountProcess', 'Front\UserController@sendToken')->name('email.send');
     Route::post('sendToken/{id}', 'Front\UserController@sendToken')->name('verifyInformation');
-	Route::post('user/placeorder', 'Front\OrderController@placeOrder')->name('user.placeorder');
+	Route::post('user/placeorder/{token?}', 'Front\OrderController@placeOrder')->name('user.placeorder');
     Route::get('user/newsLetter', 'Front\ProfileController@newsLetter')->name('user.newsLetter');
     Route::get('user/verify_account', 'Front\UserController@verifyAccount')->name('user.verify');
     Route::post('wishlist/update', 'Front\WishlistController@updateWishlist')->name('addWishlist');
@@ -119,7 +122,6 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/wallet/history','Front\WalletController@index')->name('user.walletHistory');
 	Route::get('user/subscriptions', 'Front\SubscriptionController@subscriptions')->name('user.subscriptions');
 	Route::get('user/subscriptions/buy/{slug}', 'Front\SubscriptionController@buySubscription')->name('user.buySubscription');
-	Route::get('payment/paypal/completeCheckout/{token?}/{address?}/{action?}', 'Front\PaymentController@paypalCompleteCheckout')->name('payment.paypalCompleteCheckout');
 	 // Rating & review 
  	Route::group(['prefix' => 'rating'], function () {
 		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');

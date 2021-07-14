@@ -861,7 +861,7 @@
             "_token": "{{ csrf_token() }}"
          },
          success: function(response) {
-            console.log(response);
+            $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
          },
       });
    });

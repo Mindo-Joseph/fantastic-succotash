@@ -284,7 +284,7 @@ class OrderController extends FrontController
                     $order_tax->save();
                 }
             }
-            if ($request->payment_option_id == 4) {
+            if ( ($request->payment_option_id != 1) && ($request->payment_option_id != 2) ) {
                 Payment::insert([
                     'date' => date('Y-m-d'),
                     'order_id' => $order->id,

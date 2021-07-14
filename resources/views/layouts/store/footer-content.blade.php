@@ -1,6 +1,6 @@
 @php
 $clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
-$urlImg = $clientData->logo['proxy_url'].'200/80'.$clientData->logo['image_path'];
+$urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'];
 @endphp
 <footer class="footer-light">
     <div class="light-layout bg-orange d-none">

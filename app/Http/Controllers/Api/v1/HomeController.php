@@ -158,7 +158,7 @@ class HomeController extends BaseController{
                 
                 foreach ($categories as $key => $value) {
                     $value->response_type = 'category';
-                    $response[] = $value;
+                    // $response[] = $value;
                 }
                 $brands = Brand::join('brand_translations as bt', 'bt.brand_id', 'brands.id')
                         ->select('brands.id', 'bt.title  as dataname')
@@ -169,21 +169,21 @@ class HomeController extends BaseController{
 
                 foreach ($brands as $brand) {
                     $brand->response_type = 'brand';
-                    $response[] = $brand;
+                    // $response[] = $brand;
                 }
                 $vendors  = Vendor::select('id', 'name  as dataname', 'address')->where(function ($q) use ($keyword) {
                         $q->where('name', ' LIKE', '%' . $keyword . '%')->orWhere('address', 'LIKE', '%' . $keyword . '%');
                     })->where('vendors.status', '!=', '2')->get();
                 foreach ($vendors as $vendor) {
                     $vendor->response_type = 'vendor';
-                    $response[] = $vendor;
+                    // $response[] = $vendor;
                 }
                 $products = Product::join('product_translations as pt', 'pt.product_id', 'products.id')
                             ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
                             ->where('pt.language_id', $langId)
                             ->where(function ($q) use ($keyword) {
                                 $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
-                            })->where('products.is_live', 1)->whereNull('deleted_at')->get();
+                            })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('id')->get();
                 foreach ($products as $product) {
                     $product->response_type = 'product';
                     $response[] = $product;
@@ -204,7 +204,7 @@ class HomeController extends BaseController{
                     });
                 if($for == 'category'){
                     $prodIds = array();
-                    $productCategory = ProductCategory::select('product_id')->where('category_id', $dataId)->get();
+                    $productCategory = ProductCategory::select('product_id')->where('category_id', $dataId)->distinct()->get();
                     if($productCategory){
                         foreach ($productCategory as $key => $value) {
                             $prodIds[] = $value->product_id;

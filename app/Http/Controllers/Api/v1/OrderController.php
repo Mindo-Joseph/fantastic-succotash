@@ -8,7 +8,7 @@ use GuzzleHttp\Client as GCLIENT;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, User};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, User, Payment};
 
 class OrderController extends Controller {
     use ApiResponser;
@@ -245,6 +245,14 @@ class OrderController extends Controller {
                     $order->save();
                     CartCoupon::where('cart_id', $cart->id)->delete();
                     CartProduct::where('cart_id', $cart->id)->delete();
+                    if ( ($request->payment_option_id != 1) && ($request->payment_option_id != 2) ) {
+                        Payment::insert([
+                            'date' => date('Y-m-d'),
+                            'order_id' => $order->id,
+                            'transaction_id' => $request->transaction_id,
+                            'balance_transaction' => $order->payable_amount,
+                        ]);
+                    }
                     DB::commit();
                     return $this->successResponse($order, 'Order placed successfully.', 201);
                     }

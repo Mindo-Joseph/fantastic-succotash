@@ -555,10 +555,12 @@ $(document).ready(function() {
                     }
                     if(mapAddress.types[0] == "country"){
                         var country = document.getElementById('country');
-                        for (let i = 0; i < country.options.length; i++) {
-                            if (country.options[i].text.toUpperCase() == mapAddress.long_name.toUpperCase()) {
-                                country.value = country.options[i].value;
-                                break;
+                        if (typeof country.options != "undefined") {
+                            for (let i = 0; i < country.options.length; i++) {
+                                if (country.options[i].text.toUpperCase() == mapAddress.long_name.toUpperCase()) {
+                                    country.value = country.options[i].value;
+                                    break;
+                                }
                             }
                         }
                     }
