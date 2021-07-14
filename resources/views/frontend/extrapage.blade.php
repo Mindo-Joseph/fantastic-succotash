@@ -66,7 +66,7 @@
                                 <div class="col-md-4 mb-3">
                                     <label for="">Upload Logo</label>
                                     <div class="file file--upload">
-                                        <label for="input-file">
+                                        <label for="input_file_logo">
                                             <span class="update_pic">
                                                 <img src="" id="upload_logo_preview">
                                             </span>
@@ -74,19 +74,19 @@
                                                 <i class="fas fa-plus"></i>
                                             </span>
                                         </label>
-                                        <input id="input-file" type="file" name="upload_logo" accept="image/*" onchange="document.getElementById('upload_logo_preview').src = window.URL.createObjectURL(this.files[0])">
+                                        <input id="input_file_logo" type="file" name="upload_logo" accept="image/*">
                                     </div>
                                 </div>      
                                 <div class="col-md-8 mb-3">
                                     <label for="">Upload Banner</label>
                                     <div class="file file--upload">
-                                        <label for="input-file">
+                                        <label for="input_file_banner">
                                             <span class="update_pic">
                                                 <img src="" id="upload_banner_preview">
                                             </span>
                                             <span class="plus_icon"><i class="fas fa-plus"></i></span>
                                         </label>
-                                        <input id="input-file" type="file" name="upload_banner" accept="image/*" onchange="document.getElementById('upload_banner_preview').src = window.URL.createObjectURL(this.files[0])">
+                                        <input id="input_file_banner" type="file" name="upload_banner" accept="image/*">
                                     </div>
                                 </div>      
                             </div>
@@ -154,19 +154,34 @@
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
 <script src="{{asset('front-assets/js/fly-cart.js')}}"></script>
 <script type="text/javascript">
+
     $(document).ready(function() {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
             }
         });
+        function readURL(input, previewId) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $(previewId).attr('src',e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#input_file_logo").change(function() {
+            readURL(this, '#upload_logo_preview');
+        });
+        $("#input_file_banner").change(function() {
+            readURL(this, '#upload_banner_preview');
+        }); 
         var input = document.querySelector("#phone");
         window.intlTelInput(input, {
             separateDialCode: true,
             hiddenInput: "full_number",
             utilsScript: "{{asset('assets/js/utils.js')}}",
         });
-
         function initialize() {
             var input = document.getElementById('address');
             var autocomplete = new google.maps.places.Autocomplete(input);

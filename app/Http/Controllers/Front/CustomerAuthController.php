@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption};
+use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions};
 
 class CustomerAuthController extends FrontController
 {
@@ -254,6 +254,9 @@ class CustomerAuthController extends FrontController
             $vendor->longitude = $request->longitude;
             $vendor->slug = Str::slug($request->name, "-");
             $vendor->save();
+            $permission_detail = Permissions::where('slug', 'vendors')->first();
+            UserVendor::create(['user_id' => $user->id, 'vendor_id' => $vendor->id]);
+            UserPermissions::create(['user_id' => $user->id, 'permission_id' => $permission_detail->id]);
             DB::commit();
             return response()->json([
                 'status' => 'success',
