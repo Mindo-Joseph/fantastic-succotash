@@ -23,86 +23,127 @@
             </button>
         </div>
     </div>
+
     <div class="row">
-            <div class="col-12">
-                <div class="card widget-inline">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
-                                <div class="text-center">
-                                    <h3>
-                                        <i class="mdi mdi-storefront text-primary mdi-24px"></i>
-                                        <span data-plugin="counterup" id="total_earnings_by_vendors">{{$total_vendor_count}}</span>
-                                    </h3>
-                                    <p class="text-muted font-15 mb-0">Total Vendors</p>
-                                </div>
+        <div class="col-12">
+            <div class="card widget-inline">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
+                            <div class="text-center">
+                                <h3>
+                                    <i class="mdi mdi-storefront text-primary mdi-24px"></i>
+                                    <span data-plugin="counterup" id="total_earnings_by_vendors">{{$total_vendor_count}}</span>
+                                </h3>
+                                <p class="text-muted font-15 mb-0">Total Vendors</p>
                             </div>
-                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
-                                <div class="text-center">
-                                    <h3>
-                                        <i class="mdi mdi-store-24-hour text-primary mdi-24px"></i>
-                                        <span data-plugin="counterup" id="total_order_count">{{$available_vendors_count}}</span>
-                                    </h3>
-                                    <p class="text-muted font-15 mb-0">Open Vendors</p>
-                                </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
+                            <div class="text-center">
+                                <h3>
+                                    <i class="mdi mdi-store-24-hour text-primary mdi-24px"></i>
+                                    <span data-plugin="counterup" id="total_order_count">{{$available_vendors_count}}</span>
+                                </h3>
+                                <p class="text-muted font-15 mb-0">Open Vendors</p>
                             </div>
-                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
-                                <div class="text-center">
-                                    <h3>
-                                        <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
-                                        <span data-plugin="counterup" id="total_cash_to_collected">{{$vendors_product_count}}</span>
-                                    </h3>
-                                    <p class="text-muted font-15 mb-0">Total Products</p>
-                                </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
+                            <div class="text-center">
+                                <h3>
+                                    <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
+                                    <span data-plugin="counterup" id="total_cash_to_collected">{{$vendors_product_count}}</span>
+                                </h3>
+                                <p class="text-muted font-15 mb-0">Total Products</p>
                             </div>
-                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
-                                <div class="text-center">
-                                    <h3>
-                                        <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
-                                        <span data-plugin="counterup" id="total_delivery_fees">{{$vendors_active_order_count}}</span>
-                                    </h3>
-                                    <p class="text-muted font-15 mb-0">Total Active Orders</p>
-                                </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
+                            <div class="text-center">
+                                <h3>
+                                    <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
+                                    <span data-plugin="counterup" id="total_delivery_fees">{{$vendors_active_order_count}}</span>
+                                </h3>
+                                <p class="text-muted font-15 mb-0">Total Active Orders</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <form name="saveOrder" id="saveOrder"> @csrf</form>
-                        <table class="table table-centered table-nowrap table-striped" id="vendor_datatable" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>Icon</th>
-                                    <th>Name</th>
-                                    <th>Status</th>
-                                    <th>Address</th>
-                                    <th>Offers</th>
-                                    <th class="text-center">Can Add <br> Category</th>
-                                    <th class="text-center">Commission <br> Percentage</th>
-                                    <th class="text-center">Products</th>
-                                    <th class="text-center">Orders</th>
-                                    <th class="text-center">Active <br> Orders</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="post_list">
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div> 
-        <div class="row address" id="def" style="display: none;">
-            <input type="text" id="def-address" name="test" class="autocomplete form-control def_address">
-        </div>
     </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-lg-12 tab-product pt-0">
+            <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="active-vendor" data-toggle="tab" href="#active_vendor" role="tab" aria-selected="false" data-rel="active_vendor">
+                        <i class="icofont icofont-man-in-glasses"></i>Active Vendors
+                    </a>
+                    <div class="material-border"></div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="awaiting-vendor" data-toggle="tab"
+                        href="#awaiting_vendor" role="tab" aria-selected="true" data-rel="awaiting_vendor">
+                        <i class="icofont icofont-ui-home"></i>Awaiting Vendors
+                    </a>
+                    <div class="material-border"></div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="block-vendor" data-toggle="tab" href="#block_vendor" role="tab" aria-selected="false" data-rel="block_vendor">
+                        <i class="icofont icofont-man-in-glasses"></i>Block Vendors
+                    </a>
+                    <div class="material-border"></div>
+                </li>
+            </ul>
+            <div class="tab-content nav-material" id="top-tabContent">
+                <div class="tab-pane fade past-order show active" id="active_vendor" role="tabpanel"
+                    aria-labelledby="active-vendor">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <form name="saveOrder" id="saveOrder"> @csrf</form>
+                                        <table class="table table-centered table-nowrap table-striped" id="vendor_datatable" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Icon</th>
+                                                    <th>Name</th>
+                                                    <th>Status</th>
+                                                    <th>Address</th>
+                                                    <th>Offers</th>
+                                                    <th class="text-center">Can Add <br> Category</th>
+                                                    <th class="text-center">Commission <br> Percentage</th>
+                                                    <th class="text-center">Products</th>
+                                                    <th class="text-center">Orders</th>
+                                                    <th class="text-center">Active <br> Orders</th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="post_list">
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="row address" id="def" style="display: none;">
+                            <input type="text" id="def-address" name="test" class="autocomplete form-control def_address">
+                        </div>
+                    </div>
+                        
+                </div>
+                <div class="tab-pane fade" id="awaiting_vendor" role="tabpanel"
+                    aria-labelledby="awaiting-vendor">
+                    Awaiting Vendors    
+                </div>
+                <div class="tab-pane fade past-order" id="block_vendor" role="tabpanel"
+                    aria-labelledby="block-vendor"><div class="error-msg"><p>You have not any order yet now.</p></div></div>
+            </div>
+        </div>
+    </div> 
+
 </div>
 @include('backend.vendor.modals')
 <script type="text/javascript">
@@ -184,7 +225,7 @@
                     {data: 'commission_percent', class:'text-center', name: 'commission_percent', orderable: false, searchable: false},
                     {data: 'products_count', class:'text-center', class:'text-center', name: 'products_count', orderable: false, searchable: false},
                     {data: 'orders_count', class:'text-center', name: 'orders_count', orderable: false, searchable: false},
-                    {data: 'active_orders_count', class:'text-center', name: 'active_orders_count', orderable: false, searchable: false},
+                    {data: 'awaiting_vendor_count', class:'text-center', name: 'awaiting_vendor_count', orderable: false, searchable: false},
                     {data: 'edit_action', class:'text-center', name: 'edit_action', orderable: false, searchable: false, "mRender":function(data, type, full){
                         return "<div class='form-ul'><div class='inner-div d-inline-block'><a class='action-icon' userId='"+full.id+"' href='"+full.show_url+"'><i class='mdi mdi-eye'></i></a></div><div class='inner-div d-inline-block'><form method='POST' action='"+full.destroy_url+"'><div class='form-group action-icon mb-0'><button type='button' class='btn btn-primary-outline action-icon delete-vendor' data-destroy_url='"+full.destroy_url+"' data-rel='"+full.id+"'><i class='mdi mdi-delete'></i></button></div></form></div></div>"
                     }},
