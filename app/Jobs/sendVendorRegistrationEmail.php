@@ -1,20 +1,15 @@
 <?php
 
 namespace App\Jobs;
-use App;
-use Mail;
-use Config;
-use App\Models\Client;
-use App\Mail\VerifyEmailSend;
+
 use Illuminate\Bus\Queueable;
-use App\Models\ClientPreference;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class SendVerifyEmailJob implements ShouldQueue
+class sendVendorRegistrationEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     protected $details;

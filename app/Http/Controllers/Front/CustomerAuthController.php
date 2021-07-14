@@ -203,16 +203,16 @@ class CustomerAuthController extends FrontController
             DB::beginTransaction();
             $request->validate([
                 'address' => 'required',
-                'phone_no' => 'required',
                 'full_name' => 'required',
                 'email' => 'required|email|unique:users',
-                'name' => 'required|string|max:150|unique:vendors',
                 'password' => 'required|string|min:6|max:50',
                 'confirm_password' => 'required|same:password',
+                'name' => 'required|string|max:150|unique:vendors',
+                'phone_no' => 'required|string|min:6|max:15|unique:users',
             ]);
             $user = new User();
             $county = Country::where('code', strtoupper($request->countryData))->first();
-            $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
+            $sendTime = Carbon::now()->addMinutes(10)->toDateTimeString();
             $user->type = 1;
             $user->status = 1;
             $user->role_id = 1;

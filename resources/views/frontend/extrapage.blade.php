@@ -54,7 +54,7 @@
                                  <div class="col-md-4 mb-3" id="confirm_passwordInput">
                                     <label for="confirm_password">Confirm Password</label>
                                     <input type="password" class="form-control" name="confirm_password" value="" required="">
-                                    <div class="invalid-feedback"><strong></strong></div>
+                                    <div class="invalid-feedback" id="confirm_password_error"><strong></strong></div>
                                 </div>
                             </div>
                             <div class="row">
@@ -120,26 +120,34 @@
                                     <div class="valid-feedback"></div>
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="col-md-2 mb-3">
-                                    <label for="">Dine In</label>
-                                    <div class="toggle-icon">
-                                        <input type="checkbox" id="dine-in" name="dine_in"><label for="dine-in">Toggle</label>
-                                    </div>
+                            @if($client_preferences)
+                                <div class="form-row">
+                                    @if($client_preferences->dinein_check == 1)
+                                        <div class="col-md-2 mb-3">
+                                            <label for="">Dine In</label>
+                                            <div class="toggle-icon">
+                                                <input type="checkbox" id="dine-in" name="dine_in"><label for="dine-in">Toggle</label>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @if($client_preferences->takeaway_check == 1)
+                                        <div class="col-md-2 mb-3">
+                                            <label for="">Takeaway</label>
+                                            <div class="toggle-icon">
+                                                <input type="checkbox" id="takeaway" name="takeaway"><label for="takeaway">Toggle</label>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @if($client_preferences->delivery_check == 1)
+                                        <div class="col-md-2 mb-3">
+                                            <label for="">Delivery</label>
+                                            <div class="toggle-icon">
+                                                <input type="checkbox" id="delivery" name="delivery"><label for="delivery">Toggle</label>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
-                                <div class="col-md-2 mb-3">
-                                    <label for="">Takeaway</label>
-                                    <div class="toggle-icon">
-                                        <input type="checkbox" id="takeaway" name="takeaway"><label for="takeaway">Toggle</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 mb-3">
-                                    <label for="">Delivery</label>
-                                    <div class="toggle-icon">
-                                        <input type="checkbox" id="delivery" name="delivery"><label for="delivery">Toggle</label>
-                                    </div>
-                                </div>
-                            </div>
+                            @endif
                             <button class="btn btn-solid mt-3 w-100" type="button" id="register_btn">Submit</button>
                         </div>
                     </div>
@@ -154,7 +162,6 @@
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
 <script src="{{asset('front-assets/js/fly-cart.js')}}"></script>
 <script type="text/javascript">
-
     $(document).ready(function() {
         $.ajaxSetup({
             headers: {
