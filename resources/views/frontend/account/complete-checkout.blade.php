@@ -94,11 +94,10 @@
             url: place_order_url,
             data: {auth_token: authToken, address_id:addressID, payment_option_id:payment_option_id, transaction_id:transaction_id},
             success: function(response) {
-                $(".processing").hide();
                 if (response.status == "Success") {
-                    window.location.href = checkout_success_url;
-                    success_error_alert('success', "Thank you for your order.", ".payment_response");
+                    document.location.href = checkout_success_url;
                 }else{
+                    $(".processing").hide();
                     success_error_alert('error', response.message, ".payment_response");
                 }
             },
@@ -116,11 +115,10 @@
             url: credit_wallet_url,
             data: {wallet_amount:amount, payment_option_id:payment_option_id, transaction_id:transaction_id},
             success: function(response) {
-                $(".processing").hide();
                 if (response.status == "Success") {
-                    window.location.href = checkout_success_url;
-                    success_error_alert('success', "Thank you for your payment.", ".payment_response");
+                    document.location.href = checkout_success_url;
                 }else{
+                    $(".processing").hide();
                     success_error_alert('error', response.message, ".payment_response");
                 }
             },
