@@ -69,7 +69,7 @@
                                     <span class="text-danger error-text updatetitleError"></span>
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <label for="title" class="control-label">Meta Keyword</label>
+                                    <label for="title" class="control-label">Description</label>
                                     <textarea class="form-control" id="edit_meta_keyword" placeholder="Meta Keyword" rows="6" name="meta_keyword" cols="10"></textarea>
                                 </div>
                             </div>         
