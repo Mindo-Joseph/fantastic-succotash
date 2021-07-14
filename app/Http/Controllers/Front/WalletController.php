@@ -32,10 +32,10 @@ class WalletController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function creditWallet(Request $request, $domain = '', $token = '')
+    public function creditWallet(Request $request, $domain = '')
     {
-        if(!empty($token)){
-            $user = User::where('auth_token', $token)->first();
+        if( (isset($request->auth_token)) && (!empty($request->auth_token)) ){
+            $user = User::where('auth_token', $request->auth_token)->first();
         }else{
             $user = Auth::user();
         }
@@ -58,6 +58,20 @@ class WalletController extends FrontController
             }
         }
         else{
+            return $this->errorResponse('Invalid User', 402);
+        }
+    }
+
+    /**
+     * Credit Money Into Wallet Through gateway redirection
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function postPaymentCreditWallet(Request $request, $domain = '')
+    {
+        if( (isset($request->auth_token)) && (!empty($request->auth_token)) ){
+            return $this->creditWallet($request);
+        }else{
             return $this->errorResponse('Invalid User', 402);
         }
     }

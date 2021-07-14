@@ -29,16 +29,16 @@
 
 <script src="{{asset('front-assets/js/jquery-3.3.1.min.js')}}"></script>
 <script>
-    var place_order_url = "{{route('user.placeorder', $token)}}";
-    var credit_wallet_url = "{{route('user.creditWallet', $token)}}";
+    var place_order_url = "{{route('user.postPaymentPlaceOrder')}}";
+    var credit_wallet_url = "{{route('user.postPaymentCreditWallet')}}";
     var payment_success_paypal_url = "{{route('payment.paypalSuccess')}}";
-    var checkout_success_url = "{{route('payment.getCheckoutSuccess', ':id')}}";
+    var checkout_success_url = "{{route('payment.getCheckoutSuccess')}}";
     let path = window.location.pathname;
     let queryString = window.location.search;
     let urlParams = new URLSearchParams(queryString);
     let amount = 0;
     let action = "{{ $action }}";
-    let authToken = "{{ $token }}";
+    let authToken = "{{ $auth_token }}";
     let address_id = "{{ $address_id }}";
 
     $.ajaxSetup({
@@ -57,23 +57,21 @@
             url: payment_success_paypal_url,
             data: {'amount': amount, 'token': token, 'PayerID': payer_id},
             success: function (response) {
-                $(".processing").hide();
                 if(response.status == "Success"){
-                    document.location.href = checkout_success_url.replace(":id", response.data);
-                    // success_error_alert('success', "Thank you for your payment.", ".payment_response");
                     if(action == "cart"){
-                        // placeOrder(addressID, 3, response.data);
+                        placeOrder(addressID, 3, response.data);
                     }
                     else if(action = "wallet"){
-                        // creditWallet(amount, 3, response.data);
+                        creditWallet(amount, 3, response.data);
                     }
                 }else{
-                    // $(".processing").hide();
                     if(action == "cart"){
                         success_error_alert('error', response.message, ".payment_response");
+                        $(".processing").hide();
                     }
                     else if(action = "wallet"){
                         success_error_alert('error', response.message, ".payment_response");
+                        $(".processing").hide();
                     }
                 }
             },
@@ -115,7 +113,7 @@
             type: "POST",
             dataType: 'json',
             url: credit_wallet_url,
-            data: {wallet_amount:amount, payment_option_id:payment_option_id, transaction_id:transaction_id},
+            data: {auth_token: authToken, wallet_amount:amount, payment_option_id:payment_option_id, transaction_id:transaction_id},
             success: function(response) {
                 if (response.status == "Success") {
                     document.location.href = checkout_success_url;

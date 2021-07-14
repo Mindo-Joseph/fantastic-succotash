@@ -86,7 +86,11 @@ class OrderController extends FrontController
         try {
             DB::beginTransaction();
             $delivery_on_vendors = array();
-            $user = Auth::user();
+            if( (isset($request->auth_token)) && (!empty($request->auth_token)) ){
+                $user = User::where('auth_token', $request->auth_token)->first();
+            }else{
+                $user = Auth::user();
+            }
             $loyalty_amount_saved = 0;
             $redeem_points_per_primary_currency = '';
             $loyalty_card = LoyaltyCard::where('status', '0')->first();
@@ -161,7 +165,7 @@ class OrderController extends FrontController
                         }
                     }
                     if (!empty($vendor_cart_product->product->Requires_last_mile) && $vendor_cart_product->product->Requires_last_mile == 1) {
-                        $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id);
+                        $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
                     }
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
@@ -237,7 +241,7 @@ class OrderController extends FrontController
                 $OrderVendor->taxable_amount   = $vendor_taxable_amount;
                 $OrderVendor->payment_option_id = $request->payment_option_id;
                 $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
-                $OrderVendor->delivery_fee = $this->getDeliveryFeeDispatcher($vendor_id);
+                $OrderVendor->delivery_fee = $this->getDeliveryFeeDispatcher($vendor_id, $user->id);
                 $vendor_info = Vendor::where('id', $vendor_id)->first();
                 if ($vendor_info) {
                     if (($vendor_info->commission_percent) != null && $vendor_payable_amount > 0) {
@@ -335,13 +339,13 @@ class OrderController extends FrontController
             exit($response->getMessage());
         }
     }
-    public function getDeliveryFeeDispatcher($vendor_id)
+    public function getDeliveryFeeDispatcher($vendor_id, $user_id)
     {
         try {
             $dispatch_domain = $this->checkIfLastMileOn();
             if ($dispatch_domain && $dispatch_domain != false) {
-                $customer = User::find(Auth::id());
-                $cus_address = UserAddress::where('user_id', Auth::id())->orderBy('is_primary', 'desc')->first();
+                $customer = User::find($user_id);
+                $cus_address = UserAddress::where('user_id', $user_id)->orderBy('is_primary', 'desc')->first();
                 if ($cus_address) {
                     $tasks = array();
                     $vendor_details = Vendor::find($vendor_id);
@@ -386,5 +390,14 @@ class OrderController extends FrontController
             return $preference;
         else
             return false;
+    }
+
+    public function postPaymentPlaceOrder(Request $request, $domain = '')
+    {
+        if( (isset($request->auth_token)) && (!empty($request->auth_token)) ){
+            return $this->placeOrder($request);
+        }else{
+            return $this->errorResponse('Invalid User', 402);
+        }
     }
 }

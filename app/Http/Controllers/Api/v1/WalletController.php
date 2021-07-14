@@ -19,6 +19,7 @@ class WalletController extends Controller{
         $transactions = Transaction::where('payable_id', $user->id)->paginate($paginate);
         foreach($transactions as $trans){
             $trans->meta = json_decode($trans->meta);
+            $trans->amount = sprintf("%.2f", $trans->amount / 100);
         }
         $data = ['wallet_amount' => $user->balanceFloat, 'transactions' => $transactions];
         return $this->successResponse($data, '', 200);

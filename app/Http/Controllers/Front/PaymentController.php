@@ -78,9 +78,9 @@ class PaymentController extends FrontController{
         return $this->successResponse($payment_options);
     }
 
-    public function paypalCompleteCheckout(Request $request, $domain = '', $token = '', $address_id ='', $action = '')
+    public function paypalCompleteCheckout(Request $request, $domain = '', $token = '', $action = '', $address_id ='')
     {
-        return view('frontend.account.complete-checkout')->with(['token' => $token, 'address_id' => $address_id, 'action' => $action]);
+        return view('frontend.account.complete-checkout')->with(['auth_token' => $token, 'action' => $action, 'address_id' => $address_id]);
     }
 
     public function getCheckoutSuccess(Request $request, $domain = '', $id = '')
