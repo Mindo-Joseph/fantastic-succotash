@@ -12,8 +12,7 @@ class AdminsTableDataSeeder extends Seeder
      * @return void
      */
 
-    public function run()
-    {
+    public function run(){
         DB::table('admins')->truncate();
         $maps = array(
             array(

@@ -17,14 +17,15 @@
 <section class="section-b-space">
     <div class="container-fluid">
         <div class="payment_response">
-            @if (\Session::has('success'))
-                <div class="alert p-0 mt-2 alert-success">
+            <?php /* ?> @if (\Session::has('success'))
+                <div class="alert mt-2 alert-success">
                     <span>{!! \Session::get('success') !!}</span>
                 </div>
                 @php
                     \Session::forget('success');
                 @endphp
-            @endif
+            @endif <?php */ ?>
+            <div class="alert mt-2 alert-success"><span>Thank you for your payment.</span></div>
         </div>
     </div>
 </section>

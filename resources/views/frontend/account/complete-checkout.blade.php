@@ -29,8 +29,8 @@
 
 <script src="{{asset('front-assets/js/jquery-3.3.1.min.js')}}"></script>
 <script>
-    var place_order_url = "{{route('user.placeorder', $token)}}";
-    var credit_wallet_url = "{{route('user.creditWallet', $token)}}";
+    var place_order_url = "{{route('user.postPaymentPlaceOrder')}}";
+    var credit_wallet_url = "{{route('user.postPaymentCreditWallet')}}";
     var payment_success_paypal_url = "{{route('payment.paypalSuccess')}}";
     var checkout_success_url = "{{route('payment.getCheckoutSuccess')}}";
     let path = window.location.pathname;
@@ -38,7 +38,7 @@
     let urlParams = new URLSearchParams(queryString);
     let amount = 0;
     let action = "{{ $action }}";
-    let authToken = "{{ $token }}";
+    let authToken = "{{ $auth_token }}";
     let address_id = "{{ $address_id }}";
 
     $.ajaxSetup({
@@ -94,11 +94,10 @@
             url: place_order_url,
             data: {auth_token: authToken, address_id:addressID, payment_option_id:payment_option_id, transaction_id:transaction_id},
             success: function(response) {
-                $(".processing").hide();
                 if (response.status == "Success") {
-                    window.location.href = checkout_success_url;
-                    success_error_alert('success', "Thank you for your order.", ".payment_response");
+                    document.location.href = checkout_success_url;
                 }else{
+                    $(".processing").hide();
                     success_error_alert('error', response.message, ".payment_response");
                 }
             },
@@ -114,13 +113,12 @@
             type: "POST",
             dataType: 'json',
             url: credit_wallet_url,
-            data: {wallet_amount:amount, payment_option_id:payment_option_id, transaction_id:transaction_id},
+            data: {auth_token: authToken, wallet_amount:amount, payment_option_id:payment_option_id, transaction_id:transaction_id},
             success: function(response) {
-                $(".processing").hide();
                 if (response.status == "Success") {
-                    window.location.href = checkout_success_url;
-                    success_error_alert('success', "Thank you for your payment.", ".payment_response");
+                    document.location.href = checkout_success_url;
                 }else{
+                    $(".processing").hide();
                     success_error_alert('error', response.message, ".payment_response");
                 }
             },

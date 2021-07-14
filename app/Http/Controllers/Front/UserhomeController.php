@@ -22,10 +22,12 @@ class UserhomeController extends FrontController{
      * @return \Illuminate\Http\Response
      */
     public function getExtraPage(Request $request){
+        $user = Auth::user();
         $language_id = Session::get('customerLanguage');
+        $client_preferences = ClientPreference::first();
         $navCategories = $this->categoryNav($language_id);
         $page_detail = Page::with('primary')->where('slug', $request->slug)->firstOrFail();
-        return view('frontend.extrapage', compact('page_detail', 'navCategories'));
+        return view('frontend.extrapage', compact('page_detail', 'navCategories','client_preferences', 'user'));
     }
     public function index(Request $request){
         try {

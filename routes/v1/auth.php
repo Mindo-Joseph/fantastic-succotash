@@ -31,7 +31,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('order-detail', 'Api\v1\OrderController@postOrderDetail');
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');
         Route::get('myWallet', 'Api\v1\WalletController@getFindMyWalletDetails');
-        Route::get('myWallet/credit', 'Api\v1\WalletController@creditMyWallet');
+        Route::post('myWallet/credit', 'Api\v1\WalletController@creditMyWallet');
         Route::post('store/revenue', 'Api\v1\StoreController@getMyStoreRevenueDetails');
         Route::post('changePassword', 'Api\v1\ProfileController@changePassword');
         Route::get('addressBook/{id?}', 'Api\v1\AddressController@getAddressList');
@@ -45,6 +45,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('update/order/status', 'Api\v1\OrderController@postVendorOrderStatusUpdate');
         Route::get('payment/options', 'Api\v1\PaymentOptionController@getPaymentOptions');
         Route::get('payment/{gateway}', 'Api\v1\PaymentOptionController@postPayment');
+        Route::post('payment/place/order', 'Api\v1\PaymentOptionController@postPlaceOrder');
         // Rating & review 
         Route::group(['prefix' => 'rating'], function () {
             Route::post('update-product-rating', 'Api\v1\RatingController@updateProductRating');

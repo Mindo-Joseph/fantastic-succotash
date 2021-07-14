@@ -201,36 +201,49 @@ class CustomerAuthController extends FrontController
     public function postVendorregister(Request $request, $domain = ''){
         try {
             DB::beginTransaction();
-            $request->validate([
-                'address' => 'required',
-                'phone_no' => 'required',
-                'full_name' => 'required',
-                'email' => 'required|email|unique:users',
-                'name' => 'required|string|max:150|unique:vendors',
-                'password' => 'required|string|min:6|max:50',
-                'confirm_password' => 'required|same:password',
-            ]);
-            $user = new User();
-            $county = Country::where('code', strtoupper($request->countryData))->first();
-            $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
-            $user->type = 1;
-            $user->status = 1;
-            $user->role_id = 1;
-            $user->is_admin = 1;
-            $user->is_email_verified = 0;
-            $user->is_phone_verified = 0;
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->country_id = $county->id;
-            $user->dial_code = $request->dialCode;
-            $user->phone_token_valid_till = $sendTime;
-            $user->email_token_valid_till = $sendTime;
-            $user->email_token = mt_rand(100000, 999999);
-            $user->phone_token = mt_rand(100000, 999999);
-            $user->phone_number = $request->phone_number;
-            $user->password = Hash::make($request->password);
-            $user->save();
-            $wallet = $user->wallet;
+            if (empty($request->input('user_id'))){
+                $request->validate([
+                    'address' => 'required',
+                    'full_name' => 'required',
+                    'email' => 'required|email|unique:users',
+                    'password' => 'required|string|min:6|max:50',
+                    'confirm_password' => 'required|same:password',
+                    'name' => 'required|string|max:150|unique:vendors',
+                    'phone_number' => 'required|string|min:6|max:15|unique:users',
+                ]);
+            }else {
+                 $request->validate([
+                    'address' => 'required',
+                    'name' => 'required|string|max:150|unique:vendors',
+                ]);
+            }
+            $client_detail = Client::first();
+            $client_preference = ClientPreference::first();
+            if(!$request->user_id){
+                $user = new User();
+                $county = Country::where('code', strtoupper($request->countryData))->first();
+                $sendTime = Carbon::now()->addMinutes(10)->toDateTimeString();
+                $user->type = 1;
+                $user->status = 1;
+                $user->role_id = 1;
+                $user->is_admin = 1;
+                $user->is_email_verified = 0;
+                $user->is_phone_verified = 0;
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->country_id = $county->id;
+                $user->dial_code = $request->dialCode;
+                $user->phone_token_valid_till = $sendTime;
+                $user->email_token_valid_till = $sendTime;
+                $user->email_token = mt_rand(100000, 999999);
+                $user->phone_token = mt_rand(100000, 999999);
+                $user->phone_number = $request->phone_number;
+                $user->password = Hash::make($request->password);
+                $user->save();
+                $wallet = $user->wallet;
+            }else{
+                $user = User::where('id', $request->user_id)->first();
+            }
             $vendor = new Vendor();
             $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0;
             $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0;
@@ -245,24 +258,41 @@ class CustomerAuthController extends FrontController
                 $file = $request->file('upload_banner');
                 $vendor->banner = Storage::disk('s3')->put('/vendor', $file, 'public');
             }
+            $vendor->status = 0;
             $vendor->name = $request->name;
             $vendor->email = $request->email;
+            $vendor->phone_no = $user->phone_no;
             $vendor->address = $request->address;
             $vendor->website = $request->website;
             $vendor->latitude = $request->latitude;
-            $vendor->phone_no = $request->phone_no;
             $vendor->longitude = $request->longitude;
             $vendor->slug = Str::slug($request->name, "-");
+            $vendor->desc = $request->vendor_description;
             $vendor->save();
             $permission_detail = Permissions::where('slug', 'vendors')->first();
             UserVendor::create(['user_id' => $user->id, 'vendor_id' => $vendor->id]);
             UserPermissions::create(['user_id' => $user->id, 'permission_id' => $permission_detail->id]);
+            $email_data = [
+                'email' => 'pankaj.pundir@codebrewinnovations.com',
+                'powered_by' => url('/'),
+                'website' => $vendor->website,
+                'address' => $vendor->address,
+                'vendor_name' => $vendor->name,
+                'description' => $vendor->desc,
+                'phone_no' => $user->phone_number,
+                'client_name' => $client_detail->name,
+                'customer_name' => ucwords($user->name),
+                'logo' => $client_detail->logo['original'],
+                'mail_from' => $client_preference->mail_from
+            ];
+            dispatch(new \App\Jobs\sendVendorRegistrationEmail($email_data))->onQueue('verify_email');
             DB::commit();
             return response()->json([
                 'status' => 'success',
-                'message' => 'Vendor created Successfully!',
+                'message' => 'Vendor Registration Created Successfully!',
             ]);
         } catch (Exception $e) {
+            pr($e->getMessage());die;
             DB::rollback();
         }
     }

@@ -94,6 +94,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::resource('payment', 'Client\PaymentController');
     Route::resource('accounting', 'Client\AccountController');
     Route::get('vendor/filterdata', 'Client\VendorController@getFilterData')->name('vendor.filterdata');
+    Route::post('vendor/status/update', 'Client\VendorController@postUpdateStatus')->name('vendor.status');
     Route::get('user/filterdata', 'Client\UserController@getFilterData')->name('user.filterdata');
     Route::resource('vendor', 'Client\VendorController');
     Route::get('vendor/categories/{id}', 'Client\VendorController@vendorCategory')->name('vendor.categories');
@@ -159,8 +160,6 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('subscriptions/vendors/delete/{slug}', 'Client\SubscriptionController@deleteVendorSubscription')->name('subscriptions.deleteVendorSubscription');
     Route::post('subscriptions/vendors/updateStatus/{slug}', 'Client\SubscriptionController@updateVendorSubscriptionStatus')->name('subscriptions.updateVendorSubscriptionStatus');
     Route::post('subscriptions/vendors/updateOnRequest/{slug}', 'Client\SubscriptionController@updateVendorSubscriptionOnRequest')->name('subscriptions.updateVendorSubscriptionOnRequest');
-
-
     // pickup & delivery 
     Route::group(['prefix' => 'vendor/dispatcher'], function () {
         Route::post('updateCreateVendorInDispatch', 'Client\VendorController@updateCreateVendorInDispatch')->name('update.Create.Vendor.In.Dispatch');

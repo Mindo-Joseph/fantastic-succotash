@@ -183,7 +183,7 @@ class HomeController extends BaseController{
                             ->where('pt.language_id', $langId)
                             ->where(function ($q) use ($keyword) {
                                 $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
-                            })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('id')->get();
+                            })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->get();
                 foreach ($products as $product) {
                     $product->response_type = 'product';
                     $response[] = $product;
@@ -218,7 +218,7 @@ class HomeController extends BaseController{
                 if($for == 'brand'){
                     $products = $products->where('products.brand_id', $dataId);
                 }
-                $products = $products->where('products.is_live', 1)->whereNull('deleted_at')->get();
+                $products = $products->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->get();
                 foreach ($products as $product) {
                     $product->response_type = 'product';
                     $response[] = $product;
