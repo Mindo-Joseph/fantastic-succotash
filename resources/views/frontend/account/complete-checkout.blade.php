@@ -32,7 +32,7 @@
     var place_order_url = "{{route('user.placeorder', $token)}}";
     var credit_wallet_url = "{{route('user.creditWallet', $token)}}";
     var payment_success_paypal_url = "{{route('payment.paypalSuccess')}}";
-    var checkout_success_url = "{{route('payment.getCheckoutSuccess')}}";
+    var checkout_success_url = "{{route('payment.getCheckoutSuccess', ':id')}}";
     let path = window.location.pathname;
     let queryString = window.location.search;
     let urlParams = new URLSearchParams(queryString);
@@ -59,7 +59,7 @@
             success: function (response) {
                 $(".processing").hide();
                 if(response.status == "Success"){
-                    document.location.href = checkout_success_url;
+                    document.location.href = checkout_success_url.replace(":id", response.data);
                     // success_error_alert('success', "Thank you for your payment.", ".payment_response");
                     if(action == "cart"){
                         // placeOrder(addressID, 3, response.data);

@@ -20,7 +20,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('payment/paypal', 'Front\PaypalGatewayController@postPaymentViaPaypal')->name('payment.paypal');
 	Route::get('payment/paypalSuccess', 'Front\PaypalGatewayController@paypalSuccess')->name('payment.paypalSuccess');
 	Route::get('payment/paypal/completeCheckout/{token?}/{address?}/{action?}', 'Front\PaymentController@paypalCompleteCheckout')->name('payment.paypalCompleteCheckout');
-	Route::get('payment/checkoutSuccess', 'Front\PaymentController@getCheckoutSuccess')->name('payment.getCheckoutSuccess');
+	Route::get('payment/checkoutSuccess/{id}', 'Front\PaymentController@getCheckoutSuccess')->name('payment.getCheckoutSuccess');
 	Route::get('user/login', [
 		'as' => 'customer.login',
 		'uses' => 'Front\CustomerAuthController@loginForm'
