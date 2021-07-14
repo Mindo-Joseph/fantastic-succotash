@@ -68,13 +68,13 @@
                                     <div class="file file--upload">
                                         <label for="input-file">
                                             <span class="update_pic">
-                                                <img src="" id="output">
+                                                <img src="" id="upload_logo_preview">
                                             </span>
                                             <span class="plus_icon">
                                                 <i class="fas fa-plus"></i>
                                             </span>
                                         </label>
-                                        <input id="input-file" type="file" name="upload_logo" accept="image/*">
+                                        <input id="input-file" type="file" name="upload_logo" accept="image/*" onchange="document.getElementById('upload_logo_preview').src = window.URL.createObjectURL(this.files[0])">
                                     </div>
                                 </div>      
                                 <div class="col-md-8 mb-3">
