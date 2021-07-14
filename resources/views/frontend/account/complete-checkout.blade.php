@@ -32,7 +32,7 @@
     var place_order_url = "{{route('user.placeorder', $token)}}";
     var credit_wallet_url = "{{route('user.creditWallet', $token)}}";
     var payment_success_paypal_url = "{{route('payment.paypalSuccess')}}";
-    var checkout_success_url = "{{route('payment.getCheckoutSuccess', ':id')}}";
+    var checkout_success_url = "{{route('payment.getCheckoutSuccess')}}";
     let path = window.location.pathname;
     let queryString = window.location.search;
     let urlParams = new URLSearchParams(queryString);
@@ -58,7 +58,6 @@
             data: {'amount': amount, 'token': token, 'PayerID': payer_id},
             success: function (response) {
                 if(response.status == "Success"){
-                    checkout_success_url.replace(':id', response.data);
                     if(action == "cart"){
                         placeOrder(addressID, 3, response.data);
                     }

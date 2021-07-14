@@ -18,7 +18,7 @@
     <div class="container-fluid">
         <div class="payment_response">
             @if (\Session::has('success'))
-                <div class="alert alert-success">
+                <div class="alert p-0 mt-2 alert-success">
                     <span>{!! \Session::get('success') !!}</span>
                 </div>
                 @php
