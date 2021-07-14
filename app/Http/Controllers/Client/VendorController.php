@@ -41,7 +41,7 @@ class VendorController extends BaseController
             $takeaway_check = $client_preference->takeaway_check;
             $delivery_check = $client_preference->delivery_check;
         }
-        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->with('slot')->where('status', '!=', '2')->orderBy('id', 'desc');
+        $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->with('slot')->where('status', $request->status)->orderBy('id', 'desc');
         if (Auth::user()->is_superadmin == 0) {
             $vendors = $vendors->whereHas('permissionToUser', function ($query) {
                 $query->where('user_id', Auth::user()->id);

@@ -56,7 +56,7 @@
                  <tr>
                     <th style="text-align: center;">
                         <a style="display: block;" href="#">
-                           <img src="{{asset('images/logo.png')}}" alt="">
+                           <img src="{{$mailData['logo']}}" alt="">
                         </a>
                     </th>
                  </tr>
@@ -92,29 +92,27 @@
                        <div style="margin-bottom: 20px;">
                           <h4 style="margin-bottom: 5px;">Address</h4>
                           <address style="font-style: normal;">
-                           <a style="color: #8142ff;" href="#"><b>REI San Francisco <i class="fa fa-arrow-right ml-1"></i></b></a>
-                           <p style="text-transform: uppercase;">840 Brannant st <br>
-                              San Francisco, ca 94013 <br>
-                              (514) 932-1952
+                           <p style="text-transform: uppercase; width: 300px;">
+                              {{$mailData['address']}}
                            </p>
                         </address>
                        </div>
                        <div style="margin-bottom: 20px;">
                         <h4 style="margin-bottom: 5px;">Website</h4>
-                        <a style="color: #8142ff;" href="#"><b>{{$mailData['website']}}</b></a>
+                        <a style="color: #8142ff;" href="{{$mailData['website']}}" target="_blank"><b>{{$mailData['website']}}</b></a>
                      </div>
                     </td>
                  </tr>
               </tbody>
-              <tfoot style="text-align: center;">
+             <!--  <tfoot style="text-align: center;">
                <tr>
                   <td colspan="2" style="padding: 0 15px 20px;">
                      <div style="border-radius: 20px">
-                        <p style="background-color: #8142ff;padding:5px 0;text-align:center;color: #fff;margin-top: 30px; ">Powered by <b>sales.royoorders.com</b></p>
+                        <p style="background-color: #8142ff;padding:5px 0;text-align:center;color: #fff;margin-top: 30px; ">Powered by <b>{{$mailData['powered_by']}}</b></p>
                      </div>
                   </td>
                </tr>
-              </tfoot>
+              </tfoot> -->
             </table>
          </div>
       </section>

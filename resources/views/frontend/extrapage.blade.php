@@ -17,45 +17,48 @@
         </div>
         @if($page_detail->id == 3)
             <form class="vendor-signup" id="vendor_signup_form">
-                <div class="alert alert-success" role="alert" id="success_msg" style="display:none;"></div>
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
+                        <div class="alert alert-success" role="alert" id="success_msg" style="display:none;"></div>
                         <div class="row">
                             <div class="col-12">
                                 <h2>Personal Details.</h2>
                             </div>    
                         </div>
                         <div class="needs-validation vendor-signup">
+                            <input type="hidden" name="user_id" value="{{$user ? $user->id : ''}}">
                             <div class="form-row">
                                 <div class="col-md-6 mb-3" id="full_nameInput">
                                     <label for="fullname">Full name</label>
-                                    <input type="text" class="form-control" name="full_name" value="">
+                                    <input type="text" class="form-control" name="full_name" value="{{$user ? $user->name : ''}}" {{$user ? 'disabled' : ''}}>
                                     <div class="invalid-feedback" id="full_name_error"><strong></strong></div>
                                 </div>
-                                <div class="col-md-6 mb-3" id="phone_noInput">
+                                <div class="col-md-6 mb-3" id="phone_numberInput">
                                     <label for="validationCustom02">Phone No.</label>
-                                    <input type="text" class="form-control" name="phone_no" value="" id="phone">
-                                    <div class="invalid-feedback" id="phone_no_error"><strong></strong></div>
+                                    <input type="tel" class="form-control" name="phone_number" value="{{$user ? $user->phone_number : ''}}" id="phone" {{$user ? 'disabled' : ''}}>
+                                    <div class="invalid-feedback" id="phone_number_error"><strong></strong></div>
                                     <input type="hidden" id="countryData" name="countryData" value="us">
-                                    <input type="hidden" id="dialCode" name="dialCode" value="1">
+                                    <input type="hidden" id="dialCode" name="dialCode" value="{{$user ? $user->dial_code : ''}}">
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="col-md-4 mb-3" id="emailInput">
                                     <label for="email">Email</label>
-                                    <input type="text" class="form-control" name="email" value="" required="">
+                                    <input type="text" class="form-control" name="email" value="{{$user ? $user->email :''}}" {{$user ? 'disabled' : ''}}>
                                     <div class="invalid-feedback" id="email_error"><strong></strong></div>
                                 </div>
-                                <div class="col-md-4 mb-3" id="passwordInput">
-                                    <label for="password">Password</label>
-                                    <input type="password" class="form-control" name="password" value="" required="">
-                                    <div class="invalid-feedback" id="password_error"><strong></strong></div>
-                                </div>
-                                 <div class="col-md-4 mb-3" id="confirm_passwordInput">
-                                    <label for="confirm_password">Confirm Password</label>
-                                    <input type="password" class="form-control" name="confirm_password" value="" required="">
-                                    <div class="invalid-feedback" id="confirm_password_error"><strong></strong></div>
-                                </div>
+                                @if(!$user)
+                                    <div class="col-md-4 mb-3" id="passwordInput">
+                                        <label for="password">Password</label>
+                                        <input type="password" class="form-control" name="password" value="" required="">
+                                        <div class="invalid-feedback" id="password_error"><strong></strong></div>
+                                    </div>
+                                     <div class="col-md-4 mb-3" id="confirm_passwordInput">
+                                        <label for="confirm_password">Confirm Password</label>
+                                        <input type="password" class="form-control" name="confirm_password" value="" required="">
+                                        <div class="invalid-feedback" id="confirm_password_error"><strong></strong></div>
+                                    </div>
+                                @endif
                             </div>
                             <div class="row">
                                 <div class="col-12">
@@ -148,7 +151,9 @@
                                     @endif
                                 </div>
                             @endif
-                            <button class="btn btn-solid mt-3 w-100" type="button" id="register_btn">Submit</button>
+                            <button class="btn btn-solid mt-3 w-100" dir="ltr" data-style="expand-right" id="register_btn" type="button">
+                                <span class="ladda-label">Submit</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -167,6 +172,12 @@
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
             }
+        });
+        $("#phone").keypress(function(e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+            return true;
         });
         function readURL(input, previewId) {
             if (input.files && input.files[0]) {
@@ -240,6 +251,10 @@
             $('#dialCode').val(dial_code);
         });
         $('#register_btn').click(function() {
+            var that = $(this);
+            $(this).attr('disabled', true);
+            $('.form-control').removeClass("is-invalid");
+            $('.invalid-feedback').children("strong").html('');
             var form = document.getElementById('vendor_signup_form');
             var formData = new FormData(form);
             $.ajax({
@@ -252,6 +267,7 @@
                     Accept: "application/json"
                 },
                 success: function(data) {
+                    that.attr('disabled', false);
                     if (data.status == 'success') {
                         $("#vendor_signup_form")[0].reset();
                         $('#success_msg').html(data.message).show();
@@ -261,6 +277,7 @@
                     }
                 },
                 error: function(response) {
+                    that.attr('disabled', false);
                     if (response.status === 422) {
                         let errors = response.responseJSON.errors;
                         Object.keys(errors).forEach(function(key) {
