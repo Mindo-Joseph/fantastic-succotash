@@ -30,9 +30,6 @@
                                 <a href="javascript: void(0);" class="btn btn-blue ml-2" id="dashboard_refresh_btn">
                                     <i class="mdi mdi-autorenew"></i>
                                 </a>
-                                <a href="javascript: void(0);" class="btn btn-blue ml-2">
-                                    <i class="mdi mdi-filter-variant"></i>
-                                </a>
                             </div>
                         </div>
                         <h4 class="page-title">Dashboard</h4>
