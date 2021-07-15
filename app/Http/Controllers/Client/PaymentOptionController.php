@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\Client;
 
+use Session;
 use App\Models\Brand;
-use App\Http\Controllers\Client\BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Session;
-use Illuminate\Support\Facades\Validator;
-use App\Models\{Client, ClientPreference, PaymentOption};
+use App\Http\Traits\ToasterResponser;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Client\BaseController;
+use App\Models\{Client, ClientPreference, PaymentOption};
 
 class PaymentOptionController extends BaseController
 {
+    use ToasterResponser;
     private $folderName = 'payoption';
     /**
      * Display a listing of the resource.
@@ -73,6 +75,15 @@ class PaymentOptionController extends BaseController
 
     public function updateAll(Request $request, $domain = '')
     {
+        $validatedData = $request->validate([
+            'paypal_username'       => 'required',
+            'paypal_password'       => 'required',
+            'paypal_signature'      => 'required',
+            'stripe_api_key'        => 'required',
+            'stripe_publishable_key'=> 'required'
+        ], [
+            'stripe_api_key.required'=> 'Stripe secret key field is required'
+        ]);
         $msg = 'Payment options have been saved successfully!';
         $method_id_arr = $request->input('method_id');
         $method_name_arr = $request->input('method_name');
@@ -99,13 +110,15 @@ class PaymentOptionController extends BaseController
                 }
                 else if( (isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'stripe') ){
                     $json_creds = json_encode(array(
-                        'api_key' => $request->stripe_api_key
+                        'api_key' => $request->stripe_api_key,
+                        'publishable_key' => $request->stripe_publishable_key
                     ));
                 }
             }
             PaymentOption::where('id', $id)->update(['status' => $status, 'credentials' => $json_creds]);
         }
-        return redirect()->back()->with('success', $msg);
+        $toaster = $this->successToaster('Success', $msg);
+        return redirect()->back()->with('toaster', $toaster);
         
     }
 

@@ -1989,9 +1989,17 @@ td.product-name,.vendor-name {
     font-weight: 900;
 }
 
+.select-date .form-control {
+    height: calc(0.7em + .9rem + 2px);
+}
 
+a:-webkit-any-link:focus-visible {
+    outline-offset: 0 !important;
+}
 
-
+:focus-visible {
+    outline: 0 !important;
+}
 
 
 
