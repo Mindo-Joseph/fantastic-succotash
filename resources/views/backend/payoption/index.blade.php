@@ -20,9 +20,18 @@
       <div class="col-12">
          <div class="text-sm-left">
             @if (\Session::has('success'))
-            <div class="alert alert-success">
+            <div class="alert mt-2 mb-0 alert-success">
                <span>{!! \Session::get('success') !!}</span>
             </div>
+            @endif
+            @if ( ($errors) && (count($errors) > 0) )
+                <div class="alert mt-2 mb-0 alert-danger">
+                    <ul class="m-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
          </div>
       </div>
