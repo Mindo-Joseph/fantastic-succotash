@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model{
       use SoftDeletes;
   
-    protected $fillables = ['sku', 'title', 'url_slug', 'description', 'body_html', 'vendor_id', 'category_id', 'type_id', 'country_origin_id', 'is_new', 'is_featured', 'is_live', 'is_physical', 'weight', 'weight_unit', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'publish_at','averageRating','tags'];
-
+    protected $fillable = ['sku', 'title', 'url_slug', 'description', 'body_html', 'vendor_id', 'category_id', 'type_id', 'country_origin_id', 'is_new', 'is_featured', 'is_live', 'is_physical', 'weight', 'weight_unit', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'publish_at', 'inquiry_only','has_variant','averageRating','tags', 'pharmacy_check', 'deleted_at', 'celebrity_id', 'brand_id', 'tax_category_id'];
+    
     public function addOn(){
        return $this->hasMany('App\Models\ProductAddon')->select('product_id', 'addon_id'); 
     }

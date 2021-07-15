@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BrandTranslation extends Model
 {
+	protected $fillable = ['title','brand_id','language_id'];
 	//use Searchable;
 	// public function toSearchableArray()
 	// {

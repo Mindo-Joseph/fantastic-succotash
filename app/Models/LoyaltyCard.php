@@ -9,6 +9,8 @@ class LoyaltyCard extends Model
 {
     use HasFactory;
 
+	protected $fillable = ['name','description','minimum_points','per_order_minimum_amount','per_order_points','per_purchase_minimum_amount','amount_per_loyalty_point','redeem_points_per_primary_currency','status','loyalty_check'];
+
     public static function getLoyaltyPoint($minimum_points, $payable_amount){
     	$per_order_points = 0;
         $loyalty_card_id = 0;

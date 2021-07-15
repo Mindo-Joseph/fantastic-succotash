@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductVariant extends Model
 {
+	protected $fillable = ['sku','product_id','title','quantity','price','position','compare_at_price','cost_price','barcode','currency_id','tax_category_id','inventory_policy','fulfillment_service','inventory_management','status'];
+
     public function set(){
 	    return $this->hasMany('App\Models\ProductVariantSet')
 	    		->join('variant_options as opt', 'opt.id', 'product_variant_sets.variant_option_id')
