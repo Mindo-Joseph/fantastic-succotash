@@ -12,6 +12,7 @@
                 <p class="text-muted text-center mt-2 mb-0">Upload banner image</p>
             </div>
         </div>
+        {!! Form::hidden('vendor_id', $vendor->id, ['class'=>'form-control']) !!}
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group" id="nameInput">
