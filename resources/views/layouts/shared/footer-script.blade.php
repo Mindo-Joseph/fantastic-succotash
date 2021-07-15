@@ -40,9 +40,8 @@ if (Session::has('toaster')) {
     is_hyperlocal = 1;
     @endif;
     @endif;
-
+    var base_url = "{{ url('/')}}";
     function gm_authFailure() {
-
         $('.excetion_keys').append('<span><i class="mdi mdi-block-helper mr-2"></i> <strong>Google Map</strong> key is not valid</span><br/>');
         $('.displaySettingsError').show();
     };

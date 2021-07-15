@@ -197,7 +197,27 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
+    <div id="edit_vendor_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Vendor</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <form id="save_edit_banner_form" method="post" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body" id="editVendorBox">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info waves-effect waves-light submitEditForm">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 @include('backend.vendor.modals')
 <script type="text/javascript">
@@ -209,7 +229,29 @@
             }
         });
         setTimeout(function(){$('#active-vendor').trigger('click');}, 200);
-        
+        $(document).on("click",".edit_vendor",function() {
+            var vendor_id = $(this).data('vendor_id');
+            $.ajax({
+                data: '',
+                type: "get",
+                dataType: 'json',
+                url: base_url+"/client/vendor/"+vendor_id+"/edit",
+                success: function (data) {
+                    $('#edit_vendor_modal').modal('show');
+                    $('.selectize-select').selectize();
+                    $('#edit_vendor_modal #editVendorBox').html(data.html);
+                    dine = document.getElementsByClassName('dine_in');
+                    var switchery = new Switchery(dine[0]);
+                    take = document.getElementsByClassName('takeaway');
+                    var switchery = new Switchery(take[0]);
+                    delivery = document.getElementsByClassName('delivery');
+                    var switchery = new Switchery(delivery[0]);
+                    autocompletesWraps.push('edit');
+                    loadMap(autocompletesWraps); 
+                    $('.dropify').dropify();
+                }
+            });
+        });
         $(document).on("click",".nav-link",function() {
             let rel= $(this).data('rel');
             let status= $(this).data('status');
@@ -268,7 +310,7 @@
                         return "<a href='"+full.show_url+"'>"+full.name+"</a> ";
                     }},
                     {data: 'show_slot', name: 'show_slot', orderable: false, searchable: false, "mRender":function(data, type, full){
-                        return "<span class='badge bg-soft-"+full.show_slot_label+" text-"+full.show_slot_label+"'>"+full.show_slot_option+"</span>";
+                        return "<span class='badge bg-soft-"+full.show_slot_label+" text-"+full.show_slot_label+"'>"+full.show_slot_option+"</span> | <a class='action-icon edit_vendor' href='javascript:void(0)' data-vendor_id='"+full.id+"'><i class='mdi mdi-square-edit-outline'></i></a>";
                     }},
                     {data: 'address', name: 'address', class:'address_txt',orderable: false, searchable: false, "mRender":function(data, type, full){
                         return "<p class='ellips_txt' data-toggle='tooltip' data-placement='top' title='"+full.address+"'>"+full.address+"</p>";
