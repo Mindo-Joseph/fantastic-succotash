@@ -286,9 +286,9 @@ $timezone = Auth::user()->timezone;
     var ajaxCall = 'ToCancelPrevReq';
     var credit_wallet_url = "{{route('user.creditWallet')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
-    var payment_paypal_url = "{{route('payment.paypal')}}";
+    var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
     var payment_option_list_url = "{{route('payment.option.list')}}";
-    var payment_success_paypal_url = "{{route('payment.paypalSuccess')}}";
+    var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
 
     // $(".table.wallet-transactions tbody").html('');
     // let wallet_transactions_template = _.template($('#wallet_transactions_template').html());

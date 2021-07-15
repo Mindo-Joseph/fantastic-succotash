@@ -31,7 +31,7 @@
 <script>
     var place_order_url = "{{route('user.postPaymentPlaceOrder')}}";
     var credit_wallet_url = "{{route('user.postPaymentCreditWallet')}}";
-    var payment_success_paypal_url = "{{route('payment.paypalSuccess')}}";
+    var paypal_complete_purchase_url = "{{route('payment.paypalCompletePurchase')}}";
     var checkout_success_url = "{{route('payment.getCheckoutSuccess')}}";
     let path = window.location.pathname;
     let queryString = window.location.search;
@@ -54,7 +54,7 @@
         $.ajax({
             type: "GET",
             dataType: 'json',
-            url: payment_success_paypal_url,
+            url: paypal_complete_purchase_url,
             data: {'amount': amount, 'token': token, 'PayerID': payer_id},
             success: function (response) {
                 if(response.status == "Success"){
