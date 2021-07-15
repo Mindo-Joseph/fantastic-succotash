@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 use DB;
+use Auth;
 use Carbon\Carbon;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
@@ -9,8 +10,8 @@ use App\Models\PaymentOption;
 use Omnipay\Common\CreditCard;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
+use Illuminate\Support\Facades\Validator;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, Client, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, User, Payment, Transaction};
 
 class PaymentOptionController extends Controller{
@@ -117,7 +118,7 @@ class PaymentOptionController extends Controller{
 
     public function creditMyWallet(Request $request)
     {
-        $user = User::where('auth_token', $request->auth_token)->first();
+        $user = Auth::user();
         if($user){
             $credit_amount = $request->amount;
             $wallet = $user->wallet;
