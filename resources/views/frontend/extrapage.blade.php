@@ -152,6 +152,7 @@
                                 </div>
                             @endif
                             <button class="btn btn-solid mt-3 w-100" dir="ltr" data-style="expand-right" id="register_btn" type="button">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="register_btn_loader" style="display:none !important;"></span>
                                 <span class="ladda-label">Submit</span>
                             </button>
                         </div>
@@ -253,6 +254,7 @@
         $('#register_btn').click(function() {
             var that = $(this);
             $(this).attr('disabled', true);
+            $('#register_btn_loader').show();
             $('.form-control').removeClass("is-invalid");
             $('.invalid-feedback').children("strong").html('');
             var form = document.getElementById('vendor_signup_form');
@@ -267,6 +269,7 @@
                     Accept: "application/json"
                 },
                 success: function(data) {
+                    $('#register_btn_loader').hide();
                     that.attr('disabled', false);
                     if (data.status == 'success') {
                         $("#vendor_signup_form")[0].reset();
@@ -280,6 +283,7 @@
                 },
                 error: function(response) {
                     that.attr('disabled', false);
+                    $('#register_btn_loader').hide();
                     if (response.status === 422) {
                         let errors = response.responseJSON.errors;
                         Object.keys(errors).forEach(function(key) {

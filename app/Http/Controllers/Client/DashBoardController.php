@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Client;
 use DB;
 use Session;
 use \DateTimeZone;
+use Carbon\Carbon;
 use App\Jobs\UpdateClient;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Traits\ApiResponser;
 use App\Jobs\ProcessClientDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -18,43 +20,53 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\{Banner, Brand, Category, Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country, Order, Product, User, Vendor, VendorOrderStatus};
-use Carbon\Carbon;
 
-class DashBoardController extends BaseController
-{
-
+class DashBoardController extends BaseController{
+    use ApiResponser;
     private $folderName = 'Clientlogo';
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index()
-    {
-        $total_revenue = Order::sum('payable_amount');
-        $today_sales = Order::whereDay('created_at', now()->day)->sum('payable_amount');
-        $total_categories = Category::count();
-        $total_products = Product::count();
-        $total_vendor = Vendor::count();
-        $total_banners = Banner::count();
-        $total_brands = Brand::count();
-        $total_pending_order = VendorOrderStatus::where('order_status_option_id', 1)->count();
-        $total_rejected_order = VendorOrderStatus::where('order_status_option_id', 3)->count();
-        $total_delivered_order = VendorOrderStatus::where('order_status_option_id', 6)->count();
-        $total_active_order = VendorOrderStatus::where('order_status_option_id', '!=', 3)->where('order_status_option_id', '!=', 1)->count();
-        return view('backend/dashboard')->with(['total_brands' => $total_brands, 'total_banners' => $total_banners, 'total_delivered_order' => $total_delivered_order, 'total_active_order' => $total_active_order, 'total_rejected_order' => $total_rejected_order, 'total_pending_order' => $total_pending_order, 'total_vendor' => $total_vendor, 'total_products' => $total_products, 'total_revenue' => $total_revenue, 'today_sales' => $today_sales, 'total_categories' => $total_categories]);
+    public function index(){
+        return view('backend/dashboard');
     }
 
-    public function profile()
-    {
+    public function postFilterData(Request $request){
+        try {
+            $total_brands = Brand::count();
+            $total_vendor = Vendor::count();
+            $total_banners = Banner::count();
+            $total_products = Product::count();
+            $total_categories = Category::count();
+            $total_revenue = Order::sum('payable_amount');
+            $today_sales = Order::whereDay('created_at', now()->day)->sum('payable_amount');
+            $total_pending_order = VendorOrderStatus::where('order_status_option_id', 1)->count();
+            $total_rejected_order = VendorOrderStatus::where('order_status_option_id', 3)->count();
+            $total_delivered_order = VendorOrderStatus::where('order_status_option_id', 6)->count();
+            $total_active_order = VendorOrderStatus::where('order_status_option_id', '!=', 3)->where('order_status_option_id', '!=', 1)->count();
+            $response = [
+                'today_sales' => $today_sales, 
+                'total_vendor' => $total_vendor, 
+                'total_brands' => $total_brands, 
+                'total_banners' => $total_banners, 
+                'total_revenue' => $total_revenue, 
+                'total_products' => $total_products, 
+                'total_categories' => $total_categories,
+                'total_active_order' => $total_active_order, 
+                'total_pending_order' => $total_pending_order, 
+                'total_rejected_order' => $total_rejected_order, 
+                'total_delivered_order' => $total_delivered_order, 
+            ];
+            return $this->successResponse($response);
+        } catch (Exception $e) {
+            
+        }
+    }
+    public function profile(){
         $countries = Country::all();
         $client = Client::where('code', Auth::user()->code)->first();
         $tzlist = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
         return view('backend/setting/profile')->with(['client' => $client, 'countries' => $countries, 'tzlist' => $tzlist]);
     }
 
-    public function changePassword(Request $request)
-    {
+    public function changePassword(Request $request){
         $client = User::where('id', Auth::id())->first();
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
@@ -81,8 +93,7 @@ class DashBoardController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function updateProfile(Request $request, $domain = '', $id)
-    {
+    public function updateProfile(Request $request, $domain = '', $id){
         $user = Auth::user();
         $client = Client::where('code', $user->code)->firstOrFail();
         $rules = array(
@@ -119,13 +130,11 @@ class DashBoardController extends BaseController
         return redirect()->back()->with('success', 'Client Updated successfully!');
     }
 
-    public function monthlySalesInfo()
-    {
+    public function monthlySalesInfo(){
         $monthlysales = DB::table('orders')
             ->select(DB::raw('sum(payable_amount) as y'), DB::raw('count(*) as z'), DB::raw('date(created_at) as x'))
             ->whereRaw('MONTH(created_at) = ?', [date('m')])
             ->groupBy('x')
-            // ->orderBy('x','desc')
             ->get();
         $dates = array();
         $revenue = array();
@@ -138,8 +147,7 @@ class DashBoardController extends BaseController
         return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
     }
 
-    public function yearlySalesInfo()
-    {
+    public function yearlySalesInfo(){
         $yearlysales = DB::table('orders')
             ->select(DB::raw('sum(payable_amount) as y'), DB::raw('count(*) as z'), DB::raw('monthname(created_at) as x'))
             ->whereRaw('YEAR(created_at) = ?', [date('Y')])
@@ -157,8 +165,7 @@ class DashBoardController extends BaseController
         return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
     }
 
-    public function weeklySalesInfo()
-    {
+    public function weeklySalesInfo(){
         Carbon::setWeekStartsAt(Carbon::SUNDAY);
         $weeklysales = DB::table('orders')
             ->select(DB::raw('sum(payable_amount) as y'), DB::raw('count(*) as z'), DB::raw('date(created_at) as x'))
@@ -177,11 +184,10 @@ class DashBoardController extends BaseController
         return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
     }
 
-    public function categoryInfo()
-    {
+    public function categoryInfo(){
         $orders = Order::with(array('products' => function ($query) {
-            $query->select('order_id', 'category_id');
-        }))->whereMonth('created_at', Carbon::now()->month)->select('id')->get();
+                    $query->select('order_id', 'category_id');
+                }))->whereMonth('created_at', Carbon::now()->month)->select('id')->get();
         $categories = array();
         foreach ($orders as $order) {
             foreach ($order->products as $product) {
@@ -205,9 +211,7 @@ class DashBoardController extends BaseController
     }
 
     public function thousandsCurrencyFormat($num) {
-
         if($num>1000) {
-      
               $x = round($num);
               $x_number_format = number_format($x);
               $x_array = explode(',', $x_number_format);
@@ -216,11 +220,8 @@ class DashBoardController extends BaseController
               $x_display = $x;
               $x_display = $x_array[0] . ((int) $x_array[1][0] !== 0 ? '.' . $x_array[1][0] : '');
               $x_display .= $x_parts[$x_count_parts - 1];
-      
               return $x_display;
-      
         }
-      
         return $num;
       }
 }
