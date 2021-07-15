@@ -6,11 +6,9 @@ use DB;
 use Session;
 use \DateTimeZone;
 use Carbon\Carbon;
-use App\Jobs\UpdateClient;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
-use App\Jobs\ProcessClientDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
@@ -19,21 +17,16 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Banner, Brand, Category, Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, Country, Order, Product, User, Vendor, VendorOrderStatus};
+use App\Models\{Banner, Brand, Category, Country, Order, Product, Vendor, VendorOrderStatus, UserAddress};
 
 class DashBoardController extends BaseController{
     use ApiResponser;
-    private $folderName = 'Clientlogo';
-
     public function index(){
         return view('backend/dashboard');
     }
-
     public function postFilterData(Request $request){
         try {
-            $labels = array();
-            $series = array();
-            $categories = array();
+            $type = $request->type;
             $total_brands = Brand::count();
             $total_vendor = Vendor::count();
             $total_banners = Banner::count();
@@ -44,6 +37,7 @@ class DashBoardController extends BaseController{
             $total_pending_order = VendorOrderStatus::where('order_status_option_id', 1)->count();
             $total_rejected_order = VendorOrderStatus::where('order_status_option_id', 3)->count();
             $total_delivered_order = VendorOrderStatus::where('order_status_option_id', 6)->count();
+            $dates = $sales = $labels = $series = $categories = $revenue = $address_ids = $markers =[];
             $total_active_order = VendorOrderStatus::where('order_status_option_id', '!=', 3)->where('order_status_option_id', '!=', 1)->count();
             $orders = Order::with(array('products' => function ($query) {
                     $query->select('order_id', 'category_id');
@@ -64,9 +58,46 @@ class DashBoardController extends BaseController{
                 $labels[] = $key;
                 $series[] = $value;
             }
+            $monthly_sales_query = Order::select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'), 'address_id');
+            switch ($type) {
+                case 'monthly':
+                    $created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')]);
+                break;
+                case 'weekly':
+                    Carbon::setWeekStartsAt(Carbon::SUNDAY);
+                    $created_at = $monthly_sales_query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]); 
+                break;
+                case 'yearly':
+                    $created_at = $monthly_sales_query->whereRaw('YEAR(created_at) = ?', [date('Y')]);
+                break;
+                default:
+                    $created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')]);
+                break;
+            }
+            $monthlysales = $monthly_sales_query->groupBy('x')->get();
+            foreach ($monthlysales as $monthly) {
+                $dates[] = $monthly->x;
+                $sales[] = $monthly->z;
+                $revenue[] = $monthly->y;
+                $address_ids [] = $monthly->address_id;
+            }
+            $address_details = UserAddress::whereIn('id', $address_ids)->get();
+            foreach ($address_details as $address_detail) {
+                if(!$address_detail->latitude){
+                    continue;
+                }
+                $markers[]= array(
+                    'name' => $address_detail->city,
+                    'latLng' => [$address_detail->latitude , $address_detail->longitude],
+                );
+            }
             $response = [
+                'dates' => $dates,
+                'sales' => $sales,
                 'labels' => $labels,
                 'series' => $series,
+                'markers' => $markers,
+                'revenue' => $revenue,
                 'today_sales' => $today_sales, 
                 'total_vendor' => $total_vendor, 
                 'total_brands' => $total_brands, 
@@ -84,98 +115,18 @@ class DashBoardController extends BaseController{
             
         }
     }
-    
-    public function monthlySalesInfo(){
-        $monthlysales = DB::table('orders')
-            ->select(DB::raw('sum(payable_amount) as y'), DB::raw('count(*) as z'), DB::raw('date(created_at) as x'))
-            ->whereRaw('MONTH(created_at) = ?', [date('m')])
-            ->groupBy('x')
-            ->get();
-        $dates = array();
-        $revenue = array();
-        $sales = array();
-        foreach ($monthlysales as $monthly) {
-            $dates[] = $monthly->x;
-            $sales[] = $monthly->z;
-            $revenue[] = $monthly->y;
-        }
-        return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
-    }
-
-    public function yearlySalesInfo(){
-        $yearlysales = DB::table('orders')
-            ->select(DB::raw('sum(payable_amount) as y'), DB::raw('count(*) as z'), DB::raw('monthname(created_at) as x'))
-            ->whereRaw('YEAR(created_at) = ?', [date('Y')])
-            ->groupBy('x')
-            ->orderBy('x', 'desc')
-            ->get();
-        $dates = array();
-        $revenue = array();
-        $sales = array();
-        foreach ($yearlysales as $yearly) {
-            $dates[] = $yearly->x;
-            $revenue[] = $yearly->y;
-            $sales[] = $yearly->z;
-        }
-        return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
-    }
-
-    public function weeklySalesInfo(){
-        Carbon::setWeekStartsAt(Carbon::SUNDAY);
-        $weeklysales = DB::table('orders')
-            ->select(DB::raw('sum(payable_amount) as y'), DB::raw('count(*) as z'), DB::raw('date(created_at) as x'))
-            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
-            ->groupBy('x')
-            ->orderBy('x', 'asc')
-            ->get();
-        $dates = array();
-        $revenue = array();
-        $sales = array();
-        foreach ($weeklysales as $weekly) {
-            $dates[] = $weekly->x;
-            $revenue[] = $weekly->y;
-            $sales[] = $weekly->z;
-        }
-        return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
-    }
-
-    public function categoryInfo(){
-        $orders = Order::with(array('products' => function ($query) {
-                    $query->select('order_id', 'category_id');
-                }))->whereMonth('created_at', Carbon::now()->month)->select('id')->get();
-        $categories = array();
-        foreach ($orders as $order) {
-            foreach ($order->products as $product) {
-                $category = Category::with('english')->where('id', $product->category_id)->first();
-                if ($category) {
-                    if (array_key_exists($category->slug, $categories)) {
-                        $categories[Str::limit($category->english->name, 5, '..')] += 1;
-                    } else {
-                        $categories[Str::limit($category->english->name, 5, '..')] = 1;
-                    }
-                }
-            }
-        }
-        $names = array();
-        $orders = array();
-        foreach ($categories as $key => $value) {
-            $names[] = $key;
-            $orders[] = $value;
-        }
-        return response()->json(['names' => $names, 'orders' => $orders]);
-    }
 
     public function thousandsCurrencyFormat($num) {
-        if($num>1000) {
-              $x = round($num);
-              $x_number_format = number_format($x);
-              $x_array = explode(',', $x_number_format);
-              $x_parts = array('k', 'm', 'b', 't');
-              $x_count_parts = count($x_array) - 1;
-              $x_display = $x;
-              $x_display = $x_array[0] . ((int) $x_array[1][0] !== 0 ? '.' . $x_array[1][0] : '');
-              $x_display .= $x_parts[$x_count_parts - 1];
-              return $x_display;
+        if($num > 1000) {
+          $x = round($num);
+          $x_number_format = number_format($x);
+          $x_array = explode(',', $x_number_format);
+          $x_parts = array('k', 'm', 'b', 't');
+          $x_count_parts = count($x_array) - 1;
+          $x_display = $x;
+          $x_display = $x_array[0] . ((int) $x_array[1][0] !== 0 ? '.' . $x_array[1][0] : '');
+          $x_display .= $x_parts[$x_count_parts - 1];
+          return $x_display;
         }
         return $num;
       }

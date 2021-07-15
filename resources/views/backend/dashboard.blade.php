@@ -14,7 +14,7 @@
                         <div class="page-title-right">
                             <div class="d-flex align-items-center mb-3">
                                 <input type="text" id="range-datepicker" class="form-control flatpickr-input active" placeholder="2018-10-03 to 2018-10-10" readonly="">
-                                <a href="javascript: void(0);" class="btn btn-blue ml-2">
+                                <a href="javascript: void(0);" class="btn btn-blue ml-2" id="dashboard_refresh_btn">
                                     <i class="mdi mdi-autorenew"></i>
                                 </a>
                                 <a href="javascript: void(0);" class="btn btn-blue ml-2">
@@ -230,8 +230,9 @@
                                     <button type="button" class="btn btn-xs btn-light weeklySales">Weekly</button>
                                     <button type="button" class="btn btn-xs btn-secondary monthlySales">Monthly</button>
                                 </div>
-                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh align-middle refresh_salesChart"></i></a>
-                                <a class="align-middle" data-toggle="collapse" href="#cardCollpase2" role="button" aria-expanded="false" aria-controls="cardCollpase2"><i class="mdi mdi-minus"></i></a>
+                                <a class="align-middle" data-toggle="collapse" href="#cardCollpase2" role="button" aria-expanded="false" aria-controls="cardCollpase2">
+                                    <i class="mdi mdi-minus"></i>
+                                </a>
                             </div>
                             <h4 class="header-title mb-0">Sales Analytics</h4>
                             <div id="cardCollpase2" class="collapse show mt-3" dir="ltr" style="position: relative;">
@@ -249,20 +250,23 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-lg-8 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                         <h4 class="header-title mb-0">Revenue By Location</h4>
+                         <div id="cardCollpase4" class="collapse pt-3 show">
+                            <div id="world-map-markers" style="height: 433px"></div>
+                         </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-lg-4 mb-3">
-                    <div class="card mb-0">
-                        <div class="card-body p-2">
-                            <div class="card-widgets">
-                                <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh refresh_cataegoryinfo"></i></a>
-                                <a data-toggle="collapse" href="#cardCollpase1" role="button" aria-expanded="false" aria-controls="cardCollpase1"><i class="mdi mdi-minus"></i></a>
-                            </div>
-                            <h4 class="header-title mb-0">Orders (Top Categories)</h4>
-                            <div id="cardCollpase1" class="collapse mt-3 show widget-chart" dir="ltr" style="position: relative;">
-                                <div id="total-revenue" class="mt-0" data-colors="#f1556c" style="min-height: 220.7px;">
-                                    <div id="apexchartsfwg700r2" class="apexcharts-canvas apexchartsfwg700r2 apexcharts-theme-light" style="width: 451px; height: 220.7px;">
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="card">
+                        <div class="card-body">
+                         <h4 class="header-title mb-0">Orders (Top Categories)</h4>
+                         <div id="cardCollpase4" class="collapse pt-3 show">
+                            <div id="apexchartsfwg700r2" class="apexcharts-canvas apexchartsfwg700r2 apexcharts-theme-light" style="height: 433px"></div>
+                         </div>
                         </div>
                     </div>
                 </div>
