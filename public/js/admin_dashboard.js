@@ -25,7 +25,8 @@ $(document).ready(function () {
     $("#range-datepicker").flatpickr({ 
         mode: "range",
         onClose: function(selectedDates, dateStr, instance) {
-            getDashboardData(dashboard_filter_url);
+            console.log(selectedDates);
+            getDashboardData(dashboard_filter_url,'',' ',selectedDates);
         }
     });
     getDashboardData(dashboard_filter_url);
@@ -39,8 +40,8 @@ $(document).ready(function () {
     $(".weeklySales").click(function () {
         getDashboardData(dashboard_filter_url, 'weekly');
     });
-    function getDashboardData(dashboard_filter_url, type = 'monthly'){
-         $.getJSON(dashboard_filter_url,{type:type}, function (response) {
+    function getDashboardData(dashboard_filter_url, type = 'monthly', date_filter=''){
+         $.getJSON(dashboard_filter_url,{type:type,date_filter:date_filter}, function (response) {
             $('#total_brands').html(response.data.total_brands);
             $('#total_vendor').html(response.data.total_vendor);
             $('#total_banners').html(response.data.total_banners);
@@ -52,6 +53,13 @@ $(document).ready(function () {
             $('#total_rejected_order').html(response.data.total_rejected_order);
             $('#total_delivered_order').html(response.data.total_delivered_order);
             Worldmap(response.data.markers);
+            // setTimeout(function(){
+            //     $('.counter').counterup({
+            //         delay: 100,
+            //         time: 1200
+            //     });
+            // }, 3000);
+            $('.counter').addClass('animated fadeInDownBig');
             if(type == 'yearly'){
                 updateSales(response.data.revenue, response.data.sales, response.data.dates, "category");
             }else{

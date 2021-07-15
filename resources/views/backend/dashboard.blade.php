@@ -34,7 +34,7 @@
                                 <div class="col-8">
                                     <div class="text-end">
                                         <p class="text-muted mb-1 text-truncate">Pending Orders</p>
-                                        <h3 class="text-dark mt-1 mb-0"><span data-plugin="counterup" id="total_pending_order"></span></h3>
+                                        <h3 class="text-dark mt-1 mb-0"><span class="counter" data-plugin="counterup" id="total_pending_order"></span></h3>
                                     </div>
                                 </div>
                                 <div class="col-4 text-md-right">
