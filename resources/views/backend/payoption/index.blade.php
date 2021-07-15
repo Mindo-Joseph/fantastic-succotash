@@ -20,9 +20,18 @@
       <div class="col-12">
          <div class="text-sm-left">
             @if (\Session::has('success'))
-            <div class="alert alert-success">
+            <div class="alert mt-2 mb-0 alert-success">
                <span>{!! \Session::get('success') !!}</span>
             </div>
+            @endif
+            @if ( ($errors) && (count($errors) > 0) )
+                <div class="alert mt-2 mb-0 alert-danger">
+                    <ul class="m-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
          </div>
       </div>
@@ -56,6 +65,7 @@
                 $password = (isset($creds->password)) ? $creds->password : '';
                 $signature = (isset($creds->signature)) ? $creds->signature : '';
                 $api_key = (isset($creds->api_key)) ? $creds->api_key : '';
+                $publishable_key = (isset($creds->publishable_key)) ? $creds->publishable_key : '';
                 ?>
 
                 <div class="card-box h-100">
@@ -72,8 +82,14 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mb-0">
-                                    <label for="stripe_api_key" class="mr-3">API Key</label>
+                                    <label for="stripe_api_key" class="mr-3">Secret Key</label>
                                     <input type="password" name="stripe_api_key" id="stripe_api_key" class="form-control" value="{{$api_key}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="stripe_publishable_key" class="mr-3">Publishable Key</label>
+                                    <input type="password" name="stripe_publishable_key" id="stripe_publishable_key" class="form-control" value="{{$publishable_key}}" @if($opt->status == 1) required @endif>
                                 </div>
                             </div>
                         </div>

@@ -11,7 +11,7 @@ use App\Models\Page;
 use App\Models\Client;
 use App\Models\SocialMedia;
 use Illuminate\Http\Request;
-use App\Models\ClientPreference;
+use App\Models\{ClientPreference, PaymentOption};
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\ServiceProvider;
@@ -52,11 +52,19 @@ class AppServiceProvider extends ServiceProvider
             $favicon_url = $client_preference_detail->favicon['proxy_url'] . '600/400' . $client_preference_detail->favicon['image_path'];
         }
         $client = Client::where(['id' => 1])->first();
+        $creds_arr = array();
+        $stripe_creds = PaymentOption::select('credentials')->where('code', 'stripe')->where('status', 1)->first();
+        if($stripe_creds){
+            $creds_arr = json_decode($stripe_creds->credentials);
+        }
+        $stripe_publishable_key = (isset($creds_arr->publishable_key)) ? $creds_arr->publishable_key : '';
+
         view()->share('pages', $pages);
         view()->share('client', $client);
         view()->share('favicon', $favicon_url);
         view()->share('favicon', $favicon_url);
         view()->share('social_media_details', $social_media_details);
+        view()->share('stripe_publishable_key', $stripe_publishable_key);
         view()->share('client_preference_detail', $client_preference_detail);
        
     }
