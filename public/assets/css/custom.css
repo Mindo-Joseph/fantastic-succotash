@@ -2001,7 +2001,9 @@ a:-webkit-any-link:focus-visible {
     outline: 0 !important;
 }
 
-
+.action-icon{
+    vertical-align: middle;
+}
 
 
 
