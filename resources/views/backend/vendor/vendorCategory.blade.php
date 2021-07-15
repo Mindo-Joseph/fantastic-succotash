@@ -72,7 +72,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('vendor.categories', $vendor->id) }}"  aria-expanded="true" class="nav-link {{($tab == 'category') ? 'active' : '' }} {{$vendor->status == 1 ? '' : 'disabled'}}">
-                                Category
+                                Categories & Add Ons
                             </a>
                         </li>
                     </ul>

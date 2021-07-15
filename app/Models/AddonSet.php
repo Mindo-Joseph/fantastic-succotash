@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class AddonSet extends Model
 {
+	protected $fillable = ['title','min_select','max_select','position','status','is_core','vendor_id'];
+	
     public function translation(){
 	    return $this->hasMany('App\Models\AddonSetTranslation' , 'addon_id', 'id')
 	    ->join('client_languages', 'addon_set_translations.language_id', 'client_languages.language_id')

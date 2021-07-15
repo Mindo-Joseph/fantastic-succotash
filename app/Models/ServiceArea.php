@@ -8,6 +8,8 @@ class ServiceArea extends Model
 {
     protected $appends = ['geo_coordinates'];
 
+    protected $fillable = ['name','description','geo_array','zoom_level','polygon','vendor_id'];
+
     public function getGeoCoordinatesAttribute(){
         $data = [];  
         $temp = $this->geo_array;

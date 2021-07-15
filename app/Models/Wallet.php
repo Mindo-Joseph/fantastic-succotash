@@ -10,7 +10,7 @@ use App\Models\User;
 class Wallet extends Model
 {
     use HasFactory;
-
+    protected $fillable = ['holder_type','holder_id','name','slug','description','meta','balance','decimal_places'];
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
     }

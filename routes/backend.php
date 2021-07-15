@@ -24,8 +24,9 @@ Route::get('admin/wrong/url', 'Auth\LoginController@wrongurl')->name('wrong.clie
 
 Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'], function () {
     Route::any('/logout', 'Auth\LoginController@logout')->name('client.logout');
-    Route::get('profile', 'Client\DashBoardController@profile')->name('client.profile');
+    Route::get('profile', 'Client\UserController@profile')->name('client.profile');
     Route::get('dashboard', 'Client\DashBoardController@index')->name('client.dashboard');
+    Route::get('dashboard/filter', 'Client\DashBoardController@postFilterData')->name('client.dashboard.filter');
     Route::get('salesInfo/monthly', 'Client\DashBoardController@monthlySalesInfo')->name('client.monthlySalesInfo');
     Route::get('salesInfo/yearly', 'Client\DashBoardController@yearlySalesInfo')->name('client.yearlySalesInfo');
     Route::get('salesInfo/weekly', 'Client\DashBoardController@weeklySalesInfo')->name('client.weeklySalesInfo');
@@ -55,8 +56,6 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('account/loyalty/filter', [LoyaltyController::class, 'filter'])->name('account.loyalty.filter');
     Route::get('account/loyalty/export', [LoyaltyController::class, 'export'])->name('account.loyalty.export');
     Route::get('account/order/export', [OrderController::class, 'export'])->name('account.order.export');
-    Route::put('profile/{id}', 'Client\DashBoardController@updateProfile')->name('client.profile.update');
-    Route::post('password/update', 'Client\DashBoardController@changePassword')->name('client.password.update');
     Route::get('configure', 'Client\ClientPreferenceController@index')->name('configure.index');
     Route::post('cleanSoftDeleted', 'Client\ManageContentController@deleteAllSoftDeleted')->name('config.cleanSoftDeleted');
     Route::post('importDemoContent', 'Client\ManageContentController@importDemoContent')->name('config.importDemoContent');
@@ -69,16 +68,13 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('banner/saveOrder', 'Client\BannerController@saveOrder');
     Route::post('banner/changeValidity', 'Client\BannerController@validity');
     Route::post('banner/toggle', 'Client\BannerController@toggleAllBanner')->name('banner.toggle');
-
     Route::get('web-styling', 'Client\WebStylingController@index')->name('webStyling.index');
     Route::post('web-styling/updateWebStyles', 'Client\WebStylingController@updateWebStyles')->name('styling.updateWebStyles');
-
     Route::get('app-styling', 'Client\AppStylingController@index')->name('appStyling.index');
     Route::post('app-styling/updateFont', 'Client\AppStylingController@updateFont')->name('styling.updateFont');
     Route::post('app-styling/updateColor', 'Client\AppStylingController@updateColor')->name('styling.updateColor');
     Route::post('app-styling/updateTabBar', 'Client\AppStylingController@updateTabBar')->name('styling.updateTabBar');
     Route::post('app-styling/updateHomePage', 'Client\AppStylingController@updateHomePage')->name('styling.updateHomePage');
-
     Route::resource('category', 'Client\CategoryController');
     Route::post('categoryOrder', 'Client\CategoryController@updateOrder')->name('category.order');
     Route::get('category/delete/{id}', 'Client\CategoryController@destroy');
@@ -106,7 +102,6 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('vendor/slot/{id}', 'Client\VendorSlotController@store')->name('vendor.saveSlot');
     Route::post('vendor/updateSlot/{id}', 'Client\VendorSlotController@update')->name('vendor.updateSlot');
     Route::post('vendor/deleteSlot/{id}', 'Client\VendorSlotController@destroy')->name('vendor.deleteSlot');
-
     Route::post('vendor/importCSV', 'Client\VendorController@importCsv')->name('vendor.import');
     Route::post('vendor/serviceArea/{vid}', 'Client\ServiceAreaController@store')->name('vendor.serviceArea');
     Route::post('vendor/editArea/{vid}', 'Client\ServiceAreaController@edit')->name('vendor.serviceArea.edit');
@@ -123,6 +118,8 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('customer/account/{user}/{action}', 'Client\UserController@deleteCustomer')->name('customer.account.action');
     Route::get('customer/edit/{id}', 'Client\UserController@newEdit')->name('customer.new.edit');
     Route::put('newUpdate/edit/{id}', 'Client\UserController@newUpdate')->name('customer.new.update');
+    Route::put('profile/{id}', 'Client\UserController@updateProfile')->name('client.profile.update');
+    Route::post('password/update', 'Client\UserController@changePassword')->name('client.password.update');
     Route::post('customer/change/status', 'Client\UserController@changeStatus')->name('customer.changeStatus');
     Route::resource('product', 'Client\ProductController');
     Route::post('product/importCSV', 'Client\ProductController@importCsv')->name('product.import');
@@ -165,13 +162,8 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::group(['prefix' => 'vendor/dispatcher'], function () {
         Route::post('updateCreateVendorInDispatch', 'Client\VendorController@updateCreateVendorInDispatch')->name('update.Create.Vendor.In.Dispatch');
     });
-    
-
 });
-
-
 Route::get('/search11',[SearchController::class,'search']);
-
 Route::group(['middleware' => 'auth:client', 'prefix' => '/admin'], function () {
     Route::get('/', 'Client\DashBoardController@index')->name('home');
     Route::get('{first}/{second}/{third}', 'Client\RoutingController@thirdLevel')->name('third');

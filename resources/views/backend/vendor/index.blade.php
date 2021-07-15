@@ -197,105 +197,31 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
+    <div id="edit_vendor_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Vendor</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <form id="update_vendor_form" method="post" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body" id="editVendorBox">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info waves-effect waves-light" id="update_vendor_modal">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 @include('backend.vendor.modals')
-<script type="text/javascript">
-    $(document).ready(function() {
-        var table;
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('input[name="_token"]').val()
-            }
-        });
-        setTimeout(function(){$('#active-vendor').trigger('click');}, 200);
-        
-        $(document).on("click",".nav-link",function() {
-            let rel= $(this).data('rel');
-            let status= $(this).data('status');
-            initDataTable(rel, status);
-        });
-        $(document).on("click",".delete-vendor",function() {
-            var destroy_url = $(this).data('destroy_url');
-            var id = $(this).data('rel');
-            if (confirm('Are you sure?')) {
-              $.ajax({
-                type: "POST",
-                dataType: 'json',
-                url: destroy_url,
-                data:{'_method':'DELETE'},
-                success: function(response) {
-                    if (response.status == "Success") {
-                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                        window.location.reload();
-                    }
-                }
-            });
-            }
-        });
-        function initDataTable(table, status) {
-            $('#'+table).DataTable({
-                "dom": '<"toolbar">Bfrtip',
-                "destroy": true,
-                "scrollX": true,
-                "processing": true,
-                "serverSide": true,
-                "iDisplayLength": 20,
-                language: {
-                    search: "",
-                    paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
-                    searchPlaceholder: "Search By Vendor Name"
-                },
-                drawCallback: function () {
-                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                },
-                buttons: [],
-                ajax: {
-                  url: "{{route('vendor.filterdata')}}",
-                  data: function (d) {
-                    d.status = status;
-                    d.search = $('input[type="search"]').val();
-                    d.date_filter = $('#range-datepicker').val();
-                    d.payment_option = $('#payment_option_select_box option:selected').val();
-                    d.tax_type_filter = $('#tax_type_select_box option:selected').val();
-                  }
-                },
-                columns: [
-                    {data: 'order_number', name: 'order_number', orderable: false, searchable: false,"mRender": function ( data, type, full ) {
-                        return "<a class='round_img_box' href='"+full.show_url+"'><img class='rounded-circle' src='"+full.logo.proxy_url+'90/90'+full.logo.image_path+"' alt='"+full.id+"'></a>";
-                    }},
-                    {data: 'name', name: 'name', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
-                        return "<a href='"+full.show_url+"'>"+full.name+"</a> ";
-                    }},
-                    {data: 'show_slot', name: 'show_slot', orderable: false, searchable: false, "mRender":function(data, type, full){
-                        return "<span class='badge bg-soft-"+full.show_slot_label+" text-"+full.show_slot_label+"'>"+full.show_slot_option+"</span>";
-                    }},
-                    {data: 'address', name: 'address', class:'address_txt',orderable: false, searchable: false, "mRender":function(data, type, full){
-                        return "<p class='ellips_txt' data-toggle='tooltip' data-placement='top' title='"+full.address+"'>"+full.address+"</p>";
-                    }},
-                    {data: 'offers', name: 'offers', class:'text-center', orderable: false, searchable: false, "mRender":function(data, type, full){
-                        var markup = '';
-                        for (var i = full.offers.length - 1; i >= 0; i--) {
-                            if(full.offers[i]){
-                                markup+="<span class='badge bg-soft-warning text-warning'>"+full.offers[i]+"</span>";
-                            }
-                        }
-                        return markup;
-                    }},
-                    {data: 'add_category_option', class:'text-center', name: 'add_category_option', orderable: false, searchable: false},
-                    {data: 'commission_percent', class:'text-center', name: 'commission_percent', orderable: false, searchable: false},
-                    {data: 'products_count', class:'text-center', class:'text-center', name: 'products_count', orderable: false, searchable: false},
-                    {data: 'orders_count', class:'text-center', name: 'orders_count', orderable: false, searchable: false},
-                    {data: 'active_orders_count', class:'text-center', name: 'active_orders_count', orderable: false, searchable: false},
-                    {data: 'edit_action', class:'text-center', name: 'edit_action', orderable: false, searchable: false, "mRender":function(data, type, full){
-                        return "<div class='form-ul'><div class='inner-div d-inline-block'><a class='action-icon' userId='"+full.id+"' href='"+full.show_url+"'><i class='mdi mdi-eye'></i></a></div><div class='inner-div d-inline-block'><form method='POST' action='"+full.destroy_url+"'><div class='form-group action-icon mb-0'><button type='button' class='btn btn-primary-outline action-icon delete-vendor' data-destroy_url='"+full.destroy_url+"' data-rel='"+full.id+"'><i class='mdi mdi-delete'></i></button></div></form></div></div>"
-                    }},
-                ]
-            });
-        }
-    });
-</script>
 @endsection
 @section('script')
 @include('backend.vendor.pagescript')
+    <script src="{{asset('js/admin_vendor.js')}}"></script>
 @endsection

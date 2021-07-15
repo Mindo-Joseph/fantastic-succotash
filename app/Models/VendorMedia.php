@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class VendorMedia extends Model
 {
 	protected $table = 'vendor_media';
+  protected $fillable = ['media_type','vendor_id','path'];
 
     public function getPathAttribute($value)
     {

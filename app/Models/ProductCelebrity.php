@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductCelebrity extends Model
 {
+	protected $fillable = ['celebrity_id','product_id'];
+
     public function celebrity(){
 	    return $this->belongsTo('App\Models\Celebrity', 'celebrity_id', 'id'); 
 	}
