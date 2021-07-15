@@ -94,7 +94,7 @@ $(document).ready(function() {
     });
 
     function stripeInitialize(){
-        stripe = Stripe('pk_test_51J0nVZSBx0AFwevbSTIDlYAaLjdsg4V4yoHpSo4BCZqGBzzGeU8Mnw1o0spfOYfMtyCXC11wEn6vBqbJeSNnAkw600U6jkzS3R');
+        stripe = Stripe(stripe_publishable_key);
         var elements = stripe.elements();
         var style = {
             base: {fontSize: '16px',color: '#32325d',borderColor: '#ced4da'},

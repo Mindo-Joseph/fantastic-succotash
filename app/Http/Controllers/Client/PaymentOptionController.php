@@ -99,7 +99,8 @@ class PaymentOptionController extends BaseController
                 }
                 else if( (isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'stripe') ){
                     $json_creds = json_encode(array(
-                        'api_key' => $request->stripe_api_key
+                        'api_key' => $request->stripe_api_key,
+                        'publishable_key' => $request->stripe_publishable_key
                     ));
                 }
             }
