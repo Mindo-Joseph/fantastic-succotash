@@ -14,10 +14,10 @@
                     @endphp
                     <a href="{{route('client.dashboard')}}" class="logo logo-dark text-center">
                         <span class="logo-sm">
-                            <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
+                            <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="50">
                         </span>
                         <span class="logo-lg">
-                            <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="20">
+                            <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="50">
                         </span>
                     </a>
                     
@@ -82,7 +82,7 @@
             @endphp
             <a href="{{route('client.dashboard')}}" class="logo logo-dark text-center">
                 <span class="logo-sm">
-                    <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">                    
+                    <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="50">                    
                 </span>
                 <span class="logo-lg">
                     <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="20">

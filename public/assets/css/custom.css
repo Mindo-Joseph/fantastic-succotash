@@ -1989,111 +1989,38 @@ td.product-name,.vendor-name {
     font-weight: 900;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.auth-fluid .auth-fluid-form-box{
+    max-width: 50%;
+}
+
+.auth-user-testimonial {
+    left: auto;
+    width: 100%;
+}
+
+
+.domain-outer {
+    border: 1px solid #ced4da;
+}
+.domain_name {
+    background: #fff;
+    background-color: #FFFFFF;
+    color: #1F2431;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 0;
+    height: 37.39px;
+    line-height: 37px;
+    padding: 0 10px;
+    width: max-content;
+    border: 0;
+}
+.domain-outer #sub_domain {
+    border: 0;
+    border-left: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
+    border-radius: 0;
+}
 
 
 
@@ -2226,6 +2153,10 @@ td.product-name,.vendor-name {
     .top-site-links li {
         padding: 0 0 0 10px;
     }
+    .auth-fluid .auth-fluid-form-box{
+        max-width: 100%;
+    }
+    
 }
 
 @media(max-width: 991px){
