@@ -3,6 +3,19 @@
 <link href="{{asset('assets/libs/admin-resources/admin-resources.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    span.nodatafound {
+  font-size:120% !important;
+  border: 1px solid #FC0;
+  background: #FFC;
+  color: #384F34;
+  display: block;
+  font-weight: bold;
+  margin: 2px auto 14px;
+  padding: 15px !important;
+  text-align: left;
+}
+</style>
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -16,9 +29,6 @@
                                 <input type="text" id="range-datepicker" class="form-control flatpickr-input active" placeholder="2018-10-03 to 2018-10-10" readonly="">
                                 <a href="javascript: void(0);" class="btn btn-blue ml-2" id="dashboard_refresh_btn">
                                     <i class="mdi mdi-autorenew"></i>
-                                </a>
-                                <a href="javascript: void(0);" class="btn btn-blue ml-2">
-                                    <i class="mdi mdi-filter-variant"></i>
                                 </a>
                             </div>
                         </div>
@@ -230,9 +240,6 @@
                                     <button type="button" class="btn btn-xs btn-light weeklySales">Weekly</button>
                                     <button type="button" class="btn btn-xs btn-secondary monthlySales">Monthly</button>
                                 </div>
-                                <a class="align-middle" data-toggle="collapse" href="#cardCollpase2" role="button" aria-expanded="false" aria-controls="cardCollpase2">
-                                    <i class="mdi mdi-minus"></i>
-                                </a>
                             </div>
                             <h4 class="header-title mb-0">Sales Analytics</h4>
                             <div id="cardCollpase2" class="collapse show mt-3" dir="ltr" style="position: relative;">

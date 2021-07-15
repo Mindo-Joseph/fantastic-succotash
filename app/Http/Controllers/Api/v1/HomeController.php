@@ -24,7 +24,7 @@ class HomeController extends BaseController{
     public function headerContent(Request $request){
         try {
             $homeData = array();
-            $homeData['profile'] = Client::with('preferences')->select('company_name', 'code', 'logo', 'company_address', 'phone_number', 'email')->first();
+            $homeData['profile'] = Client::with('preferences')->select('company_name', 'code', 'sub_domain', 'logo', 'company_address', 'phone_number', 'email')->first();
             $app_styling_detail = AppStyling::getSelectedData();
             foreach ($app_styling_detail as $app_styling) {
                 $key = $app_styling['key'];

@@ -31,6 +31,12 @@ class DashBoardController extends BaseController{
             $total_vendor = Vendor::count();
             $total_banners = Banner::count();
             $total_products = Product::count();
+            $date_filter = $request->date_filter;
+            if($date_filter){
+                $date_explode = explode('to', $date_filter);
+                $from_date = $date_explode[0].' 00:00:00';
+                $end_date = $date_explode[1].' 23:59:59';
+            }
             $total_categories = Category::count();
             $total_revenue = Order::sum('payable_amount');
             $today_sales = Order::whereDay('created_at', now()->day)->sum('payable_amount');
@@ -39,9 +45,14 @@ class DashBoardController extends BaseController{
             $total_delivered_order = VendorOrderStatus::where('order_status_option_id', 6)->count();
             $dates = $sales = $labels = $series = $categories = $revenue = $address_ids = $markers =[];
             $total_active_order = VendorOrderStatus::where('order_status_option_id', '!=', 3)->where('order_status_option_id', '!=', 1)->count();
-            $orders = Order::with(array('products' => function ($query) {
+            $orders_query = Order::with(array('products' => function ($query) {
                     $query->select('order_id', 'category_id');
-                }))->whereMonth('created_at', Carbon::now()->month)->select('id')->get();
+                }));
+            if($date_filter){
+                $orders = $orders_query->whereBetween('created_at', [$from_date, $end_date])->select('id')->get();
+            }else{
+                $orders = $orders_query->whereMonth('created_at', Carbon::now()->month)->select('id')->get();
+            }
             foreach ($orders as $order) {
                 foreach ($order->products as $product) {
                     $category = Category::with('english')->where('id', $product->category_id)->first();
@@ -59,20 +70,24 @@ class DashBoardController extends BaseController{
                 $series[] = $value;
             }
             $monthly_sales_query = Order::select(\DB::raw('sum(payable_amount) as y'), \DB::raw('count(*) as z'), \DB::raw('date(created_at) as x'), 'address_id');
-            switch ($type) {
-                case 'monthly':
-                    $created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')]);
-                break;
-                case 'weekly':
-                    Carbon::setWeekStartsAt(Carbon::SUNDAY);
-                    $created_at = $monthly_sales_query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]); 
-                break;
-                case 'yearly':
-                    $created_at = $monthly_sales_query->whereRaw('YEAR(created_at) = ?', [date('Y')]);
-                break;
-                default:
-                    $created_at = $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')]);
-                break;
+            if($date_filter){
+                $monthly_sales_query->whereBetween('created_at', [$from_date, $end_date]);
+            }else{
+                switch ($type) {
+                    case 'monthly':
+                        $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')]);
+                    break;
+                    case 'weekly':
+                        Carbon::setWeekStartsAt(Carbon::SUNDAY);
+                        $monthly_sales_query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]); 
+                    break;
+                    case 'yearly':
+                        $monthly_sales_query->whereRaw('YEAR(created_at) = ?', [date('Y')]);
+                    break;
+                    default:
+                        $monthly_sales_query->whereRaw('MONTH(created_at) = ?', [date('m')]);
+                    break;
+                }
             }
             $monthlysales = $monthly_sales_query->groupBy('x')->get();
             foreach ($monthlysales as $monthly) {
