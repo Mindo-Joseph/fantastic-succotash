@@ -24,12 +24,16 @@ use App\Models\{Banner, Brand, Category, Client, ClientPreference, MapProvider, 
 class DashBoardController extends BaseController{
     use ApiResponser;
     private $folderName = 'Clientlogo';
+
     public function index(){
         return view('backend/dashboard');
     }
 
     public function postFilterData(Request $request){
         try {
+            $labels = array();
+            $series = array();
+            $categories = array();
             $total_brands = Brand::count();
             $total_vendor = Vendor::count();
             $total_banners = Banner::count();
@@ -41,7 +45,28 @@ class DashBoardController extends BaseController{
             $total_rejected_order = VendorOrderStatus::where('order_status_option_id', 3)->count();
             $total_delivered_order = VendorOrderStatus::where('order_status_option_id', 6)->count();
             $total_active_order = VendorOrderStatus::where('order_status_option_id', '!=', 3)->where('order_status_option_id', '!=', 1)->count();
+            $orders = Order::with(array('products' => function ($query) {
+                    $query->select('order_id', 'category_id');
+                }))->whereMonth('created_at', Carbon::now()->month)->select('id')->get();
+            foreach ($orders as $order) {
+                foreach ($order->products as $product) {
+                    $category = Category::with('english')->where('id', $product->category_id)->first();
+                    if ($category) {
+                        if (array_key_exists($category->slug, $categories)) {
+                            $categories[Str::limit($category->english->name, 5, '..')] += 1;
+                        } else {
+                            $categories[Str::limit($category->english->name, 5, '..')] = 1;
+                        }
+                    }
+                }
+            }
+            foreach ($categories as $key => $value) {
+                $labels[] = $key;
+                $series[] = $value;
+            }
             $response = [
+                'labels' => $labels,
+                'series' => $series,
                 'today_sales' => $today_sales, 
                 'total_vendor' => $total_vendor, 
                 'total_brands' => $total_brands, 
@@ -59,77 +84,7 @@ class DashBoardController extends BaseController{
             
         }
     }
-    public function profile(){
-        $countries = Country::all();
-        $client = Client::where('code', Auth::user()->code)->first();
-        $tzlist = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
-        return view('backend/setting/profile')->with(['client' => $client, 'countries' => $countries, 'tzlist' => $tzlist]);
-    }
-
-    public function changePassword(Request $request){
-        $client = User::where('id', Auth::id())->first();
-        $validator = Validator::make($request->all(), [
-            'old_password' => 'required',
-            'password' => 'required|confirmed|min:6',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator);
-        }
-        if (Hash::check($request->old_password, $client->password)) {
-            $client->password = Hash::make($request->password);
-            $client->save();
-            $clientData = 'empty';
-            return redirect()->back()->with('success', 'Password Changed successfully!');
-        } else {
-            $request->session()->flash('error', 'Wrong Old Password');
-            return redirect()->back();
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function updateProfile(Request $request, $domain = '', $id){
-        $user = Auth::user();
-        $client = Client::where('code', $user->code)->firstOrFail();
-        $rules = array(
-            'name' => 'required|string|max:50',
-            'phone_number' => 'required|digits:10',
-            'company_name' => 'required',
-            'company_address' => 'required',
-            'country_id' => 'required',
-            'timezone' => 'required',
-        );
-        $validation  = Validator::make($request->all(), $rules);
-        if ($validation->fails()) {
-            return redirect()->back()->withInput()->withErrors($validation);
-        }
-        $data = array();
-        foreach ($request->only('name', 'phone_number', 'company_name', 'company_address', 'country_id', 'timezone') as $key => $value) {
-            $data[$key] = $value;
-        }
-        $client = Client::where('code', Auth::user()->code)->first();
-        if ($request->hasFile('logo')) {
-            $file = $request->file('logo');
-            $file_name = 'Clientlogo/' . uniqid() . '.' .  $file->getClientOriginalExtension();
-            $path = Storage::disk('s3')->put($file_name, file_get_contents($file), 'public');
-            $data['logo'] = $file_name;
-        } else {
-            $data['logo'] = $client->getRawOriginal('logo');
-        }
-        $client = Client::where('code', Auth::user()->code)->update($data);
-        $userdata = array();
-        foreach ($request->only('name', 'phone_number', 'timezone') as $key => $value) {
-            $userdata[$key] = $value;
-        }
-        $user = User::where('id', Auth::id())->update($userdata);
-        return redirect()->back()->with('success', 'Client Updated successfully!');
-    }
-
+    
     public function monthlySalesInfo(){
         $monthlysales = DB::table('orders')
             ->select(DB::raw('sum(payable_amount) as y'), DB::raw('count(*) as z'), DB::raw('date(created_at) as x'))
@@ -141,8 +96,8 @@ class DashBoardController extends BaseController{
         $sales = array();
         foreach ($monthlysales as $monthly) {
             $dates[] = $monthly->x;
-            $revenue[] = $monthly->y;
             $sales[] = $monthly->z;
+            $revenue[] = $monthly->y;
         }
         return response()->json(['dates' => $dates, 'revenue' => $revenue, 'sales' => $sales]);
     }

@@ -92,11 +92,54 @@ $(document).ready(function () {
             $('#total_active_order').html(response.data.total_active_order);
             $('#total_rejected_order').html(response.data.total_rejected_order);
             $('#total_delivered_order').html(response.data.total_delivered_order);
+            orderTopcatgory(response.data.labels, response.data.series);
         });
+    }
+    function orderTopcatgory(labels, series){
+        var options = {
+            series: series,
+            labels: labels,
+            chart: {
+                width: 350,
+                type: 'donut',
+            },
+            dataLabels: {
+                enabled: false
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        show: false
+                    }
+                }
+            }],
+            legend: {
+                position: 'right',
+                offsetY: 0,
+                height: 230,
+            },
+            noData: {
+                text: "No Data Found",
+                align: 'center',
+                verticalAlign: 'middle',
+                offsetX: 0,
+                offsetY: 0,
+                style: {
+                    color: "#000000",
+                    fontSize: '14px',
+                    fontFamily: "Helvetica"
+                }
+            }
+        };
+        var chart1 = new ApexCharts(document.querySelector("#apexchartsfwg700r2"), options);
+        chart1.render();
     }
     var url = monthlyInfo_url;
     getUpdateSales(url);
-    updateCategoryInfo();
     $(".yearSales").click(function () {
         var url = yearlyInfo_url;
         $.getJSON(url, function (response) {
@@ -162,7 +205,6 @@ $(document).ready(function () {
                     }
                 }
             };
-
             var chart1 = new ApexCharts(document.querySelector("#apexchartsfwg700r2"), options);
             chart1.render();
         });
