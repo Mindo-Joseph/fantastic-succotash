@@ -636,9 +636,14 @@
       </div>
    </div>
    <div class="row">
-      <div class="col-12">
+      <div class="col-6">
          <div class="page-title-box">
             <h4 class="page-title text-uppercase">User Authentication</h4>
+         </div>
+      </div>
+      <div class="col-6">
+         <div class="page-title-box">
+            <h4 class="page-title text-uppercase">Custom Mods</h4>
          </div>
       </div>
    </div>
@@ -672,23 +677,12 @@
          <div class="col-md-6 col-lx-4">
             <div class="card-box">
                <div class="row align-items-center">
-                  <div class="col-md-8">
+                  <div class="col-md-3">
                      <div class="form-group mb-0">
                         <label for="celebrity_check" class="mr-3 mb-0"> Celebrity Mod</label>
                         <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1')) checked='checked' @endif>
                      </div>
                   </div>
-                  <div class="col-md-4">
-                     <div class="form-group mb-0 text-md-right">
-                        <button class="btn btn-info d-block ml-md-auto" type="submit"> Save </button>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="col-md-6 col-lx-4">
-            <div class="card-box">
-               <div class="row align-items-center">
                   <div class="col-md-4">
                      <div class="form-group mb-0">
                         <label for="pharmacy_check" class="mr-3 mb-0">Pharmacy Mod</label>
@@ -701,12 +695,12 @@
                         <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1')) checked='checked' @endif>
                      </div>
                   </div>
-                  <div class="col-md-3">
+                  <!-- <div class="col-md-3">
                      <div class="form-group mb-0">
                         <label for="rating_check" class="mr-3 mb-0">Rating</label>
                         <input type="checkbox" data-plugin="switchery" name="rating_check" id="rating_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->rating_check == '1')) checked='checked' @endif>
                      </div>
-                  </div>
+                  </div> -->
                   <div class="col-md-2">
                      <div class="form-group mb-0 text-md-right">
                         <button class="btn btn-info d-block ml-md-auto" type="submit"> Save </button>
@@ -715,6 +709,20 @@
                </div>
             </div>
          </div>
+      </div>
+      <div class="row">
+         <div class="col-6">
+            <div class="page-title-box">
+               <h4 class="page-title text-uppercase">Vendor Types</h4>
+            </div>
+         </div>
+         <div class="col-6">
+            <div class="page-title-box">
+               <h4 class="page-title text-uppercase">Data Management</h4>
+            </div>
+         </div>
+      </div>
+      <div class="row">
          <div class="col-md-6 col-lx-4">
             <div class="card-box">
                <div class="row align-items-center">
@@ -760,8 +768,8 @@
             </div>
          </div>
       </div>
-
    </form>
+
    <div style="display:none;">
       <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
          @csrf

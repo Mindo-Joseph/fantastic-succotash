@@ -114,8 +114,11 @@ class VendorController extends BaseController
                     'csvVendors' => $csvVendors,
                     'client_preferences'=> $client_preferences, 
                     'total_vendor_count' => $total_vendor_count, 
+                    'active_vendor_count' => $active_vendor_count, 
                     'vendors_product_count' => $vendors_product_count, 
-                    'available_vendors_count' => $available_vendors_count, 
+                    'available_vendors_count' => $available_vendors_count,
+                    'blocked_vendor_count' => $blocked_vendor_count, 
+                    'awaiting__Approval_vendor_count' => $awaiting__Approval_vendor_count,  
                     'vendors_active_order_count' => $vendors_active_order_count
                 ]);
             }else{

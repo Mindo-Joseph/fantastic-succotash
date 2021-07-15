@@ -30,7 +30,7 @@ class PaypalGatewayController extends Controller
         $this->gateway->setTestMode(true); //set it to 'false' when go live
     }
 
-    public function postPaymentViaPaypal(Request $request){
+    public function paypalPurchase(Request $request){
         try{
             $response = $this->gateway->purchase([
                 'currency' => 'USD',
@@ -51,18 +51,17 @@ class PaypalGatewayController extends Controller
         }
     }
 
-    public function paypalSuccess(Request $request)
+    public function paypalCompletePurchase(Request $request)
     {
         // Once the transaction has been approved, we need to complete it.
         if($request->has(['token', 'PayerID'])){
             $transaction = $this->gateway->completePurchase(array(
-                'amount'                => $request->input('amount'),
-                'payer_id'              => $request->input('PayerID'),
-                'transactionReference'  => $request->input('token'),
+                'amount'                => $request->amount,
+                'payer_id'              => $request->PayerID,
+                'transactionReference'  => $request->token
             ));
             $response = $transaction->send();
             if ($response->isSuccessful()){
-                // $arr_body = $response->getData();
                 return $this->successResponse($response->getTransactionReference());
             } else {
                 return $this->errorResponse($response->getMessage(), 400);

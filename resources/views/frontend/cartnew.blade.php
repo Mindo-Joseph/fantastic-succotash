@@ -513,13 +513,13 @@
     var base_url = "{{url('/')}}";
     var place_order_url = "{{route('user.placeorder')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
-    var payment_paypal_url = "{{route('payment.paypal')}}";
+    var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
     var user_store_address_url = "{{route('address.store')}}";
     var promo_code_remove_url = "{{ route('remove.promocode') }}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
     var payment_option_list_url = "{{route('payment.option.list')}}";
     var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
-    var payment_success_paypal_url = "{{route('payment.paypalSuccess')}}";
+    var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
 </script>
 @endsection
