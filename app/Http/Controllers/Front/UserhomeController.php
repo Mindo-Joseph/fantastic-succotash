@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\Front\FrontController;
 use Illuminate\Contracts\Session\Session as SessionSession;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference, Page};
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference, Page, VendorRegistrationDocument};
 
 class UserhomeController extends FrontController{
     use ApiResponser;
@@ -27,7 +27,8 @@ class UserhomeController extends FrontController{
         $client_preferences = ClientPreference::first();
         $navCategories = $this->categoryNav($language_id);
         $page_detail = Page::with('primary')->where('slug', $request->slug)->firstOrFail();
-        return view('frontend.extrapage', compact('page_detail', 'navCategories','client_preferences', 'user'));
+        $vendor_registration_documents = VendorRegistrationDocument::get();
+        return view('frontend.extrapage', compact('page_detail', 'navCategories','client_preferences', 'user', 'vendor_registration_documents'));
     }
     public function index(Request $request){
         try {
