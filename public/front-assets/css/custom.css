@@ -927,7 +927,7 @@ form .btn{
     font-weight: bold;
     letter-spacing: 0;
     border-radius: 50%;
-    background-color: #3F9FFF;
+    background-color: var(--theme-deafult);
     display: block;
     position: absolute;
     right: 0;
@@ -954,7 +954,7 @@ form .btn{
     font-weight: bold;
     letter-spacing: 0;
     border-radius: 50%;
-    background-color: #3F9FFF;
+    background-color: var(--theme-deafult);
     box-shadow: 0 2px 4px 0 rgb(63 159 255 / 40%);
     display: block;
     position: absolute;
@@ -1881,10 +1881,6 @@ header{
     cursor: pointer;
 }
 
-.top-banner-wrapper .img-fluid {
-    width: 100%;
-}
-
 #stripe-card-element{
     flex:1;
     padding:0 15px;
@@ -2380,7 +2376,7 @@ body .rating-form .btn-reset {
     font-weight: bold;
     letter-spacing: 0;
     border-radius: 50%;
-    background-color: #3F9FFF;
+    background-color: var(--theme-deafult);
     box-shadow: 0 2px 4px 0 rgb(63 159 255 / 40%);
     display: block;
     position: absolute;
@@ -2565,7 +2561,6 @@ td.order_address {
 .common-banner img,.category-block .category-image img {
     height: 100%;
     object-fit: cover;
-    width: 100%;
 }
 
 button.return-order-product {
@@ -2675,10 +2670,6 @@ button.close {
     
 .collection-collapse-block:last-child {
     padding: 0;
-}
-
-.image_mask img {
-    width: 100%;
 }
 
 form input.form-control[placeholder="Address"] {
@@ -2805,16 +2796,16 @@ form input.form-control[placeholder="Address"] {
 }
 
 
-.vendor-signup .update_pic {
+.vendor-signup .update_pic,.file.upload-new .update_pic {
     width: 100%;
     height: 150px;
     border-radius: 0;
 }
 
-.vendor-signup .file>label {
+.vendor-signup .file>label,.file.upload-new>label {
     width: 100%;
 }
-.vendor-signup .file .update_pic img{
+.vendor-signup .file .update_pic img,.file.upload-new img{
     height: auto;
     width: auto;
 }
@@ -2849,7 +2840,9 @@ form input.form-control[placeholder="Address"] {
     background: #fff;
     box-shadow: 0 0.75rem 6rem rgb(56 65 74 / 7%);
     color: #cad0de;
-    margin: auto;
+    margin: auto;    
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .pricingtable .pricingtable-header {
@@ -3010,6 +3003,16 @@ form input.form-control[placeholder="Address"] {
 .dark .divider_line{
     opacity: 1;
 }
+
+.dark .card.subscript-box {
+    background-color: rgb(255 255 255 / 20%);
+    border: 0;
+}
+
+.dark .pricingtable {
+    background: rgb(255 255 255 / 20%);
+}
+
 
 /* Country Dropdown Css */
 .iti__flag-container li,

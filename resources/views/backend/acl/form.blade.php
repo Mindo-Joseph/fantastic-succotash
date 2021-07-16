@@ -35,9 +35,9 @@
                             @csrf
                             {{-- <div class="row mb-2">
                                 <div class="col-md-4">
+                                    <label>Upload Logo</label>
                                     <input type="file" data-plugins="dropify" name="logo"
                                         data-default-file="{{isset($client->logo) ? Storage::disk('s3')->url($client->logo) : ''}}" />
-                                    <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
                                 </div>
                             </div> --}}
 

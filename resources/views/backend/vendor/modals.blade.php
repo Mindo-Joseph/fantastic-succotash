@@ -12,13 +12,12 @@
                         <div class="col-md-12">
                             <div class="row mb-2">
                                 <div class="offset-md-1 col-md-3">
+                                    <label>Upload Logo</label>
                                     <input type="file" accept="image/*" data-plugins="dropify" name="logo" class="dropify" data-default-file="" />
-                                    <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
                                 </div> 
-                                <div class="col-md-1"></div>
-                                <div class="col-md-6">                 
+                                <div class="col-md-6">     
+                                    <label>Upload banner image</label>            
                                     <input type="file" accept="image/*" data-plugins="dropify" name="banner" class="dropify" data-default-file="" />
-                                    <p class="text-muted text-center mt-2 mb-0">Upload banner image</p>
                                 </div>
                             </div>
                             <div class="row">

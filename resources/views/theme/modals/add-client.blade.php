@@ -11,8 +11,8 @@
                 <div class="modal-body p-4">
                     <div class="row mb-2">
                         <div class="col-md-4">
+                            <label>Upload Logo</label>
                             <input type="file" data-plugins="dropify" name="logo" />
-                            <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
                         </div>
                     </div>
 
