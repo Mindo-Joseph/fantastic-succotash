@@ -191,16 +191,19 @@
                                 </div>
                                 <div class="col-sm-9 mt-3 mt-sm-0">
                                     <div class="row align-items-end border-left-top pt-sm-0 pt-2 px-md-3">
-                                        <div class="col-12 d-flex align-items-center justify-content-between">
-                                            <h3 class="d-inline-block">Royo Gold</h3>
-                                            <span class="plan-price">$20 / mo</span>
+                                        <div class="col-12">
+                                            <div class=" d-flex align-items-center justify-content-between">
+                                                <h3 class="d-inline-block">Royo Gold</h3>
+                                                <span class="plan-price">$20 / mo</span>
+                                            </div>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur ea unde libero architecto numquam eum?</p>
                                         </div>
                                         <div class="col-sm-6 form-group mb-2">
                                             <label for="">Billing</label>
                                             <input class="form-control" type="text">
                                         </div>
                                         <div class="col-sm-6 mb-2 text-center text-sm-right">
-                                            <button class="btn btn-solid">Cancel</button>
+                                            <a href="#">Cancel</a>
                                         </div>
                                     </div>
                                     

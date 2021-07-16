@@ -112,7 +112,7 @@ $timezone = Auth::user()->timezone;
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
                                                     <div class="col-md-3">{{convertDateTimeInTimeZone($order->created_at, $timezone, 'l, F d, Y, H:i A')}}</div>
                                                     <div class="col-md-3">
-                                                        <a href="#">{{$order->user->name}}</a>
+                                                        <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <span class="ellipsis" data-toggle="tooltip" data-placement="top" title="">
@@ -259,7 +259,7 @@ $timezone = Auth::user()->timezone;
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
                                                     <div class="col-md-3">{{$order->created_at->format('D M d, Y h:m A')}}</div>
                                                     <div class="col-md-3">
-                                                        <a href="#">{{$order->user->name}}</a>
+                                                        <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <span class="ellipsis" data-toggle="tooltip" data-placement="top" title="">
@@ -412,7 +412,7 @@ $timezone = Auth::user()->timezone;
                                                 <div class="col-md-3">#{{$order->order_number}}</div>
                                                 <div class="col-md-3">{{$order->created_at->format('D M d, Y h:m A')}}</div>
                                                 <div class="col-md-3">
-                                                    <a href="#">{{$order->user->name}}</a>
+                                                    <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <span class="ellipsis" data-toggle="tooltip" data-placement="top" title="">

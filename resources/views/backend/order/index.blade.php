@@ -32,7 +32,7 @@
                         <div class="col-md-3"><h6>#<%= order.order_number %></h6></div>
                         <div class="col-md-3"><%= order.created_date %></div>
                         <div class="col-md-3">
-                            <a href="#"><%= order.user.name %></a>
+                            <a class="text-capitalize" href="#"><%= order.user.name %></a>
                         </div>
                         <% if(order.address !== null) { %>
                         <div class="col-md-3">
