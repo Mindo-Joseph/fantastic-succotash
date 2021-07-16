@@ -147,7 +147,7 @@
                                         @endif
                                         @if(in_array('subscription_plans_vendors',$allowed) || Auth::user()->is_superadmin == 1)
                                             <li>
-                                                <a href="{{route('subscriptions.vendors')}}">Vendors</a>
+                                                <a href="{{route('subscription.plans.vendor')}}">Vendors</a>
                                             </li>
                                         @endif
                                     </ul>

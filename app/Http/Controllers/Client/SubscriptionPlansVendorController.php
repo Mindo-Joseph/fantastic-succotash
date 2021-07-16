@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, SmsProvider, Currency, Language, Country, User, SubscriptionPlansUser, SubscriptionPlanFeaturesUser,  SubscriptionFeaturesListUser};
+use App\Models\{Client, ClientPreference, SmsProvider, Currency, Language, Country, User, SubscriptionPlansVendor, SubscriptionPlanFeaturesVendor, SubscriptionFeaturesListVendor};
 use Carbon\Carbon;
 
-class UserSubscriptionController extends BaseController
+class SubscriptionPlansVendorController extends BaseController
 {
     use ApiResponser;
     private $folderName = '/subscriptions/image';
@@ -41,8 +41,8 @@ class UserSubscriptionController extends BaseController
      */
     public function getSubscriptionPlans(Request $request, $domain = '')
     {
-        $sub_plans = SubscriptionPlansUser::with(['features.feature'])->get();
-        $featuresList = SubscriptionFeaturesListUser::where('status', 1)->get();
+        $sub_plans = SubscriptionPlansVendor::with(['features.feature'])->orderBy('sort_order', 'asc')->get();
+        $featuresList = SubscriptionFeaturesListVendor::where('status', 1)->get();
         if($sub_plans){
             foreach($sub_plans as $plan){
                 $features = '';
@@ -57,7 +57,7 @@ class UserSubscriptionController extends BaseController
                 $plan->features = $features;
             }
         }
-        return view('backend/subscriptions/subscriptionPlansUser')->with(['features'=>$featuresList, 'subscription_plans'=>$sub_plans]);
+        return view('backend/subscriptions/subscriptionPlansVendor')->with(['features'=>$featuresList, 'subscription_plans'=>$sub_plans]);
     }
 
     /**
@@ -73,10 +73,11 @@ class UserSubscriptionController extends BaseController
             'title' => 'required|string|max:50',
             'features' => 'required',
             'price' => 'required',
-            'period' => 'required'
+            // 'period' => 'required',
+            'sort_order' => 'required'
         );
         if(!empty($slug)){
-            $plan = SubscriptionPlansUser::where('slug', $slug)->firstOrFail();
+            $plan = SubscriptionPlansVendor::where('slug', $slug)->firstOrFail();
             $rules['title'] = $rules['title'].',id,'.$plan->id;
             $message = 'updated';
         }
@@ -86,15 +87,18 @@ class UserSubscriptionController extends BaseController
             return redirect()->back()->withInput()->withErrors($validation);
         }
         if(!empty($slug)){
-            $subFeatures = SubscriptionPlanFeaturesUser::where('subscription_plan_id', $plan->id)->whereNotIn('feature_id', $request->features)->delete();
+            $subFeatures = SubscriptionPlanFeaturesVendor::where('subscription_plan_id', $plan->id)->whereNotIn('feature_id', $request->features)->delete();
         }else{
-            $plan = new SubscriptionPlansUser;
+            $plan = new SubscriptionPlansVendor;
             $plan->slug = uniqid();
         }
         $plan->title = $request->title;
         $plan->price = $request->price;
-        $plan->period = $request->period;
+        // $plan->period = $request->period;
+        $plan->frequency = $request->frequency;
+        $plan->sort_order = $request->sort_order;
         $plan->status = ($request->has('status') && $request->status == 'on') ? '1' : '0';
+        $plan->on_request = ($request->has('on_request') && $request->on_request == 'on') ? 1 : 0;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $plan->image = Storage::disk('s3')->put($this->folderName, $file,'public');
@@ -107,7 +111,7 @@ class UserSubscriptionController extends BaseController
         if( ($request->has('features')) && (!empty($request->features)) ){
             foreach($request->features as $key => $val){
                 if(!empty($slug)){
-                    $subFeature = SubscriptionPlanFeaturesUser::where('subscription_plan_id', $planId)->where('feature_id', $val)->first();
+                    $subFeature = SubscriptionPlanFeaturesVendor::where('subscription_plan_id', $planId)->where('feature_id', $val)->first();
                     if($subFeature){
                         continue;
                     }
@@ -118,7 +122,7 @@ class UserSubscriptionController extends BaseController
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 );
-                SubscriptionPlanFeaturesUser::insert($feature);
+                SubscriptionPlanFeaturesVendor::insert($feature);
             }
         }
         return redirect()->back()->with('success', 'Subscription has been '.$message.' successfully.');
@@ -132,14 +136,14 @@ class UserSubscriptionController extends BaseController
      */
     public function editSubscriptionPlan(Request $request, $domain = '', $slug='')
     {
-        $plan = SubscriptionPlansUser::where('slug', $slug)->firstOrFail();
-        $planFeatures = SubscriptionPlanFeaturesUser::select('feature_id')->where('subscription_plan_id', $plan->id)->get();
-        $featuresList = SubscriptionFeaturesListUser::where('status', 1)->get();
+        $plan = SubscriptionPlansVendor::where('slug', $slug)->firstOrFail();
+        $planFeatures = SubscriptionPlanFeaturesVendor::select('feature_id')->where('subscription_plan_id', $plan->id)->get();
+        $featuresList = SubscriptionFeaturesListVendor::where('status', 1)->get();
         $subPlanFeatures = array();
         foreach($planFeatures as $feature){
             $subPlanFeatures[] = $feature->feature_id;
         }
-        $returnHTML = view('backend.subscriptions.edit-subscriptionPlanUser')->with(['features'=>$featuresList, 'plan' => $plan, 'subPlanFeatures'=>$subPlanFeatures])->render();
+        $returnHTML = view('backend.subscriptions.edit-subscriptionPlanVendor')->with(['features'=>$featuresList, 'plan' => $plan, 'subPlanFeatures'=>$subPlanFeatures])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -151,10 +155,24 @@ class UserSubscriptionController extends BaseController
      */
     public function updateSubscriptionPlanStatus(Request $request, $domain = '', $slug='')
     {
-        $subscription = SubscriptionPlansUser::where('slug', $slug)->firstOrFail();
+        $subscription = SubscriptionPlansVendor::where('slug', $slug)->firstOrFail();
         $subscription->status = $request->status;
         $subscription->save();
         return response()->json(array('success' => true, 'message'=>'Subscription status has been updated.'));
+    }
+
+    /**
+     * update vendor subscription on request
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateSubscriptionPlanOnRequest(Request $request, $domain = '', $slug='')
+    {
+        $subscription = SubscriptionPlansVendor::where('slug', $slug)->firstOrFail();
+        $subscription->on_request = $request->on_request;
+        $subscription->save();
+        return response()->json(array('success' => true, 'message'=>'Subscription on request status has been updated.'));
     }
 
     /**
@@ -166,7 +184,7 @@ class UserSubscriptionController extends BaseController
     public function deleteSubscriptionPlan(Request $request, $domain = '', $slug='')
     {
         try {
-            $subscription = SubscriptionPlansUser::where('slug', $slug)->firstOrFail();
+            $subscription = SubscriptionPlansVendor::where('slug', $slug)->firstOrFail();
             $subscription->delete();
             return redirect()->back()->with('success', 'Subscription has been deleted successfully.');
         } catch (Exception $e) {
