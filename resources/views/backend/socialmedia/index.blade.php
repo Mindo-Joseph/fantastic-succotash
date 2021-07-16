@@ -25,7 +25,7 @@
                                     <th>#</th>
                                     <th>Icon</th>
                                     <th>Title</th>
-                                    <th>Url</th>
+                                    <th>URL</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

@@ -113,12 +113,12 @@
                 @csrf
                 <div class="card-box mb-0 h-100 pb-0">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h4 class="header-title mb-0">Nomenclature</h4>
+                        <h4 class="header-title mb-0">Localization</h4>
                         <input type="hidden" name="send_to" id="send_to" value="customize">
                         <button class="btn btn-info d-block" type="submit"> Save </button>
                     </div>
                     <p class="sub-header">
-                        Define and update the nomenclature
+                        Define and update the localization
                     </p>
                     <div class="row col-spacing">
                         <div class="col-sm-4 mb-2">
@@ -199,25 +199,6 @@
                                 @endif
                             </div>
                         </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="col-lg-3 col-lg-3 mb-3">
-            <form method="POST" class="h-100" action="{{route('referandearn.update', Auth::user()->code)}}">
-                @csrf
-                <div class="card-box mb-0 h-100 pb-1">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h4 class="header-title mb-0">Refer and Earn</h4>
-                        <button class="btn btn-info d-block" type="submit"> Save </button>
-                    </div>
-                    <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-4" id="addCur-160">
-                        <label class="primaryCurText">Referred To Amount = </label>
-                        <input class="form-control" type="number" id="reffered_to_amount" name="reffered_to_amount" value="{{ old('reffered_to_amount', $reffer_to ?? '')}}" min="0">
-                    </div>
-                    <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-3" id="addCur-160">
-                        <label class="primaryCurText">Referred By Amount = </label>
-                        <input class="form-control" type="number" name="reffered_by_amount" id="reffered_by_amount" value="{{ old('reffered_by_amount', $reffer_by ?? '')}}" min="0">
                     </div>
                 </div>
             </form>
