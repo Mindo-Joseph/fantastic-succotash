@@ -10,14 +10,35 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
-
+use Auth;
 class VendorController extends Controller{
     use ApiResponser;
 
     public function index(Request $request){
-        $total_order_value = OrderVendor::sum('payable_amount');
-        $total_delivery_fees = OrderVendor::sum('delivery_fee');
-        $total_admin_commissions = OrderVendor::sum(DB::raw('admin_commission_percentage_amount + admin_commission_fixed_amount'));
+        $total_order_value = OrderVendor::orderBy('id','desc');
+        if (Auth::user()->is_superadmin == 0) {
+            $total_order_value = $total_order_value->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $total_order_value = $total_order_value->sum('payable_amount');
+
+        $total_delivery_fees = OrderVendor::orderBy('id','desc');
+        if (Auth::user()->is_superadmin == 0) {
+            $total_delivery_fees = $total_delivery_fees->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $total_delivery_fees = $total_delivery_fees->sum('delivery_fee');
+
+        $total_admin_commissions = OrderVendor::orderBy('id','desc');
+        if (Auth::user()->is_superadmin == 0) {
+            $total_admin_commissions = $total_admin_commissions->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $total_admin_commissions = $total_admin_commissions->sum(DB::raw('admin_commission_percentage_amount + admin_commission_fixed_amount'));
+
         return view('backend.accounting.vendor')->with(['total_order_value' => number_format($total_order_value, 2), 'total_delivery_fees' => number_format($total_delivery_fees, 2), 'total_admin_commissions' => number_format($total_admin_commissions, 2)]);
     }
 
@@ -32,7 +53,15 @@ class VendorController extends Controller{
             if($month_number){
                 $query->whereMonth('created_at', $month_number);
             }
-        }])->where('status', '!=', '2')->orderBy('id', 'desc')->get();
+        }])->where('status', '!=', '2')->orderBy('id', 'desc');
+        
+        if (Auth::user()->is_superadmin == 0) {
+            $vendors = $vendors->whereHas('permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+
+        $vendors = $vendors->get();
         foreach ($vendors as $vendor) {
             $vendor->total_paid = 0.00;
             $vendor->url = route('vendor.show', $vendor->id);
