@@ -36,36 +36,69 @@ class BaseController extends Controller
         if (!is_null($tree) && count($tree) > 0) {
             $this->htmlData .= '<ol class="dd-list">';
             foreach ($tree as $node) {
-                if (in_array($node['id'], $activeCategory)) {
-                    $this->htmlData .= '<li class="dd-item dd3-item" data-id="' . $node["id"] . '">';
-                    if ($from == 'category') {
-                        $this->htmlData .= '<div class="dd-handle dd3-handle"></div>';
-                    }
-                    $icon = $node['icon']['proxy_url'] . '30/30' . $node['icon']['image_path'];
-                    if (isset($node['translation_one'])) {
-                        $this->htmlData .= '<div class="dd3-content"><img class="rounded-circle mr-1" src="' . $icon . '"><a class="openCategoryModal" dataid="' . $node["id"] . '" is_vendor="0" href="#"> ' . $node['translation_one']["name"] . '</a><span class="inner-div text-right">';
-                    } else {
-                        $this->htmlData .= '<div class="dd3-content"><img class="rounded-circle mr-1" src="' . $icon . '">' . $node['translation_one']["name"] . '<span class="inner-div text-right">';
-                    }
-                    if (!in_array($node["id"], $blockedCategory)) {
-                        $status = 2; //$icon = 'mdi-lock-open-variant';
-                        $title = 'Delete';
-                        $icon = 'mdi-delete';
-                        $askMessage = "return confirm('Are you sure? You want to delete category.')";
+                if(!empty($activeCategory)){
+                    if (in_array($node['id'], $activeCategory)) {
+                        $this->htmlData .= '<li class="dd-item dd3-item" data-id="' . $node["id"] . '">';
                         if ($from == 'category') {
-                            if ($node["is_core"] == 1) {
-                                $this->htmlData .= '<a class="action-icon openCategoryModal" dataid="' . $node["id"] . '" is_vendor="0" href="#"> <i class="mdi mdi-square-edit-outline"></i></a><a class="action-icon" dataid="' . $node["id"] . '" title="' . $title . '" onclick="' . $askMessage . '" href="' . url("client/category/delete/" . $node["id"]) . '"> <i class="mdi ' . $icon . '"></i></a>';
-                            }
-                        } elseif ($from == 'vendor' && $node["is_core"] == 0) {
-                            $this->htmlData .= '<a class="action-icon openCategoryModal" dataid="' . $node["id"] . '" is_vendor="1" href="#"> <i class="mdi mdi-square-edit-outline"></i></a>
-                            <a class="action-icon" dataid="' . $node["id"] . '" onclick="' . $askMessage . '" href="' . url("client/category/delete/" . $node["id"]) . '" title="' . $title . '"> <i class="mdi ' . $icon . '"></i></a>';
+                            $this->htmlData .= '<div class="dd-handle dd3-handle"></div>';
                         }
+                        $icon = $node['icon']['proxy_url'] . '30/30' . $node['icon']['image_path'];
+                        if (isset($node['translation_one'])) {
+                            $this->htmlData .= '<div class="dd3-content"><img class="rounded-circle mr-1" src="' . $icon . '"><a class="openCategoryModal" dataid="' . $node["id"] . '" is_vendor="0" href="#"> ' . $node['translation_one']["name"] . '</a><span class="inner-div text-right">';
+                        } else {
+                            $this->htmlData .= '<div class="dd3-content"><img class="rounded-circle mr-1" src="' . $icon . '">' . $node['translation_one']["name"] . '<span class="inner-div text-right">';
+                        }
+                        if (!in_array($node["id"], $blockedCategory)) {
+                            $status = 2; //$icon = 'mdi-lock-open-variant';
+                            $title = 'Delete';
+                            $icon = 'mdi-delete';
+                            $askMessage = "return confirm('Are you sure? You want to delete category.')";
+                            if ($from == 'category') {
+                                if ($node["is_core"] == 1) {
+                                    $this->htmlData .= '<a class="action-icon openCategoryModal" dataid="' . $node["id"] . '" is_vendor="0" href="#"> <i class="mdi mdi-square-edit-outline"></i></a><a class="action-icon" dataid="' . $node["id"] . '" title="' . $title . '" onclick="' . $askMessage . '" href="' . url("client/category/delete/" . $node["id"]) . '"> <i class="mdi ' . $icon . '"></i></a>';
+                                }
+                            } elseif ($from == 'vendor' && $node["is_core"] == 0) {
+                                $this->htmlData .= '<a class="action-icon openCategoryModal" dataid="' . $node["id"] . '" is_vendor="1" href="#"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                <a class="action-icon" dataid="' . $node["id"] . '" onclick="' . $askMessage . '" href="' . url("client/category/delete/" . $node["id"]) . '" title="' . $title . '"> <i class="mdi ' . $icon . '"></i></a>';
+                            }
+                        }
+                        $this->htmlData .= '</span> </div>';
+                        if (isset($node['children']) && count($node['children']) > 0) {
+                            $ss = $this->printTree($node['children'], $from, $activeCategory, $blockedCategory);
+                        }
+                        $this->htmlData .= '</li>';
                     }
-                    $this->htmlData .= '</span> </div>';
-                    if (isset($node['children']) && count($node['children']) > 0) {
-                        $ss = $this->printTree($node['children'], $from, $activeCategory, $blockedCategory);
-                    }
-                    $this->htmlData .= '</li>';
+                }
+                else{
+                    $this->htmlData .= '<li class="dd-item dd3-item" data-id="' . $node["id"] . '">';
+                        if ($from == 'category') {
+                            $this->htmlData .= '<div class="dd-handle dd3-handle"></div>';
+                        }
+                        $icon = $node['icon']['proxy_url'] . '30/30' . $node['icon']['image_path'];
+                        if (isset($node['translation_one'])) {
+                            $this->htmlData .= '<div class="dd3-content"><img class="rounded-circle mr-1" src="' . $icon . '"><a class="openCategoryModal" dataid="' . $node["id"] . '" is_vendor="0" href="#"> ' . $node['translation_one']["name"] . '</a><span class="inner-div text-right">';
+                        } else {
+                            $this->htmlData .= '<div class="dd3-content"><img class="rounded-circle mr-1" src="' . $icon . '">' . $node['translation_one']["name"] . '<span class="inner-div text-right">';
+                        }
+                        if (!in_array($node["id"], $blockedCategory)) {
+                            $status = 2; //$icon = 'mdi-lock-open-variant';
+                            $title = 'Delete';
+                            $icon = 'mdi-delete';
+                            $askMessage = "return confirm('Are you sure? You want to delete category.')";
+                            if ($from == 'category') {
+                                if ($node["is_core"] == 1) {
+                                    $this->htmlData .= '<a class="action-icon openCategoryModal" dataid="' . $node["id"] . '" is_vendor="0" href="#"> <i class="mdi mdi-square-edit-outline"></i></a><a class="action-icon" dataid="' . $node["id"] . '" title="' . $title . '" onclick="' . $askMessage . '" href="' . url("client/category/delete/" . $node["id"]) . '"> <i class="mdi ' . $icon . '"></i></a>';
+                                }
+                            } elseif ($from == 'vendor' && $node["is_core"] == 0) {
+                                $this->htmlData .= '<a class="action-icon openCategoryModal" dataid="' . $node["id"] . '" is_vendor="1" href="#"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                <a class="action-icon" dataid="' . $node["id"] . '" onclick="' . $askMessage . '" href="' . url("client/category/delete/" . $node["id"]) . '" title="' . $title . '"> <i class="mdi ' . $icon . '"></i></a>';
+                            }
+                        }
+                        $this->htmlData .= '</span> </div>';
+                        if (isset($node['children']) && count($node['children']) > 0) {
+                            $ss = $this->printTree($node['children'], $from, $activeCategory, $blockedCategory);
+                        }
+                        $this->htmlData .= '</li>';
                 }
             }
             $this->htmlData .= '</ol>';
