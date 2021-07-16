@@ -39,6 +39,9 @@
                                             <a class="text-body" href="javascript:void(0)" id="text_body_{{$page->id}}">{{$page->primary->title}}</a>
                                         </td>
                                         <td align="right">
+                                        <a href="{{route('extrapage',['slug' => $page->slug])}}" target="_BLANK">
+                                            <i class="mdi mdi-eye"></i>
+                                        </a>
                                             @if(!in_array($page->id, [1,2]))
                                                 <a class="text-body delete-page" href="javascript:void(0)" data-page_id="{{$page->id}}">
                                                     <i class="mdi mdi-delete"></i>

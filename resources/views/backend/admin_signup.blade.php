@@ -33,16 +33,16 @@
                         </div>
 
                         <!-- title-->
-                        <h4 class="mt-0">Sign In</h4>
+                        <h4 class="mt-0">Sign Up</h4>
                         <p class="text-muted mb-4">Enter your email address and password to access account.</p>
 
                         <!-- form -->
                         <form action="#">
                             <div class="row">
-                            <div class="col-sm-6">
-                                    <div class="mt-3">
-                                    <div class="dropify-wrapper" style="height: 314px;"><div class="dropify-message"><span class="file-icon"> <p>Drag and drop a file here or click</p></span><p class="dropify-error">Ooops, something wrong appended.</p></div><div class="dropify-loader"></div><div class="dropify-errors-container"><ul></ul></div><input type="file" data-plugins="dropify" data-height="300"><button type="button" class="dropify-clear">Remove</button><div class="dropify-preview"><span class="dropify-render"></span><div class="dropify-infos"><div class="dropify-infos-inner"><p class="dropify-filename"><span class="file-icon"></span> <span class="dropify-filename-inner"></span></p><p class="dropify-infos-message">Drag and drop or click to replace</p></div></div></div></div>
-                                        <p class="text-muted text-center mt-2 mb-0">Default File</p>
+                            <div class="col-md-4 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="">Upload Logo</label>
+                                        <div class="dropify-wrapper has-preview"><div class="dropify-message"><span class="file-icon"> <p>Drag and drop a file here or click</p></span><p class="dropify-error">Ooops, something wrong appended.</p></div><div class="dropify-loader" style="display: none;"></div><div class="dropify-errors-container"><ul></ul></div><input type="file" data-plugins="dropify" data-default-file="../assets/images/small/img-2.jpg"><button type="button" class="dropify-clear">Remove</button><div class="dropify-preview" style="display: block;"><span class="dropify-render"><img src="../assets/images/small/img-2.jpg"></span><div class="dropify-infos"><div class="dropify-infos-inner"><p class="dropify-filename"><span class="file-icon"></span> <span class="dropify-filename-inner">img-2.jpg</span></p><p class="dropify-infos-message">Drag and drop or click to replace</p></div></div></div></div>
                                     </div>
                                 </div>
                             </div>
@@ -106,7 +106,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <div class="form-group mb-0 text-center">
+                                    <div class="form-group mb-0 mt-3 text-center">
                                         <button class="btn btn-primary btn-block" type="submit">Log In </button>
                                     </div>
                                 </div>
@@ -127,11 +127,11 @@
             <!-- Auth fluid right content -->
             <div class="auth-fluid-right text-center">
                 <div class="auth-user-testimonial">
-                    <h2 class="mb-3 text-white">I love the color!</h2>
-                    <p class="lead"><i class="mdi mdi-format-quote-open"></i> I've been using your theme from the previous developer for our web app, once I knew new version is out, I immediately bought with no hesitation. Great themes, good documentation with lots of customization available and sample app that really fit our need. <i class="mdi mdi-format-quote-close"></i>
+                    <h2 class="mb-3 text-white">Lorem ipsum dolor sit amet.</h2>
+                    <p class="lead"><i class="mdi mdi-format-quote-open"></i> Lorem ipsum dolor sit amet consectetur adipisicing elit. A provident optio nostrum dolores ipsa odio et harum, unde facere molestiae, asperiores explicabo quidem aspernatur inventore amet ab officiis nesciunt magnam? <i class="mdi mdi-format-quote-close"></i>
                     </p>
                     <h5 class="text-white">
-                        - Fadlisaad (Ubold Admin User)
+                        - lorem (Admin User)
                     </h5>
                 </div> <!-- end auth-user-testimonial-->
             </div>

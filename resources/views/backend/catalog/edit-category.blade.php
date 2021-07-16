@@ -3,18 +3,18 @@
     <div class="col-md-12">
         <div class="row mb-6">
             <div class="col-sm-2">
+                <label>Upload Category Icon </label>
                 <input type="file" accept="image/*" data-plugins="dropify" name="icon" class="dropify" data-default-file="{{$category->icon['proxy_url'].'400/400'.$category->icon['image_path']}}" />
-                <p class="text-muted text-center mt-2 mb-0">Upload Category Icon </p>
             </div> 
             <div class="col-sm-4">                
+                <label>Upload Category image</label>
                 <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$category->image['proxy_url'].'400/400'.$category->image['image_path']}}" />
-                <p class="text-muted text-center mt-2 mb-0">Upload Category image</p>
             </div>
             <div class="col-md-6">
                  <div class="row">
                     <div class="col-md-6">
                          <div class="form-group" id="slugInputEdit">
-                            {!! Form::label('title', 'Url Slug',['class' => 'control-label']) !!} 
+                            {!! Form::label('title', 'URL Slug',['class' => 'control-label']) !!} 
                             {!! Form::text('slug', $category->slug, ['class'=>'form-control','id' => 'slug', 'onkeypress' => "return alphaNumeric(event)"]) !!}
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>

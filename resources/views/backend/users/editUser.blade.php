@@ -128,6 +128,20 @@
                                                     </tr>
                                                     @endif
 
+                                            @elseif($singlepermission->name == 'CMS Pages' || $singlepermission->name == 'CMS Emails')
+                                                <tr>
+                                                    <td>
+                                                        <h5 class="m-0 font-weight-normal">{{ $singlepermission->name }}</h5>
+                                                    </td>
+            
+                                                    <td>
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="checkbox" class="custom-control-input event_type" data-id="{{ $singlepermission->id }}" data-event-type="permission" id="permission_{{ $singlepermission->id}}" name="permissions[]" value="{{ $singlepermission->id }}" @if(in_array($singlepermission->id, $userpermissions)) checked @endif >
+                                                            
+                                                            <label class="custom-control-label" for="permission_{{ $singlepermission->id}}"></label>
+                                                        </div>
+                                                    </td>
+                                                </tr> 
                                             @else   
                                                 <tr>
                                                     <td>

@@ -18,8 +18,12 @@ class PaymentOptionController extends Controller{
     use ApiResponser;
     public $gateway;
 
-    public function getPaymentOptions(Request $request){
-        $code = array('paypal', 'stripe');
+    public function getPaymentOptions(Request $request, $page = ''){
+        if($page == 'wallet'){
+            $code = array('paypal', 'stripe');
+        }else{
+            $code = array('cod', 'paypal', 'stripe');
+        }
         $payment_options = PaymentOption::whereIn('code', $code)->get(['id', 'title', 'off_site']);
         return $this->successResponse($payment_options, '', 201);
     }

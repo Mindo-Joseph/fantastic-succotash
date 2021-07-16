@@ -32,9 +32,9 @@ class DatabaseSeeder extends Seeder
               OrderStatusSeeder::class,
               OrderStatusSeeder::class,
               DispatcherStatusOptionSeeder::class,
-              SubscriptionValiditiesSeeder::class,
-              SubscriptionFeaturesListSeeder::class,
-              SubscribedStatusOptionsSeeder::class
+              SubscriptionFeaturesListUserSeeder::class,
+              SubscriptionFeaturesListVendorSeeder::class,
+              SubscriptionStatusOptionsSeeder::class
           ]);
         // $this->call(UsersTableSeeder::class);
         $this->call(AppStylingOptionsTableSeeder::class);

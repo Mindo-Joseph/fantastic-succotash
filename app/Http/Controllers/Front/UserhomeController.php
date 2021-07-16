@@ -140,7 +140,7 @@ class UserhomeController extends FrontController{
                 'url_slug' => $new_product_detail->url_slug,
                 'inquiry_only' => $new_product_detail->inquiry_only,
                 'vendor_name' => $new_product_detail->vendor ? $new_product_detail->vendor->name : '',
-                'price' => Session::get('currencySymbol').' '.($new_product_detail->variant->first()->price * $multiply),
+                'price' => Session::get('currencySymbol').' '.(number_format($new_product_detail->variant->first()->price * $multiply,2)),
             );
         }
         foreach ($feature_product_details as  $feature_product_detail) {
@@ -154,7 +154,7 @@ class UserhomeController extends FrontController{
                 'url_slug' => $feature_product_detail->url_slug,
                 'inquiry_only' => $feature_product_detail->inquiry_only,
                 'vendor_name' => $feature_product_detail->vendor ? $feature_product_detail->vendor->name : '',
-                'price' => Session::get('currencySymbol').' '.($feature_product_detail->variant->first()->price * $multiply),
+                'price' => Session::get('currencySymbol').' '.(number_format($feature_product_detail->variant->first()->price * $multiply,2)),
             );
         }
         foreach ($on_sale_product_details as  $on_sale_product_detail) {
@@ -168,7 +168,7 @@ class UserhomeController extends FrontController{
                 'url_slug' => $on_sale_product_detail->url_slug,
                 'inquiry_only' => $on_sale_product_detail->inquiry_only,
                 'vendor_name' => $on_sale_product_detail->vendor ? $on_sale_product_detail->vendor->name : '',
-                'price' => Session::get('currencySymbol').' '.($on_sale_product_detail->variant->first()->price * $multiply),
+                'price' => Session::get('currencySymbol').' '.(number_format($on_sale_product_detail->variant->first()->price * $multiply,2)),
             );
         }
         $data = [

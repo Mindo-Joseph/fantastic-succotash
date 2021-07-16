@@ -16,7 +16,7 @@ class WalletController extends Controller{
     	$user = Auth::user();
         $user = User::with('country')->find($user->id);
         $paginate = $request->has('limit') ? $request->limit : 12;
-        $transactions = Transaction::where('payable_id', $user->id)->paginate($paginate);
+        $transactions = Transaction::where('payable_id', $user->id)->orderBy('id', 'desc')->paginate($paginate);
         foreach($transactions as $trans){
             $trans->meta = json_decode($trans->meta);
             $trans->amount = sprintf("%.2f", $trans->amount / 100);

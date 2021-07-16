@@ -122,7 +122,7 @@
                                                     <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                                 </a>
                                                 <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                                    {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
+                                                    {{ Session::get('currencySymbol').' '.(number_format($new['variant'][0]['price'] * $multiply,2))}} </h4>
                                             </div>
                                         </div>
                                     @endforeach
@@ -266,7 +266,7 @@
                                                             <a href="{{route('productDetail', $data->url_slug)}}">
                                                                 <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
                                                             </a>
-                                                            <h4>{{Session::get('currencySymbol').($data->variant[0]->price * $data->variant[0]->multiplier)}}</h4>
+                                                            <h4>{{Session::get('currencySymbol').(number_format($data->variant[0]->price * $data->variant[0]->multiplier,2))}}</h4>
                                                             </div>
                                                         </div>
                                                     </div>

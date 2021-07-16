@@ -118,9 +118,9 @@
                                         value="{{$product->variant[0]->id}}">
                                     @if($product->inquiry_only == 0)
                                     <h3 id="productPriceValue" class="mb-md-3">
-                                        <b class="mr-1">{{Session::get('currencySymbol').($product->variant[0]->price * $product->variant[0]->multiplier)}}</b>
+                                        <b class="mr-1">{{Session::get('currencySymbol').(number_format($product->variant[0]->price * $product->variant[0]->multiplier,2))}}</b>
                                         @if($product->variant[0]->compare_at_price > 0 )
-                                            <span class="org_price">{{Session::get('currencySymbol').($product->variant[0]->compare_at_price * $product->variant[0]->multiplier)}}</span>
+                                            <span class="org_price">{{Session::get('currencySymbol').(number_format($product->variant[0]->compare_at_price * $product->variant[0]->multiplier,2))}}</span>
                                         @endif
                                     </h3>
                                     @endif
@@ -158,9 +158,7 @@
                                     @if($product->inquiry_only == 0)
                                         <div class="product-description border-product">
                                             <h6 class="product-title mt-0">quantity: 
-                                                @if($product->variant[0]->quantity > 0)
-                                                    <span id="instock" style="color: green;">In Stock ({{$product->variant[0]->quantity}})</span>
-                                                @else
+                                                @if(!$product->variant[0]->quantity > 0)
                                                     <span id="outofstock" style="color: red;">Out of Stock</span>
                                                 @endif
                                             </h6>

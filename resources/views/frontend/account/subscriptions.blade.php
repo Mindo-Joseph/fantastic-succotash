@@ -177,6 +177,84 @@
                     @endif
                     <!-- END Col -->
                 </div>
+
+                <div class="row">
+                    
+                    <div class="col-12 mb-4">
+                        <div class="card subscript-box">
+                            <div class="row align-items-center">
+                                <div class="col-sm-3 text-center">
+                                    <div class="gold-icon">
+                                        <img src="{{asset('assets/images/gold.png')}}" alt="">
+                                    </div>
+                                    <h3 class="m-0">Gold Plan</h3>
+                                </div>
+                                <div class="col-sm-9 mt-3 mt-sm-0">
+                                    <div class="row align-items-end border-left-top pt-sm-0 pt-2 px-md-3">
+                                        <div class="col-12 d-flex align-items-center justify-content-between">
+                                            <h3 class="d-inline-block">Royo Gold</h3>
+                                            <span class="plan-price">$20 / mo</span>
+                                        </div>
+                                        <div class="col-sm-6 form-group mb-2">
+                                            <label for="">Billing</label>
+                                            <input class="form-control" type="text">
+                                        </div>
+                                        <div class="col-sm-6 mb-2 text-center text-sm-right">
+                                            <button class="btn btn-solid">Cancel</button>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 col-sm-6">
+                        <div class="pricingTable">
+                            <div class="pricingTable-header">
+                                <i class="fa fa-adjust"></i>
+                                <div class="price-value"> $10.00 <span class="month">per month</span> </div>
+                            </div>
+                            <h3 class="heading">Lorem, ipsum.</h3>
+                            <div class="pricing-content">
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis similique illum vero rerum illo aliquid!</p>
+                            </div>
+                            <div class="pricingTable-signup">
+                                <a class="btn btn-solid" href="#">sign up</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                        <div class="pricingTable green">
+                            <div class="pricingTable-header">
+                                <i class="fa fa-briefcase"></i>
+                                <div class="price-value"> $20.00 <span class="month">per month</span> </div>
+                            </div>
+                            <h3 class="heading">Lorem, ipsum.</h3>
+                            <div class="pricing-content">
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis similique illum vero rerum illo aliquid!</p>
+                            </div>
+                            <div class="pricingTable-signup">
+                                <a class="btn btn-solid" href="#">sign up</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                        <div class="pricingTable blue">
+                            <div class="pricingTable-header">
+                                <i class="fa fa-diamond"></i>
+                                <div class="price-value"> $30.00 <span class="month">per month</span> </div>
+                            </div>
+                            <h3 class="heading">Gold</h3>
+                            <div class="pricing-content">
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis similique illum vero rerum illo aliquid!</p>
+                            </div>
+                            <div class="pricingTable-signup">
+                                <a class="btn btn-solid" href="#">sign up</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
             </div>
         </div>
