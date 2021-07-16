@@ -24,7 +24,7 @@ $timezone = Auth::user()->timezone;
                                     <p>#{{$order->order_number}}</p>
                                 </div>
                             </div>
-                            @if(isset($order->vendors) && $order->vendors->first()->dispatch_traking_url !=null)
+                            @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null)
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <h5 class="mt-0">Tracking ID:</h5>
@@ -70,7 +70,7 @@ $timezone = Auth::user()->timezone;
                                     @endforeach
                                 </ul>
                             </div>
-                            @if(isset($order->vendors) && $order->vendors->first()->delivery_fee > 0.00)
+                            @if(isset($order->vendors) && isset($order->vendors->first()->delivery_fee) && $order->vendors->first()->delivery_fee > 0.00)
                                 <div class="col-lg-6">
                                     <ul class="list-unstyled">
                                         @foreach($dispatcher_status_options as $dispatcher_status_option)
