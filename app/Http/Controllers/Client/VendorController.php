@@ -422,7 +422,8 @@ class VendorController extends BaseController
     {
         $vendor = Vendor::where('id', $id)->first();
         $msg = 'Order configuration';
-
+        $vendor->show_slot         = ($request->has('show_slot') && $request->show_slot == 'on') ? 1 : 0;
+        
         if ($request->has('order_pre_time')) {
             $vendor->order_min_amount   = $request->order_min_amount;
             $vendor->order_pre_time     = $request->order_pre_time;
