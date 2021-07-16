@@ -140,7 +140,7 @@
             <div class="page-title-box d-flex align-items-center justify-content-between">
                 <h4 class="page-title">Orders</h4>
                 <a class="return-btn" href="{{route('backend.order.returns',['Pending'])}}">
-                    <b>Return Request <span>({{$return_requests}})</span> 
+                    <b>Return Request  <sup class="total-items">({{$return_requests}})</sup>
                         <i class="fa fa-arrow-circle-right ml-1" aria-hidden="true"></i>
                     </b>
                 </a>

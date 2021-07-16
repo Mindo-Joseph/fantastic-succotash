@@ -158,7 +158,7 @@
 <div id="add-vendor-subscription" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addVendorSubscription_Label" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header border-bottom">
                 <h4 class="modal-title">Add Plan</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
@@ -169,8 +169,8 @@
                         <div class="col-md-12">
                             <div class="row mb-2">
                                 <div class="col-md-12">
+                                    <label>Upload Image</label>
                                     <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="" />
-                                    <p class="text-muted text-center mt-2 mb-0">Upload Image</p>
                                 </div> 
                             </div>
 

@@ -106,7 +106,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <div class="form-group mb-0 text-center">
+                                    <div class="form-group mb-0 mt-3 text-center">
                                         <button class="btn btn-primary btn-block" type="submit">Log In </button>
                                     </div>
                                 </div>
@@ -127,11 +127,11 @@
             <!-- Auth fluid right content -->
             <div class="auth-fluid-right text-center">
                 <div class="auth-user-testimonial">
-                    <h2 class="mb-3 text-white">I love the color!</h2>
-                    <p class="lead"><i class="mdi mdi-format-quote-open"></i> I've been using your theme from the previous developer for our web app, once I knew new version is out, I immediately bought with no hesitation. Great themes, good documentation with lots of customization available and sample app that really fit our need. <i class="mdi mdi-format-quote-close"></i>
+                    <h2 class="mb-3 text-white">Lorem ipsum dolor sit amet.</h2>
+                    <p class="lead"><i class="mdi mdi-format-quote-open"></i> Lorem ipsum dolor sit amet consectetur adipisicing elit. A provident optio nostrum dolores ipsa odio et harum, unde facere molestiae, asperiores explicabo quidem aspernatur inventore amet ab officiis nesciunt magnam? <i class="mdi mdi-format-quote-close"></i>
                     </p>
                     <h5 class="text-white">
-                        - Fadlisaad (Ubold Admin User)
+                        - lorem (Admin User)
                     </h5>
                 </div> <!-- end auth-user-testimonial-->
             </div>
