@@ -18,7 +18,7 @@ use App\Http\Controllers\Client\BaseController;
 use App\Models\{Client, ClientPreference, SmsProvider, Currency, Language, Country, User, SubscriptionPlansUser, SubscriptionPlanFeaturesUser,  SubscriptionFeaturesListUser};
 use Carbon\Carbon;
 
-class UserSubscriptionController extends BaseController
+class SubscriptionPlansUserController extends BaseController
 {
     use ApiResponser;
     private $folderName = '/subscriptions/image';
@@ -41,7 +41,7 @@ class UserSubscriptionController extends BaseController
      */
     public function getSubscriptionPlans(Request $request, $domain = '')
     {
-        $sub_plans = SubscriptionPlansUser::with(['features.feature'])->get();
+        $sub_plans = SubscriptionPlansUser::with(['features.feature'])->orderBy('sort_order', 'asc')->get();
         $featuresList = SubscriptionFeaturesListUser::where('status', 1)->get();
         if($sub_plans){
             foreach($sub_plans as $plan){
@@ -73,7 +73,8 @@ class UserSubscriptionController extends BaseController
             'title' => 'required|string|max:50',
             'features' => 'required',
             'price' => 'required',
-            'period' => 'required'
+            'period' => 'required',
+            'sort_order' => 'required'
         );
         if(!empty($slug)){
             $plan = SubscriptionPlansUser::where('slug', $slug)->firstOrFail();
@@ -94,6 +95,7 @@ class UserSubscriptionController extends BaseController
         $plan->title = $request->title;
         $plan->price = $request->price;
         $plan->period = $request->period;
+        $plan->sort_order = $request->sort_order;
         $plan->status = ($request->has('status') && $request->status == 'on') ? '1' : '0';
         if ($request->hasFile('image')) {
             $file = $request->file('image');

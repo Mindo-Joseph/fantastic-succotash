@@ -152,17 +152,19 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('updateAll', 'Client\PaymentOptionController@updateAll')->name('payoption.updateAll');
     Route::resource('inquiry', 'Client\ProductInquiryController');
     Route::get('inquiry/filter', [ProductInquiryController::class, 'show'])->name('inquiry.filter');
-    Route::get('subscription/plans/user', 'Client\UserSubscriptionController@getSubscriptionPlans')->name('subscription.plans.user');
-    Route::post('subscription/plan/save/user/{slug?}', 'Client\UserSubscriptionController@saveSubscriptionPlan')->name('subscription.plan.save.user');
-    Route::get('subscription/plan/edit/user/{slug}', 'Client\UserSubscriptionController@editSubscriptionPlan')->name('subscription.plan.edit.user');
-    Route::get('subscription/plan/delete/user/{slug}', 'Client\UserSubscriptionController@deleteSubscriptionPlan')->name('subscription.plan.delete.user');
-    Route::post('subscription/plan/updateStatus/user/{slug}', 'Client\UserSubscriptionController@updateSubscriptionPlanStatus')->name('subscription.plan.updateStatus.user');
-    Route::get('subscriptions/vendors', 'Client\SubscriptionController@vendorSubscriptions')->name('subscriptions.vendors');
-    Route::post('subscriptions/vendors/save/{slug?}', 'Client\SubscriptionController@saveVendorSubscription')->name('subscriptions.saveVendorSubscription');
-    Route::get('subscriptions/vendors/edit/{slug}', 'Client\SubscriptionController@editVendorSubscription')->name('subscriptions.editVendorSubscription');
-    Route::get('subscriptions/vendors/delete/{slug}', 'Client\SubscriptionController@deleteVendorSubscription')->name('subscriptions.deleteVendorSubscription');
-    Route::post('subscriptions/vendors/updateStatus/{slug}', 'Client\SubscriptionController@updateVendorSubscriptionStatus')->name('subscriptions.updateVendorSubscriptionStatus');
-    Route::post('subscriptions/vendors/updateOnRequest/{slug}', 'Client\SubscriptionController@updateVendorSubscriptionOnRequest')->name('subscriptions.updateVendorSubscriptionOnRequest');
+    
+    Route::get('subscription/plans/user', 'Client\SubscriptionPlansUserController@getSubscriptionPlans')->name('subscription.plans.user');
+    Route::post('subscription/plan/save/user/{slug?}', 'Client\SubscriptionPlansUserController@saveSubscriptionPlan')->name('subscription.plan.save.user');
+    Route::get('subscription/plan/edit/user/{slug}', 'Client\SubscriptionPlansUserController@editSubscriptionPlan')->name('subscription.plan.edit.user');
+    Route::get('subscription/plan/delete/user/{slug}', 'Client\SubscriptionPlansUserController@deleteSubscriptionPlan')->name('subscription.plan.delete.user');
+    Route::post('subscription/plan/updateStatus/user/{slug}', 'Client\SubscriptionPlansUserController@updateSubscriptionPlanStatus')->name('subscription.plan.updateStatus.user');
+    Route::get('subscription/plans/vendor', 'Client\SubscriptionPlansVendorController@getSubscriptionPlans')->name('subscription.plans.vendor');
+    Route::post('subscription/plan/save/vendor/{slug?}', 'Client\SubscriptionPlansVendorController@saveSubscriptionPlan')->name('subscription.plan.save.vendor');
+    Route::get('subscription/plan/edit/vendor/{slug}', 'Client\SubscriptionPlansVendorController@editSubscriptionPlan')->name('subscription.plan.edit.vendor');
+    Route::get('subscription/plan/delete/vendor/{slug}', 'Client\SubscriptionPlansVendorController@deleteSubscriptionPlan')->name('subscription.plan.delete.vendor');
+    Route::post('subscription/plan/updateStatus/vendor/{slug}', 'Client\SubscriptionPlansVendorController@updateSubscriptionPlanStatus')->name('subscription.plan.updateStatus.vendor');
+    Route::post('subscription/plan/updateOnRequest/vendor/{slug}', 'Client\SubscriptionPlansVendorController@updateSubscriptionPlanOnRequest')->name('subscription.plan.updateOnRequest.vendor');
+
     Route::get('/admin/signup', 'Client\AdminSignUpController@index')->name('admin.signup');
     // pickup & delivery 
     Route::group(['prefix' => 'vendor/dispatcher'], function () {

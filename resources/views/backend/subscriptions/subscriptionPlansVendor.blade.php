@@ -22,11 +22,11 @@
             <div class="row align-items-center">
                 <div class="col-sm-6">
                     <div class="page-title-box">
-                        <h4 class="page-title">Vendor Subscriptions</h4>
+                        <h4 class="page-title">Vendor Subscription Plans</h4>
                     </div>
                 </div>
                 <div class="col-sm-6 text-sm-right">
-                    <button class="btn btn-info waves-effect waves-light text-sm-right" data-toggle="modal" data-target="#add-vendor-subscription">
+                    <button class="btn btn-info waves-effect waves-light text-sm-right" data-toggle="modal" data-target="#add-subscription-plan">
                         <i class="mdi mdi-plus-circle mr-1"></i> Add Plan
                     </button>
                 </div>
@@ -95,7 +95,7 @@
                             <div class="table-responsive">
                                 <div class="table-responsive">
                                     <form name="saveOrder" id="saveOrder"> @csrf </form>
-                                    <table class="table table-centered table-nowrap table-striped" id="subscriptions-datatable">
+                                    <table class="table table-centered table-nowrap table-striped" id="sub-plans-datatable">
                                         <thead>
                                             <tr>
                                                 <th>Image</th>
@@ -110,30 +110,30 @@
                                             </tr>
                                         </thead>
                                         <tbody id="subscriptions_list">
-                                            @foreach($vendor_subscriptions as $sub)
+                                            @foreach($subscription_plans as $plan)
                                             <?php 
                                             ?>
-                                            <tr data-row-id="{{$sub->slug}}">
+                                            <tr data-row-id="{{$plan->slug}}">
                                                 <td> 
-                                                    <img src="{{$sub->image['proxy_url'].'40/40'.$sub->image['image_path']}}" class="rounded-circle" alt="{{$sub->slug}}" >
+                                                    <img src="{{$plan->image['proxy_url'].'40/40'.$plan->image['image_path']}}" class="rounded-circle" alt="{{$plan->slug}}" >
                                                 </td>
-                                                <td><a href="javascript:void(0)" class="editVendorSubscriptionBtn" data-id="{{$sub->slug}}">{{$sub->title}}</a></td>
-                                                <td>{{$sub->Description}}</td>
-                                                <td>${{$sub->price}}</td>
-                                                <td>{{$sub->features}}</td>
-                                                <td>{{$sub->validity->name}}</td>
+                                                <td><a href="javascript:void(0)" class="editSubscriptionPlanBtn" data-id="{{$plan->slug}}">{{$plan->title}}</a></td>
+                                                <td>{{$plan->Description}}</td>
+                                                <td>${{$plan->price}}</td>
+                                                <td>{{$plan->features}}</td>
+                                                <td>{{$plan->period}} days</td>
                                                 <td>
-                                                    <input type="checkbox" data-id="{{$sub->slug}}" data-plugin="switchery" name="vendorSubscriptionStatus" class="chk_box status_check" data-color="#43bee1" {{($sub->status == 1) ? 'checked' : ''}} >
+                                                    <input type="checkbox" data-id="{{$plan->slug}}" data-plugin="switchery" name="vendorSubscriptionStatus" class="chk_box status_check" data-color="#43bee1" {{($plan->status == 1) ? 'checked' : ''}} >
                                                 </td>
                                                 <td>
-                                                    <input type="checkbox" data-id="{{$sub->slug}}" data-plugin="switchery" name="vendorSubscriptionOnRequest" class="chk_box on_request_check" data-color="#43bee1" {{($sub->on_request == 1) ? 'checked' : ''}} >
+                                                    <input type="checkbox" data-id="{{$plan->slug}}" data-plugin="switchery" name="vendorSubscriptionOnRequest" class="chk_box on_request_check" data-color="#43bee1" {{($plan->on_request == 1) ? 'checked' : ''}} >
                                                 </td>
                                                 <td> 
                                                     <div class="form-ul" style="width: 60px;">
                                                         <div class="inner-div" >
                                                             @if(Auth::user()->is_superadmin == 1)
-                                                                <a href="javascript:void(0)" class="action-icon editVendorSubscriptionBtn" data-id="{{$sub->slug}}"><i class="mdi mdi-square-edit-outline"></i></a>
-                                                                <a href="{{route('subscriptions.deleteVendorSubscription', $sub->slug)}}" onclick="return confirm('Are you sure? You want to delete the subscription plan.')" class="action-icon"> <i class="mdi mdi-delete" title="Delete subscription plan"></i></a>
+                                                                <a href="javascript:void(0)" class="action-icon editSubscriptionPlanBtn" data-id="{{$plan->slug}}"><i class="mdi mdi-square-edit-outline"></i></a>
+                                                                <a href="{{route('subscription.plan.delete.vendor', $plan->slug)}}" onclick="return confirm('Are you sure? You want to delete the subscription plan.')" class="action-icon"> <i class="mdi mdi-delete" title="Delete subscription plan"></i></a>
                                                             @endif    
                                                         </div>
                                                     </div>
@@ -155,14 +155,14 @@
 
 </div> <!-- container -->
 
-<div id="add-vendor-subscription" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addVendorSubscription_Label" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div id="add-subscription-plan" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addVendorSubscription_Label" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h4 class="modal-title">Add Plan</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <form id="vendor_subscription_form" method="post" enctype="multipart/form-data" action="{{ route('subscriptions.saveVendorSubscription') }}">
+            <form id="vendor_subscription_form" method="post" enctype="multipart/form-data" action="{{ route('subscription.plan.save.vendor') }}">
                 @csrf
                 <div class="modal-body" >
                     <div class="row">
@@ -194,7 +194,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group" id="nameInput">
                                         {!! Form::label('title', 'Title',['class' => 'control-label']) !!} 
-                                        {!! Form::text('title', null, ['class'=>'form-control']) !!}
+                                        {!! Form::text('title', null, ['class'=>'form-control', 'required'=>'required']) !!}
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
@@ -203,9 +203,9 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Features</label>
-                                        <select class="form-control select2-multiple" name="features[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                                        <select class="form-control select2-multiple" name="features[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ..." required="required">
                                             @foreach($features as $feature)
-                                                <option value="{{$feature->id}}" {{ (isset($sub->feature_id) && in_array($feature->id, $subFeatures)) ? "selected" : "" }}> {{$feature->title}} </option>
+                                                <option value="{{$feature->id}}"> {{$feature->title}} </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -215,17 +215,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Price</label>
-                                        <input class="form-control" type="number" name="price" min="0">
+                                        <input class="form-control" type="number" name="price" min="0" required="required">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="">Validity</label>
-                                        <select class="form-control" name="validity">
-                                            @foreach($validities as $val)
-                                                <option value="{{$val->id}}"> {{$val->name}} </option>
-                                            @endforeach
-                                        </select>
+                                        <label for="">Validity (In days)</label>
+                                        <input class="form-control" type="number" name="period" min="0" required="required">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -246,7 +242,7 @@
     </div>
 </div>
 
-<div id="edit-vendor-subscription" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editVendorSubscription_Label" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div id="edit-subscription-plan" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editVendorSubscription_Label" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
         </div>
@@ -258,28 +254,28 @@
 @section('script')
 
 <script>
-    var edit_subscription_url = "{{ route('subscriptions.editVendorSubscription', ':id') }}";
-    var update_subscription_status_url = "{{route('subscriptions.updateVendorSubscriptionStatus', ':id')}}";
-    var update_subscription_onrequest_url = "{{route('subscriptions.updateVendorSubscriptionOnRequest', ':id')}}";
+    var edit_subscription_url = "{{ route('subscription.plan.edit.vendor', ':id') }}";
+    var update_subscription_status_url = "{{route('subscription.plan.updateStatus.vendor', ':id')}}";
+    var update_subscription_onrequest_url = "{{route('subscription.plan.updateOnRequest.vendor', ':id')}}";
 
-    $(document).delegate(".editVendorSubscriptionBtn", "click", function(){
+    $(document).delegate(".editSubscriptionPlanBtn", "click", function(){
         let slug = $(this).attr("data-id");
         $.ajax({
             type: "get",
             dataType: "json",
             url: edit_subscription_url.replace(":id", slug),
             success: function(res) {
-                $("#edit-vendor-subscription .modal-content").html(res.html);
-                $("#edit-vendor-subscription").modal("show");
-                $('#edit-vendor-subscription .select2-multiple').select2();
-                $('#edit-vendor-subscription .dropify').dropify();
-                var switchery1 = new Switchery($("#edit-vendor-subscription .status")[0]);
-                var switchery2 = new Switchery($("#edit-vendor-subscription .on_request")[0]);
+                $("#edit-subscription-plan .modal-content").html(res.html);
+                $("#edit-subscription-plan").modal("show");
+                $('#edit-subscription-plan .select2-multiple').select2();
+                $('#edit-subscription-plan .dropify').dropify();
+                var switchery1 = new Switchery($("#edit-subscription-plan .status")[0]);
+                var switchery2 = new Switchery($("#edit-subscription-plan .on_request")[0]);
             }
         });
     });
 
-    $("#subscriptions-datatable .status_check").on("change", function() {
+    $("#sub-plans-datatable .status_check").on("change", function() {
         var slug = $(this).attr('data-id');
         var status = 0;
         if($(this).is(":checked")){
@@ -301,7 +297,7 @@
         });
     });
 
-    $("#subscriptions-datatable .on_request_check").on("change", function() {
+    $("#sub-plans-datatable .on_request_check").on("change", function() {
         var slug = $(this).attr('data-id');
         var on_request = 0;
         if($(this).is(":checked")){
