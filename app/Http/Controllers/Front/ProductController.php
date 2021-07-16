@@ -112,6 +112,12 @@ class ProductController extends FrontController
                 $is_inwishlist_btn = $category_detail ? $category_detail->show_wishlist : 0;
             }
         }
+        // $cart = Cart::where('user_id', $user->id)->first();
+        // $quantity = 1;
+        // if($cart){
+        //     $cart_product = CartProduct::where('product_id', $p_id)->where('cart_id', $cart->id)->first();
+        //     if($cart_product){ $quantity = $cart_product->quantity;}
+        // }
         return view('frontend.product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn]);
     }
     public function metaProduct($langId, $multiplier, $for = 'relate', $productArray = []){

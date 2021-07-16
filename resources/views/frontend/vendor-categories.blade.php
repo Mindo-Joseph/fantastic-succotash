@@ -121,7 +121,7 @@
                                                     <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                                 </a>
                                                 <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                                    {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
+                                                    {{ Session::get('currencySymbol').' '.(number_format($new['variant'][0]['price'] * $multiply,2))}} </h4>
                                             </div>
                                         </div>
                                     @endforeach

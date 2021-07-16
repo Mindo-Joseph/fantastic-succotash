@@ -331,7 +331,7 @@ class VendorController extends BaseController
 
         if ($categories) {
             $build = $this->buildTree($categories->toArray());
-            $tree = $this->printTree($build, 'vendor');
+            $tree = $this->printTree($build, 'vendor', $active);
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
         $addons = AddonSet::with('option')->select('id', 'title', 'min_select', 'max_select', 'position')
@@ -424,8 +424,10 @@ class VendorController extends BaseController
         $msg = 'Order configuration';
         $vendor->show_slot         = ($request->has('show_slot') && $request->show_slot == 'on') ? 1 : 0;
         
-        if ($request->has('order_pre_time')) {
+        if ($request->has('order_min_amount')) {
             $vendor->order_min_amount   = $request->order_min_amount;
+        }
+        if ($request->has('order_pre_time')) {
             $vendor->order_pre_time     = $request->order_pre_time;
             $vendor->auto_reject_time   = $request->auto_reject_time;
         }
