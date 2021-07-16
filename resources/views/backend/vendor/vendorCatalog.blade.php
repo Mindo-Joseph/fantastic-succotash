@@ -127,7 +127,7 @@
                                                         @endif
                                                     </td>
                                                     <td> <a href="{{ route('product.edit', $product->id) }}" target="_blank">{{ Str::limit((isset($product->primary->title) && !empty($product->primary->title)) ? $product->primary->title : '' , 30)}}</a> </td>
-                                                    <td> {{ $product->category ? $product->category->cat->slug: 'N/A' }}</td>
+                                                    <td> {{ $product->category ? $product->category->cat->name: 'N/A' }}</td>
                                                     <td> {{ !empty($product->brand) ? $product->brand->title : 'N/A'  }}</td>
                                                     <td> {{ $product->variant->first() ? $product->variant->first()->quantity : 0 }}</td>
                                                     <td> {{ $product->variant->first() ? $product->variant->first()->price : 0 }}</td>
@@ -197,7 +197,7 @@
 
                                 <div class="col-12 mb-2" style="cursor: not-allowed;">
                                     <div class="form-group" id="">
-                                        {!! Form::label('title', 'Url Slug',['class' => 'control-label']) !!}
+                                        {!! Form::label('title', 'URL Slug',['class' => 'control-label']) !!}
                                         {!! Form::text('product_url', null, ['class'=>'form-control', 'id' => 'product_url', 'placeholder' => 'Apple iMac', 'style' => 'pointer-events:none;']) !!}
                                     </div>
                                 </div>

@@ -158,9 +158,7 @@
                                     @if($product->inquiry_only == 0)
                                         <div class="product-description border-product">
                                             <h6 class="product-title mt-0">quantity: 
-                                                @if($product->variant[0]->quantity > 0)
-                                                    <span id="instock" style="color: green;">In Stock ({{$product->variant[0]->quantity}})</span>
-                                                @else
+                                                @if(!$product->variant[0]->quantity > 0)
                                                     <span id="outofstock" style="color: red;">Out of Stock</span>
                                                 @endif
                                             </h6>

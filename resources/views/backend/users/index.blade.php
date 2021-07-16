@@ -32,7 +32,7 @@
         </div>
         <div class="col-sm-6 text-right">
             <button class="btn btn-info waves-effect waves-light text-sm-right addUserModal"
-                userId="0" style=""><i class="mdi mdi-plus-circle mr-1"></i> Add
+                userId="0" ><i class="mdi mdi-plus-circle mr-1"></i> Add
             </button>
         </div>
     </div>
@@ -102,8 +102,8 @@
                                     <th>Login Type</th>
                                     <th>Email/Auth-id</th>
                                     <th>Phone</th>
-                                    <th>Email Otp</th>
-                                    <th>Phone Otp</th>
+                                    <th>Email OTP</th>
+                                    <th>Phone OTP</th>
                                     <th>Orders</th>
                                     <th>Active Orders</th>
                                     <th>Status</th>
@@ -203,7 +203,6 @@
                     {data: 'status', name: 'status', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
                         if(full.status == 1){
                             return "<input type='checkbox' data-id='"+full.id+"' id='cur_"+full.id+"' data-plugin='switchery' name='userAccount' class='chk_box' data-color='#43bee1' checked>";
-
                         }else{
                             return "<input type='checkbox' data-id='"+full.id+"' id='cur_"+full.id+"' data-plugin='switchery' name='userAccount' class='chk_box' data-color='#43bee1'>";
                         }

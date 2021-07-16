@@ -261,7 +261,7 @@
         temp.val(url).select();
         document.execCommand("copy");
         temp.remove();
-        $("#copy_message").text("Url Copied!").show(); 
+        $("#copy_message").text("URL Copied!").show(); 
         setTimeout(function(){ 
             $("#copy_message").text('').hide(); 
         }, 3000);
