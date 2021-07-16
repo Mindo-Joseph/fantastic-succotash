@@ -17,7 +17,17 @@ class ClientPreferenceController extends BaseController{
         $smsTypes = SmsProvider::where('status', '1')->get();
         $ClientPreference = ClientPreference::where('client_code',$client->code)->first();
         $preference = $ClientPreference ? $ClientPreference : new ClientPreference();
-        return view('backend/setting/config')->with(['client' => $client, 'preference' => $preference, 'mapTypes'=> $mapTypes, 'smsTypes' => $smsTypes]);
+        if($preference->reffered_by_amount == null){
+            $reffer_by = 0;
+        }else{
+            $reffer_by = $preference->reffered_by_amount;
+        }
+        if($preference->reffered_to_amount == null){
+            $reffer_to = 0;
+        }else{
+            $reffer_to = $preference->reffered_to_amount;
+        }
+        return view('backend/setting/config')->with(['client' => $client, 'reffer_by' => $reffer_by, 'reffer_to' => $reffer_to, 'preference' => $preference, 'mapTypes'=> $mapTypes, 'smsTypes' => $smsTypes]);
     }
 
     public function getCustomizePage(ClientPreference $clientPreference){
@@ -42,17 +52,7 @@ class ClientPreferenceController extends BaseController{
         foreach ($preference->language as $value) {
             $cli_langs[] = $value->language_id;
         }
-        if($preference->reffered_by_amount == null){
-            $reffer_by = 0;
-        }else{
-            $reffer_by = $preference->reffered_by_amount;
-        }
-        if($preference->reffered_to_amount == null){
-            $reffer_to = 0;
-        }else{
-            $reffer_to = $preference->reffered_to_amount;
-        }
-        return view('backend.setting.customize', compact('client', 'cli_langs','reffer_by','languages','reffer_to','currencies','preference','cli_currs','curtableData', 'webTemplates', 'appTemplates','primaryCurrency','social_media_details'));
+        return view('backend.setting.customize', compact('client', 'cli_langs','languages','currencies','preference','cli_currs','curtableData', 'webTemplates', 'appTemplates','primaryCurrency','social_media_details'));
     }
 
     public function referandearnUpdate(Request $request, $code){
@@ -62,7 +62,7 @@ class ClientPreferenceController extends BaseController{
             $preference->reffered_to_amount = $request->reffered_to_amount;
             $preference->reffered_by_amount = $request->reffered_by_amount;
             $preference->save();
-            return redirect()->route('configure.customize')->with('success', 'Client configurations updated successfully!');
+            return redirect()->route('configure.index')->with('success', 'Client configurations updated successfully!');
         }
     }
 

@@ -122,7 +122,7 @@
                         </div>
 
                         <div class="col-md-4" style="cursor: not-allowed;">
-                            {!! Form::label('title', 'Url Slug',['class' => 'control-label']) !!}
+                            {!! Form::label('title', 'URL Slug',['class' => 'control-label']) !!}
                             {!! Form::text('url_slug', $product->url_slug, ['class'=>'form-control', 'id' => 'url_slug','onkeypress' => "return alplaNumericSlug(event)"]) !!}
                         </div>
 
@@ -173,16 +173,16 @@
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Pricing Information</h5>
                     @if($product->has_variant == 0)
                     <div class="row mb-2">
-                        <div class="col-6 mb-2">
+                        <div class="col-4 mb-2">
                             {!! Form::label('title', 'Price', ['class' => 'control-label']) !!}
                             {!! Form::text('price', $product->variant[0]->price, ['class'=>'form-control', 'id' => 'price', 'placeholder' => '200', 'onkeypress' => 'return isNumberKey(event)']) !!}
                         </div>
-                        <div class="col-6 mb-2">
-                            {!! Form::label('title', 'Compare at price', ['class' => 'control-label']) !!}
+                        <div class="col-4 mb-2">
+                            {!! Form::label('title', 'Compare at price (Optional)', ['class' => 'control-label']) !!}
                             {!! Form::text('compare_at_price', $product->variant[0]->compare_at_price, ['class'=>'form-control', 'id' => 'compare_at_price', 'placeholder' => '200', 'onkeypress' => 'return isNumberKey(event)']) !!}
                         </div>
-                        <div class="col-6 mb-2">
-                            {!! Form::label('title', 'Cost Price', ['class' => 'control-label']) !!}
+                        <div class="col-4 mb-2">
+                            {!! Form::label('title', 'Cost Price (Optional)', ['class' => 'control-label']) !!}
                             {!! Form::text('cost_price', $product->variant[0]->cost_price, ['class'=>'form-control', 'id' => 'cost_price', 'placeholder' => '200', 'onkeypress' => 'return isNumberKey(event)']) !!}
                         </div>
                     </div>
@@ -194,10 +194,12 @@
                         </div>
                         <div class="col-sm-8 check_inventory">
                             <div class="row">
+                            @if($product->has_variant == 0)
                                 <div class="col-sm-6">
                                     {!! Form::label('title', 'Quantity',['class' => 'control-label']) !!}
                                     {!! Form::number('quantity', $product->variant[0]->quantity, ['class'=>'form-control', 'id' => 'quantity', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                 </div>
+                            @endif
                                 <div class="col-sm-6">
                                     {!! Form::label('title', 'Sell When Out Of Stock',['class' => 'control-label']) !!} <br />
                                     <input type="checkbox" bid="" id="sell_stock_out" data-plugin="switchery" name="sell_stock_out" class="chk_box" data-color="#43bee1" @if($product->sell_when_out_of_stock == 1) checked @endif>
@@ -250,7 +252,7 @@
                                     <th>Price</th>
                                     <th>Compare at price</th>
                                     <th>Cost Price</th>
-                                    <th>Quantity</th>
+                                    <th class="check_inventory">Quantity</th>
                                     <th>Action</th>
                                 </thead>
                                 <tbody id="product_tbody_{{$product->id}}">
@@ -294,8 +296,8 @@
                                         <td>
                                             <input type="text" style="width: 70px;" name="variant_cost_price[]" value="{{$varnt->cost_price}}" onkeypress="return isNumberKey(event)">
                                         </td>
-                                        <td>
-                                            <input type="text" style="width: 70px;" name="variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
+                                        <td class="check_inventory">
+                                            <input type="text" style="width: 70px;"  name="variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
                                         </td>
                                         <td>
                                             <a href="javascript:void(0);" data-varient_id="{{$varnt->id}}" class="action-icon deleteExistRow">

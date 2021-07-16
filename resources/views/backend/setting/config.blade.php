@@ -109,7 +109,7 @@
                      </div>
 
                      <div class="form-group mt-3 mb-0 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
-                        <label for="delivery_service_key_url">Royo Dispatcher Url</label>
+                        <label for="delivery_service_key_url">Royo Dispatcher URL</label>
                         <input type="text" name="delivery_service_key_url" id="delivery_service_key_url" placeholder="" class="form-control" value="{{ old('delivery_service_key_url', $preference->delivery_service_key_url ?? '')}}">
                         @if($errors->has('delivery_service_key_url'))
                         <span class="text-danger" role="alert">
@@ -159,7 +159,7 @@
                      </div>
 
                      <div class="form-group mt-3 mb-0 dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_ride == '1')) ? '' : 'display:none;'}}">
-                        <label for="pickup_delivery_service_key_url">Royo Dispatcher Url</label>
+                        <label for="pickup_delivery_service_key_url">Royo Dispatcher URL</label>
                         <input type="text" name="pickup_delivery_service_key_url" id="pickup_delivery_service_key_url" placeholder="" class="form-control" value="{{ old('pickup_delivery_service_key_url', $preference->pickup_delivery_service_key_url ?? '')}}">
                         @if($errors->has('pickup_delivery_service_key_url'))
                         <span class="text-danger" role="alert">
@@ -244,7 +244,7 @@
                   </div>
                   <div class="col-12">
                      <div class="form-group mb-0">
-                        <label for="fb_client_url">Facebook Redirect Url</label>
+                        <label for="fb_client_url">Facebook Redirect URL</label>
                         <input type="text" name="fb_client_url" id="fb_client_url" placeholder="" class="form-control" value="{{ old('fb_client_url', $preference->fb_client_url ?? '')}}">
                         @if($errors->has('fb_client_url'))
                         <span class="text-danger" role="alert">
@@ -296,7 +296,7 @@
                   </div>
                   <div class="col-12">
                      <div class="form-group mb-0">
-                        <label for="twitter_client_url">Twitter Redirect Url</label>
+                        <label for="twitter_client_url">Twitter Redirect URL</label>
                         <input type="text" name="twitter_client_url" id="twitter_client_url" placeholder="" class="form-control" value="{{ old('twitter_client_url', $preference->twitter_client_url ?? '')}}">
                         @if($errors->has('twitter_client_url'))
                         <span class="text-danger" role="alert">
@@ -347,7 +347,7 @@
                   </div>
                   <div class="col-md-12">
                      <div class="form-group mb-0">
-                        <label for="google_client_url">Google Redirect Url</label>
+                        <label for="google_client_url">Google Redirect URL</label>
                         <input type="text" name="google_client_url" id="google_client_url" placeholder="" class="form-control" value="{{ old('google_client_url', $preference->google_client_url ?? '')}}">
                         @if($errors->has('google_client_url'))
                         <span class="text-danger" role="alert">
@@ -398,7 +398,7 @@
                   </div>
                   <div class="col-12">
                      <div class="form-group mb-0">
-                        <label for="apple_client_url"> Apple Redirect Url</label>
+                        <label for="apple_client_url"> Apple Redirect URL</label>
                         <input type="text" name="apple_client_url" id="apple_client_url" placeholder="" class="form-control" value="{{ old('apple_client_url', $preference->apple_client_url ?? '')}}">
                         @if($errors->has('apple_client_url'))
                         <span class="text-danger" role="alert">
@@ -770,6 +770,27 @@
       </div>
    </form>
 
+   <div class="row">
+   <div class="col-lg-3 col-lg-3 mb-3">
+            <form method="POST" class="h-100" action="{{route('referandearn.update', Auth::user()->code)}}">
+                @csrf
+                <div class="card-box mb-0 h-100 pb-1">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h4 class="header-title mb-0">Refer and Earn</h4>
+                        <button class="btn btn-info d-block" type="submit"> Save </button>
+                    </div>
+                    <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-4" id="addCur-160">
+                        <label class="primaryCurText">Referred To Amount = </label>
+                        <input class="form-control" type="number" id="reffered_to_amount" name="reffered_to_amount" value="{{ old('reffered_to_amount', $reffer_to ?? '')}}" min="0">
+                    </div>
+                    <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-3" id="addCur-160">
+                        <label class="primaryCurText">Referred By Amount = </label>
+                        <input class="form-control" type="number" name="reffered_by_amount" id="reffered_by_amount" value="{{ old('reffered_by_amount', $reffer_by ?? '')}}" min="0">
+                    </div>
+                </div>
+            </form>
+        </div>
+   </div>
    <div style="display:none;">
       <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
          @csrf

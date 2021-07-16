@@ -14,7 +14,7 @@
                  <div class="row">
                     <div class="col-md-6">
                          <div class="form-group" id="slugInputEdit">
-                            {!! Form::label('title', 'Url Slug',['class' => 'control-label']) !!} 
+                            {!! Form::label('title', 'URL Slug',['class' => 'control-label']) !!} 
                             {!! Form::text('slug', $category->slug, ['class'=>'form-control','id' => 'slug', 'onkeypress' => "return alphaNumeric(event)"]) !!}
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>

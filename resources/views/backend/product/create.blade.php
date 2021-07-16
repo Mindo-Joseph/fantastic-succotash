@@ -73,7 +73,7 @@
                         </div>
 
                         <div class="col-6" style="cursor: not-allowed;">
-                            {!! Form::label('title', 'Url Slug',['class' => 'control-label']) !!}
+                            {!! Form::label('title', 'URL Slug',['class' => 'control-label']) !!}
                             {!! Form::text('product_url', null, ['class'=>'form-control', 'id' => 'product_url', 'placeholder' => 'Apple iMac', 'style' => 'pointer-events:none;']) !!}
                         </div>
 

@@ -751,8 +751,8 @@ class LanguageTableSeeder extends Seeder
             ),
             array(
                 "sort_code" => "es",
-                "name" => "Spanish; Castilian",
-                "nativeName" => "español, castellano"
+                "name" => "Spanish",
+                "nativeName" => "español"
             ),
             array(
                 "sort_code" => "su",
