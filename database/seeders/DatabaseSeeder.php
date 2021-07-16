@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
               OrderStatusSeeder::class,
               DispatcherStatusOptionSeeder::class,
               SubscriptionFeaturesListUserSeeder::class,
+              SubscriptionFeaturesListVendorSeeder::class,
               SubscriptionStatusOptionsSeeder::class
           ]);
         // $this->call(UsersTableSeeder::class);
