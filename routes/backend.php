@@ -10,6 +10,7 @@ use App\Http\Controllers\Client\Accounting\OrderController;
 use App\Http\Controllers\Client\Accounting\VendorController;
 use App\Http\Controllers\Client\Accounting\LoyaltyController;
 use App\Http\Controllers\Client\Accounting\PromoCodeController;
+use App\Http\Controllers\Client\VendorRegistrationDocumentController;
 
 Route::get('email-test', function(){
     $details['email'] = 'pankaj@yopmail.com';
@@ -84,6 +85,11 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::resource('brand', 'Client\BrandController');
     Route::post('brand/order', 'Client\BrandController@updateOrders')->name('brand.order');
     Route::resource('cms', 'Client\CmsController');
+    Route::resource('vendorregistrationdocument', 'Client\VendorRegistrationDocumentController');
+     Route::get('vendor/registration/document/edit', [VendorRegistrationDocumentController::class, 'show'])->name('vendor.registration.document.edit');
+    Route::post('vendorregistrationdocument/create', [VendorRegistrationDocumentController::class, 'store'])->name('vendor.registration.document.create');
+    Route::post('vendorregistrationdocument/update', [VendorRegistrationDocumentController::class, 'update'])->name('vendor.registration.document.update');
+    Route::post('vendor/registration/document/delete', [VendorRegistrationDocumentController::class, 'destroy'])->name('vendor.registration.document.delete');
     Route::resource('tax', 'Client\TaxCategoryController');
     Route::resource('taxRate', 'Client\TaxRateController');
     Route::resource('addon', 'Client\AddonSetController');

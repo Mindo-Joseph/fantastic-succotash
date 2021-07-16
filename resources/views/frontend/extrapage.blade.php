@@ -151,6 +151,31 @@
                                     @endif
                                 </div>
                             @endif
+                            <div class="form-row">
+                                @foreach($vendor_registration_documents as $vendor_registration_document)
+                                <div class="col-md-6 mb-3">
+                                    <label for="">{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</label>
+                                    <div class="file file--upload">
+                                        <label for="input_file_logo_{{$vendor_registration_document->id}}">
+                                            <span class="update_pic">
+                                                <img src="" id="upload_logo_preview_{{$vendor_registration_document->id}}">
+                                            </span>
+                                            <span class="plus_icon">
+                                                <i class="fas fa-plus"></i>
+                                            </span>
+                                        </label>
+                                        @if(strtolower($vendor_registration_document->file_type) == 'image')
+                                            <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="vendor_registration_document[]" accept="image/*" data-rel="{{$vendor_registration_document->id}}">
+                                        @else
+                                        <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="vendor_registration_document[]" accept=".pdf,.doc" data-rel="{{$vendor_registration_document->id}}">
+                                        @endif
+                                    </div>
+                                </div>      
+                                 @endforeach   
+                            </div>
+                            <div class="col-md-12">
+                                    <label for="html">I accept the <a href="{{url('extra-page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and and have read the <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> Privacy Policy.</a></label>
+                            </div>
                             <button class="btn btn-solid mt-3 w-100" dir="ltr" data-style="expand-right" id="register_btn" type="button">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="register_btn_loader" style="display:none !important;"></span>
                                 <span class="ladda-label">Submit</span>
@@ -189,6 +214,10 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+        $(document).on('change', '[id^=input_file_logo_]', function(event){
+            var rel = $(this).data('rel');
+             readURL(this, '#upload_logo_preview_'+rel);
+        });
         $("#input_file_logo").change(function() {
             readURL(this, '#upload_logo_preview');
         });

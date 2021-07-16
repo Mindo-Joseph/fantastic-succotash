@@ -314,7 +314,7 @@
                     </div>
                     <div class="form-group position-relative">
                         <label for="">URL</label>
-                        <input class="form-control" name="url" type="text">
+                        <input class="form-control" name="url" type="text" placeholder="http://www.google.com">
                         <span class="text-danger error-text social_media_url_err"></span>
                     </div>
                 </div>

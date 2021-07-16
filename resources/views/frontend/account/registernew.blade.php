@@ -18,21 +18,21 @@
                         @if(session('preferences')->google_login == 1)
                             <li>
                                 <a href="{{url('auth/google')}}">
-                                    <img src="{{asset('front-assets/images/google.svg')}}" alt="">
+                                    <img src="{{asset('front-assets/images/google.svg')}}">
                                 </a>
                             </li>
                         @endif
                         @if(session('preferences')->fb_login == 1)
                             <li>
                                 <a href="{{url('auth/facebook')}}">
-                                    <img src="{{asset('front-assets/images/facebook.svg')}}" alt="">
+                                    <img src="{{asset('front-assets/images/facebook.svg')}}">
                                 </a>
                             </li>
                         @endif
                         @if(session('preferences')->twitter_login)
                             <li>
                                 <a href="{{url('auth/twitter')}}">
-                                    <img src="{{asset('front-assets/images/twitter.svg')}}" alt="">
+                                    <img src="{{asset('front-assets/images/twitter.svg')}}">
                                 </a>
                             </li>
                         @endif
@@ -96,25 +96,25 @@
                             </div>
                             <div class="row form-group mb-0 align-items-center">
                                 <div class="col-md-12">
-                                    <label for="html">By creating an account you agree to the <a href="{{url('extra-page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and <a href="{{url('extra-page/privacy-policy')}}" target="_blank">Privacy Policy.</a></label>
+                                    <label for="html">I accept the <a href="{{url('extra-page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and and have read the <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> Privacy Policy.</a></label>
                                 </div>
                                 <div class="col-md-6 hide position-absolute">
-                                <label for="">Referral Code</label>
-                                <input type="text" class="form-control" id="refferal_code" placeholder="Refferal Code" name="refferal_code" value="{{ old('refferal_code', $code ?? '')}}">
-                                @if($errors->first('refferal_code'))
-                                <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('refferal_code') }}</strong>
-                                </span>
-                                @endif
+                                    <label for="">Referral Code</label>
+                                    <input type="text" class="form-control" id="refferal_code" placeholder="Refferal Code" name="refferal_code" value="{{ old('refferal_code', $code ?? '')}}">
+                                    @if($errors->first('refferal_code'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('refferal_code') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
-                                </div>
-                                <div class="row mt-3">
+                            </div>
+                            <div class="row mt-3">
                                 <div class="col-md-12">
-                                <input type="hidden" name="device_type" value="web">
-                                <input type="hidden" name="device_token" value="web">
-                                <button type="submit" class="btn btn-solid submitLogin w-100">Create An Account</button>
+                                    <input type="hidden" name="device_type" value="web">
+                                    <input type="hidden" name="device_token" value="web">
+                                    <button type="submit" class="btn btn-solid submitLogin w-100">Create An Account</button>
                                 </div>
-                                </div>                              
+                            </div>                              
                         </form>
                     </div>
                 </div>                        

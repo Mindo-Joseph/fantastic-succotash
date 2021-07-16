@@ -430,7 +430,7 @@
                 </div>
                  <div class="col-12 form-group checkbox-input">
                     <input type="checkbox" id="agree" name="agree" required>
-                    <label for="agree">I agree to share my contact details.</label>
+                     <label for="agree">I accept the <a href="{{url('extra-page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and have read the <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> Privacy Policy.</a></label>
                     <span class="d-block text-danger error-text agreeError"></span>
                 </div>
                 <div class="col-12 mt-2">

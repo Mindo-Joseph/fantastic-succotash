@@ -768,72 +768,127 @@
             </div>
          </div>
       </div>
-   </form>
-
-   <div style="display:none;">
-      <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
-         @csrf
-         <div class="row">
-            <div class="col-xl-11 col-md-offset-1">
-               <div class="card-box">
-                  <h4 class="header-title text-uppercase">Email</h4>
-                  <p class="sub-header">
-                     Choose Email paid plan to whitelable "From email address" and "Sender Name" in the Email sent
-                     out
-                     from your account.
-                  </p>
-                  <div class="row mb-0">
-                     <div class="col-md-6">
-                        <div class="form-group mb-3">
-                           <label for="email_plan">CURRENT SELECTION</label>
-                           <select class="form-control" id="email_plan" name="email_plan">
-                              <option>Select Plan</option>
-                              <option value="free" {{ (isset($preference) && $preference->email_plan =="free")? "selected" : "" }}>
-                                 Free</option>
-                              <option value="paid" {{ (isset($preference) && $preference->email_plan =="paid")? "selected" : "" }}>
-                                 Paid</option>
-                           </select>
-                           @if($errors->has('email_plan'))
-                           <span class="text-danger" role="alert">
-                              <strong>{{ $errors->first('email_plan') }}</strong>
-                           </span>
-                           @endif
+      <div class="row">
+         <div class="col-lg-6 col-lg-3 mb-3">
+            <div class="card-box mb-0 h-100 pb-1">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h4 class="header-title mb-0">Vendor Registration Documents</h4>
+                    <a class="btn btn-info d-block" id="add_vendor_registration_document_modal_btn">
+                        <i class="mdi mdi-plus-circle mr-1"></i>Add
+                    </a>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="post_list">
+                                    @forelse($vendor_registration_documents as $vendor_registration_document)
+                                    <tr>
+                                        <td>
+                                            {{$vendor_registration_document->file_type}}
+                                        </td>
+                                        <td>{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</a>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <div class="inner-div" style="float: left;">
+                                                   <a class="action-icon edit_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}" href="javascript:void(0)">
+                                                        <i class="mdi mdi-square-edit-outline"></i>
+                                                   </a>
+                                                </div>
+                                                <div class="inner-div">
+                                                    <button type="button" class="btn btn-primary-outline action-icon delete_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr align="center">
+                                        <td colspan="4" style="padding: 20px 0">Result not found.</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+   </form>
+<div style="display:none;">
+   <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+      @csrf
+      <div class="row">
+         <div class="col-xl-11 col-md-offset-1">
+            <div class="card-box">
+               <h4 class="header-title text-uppercase">Email</h4>
+               <p class="sub-header">
+                  Choose Email paid plan to whitelable "From email address" and "Sender Name" in the Email sent
+                  out
+                  from your account.
+               </p>
+               <div class="row mb-0">
+                  <div class="col-md-6">
+                     <div class="form-group mb-3">
+                        <label for="email_plan">CURRENT SELECTION</label>
+                        <select class="form-control" id="email_plan" name="email_plan">
+                           <option>Select Plan</option>
+                           <option value="free" {{ (isset($preference) && $preference->email_plan =="free")? "selected" : "" }}>
+                              Free</option>
+                           <option value="paid" {{ (isset($preference) && $preference->email_plan =="paid")? "selected" : "" }}>
+                              Paid</option>
+                        </select>
+                        @if($errors->has('email_plan'))
+                        <span class="text-danger" role="alert">
+                           <strong>{{ $errors->first('email_plan') }}</strong>
+                        </span>
+                        @endif
                      </div>
                   </div>
-                  <div class="row mb-2">
-                     <div class="col-md-12">
-                        <div class="form-group mb-3">
-                           <label for="sms_service_api_key">PREVIEW</label>
-                           <div class="card">
-                              <div class="card-body">
-                                 <p class="mb-2"><span class="font-weight-semibold mr-2">From:</span>
-                                    johndoe<span>
-                                       << /span>contact@royodispatcher.com<span>></span>
-                                 </p>
-                                 <p class="mb-2"><span class="font-weight-semibold mr-2">Reply To:</span>
-                                    johndoe@gmail.com
-                                 </p>
-                                 <p class="mt-3 text-center">
-                                    Your message hore here..
-                                 </p>
-                              </div>
+               </div>
+               <div class="row mb-2">
+                  <div class="col-md-12">
+                     <div class="form-group mb-3">
+                        <label for="sms_service_api_key">PREVIEW</label>
+                        <div class="card">
+                           <div class="card-body">
+                              <p class="mb-2"><span class="font-weight-semibold mr-2">From:</span>
+                                 johndoe<span>
+                                    << /span>contact@royodispatcher.com<span>></span>
+                              </p>
+                              <p class="mb-2"><span class="font-weight-semibold mr-2">Reply To:</span>
+                                 johndoe@gmail.com
+                              </p>
+                              <p class="mt-3 text-center">
+                                 Your message hore here..
+                              </p>
                            </div>
                         </div>
                      </div>
                   </div>
-                  <div class="row mb-2">
-                     <div class="col-md-2">
-                        <div class="form-group mb-0 text-center">
-                           <button class="btn btn-info btn-block" type="submit"> Save </button>
-                        </div>
+               </div>
+               <div class="row mb-2">
+                  <div class="col-md-2">
+                     <div class="form-group mb-0 text-center">
+                        <button class="btn btn-info btn-block" type="submit"> Save </button>
                      </div>
                   </div>
                </div>
             </div>
          </div>
-      </form>
-   </div>
+      </div>
+   </form>
+</div>
 </div>
 <div id="show-map-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
    <div class="modal-dialog modal-full-width">
@@ -860,9 +915,135 @@
       </div>
    </div>
 </div>
+<div id="add_vendor_registration_document_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered">
+     <div class="modal-content">
+         <div class="modal-header border-bottom">
+             <h4 class="modal-title" id="standard-modalLabel">Add Vendor Registration Document</h4>
+             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+         </div>
+         <div class="modal-body">
+            <form id="vendorRegistrationDocumentForm" method="POST" action="javascript:void(0)">
+               @csrf
+               <div id="save_social_media">
+                  <input type="hidden" name="vendor_registration_document_id" value="">
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form-group position-relative">
+                           <label for="">Type</label>
+                           <div class="input-group mb-2">
+                               <select class="form-control" name="file_type">
+                                 @forelse($file_types as $k => $file_type)
+                                    <option value="{{$file_type}}">{{$file_type}}</option>
+                                 @empty
+                                 @endforelse
+                               </select>
+                           </div>
+                       </div>
+                     </div>
+                     @forelse($client_languages as $k => $client_language)
+                        <div class="col-md-6 mb-2">
+                           <div class="row">
+                              <div class="col-12">
+                                 <div class="form-group position-relative">
+                                    <label for="">Name ({{$client_language->langName}})</label>
+                                    <input class="form-control" name="language_id[{{$k}}]" type="hidden" value="{{$client_language->langId}}">
+                                    <input class="form-control" name="name[{{$k}}]" type="text">
+                                    <span class="text-danger error-text social_media_url_err"></span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     @empty
+                     @endforelse
+                  </div>
+               </div>
+            </form>
+         </div>
+         <div class="modal-footer">
+             <button type="button" class="btn btn-primary submitSaveVendorRegistrationDocument">Save</button>
+         </div>
+     </div>
+   </div>
+</div>
 @endsection
 @section('script')
 <script type="text/javascript">
+   $('#add_vendor_registration_document_modal_btn').click(function(e) {
+      $('#add_vendor_registration_document_modal').modal('show');
+      $('#add_vendor_registration_document_modal #standard-modalLabel').html('Add Vendor Registration Document');
+   });
+   $(document).on("click", ".delete_vendor_registration_document_btn", function() {
+      var vendor_registration_document_id = $(this).data('vendor_registration_document_id');
+      if (confirm('Are you sure?')) {
+          $.ajax({
+              type: "POST",
+              dataType: 'json',
+              url: "{{ route('vendor.registration.document.delete') }}",
+              data: {
+                  _token: "{{ csrf_token() }}",
+                  vendor_registration_document_id: vendor_registration_document_id
+              },
+              success: function(response) {
+                  if (response.status == "Success") {
+                      $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                      setTimeout(function() {
+                          location.reload()
+                      }, 2000);
+                  }
+              }
+          });
+      }
+   });
+   $(document).on('click', '.submitSaveVendorRegistrationDocument', function(e) {
+      var social_media_id = $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val();
+      if (social_media_id) {
+          var post_url = "{{ route('social.media.update') }}";
+      } else {
+          var post_url = "{{ route('vendor.registration.document.create') }}";
+      }
+      var form_data = new FormData(document.getElementById("vendorRegistrationDocumentForm"));
+      $.ajax({
+         url: post_url,
+         method: 'POST',
+         data: form_data,
+         contentType: false,
+         processData: false,
+         success: function(response) {
+              if (response.status == 'Success') {
+                  $('#add_or_edit_social_media_modal').modal('hide');
+                  $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                  setTimeout(function() {
+                      location.reload()
+                  }, 2000);
+              } else {
+                  $.NotificationApp.send("Error", response.message, "top-right", "#ab0535", "error");
+              }
+          },
+          error: function(response) {
+              $('.social_media_url_err').html(response.responseJSON.errors.social_media_url[0]);
+          }
+      });
+   });
+   $(document).on("click", ".edit_vendor_registration_document_btn", function() {
+      let vendor_registration_document_id = $(this).data('vendor_registration_document_id');
+      $('#add_vendor_registration_document_modal input[name=vendor_registration_document_id]').val(vendor_registration_document_id);
+      $.ajax({
+          method: 'GET',
+          data: {vendor_registration_document_id: vendor_registration_document_id},
+          url: "{{ route('vendor.registration.document.edit') }}",
+          success: function(response) {
+              if (response.status = 'Success') {
+                  $('#add_vendor_registration_document_modal').modal('show');
+                  $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val(response.data.id);
+                  $('#add_vendor_registration_document_modal #standard-modalLabel').html('Update Vendor Registration Document');
+              }
+          },
+          error: function() {
+
+          }
+      });
+   });
    $('.cleanSoftDeleted').click(function(e) {
       if (confirm('Are you Sure?')) {
          e.preventDefault();
@@ -963,7 +1144,7 @@
       $('#add-customer-modal').removeClass('fadeIn');
 
    });
-
+   
    $(document).on('click', '.showMap', function() {
       var no = $(this).attr('num');
       var lats = document.getElementById('Default_latitude').value;
@@ -1113,7 +1294,6 @@
    delivery_option[0].onchange = function() {
       optionsChecked("delivery_check");
    }
-
    function optionsChecked(id) {
       var delivery_checked = $("#delivery_check").is(":checked");
       var takeaway_checked = $("#takeaway_check").is(":checked");

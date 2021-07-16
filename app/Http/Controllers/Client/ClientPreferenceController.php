@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency, ReferAndEarn,SocialMedia};
+use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency, ReferAndEarn,SocialMedia, VendorRegistrationDocument};
 
 class ClientPreferenceController extends BaseController{
 
@@ -17,7 +17,14 @@ class ClientPreferenceController extends BaseController{
         $smsTypes = SmsProvider::where('status', '1')->get();
         $ClientPreference = ClientPreference::where('client_code',$client->code)->first();
         $preference = $ClientPreference ? $ClientPreference : new ClientPreference();
-        return view('backend/setting/config')->with(['client' => $client, 'preference' => $preference, 'mapTypes'=> $mapTypes, 'smsTypes' => $smsTypes]);
+        $client_languages = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
+                    ->where('client_languages.client_code', Auth::user()->code)
+                    ->where('client_languages.is_active', 1)
+                    ->orderBy('client_languages.is_primary', 'desc')->get();
+        $file_types = ['image/*' => 'Image', '.pdf' => 'Pdf'];
+        $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
+        return view('backend/setting/config')->with(['client' => $client, 'preference' => $preference, 'mapTypes'=> $mapTypes, 'smsTypes' => $smsTypes, 'client_languages' => $client_languages, 'file_types' => $file_types, 'vendor_registration_documents' => $vendor_registration_documents]);
     }
 
     public function getCustomizePage(ClientPreference $clientPreference){
