@@ -103,7 +103,7 @@
                                                 <th>Description</th>
                                                 <th>Price</th>
                                                 <th>Features</th>
-                                                <th>Validity</th>
+                                                <th>Frequency</th>
                                                 <th>Status</th>
                                                 <th>On Request</th>
                                                 <th>Action</th>
@@ -121,7 +121,7 @@
                                                 <td>{{$plan->Description}}</td>
                                                 <td>${{$plan->price}}</td>
                                                 <td>{{$plan->features}}</td>
-                                                <td>{{$plan->period}} days</td>
+                                                <td>{{ucfirst($plan->frequency)}}</td>
                                                 <td>
                                                     <input type="checkbox" data-id="{{$plan->slug}}" data-plugin="switchery" name="vendorSubscriptionStatus" class="chk_box status_check" data-color="#43bee1" {{($plan->status == 1) ? 'checked' : ''}} >
                                                 </td>
@@ -220,8 +220,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="">Validity (In days)</label>
-                                        <input class="form-control" type="number" name="period" min="0" required="required">
+                                        <label for="">Frequency</label>
+                                        <select class="form-control" name="frequency" required="required">
+                                            <option value="">Choose...</option>
+                                            <option value="weekly">Weekly</option>
+                                            <option value="monthly">Monthly</option>
+                                            <option value="yearly">Yearly</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-12">

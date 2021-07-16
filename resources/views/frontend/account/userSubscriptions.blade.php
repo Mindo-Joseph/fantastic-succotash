@@ -146,40 +146,8 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="row mt-4 justify-content-center">
-                    @if($subscriptions->isNotEmpty())
-                        @foreach($subscriptions as $sub)
-                        <div class="col-sm-4">
-                            <div class="price-card text-center">
-                                <div class="title">
-                                    <img src="{{ $sub->image['proxy_url'].'100/100'.$sub->image['image_path'] }}">
-                                    <h2>{{ $sub->title }}</h2>
-                                </div>
-                                <div class="price">
-                                    <h4><sup>$</sup>{{ $sub->price }}</h4>
-                                </div>
-                                <div class="option">
-                                    <ul>
-                                        @foreach($sub->features as $feature)
-                                        <li class="d-block"><i class="fa fa-check" aria-hidden="true"></i> {{ $feature }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                                <div>
-                                    <button type="button" class="btn btn-outline text-white" onclick="return window.open(&quot;{{ route('user.buySubscription', $sub->slug) }}&quot;)">Buy Now</button>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                    @else
-                        <h5>No Subscription Plan Found</h5>
-                    @endif
-                    <!-- END Col -->
-                </div>
 
                 <div class="row">
-                    
                     <div class="col-12 mb-4">
                         <div class="card subscript-box">
                             <div class="row align-items-center">
@@ -211,25 +179,29 @@
                         </div>
                     </div>
                     
-                    <div class="col-md-4 col-sm-6">
-                        <div class="pricingtable">
-                            <div class="gold-icon position-relative">
-                                <img src="{{asset('assets/images/gold-icon.png')}}" alt="">
-                                <div class="pricingtable-header position-absolute">
-                                    <div class="price-value"> <b>$10.00</b> <span class="month">per month</span> </div>
+                    @if($subscriptions->isNotEmpty())
+                        @foreach($subscriptions as $plan)
+                            <div class="col-md-4 col-sm-6">
+                                <div class="pricingtable">
+                                    <div class="gold-icon position-relative">
+                                        <img src="{{ $plan->image['proxy_url'].'100/100'.$plan->image['image_path'] }}">
+                                        <div class="pricingtable-header position-absolute">
+                                            <div class="price-value"> <b>${{ $plan->price }}</b> <span class="month">{{ $plan->frequency }}</span> </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-2">
+                                        <h3 class="heading mt-0 mb-2"><b>{{ $plan->title }}</b></h3>
+                                        <div class="pricing-content">
+                                            <p class="mb-0">{{ $plan->description }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="pricingtable-signup">
+                                        <a class="btn btn-solid w-100" href="#">Buy Now</a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="p-2">
-                                <h3 class="heading mt-0 mb-2"><b>Royo Gold</b></h3>
-                                <div class="pricing-content">
-                                    <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis similique illum vero rerum illo aliquid!</p>
-                                </div>
-                            </div>
-                            <div class="pricingtable-signup">
-                                <a class="btn btn-solid w-100" href="#">Subscriber</a>
-                            </div>
-                        </div>
-                    </div>
+                        @endforeach
+                    @endif
                 </div>
                 
             </div>

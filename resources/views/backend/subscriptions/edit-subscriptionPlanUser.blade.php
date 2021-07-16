@@ -50,10 +50,21 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <?php /* ?><div class="col-md-6">
                         <div class="form-group">
                             <label for="">Validity (In days)</label>
                             <input class="form-control" type="number" name="period" min="0" value="{{ $plan->period }}" required="required">
+                        </div>
+                    </div><?php */ ?>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Frequency</label>
+                            <select class="form-control" name="frequency" value="{{ $plan->frequency }}" required="required">
+                                <option value="">Choose...</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-6">

@@ -125,7 +125,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/setPrimaryAddress/{id}', 'Front\AddressController@setPrimaryAddress')->name('setPrimaryAddress');
 	Route::post('user/submitPassword','Front\ProfileController@submitChangePassword')->name('user.submitChangePassword');
 	Route::get('user/wallet/history','Front\WalletController@index')->name('user.walletHistory');
-	Route::get('user/subscriptions', 'Front\SubscriptionController@subscriptions')->name('user.subscriptions');
+	Route::get('user/subscriptions', 'Front\UserSubscriptionController@getSubscriptions')->name('user.subscriptions');
 	Route::get('user/subscriptions/buy/{slug}', 'Front\SubscriptionController@buySubscription')->name('user.buySubscription');
 	 // Rating & review 
  	Route::group(['prefix' => 'rating'], function () {

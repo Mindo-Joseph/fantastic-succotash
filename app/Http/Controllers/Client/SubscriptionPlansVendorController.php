@@ -73,7 +73,7 @@ class SubscriptionPlansVendorController extends BaseController
             'title' => 'required|string|max:50',
             'features' => 'required',
             'price' => 'required',
-            'period' => 'required',
+            // 'period' => 'required',
             'sort_order' => 'required'
         );
         if(!empty($slug)){
@@ -94,7 +94,8 @@ class SubscriptionPlansVendorController extends BaseController
         }
         $plan->title = $request->title;
         $plan->price = $request->price;
-        $plan->period = $request->period;
+        // $plan->period = $request->period;
+        $plan->frequency = $request->frequency;
         $plan->sort_order = $request->sort_order;
         $plan->status = ($request->has('status') && $request->status == 'on') ? '1' : '0';
         $plan->on_request = ($request->has('on_request') && $request->on_request == 'on') ? 1 : 0;
