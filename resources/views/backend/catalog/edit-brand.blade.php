@@ -2,8 +2,8 @@
     <div class="col-md-12">
         <div class="row mb-2">
             <div class="col-md-12">              
+                <label>Upload image</label>
                 <input type="file" accept="image/*" class="dropify" data-plugins="dropify" name="image" data-default-file="{{$brand->image['proxy_url'].'400/400'.$brand->image['image_path']}}" />
-                <p class="text-muted text-center mt-2 mb-0">Upload image</p>
             </div>
         </div>
         <div class="row">

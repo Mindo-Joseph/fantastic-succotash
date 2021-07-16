@@ -1,4 +1,4 @@
-<div class="modal-header">
+<div class="modal-header border-bottom">
     <h4 class="modal-title">Edit Plan</h4>
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 </div>
@@ -9,8 +9,8 @@
             <div class="col-md-12">
                 <div class="row mb-2">
                     <div class="col-md-12">
+                        <label>Upload Image</label>
                         <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{ $subscription->image['proxy_url'].'100/100'.$subscription->image['image_path'] }}" />
-                        <p class="text-muted text-center mt-2 mb-0">Upload Image</p>
                     </div> 
                 </div>
 

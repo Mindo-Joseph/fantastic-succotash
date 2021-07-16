@@ -854,6 +854,7 @@ form .btn{
 .btn-solid{
     padding: 6.7px 29px;
     border-radius: 4px;
+    border-width: 1px;
 }
 
 .register-page .theme-card .theme-form input{
@@ -1278,8 +1279,8 @@ h1,h2,h3,h4,h5,h6{
 
 .order_detail:before {
     content: "";
-    border-left: 1px solid var(--theme-deafult)e8;
-    background-color: var(--theme-deafult)e8;
+    border-left: 1px solid var(--theme-deafult);
+    background-color: var(--theme-deafult);
     position: absolute;
     height: calc(100% - 30px);
     left: -1px;
@@ -2820,6 +2821,133 @@ form input.form-control[placeholder="Address"] {
 
 
 
+/**/
+.card.subscript-box {
+    background-color: #fff;
+    border: 1px solid #f7f7f7;
+    border-radius: 16px;
+    padding: 10px;
+    box-shadow: 0 0.75rem 6rem rgb(56 65 74 / 7%);
+}
+
+.gold-icon img {
+    height: 60px;
+    margin: 10px;
+}
+.pricingTable {
+    width: calc(100% - 10px);
+    text-align: center;
+    background: #fff;
+    box-shadow: 0 0.75rem 6rem rgb(56 65 74 / 7%);
+    padding-bottom: 40px;
+    border-radius: 10px;
+    color: #cad0de;
+    transform: scale(1.02);
+    -webkit-transform: scale(1.02);
+    -moz-transform: scale(1.02);
+    transition-duration: 1s;
+    transition: all .5s ease 0s;
+    margin: auto;
+}
+
+.pricingTable:hover {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    z-index: 1
+}
+
+.pricingTable .pricingTable-header {
+    padding: 20px 0;
+    background: #f5f6f9;
+    border-radius: 10px 10px 50% 50%;
+    transition: all .5s ease 0s
+}
+
+.pricingTable:hover .pricingTable-header {
+    background: #ff9624
+}
+
+.pricingTable .pricingTable-header i {
+    font-size: 50px;
+    color: #858c9a;
+    margin-bottom: 10px;
+    transition: all .5s ease 0s
+}
+
+.pricingTable .price-value {
+    font-size: 35px;
+    color: #ff9624;
+    transition: all .5s ease 0s
+}
+
+.pricingTable .month {
+    display: block;
+    font-size: 14px;
+    color: #cad0de
+}
+
+.pricingTable:hover .month,
+.pricingTable:hover .price-value,
+.pricingTable:hover .pricingTable-header i {
+    color: #fff
+}
+
+.pricingTable .heading {
+    font-size: 24px;
+    color: #ff9624;
+    margin-bottom: 20px;
+    text-transform: uppercase
+}
+
+.pricingTable .pricing-content ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px
+}
+
+.pricingTable .pricing-content ul li {
+    line-height: 30px;
+    display: block;
+    color: #a7a8aa
+}
+
+.pricingTable.blue .heading,
+.pricingTable.blue .price-value {
+    color: #4b64ff
+}
+
+.pricingTable.blue:hover .pricingTable-header {
+    background: #4b64ff
+}
+
+
+.pricingTable.red .heading,
+.pricingTable.red .price-value {
+    color: #ff4b4b
+}
+
+.pricingTable.red:hover .pricingTable-header {
+    background: #ff4b4b
+}
+
+.pricingTable.green .heading,
+.pricingTable.green .price-value {
+    color: #40c952
+}
+
+.pricingTable.green:hover .pricingTable-header {
+    background: #40c952
+}
+
+
+.pricingTable.blue:hover .price-value,
+.pricingTable.green:hover .price-value,
+.pricingTable.red:hover .price-value {
+    color: #fff
+}
+/**/
+
 
 
 
@@ -2953,6 +3081,15 @@ form input.form-control[placeholder="Address"] {
     }
     .product-rating .modal-dialog {
         max-width: 1000px;
+    }
+    .border-left-top {
+        border-left: 1px solid #ddd;
+    }
+}
+
+@media(max-width: 576px){
+    .border-left-top {
+        border-top: 1px solid #ddd;
     }
 }
 
