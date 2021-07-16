@@ -363,6 +363,11 @@ class VendorController extends BaseController
                             $v->select('id','product_id', 'quantity', 'price')->groupBy('product_id');
                     }])->select('id', 'sku','vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
                     ->where('vendor_id', $id)->get();
+        $product_count = $products->count();
+        $published_products = $products->where('is_live', 1)->count();
+        $last_mile_delivery = $products->where('Requires_last_mile', 1)->count();
+        $new_products = $products->where('is_new', 1)->count();
+        $featured_products = $products->where('is_featured', 1)->count();
         $categories = Category::select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
                         ->where('id', '>', '1')
                         ->where(function($q) use($id){
@@ -401,7 +406,7 @@ class VendorController extends BaseController
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
         $client_preferences = ClientPreference::first();
     //    dd($products->toArray());
-        return view('backend.vendor.vendorCatalog')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
+        return view('backend.vendor.vendorCatalog')->with(['new_products' => $new_products, 'featured_products' => $featured_products, 'last_mile_delivery' => $last_mile_delivery, 'published_products' => $published_products, 'product_count' => $product_count, 'client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
     }
 
     /**       delete vendor       */
