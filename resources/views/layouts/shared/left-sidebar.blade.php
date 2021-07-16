@@ -7,7 +7,7 @@
                 $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'];
             }
             $marketing_permissions = array("banner", "promocode", "loyalty_cards");
-            $subscription_permissions = array("subscriptions_customers", "subscriptions_vendors");
+            $subscription_permissions = array("subscription_plans_customers", "subscription_plans_vendors");
             $extra_permissions = array("celebrity", "inquiries");
             $setting_permissions = array("profile", "customize", "app_styling", "web_styling", "catalog", "configurations", "tax", "payment");
             $styling_permissions = array("app_styling", "web_styling");
@@ -140,12 +140,12 @@
                                 </a>
                                 <div class="collapse" id="sidebarsubscriptions">
                                     <ul class="nav-second-level">
-                                        @if(in_array('subscriptions_customers',$allowed) || Auth::user()->is_superadmin == 1)
+                                        @if(in_array('subscription_plans_customers',$allowed) || Auth::user()->is_superadmin == 1)
                                             <li>
-                                                <a href="{{route('subscriptions.users')}}">Customers</a>
+                                                <a href="{{route('subscription.plans.user')}}">Customers</a>
                                             </li>
                                         @endif
-                                        @if(in_array('subscriptions_vendors',$allowed) || Auth::user()->is_superadmin == 1)
+                                        @if(in_array('subscription_plans_vendors',$allowed) || Auth::user()->is_superadmin == 1)
                                             <li>
                                                 <a href="{{route('subscriptions.vendors')}}">Vendors</a>
                                             </li>

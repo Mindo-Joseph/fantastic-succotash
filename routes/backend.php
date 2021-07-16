@@ -146,11 +146,11 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('updateAll', 'Client\PaymentOptionController@updateAll')->name('payoption.updateAll');
     Route::resource('inquiry', 'Client\ProductInquiryController');
     Route::get('inquiry/filter', [ProductInquiryController::class, 'show'])->name('inquiry.filter');
-    Route::get('subscriptions/users', 'Client\SubscriptionController@userSubscriptions')->name('subscriptions.users');
-    Route::post('subscriptions/users/save/{slug?}', 'Client\SubscriptionController@saveUserSubscription')->name('subscriptions.saveUserSubscription');
-    Route::get('subscriptions/users/edit/{slug}', 'Client\SubscriptionController@editUserSubscription')->name('subscriptions.editUserSubscription');
-    Route::get('subscriptions/users/delete/{slug}', 'Client\SubscriptionController@deleteUserSubscription')->name('subscriptions.deleteUserSubscription');
-    Route::post('subscriptions/users/updateStatus/{slug}', 'Client\SubscriptionController@updateUserSubscriptionStatus')->name('subscriptions.updateUserSubscriptionStatus');
+    Route::get('subscription/plans/user', 'Client\UserSubscriptionController@getSubscriptionPlans')->name('subscription.plans.user');
+    Route::post('subscription/plan/save/user/{slug?}', 'Client\UserSubscriptionController@saveSubscriptionPlan')->name('subscription.plan.save.user');
+    Route::get('subscription/plan/edit/user/{slug}', 'Client\UserSubscriptionController@editSubscriptionPlan')->name('subscription.plan.edit.user');
+    Route::get('subscription/plan/delete/user/{slug}', 'Client\UserSubscriptionController@deleteSubscriptionPlan')->name('subscription.plan.delete.user');
+    Route::post('subscription/plan/updateStatus/user/{slug}', 'Client\UserSubscriptionController@updateSubscriptionPlanStatus')->name('subscription.plan.updateStatus.user');
     Route::get('subscriptions/vendors', 'Client\SubscriptionController@vendorSubscriptions')->name('subscriptions.vendors');
     Route::post('subscriptions/vendors/save/{slug?}', 'Client\SubscriptionController@saveVendorSubscription')->name('subscriptions.saveVendorSubscription');
     Route::get('subscriptions/vendors/edit/{slug}', 'Client\SubscriptionController@editVendorSubscription')->name('subscriptions.editVendorSubscription');
