@@ -43,7 +43,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('mystore/product/list', 'Api\v1\StoreController@getMyStoreProductList');
         Route::get('primary/address/{id}', 'Api\v1\AddressController@postUpdatePrimaryAddress');
         Route::post('update/order/status', 'Api\v1\OrderController@postVendorOrderStatusUpdate');
-        Route::get('payment/options', 'Api\v1\PaymentOptionController@getPaymentOptions');
+        Route::get('payment/options/{page}', 'Api\v1\PaymentOptionController@getPaymentOptions');
         Route::get('payment/{gateway}', 'Api\v1\PaymentOptionController@postPayment');
         Route::post('payment/place/order', 'Api\v1\PaymentOptionController@postPlaceOrder');
         // Rating & review 
