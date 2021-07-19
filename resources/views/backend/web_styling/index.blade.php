@@ -24,6 +24,16 @@
             </div>
         </div>
     </div>
+    <div class="col-md-4 col-xl-2">
+        <div class="card h-100">
+            <div class="card-body">
+                <h4 class="header-title mb-3">Rating Toggle</h4>
+                <div class="mb-0">
+                    <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="col-lg-2">
         <div class="card h-100">
             <div class="card-body">
@@ -73,6 +83,9 @@
     $("#cart_enable").change(function() {
         submitData();
     });
+    $("#rating_enable").change(function() {
+        submitData();
+    });
     $("#image").change(function() {
        
     });
@@ -98,7 +111,6 @@
                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
                     var r = document.querySelector(':root');
                     r.style.setProperty('--theme-deafult', 'lightblue');
-                    console.log("Fergw");
                 }
             }
         });

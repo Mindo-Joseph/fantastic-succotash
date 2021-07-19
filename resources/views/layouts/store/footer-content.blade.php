@@ -87,14 +87,14 @@ $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'
                             <li>
                                 <!-- <span class="lft-icon"><img src="{{asset('front-assets/images/icon/address.png')}}" class="img-fluid mr-1" alt=""></span> -->
                                 <i class="fa fa-home"></i>
-                                <?=  $client ? $client->company_address : '' ?? 'Level- 26, Dubai World Trade Centre Tower,
+                                <?=  $client_head ? $client_head->company_address : '' ?? 'Level- 26, Dubai World Trade Centre Tower,
                                 Sheikh Rashid Tower, Sheikh Zayed Rd, Dubai, UAE' ?>
                             </li>
                             <li>
-                                <a href="tel:+234-803-531-4802"><i class="fa fa-phone mr-1" aria-hidden="true"></i><span><?=  $client ? $client->phone_number : '' ?? '+234-803-531-4802' ?></span></a>
+                                <a href="tel:+234-803-531-4802"><i class="fa fa-phone mr-1" aria-hidden="true"></i><span><?=  $client_head ? $client_head->phone_number : '' ?? '+234-803-531-4802' ?></span></a>
                             </li>
                             <li>
-                                <a href="mailto:info@pearwheel.com"><i class="fa fa-envelope-o mr-1" aria-hidden="true"></i><span><?=  $client ? $client->email : '' ?? 'info@pearwheel.com' ?></span></a>
+                                <a href="mailto:info@pearwheel.com"><i class="fa fa-envelope-o mr-1" aria-hidden="true"></i><span><?=  $client_head ? $client_head->email : '' ?? 'info@pearwheel.com' ?></span></a>
                             </li>
                             <li>
                                 <a href="#"><span></span></a>
