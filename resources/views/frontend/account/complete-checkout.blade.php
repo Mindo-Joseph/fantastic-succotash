@@ -59,7 +59,8 @@
             success: function (response) {
                 if(response.status == "Success"){
                     if(action == "cart"){
-                        placeOrder(addressID, 3, response.data);
+                        document.location.href = checkout_success_url;
+                        // placeOrder(addressID, 3, response.data);
                     }
                     else if(action = "wallet"){
                         creditWallet(amount, 3, response.data);
