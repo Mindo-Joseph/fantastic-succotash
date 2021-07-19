@@ -18,15 +18,31 @@ use App\Exports\OrderVendorListTaxExport;
 
 class OrderController extends Controller{
     use ApiResponser;
-    public function index(Request $request){
+    public function index(Request $request){ 
         $total_order_count = 0;
         $total_delivery_fees = 0;
         $total_cash_to_collected = 0;
         $total_earnings_by_vendors = 0;
         $dispatcher_status_options = DispatcherStatusOption::get();
         $order_status_options = OrderStatusOption::where('type', 1)->get();
-        $vendors = Vendor::where('status', '!=', '2')->orderBy('id', 'desc')->get();
-        $vendor_orders = OrderVendor::with(['orderDetail.paymentOption', 'user','vendor','payment'])->get();
+        // all vendors 
+        $vendors = Vendor::where('status', '!=', '2')->orderBy('id', 'desc');
+        if (Auth::user()->is_superadmin == 0) {
+            $vendors = $vendors->whereHas('permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendors = $vendors->get();
+
+        // vendor orders 
+        $vendor_orders = OrderVendor::with(['orderDetail.paymentOption', 'user','vendor','payment']);
+        if (Auth::user()->is_superadmin == 0) {
+            $vendor_orders = $vendor_orders->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendor_orders =$vendor_orders->get();
+
         foreach ($vendor_orders as $vendor_order) {
             $total_delivery_fees+= $vendor_order->delivery_fee;
             $total_earnings_by_vendors+= $vendor_order->payable_amount;
@@ -49,6 +65,11 @@ class OrderController extends Controller{
             $to_date = $date_date_filter[1];
             $from_date = $date_date_filter[0];
             $vendor_orders_query->between($from_date, $to_date);
+        }
+        if (Auth::user()->is_superadmin == 0) {
+            $vendor_orders_query = $vendor_orders_query->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
         }
         $vendor_orders = $vendor_orders_query->orderBy('id', 'DESC')->get();
         foreach ($vendor_orders as $vendor_order) {

@@ -11,6 +11,13 @@ function pr($var) {
 	print_r($var);
   	echo '</pre>';
 }
+function http_check($url) {
+    $return = $url;
+    if ((!(substr($url, 0, 7) == 'http://')) || (!(substr($url, 0, 8) == 'https://'))) {
+        $return = 'http://' . $url;
+    }
+    return $return;
+} 
 function getMonthNumber($month_name){
     if($month_name == 'January'){
         return 1;

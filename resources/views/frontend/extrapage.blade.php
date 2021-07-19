@@ -28,17 +28,22 @@
                         <div class="needs-validation vendor-signup">
                             <input type="hidden" name="user_id" value="{{$user ? $user->id : ''}}">
                             <div class="form-row">
-                                <div class="col-md-6 mb-3" id="full_nameInput">
-                                    <label for="fullname">Full name</label>
+                                <div class="col-md-4 mb-3" id="full_nameInput">
+                                    <label for="fullname">Full Name</label>
                                     <input type="text" class="form-control" name="full_name" value="{{$user ? $user->name : ''}}" {{$user ? 'disabled' : ''}}>
                                     <div class="invalid-feedback" id="full_name_error"><strong></strong></div>
                                 </div>
-                                <div class="col-md-6 mb-3" id="phone_numberInput">
+                                <div class="col-md-4 mb-3" id="phone_numberInput">
                                     <label for="validationCustom02">Phone No.</label>
                                     <input type="tel" class="form-control" name="phone_number" value="{{$user ? $user->phone_number : ''}}" id="phone" {{$user ? 'disabled' : ''}}>
                                     <div class="invalid-feedback" id="phone_number_error"><strong></strong></div>
                                     <input type="hidden" id="countryData" name="countryData" value="us">
                                     <input type="hidden" id="dialCode" name="dialCode" value="{{$user ? $user->dial_code : ''}}">
+                                </div>
+                                <div class="col-md-4 mb-3" id="full_nameInput">
+                                    <label for="fullname">Title</label>
+                                    <input type="text" class="form-control" name="title" value="{{$user ? $user->title : ''}}">
+                                    <div class="invalid-feedback" id="full_name_error"><strong></strong></div>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -153,28 +158,30 @@
                             @endif
                             <div class="form-row">
                                 @foreach($vendor_registration_documents as $vendor_registration_document)
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-6 mb-3" id="{{$vendor_registration_document->primary->slug}}Input">
                                     <label for="">{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</label>
                                     <div class="file file--upload">
                                         <label for="input_file_logo_{{$vendor_registration_document->id}}">
-                                            <span class="update_pic">
-                                                <img src="" id="upload_logo_preview_{{$vendor_registration_document->id}}">
+                                            <span class="update_pic pdf-icon">
+                                                <img src=""  id="upload_logo_preview_{{$vendor_registration_document->id}}">
                                             </span>
-                                            <span class="plus_icon">
-                                                <i class="fas fa-plus"></i>
+                                            <span class="plus_icon" id="plus_icon_{{$vendor_registration_document->id}}">
+                                                <i class="fa fa-plus"></i>
                                             </span>
                                         </label>
                                         @if(strtolower($vendor_registration_document->file_type) == 'image')
-                                            <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="vendor_registration_document[]" accept="image/*" data-rel="{{$vendor_registration_document->id}}">
+                                            <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept="image/*" data-rel="{{$vendor_registration_document->id}}">
                                         @else
-                                        <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="vendor_registration_document[]" accept=".pdf,.doc" data-rel="{{$vendor_registration_document->id}}">
+                                        <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept=".pdf,.doc" data-rel="{{$vendor_registration_document->id}}">
                                         @endif
+                                        <div class="invalid-feedback" id="{{$vendor_registration_document->primary->slug}}_error"><strong></strong></div>
                                     </div>
                                 </div>      
                                  @endforeach   
                             </div>
-                            <div class="col-md-12">
-                                    <label for="html">I accept the <a href="{{url('extra-page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and and have read the <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> Privacy Policy.</a></label>
+                            <div class="col-12 checkbox-input">
+                                <input type="checkbox" id="html">
+                                <label for="html">I accept the <a href="{{url('extra-page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and and have read the <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> Privacy Policy.</a></label>
                             </div>
                             <button class="btn btn-solid mt-3 w-100" dir="ltr" data-style="expand-right" id="register_btn" type="button">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="register_btn_loader" style="display:none !important;"></span>
@@ -199,6 +206,9 @@
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
             }
         });
+        function getExtension(filename) {
+            return filename.split('.').pop().toLowerCase();
+        }
         $("#phone").keypress(function(e) {
             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
                 return false;
@@ -208,15 +218,21 @@
         function readURL(input, previewId) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
+                var extension = getExtension(input.files[0].name);
                 reader.onload = function(e) {
-                    $(previewId).attr('src',e.target.result);
+                    if(extension == 'pdf'){
+                        $(previewId).attr('src','https://image.flaticon.com/icons/svg/179/179483.svg');
+                    }else{
+                        $(previewId).attr('src',e.target.result);
+                    }
                 }
                 reader.readAsDataURL(input.files[0]);
             }
         }
         $(document).on('change', '[id^=input_file_logo_]', function(event){
             var rel = $(this).data('rel');
-             readURL(this, '#upload_logo_preview_'+rel);
+            $('#plus_icon_'+rel).hide();
+            readURL(this, '#upload_logo_preview_'+rel);
         });
         $("#input_file_logo").change(function() {
             readURL(this, '#upload_logo_preview');
@@ -301,9 +317,9 @@
                     $('#register_btn_loader').hide();
                     that.attr('disabled', false);
                     if (data.status == 'success') {
+                        $('img').attr('src', '');
+                        $('input[type=file]').val('');
                         $("#vendor_signup_form")[0].reset();
-                        $('#upload_logo_preview').attr('src', '');
-                        $('#upload_banner_preview').attr('src', '');
                         $('#success_msg').html(data.message).show();
                         setTimeout(function() {
                             $('#success_msg').html('').hide();

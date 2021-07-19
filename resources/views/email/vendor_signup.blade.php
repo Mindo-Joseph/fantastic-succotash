@@ -78,6 +78,10 @@
                           <p>{{$mailData['vendor_name']}}</p>
                        </div>
                        <div style="margin-bottom: 20px;">
+                          <h4 style="margin-bottom: 5px;">Title</h4>
+                          <p>{{$mailData['title']}}</p>
+                       </div>
+                       <div style="margin-bottom: 20px;">
                           <h4 style="margin-bottom: 5px;">Description</h4>
                           <p>{{$mailData['description']}}</p>
                        </div>

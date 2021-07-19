@@ -16,7 +16,14 @@ class OrderVendorListTaxExport implements FromCollection,WithHeadings,WithMappin
     public function collection(){
         $user = Auth::user();
         $timezone = $user->timezone ? $user->timezone : 'Asia/Kolkata';
-        $vendor_orders =  OrderVendor::with(['orderDetail.paymentOption', 'user','vendor','payment'])->orderBy('id', 'DESC')->get();
+        $vendor_orders =  OrderVendor::with(['orderDetail.paymentOption', 'user','vendor','payment'])->orderBy('id', 'DESC');
+        if (Auth::user()->is_superadmin == 0) {
+            $vendor_orders = $vendor_orders->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendor_orders = $vendor_orders->get();
+
         foreach ($vendor_orders as $vendor_order) {
             $vendor_order->created_date = convertDateTimeInTimeZone($vendor_order->created_at, $timezone, 'Y-m-d h:i:s A');
             $vendor_order->user_name = $vendor_order->user ? $vendor_order->user->name : '';

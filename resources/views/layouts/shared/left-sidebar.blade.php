@@ -147,14 +147,15 @@
                                         @endif
                                         @if(in_array('subscription_plans_vendors',$allowed) || Auth::user()->is_superadmin == 1)
                                             <li>
-                                                <a href="{{route('subscriptions.vendors')}}">Vendors</a>
+                                                <a href="{{route('subscription.plans.vendor')}}">Vendors</a>
                                             </li>
                                         @endif
                                     </ul>
                                 </div>
                             </li>
                             @endif
-                            @if(in_array('customers',$allowed) || Auth::user()->is_superadmin == 1)
+                            {{-- @if(in_array('customers',$allowed) || Auth::user()->is_superadmin == 1) --}}
+                            @if(Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('customer.index')}}">
                                         <span class="icon-customer-2"></span>
@@ -165,7 +166,8 @@
                         </ul>
                 </li>
                 @endif
-                @if(count(array_intersect($setting_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
+                @if(Auth::user()->is_superadmin == 1)
+                {{-- @if(count(array_intersect($setting_permissions, $allowed)) || Auth::user()->is_superadmin == 1) --}}
                 <li>
                    <a class="menu-title pl-1" href="#">
                         <span class="icon-settings-1-1"></span>
@@ -272,8 +274,9 @@
                         <span>MARKETING</span>
                     </a>
                     <ul class="nav-second-level">
-                        @if(in_array('banner',$allowed) || Auth::user()->is_superadmin == 1)
-                            <li>
+                        {{-- @if(in_array('banner',$allowed) || Auth::user()->is_superadmin == 1) --}}
+                        @if(Auth::user()->is_superadmin == 1)    
+                        <li>
                                 <a href="{{route('banner.index')}}">
                                     <span class="icon-banners"></span>
                                     <span> Banner </span>
@@ -310,7 +313,8 @@
                                 <span>EXTRA</span>
                             </a>
                             <ul class="nav-second-level">
-                                @if(!empty($client_preference) && $client_preference->celebrity_check == 1)
+                                {{-- @if(!empty($client_preference) && $client_preference->celebrity_check == 1) --}}
+                                @if(Auth::user()->is_superadmin == 1)   
                                     @if(in_array('celebrity',$allowed) || Auth::user()->is_superadmin == 1)
                                         <li>
                                             <a href="{{ route('celebrity.index') }}">

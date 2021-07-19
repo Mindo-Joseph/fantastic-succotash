@@ -32,7 +32,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="">Features</label>
                             <select class="form-control select2-multiple" name="features[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ..." required="required">
@@ -42,18 +42,35 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="">Price</label>
                             <input class="form-control" type="number" name="price" min="0" value="{{ $plan->price }}" required="required">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="row">
+                    <?php /* ?><div class="col-md-6">
                         <div class="form-group">
                             <label for="">Validity (In days)</label>
                             <input class="form-control" type="number" name="period" min="0" value="{{ $plan->period }}" required="required">
+                        </div>
+                    </div><?php */ ?>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Frequency</label>
+                            <select class="form-control" name="frequency" value="{{ $plan->frequency }}" required="required">
+                                <option value="">Choose...</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Sort Order</label>
+                            <input class="form-control" type="number" name="sort_order" min="1" value="{{ $plan->sort_order }}" required="required">
                         </div>
                     </div>
                     <div class="col-md-12">

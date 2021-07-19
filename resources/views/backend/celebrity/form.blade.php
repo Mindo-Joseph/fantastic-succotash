@@ -2,8 +2,8 @@
 <div class="row mb-3">
     <div class="col-md-3"></div>
     <div class="col-md-6" id="imageInput">
-        <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$lc->avatar['proxy_url'].'600/400'.$lc->avatar['image_path']}}" />
-        <p class="text-muted text-center mt-2 mb-0">Upload banner image</p>
+        <label>Upload banner image</label>
+        <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$lc->avatar['proxy_url'].'600/400'.$lc->avatar['image_path']}}" />        
         <span class="invalid-feedback" role="alert">
             <strong></strong>
         </span>

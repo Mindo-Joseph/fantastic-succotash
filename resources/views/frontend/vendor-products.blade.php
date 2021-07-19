@@ -168,12 +168,67 @@
                     <div class="page-main-content">
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="top-banner-wrapper text-center">
+                                <div class="top-banner-wrapper">
 
                                     @if(!empty($vendor->banner))
-                                    <div class="common-banner"><img alt="" src="{{$vendor->banner['proxy_url'] . '1000/200' . $vendor->banner['image_path']}}" class="img-fluid blur-up lazyload"></div>
+                                    <div class="common-banner text-center"><img alt="" src="{{$vendor->banner['proxy_url'] . '1000/200' . $vendor->banner['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
 
+                                    <div class="row mt-4">
+                                        <div class="col-md-8 offset-md-2">
+                                            <form action="">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="">Upload Logo</label>
+                                                        <div class="file file--upload upload-new">
+                                                            <label for="input-file">
+                                                                <span class="update_pic">
+                                                                    <img src="" alt="" id="output">
+                                                                </span>
+                                                                    <span class="plus_icon"><i class="fa fa-plus"></i></span>
+                                                            </label>
+                                                            <input id="input-file" type="file" name="profile_image" accept="image/*" onchange="loadFile(event)">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="emailaddress">Email address</label>
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text" id="basic-addon1">+91</span>
+                                                                </div>
+                                                                <input type="text" class="form-control" name="phone_number" id="phone_number" value="" placeholder="Enter mobile number" required="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group" id="">
+                                                            <label for="title" class="control-label">Address</label>
+                                                            <input class="form-control" name="" type="text" value="1" onkeypress="">
+                                                        </div>
+                                                    </div>                                                    
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="">
+                                                            <label for="title" class="control-label">Website Url</label>
+                                                            <input class="form-control" name="" type="text" value="1" onkeypress="">
+                                                        </div>
+                                                    </div>                                                    
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="">
+                                                            <label for="title" class="control-label">Description</label>
+                                                            <textarea class="form-control" name="" id="" cols="30" rows="5"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 mt-2">
+                                                        <button class="btn btn-solid w-100">Submit</button>
+                                                    </div>                                                    
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                   
 
                                     <div class="top-banner-content small-section">
                                         <h4>{{ $vendor->name }}</h4>

@@ -45,6 +45,7 @@ class PaymentOptionController extends Controller{
                             $request->transaction_id = $responseArray['data'];
                             if($request->action == 'cart'){
                                 $orderResponse = $this->postPlaceOrder($request);
+                                return $orderResponse;
                             }
                             else if($request->action == 'wallet'){
                                 $walletResponse = $this->creditMyWallet($request);
@@ -190,7 +191,7 @@ class PaymentOptionController extends Controller{
             $total_discount = 0;
             $taxable_amount = 0;
             $payable_amount = 0;
-            $user = User::where('auth_token', $request->auth_token)->first();
+            $user = Auth::user();
             if($user){
                 DB::beginTransaction();
                 $loyalty_amount_saved = 0;

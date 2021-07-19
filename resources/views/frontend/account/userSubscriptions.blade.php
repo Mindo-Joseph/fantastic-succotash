@@ -146,61 +146,31 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="row mt-4 justify-content-center">
-                    @if($subscriptions->isNotEmpty())
-                        @foreach($subscriptions as $sub)
-                        <div class="col-sm-4">
-                            <div class="price-card text-center">
-                                <div class="title">
-                                    <img src="{{ $sub->image['proxy_url'].'100/100'.$sub->image['image_path'] }}">
-                                    <h2>{{ $sub->title }}</h2>
-                                </div>
-                                <div class="price">
-                                    <h4><sup>$</sup>{{ $sub->price }}</h4>
-                                </div>
-                                <div class="option">
-                                    <ul>
-                                        @foreach($sub->features as $feature)
-                                        <li class="d-block"><i class="fa fa-check" aria-hidden="true"></i> {{ $feature }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                                <div>
-                                    <button type="button" class="btn btn-outline text-white" onclick="return window.open(&quot;{{ route('user.buySubscription', $sub->slug) }}&quot;)">Buy Now</button>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                    @else
-                        <h5>No Subscription Plan Found</h5>
-                    @endif
-                    <!-- END Col -->
-                </div>
 
                 <div class="row">
-                    
                     <div class="col-12 mb-4">
                         <div class="card subscript-box">
                             <div class="row align-items-center">
                                 <div class="col-sm-3 text-center">
                                     <div class="gold-icon">
-                                        <img src="{{asset('assets/images/gold.png')}}" alt="">
+                                        <img src="{{asset('assets/images/gold-icon.png')}}" alt="">
                                     </div>
-                                    <h3 class="m-0">Gold Plan</h3>
                                 </div>
                                 <div class="col-sm-9 mt-3 mt-sm-0">
-                                    <div class="row align-items-end border-left-top pt-sm-0 pt-2 px-md-3">
-                                        <div class="col-12 d-flex align-items-center justify-content-between">
-                                            <h3 class="d-inline-block">Royo Gold</h3>
-                                            <span class="plan-price">$20 / mo</span>
+                                    <div class="row align-items-end border-left-top pt-sm-0 pt-2">
+                                        <div class="col-12">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h3 class="d-inline-block"><b>Gold Membership</b></h3>
+                                                <span class="plan-price">$20 / mo</span>
+                                            </div>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur ea unde libero architecto numquam eum?</p>
                                         </div>
-                                        <div class="col-sm-6 form-group mb-2">
-                                            <label for="">Billing</label>
-                                            <input class="form-control" type="text">
+                                        <div class="col-sm-6 form-group mb-0">
+                                            <b class="mr-2">Upcoming Billing Date</b>
+                                            <span>(16-May-2022)</span>
                                         </div>
-                                        <div class="col-sm-6 mb-2 text-center text-sm-right">
-                                            <button class="btn btn-solid">Cancel</button>
+                                        <div class="col-sm-6 mb-0 text-center text-sm-right">
+                                            <a href="#">Cancel</a>
                                         </div>
                                     </div>
                                     
@@ -209,51 +179,29 @@
                         </div>
                     </div>
                     
-                    <div class="col-md-4 col-sm-6">
-                        <div class="pricingTable">
-                            <div class="pricingTable-header">
-                                <i class="fa fa-adjust"></i>
-                                <div class="price-value"> $10.00 <span class="month">per month</span> </div>
+                    @if($subscriptions->isNotEmpty())
+                        @foreach($subscriptions as $plan)
+                            <div class="col-md-4 col-sm-6">
+                                <div class="pricingtable">
+                                    <div class="gold-icon position-relative">
+                                        <img src="{{ $plan->image['proxy_url'].'100/100'.$plan->image['image_path'] }}">
+                                        <div class="pricingtable-header position-absolute">
+                                            <div class="price-value"> <b>${{ $plan->price }}</b> <span class="month">{{ $plan->frequency }}</span> </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-2">
+                                        <h3 class="heading mt-0 mb-2"><b>{{ $plan->title }}</b></h3>
+                                        <div class="pricing-content">
+                                            <p class="mb-0">{{ $plan->description }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="pricingtable-signup">
+                                        <a class="btn btn-solid w-100" href="#">Buy Now</a>
+                                    </div>
+                                </div>
                             </div>
-                            <h3 class="heading">Lorem, ipsum.</h3>
-                            <div class="pricing-content">
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis similique illum vero rerum illo aliquid!</p>
-                            </div>
-                            <div class="pricingTable-signup">
-                                <a class="btn btn-solid" href="#">sign up</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="pricingTable green">
-                            <div class="pricingTable-header">
-                                <i class="fa fa-briefcase"></i>
-                                <div class="price-value"> $20.00 <span class="month">per month</span> </div>
-                            </div>
-                            <h3 class="heading">Lorem, ipsum.</h3>
-                            <div class="pricing-content">
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis similique illum vero rerum illo aliquid!</p>
-                            </div>
-                            <div class="pricingTable-signup">
-                                <a class="btn btn-solid" href="#">sign up</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="pricingTable blue">
-                            <div class="pricingTable-header">
-                                <i class="fa fa-diamond"></i>
-                                <div class="price-value"> $30.00 <span class="month">per month</span> </div>
-                            </div>
-                            <h3 class="heading">Gold</h3>
-                            <div class="pricing-content">
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis similique illum vero rerum illo aliquid!</p>
-                            </div>
-                            <div class="pricingTable-signup">
-                                <a class="btn btn-solid" href="#">sign up</a>
-                            </div>
-                        </div>
-                    </div>
+                        @endforeach
+                    @endif
                 </div>
                 
             </div>

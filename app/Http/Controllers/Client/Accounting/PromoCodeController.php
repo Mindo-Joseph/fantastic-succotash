@@ -20,11 +20,55 @@ class PromoCodeController extends Controller{
 
     public function index(Request $request){
         $order_status_options = OrderStatusOption::where('type', 1)->get();
-        $promo_code_uses_count = OrderVendor::distinct('coupon_code')->count('coupon_code');
-        $unique_users_to_use_promo_code_count = OrderVendor::whereNotNull('coupon_id')->distinct('user_id')->count('user_id');
-        $admin_paid_total_amt = OrderVendor::where('coupon_paid_by', 1)->sum('discount_amount');
-        $vendor_paid_total_amt = OrderVendor::where('coupon_paid_by', 0)->sum('discount_amount');
-        $promo_code_options = OrderVendor::whereNotNull('coupon_id')->distinct('coupon_id')->get();
+
+        //  promo_code_uses_count
+        $promo_code_uses_count = OrderVendor::distinct('coupon_code');
+        if (Auth::user()->is_superadmin == 0) {
+            $promo_code_uses_count = $promo_code_uses_count->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $promo_code_uses_count = $promo_code_uses_count->count('coupon_code');
+
+        /// unique_users_to_use_promo_code_count 
+        $unique_users_to_use_promo_code_count = OrderVendor::whereNotNull('coupon_id')->distinct('user_id');
+        if (Auth::user()->is_superadmin == 0) {
+            $unique_users_to_use_promo_code_count = $unique_users_to_use_promo_code_count->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $unique_users_to_use_promo_code_count = $unique_users_to_use_promo_code_count->count('user_id');
+
+        /// admin_paid_total_amt 
+        $admin_paid_total_amt = OrderVendor::where('coupon_paid_by', 1);
+        if (Auth::user()->is_superadmin == 0) {
+            $admin_paid_total_amt = $admin_paid_total_amt->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $admin_paid_total_amt = $admin_paid_total_amt->sum('discount_amount');
+
+    /// vendor_paid_total_amt 
+        $vendor_paid_total_amt = OrderVendor::where('coupon_paid_by', 0);
+        if (Auth::user()->is_superadmin == 0) {
+            $vendor_paid_total_amt = $vendor_paid_total_amt->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendor_paid_total_amt = $vendor_paid_total_amt->sum('discount_amount');
+
+        /// promo_code_options 
+        $promo_code_options = OrderVendor::whereNotNull('coupon_id')->distinct('coupon_id');
+        
+        if (Auth::user()->is_superadmin == 0) {
+            $promo_code_options = $promo_code_options->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $promo_code_options = $promo_code_options->get();
+
+        
+
         return view('backend/accounting/promocode', compact('vendor_paid_total_amt','admin_paid_total_amt','promo_code_uses_count','unique_users_to_use_promo_code_count','order_status_options','promo_code_options'));
     }
 
@@ -34,6 +78,12 @@ class PromoCodeController extends Controller{
             $search_value = $request->get('search');
             $timezone = $user->timezone ? $user->timezone : 'Asia/Kolkata';
             $vendor_orders_query = OrderVendor::with(['orderDetail.paymentOption', 'user','vendor','payment','orderstatus']);
+            if (Auth::user()->is_superadmin == 0) {
+                $vendor_orders_query = $vendor_orders_query->whereHas('vendor.permissionToUser', function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                });
+            }
+
             if (!empty($request->get('date_filter'))) {
                 $date_date_filter = explode('to', $request->get('date_filter'));
                 $to_date = $date_date_filter[1];

@@ -6,14 +6,21 @@ use App\Models\OrderVendor;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
-
+use Auth;
 class OrderVendorTaxExport implements FromCollection,WithHeadings,WithMapping{
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
-        return OrderVendor::with(['orderDetail.paymentOption', 'user','vendor','payment'])->get();
+        $vendor_orders = OrderVendor::with(['orderDetail.paymentOption', 'user','vendor','payment']);
+        if (Auth::user()->is_superadmin == 0) {
+            $vendor_orders = $vendor_orders->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendor_orders = $vendor_orders->get();
+        return $vendor_orders;
     }
 
     public function headings(): array{

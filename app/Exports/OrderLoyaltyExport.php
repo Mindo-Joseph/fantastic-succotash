@@ -16,7 +16,14 @@ class OrderLoyaltyExport implements FromCollection,WithHeadings,WithMapping
     public function collection(){
         $user = Auth::user();
         $timezone = $user->timezone ? $user->timezone : 'Asia/Kolkata';
-        $orders = Order::with('user','paymentOption','loyaltyCard')->orderBy('id', 'desc')->get();
+        $orders = Order::with('user','paymentOption','loyaltyCard')->orderBy('id', 'desc');
+        if (Auth::user()->is_superadmin == 0) {
+            $orders = $orders->whereHas('vendors.vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $orders = $orders->get();
+
         foreach ($orders as $order) {
             $order->loyalty_membership = $order->loyaltyCard ? $order->loyaltyCard->name : '';
             $order->loyalty_points_used = $order->loyalty_points_used ? $order->loyalty_points_used : '0.00';

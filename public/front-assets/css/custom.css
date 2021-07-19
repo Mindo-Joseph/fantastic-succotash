@@ -927,7 +927,7 @@ form .btn{
     font-weight: bold;
     letter-spacing: 0;
     border-radius: 50%;
-    background-color: #3F9FFF;
+    background-color: var(--theme-deafult);
     display: block;
     position: absolute;
     right: 0;
@@ -954,7 +954,7 @@ form .btn{
     font-weight: bold;
     letter-spacing: 0;
     border-radius: 50%;
-    background-color: #3F9FFF;
+    background-color: var(--theme-deafult);
     box-shadow: 0 2px 4px 0 rgb(63 159 255 / 40%);
     display: block;
     position: absolute;
@@ -1881,10 +1881,6 @@ header{
     cursor: pointer;
 }
 
-.top-banner-wrapper .img-fluid {
-    width: 100%;
-}
-
 #stripe-card-element{
     flex:1;
     padding:0 15px;
@@ -2380,7 +2376,7 @@ body .rating-form .btn-reset {
     font-weight: bold;
     letter-spacing: 0;
     border-radius: 50%;
-    background-color: #3F9FFF;
+    background-color: var(--theme-deafult);
     box-shadow: 0 2px 4px 0 rgb(63 159 255 / 40%);
     display: block;
     position: absolute;
@@ -2565,7 +2561,6 @@ td.order_address {
 .common-banner img,.category-block .category-image img {
     height: 100%;
     object-fit: cover;
-    width: 100%;
 }
 
 button.return-order-product {
@@ -2675,10 +2670,6 @@ button.close {
     
 .collection-collapse-block:last-child {
     padding: 0;
-}
-
-.image_mask img {
-    width: 100%;
 }
 
 form input.form-control[placeholder="Address"] {
@@ -2805,17 +2796,24 @@ form input.form-control[placeholder="Address"] {
 }
 
 
-.vendor-signup .update_pic {
+.vendor-signup .update_pic, .file.upload-new .update_pic {
     width: 100%;
-    height: 150px;
+    height: auto;
+    margin: auto;
+    text-align: center;
+    border: 0;
     border-radius: 0;
 }
 
-.vendor-signup .file>label {
+.vendor-signup .file>label, .file.upload-new>label {
     width: 100%;
+    border: 1px solid #ddd;
+    padding: 30px 0;
+    height: 192px;
 }
-.vendor-signup .file .update_pic img{
-    height: auto;
+
+.vendor-signup .file .update_pic img, .file.upload-new img {
+    height: 130px;
     width: auto;
 }
 
@@ -2830,123 +2828,121 @@ form input.form-control[placeholder="Address"] {
     box-shadow: 0 0.75rem 6rem rgb(56 65 74 / 7%);
 }
 
-.gold-icon img {
-    height: 60px;
-    margin: 10px;
+.gold-icon {
+    background: #ebcd71;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    justify-content: center;
+    padding: 20px;
 }
-.pricingTable {
+
+.gold-icon img {
+    height: 120px;
+}
+
+.pricingtable {
     width: calc(100% - 10px);
-    text-align: center;
     background: #fff;
     box-shadow: 0 0.75rem 6rem rgb(56 65 74 / 7%);
-    padding-bottom: 40px;
-    border-radius: 10px;
     color: #cad0de;
-    transform: scale(1.02);
-    -webkit-transform: scale(1.02);
-    -moz-transform: scale(1.02);
-    transition-duration: 1s;
+    margin: auto;    
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.pricingtable .pricingtable-header {
+    padding: 0 10px;
+    background: rgb(0 0 0 / 20%);
+    width: 100%;
+    height: 100%;
     transition: all .5s ease 0s;
-    margin: auto;
+    text-align: right;
 }
 
-.pricingTable:hover {
-    transform: scale(1);
-    -webkit-transform: scale(1);
-    -moz-transform: scale(1);
-    z-index: 1
-}
-
-.pricingTable .pricingTable-header {
-    padding: 20px 0;
-    background: #f5f6f9;
-    border-radius: 10px 10px 50% 50%;
-    transition: all .5s ease 0s
-}
-
-.pricingTable:hover .pricingTable-header {
-    background: #ff9624
-}
-
-.pricingTable .pricingTable-header i {
+.pricingtable .pricingtable-header i {
     font-size: 50px;
     color: #858c9a;
     margin-bottom: 10px;
     transition: all .5s ease 0s
 }
 
-.pricingTable .price-value {
-    font-size: 35px;
-    color: #ff9624;
+.pricingtable .price-value {
+    font-size: 30px;
+    color: #fff;
     transition: all .5s ease 0s
 }
 
-.pricingTable .month {
+.pricingtable .month {
     display: block;
     font-size: 14px;
-    color: #cad0de
+    color: #fff;
 }
 
-.pricingTable:hover .month,
-.pricingTable:hover .price-value,
-.pricingTable:hover .pricingTable-header i {
+.pricingtable:hover .month,
+.pricingtable:hover .price-value,
+.pricingtable:hover .pricingtable-header i {
     color: #fff
 }
 
-.pricingTable .heading {
+.pricingtable .heading {
     font-size: 24px;
-    color: #ff9624;
     margin-bottom: 20px;
     text-transform: uppercase
 }
 
-.pricingTable .pricing-content ul {
+.pricingtable .pricing-content ul {
     list-style: none;
     padding: 0;
     margin-bottom: 30px
 }
 
-.pricingTable .pricing-content ul li {
+.pricingtable .pricing-content ul li {
     line-height: 30px;
     display: block;
     color: #a7a8aa
 }
 
-.pricingTable.blue .heading,
-.pricingTable.blue .price-value {
+.pricingtable.blue .heading,
+.pricingtable.blue .price-value {
     color: #4b64ff
 }
 
-.pricingTable.blue:hover .pricingTable-header {
+.pricingtable.blue:hover .pricingtable-header {
     background: #4b64ff
 }
 
 
-.pricingTable.red .heading,
-.pricingTable.red .price-value {
+.pricingtable.red .heading,
+.pricingtable.red .price-value {
     color: #ff4b4b
 }
 
-.pricingTable.red:hover .pricingTable-header {
+.pricingtable.red:hover .pricingtable-header {
     background: #ff4b4b
 }
 
-.pricingTable.green .heading,
-.pricingTable.green .price-value {
+.pricingtable.green .heading,
+.pricingtable.green .price-value {
     color: #40c952
 }
 
-.pricingTable.green:hover .pricingTable-header {
+.pricingtable.green:hover .pricingtable-header {
     background: #40c952
 }
 
 
-.pricingTable.blue:hover .price-value,
-.pricingTable.green:hover .price-value,
-.pricingTable.red:hover .price-value {
+.pricingtable.blue:hover .price-value,
+.pricingtable.green:hover .price-value,
+.pricingtable.red:hover .price-value {
     color: #fff
 }
 /**/
+
+
+
+
 
 
 
@@ -3015,6 +3011,16 @@ form input.form-control[placeholder="Address"] {
     opacity: 1;
 }
 
+.dark .card.subscript-box {
+    background-color: rgb(255 255 255 / 20%);
+    border: 0;
+}
+
+.dark .pricingtable {
+    background: rgb(255 255 255 / 20%);
+}
+
+
 /* Country Dropdown Css */
 .iti__flag-container li,
 .flag-container li {
@@ -3033,6 +3039,18 @@ form input.form-control[placeholder="Address"] {
 .invalid-feedback {
     display: block;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Responsiveness Css Start From Here */
 @media (max-width: 1919px){
@@ -3082,15 +3100,9 @@ form input.form-control[placeholder="Address"] {
     .product-rating .modal-dialog {
         max-width: 1000px;
     }
-    .border-left-top {
-        border-left: 1px solid #ddd;
-    }
 }
 
 @media(max-width: 576px){
-    .border-left-top {
-        border-top: 1px solid #ddd;
-    }
 }
 
 @media(max-width:767px){    

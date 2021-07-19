@@ -21,7 +21,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('payment/paypal/CompletePurchase', 'Front\PaypalGatewayController@paypalCompletePurchase')->name('payment.paypalCompletePurchase');
 
 	Route::get('payment/paypal/completeCheckout/{token?}/{action?}/{address?}', 'Front\PaymentController@paypalCompleteCheckout')->name('payment.paypalCompleteCheckout');
-	Route::get('payment/checkoutSuccess', 'Front\PaymentController@getCheckoutSuccess')->name('payment.getCheckoutSuccess');
+	Route::get('payment/checkoutSuccess/{id}', 'Front\PaymentController@getCheckoutSuccess')->name('payment.getCheckoutSuccess');
 	
 	Route::post('payment/user/placeorder', 'Front\OrderController@postPaymentPlaceOrder')->name('user.postPaymentPlaceOrder');
 	Route::post('payment/user/wallet/credit', 'Front\WalletController@postPaymentCreditWallet')->name('user.postPaymentCreditWallet');
@@ -125,8 +125,8 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/setPrimaryAddress/{id}', 'Front\AddressController@setPrimaryAddress')->name('setPrimaryAddress');
 	Route::post('user/submitPassword','Front\ProfileController@submitChangePassword')->name('user.submitChangePassword');
 	Route::get('user/wallet/history','Front\WalletController@index')->name('user.walletHistory');
-	Route::get('user/subscriptions', 'Front\SubscriptionController@subscriptions')->name('user.subscriptions');
-	Route::get('user/subscriptions/buy/{slug}', 'Front\SubscriptionController@buySubscription')->name('user.buySubscription');
+	Route::get('user/subscriptions', 'Front\UserSubscriptionController@getSubscriptions')->name('user.subscriptions');
+	Route::get('user/subscriptions/buy/{slug}', 'Front\UserSubscriptionController@buySubscription')->name('user.buySubscription');
 	 // Rating & review 
  	Route::group(['prefix' => 'rating'], function () {
 		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');

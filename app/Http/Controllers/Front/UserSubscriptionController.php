@@ -12,23 +12,23 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{User, UserAddress, ClientPreference, Client, UserSubscriptions, SubscriptionFeaturesList, SubscriptionValidities, PaymentOption};
+use App\Models\{User, UserAddress, ClientPreference, Client, SubscriptionPlansUser, SubscriptionFeaturesListUser, PaymentOption};
 
-class SubscriptionController extends FrontController
+class UserSubscriptionController extends FrontController
 {
     /**
      * get user subscriptions.
      *
      * @return \Illuminate\Http\Response
      */
-    public function subscriptions(Request $request, $domain = '')
+    public function getSubscriptions(Request $request, $domain = '')
     {
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        $subscriptions = UserSubscriptions::with('features.feature', 'validity')->where('status', '1')->get();
-        $featuresList = SubscriptionFeaturesList::where('type', 'User')->where('status', 1)->get();
-        if($subscriptions){
-            foreach($subscriptions as $sub){
+        $sub_plans = SubscriptionPlansUser::with('features.feature')->where('status', '1')->orderBy('sort_order', 'asc')->get();
+        $featuresList = SubscriptionFeaturesListUser::where('status', 1)->get();
+        if($sub_plans){
+            foreach($sub_plans as $sub){
                 $subFeaturesList = array();
                 if($sub->features->isNotEmpty()){
                     foreach($sub->features as $feature){
@@ -39,7 +39,7 @@ class SubscriptionController extends FrontController
                 $sub->features = $subFeaturesList;
             }
         }
-        return view('frontend.account.subscriptions')->with(['navCategories' => $navCategories, 'subscriptions'=> $subscriptions]);
+        return view('frontend.account.userSubscriptions')->with(['navCategories' => $navCategories, 'subscriptions'=> $sub_plans]);
     }
     
     /**
