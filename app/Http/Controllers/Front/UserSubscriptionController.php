@@ -25,14 +25,18 @@ class UserSubscriptionController extends FrontController
      */
     public function getSubscriptionPlans(Request $request, $domain = '')
     {
-        $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', '60f165e1ae656')->where('status', '1')->first();
-        // dd($subscription_plan->toArray());
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         $sub_plans = SubscriptionPlansUser::with('features.feature')->where('status', '1')->orderBy('sort_order', 'asc')->get();
         $featuresList = SubscriptionFeaturesListUser::where('status', 1)->get();
-        $active_subscriptions = SubscriptionInvoicesUser::with(['plan', 'features.feature'])->where('user_id', Auth::user()->id)->get();
-        // dd($active_subscriptions->toArray());
+        $active_subscriptions = SubscriptionInvoicesUser::with(['plan', 'features.feature'])
+                            ->where('status_id', '2')
+                            ->where('user_id', Auth::user()->id)->get();
+        $active_subscription_plan_ids = array();
+        foreach($active_subscriptions as $subscription){
+            $active_subscription_plan_ids[] = $subscription->subscription_id;
+        }
+
         if($sub_plans){
             foreach($sub_plans as $sub){
                 $subFeaturesList = array();
@@ -45,11 +49,11 @@ class UserSubscriptionController extends FrontController
                 $sub->features = $subFeaturesList;
             }
         }
-        return view('frontend.account.userSubscriptions')->with(['navCategories' => $navCategories, 'subscriptions'=> $sub_plans, 'active_subscriptions' => $active_subscriptions]);
+        return view('frontend.account.userSubscriptions')->with(['navCategories'=>$navCategories, 'subscriptions'=>$sub_plans, 'active_subscriptions'=>$active_subscriptions, 'active_subscription_plan_ids'=>$active_subscription_plan_ids]);
     }
     
     /**
-     * buy user subscription.
+     * select user subscription.
      *
      * @return \Illuminate\Http\Response
      */
@@ -62,7 +66,6 @@ class UserSubscriptionController extends FrontController
         foreach ($payment_options as $payment_option) {
            $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
         }
-        // return view('frontend.account.buysubscription')->with(['navCategories' => $navCategories, 'subscription'=> $subscription, 'payment_options'=>$payment_options]);
         return response()->json(["status"=>"Success", "sub_plan" => $sub_plan, "payment_options" => $payment_options]);
     }
 
@@ -102,16 +105,22 @@ class UserSubscriptionController extends FrontController
             $subscription_invoice->save();
             $subscription_invoice_id = $subscription_invoice->id;
             if($subscription_invoice_id){
-                $subscription_invoice_features = new SubscriptionInvoiceFeaturesUser;
+                $subscription_invoice_features = array();
                 foreach($subscription_plan->features as $feature){
-                    $subscription_invoice_features->user_id = $user->id;
-                    $subscription_invoice_features->subscription_id = $subscription_plan->id;
-                    $subscription_invoice_features->subscription_invoice_id = $subscription_invoice_id;
-                    $subscription_invoice_features->feature_id = $feature->feature_id;
-                    $subscription_invoice_features->feature_title = $feature->feature->title;
-                    $subscription_invoice_features->save();
+                    $subscription_invoice_features[] = array(
+                        'user_id' => $user->id,
+                        'subscription_id' => $subscription_plan->id,
+                        'subscription_invoice_id' => $subscription_invoice_id,
+                        'feature_id' => $feature->feature_id,
+                        'feature_title' => $feature->feature->title
+                    );
                 }
-                return $this->successResponse('', 'Your subscription has been activated successfully.');
+                if(!empty($subscription_invoice_features)){
+                    SubscriptionInvoiceFeaturesUser::insert($subscription_invoice_features);
+                }
+                $message = 'Your subscription has been activated successfully.';
+                Session::put('success', $message);
+                return $this->successResponse('', $message);
             }
             else{
                 return $this->errorResponse('Error in purchasing subscription.', 402);
@@ -119,6 +128,29 @@ class UserSubscriptionController extends FrontController
         }
         else{
             return $this->errorResponse('Invalid Data', 402);
+        }
+    }
+
+    /**
+     * cancel user subscription.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelSubscriptionPlan(Request $request, $domain = '', $slug = '')
+    {
+        $active_subscription = SubscriptionInvoicesUser::with('plan')
+                            ->where('slug', $slug)
+                            ->where('user_id', Auth::user()->id)
+                            ->where('status_id', 2)->first();
+        if($active_subscription){
+            $active_subscription->status_id = 4;
+            $active_subscription->cancelled_at = Carbon::now()->toDateTimeString();
+            $active_subscription->updated_at = Carbon::now()->toDateTimeString();
+            $active_subscription->save();
+            return redirect()->back()->with('success', 'Your '.$active_subscription->plan->title.' subscription has been cancelled successfully');
+        }
+        else{
+            return redirect()->back()->with('error', 'Unable to cancel subscription');
         }
     }
 }

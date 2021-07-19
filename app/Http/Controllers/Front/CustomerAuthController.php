@@ -297,7 +297,6 @@ class CustomerAuthController extends FrontController
                     $vendor_docs =  new VendorDocs();
                     $vendor_docs->vendor_id = $vendor->id;
                     $vendor_docs->file_name = Storage::disk('s3')->put('/vendor', $vendor_registration_document, 'public');
-                    pr($vendor_docs->file_name);
                     $vendor_docs->save();
                 }
             }
