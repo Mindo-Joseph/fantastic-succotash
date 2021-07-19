@@ -329,10 +329,9 @@ class CartController extends BaseController{
                     }, 'vendorProducts.product.taxCategory.taxRate', 
                 ])->select('vendor_id')->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
-        $total_tax = $total_paying = $total_disc_amount = 0.00; $item_count = 0;
+        $total_tax = $total_paying = $total_disc_amount = 0.00; $item_count = 0; $total_delivery_amount = 0;
         if($cartData){
             $tax_details = [];
-
             foreach ($cartData as $ven_key => $vendorData) {
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
                 $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';$deliver_charge = 0;
@@ -492,6 +491,7 @@ class CartController extends BaseController{
                 $vendorData->proSum = $proSum;
                 $vendorData->addonSum = $ttAddon;
                 $vendorData->deliver_charge = $deliver_charge;
+                $total_delivery_amount += $deliver_charge;
                 $vendorData->coupon_apply_on_vendor = $couponApplied;
                 $vendorData->is_coupon_applied = $is_coupon_applied;
                 $vendorData->is_coupon_applied = $is_coupon_applied;
@@ -527,7 +527,7 @@ class CartController extends BaseController{
         }
         $cart->products = $cartData;
         $cart->item_count = $item_count;
-        $cart->total_payable_amount = $total_paying + $total_tax - $total_disc_amount - $cart->loyalty_amount;
+        $cart->total_payable_amount = $total_paying + $total_delivery_amount + $total_tax - $total_disc_amount - $cart->loyalty_amount;
         return $cart;
     }
     public function getDeliveryFeeDispatcher($vendor_id){
