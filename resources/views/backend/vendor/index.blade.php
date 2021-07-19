@@ -11,7 +11,7 @@
     <div class="row align-items-center">
         <div class="col-sm-6">
             <div class="page-title-box">
-                <h4 class="page-title">{{getNomenclatureName('vendors')}}</h4>
+                <h4 class="page-title">{{getNomenclatureName('vendors', true)}}</h4>
             </div>
         </div>
         <div class="col-sm-6 text-sm-right">
@@ -34,7 +34,7 @@
                                     <i class="mdi mdi-storefront text-primary mdi-24px"></i>
                                     <span data-plugin="counterup" id="total_earnings_by_vendors">{{$total_vendor_count}}</span>
                                 </h3>
-                                <p class="text-muted font-15 mb-0">Total Vendors</p>
+                                <p class="text-muted font-15 mb-0">Total {{getNomenclatureName('vendors', true)}}</p>
                             </div>
                         </div>
                         <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
@@ -43,7 +43,7 @@
                                     <i class="mdi mdi-store-24-hour text-primary mdi-24px"></i>
                                     <span data-plugin="counterup" id="total_order_count">{{$available_vendors_count}}</span>
                                 </h3>
-                                <p class="text-muted font-15 mb-0">Open Vendors</p>
+                                <p class="text-muted font-15 mb-0">Open {{getNomenclatureName('vendors', true)}}</p>
                             </div>
                         </div>
                         <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
@@ -202,7 +202,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header border-bottom">
-                    <h4 class="modal-title">Edit Vendor</h4>
+                    <h4 class="modal-title">Edit {{getNomenclatureName('vendors', false)}}</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <form id="update_vendor_form" method="post" enctype="multipart/form-data">

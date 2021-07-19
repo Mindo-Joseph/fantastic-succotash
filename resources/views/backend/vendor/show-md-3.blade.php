@@ -232,7 +232,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h4 class="modal-title">Edit Vendor</h4>
+                <h4 class="modal-title">Edit {{getNomenclatureName('vendors', false)}}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="save_edit_banner_form" method="post" enctype="multipart/form-data">

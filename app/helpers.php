@@ -55,12 +55,12 @@ function generateOrderNo($length = 8){
     } while (!empty(\DB::table('orders')->where('order_number', $number)->first(['order_number'])) );
     return $number;
 }
-function getNomenclatureName($searchTerm){
+function getNomenclatureName($searchTerm, $plural = true){
     $result = Nomenclature::where('label', 'LIKE', "%{$searchTerm}%")->first();
     if($result){
         $searchTerm = $result->value;
     }
-    return $searchTerm;
+    return $plural ? $searchTerm : rtrim($searchTerm, 's');
 }
 function convertDateTimeInTimeZone($date, $timezone, $format = 'Y-m-d H:i:s'){
     $date = Carbon::parse($date, 'UTC');

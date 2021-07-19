@@ -138,7 +138,7 @@
         <div class="row">
             <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                 <div class="title1">
-                    <h2 class="title-inner1 mb-0">Our Vendors</h2>
+                    <h2 class="title-inner1 mb-0">Our {{getNomenclatureName('vendors', true)}}</h2>
                 </div>
                 <a class="view_more_items" href="#">View More</a>
             </div>
