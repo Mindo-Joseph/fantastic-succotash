@@ -125,8 +125,9 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/setPrimaryAddress/{id}', 'Front\AddressController@setPrimaryAddress')->name('setPrimaryAddress');
 	Route::post('user/submitPassword','Front\ProfileController@submitChangePassword')->name('user.submitChangePassword');
 	Route::get('user/wallet/history','Front\WalletController@index')->name('user.walletHistory');
-	Route::get('user/subscriptions', 'Front\UserSubscriptionController@getSubscriptions')->name('user.subscriptions');
-	Route::get('user/subscriptions/buy/{slug}', 'Front\UserSubscriptionController@buySubscription')->name('user.buySubscription');
+	Route::get('user/subscription/plans', 'Front\UserSubscriptionController@getSubscriptionPlans')->name('user.subscription.plans');
+	Route::get('user/subscription/select/{slug}', 'Front\UserSubscriptionController@selectSubscriptionPlan')->name('user.subscription.plan.select');
+	Route::post('user/subscription/purchase/{slug}', 'Front\UserSubscriptionController@purchaseSubscriptionPlan')->name('user.subscription.plan.purchase');
 	 // Rating & review 
  	Route::group(['prefix' => 'rating'], function () {
 		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');
