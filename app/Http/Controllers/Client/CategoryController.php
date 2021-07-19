@@ -66,7 +66,6 @@ class CategoryController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        // dd($request->all());
         $rules = array(
             'name.0' => 'required|string|max:60',
             'slug' => 'required|string|max:30|unique:categories',
@@ -79,7 +78,7 @@ class CategoryController extends BaseController{
         $save = $this->save($request, $cate, 'false');
         if($save > 0){
             foreach ($request->language_id as $key => $value) {
-                $trans = new Category_translation();
+                $trans = new Categorytranslation();
                 $trans->name = $request->name[$key];
                 $trans->meta_title = $request->meta_title[$key];
                 $trans->meta_description = $request->meta_description[$key];
