@@ -225,19 +225,17 @@
                                 
                 {{-- <img src="{{asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt=""> --}}
             </div>
-            <p class="inbox-item-author">{{ $users->user->name??'' }}</p>
+            <p class="inbox-item-author">{{ $users->user->name??'' }} 
+               
+            </p>
             <p class="inbox-item-text"><i class="fa fa-envelope" aria-hidden="true"> {{ $users->user->email??'' }}</i> @if($users->user->phone_number)<i class="fa fa-phone" aria-hidden="true"> {{ $users->user->phone_number??'' }}</i>@endif</p>
             @if($users->user->id != Auth::id())
-            <div class="inner-div">
-                <form method="POST" action="{{route('user.vendor.permission.destroy', $users->id)}}">
-                    @csrf
-                    @method('DELETE')
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary-outline action-icon" onclick="return confirm('Are you sure ?');"> <i class="mdi mdi-delete"></i></button>
-    
-                    </div>
-                </form>
-            </div>
+            <form method="POST" action="{{route('user.vendor.permission.destroy', $users->id)}}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-primary-outline" onclick="return confirm('Are you sure ?');"> <i class="mdi mdi-delete"></i></button>
+        
+                    </form>
             @endif
         </div>
        
