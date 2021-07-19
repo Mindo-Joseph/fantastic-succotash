@@ -1003,7 +1003,7 @@
                                  <div class="form-group position-relative">
                                     <label for="">Name ({{$client_language->langName}})</label>
                                     <input class="form-control" name="language_id[{{$k}}]" type="hidden" value="{{$client_language->langId}}">
-                                    <input class="form-control" name="name[{{$k}}]" type="text">
+                                    <input class="form-control" name="name[{{$k}}]" type="text" id="vendor_registration_document_name_{{$client_language->langId}}">
                                     <span class="text-danger error-text social_media_url_err"></span>
                                  </div>
                               </div>
@@ -1051,9 +1051,9 @@
          }
       });
       $(document).on('click', '.submitSaveVendorRegistrationDocument', function(e) {
-         var social_media_id = $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val();
-         if (social_media_id) {
-            var post_url = "{{ route('social.media.update') }}";
+         var vendor_registration_document_id = $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val();
+         if (vendor_registration_document_id) {
+            var post_url = "{{ route('vendor.registration.document.update') }}";
          } else {
             var post_url = "{{ route('vendor.registration.document.create') }}";
          }
@@ -1092,8 +1092,12 @@
             success: function(response) {
                if (response.status = 'Success') {
                   $('#add_vendor_registration_document_modal').modal('show');
+                  $("#add_vendor_registration_document_modal input[name=file_type]").val(response.data.file_type).change();
                   $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val(response.data.id);
                   $('#add_vendor_registration_document_modal #standard-modalLabel').html('Update Vendor Registration Document');
+                  $.each(response.data.translations, function( index, value ) {
+                    $('#add_vendor_registration_document_modal #vendor_registration_document_name_'+value.language_id).val(value.name);
+                  });
                }
             },
             error: function() {

@@ -48,7 +48,7 @@ class VendorRegistrationDocumentController extends BaseController{
      */
     public function show(Request $request){
         try {
-            $vendor_registration_document = VendorRegistrationDocument::where(['id' => $request->vendor_registration_document_id])->firstOrFail();
+            $vendor_registration_document = VendorRegistrationDocument::with(['translations'])->where(['id' => $request->vendor_registration_document_id])->firstOrFail();
             return $this->successResponse($vendor_registration_document, '');
         } catch (Exception $e) {
             return $this->errorResponse([], $e->getMessage());
@@ -64,7 +64,34 @@ class VendorRegistrationDocumentController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, VendorRegistrationDocument $vendorRegistrationDocument){
-        
+         try {
+            $this->validate($request, [
+              'name.0' => 'required|string|max:60',
+              'file_type' => 'required',
+            ],['name.0' => 'The default language name field is required.']);
+            DB::beginTransaction();
+            $vendor_registration_document_id = $request->vendor_registration_document_id;
+            $vendor_registration_document = VendorRegistrationDocument::where('id', $vendor_registration_document_id)->first();
+            $vendor_registration_document->file_type = $request->file_type;
+            $vendor_registration_document->save();
+            $language_id = $request->language_id;
+            VendorRegistrationDocumentTranslation::where('vendor_registration_document_id', $vendor_registration_document_id)->delete();
+            foreach ($request->name as $k => $name) {
+                if($name){
+                    $VendorRegistrationDocumentTranslation = new VendorRegistrationDocumentTranslation();
+                    $VendorRegistrationDocumentTranslation->name = $name;
+                    $VendorRegistrationDocumentTranslation->slug = Str::slug($name, '-');
+                    $VendorRegistrationDocumentTranslation->language_id = $language_id[$k];
+                    $VendorRegistrationDocumentTranslation->vendor_registration_document_id = $vendor_registration_document->id;
+                    $VendorRegistrationDocumentTranslation->save();
+                }
+            }
+            DB::commit();
+            return $this->successResponse($vendor_registration_document, 'Vendor Registration Document Updated Successfully.');
+        } catch (Exception $e) {
+            DB::rollback();
+            return $this->errorResponse([], $e->getMessage());
+        }
     }
 
 

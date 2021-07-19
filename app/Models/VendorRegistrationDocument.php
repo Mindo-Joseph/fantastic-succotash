@@ -13,4 +13,8 @@ class VendorRegistrationDocument extends Model
       $langData = $this->hasOne('App\Models\VendorRegistrationDocumentTranslation')->join('client_languages as cl', 'cl.language_id', 'vendor_registration_document_translations.language_id')->where('cl.is_primary', 1);
       return $langData;
     }
+    public function translations(){
+      $langData = $this->hasMany('App\Models\VendorRegistrationDocumentTranslation');
+      return $langData;
+    }
 }
