@@ -10,10 +10,18 @@
                 <input type="file" accept="image/*" data-plugins="dropify" data-default-file="{{$vendor->banner['proxy_url'] . '90/90' . $vendor->banner['image_path']}}" name="banner" class="dropify" />
             </div>
             <div class="col-md-3">
-                <label>Upload Document</label>
-                <a class="d-block mb-1 document-btn" target="_blank" href="#">Document One</a>
-                <a class="d-block mb-1 document-btn" target="_blank" href="#">Document Two</a>
-                <a class="d-block mb-1 document-btn" target="_blank" href="#">Document Three</a>
+                <label>Uploaded Document</label>
+                <div class="d-flex align-items-center justify-content-between">
+                    <label>Document One</label><a class="d-block mb-1 document-btn" target="_blank" href="#"><i class="fa fa-eye float-right"></i> </a>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <label>Document Two</label><a class="d-block mb-1 document-btn" target="_blank" href="#"><i class="fa fa-eye float-right"></i> </a>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <label>Document Three</label><a class="d-block mb-1 document-btn" target="_blank" href="#"><i class="fa fa-eye float-right"></i> </a>
+                </div>
+                
+            
             </div>
         </div>
         {!! Form::hidden('vendor_id', $vendor->id, ['class'=>'form-control']) !!}
