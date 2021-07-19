@@ -14,7 +14,9 @@
 @endsection
 
 @section('content')
-
+@php
+$timezone = Auth::user()->timezone;
+@endphp
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -23,91 +25,9 @@
     .invalid-feedback {
         display: block;
     }
-    .price-card{
-        position: relative;
-        max-width: 300px;
-        height: auto;
-        background: linear-gradient(-5deg, transparent 0%, var(--theme-deafult) 50%, var(--theme-deafult) 100%);
-        border-radius: 15px;
-        margin: 0 auto;
-        padding: 40px 20px;
-        -webkit-box-shadow: 0 10px 15px rgba(0,0,0,.1) ;
-        box-shadow: 0 10px 15px rgba(0,0,0,.1) ;
-        -webkit-transition: .5s;
-        transition: .5s;
-        overflow: hidden;
-    }
-    .price-card:hover{
-        -webkit-transform: scale(1.1);
-        transform: scale(1.1);
-    }
-    /* .col-sm-4:nth-child(1) .price-card{
-        background: linear-gradient(-45deg,#f403d1,#64b5f6);
-    }
-    .col-sm-4:nth-child(2) .price-card{
-        background: linear-gradient(-45deg,#ffec61,#f321d7);
-    } */
-    .price-card::before{
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 40%;
-        background: rgba(255, 255, 255, .1);
-        z-index: 0;
-        -webkit-transform: skewY(-5deg) scale(1.5);
-        transform: skewY(-5deg) scale(1.5);
-    }
-    .title h2 {
-        position: relative;
-        margin: 20px  0 0;
-        padding: 0;
-        color: #fff;
-        font-size: 20px;
-        z-index: 2;
-    }
-    .price,.option{
-        position: relative;
-        z-index: 2;
-    }
-    .price h4 {
-        margin: 0;
-        padding: 20px 0 ;
-        color: #fff;
-        font-size: 40px;
-    }
-    .option ul {
-        margin: 0;
-        padding: 0;
-
-    }
-    .option ul li {
+    ul li {
         margin: 0 0 10px;
-        padding: 0;
-        list-style: none;
-        color: #fff;
-        font-size: 16px;
-    }
-    .price-card a {
-        position: relative;
-        z-index: 2;
-        background: #fff;
-        color : black;
-        width: 150px;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 40px;
-        display: block;
-        text-align: center;
-        margin: 20px auto 0 ;
-        font-size: 16px;
-        cursor: pointer;
-        -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
-        box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
-    }
-    .price-card a:hover{
-        text-decoration: none;
+        color: #6c757d;
     }
 </style>
 
@@ -149,34 +69,42 @@
 
                 <div class="row">
                     <div class="col-12 mb-4">
-                        <div class="card subscript-box">
-                            <div class="row align-items-center">
-                                <div class="col-sm-3 text-center">
-                                    <div class="gold-icon">
-                                        <img src="{{asset('assets/images/gold-icon.png')}}" alt="">
+                        @if(!empty($active_subscriptions))
+                            <div class="card subscript-box">
+                                <div class="row align-items-center">
+                                    @foreach($active_subscriptions as $subscription)
+                                    <div class="col-sm-3 text-center">
+                                        <div class="gold-icon">
+                                            <img src="{{$subscription->plan->image['proxy_url'].'100/100'.$subscription->plan->image['image_path']}}" alt="">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-9 mt-3 mt-sm-0">
-                                    <div class="row align-items-end border-left-top pt-sm-0 pt-2">
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <h3 class="d-inline-block"><b>Gold Membership</b></h3>
-                                                <span class="plan-price">$20 / mo</span>
+                                    <div class="col-sm-9 mt-3 mt-sm-0">
+                                        <div class="row align-items-end border-left-top pt-sm-0 pt-2">
+                                            <div class="col-12">
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <h3 class="d-inline-block"><b>{{ $subscription->plan->title }}</b></h3>
+                                                    <span class="plan-price">${{ $subscription->subscription_amount }} / {{ $subscription->frequency }}</span>
+                                                </div>
+                                                <p>{{ $subscription->plan->description }}</p>
+                                                <?php /* ?><ul class="mb-3">
+                                                    @foreach($subscription->features as $feature)
+                                                        <li><i class="fa fa-check"></i> {{ $feature->feature->title }}</li>
+                                                    @endforeach
+                                                </ul><?php */ ?>
                                             </div>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur ea unde libero architecto numquam eum?</p>
-                                        </div>
-                                        <div class="col-sm-6 form-group mb-0">
-                                            <b class="mr-2">Upcoming Billing Date</b>
-                                            <span>(16-May-2022)</span>
-                                        </div>
-                                        <div class="col-sm-6 mb-0 text-center text-sm-right">
-                                            <a href="#">Cancel</a>
+                                            <div class="col-sm-6 form-group mb-0">
+                                                <b class="mr-2">Upcoming Billing Date</b>
+                                                <span>{{ convertDateTimeInTimeZone($subscription->next_date, $timezone, 'F d, Y, H:i A') }}</span>
+                                            </div>
+                                            <div class="col-sm-6 mb-0 text-center text-sm-right">
+                                                <a href="#cancel-subscription" data-toggle="modal">Cancel</a>
+                                            </div>
                                         </div>
                                     </div>
-                                    
+                                    @endforeach
                                 </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                     
                     @if($subscriptions->isNotEmpty())
@@ -228,6 +156,26 @@
       </div>
       <div class="modal-footer flex-nowrap justify-content-center align-items-center">
         <button type="button" class="btn btn-solid" id="continue_buy_subscription_btn" data-id="">Continue</button>
+        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="cancel-subscription" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="cancel_subscriptionLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="cancel_subscriptionLabel">Unsubscribe</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="m-0">Do you really want to cancel this subscription ?</h6>
+      </div>
+      <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+        <button type="button" class="btn btn-solid" id="cancel_subscription_confirm_btn" data-id="">Continue</button>
         <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
       </div>
     </div>
@@ -302,8 +250,8 @@
 @section('script')
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
-    var subscription_payment_options_url = "{{route('user.buySubscription', ':id')}}";
-    var user_subscription_purchase_url = "";
+    var subscription_payment_options_url = "{{route('user.subscription.plan.select', ':id')}}";
+    var user_subscription_purchase_url = "{{route('user.subscription.plan.purchase', ':id')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
     var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";

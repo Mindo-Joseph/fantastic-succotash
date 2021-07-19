@@ -116,6 +116,7 @@ $(document).ready(function() {
             url: subscription_payment_options_url,
             success: function(response) {
                 if(response.status == "Success"){
+                    $("#subscription_payment #subscription_title").attr('data-id', sub_id);
                     $("#subscription_payment #subscription_title").html(response.sub_plan.title);
                     $("#subscription_payment #subscription_price").html('$' + response.sub_plan.price);
                     $("#subscription_payment #subscription_amount").val(response.sub_plan.price);
@@ -134,7 +135,6 @@ $(document).ready(function() {
     $(document).delegate(".subscription_confirm_btn", "click", function(){
         var selected_option = $("input[name='subscription_payment_method']:checked");
         var payment_option_id = selected_option.data("payment_option_id");
-        $(this).attr("disabled", true);
         if( (selected_option.length > 0) && (payment_option_id > 0) ){
             if( payment_option_id == 4 ){
                 stripe.createToken(card).then(function(result) {
@@ -142,10 +142,12 @@ $(document).ready(function() {
                         $('#stripe_card_error').html(result.error.message);
                         $(this).attr("disabled", false);
                     } else {
+                        $(this).attr("disabled", true);
                         paymentViaStripe(result.token.id, '', payment_option_id);
                     }
                 });
             }else{
+                $(this).attr("disabled", true);
                 paymentViaPaypal('', payment_option_id);
             }
         }else{
@@ -275,8 +277,7 @@ $(document).ready(function() {
                         creditWallet(total_amount, payment_option_id, resp.data.id);
                     }
                     else if(path.indexOf("subscription") !== -1){
-                        location.href = path;
-                        userSubscriptionPurchase(payment_option_id, resp.data.id);
+                        userSubscriptionPurchase(total_amount, payment_option_id, resp.data.id);
                     }
                 }else{
                     if(path.indexOf("cart") !== -1){
@@ -464,26 +465,32 @@ $(document).ready(function() {
             }
         });
     }
-    function userSubscriptionPurchase(payment_option_id, transaction_id){
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: user_subscription_purchase_url,
-            data: {amount:amount, payment_option_id:payment_option_id, transaction_id:transaction_id},
-            success: function(response) {
-                if (response.status == "Success") {
-                    location.href = path;
-                }else{
-                    success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
-                    $(".subscription_confirm_btn").attr("disabled", false);
+    function userSubscriptionPurchase(amount, payment_option_id, transaction_id){
+        var id = $("#subscription_payment #subscription_title").attr('data-id');
+        if(id != ''){
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: user_subscription_purchase_url.replace(":id", id),
+                data: {amount:amount, payment_option_id:payment_option_id, transaction_id:transaction_id},
+                success: function(response) {
+                    if (response.status == "Success") {
+                        location.href = path;
+                    }else{
+                        success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
+                        $(".subscription_confirm_btn").attr("disabled", false);
+                    }
+                },
+                error: function(error){
+                    var response = $.parseJSON(error.responseText);
+                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                    $(".topup_wallet_confirm").removeAttr("disabled");
                 }
-            },
-            error: function(error){
-                var response = $.parseJSON(error.responseText);
-                success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                $(".topup_wallet_confirm").removeAttr("disabled");
-            }
-        });
+            });
+        }else{
+            success_error_alert('error', 'Invalid data', "#wallet_topup_form .payment_response");
+            $(".topup_wallet_confirm").removeAttr("disabled");
+        }
     }
     $(document).on("click", ".topup_wallet_confirm", function() {
         // $(".topup_wallet_confirm").attr("disabled", true);
