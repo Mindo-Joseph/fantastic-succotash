@@ -9,12 +9,16 @@
                 <label>Upload banner image</label>           
                 <input type="file" accept="image/*" data-plugins="dropify" data-default-file="{{$vendor->banner['proxy_url'] . '90/90' . $vendor->banner['image_path']}}" name="banner" class="dropify" />
             </div>
-            <div class="col-md-3">
-                <label>Upload Document</label>
-                <a class="d-block mb-1 document-btn" target="_blank" href="#">Document One</a>
-                <a class="d-block mb-1 document-btn" target="_blank" href="#">Document Two</a>
-                <a class="d-block mb-1 document-btn" target="_blank" href="#">Document Three</a>
-            </div>
+             @if(isset($vendor_docs))
+                @if($vendor_docs->count() > 0)
+                    <div class="col-md-3">
+                        <label>Upload Document</label>
+                        @foreach($vendor_docs as $k => $vendor_doc)
+                        <a class="d-block mb-1 document-btn" target="_blank" href="{{$vendor_doc->file_name['proxy_url'] . '90/90' . $vendor_doc->file_name['image_path']}}">Document{{$k+1}}</a>
+                        @endforeach
+                    </div>
+                @endif
+            @endif
         </div>
         {!! Form::hidden('vendor_id', $vendor->id, ['class'=>'form-control']) !!}
         <div class="row">

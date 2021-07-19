@@ -21,12 +21,6 @@
                                     <input type="file" accept="image/*" data-plugins="dropify" name="banner" class="dropify" data-default-file="" />
                                     <label class="logo-size text-right w-100">Image Size 1026x200</label>
                                 </div>
-                                <div class="col-md-3">
-                                    <label>Upload Document</label>
-                                    <a class="d-block mb-1 document-btn" target="_blank" href="#">Document One</a>
-                                    <a class="d-block mb-1 document-btn" target="_blank" href="#">Document Two</a>
-                                    <a class="d-block mb-1 document-btn" target="_blank" href="#">Document Three</a>
-                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
