@@ -144,6 +144,7 @@
                         <div class="custom-dd dd nestable_list_1" id="nestable_list_1">
                             <ol class="dd-list">
                                 @forelse($builds as $build)
+                                @if($build['translation_one'])
                                 <li class="dd-item dd3-item" data-category_id="{{$build['id']}}">
                                     <div class="dd3-content"> 
                                         <img class="rounded-circle mr-1" src="{{$build['icon']['proxy_url']}}30/30{{$build['icon']['image_path']}}"> {{$build['translation_one']['name']}}
@@ -203,6 +204,7 @@
                                     </ol>
                                     @endif
                                 </li>
+                                @endif
                                 @empty
                                 @endforelse
                             </ol>
