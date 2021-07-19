@@ -38,11 +38,25 @@ $timezone = Auth::user()->timezone;
                 <div class="text-sm-left">
                     @if (\Session::has('success'))
                         <div class="alert alert-success">
+                            <button type="button" class="close p-0" data-dismiss="alert">x</button>
                             <span>{!! \Session::get('success') !!}</span>
                         </div>
+                        @php
+                            \Session::forget('success');
+                        @endphp
+                    @endif
+                    @if (\Session::has('error'))
+                        <div class="alert alert-danger">
+                            <button type="button" class="close p-0" data-dismiss="alert">x</button>
+                            <span>{!! \Session::get('error') !!}</span>
+                        </div>
+                        @php
+                            \Session::forget('error');
+                        @endphp
                     @endif
                     @if ( ($errors) && (count($errors) > 0) )
                         <div class="alert alert-danger">
+                            <button type="button" class="close p-0" data-dismiss="alert">x</button>
                             <ul class="m-0">
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -71,8 +85,8 @@ $timezone = Auth::user()->timezone;
                     <div class="col-12 mb-4">
                         @if(!empty($active_subscriptions))
                             <div class="card subscript-box">
-                                <div class="row align-items-center">
-                                    @foreach($active_subscriptions as $subscription)
+                                @foreach($active_subscriptions as $subscription)
+                                <div class="row align-items-center mb-2">
                                     <div class="col-sm-3 text-center">
                                         <div class="gold-icon">
                                             <img src="{{$subscription->plan->image['proxy_url'].'100/100'.$subscription->plan->image['image_path']}}" alt="">
@@ -97,12 +111,12 @@ $timezone = Auth::user()->timezone;
                                                 <span>{{ convertDateTimeInTimeZone($subscription->next_date, $timezone, 'F d, Y, H:i A') }}</span>
                                             </div>
                                             <div class="col-sm-6 mb-0 text-center text-sm-right">
-                                                <a href="#cancel-subscription" data-toggle="modal">Cancel</a>
+                                                <a class="cancel-subscription-link" href="#cancel-subscription" data-toggle="modal" data-id="{{ $subscription->slug }}">Cancel</a>
                                             </div>
                                         </div>
                                     </div>
-                                    @endforeach
                                 </div>
+                                @endforeach
                             </div>
                         @endif
                     </div>
@@ -129,7 +143,11 @@ $timezone = Auth::user()->timezone;
                                         </ul>
                                     </div>
                                     <div class="pricingtable-purchase">
-                                        <button class="btn btn-solid w-100 subscribe_btn" data-id="{{ $plan->slug }}">Subscribe</button>
+                                        @if(in_array($plan->id, $active_subscription_plan_ids))
+                                            <button class="btn btn-solid black-btn disabled w-100">Subscribed</button>
+                                        @else
+                                            <button class="btn btn-solid w-100 subscribe_btn" data-id="{{ $plan->slug }}">Subscribe</button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -171,13 +189,16 @@ $timezone = Auth::user()->timezone;
           <span aria-hidden="true">×</span>
         </button>
       </div>
-      <div class="modal-body">
-        <h6 class="m-0">Do you really want to cancel this subscription ?</h6>
-      </div>
-      <div class="modal-footer flex-nowrap justify-content-center align-items-center">
-        <button type="button" class="btn btn-solid" id="cancel_subscription_confirm_btn" data-id="">Continue</button>
-        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
-      </div>
+      <form id="cancel-subscription-form" method="POST" action="">
+        @csrf
+        <div class="modal-body">
+            <h6 class="m-0">Do you really want to cancel this subscription ?</h6>
+        </div>
+        <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+            <button type="submit" class="btn btn-solid">Continue</a>
+            <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -252,6 +273,7 @@ $timezone = Auth::user()->timezone;
 <script type="text/javascript">
     var subscription_payment_options_url = "{{route('user.subscription.plan.select', ':id')}}";
     var user_subscription_purchase_url = "{{route('user.subscription.plan.purchase', ':id')}}";
+    var user_subscription_cancel_url = "{{route('user.subscription.plan.cancel', ':id')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
     var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
@@ -263,6 +285,11 @@ $timezone = Auth::user()->timezone;
         }else{
             $("#subscription_payment_methods .stripe_element_wrapper").addClass('d-none');
         }
+    });
+
+    $(document).on('click', '.cancel-subscription-link', function(){
+        var id = $(this).attr('data-id');
+        $('#cancel-subscription-form').attr('action', user_subscription_cancel_url.replace(":id", id));
     });
 </script>
 
