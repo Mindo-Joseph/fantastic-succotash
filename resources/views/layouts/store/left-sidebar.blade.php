@@ -12,7 +12,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="main-menu border-section border-top-0">
                     <div class="col-2 menu-left">                        
                         <div class="brand-logo">
-                            <a href="{{ route('userHome') }}"><img class="img-fluid blur-up lazyload" alt="" src="{{$clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path']}}" ></a>
+                            <a href="{{ route('userHome') }}"><img class="img-fluid blur-up lazyload" alt="" src="{{$clientData ? $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'] : ' '}}" ></a>
                         </div>
                     </div>
 
