@@ -789,11 +789,8 @@
                      <tbody id="post_list">
                         @forelse($vendor_registration_documents as $vendor_registration_document)
                         <tr>
-                           <td>
-                              {{$vendor_registration_document->file_type}}
-                           </td>
-                           <td>{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</a>
-                           </td>
+                           <td>{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</td>
+                           <td>{{$vendor_registration_document->file_type}}</td>
                            <td>
                               <div>
                                  <div class="inner-div" style="float: left;">

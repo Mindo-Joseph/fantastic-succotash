@@ -36,7 +36,7 @@
             </div>
             <h3>Your cart is empty!</h3>
             <p>Add items to it now.</p>
-            <a class="btn btn-solid" href="{{url('/')}}">Shop Now</a>
+            <a class="btn btn-solid" href="{{url('/')}}">Continue Shopping</a>
         </div>
     </div>
 </script>
@@ -372,7 +372,7 @@
             </div>
             <h3>Your cart is empty!</h3>
             <p>Add items to it now.</p>
-            <a class="btn btn-solid" href="{{url('/')}}">Shop Now</a>
+            <a class="btn btn-solid" href="{{url('/')}}">Continue Shopping</a>
         </div>
     </div>
     @endif

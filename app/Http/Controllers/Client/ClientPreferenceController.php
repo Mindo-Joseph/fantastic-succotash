@@ -22,7 +22,7 @@ class ClientPreferenceController extends BaseController{
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
-        $file_types = ['image/*' => 'Image', '.pdf' => 'Pdf'];
+        $file_types = ['image/*' => 'Image', '.pdf' => 'Pdf', 'text' => 'Text'];
         $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
         if($preference->reffered_by_amount == null){
             $reffer_by = 0;
