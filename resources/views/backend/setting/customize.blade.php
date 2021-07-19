@@ -259,12 +259,11 @@
             </div>
         </div>
         <div class="col-lg-4 col-lg-3 mb-3">
-            <form method="POST" class="h-100" action="{{route('client.updateDomain', Auth::user()->code)}}">
+            <form method="POST" class="h-100" action="{{route('nomenclature.store', Auth::user()->code)}}">
                 @csrf
                 <div class="card-box mb-0 h-100">
                     <div class="d-flex align-items-center justify-content-between">
                         <h4 class="header-title mb-0">Nomenclature</h4>
-                        <input type="hidden" name="send_to" id="send_to" value="customize">
                         <button class="btn btn-info d-block" type="submit"> Save </button>
                     </div>
                     <p class="sub-header">View and update the naming</p>

@@ -58,6 +58,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('account/loyalty/export', [LoyaltyController::class, 'export'])->name('account.loyalty.export');
     Route::get('account/order/export', [OrderController::class, 'export'])->name('account.order.export');
     Route::get('configure', 'Client\ClientPreferenceController@index')->name('configure.index');
+    Route::post('nomenclature/add', 'Client\NomenclatureController@store')->name('nomenclature.store');
     Route::post('cleanSoftDeleted', 'Client\ManageContentController@deleteAllSoftDeleted')->name('config.cleanSoftDeleted');
     Route::post('importDemoContent', 'Client\ManageContentController@importDemoContent')->name('config.importDemoContent');
     Route::post('hardDeleteEverything', 'Client\ManageContentController@hardDeleteEverything')->name('config.hardDeleteEverything');
