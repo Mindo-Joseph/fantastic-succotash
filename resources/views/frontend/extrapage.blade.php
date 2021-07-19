@@ -162,11 +162,11 @@
                                     <label for="">{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</label>
                                     <div class="file file--upload">
                                         <label for="input_file_logo_{{$vendor_registration_document->id}}">
-                                            <span class="update_pic">
-                                                <img src="" id="upload_logo_preview_{{$vendor_registration_document->id}}">
+                                            <span class="update_pic pdf-icon">
+                                                <img src=""  id="upload_logo_preview_{{$vendor_registration_document->id}}">
                                             </span>
-                                            <span class="plus_icon">
-                                                <i class="fas fa-plus"></i>
+                                            <span class="plus_icon" id="plus_icon_{{$vendor_registration_document->id}}">
+                                                <i class="fa fa-plus"></i>
                                             </span>
                                         </label>
                                         @if(strtolower($vendor_registration_document->file_type) == 'image')
@@ -206,6 +206,9 @@
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
             }
         });
+        function getExtension(filename) {
+            return filename.split('.').pop().toLowerCase();
+        }
         $("#phone").keypress(function(e) {
             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
                 return false;
@@ -215,15 +218,21 @@
         function readURL(input, previewId) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
+                var extension = getExtension(input.files[0].name);
                 reader.onload = function(e) {
-                    $(previewId).attr('src',e.target.result);
+                    if(extension == 'pdf'){
+                        $(previewId).attr('src','https://image.flaticon.com/icons/svg/179/179483.svg');
+                    }else{
+                        $(previewId).attr('src',e.target.result);
+                    }
                 }
                 reader.readAsDataURL(input.files[0]);
             }
         }
         $(document).on('change', '[id^=input_file_logo_]', function(event){
             var rel = $(this).data('rel');
-             readURL(this, '#upload_logo_preview_'+rel);
+            $('#plus_icon_'+rel).hide();
+            readURL(this, '#upload_logo_preview_'+rel);
         });
         $("#input_file_logo").change(function() {
             readURL(this, '#upload_logo_preview');

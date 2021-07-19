@@ -137,6 +137,7 @@
         $(document).on("click",".page-detail",function() {
             $('#edit_page_content #edit_description').val('');
             $('#edit_page_content #edit_description').summernote('destroy');
+            $('#edit_page_content #edit_description').summernote({height: 450});
             let url = $(this).data('show_url');
             let language_id = $('#edit_page_content #client_language :selected').val();
             $.get(url, {language_id:language_id},function(response) {

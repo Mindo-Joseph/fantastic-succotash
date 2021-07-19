@@ -17,10 +17,41 @@ class LoyaltyController extends Controller{
 
     public function index(Request $request){
         $loyalty_card_details = LoyaltyCard::get();
-        $total_loyalty_spent = Order::sum('loyalty_points_used');
-        $total_loyalty_earned = Order::sum('loyalty_points_earned');
+        
+        // total_loyalty_spent 
+        $total_loyalty_spent = Order::orderBy('id','desc');
+        if (Auth::user()->is_superadmin == 0) {
+            $total_loyalty_spent = $total_loyalty_spent->whereHas('vendors.vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $total_loyalty_spent =$total_loyalty_spent->sum('loyalty_points_used');
+
+
+        // total_loyalty_earned 
+        $total_loyalty_earned = Order::orderBy('id','desc');
+        if (Auth::user()->is_superadmin == 0) {
+            $total_loyalty_earned = $total_loyalty_earned->whereHas('vendors.vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $total_loyalty_earned =$total_loyalty_earned->sum('loyalty_points_earned');
+
+        
+
         $payment_options = PaymentOption::where('status', 1)->get();
-        $type_of_loyality_applied_count = Order::distinct('loyalty_membership_id')->count('loyalty_membership_id');
+
+         // type_of_loyality_applied_count 
+         $type_of_loyality_applied_count = Order::orderBy('id','desc');
+         if (Auth::user()->is_superadmin == 0) {
+             $type_of_loyality_applied_count = $type_of_loyality_applied_count->whereHas('vendors.vendor.permissionToUser', function ($query) {
+                 $query->where('user_id', Auth::user()->id);
+             });
+         }
+         $type_of_loyality_applied_count =$type_of_loyality_applied_count->distinct('loyalty_membership_id')->count('loyalty_membership_id');
+ 
+        
+
         return view('backend.accounting.loyality',compact('loyalty_card_details', 'total_loyalty_earned','total_loyalty_spent','type_of_loyality_applied_count', 'payment_options'));
     }
 
@@ -35,6 +66,12 @@ class LoyaltyController extends Controller{
             $month_number =  getMonthNumber($temp_arr[0]);
         }
         $orders_query = Order::with('user','paymentOption','loyaltyCard');
+        if (Auth::user()->is_superadmin == 0) {
+            $orders_query = $orders_query->whereHas('vendors.vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+
         if (!empty($request->get('date_filter'))) {
             $date_date_filter = explode('to', $request->get('date_filter'));
             $to_date = $date_date_filter[1];

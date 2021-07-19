@@ -50,9 +50,33 @@ class OrderController extends BaseController{
             });
         }
         $return_requests = $return_requests->count();
-        $pending_order_count = OrderVendor::where('order_status_option_id',1)->count();
-        $past_order_count = OrderVendor::whereIn('order_status_option_id',[6,3])->count();
-        $active_order_count = OrderVendor::whereIn('order_status_option_id',[2,4,5])->count();
+        // Pending counts 
+        $pending_order_count = OrderVendor::where('order_status_option_id',1);
+        if (Auth::user()->is_superadmin == 0) {
+            $pending_order_count = $pending_order_count->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $pending_order_count = $pending_order_count->count();
+
+        // post orders count 
+        $past_order_count = OrderVendor::whereIn('order_status_option_id',[6,3]);
+        if (Auth::user()->is_superadmin == 0) {
+            $past_order_count = $past_order_count->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $past_order_count = $past_order_count->count();
+
+        // active orders count 
+        $active_order_count = OrderVendor::whereIn('order_status_option_id',[2,4,5]);
+        if (Auth::user()->is_superadmin == 0) {
+            $active_order_count = $active_order_count->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $active_order_count = $active_order_count->count();
+
         return view('backend.order.index', compact('orders','return_requests', 'pending_order_count', 'active_order_count', 'past_order_count'));
     }
 
