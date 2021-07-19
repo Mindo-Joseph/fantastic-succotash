@@ -754,15 +754,15 @@
          </div>
          <div class="col-md-6 col-lx-4">
             <div class="card-box">
-               <div class="row align-items-center">
-                  <div class="col-md-3">
-                     <button class="btn btn-danger cleanSoftDeleted">Clean All Soft Deleted</button>
+               <div class="row align-items-center text-center">
+                  <div class="col-md-4">
+                     <button class="btn w-100 btn-danger cleanSoftDeleted">Clean All Soft Deleted</button>
                   </div>
-                  <div class="col-md-3">
-                     <button class="btn btn-danger importDemoContent">Import Demo Content</button>
+                  <div class="col-md-4">
+                     <button class="btn w-100 btn-danger importDemoContent">Import Demo Content</button>
                   </div>
-                  <div class="col-md-3">
-                     <button class="btn btn-danger hardDeleteEverything">Hard Delete Everything</button>
+                  <div class="col-md-4">
+                     <button class="btn w-100 btn-danger hardDeleteEverything">Hard Delete Everything</button>
                   </div>
                </div>
             </div>
