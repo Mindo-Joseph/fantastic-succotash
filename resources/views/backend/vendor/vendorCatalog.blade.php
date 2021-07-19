@@ -301,12 +301,16 @@
         </div>
     </div>
 </div>
+
+
 <script type="text/javascript">
     $('.addProductBtn').click(function() {
         $('#add-product').modal({
             keyboard: false
         });
     });
+
+  
 
     $('.importProductBtn').click(function() {
         $('#import-product').modal({

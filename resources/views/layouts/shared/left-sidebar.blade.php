@@ -132,7 +132,8 @@
                                     </div>
                                 </li>
                             @endif
-                            @if(count(array_intersect($subscription_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
+                            @if(Auth::user()->is_superadmin == 1)
+                            {{-- @if(count(array_intersect($subscription_permissions, $allowed)) || Auth::user()->is_superadmin == 1) --}}
                             <li>
                                 <a href="#sidebarsubscriptions" data-toggle="collapse">
                                     <span class="icon-subscribe"></span>

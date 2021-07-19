@@ -9,6 +9,7 @@ use Redirect;
 use DataTables;
 use Carbon\Carbon;
 use App\Models\UserVendor;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Imports\VendorImport;
@@ -19,7 +20,7 @@ use App\Http\Traits\ToasterResponser;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory};
+use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory,UserPermissions};
 use GuzzleHttp\Client as GCLIENT;
 use DB;
 class VendorController extends BaseController
@@ -122,7 +123,7 @@ class VendorController extends BaseController
                     'vendors_active_order_count' => $vendors_active_order_count
                 ]);
             }else{
-                return Redirect::route('vendor.show', $vendors->first()->id);
+                return Redirect::route('vendor.catalogs', $vendors->first()->id);
             }
         }else{
             return view('backend/vendor/index')->with([
@@ -594,6 +595,99 @@ class VendorController extends BaseController
                     }
                 
         }
+
+
+
+        // serach customer for vendor permission 
+
+        public function searchUserForPermission(Request $request)
+            {
+                $search = $request->get('query')??'';
+                $vendor_id = $request->get('vendor_id')??0;
+                $alreadyids = UserVendor::where('vendor_id', $vendor_id)->pluck('user_id');
+                if (isset($search)) {
+                    if ($search == '') {
+                        $employees = User::orderby('name', 'asc')->select('id', 'name','email','phone_number')->whereNotIn('id',$alreadyids)->limit(10)->get();
+                    } else {
+                        $employees = User::orderby('name', 'asc')->select('id', 'name','email','phone_number')->whereNotIn('id',$alreadyids)->where('name', 'LIKE', "%{$search}%")->limit(10)->get();
+                    }
+                    $output = '<ul class="dropdown-menu" style="display:block; position:relative">';
+                        foreach($employees as $row)
+                        {
+                        $output .= '
+                        <li data-id="'.$row->id.'"><a href="#">'.$row->name.'('.$row->email.')</a></li>
+                        ';
+                        }
+                        $output .= '</ul>';
+                        echo $output;
+                        
+                }
+            }
+
+      /**
+     * submit permissions for user via vendor
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function permissionsForUserViaVendor(Request $request, $domain = ''){
+        DB::beginTransaction();
+        try {
+        $rules = array(
+             'ids' => 'required',
+        );
+        //dd($request->all());
+        $validation  = Validator::make($request->all(), $rules)->validate();
+
+        $id = $request->ids;
+        $data = [
+            'status' => 1,
+            'is_admin' => 1,
+            'is_superadmin' => 0
+        ];
+        $client = User::where('id', $id)->update($data);
+
+        if(UserPermissions::where('user_id', $id)->count() == 0){
+            //for updating permissions
+            $request->permissions = [1,2,3,12,17,18,19,20,21];
+            $removepermissions = UserPermissions::where('user_id', $id)->delete();
+            if ($request->permissions) {
+                $userpermissions = $request->permissions;
+                $addpermission = [];
+                for ($i=0;$i<count($userpermissions);$i++) {
+                    $addpermission[] =  array('user_id' => $id,'permission_id' => $userpermissions[$i]);
+                }
+                UserPermissions::insert($addpermission);
+            }
+        }
+        
+         //for updating vendor permissions
+        
+            $addvendorpermissions = UserVendor::updateOrCreate(['user_id' =>  $id,'vendor_id' => $request->vendor_id]);
+            DB::commit();
+            return $this->successResponse($client,'Updated.');
+        }catch (Exception $e) {
+            DB::rollback();
+            return $this->errorResponse($e->getMessage(), 400);
+        }
+      
+    }      
+    
+    /**
+     * Remove the specified user fro vendor permission
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function userVendorPermissionDestroy($domain = '', $id)
+    {
+        $del_price_rule = UserVendor::where('id', $id);
+         $del_price_rule = $del_price_rule->delete();
+
+        return redirect()->back()->with('success', 'Permission deleted successfully!');
+    }
+
     
 
     
