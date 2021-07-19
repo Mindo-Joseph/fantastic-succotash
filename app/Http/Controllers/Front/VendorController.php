@@ -82,7 +82,6 @@ class VendorController extends FrontController
                 // abort(404);
             }
         }
-
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
@@ -91,27 +90,29 @@ class VendorController extends FrontController
                     $q->select('title', 'brand_id')->where('brand_translations.language_id', $langId);
                 }])->select('brand_id')->where('vendor_id', $vendor->id)
                 ->where('brand_id', '>', 0)->groupBy('brand_id')->get();
-        $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
-                            $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
-                            $zx->select('variant_options.*', 'vt.title');
-                            $zx->where('vt.language_id', $langId);
-                        }
-                    ])->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id')
-                    ->join('variant_translations as vt','vt.variant_id','vr.id')
-                    ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
-                    ->where('vt.language_id', $langId)
-                    ->whereIn('product_id', function($qry) use($vendor){ 
-                        $qry->select('id')->from('products')
-                            ->where('vendor_id', $vendor->id);
-                    })->groupBy('product_variant_sets.variant_type_id')->get();
-        $navCategories = $this->categoryNav($langId);
-        $vendorIds[] = $vendor->id;
-        $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
-        $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-        if(!empty($slug2)){
-            $vendor->vendor_templete_id = '';
-        }
-        $listData = $this->listData($langId, $vendor->id, $vendor->vendor_templete_id, $slug2);
+                $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
+                    $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
+                    $zx->select('variant_options.*', 'vt.title');
+                    $zx->where('vt.language_id', $langId);
+                }
+                ])->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id')
+                ->join('variant_translations as vt','vt.variant_id','vr.id')
+                ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
+                ->where('vt.language_id', $langId)
+                ->whereIn('product_id', function($qry) use($vendor){ 
+                    $qry->select('id')->from('products')
+                    ->where('vendor_id', $vendor->id);
+                })->groupBy('product_variant_sets.variant_type_id')->get();
+                $navCategories = $this->categoryNav($langId);
+                $vendorIds[] = $vendor->id;
+                $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
+                // pr($np->toArray());die;
+                $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
+                if(!empty($slug2)){
+                    $vendor->vendor_templete_id = '';
+                }
+                $listData = $this->listData($langId, $vendor->id, $vendor->vendor_templete_id, $slug2);
+                // dd($listData);
         $page = ($vendor->vendor_templete_id == 2) ? 'categories' : 'products';
         return view('frontend/vendor-'.$page)->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
     }
@@ -149,7 +150,10 @@ class VendorController extends FrontController
                 $category = Category::select('id')->where('slug', $categorySlug)->firstOrFail();
                 $products = $products->where('category_id', $category->id);
             }
+            // $sample = $products->where('is_live', 1)->where('vendor_id', $vid);
             $products = $products->where('is_live', 1)->where('vendor_id', $vid)->paginate($pagiNate);
+            // $sample = $sample->join('product_variants', 'product_variants.product_id', '=', 'products.id')->orderBy('product_variants.price', 'DESC')->get();
+            // pr($sample->toArray());die; 
             if(!empty($products)){
                 foreach ($products as $key => $value) {
                     foreach ($value->variant as $k => $v) {
@@ -157,6 +161,7 @@ class VendorController extends FrontController
                     }
                 }
             }
+        // pr($products->toArray());die;
             $listData = $products;
             return $listData;
         }

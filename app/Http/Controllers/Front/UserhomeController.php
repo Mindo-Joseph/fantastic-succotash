@@ -48,9 +48,11 @@ class UserhomeController extends FrontController{
             Session::put('navCategories', $navCategories);
             $clientPreferences = ClientPreference::first();
             $count = 0;
-            if($clientPreferences->dinein_check == 1){$count++;}
-            if($clientPreferences->takeaway_check == 1){$count++;}
-            if($clientPreferences->delivery_check == 1){$count++;}
+            if($clientPreferences){
+                if($clientPreferences->dinein_check == 1){$count++;}
+                if($clientPreferences->takeaway_check == 1){$count++;}
+                if($clientPreferences->delivery_check == 1){$count++;}
+            }
             if($preferences){
                 if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                     $selectedAddress = $preferences->Default_location_name;
@@ -100,7 +102,7 @@ class UserhomeController extends FrontController{
         }
         Session::forget('type');
         Session::put('type', $request->type);
-        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where($request->type, 1);
+        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where($request->type, 1)->where('status', 1);
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                 $selectedAddress = $preferences->Default_location_name;

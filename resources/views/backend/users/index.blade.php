@@ -176,6 +176,7 @@
                 },
                 columns: [
                     {data: 'image_url', name: 'image_url', orderable: false, searchable: false,"mRender": function ( data, type, full ) {
+                        console.log(full);
                         return "<img src='"+full.image_url+"' class='rounded-circle' alt='"+full.id+"' >";
                     }},
                     {data: 'name', name: 'name', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
@@ -191,9 +192,17 @@
                     }},
                     {data: 'is_phone_verified', name: 'is_phone_verified', orderable: false, searchable: false, "mRender": function ( data, type, full) {
                         if(full.is_phone_verified == 1){
-                            return "<i class='mdi mdi-phone-check mr-1 mdi-icons'></i>"+full.login_type_value;
+                            if(full.phone_number){
+                                return "<i class='mdi mdi-phone-check mr-1 mdi-icons'></i>"+full.phone_number;
+                            }else{
+                                return "";
+                            }
                         }else{
-                            return full.login_type_value;
+                            if(full.phone_number){
+                                return full.phone_number;
+                            }else{
+                                return "";
+                            }
                         }
                     }},
                     {data: 'email_token', name: 'email_token', orderable: false, searchable: false},
