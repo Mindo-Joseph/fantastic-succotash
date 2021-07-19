@@ -28,17 +28,22 @@
                         <div class="needs-validation vendor-signup">
                             <input type="hidden" name="user_id" value="{{$user ? $user->id : ''}}">
                             <div class="form-row">
-                                <div class="col-md-6 mb-3" id="full_nameInput">
-                                    <label for="fullname">Full name</label>
+                                <div class="col-md-4 mb-3" id="full_nameInput">
+                                    <label for="fullname">Full Name</label>
                                     <input type="text" class="form-control" name="full_name" value="{{$user ? $user->name : ''}}" {{$user ? 'disabled' : ''}}>
                                     <div class="invalid-feedback" id="full_name_error"><strong></strong></div>
                                 </div>
-                                <div class="col-md-6 mb-3" id="phone_numberInput">
+                                <div class="col-md-4 mb-3" id="phone_numberInput">
                                     <label for="validationCustom02">Phone No.</label>
                                     <input type="tel" class="form-control" name="phone_number" value="{{$user ? $user->phone_number : ''}}" id="phone" {{$user ? 'disabled' : ''}}>
                                     <div class="invalid-feedback" id="phone_number_error"><strong></strong></div>
                                     <input type="hidden" id="countryData" name="countryData" value="us">
                                     <input type="hidden" id="dialCode" name="dialCode" value="{{$user ? $user->dial_code : ''}}">
+                                </div>
+                                <div class="col-md-4 mb-3" id="full_nameInput">
+                                    <label for="fullname">Title</label>
+                                    <input type="text" class="form-control" name="title" value="{{$user ? $user->title : ''}}">
+                                    <div class="invalid-feedback" id="full_name_error"><strong></strong></div>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -153,7 +158,7 @@
                             @endif
                             <div class="form-row">
                                 @foreach($vendor_registration_documents as $vendor_registration_document)
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-6 mb-3" id="{{$vendor_registration_document->primary->slug}}Input">
                                     <label for="">{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</label>
                                     <div class="file file--upload">
                                         <label for="input_file_logo_{{$vendor_registration_document->id}}">
@@ -165,10 +170,11 @@
                                             </span>
                                         </label>
                                         @if(strtolower($vendor_registration_document->file_type) == 'image')
-                                            <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="vendor_registration_document[]" accept="image/*" data-rel="{{$vendor_registration_document->id}}">
+                                            <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept="image/*" data-rel="{{$vendor_registration_document->id}}">
                                         @else
-                                        <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="vendor_registration_document[]" accept=".pdf,.doc" data-rel="{{$vendor_registration_document->id}}">
+                                        <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept=".pdf,.doc" data-rel="{{$vendor_registration_document->id}}">
                                         @endif
+                                        <div class="invalid-feedback" id="{{$vendor_registration_document->primary->slug}}_error"><strong></strong></div>
                                     </div>
                                 </div>      
                                  @endforeach   
@@ -302,9 +308,9 @@
                     $('#register_btn_loader').hide();
                     that.attr('disabled', false);
                     if (data.status == 'success') {
+                        $('img').attr('src', '');
+                        $('input[type=file]').val('');
                         $("#vendor_signup_form")[0].reset();
-                        $('#upload_logo_preview').attr('src', '');
-                        $('#upload_banner_preview').attr('src', '');
                         $('#success_msg').html(data.message).show();
                         setTimeout(function() {
                             $('#success_msg').html('').hide();

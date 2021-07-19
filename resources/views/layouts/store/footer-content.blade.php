@@ -67,7 +67,7 @@ $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'
                             <ul>
                                 @foreach($social_media_details as $social_media_detail)
                                 <li>
-                                    <a href="{{$social_media_detail->url}}" target="_blank">
+                                    <a href="{{http_check($social_media_detail->url)}}" target="_blank">
                                         <i class="fa fa-{{$social_media_detail->icon}}" aria-hidden="true"></i>
                                     </a>
                                 </li>

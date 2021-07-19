@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 use DB;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use App\Models\VendorRegistrationDocument;
@@ -25,6 +26,7 @@ class VendorRegistrationDocumentController extends BaseController{
                 if($name){
                     $VendorRegistrationDocumentTranslation = new VendorRegistrationDocumentTranslation();
                     $VendorRegistrationDocumentTranslation->name = $name;
+                    $VendorRegistrationDocumentTranslation->slug = Str::slug($name, '-');
                     $VendorRegistrationDocumentTranslation->language_id = $language_id[$k];
                     $VendorRegistrationDocumentTranslation->vendor_registration_document_id = $vendor_registration_document->id;
                     $VendorRegistrationDocumentTranslation->save();
@@ -62,7 +64,6 @@ class VendorRegistrationDocumentController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, VendorRegistrationDocument $vendorRegistrationDocument){
-
         
     }
 

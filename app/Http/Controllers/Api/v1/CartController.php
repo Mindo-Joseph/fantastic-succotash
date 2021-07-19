@@ -520,6 +520,9 @@ class CartController extends BaseController{
         $cart->total_discount_amount = $total_disc_amount;
         if($cart->user_id > 0){
             $cart->loyalty_amount = $this->getLoyaltyPoints($cart->user_id, $clientCurrency->doller_compare);
+            if($total_paying < $cart->loyalty_amount){
+               $cart->loyalty_amount = 0.00; 
+            }
             // $cart->wallet = $this->getWallet($cart->user_id, $clientCurrency->doller_compare, $currency);
         }
         $cart->products = $cartData;
@@ -540,8 +543,8 @@ class CartController extends BaseController{
                                                 'longitude' => $vendor_details->longitude??76.80350870
                                                 );
                             $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
-                                              'longitude' => $cus_address->longitude??76.803508700000
-                                            );
+                                    'longitude' => $cus_address->longitude??76.803508700000
+                                );
                             $postdata =  ['locations' => $location];
                             $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
                                                         'shortcode' => $dispatch_domain->delivery_service_key_code,

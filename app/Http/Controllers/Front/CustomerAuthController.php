@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions, VendorDocs};
+use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions, VendorDocs, VendorRegistrationDocument};
 
 class CustomerAuthController extends FrontController
 {
@@ -200,13 +200,14 @@ class CustomerAuthController extends FrontController
     public function postVendorregister(Request $request, $domain = ''){
         try {
             DB::beginTransaction();
+            $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
             if (empty($request->input('user_id'))){
-                $vendor_registration_document_count = VendorRegistrationDocument::with('primary')->count();
-                if($vendor_registration_document_count->count() > 0){
+                if($vendor_registration_documents->count() > 0){
                     $request->validate([
                         'address' => 'required',
                         'full_name' => 'required',
                         'email' => 'required|email|unique:users',
+                        'vendor_registration_document.*.did_visit' => 'required',
                         'password' => 'required|string|min:6|max:50',
                         'confirm_password' => 'required|same:password',
                         'name' => 'required|string|max:150|unique:vendors',
@@ -224,10 +225,14 @@ class CustomerAuthController extends FrontController
                     ]);
                 }
             }else {
-                 $request->validate([
-                    'address' => 'required',
-                    'name' => 'required|string|max:150|unique:vendors',
-                ]);
+                $rules_array = [
+                        'address' => 'required',
+                        'name' => 'required|string|max:150|unique:vendors',
+                ];
+                foreach ($vendor_registration_documents as $vendor_registration_document) {
+                    $rules_array[$vendor_registration_document->primary->slug] = 'required';
+                }
+                $request->validate($rules_array);
             }
             $client_detail = Client::first();
             $client_preference = ClientPreference::first();
@@ -243,6 +248,7 @@ class CustomerAuthController extends FrontController
                 $user->is_phone_verified = 0;
                 $user->name = $request->name;
                 $user->email = $request->email;
+                $user->title = $request->title;
                 $user->country_id = $county->id;
                 $user->dial_code = $request->dialCode;
                 $user->phone_token_valid_till = $sendTime;
@@ -255,6 +261,8 @@ class CustomerAuthController extends FrontController
                 $wallet = $user->wallet;
             }else{
                 $user = User::where('id', $request->user_id)->first();
+                $user->title = $request->title;
+                $user->save();
             }
             $vendor = new Vendor();
             $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0;
@@ -283,17 +291,21 @@ class CustomerAuthController extends FrontController
             $vendor->save();
             $permission_detail = Permissions::where('slug', 'vendors')->first();
             if ($request->hasFile('vendor_registration_document')) {
-                $vendor_registration_documents = $request->vendor_registration_document;
                 foreach ($vendor_registration_documents as $vendor_registration_document) {
-                    $vendor_docs =  new VendorDocs();
-                    $vendor_docs->vendor_id = $vendor->id;
-                    $vendor_docs->file_name = Storage::disk('s3')->put('/vendor', $vendor_registration_document, 'public');
-                    $vendor_docs->save();
+                    $name = $vendor_registration_document->primary->slug;
+                    $vendor_registration_documents = $request->$name;
+                    foreach ($vendor_registration_documents as $vendor_registration_document) {
+                        $vendor_docs =  new VendorDocs();
+                        $vendor_docs->vendor_id = $vendor->id;
+                        $vendor_docs->file_name = Storage::disk('s3')->put('/vendor', $vendor_registration_document, 'public');
+                        $vendor_docs->save();
+                    }
                 }
             }
             UserVendor::create(['user_id' => $user->id, 'vendor_id' => $vendor->id]);
             UserPermissions::create(['user_id' => $user->id, 'permission_id' => $permission_detail->id]);
             $email_data = [
+                'title' => $user->title,
                 'email' => $user->email,
                 'powered_by' => url('/'),
                 'website' => $vendor->website,
