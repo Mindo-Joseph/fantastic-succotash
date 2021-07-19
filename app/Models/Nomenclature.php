@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Nomenclature extends Model
 {
     use HasFactory;
+    protected $fillable = ['label', 'value'];
 }
