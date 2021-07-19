@@ -14,4 +14,7 @@ class OrderTax extends Model
         return $this->hasOne('App\Models\TaxCategory' , 'id', 'tax_category_id'); 
     }
 
+    public function order(){
+	    return $this->hasOne('App\Models\Order' , 'id', 'order_id'); 
+	}
 }

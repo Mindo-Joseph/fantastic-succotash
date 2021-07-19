@@ -12,4 +12,8 @@ class VendorOrderStatus extends Model
     public function OrderStatusOption(){
        return $this->hasOne('App\Models\OrderStatusOption', 'id', 'order_status_option_id'); 
     }
+
+    public function vendor(){
+        return $this->belongsTo('App\Models\Vendor', 'vendor_id', 'id')->select('id', 'name', 'desc', 'logo', 'banner', 'order_pre_time', 'auto_reject_time', 'order_min_amount');
+    }
 }
