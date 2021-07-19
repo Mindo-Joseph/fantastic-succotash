@@ -158,7 +158,7 @@
                                             </a>
                                         </span> 
                                     </div>
-                                    @if(isset($build['children']))
+                                    @if(isset($build['children'])) 
                                     <ol class="dd-list">
                                         @forelse($build['children']  as $first_child)
                                         @if(isset($first_child['translation_one']))
