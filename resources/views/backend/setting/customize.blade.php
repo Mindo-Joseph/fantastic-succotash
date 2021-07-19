@@ -267,7 +267,7 @@
                         <div class="col-sm-12">
                             <div class="form-group mb-3">
                                 <label for="custom_domain">Vendors</label>
-                                <input type="text" name="custom_domain" id="custom_domain" placeholder="xyz" class="form-control" value="{{ old('custom_domain', $nomenclature_value ?? '')}}">
+                                <input type="text" name="custom_domain" id="custom_domain" placeholder="xyz" class="form-control" value="{{ $nomenclature_value ? $nomenclature_value->value : ''}}">
                                 @if($errors->has('custom_domain'))
                                     <span class="text-danger" role="alert">
                                         <strong>{{ $errors->first('custom_domain') }}</strong>

@@ -70,6 +70,7 @@
         </div>
     </div>
 </div>
+@if(Auth::user()->is_superadmin == 1)
 <div class="card-box">
     <div class="row text-left">
         <div class="col-md-12">
@@ -194,9 +195,24 @@
         </div>
     </div>
 </div>
+@endif
+<style type="text/css">
+    #nestable_list_1 ol, #nestable_list_1 ul{
+        list-style-type: none;
+    }
+</style>
+
 @if(count($vendor->permissionToUser))
+<<<<<<< HEAD
 <div class="card-box">
     <h4 class="header-title mb-3">Users</h4>
+=======
+ <div class="card-box">
+    <h4 class="header-title mb-2 d-inline-block">Users</h4>
+    <h4 class="header-title mb-1 float-right"><a class="btn addUsersBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1" ></i> Add Users
+    </a></h4>
+    
+>>>>>>> dinesh
     <div class="inbox-widget" data-simplebar style="max-height: 350px;">
         @foreach($vendor->permissionToUser as $users)
         <div class="inbox-item">
@@ -205,9 +221,25 @@
 
                 {{-- <img src="{{asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt=""> --}}
             </div>
+<<<<<<< HEAD
             <p class="inbox-item-author">{{ $users->user->name??'' }}</p>
             <p class="inbox-item-text"><i class="fa fa-envelope" aria-hidden="true"></i> <span>{{ $users->user->email??'' }}</span> <i class="fa fa-phone" aria-hidden="true"> {{ $users->user->phone_number??'' }}</i></p>
+=======
+            <p class="inbox-item-author">{{ $users->user->name??'' }} 
+               
+            </p>
+            <p class="inbox-item-text"><i class="fa fa-envelope" aria-hidden="true"> {{ $users->user->email??'' }}</i> @if($users->user->phone_number)<i class="fa fa-phone" aria-hidden="true"> {{ $users->user->phone_number??'' }}</i>@endif</p>
+            @if($users->user->id != Auth::id())
+            <form method="POST" action="{{route('user.vendor.permission.destroy', $users->id)}}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-primary-outline" onclick="return confirm('Are you sure ?');"> <i class="mdi mdi-delete"></i></button>
+        
+                    </form>
+            @endif
+>>>>>>> dinesh
         </div>
+       
         @endforeach
     </div>
 </div>
@@ -232,7 +264,48 @@
         </div>
     </div>
 </div>
+
+
+<div id="add-user-permission" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add User</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form id="add_user_permission_vendor" method="post" enctype="multipart/form-data" action="{{route('permissionsForUserViaVendor')}}">
+                @csrf
+                <input type="hidden" name="vendor_id" value="{{$vendor->id}}" id="set-vendor_id">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <div class="form-group" id="skuInput">
+                                        {!! Form::text('search', null, ['class' => 'form-control', 'placeholder' => 'Search User', 'id' => 'id_search_user_for_permission', 'required' => 'required']) !!}
+                                        <input type="hidden" id='cusid' name="ids" readonly>
+                                        <div id="userList">
+                                        </div>
+                                    </div>
+                                </div>
+
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span class="text-danger" id="error-msg"></span>
+                <span class="text-success" id="success-msg"></span>
+                <div class="modal-footer">
+                    <button  class="btn btn-info waves-effect waves-light" id="user_permission_form_button">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
+<<<<<<< HEAD
     $(document).ready(function() {
         $.ajaxSetup({
             headers: {
@@ -266,6 +339,95 @@
             var vendor_id = "{{$vendor->id}}";
             var can_add_category = $(this).is(":checked");
             var url = "{{ url('client/vendor/activeCategory').'/'.$vendor->id}}"
+=======
+
+$('.addUsersBtn').click(function() {
+        $('#add-user-permission').modal({
+            keyboard: false
+        });
+    });
+    
+
+    $( document ).ready(function() {
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('input[name="_token"]').val()
+        }
+    });
+// search users for set permission 
+    $('#id_search_user_for_permission').keyup(function(){ 
+    var query = $(this).val();
+    var vendor_id = $('#set-vendor_id').val();
+    if(query != '')
+    {
+     var _token = $('input[name="_token"]').val();
+     $.ajax({
+      url:"{{ route('searchUserForPermission') }}",
+      method:"POST",
+      data:{query:query, _token:_token, vendor_id:vendor_id},
+      success:function(data){
+       $('#userList').fadeIn();  
+       $('#userList').html(data);
+      }
+     });
+    }
+});
+
+$(document).on('click', 'li', function(){  
+    $('#id_search_user_for_permission').val($(this).text());  
+    $('#cusid').val($(this).attr('data-id'));
+    $('#userList').fadeOut();  
+});  
+
+
+// submit permission for user 
+$('#add_user_permission_vendor').submit(function(e) {
+            
+            e.preventDefault();
+
+            var formData = new FormData(this);
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('permissionsForUserViaVendor') }}",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function() {
+                   $("#user_permission_form_button").html(
+                            '<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop(
+                            'disabled', true);
+                },
+                success: (data) => {
+                    if (data.status == 'Success') {
+                       $("#user_permission_form_button").html('Submitted');
+                       location.reload();
+                    } else {
+                        $('#error-msg').text(data.message);
+                        $("#user_permission_form_button").html('Submit').prop('disabled',
+                            false);
+                    }
+                },
+                error: function(data) {
+                    $('#error-msg').text(data.message);
+                    $("#user_permission_form_button").html('Submit').prop('disabled',
+                        false);
+                }
+            });
+        });
+
+
+
+
+    $(document).on('click', '#approve_btn, #reject_btn, #block_btn', function(){
+        var that  = $(this);
+        var status = that.data('status');
+        var vendor_id = that.data('vendor_id');
+        var text = that.text().toLowerCase();
+        var message = "Are you sure want to "+text+" this vendor?";
+        if(confirm(message)){
+>>>>>>> dinesh
             $.ajax({
                 url: url,
                 type: "POST",
