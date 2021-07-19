@@ -171,6 +171,8 @@
                                         </label>
                                         @if(strtolower($vendor_registration_document->file_type) == 'image')
                                             <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept="image/*" data-rel="{{$vendor_registration_document->id}}">
+                                        @if(strtolower($vendor_registration_document->file_type) == 'image')
+                                            <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept=".xlsx, .xls, .csv, text/html, text/plain" data-rel="{{$vendor_registration_document->id}}">
                                         @else
                                         <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept=".pdf,.doc" data-rel="{{$vendor_registration_document->id}}">
                                         @endif

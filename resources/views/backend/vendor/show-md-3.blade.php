@@ -182,7 +182,6 @@
                                         @endif
                                     </li>
                                     @endif
-<<<<<<< HEAD
                                     @empty
                                     @endforelse
                                 </ol>
@@ -191,15 +190,6 @@
                             @empty
                             @endforelse
                         </ol>
-=======
-                                </li>
-                                @endif
-                                @empty
-                                @endforelse
-                            </ol>
-                        </div>
->>>>>>> 221f496fec95bfef1ae44971a5105fcc23b9448e
-                    </div>
                 </div>
             </div>
         </div>
