@@ -194,9 +194,14 @@
                                         <div class="pricing-content">
                                             <p class="mb-0">{{ $plan->description }}</p>
                                         </div>
+                                        <ul class="mb-3">
+                                            @foreach($plan->features as $feature)
+                                                <li><i class="fa fa-check"></i> {{ $feature }}</li>
+                                            @endforeach
+                                        </ul>
                                     </div>
-                                    <div class="pricingtable-signup">
-                                        <a class="btn btn-solid w-100" href="#">Buy Now</a>
+                                    <div class="pricingtable-purchase">
+                                        <button class="btn btn-solid w-100 subscribe_btn" data-id="{{ $plan->slug }}">Subscribe</button>
                                     </div>
                                 </div>
                             </div>
@@ -209,14 +214,108 @@
     </div>
 </section>
 
+<div class="modal fade" id="confirm-buy-subscription" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="confirm_buy_subscriptionLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="confirm_buy_subscriptionLabel">Confirm Subscription</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="m-0">Do you really want to buy this subscription ?</h6>
+      </div>
+      <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+        <button type="button" class="btn btn-solid" id="continue_buy_subscription_btn" data-id="">Continue</button>
+        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="subscription_payment" tabindex="-1" aria-labelledby="subscription_paymentLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title text-17 mb-0 mt-0" id="subscription_paymentLabel">Subscription</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="" id="subscription_payment_form">
+        @csrf
+        @method('POST')
+        <div class="modal-body pb-0">
+            <div class="form-group">
+                <h5 class="text-17 mb-2" id="subscription_title"></h5>
+                <div class="text-36"><span id="subscription_price"></span></div>
+                <div><input type="hidden" name="subscription_amount" id="subscription_amount" value=""></div>
+            </div>
+            <hr class="mb-1" />
+            <div class="payment_response">
+                <div class="alert p-0 m-0" role="alert"></div>
+            </div>
+            <h5 class="text-17 mb-2">Debit From</h5>
+            <div class="form-group" id="subscription_payment_methods">
+            </div>
+        </div>
+        <div class="modal-footer d-block text-center">
+            <div class="row">
+                <div class="col-sm-6 pl-sm-0 pr-sm-1"><button type="button" class="btn btn-block btn-solid mt-2 subscription_confirm_btn">Buy Now</button></div>
+                <div class="col-sm-6 pr-sm-0 pl-sm-1"><button type="button" class="btn btn-block btn-solid mt-2" data-dismiss="modal">Cancel</button></div>
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/template" id="payment_method_template">
+    <% if(payment_options == '') { %>
+        <h6>Payment Methods Not Avaialable</h6>
+    <% }else{ %>
+        <% _.each(payment_options, function(payment_option, k){%>
+            <% if( (payment_option.slug != 'cash_on_delivery') && (payment_option.slug != 'loyalty_points') ) { %>
+                <label class="radio mt-2">
+                    <%= payment_option.title %> 
+                    <input type="radio" name="subscription_payment_method" id="radio-<%= payment_option.slug %>" value="<%= payment_option.slug %>" data-payment_option_id="<%= payment_option.id %>">
+                    <span class="checkround"></span>
+                </label>
+                <% if(payment_option.slug == 'stripe') { %>
+                    <div class="col-md-12 mt-3 mb-3 stripe_element_wrapper d-none">
+                        <div class="form-control">
+                            <label class="d-flex flex-row pt-1 pb-1 mb-0">
+                                <div id="stripe-card-element"></div>
+                            </label>
+                        </div>
+                        <span class="error text-danger" id="stripe_card_error"></span>
+                    </div>
+                <% } %>
+            <% } %>
+        <% }); %>
+    <% } %>
+</script>
+
 @endsection
 
 @section('script')
-<script src="{{asset('assets/libs/dropzone/dropzone.min.js')}}"></script>
-<script src="{{asset('assets/libs/dropify/dropify.min.js')}}"></script>
-
+<script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
-    
+    var subscription_payment_options_url = "{{route('user.buySubscription', ':id')}}";
+    var user_subscription_purchase_url = "";
+    var payment_stripe_url = "{{route('payment.stripe')}}";
+    var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
+    var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
+
+    $(document).on('change', '#subscription_payment_methods input[name="subscription_payment_method"]', function() {
+        var method = $(this).data("payment_option_id");
+        if(method == 4){
+            $("#subscription_payment_methods .stripe_element_wrapper").removeClass('d-none');
+        }else{
+            $("#subscription_payment_methods .stripe_element_wrapper").addClass('d-none');
+        }
+    });
 </script>
 
 @endsection

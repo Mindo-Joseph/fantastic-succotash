@@ -255,54 +255,30 @@
             </div>
         </div>
         <div class="col-lg-4 col-lg-3 mb-3">
-            <div class="card-box mb-0 h-100 pb-1">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                    <h4 class="header-title mb-0">Nomenclature</h4>
-                    <button class="btn btn-info d-block" id="add_social_media_modal_btn">
-                        <i class="mdi mdi-plus-circle mr-1"></i>Add
-                    </button>
+            <form method="POST" class="h-100" action="{{route('client.updateDomain', Auth::user()->code)}}">
+                @csrf
+                <div class="card-box mb-0 h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="header-title mb-0">Nomenclature</h4>
+                        <input type="hidden" name="send_to" id="send_to" value="customize">
+                        <button class="btn btn-info d-block" type="submit"> Save </button>
+                    </div>
+                    <p class="sub-header">View and update the naming</p>
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <div class="form-group mb-3">
+                                <label for="custom_domain">Vendor</label>
+                                <input type="text" name="custom_domain" id="custom_domain" placeholder="xyz" class="form-control" value="{{ old('custom_domain', $preference->domain->custom_domain ?? '')}}">
+                                @if($errors->has('custom_domain'))
+                                    <span class="text-danger" role="alert">
+                                        <strong>{{ $errors->first('custom_domain') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="table-responsive mt-3">
-                    <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="post_list">
-                            @forelse($social_media_details as $social_media_detail)
-                            <tr>
-                                <td>
-                                    <i class="fab fa-{{$social_media_detail->icon}}" aria-hidden="true"></i>
-                                </td>
-                                <td>
-                                    <a href="{{$social_media_detail->url}}" target="_blank">{{$social_media_detail->url}}</a>
-                                </td>
-                                <td>
-                                    <div>
-                                        <div class="inner-div" style="float: left;">
-                                            <a class="action-icon edit_social_media_option_btn" data-social_media_detail_id="{{$social_media_detail->id}}">
-                                                <i class="mdi mdi-square-edit-outline"></i>
-                                            </a>
-                                        </div>
-                                        <div class="inner-div">
-                                            <button type="button" class="btn btn-primary-outline action-icon delete_social_media_option_btn" data-social_media_detail_id="{{$social_media_detail->id}}">
-                                                <i class="mdi mdi-delete"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr align="center">
-                                <td colspan="4" style="padding: 20px 0">Result not found.</td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
