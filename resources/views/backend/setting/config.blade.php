@@ -771,55 +771,51 @@
       <div class="row">
          <div class="col-lg-6 col-lg-3 mb-3">
             <div class="card-box mb-0 h-100 pb-1">
-               <div class="d-flex align-items-center justify-content-between mb-2">
+               <div class="d-flex align-items-center justify-content-between mt-2">
                   <h4 class="header-title mb-0">Vendor Registration Documents</h4>
                   <a class="btn btn-info d-block" id="add_vendor_registration_document_modal_btn">
                      <i class="mdi mdi-plus-circle mr-1"></i>Add
                   </a>
                </div>
-               <div class="card">
-                  <div class="card-body">
-                     <div class="table-responsive">
-                        <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
-                           <thead>
-                              <tr>
-                                 <th>Name</th>
-                                 <th>Type</th>
-                                 <th>Action</th>
-                              </tr>
-                           </thead>
-                           <tbody id="post_list">
-                              @forelse($vendor_registration_documents as $vendor_registration_document)
-                              <tr>
-                                 <td>
-                                    {{$vendor_registration_document->file_type}}
-                                 </td>
-                                 <td>{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</a>
-                                 </td>
-                                 <td>
-                                    <div>
-                                       <div class="inner-div" style="float: left;">
-                                          <a class="action-icon edit_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}" href="javascript:void(0)">
-                                             <i class="mdi mdi-square-edit-outline"></i>
-                                          </a>
-                                       </div>
-                                       <div class="inner-div">
-                                          <button type="button" class="btn btn-primary-outline action-icon delete_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}">
-                                             <i class="mdi mdi-delete"></i>
-                                          </button>
-                                       </div>
-                                    </div>
-                                 </td>
-                              </tr>
-                              @empty
-                              <tr align="center">
-                                 <td colspan="4" style="padding: 20px 0">Result not found.</td>
-                              </tr>
-                              @endforelse
-                           </tbody>
-                        </table>
-                     </div>
-                  </div>
+               <div class="table-responsive mt-3">
+                  <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
+                     <thead>
+                        <tr>
+                           <th>Name</th>
+                           <th>Type</th>
+                           <th>Action</th>
+                        </tr>
+                     </thead>
+                     <tbody id="post_list">
+                        @forelse($vendor_registration_documents as $vendor_registration_document)
+                        <tr>
+                           <td>
+                              {{$vendor_registration_document->file_type}}
+                           </td>
+                           <td>{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</a>
+                           </td>
+                           <td>
+                              <div>
+                                 <div class="inner-div" style="float: left;">
+                                    <a class="action-icon edit_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}" href="javascript:void(0)">
+                                       <i class="mdi mdi-square-edit-outline"></i>
+                                    </a>
+                                 </div>
+                                 <div class="inner-div">
+                                    <button type="button" class="btn btn-primary-outline action-icon delete_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}">
+                                       <i class="mdi mdi-delete"></i>
+                                    </button>
+                                 </div>
+                              </div>
+                           </td>
+                        </tr>
+                        @empty
+                        <tr align="center">
+                           <td colspan="4" style="padding: 20px 0">Result not found.</td>
+                        </tr>
+                        @endforelse
+                     </tbody>
+                  </table>
                </div>
             </div>
          </div>
