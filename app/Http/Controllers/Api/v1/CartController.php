@@ -520,7 +520,7 @@ class CartController extends BaseController{
         $cart->total_discount_amount = $total_disc_amount;
         if($cart->user_id > 0){
             $cart->loyalty_amount = $this->getLoyaltyPoints($cart->user_id, $clientCurrency->doller_compare);
-            if($total_paying < $cart->loyalty_amount){
+            if($total_paying > $cart->loyalty_amount){
                $cart->loyalty_amount = 0.00; 
             }
             // $cart->wallet = $this->getWallet($cart->user_id, $clientCurrency->doller_compare, $currency);
