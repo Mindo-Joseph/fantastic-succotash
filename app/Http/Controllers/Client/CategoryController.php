@@ -78,15 +78,16 @@ class CategoryController extends BaseController{
         $save = $this->save($request, $cate, 'false');
         if($save > 0){
             foreach ($request->language_id as $key => $value) {
-                $trans = new Categorytranslation();
-                $trans->name = $request->name[$key];
-                $trans->meta_title = $request->meta_title[$key];
-                $trans->meta_description = $request->meta_description[$key];
-                $trans->meta_keywords = $request->meta_keywords[$key];
-                $trans->category_id = $save;
-                $trans->language_id = $request->language_id[$key];
-                $trans->save();
+                $category_translation = new Category_translation();
+                $category_translation->name = $request->name[$key];
+                $category_translation->meta_title = $request->meta_title[$key];
+                $category_translation->meta_description = $request->meta_description[$key];
+                $category_translation->meta_keywords = $request->meta_keywords[$key];
+                $category_translation->category_id = $save;
+                $category_translation->language_id = $request->language_id[$key];
+                $category_translation->save();
             }
+            die;
             $hs = new CategoryHistory();
             $hs->category_id = $save;
             $hs->action = 'Add';
