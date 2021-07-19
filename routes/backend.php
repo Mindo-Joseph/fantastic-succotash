@@ -101,6 +101,9 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('user/filterdata', 'Client\UserController@getFilterData')->name('user.filterdata');
     Route::resource('vendor', 'Client\VendorController');
     Route::get('vendor/categories/{id}', 'Client\VendorController@vendorCategory')->name('vendor.categories');
+    Route::post('vendor/search/customer', 'Client\VendorController@searchUserForPermission')->name('searchUserForPermission');
+    Route::post('vendor/permissionsForUserViaVendor', 'Client\VendorController@permissionsForUserViaVendor')->name('permissionsForUserViaVendor');
+    Route::DELETE('vendor/vendor-permission-del/{id}', 'Client\VendorController@userVendorPermissionDestroy')->name('user.vendor.permission.destroy'); 
     Route::get('vendor/catalogs/{id}', 'Client\VendorController@vendorCatalog')->name('vendor.catalogs');
     Route::post('vendor/saveConfig/{id}', 'Client\VendorController@updateConfig')->name('vendor.config.update');
     Route::post('vendor/activeCategory/{id}', 'Client\VendorController@activeCategory')->name('vendor.category.update');
