@@ -76,14 +76,12 @@
                             </div>
                             @endif
                         </div>
-
                         @if(!empty($variantSets) && count($variantSets) > 0)
                         @foreach($variantSets as $key => $sets)
                         <div class="collection-collapse-block border-0 open">
                             <h3 class="collapse-block-title">{{$sets->title}}</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="collection-brand-filter">
-
                                     @if($sets->type == 2)
                                         @foreach($sets->options as $ok => $opt)
                                         <div class="chiller_cb small_label d-inline-block color-selector">
@@ -97,7 +95,6 @@
                                             @endif
                                         </div>
                                         @endforeach
-
                                     @else
                                         @foreach($sets->options as $ok => $opt)
                                         <div class="custom-control custom-checkbox collection-filter-checkbox">
@@ -182,47 +179,36 @@
                                                     <div class="file file--upload">
                                                         <label>
                                                             <span class="update_pic border-0">
-                                                            <img src="https://imgproxy.royoorders.com/insecure/fill/1000/1000/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/default/default_image.png" alt="">
+                                                            <img src="{{$vendor->logo['proxy_url'] . '1000/200' . $vendor->logo['image_path']}}" alt="">
                                                             </span>
                                                         </label>
                                                     </div>
                                                     <div class="name_location d-block py-0">
-                                                        <h5 class="mt-0 mb-1">Demo_One</h5>
+                                                        <h5 class="mt-0 mb-1">{{$vendor->name}}</h5>
                                                     </div>
-                                                    <div class="">
-                                                        <a href="demo_one@gmail.com" target="_blank" data-toggle="tooltip" data-placement="bottom" title="demo_one@gmail.com"><i class="fa fa-envelope"></i></a>
-                                                        <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="Ploat No. 5, Madhya Marg, 28B, Sector 28B, Chandigarh, 160028"><i class="fa fa-address-card mx-1"></i></a>
-                                                        <a href="https://sales.royoorders.com/" target="_blank" data-toggle="tooltip" data-placement="bottom" title="https://sales.royoorders.com/"><i class="fa fa-home"></i></a>
-                                                    </div>
+                                                    @if($vendor->is_show_vendor_details == 1)
+                                                        <div class="">
+                                                            @if($vendor->email)
+                                                                <a href="{{$vendor->email}}" target="_blank" data-toggle="tooltip" data-placement="bottom" title="{{$vendor->email}}"><i class="fa fa-envelope"></i></a>
+                                                            @endif
+                                                            <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="{{$vendor->address}}"><i class="fa fa-address-card mx-1"></i></a>
+                                                            @if($vendor->website)
+                                                            <a href="{{$vendor->website}}" target="_blank" data-toggle="tooltip" data-placement="bottom" title="{{$vendor->website}}"><i class="fa fa-home"></i></a>
+                                                            @endif
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 </div>
+                                                @if($vendor->desc)
                                                 <div class="row">
-                                                    <!-- <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="emailaddress">Email address</label>
-                                                            <p><a href="demo_one@gmail.com">demo_one@gmail.com</a></p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group" id="">
-                                                            <label for="title" class="control-label">Website Url</label>
-                                                            <p><a href="https://sales.royoorders.com/">https://sales.royoorders.com/ </a></p>
-                                                        </div>
-                                                    </div>  
-                                                    <div class="col-12">
-                                                        <div class="form-group" id="">
-                                                            <label for="title" class="control-label">Address</label>
-                                                            <p>Ploat No. 5, Madhya Marg, 28B, Sector 28B, Chandigarh, 160028</p>
-                                                        </div>
-                                                    </div>                                                     -->
-                                                                                                      
                                                     <div class="col-md-12">
                                                         <div class="form-group" id="">
                                                             <label for="title" class="control-label">Description</label>
-                                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                                                            <p>{{$vendor->desc}}</p>
                                                         </div>
                                                     </div>                                                  
                                                 </div>
+                                                @endif
                                             </form>
                                         </div>
                                     </div>

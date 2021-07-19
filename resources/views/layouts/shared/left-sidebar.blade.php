@@ -91,7 +91,7 @@
                                 <li>
                                     <a href="{{route('vendor.index')}}">
                                     <span class="icon-vendor"></span>
-                                        <span> Vendors </span>
+                                        <span>{{getNomenclatureName('vendor')}}</span>
                                     </a>
                                 </li>
                             @endif

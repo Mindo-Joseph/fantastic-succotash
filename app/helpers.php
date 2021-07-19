@@ -1,6 +1,7 @@
 <?php
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use App\Models\Nomenclature;
 
 function changeDateFormate($date,$date_format){
     return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->format($date_format);    
@@ -53,6 +54,13 @@ function generateOrderNo($length = 8){
         }
     } while (!empty(\DB::table('orders')->where('order_number', $number)->first(['order_number'])) );
     return $number;
+}
+function getNomenclatureName($searchTerm){
+    $result = Nomenclature::where('label', 'LIKE', "%{$searchTerm}%")->first();
+    if($result){
+        $searchTerm = $result->value;
+    }
+    return $searchTerm;
 }
 function convertDateTimeInTimeZone($date, $timezone, $format = 'Y-m-d H:i:s'){
     $date = Carbon::parse($date, 'UTC');

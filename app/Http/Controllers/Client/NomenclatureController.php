@@ -18,10 +18,10 @@ class NomenclatureController extends BaseController
     public function store(Request $request)
     {
         $nomenclature = new NomenClature();
-        $nomenclature->label = "vendor";
+        $nomenclature->label = "vendors";
         $nomenclature->value = $request->custom_domain;
         $nomenclature->save();
-        return redirect()->route('configure.index')->with('success', 'Nomenclature Added Successfully!');
+        return redirect()->route('configure.customize')->with('success', 'Nomenclature Added Successfully!');
     }
 
 }

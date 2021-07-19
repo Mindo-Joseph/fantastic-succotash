@@ -266,7 +266,7 @@
                     <div class="row mb-2">
                         <div class="col-sm-12">
                             <div class="form-group mb-3">
-                                <label for="custom_domain">Vendor</label>
+                                <label for="custom_domain">Vendors</label>
                                 <input type="text" name="custom_domain" id="custom_domain" placeholder="xyz" class="form-control" value="{{ old('custom_domain', $preference->domain->custom_domain ?? '')}}">
                                 @if($errors->has('custom_domain'))
                                     <span class="text-danger" role="alert">
