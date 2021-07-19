@@ -161,41 +161,43 @@
                                     @if(isset($build['children']))
                                     <ol class="dd-list">
                                         @forelse($build['children']  as $first_child)
-                                        <li class="dd-item dd3-item" data-id="{{$first_child['id']}}">
-                                            <div class="dd3-content"> 
-                                                <img class="rounded-circle mr-1" src="{{$first_child['icon']['proxy_url']}}30/30{{$first_child['icon']['image_path']}}"> {{$first_child['translation_one']['name']}} 
-                                                <span class="inner-div text-right">
-                                                    <a class="action-icon" data-id="2" href="javascript:void(0)">
-                                                        @if(in_array($first_child['id'], $VendorCategory))
-                                                            <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="" {{$vendor->status == 1 ? '' : 'disabled'}}>
-                                                        @else
-                                                            <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
-                                                        @endif
-                                                    </a>
-                                                </span>
-                                            </div>
-                                            @if(isset($first_child['children']))
-                                                <ol class="dd-list">
-                                                    @forelse($first_child['children'] as $second_child)
-                                                        <li class="dd-item dd3-item" data-id="6">
-                                                            <div class="dd3-content">
-                                                                <img class="rounded-circle mr-1" src="{{$second_child['icon']['proxy_url']}}30/30{{$second_child['icon']['image_path']}}">{{$second_child['translation_one']['name']}}
-                                                                    <span class="inner-div text-right">
-                                                                        <a class="action-icon" data-id="6" href="javascript:void(0)">
-                                                                            @if(in_array($second_child['id'], $VendorCategory))
-                                                                                <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="" {{$vendor->status == 1 ? '' : 'disabled'}}>
-                                                                            @else
-                                                                                <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
-                                                                            @endif
-                                                                        </a>
-                                                                    </span> 
-                                                            </div>
-                                                        </li>
-                                                    @empty
-                                                    @endforelse
-                                                </ol>
-                                            @endif
-                                        </li>
+                                        @if(isset($first_child['translation_one']))
+                                            <li class="dd-item dd3-item" data-id="{{$first_child['id']}}">
+                                                <div class="dd3-content"> 
+                                                    <img class="rounded-circle mr-1" src="{{$first_child['icon']['proxy_url']}}30/30{{$first_child['icon']['image_path']}}"> {{$first_child['translation_one']['name']}} 
+                                                    <span class="inner-div text-right">
+                                                        <a class="action-icon" data-id="2" href="javascript:void(0)">
+                                                            @if(in_array($first_child['id'], $VendorCategory))
+                                                                <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                                            @else
+                                                                <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                                            @endif
+                                                        </a>
+                                                    </span>
+                                                </div>
+                                                @if(isset($first_child['children']))
+                                                    <ol class="dd-list">
+                                                        @forelse($first_child['children'] as $second_child)
+                                                            <li class="dd-item dd3-item" data-id="6">
+                                                                <div class="dd3-content">
+                                                                    <img class="rounded-circle mr-1" src="{{$second_child['icon']['proxy_url']}}30/30{{$second_child['icon']['image_path']}}">{{$second_child['translation_one']['name']}}
+                                                                        <span class="inner-div text-right">
+                                                                            <a class="action-icon" data-id="6" href="javascript:void(0)">
+                                                                                @if(in_array($second_child['id'], $VendorCategory))
+                                                                                    <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                                                                @else
+                                                                                    <input type="checkbox" data-category_id="{{ $second_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                                                                @endif
+                                                                            </a>
+                                                                        </span> 
+                                                                </div>
+                                                            </li>
+                                                        @empty
+                                                        @endforelse
+                                                    </ol>
+                                                @endif
+                                            </li>
+                                        @endif
                                         @empty
                                         @endforelse
                                     </ol>
