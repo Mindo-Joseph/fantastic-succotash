@@ -203,16 +203,11 @@
 </style>
 
 @if(count($vendor->permissionToUser))
-<<<<<<< HEAD
-<div class="card-box">
-    <h4 class="header-title mb-3">Users</h4>
-=======
  <div class="card-box">
     <h4 class="header-title mb-2 d-inline-block">Users</h4>
     <h4 class="header-title mb-1 float-right"><a class="btn addUsersBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1" ></i> Add Users
     </a></h4>
     
->>>>>>> dinesh
     <div class="inbox-widget" data-simplebar style="max-height: 350px;">
         @foreach($vendor->permissionToUser as $users)
         <div class="inbox-item">
@@ -221,10 +216,6 @@
 
                 {{-- <img src="{{asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt=""> --}}
             </div>
-<<<<<<< HEAD
-            <p class="inbox-item-author">{{ $users->user->name??'' }}</p>
-            <p class="inbox-item-text"><i class="fa fa-envelope" aria-hidden="true"></i> <span>{{ $users->user->email??'' }}</span> <i class="fa fa-phone" aria-hidden="true"> {{ $users->user->phone_number??'' }}</i></p>
-=======
             <p class="inbox-item-author">{{ $users->user->name??'' }} 
                
             </p>
@@ -237,7 +228,6 @@
         
                     </form>
             @endif
->>>>>>> dinesh
         </div>
        
         @endforeach
@@ -305,42 +295,7 @@
 </div>
 
 <script type="text/javascript">
-<<<<<<< HEAD
-    $(document).ready(function() {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('input[name="_token"]').val()
-            }
-        });
-        $(document).on('click', '#approve_btn, #reject_btn, #block_btn', function() {
-            var that = $(this);
-            var status = that.data('status');
-            var vendor_id = that.data('vendor_id');
-            var text = that.text().toLowerCase();
-            var message = "Are you sure want to " + text + " this vendor?";
-            if (confirm(message)) {
-                $.ajax({
-                    type: "POST",
-                    url: "{{route('vendor.status')}}",
-                    data: {
-                        vendor_id: vendor_id,
-                        status: status
-                    },
-                    success: function(data) {
-                        if (data.status == 'success') {
-                            $.NotificationApp.send("Success", data.message, "top-right", "#5ba035", "success");
-                            window.location.href = "{{ route('vendor.index') }}";
-                        }
-                    }
-                });
-            }
-        });
-        $(document).on('change', '.can_add_category1', function() {
-            var vendor_id = "{{$vendor->id}}";
-            var can_add_category = $(this).is(":checked");
-            var url = "{{ url('client/vendor/activeCategory').'/'.$vendor->id}}"
-=======
-
+    
 $('.addUsersBtn').click(function() {
         $('#add-user-permission').modal({
             keyboard: false
@@ -356,7 +311,7 @@ $('.addUsersBtn').click(function() {
         }
     });
 // search users for set permission 
-    $('#id_search_user_for_permission').keyup(function(){ 
+$('#id_search_user_for_permission').keyup(function(){ 
     var query = $(this).val();
     var vendor_id = $('#set-vendor_id').val();
     if(query != '')
@@ -419,7 +374,6 @@ $('#add_user_permission_vendor').submit(function(e) {
 
 
 
-
     $(document).on('click', '#approve_btn, #reject_btn, #block_btn', function(){
         var that  = $(this);
         var status = that.data('status');
@@ -427,68 +381,74 @@ $('#add_user_permission_vendor').submit(function(e) {
         var text = that.text().toLowerCase();
         var message = "Are you sure want to "+text+" this vendor?";
         if(confirm(message)){
->>>>>>> dinesh
             $.ajax({
-                url: url,
                 type: "POST",
-                dataType: "json",
-                data: {
-                    vendor_id: vendor_id,
-                    can_add_category: can_add_category
-                },
-                success: function(response) {
-                    if (response.status == 'Success') {
+                url: "{{route('vendor.status')}}",
+                data: { vendor_id: vendor_id , status:status},
+                success: function(data) {
+                    if(data.status == 'success'){
+                       $.NotificationApp.send("Success", data.message, "top-right", "#5ba035", "success");
+                       window.location.href = "{{ route('vendor.index') }}";
+                    }
+                }
+            });
+        }       
+    });
+    $(document).on('change', '.can_add_category1', function(){
+        var vendor_id = "{{$vendor->id}}";
+        var can_add_category = $(this).is(":checked");
+        var url = "{{ url('client/vendor/activeCategory').'/'.$vendor->id}}"
+        $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "json",
+            data: {vendor_id:vendor_id, can_add_category:can_add_category},
+            success: function(response) {
+                if (response.status == 'Success') {
 
-                    }
                 }
-            });
-        });
-        $(document).on('change', '#assignTo', function() {
-            var assignTo = $(this).val();
-            var vendor_id = "{{$vendor->id}}";
-            var url = "{{ url('client/vendor/activeCategory').'/'.$vendor->id}}"
-            $.ajax({
-                url: url,
-                type: "POST",
-                dataType: "json",
-                data: {
-                    vendor_id: vendor_id,
-                    assignTo: assignTo
-                },
-                success: function(response) {
-                    if (response.status == 'Success') {
-
-                    }
-                }
-            });
-        });
-        $(document).on('change', '.activeCategory', function() {
-            var vendor_id = "{{$vendor->id}}";
-            var status = $(this).is(":checked");
-            var category_id = $(this).data('category_id');
-            var url = "{{ url('client/vendor/activeCategory').'/'.$vendor->id}}"
-            $.ajax({
-                url: url,
-                type: "POST",
-                dataType: "json",
-                data: {
-                    category_id: category_id,
-                    status: status,
-                    vendor_id: vendor_id
-                },
-                success: function(response) {
-                    if (response.status == 'Success') {
-                        $('#category_list').html('');
-                        $('#category_list').html('<option value="">Select Category...</option>');
-                        $('#category_list').selectize()[0].selectize.destroy();
-                        $.each(response.data, function(key, value) {
-                            if (value.category.type_id == 1) {
-                                $('#category_list').append('<option value=' + value.category_id + '>' + value.category.slug + '</option>');
-                            }
-                        });
-                    }
-                }
-            });
+            }
         });
     });
+    $(document).on('change', '#assignTo', function(){
+        var assignTo = $(this).val();
+        var vendor_id = "{{$vendor->id}}";
+        var url = "{{ url('client/vendor/activeCategory').'/'.$vendor->id}}"
+        $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "json",
+            data: {vendor_id:vendor_id, assignTo:assignTo},
+            success: function(response) {
+                if (response.status == 'Success') {
+
+                }
+            }
+        });
+    });
+    $(document).on('change', '.activeCategory', function(){
+        var vendor_id = "{{$vendor->id}}";
+        var status = $(this).is(":checked");
+        var category_id = $(this).data('category_id');
+        var url = "{{ url('client/vendor/activeCategory').'/'.$vendor->id}}"
+        $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "json",
+            data: {category_id: category_id, status:status, vendor_id:vendor_id},
+            success: function(response) {
+                if (response.status == 'Success') {
+                    $('#category_list').html('');
+                   $('#category_list').html('<option value="">Select Category...</option>');
+                   $('#category_list').selectize()[0].selectize.destroy();
+                   $.each(response.data, function (key, value) {
+                        if(value.category.type_id == 1){
+                           $('#category_list').append('<option value='+value.category_id+'>'+value.category.slug+'</option>');
+                        }
+                   });
+                }
+            }
+        });
+    });
+});
 </script>
