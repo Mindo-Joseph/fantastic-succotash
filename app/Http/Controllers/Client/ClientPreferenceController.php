@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency, ReferAndEarn,SocialMedia, VendorRegistrationDocument};
+use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency, Nomenclature, ReferAndEarn,SocialMedia, VendorRegistrationDocument};
 
 class ClientPreferenceController extends BaseController{
 
@@ -53,13 +53,14 @@ class ClientPreferenceController extends BaseController{
         $primaryCurrency = ClientCurrency::where('is_primary', 1)->first();
         $ClientPreference = ClientPreference::with('language', 'primarylang', 'domain', 'currency.currency', 'primary.currency')->select('client_code', 'theme_admin', 'distance_unit', 'date_format', 'time_format', 'Default_location_name', 'Default_latitude', 'Default_longitude', 'verify_email', 'verify_phone', 'web_template_id', 'app_template_id', 'primary_color', 'secondary_color', 'reffered_by_amount', 'reffered_to_amount')->where('client_code', $client->code)->first();
         $preference = $ClientPreference ? $ClientPreference : new ClientPreference();
+        $nomenclature_value = Nomenclature::first();
         foreach ($preference->currency as $value) {
             $cli_currs[] = $value->currency_id;
         }
         foreach ($preference->language as $value) {
             $cli_langs[] = $value->language_id;
         }
-        return view('backend.setting.customize', compact('client', 'cli_langs','languages','currencies','preference','cli_currs','curtableData', 'webTemplates', 'appTemplates','primaryCurrency','social_media_details'));
+        return view('backend.setting.customize', compact('client','nomenclature_value','cli_langs','languages','currencies','preference','cli_currs','curtableData', 'webTemplates', 'appTemplates','primaryCurrency','social_media_details'));
     }
 
     public function referandearnUpdate(Request $request, $code){

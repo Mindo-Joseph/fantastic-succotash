@@ -103,6 +103,7 @@ class BaseController extends Controller
                         $this->htmlData .= '</li>';
                 }
             }
+            // pr($this->htmlData);
             $this->htmlData .= '</ol>';
         }
         return $this->htmlData;

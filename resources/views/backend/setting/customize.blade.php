@@ -270,7 +270,7 @@
                                 <input type="text" name="custom_domain" id="custom_domain" placeholder="xyz" class="form-control" value="{{ old('custom_domain', $preference->domain->custom_domain ?? '')}}">
                                 @if($errors->has('custom_domain'))
                                     <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('custom_domain') }}</strong>
+                                        <strong>{{ $nomenclature_value }}</strong>
                                     </span>
                                 @endif
                             </div>
