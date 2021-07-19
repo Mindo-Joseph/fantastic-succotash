@@ -224,4 +224,7 @@
 @section('script')
 @include('backend.vendor.pagescript')
     <script src="{{asset('js/admin_vendor.js')}}"></script>
+    <script type="text/javascript">
+        var search_text = "{{getNomenclatureName('vendors', false)}}";
+    </script>
 @endsection

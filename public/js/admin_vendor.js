@@ -109,7 +109,7 @@ $(document).ready(function() {
                 language: {
                     search: "",
                     paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
-                    searchPlaceholder: "Search By Vendor Name"
+                    searchPlaceholder: "Search By "+search_text+" Name"
                 },
                 drawCallback: function () {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
