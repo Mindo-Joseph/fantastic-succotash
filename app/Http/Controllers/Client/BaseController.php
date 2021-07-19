@@ -36,6 +36,9 @@ class BaseController extends Controller
         if (!is_null($tree) && count($tree) > 0) {
             $this->htmlData .= '<ol class="dd-list">';
             foreach ($tree as $node) {
+                if(!isset($node['translation_one'])){
+                    continue;
+                }
                 if(!empty($activeCategory)){
                     if (in_array($node['id'], $activeCategory)) {
                         $this->htmlData .= '<li class="dd-item dd3-item" data-id="' . $node["id"] . '">';
@@ -68,8 +71,7 @@ class BaseController extends Controller
                         }
                         $this->htmlData .= '</li>';
                     }
-                }
-                else{
+                }else{
                     $this->htmlData .= '<li class="dd-item dd3-item" data-id="' . $node["id"] . '">';
                         if ($from == 'category') {
                             $this->htmlData .= '<div class="dd-handle dd3-handle"></div>';
