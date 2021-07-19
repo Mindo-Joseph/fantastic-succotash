@@ -79,7 +79,7 @@
                                                 <img src="" id="upload_logo_preview">
                                             </span>
                                             <span class="plus_icon">
-                                                <i class="fas fa-plus"></i>
+                                                <i class="fa fa-plus"></i>
                                             </span>
                                         </label>
                                         <input id="input_file_logo" type="file" name="upload_logo" accept="image/*">
@@ -92,7 +92,7 @@
                                             <span class="update_pic">
                                                 <img src="" id="upload_banner_preview">
                                             </span>
-                                            <span class="plus_icon"><i class="fas fa-plus"></i></span>
+                                            <span class="plus_icon"><i class="fa fa-plus"></i></span>
                                         </label>
                                         <input id="input_file_banner" type="file" name="upload_banner" accept="image/*">
                                     </div>

@@ -203,7 +203,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-lg-6 col-lg-3 mb-3">
+        <div class="col-lg-5 col-lg-3 mb-3">
             <div class="card-box mb-0 h-100 pb-1">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <h4 class="header-title mb-0">Social Media</h4>
@@ -219,6 +219,60 @@
                                     <tr>
                                         <th>Icon</th>
                                         <th>URL</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="post_list">
+                                    @forelse($social_media_details as $social_media_detail)
+                                    <tr>
+                                        <td>
+                                            <i class="fab fa-{{$social_media_detail->icon}}" aria-hidden="true"></i>
+                                        </td>
+                                        <td>
+                                            <a href="{{$social_media_detail->url}}" target="_blank">{{$social_media_detail->url}}</a>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <div class="inner-div" style="float: left;">
+                                                    <a class="action-icon edit_social_media_option_btn" data-social_media_detail_id="{{$social_media_detail->id}}">
+                                                        <i class="mdi mdi-square-edit-outline"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="inner-div">
+                                                    <button type="button" class="btn btn-primary-outline action-icon delete_social_media_option_btn" data-social_media_detail_id="{{$social_media_detail->id}}">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr align="center">
+                                        <td colspan="4" style="padding: 20px 0">Result not found.</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-lg-3 mb-3">
+            <div class="card-box mb-0 h-100 pb-1">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h4 class="header-title mb-0">Nomenclature</h4>
+                    <button class="btn btn-info d-block" id="add_social_media_modal_btn">
+                        <i class="mdi mdi-plus-circle mr-1"></i>Add
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

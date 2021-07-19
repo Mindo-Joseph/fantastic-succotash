@@ -51,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
         if ($client_preference_detail) {
             $favicon_url = $client_preference_detail->favicon['proxy_url'] . '600/400' . $client_preference_detail->favicon['image_path'];
         }
-        $client = Client::where(['id' => 1])->first();
+        $client_head = Client::where(['id' => 1])->first();
         $creds_arr = array();
         $stripe_creds = PaymentOption::select('credentials')->where('code', 'stripe')->where('status', 1)->first();
         if($stripe_creds){
@@ -60,7 +60,7 @@ class AppServiceProvider extends ServiceProvider
         $stripe_publishable_key = (isset($creds_arr->publishable_key)) ? $creds_arr->publishable_key : '';
 
         view()->share('pages', $pages);
-        view()->share('client', $client);
+        view()->share('client_head', $client_head);
         view()->share('favicon', $favicon_url);
         view()->share('favicon', $favicon_url);
         view()->share('social_media_details', $social_media_details);

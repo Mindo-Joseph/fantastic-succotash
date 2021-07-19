@@ -423,7 +423,6 @@ class VendorController extends BaseController
         $vendor = Vendor::where('id', $id)->first();
         $msg = 'Order configuration';
         $vendor->show_slot         = ($request->has('show_slot') && $request->show_slot == 'on') ? 1 : 0;
-        
         if ($request->has('order_min_amount')) {
             $vendor->order_min_amount   = $request->order_min_amount;
         }
@@ -431,7 +430,9 @@ class VendorController extends BaseController
             $vendor->order_pre_time     = $request->order_pre_time;
             $vendor->auto_reject_time   = $request->auto_reject_time;
         }
-
+        if ($request->has('is_show_vendor_details')) {
+            $vendor->is_show_vendor_details = ($request->has('is_show_vendor_details') && $request->is_show_vendor_details == 'on') ? 1 : 0;
+        }
         if ($request->has('commission_percent')) {
             $vendor->commission_percent         = $request->commission_percent;
             $vendor->commission_fixed_per_order = $request->commission_fixed_per_order;
