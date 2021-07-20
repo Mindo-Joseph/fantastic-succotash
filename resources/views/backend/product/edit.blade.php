@@ -110,7 +110,7 @@
                     <h5 class="text-uppercase bg-light p-2 mt-0 mb-3">General</h5>
                     <div class="row mb-2 row-spacing">
                         <div class="col-md-5 mb-2" style="cursor: not-allowed;">
-                            {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
+                            {!! Form::label('title', 'SKU (a-z, A-Z, 0-9, -,_)',['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
                             {!! Form::text('sku', $product->sku, ['class'=>'form-control','id' => 'sku', 'onkeypress' => "return alplaNumeric(event)",'name' => 'sku']) !!}
 
