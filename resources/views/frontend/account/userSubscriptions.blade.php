@@ -219,7 +219,14 @@ $timezone = Auth::user()->timezone;
             <div class="form-group">
                 <h5 class="text-17 mb-2" id="subscription_title"></h5>
                 <div class="text-36"><span id="subscription_price"></span></div>
-                <div><input type="hidden" name="subscription_amount" id="subscription_amount" value=""></div>
+                <div>
+                    <input type="hidden" name="email" id="email" value="{{ Auth::user()->email }}">
+                    <input type="hidden" name="subscription_id" id="subscription_id" value="">
+                    <input type="hidden" name="subscription_amount" id="subscription_amount" value="">
+                    <input type="hidden" name="card_last_four_digit" id="card_last_four_digit" value="">
+                    <input type="hidden" name="card_expiry_month" id="card_expiry_month" value="">
+                    <input type="hidden" name="card_expiry_year" id="card_expiry_year" value="">
+                </div>
             </div>
             <hr class="mb-1" />
             <div class="payment_response">

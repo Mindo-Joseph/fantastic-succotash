@@ -6,12 +6,13 @@ use App\Models\Cart;
 use App\Models\User;
 use DB;
 use App;
+use Auth;
 use Config;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Twilio\Rest\Client as TwilioClient;
-use App\Models\{Client, Category, Product, ClientPreference, UserDevice, UserLoyaltyPoint, Wallet};
+use App\Models\{Client, Category, Product, ClientPreference, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods};
 
 class FrontController extends Controller
 {
@@ -205,5 +206,27 @@ class FrontController extends Controller
             $barCode = substr(md5(microtime()), 0, 14);
         }
         return $barCode;
+    }
+
+    /* Save user payment method */
+    public function saveUserPaymentMethod($request)
+    {
+        $payment_method = new UserSavedPaymentMethods;
+        $payment_method->user_id = Auth::user()->id;
+        $payment_method->payment_option_id = $request->payment_option_id;
+        $payment_method->card_last_four_digit = $request->card_last_four_digit;
+        $payment_method->card_expiry_month = $request->card_expiry_month;
+        $payment_method->card_expiry_year = $request->card_expiry_year;
+        $payment_method->customerReference = ($request->has('customerReference')) ? $request->customerReference : NULL;
+        $payment_method->cardReference = ($request->has('cardReference')) ? $request->cardReference : NULL;
+        $payment_method->save();
+    }
+
+    /* Get Saved user payment method */
+    public function getSavedUserPaymentMethod($request)
+    {
+        $saved_payment_method = UserSavedPaymentMethods::where('user_id', Auth::user()->id)
+                        ->where('payment_option_id', $request->payment_option_id)->first();
+        return $saved_payment_method;
     }
 }

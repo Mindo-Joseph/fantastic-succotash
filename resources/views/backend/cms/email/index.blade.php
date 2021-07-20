@@ -45,6 +45,45 @@
                                             </a>
                                         </td>
                                     </tr>
+                                    <tr class="page-title active-page page-detail" data-page_id="" data-show_url="">
+                                        <td>
+                                            <a class="text-body" href="javascript:void(0)" id="">New Vendor Signup</a>
+                                        </td>
+                                        <td align="right">
+                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
+                                                <i class="mdi mdi-pencil-box-outline"></i>
+                                            </a>
+                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
+                                                <i class="mdi mdi-delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="page-title active-page page-detail" data-page_id="" data-show_url="">
+                                        <td>
+                                            <a class="text-body" href="javascript:void(0)" id="">Refund</a>
+                                        </td>
+                                        <td align="right">
+                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
+                                                <i class="mdi mdi-pencil-box-outline"></i>
+                                            </a>
+                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
+                                                <i class="mdi mdi-delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="page-title active-page page-detail" data-page_id="" data-show_url="">
+                                        <td>
+                                            <a class="text-body" href="javascript:void(0)" id="">Verify mail</a>
+                                        </td>
+                                        <td align="right">
+                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
+                                                <i class="mdi mdi-pencil-box-outline"></i>
+                                            </a>
+                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
+                                                <i class="mdi mdi-delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
                             </tbody>
                         </table>
                    </div>

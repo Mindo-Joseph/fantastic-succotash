@@ -109,16 +109,15 @@ $(document).ready(function() {
 
     $(document).delegate(".subscribe_btn", "click", function(){
         var sub_id = $(this).attr('data-id');
-        subscription_payment_options_url = subscription_payment_options_url.replace(":id", sub_id);
         $.ajax({
             type: "get",
             dataType: "json",
-            url: subscription_payment_options_url,
+            url: subscription_payment_options_url.replace(":id", sub_id),
             success: function(response) {
                 if(response.status == "Success"){
-                    $("#subscription_payment #subscription_title").attr('data-id', sub_id);
                     $("#subscription_payment #subscription_title").html(response.sub_plan.title);
                     $("#subscription_payment #subscription_price").html('$' + response.sub_plan.price);
+                    $("#subscription_payment #subscription_id").val(sub_id);
                     $("#subscription_payment #subscription_amount").val(response.sub_plan.price);
                     $("#subscription_payment #subscription_payment_methods").html('');
                     let payment_method_template = _.template($('#payment_method_template').html());
@@ -133,21 +132,25 @@ $(document).ready(function() {
         });
     });
     $(document).delegate(".subscription_confirm_btn", "click", function(){
+        var _this = $(".subscription_confirm_btn");
         var selected_option = $("input[name='subscription_payment_method']:checked");
         var payment_option_id = selected_option.data("payment_option_id");
         if( (selected_option.length > 0) && (payment_option_id > 0) ){
             if( payment_option_id == 4 ){
                 stripe.createToken(card).then(function(result) {
+                    $("#card_last_four_digit").val(result.token.card.last4);
+                    $("#card_expiry_month").val(result.token.card.exp_month);
+                    $("#card_expiry_year").val(result.token.card.exp_year);
                     if (result.error) {
                         $('#stripe_card_error').html(result.error.message);
-                        $(this).attr("disabled", false);
+                        _this.attr("disabled", false);
                     } else {
-                        $(this).attr("disabled", true);
+                        _this.attr("disabled", true);
                         paymentViaStripe(result.token.id, '', payment_option_id);
                     }
                 });
             }else{
-                $(this).attr("disabled", true);
+                _this.attr("disabled", true);
                 paymentViaPaypal('', payment_option_id);
             }
         }else{
@@ -254,7 +257,7 @@ $(document).ready(function() {
         let cartElement = $("input[name='cart_total_payable_amount']");
         let walletElement = $("input[name='wallet_amount']");
         let subscriptionElement = $("input[name='subscription_amount']");
-        let ajaxData = {'stripe_token' : stripe_token};
+        let ajaxData = [];
         if(cartElement.length > 0){
             total_amount = cartElement.val();
         }
@@ -263,9 +266,13 @@ $(document).ready(function() {
         }
         else if(subscriptionElement.length > 0){
             total_amount = subscriptionElement.val();
-            ajaxData.subscription_id = $("#subscription_payment #subscription_title").attr('data-id');
+            ajaxData = $("#subscription_payment_form").serializeArray();
         }
-        ajaxData.amount = total_amount;
+        ajaxData.push(
+            {name: 'stripe_token', value: stripe_token},
+            {name: 'amount', value: total_amount},
+            {name: 'payment_option_id', value: payment_option_id}
+        );
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -306,6 +313,10 @@ $(document).ready(function() {
                 else if(path.indexOf("wallet") !== -1){
                     success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
                     $(".topup_wallet_confirm").removeAttr("disabled");
+                }
+                else if(path.indexOf("subscription") !== -1){
+                    success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
+                    $(".subscription_confirm_btn").removeAttr("disabled");
                 }
             }
         });
@@ -469,7 +480,7 @@ $(document).ready(function() {
         });
     }
     function userSubscriptionPurchase(amount, payment_option_id, transaction_id){
-        var id = $("#subscription_payment #subscription_title").attr('data-id');
+        var id = $("#subscription_payment_form #subscription_id").val();
         if(id != ''){
             $.ajax({
                 type: "POST",
