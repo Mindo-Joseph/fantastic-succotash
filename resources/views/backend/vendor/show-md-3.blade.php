@@ -262,7 +262,7 @@
                 <h4 class="modal-title">Add User</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <form id="add_user_permission_vendor" method="post" enctype="multipart/form-data" action="{{route('permissionsForUserViaVendor')}}">
+            <form id="add_user_permission_vendor" method="post" enctype="multipart/form-data" action="{{route('permissionsForUserViaVendor')}}" autocomplete="off">
                 @csrf
                 <input type="hidden" name="vendor_id" value="{{$vendor->id}}" id="set-vendor_id">
                 <div class="modal-body">
