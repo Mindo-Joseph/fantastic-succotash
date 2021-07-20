@@ -5,8 +5,7 @@ use DB;
 use App\Models\{AppStyling,AppStylingOption};
 use Illuminate\Database\Seeder;
 
-class AppStylingSeeder extends Seeder
-{
+class AppStylingSeeder extends Seeder{
     /**
      * Run the database seeds.
      *
@@ -21,51 +20,42 @@ class AppStylingSeeder extends Seeder
             'name' => 'Regular Font',
             'type' => '2'
         ]);
-
         $app_styling_option = AppStylingOption::insert([
             'app_styling_id' => $app_styling,
             'name' => 'CircularStd-Book',
             'is_selected' => '1'
         ]);
-
         $app_styling = AppStyling::insertGetId([
             'name' => 'Medium Font',
             'type' => '2'
         ]);
-
         $app_styling_option = AppStylingOption::insert([
             'app_styling_id' => $app_styling,
             'name' => 'CircularStd-Medium',
             'is_selected' => '1'
         ]);
-
         $app_styling = AppStyling::insertGetId([
             'name' => 'Bold Font',
             'type' => '2'
         ]);
-
         $app_styling_option = AppStylingOption::insert([
             'app_styling_id' => $app_styling,
             'name' => 'CircularStd-Bold',
             'is_selected' => '1'
         ]);
-
         $app_styling = AppStyling::insertGetId([
             'name' => 'Primary Color',
             'type' => '4'
         ]);
-
         $app_styling_option = AppStylingOption::insert([
             'app_styling_id' => $app_styling,
             'name' => '#41A2E6',
             'is_selected' => '1'
         ]);
-
         $app_styling = AppStyling::insertGetId([
             'name' => 'Secondary Color',
             'type' => '4'
         ]);
-
         $app_styling_option = AppStylingOption::insert([
             'app_styling_id' => $app_styling,
             'name' => '#fff',

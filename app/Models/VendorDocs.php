@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class VendorDocs extends Model
-{
+class VendorDocs extends Model{
+
     use HasFactory;
     public function getfileNameAttribute($value){
       $values = array();
@@ -17,5 +17,8 @@ class VendorDocs extends Model
       $values['image_path'] = env('IMG_URL2').'/'.\Storage::disk('s3')->url($img);
       $values['image_fit'] = env('FIT_URl');
       return $values;
+    }
+    public function vendor_registration_document(){
+        return $this->hasOne('App\Models\VendorRegistrationDocument', 'id', 'vendor_registration_document_id'); 
     }
 }
