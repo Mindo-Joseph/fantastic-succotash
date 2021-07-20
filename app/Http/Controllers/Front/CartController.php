@@ -336,7 +336,8 @@ class CartController extends FrontController
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if($cartData){
             foreach ($cartData as $ven_key => $vendorData) {
-                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = $deliver_charge = 0.00;
+                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
+                $delivery_count = 0;
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
                     $quantity_price = 0;
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
@@ -384,12 +385,15 @@ class CartController extends FrontController
                     if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1)
                     {   
                         $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
+                        if(!empty($deliver_charge) && $delivery_count == 0)
+                        {
+                            $delivery_count = 1;
+                            $prod->deliver_charge = number_format($deliver_charge, 2);
+                            $payable_amount = $payable_amount + $deliver_charge;
+                            $delivery_fee_charges = $deliver_charge;
+                        }
                     }
-                    if(empty($deliver_charge))
-                    $deliver_charge = 0;
-                    $prod->deliver_charge = number_format($deliver_charge, 2);
-                    $payable_amount = $payable_amount + $deliver_charge;
-                    $delivery_fee_charges = $deliver_charge;
+                    
                 }
                 if($vendorData->coupon){
                     if($vendorData->coupon->promo->promo_type_id == 2){
