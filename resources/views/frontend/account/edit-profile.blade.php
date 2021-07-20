@@ -22,7 +22,23 @@
             </div>
             <div class="col-md-12 mb-3">
                 <label for="">Phone No.</label>
-                <input type="tel" class="form-control phone @error('phone_number') is-invalid @enderror" id="phone" placeholder="Phone Number" name="phone_number" value="{{ $user ? $user->phone_number : old('phone_number')}}">
+                @php
+                 if($user){
+                    if($user->dial_code){
+                        $phn = '+'.$user->dial_code.$user->phone_number;
+                    }
+                    else if($user->phone_number){
+                        $phn = $user->phone_number;
+                    }
+                    else{
+                        $phn = ' ';
+                    }
+                 }
+                 else{
+                     $phn = ' ';
+                 }
+                @endphp
+                <input type="tel" class="form-control phone @error('phone_number') is-invalid @enderror" id="phone" placeholder="Phone Number" name="phone_number" value="{{$phn ? $phn : old('phone_number')}}">
                 <input type="hidden" id="countryData" name="countryData" value="us">
                 <input type="hidden" id="dialCode" name="dialCode" value="1">
                 @error('phone_number')

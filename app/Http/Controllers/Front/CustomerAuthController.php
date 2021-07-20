@@ -128,7 +128,6 @@ class CustomerAuthController extends FrontController
             return redirect()->route('user.verify');
         }
         $checkEmail = User::where('email', $req->email)->first();
-
         if ($checkEmail) {
             return redirect()->back()->with('err_password', 'Password not matched. Please enter correct password.');
         }
@@ -289,9 +288,10 @@ class CustomerAuthController extends FrontController
             $vendor->desc = $request->vendor_description;
             $vendor->slug = Str::slug($request->name, "-");
             $vendor->save();
-            $permission_detail = Permissions::where('slug', 'vendors')->first();
+            $permission_details = Permissions::whereIn('id', [1,2,3,12,17,18,19,20,21])->get();
             if($vendor_registration_documents->count() > 0){
                 foreach ($vendor_registration_documents as $vendor_registration_document) {
+                    $vendor_registration_document_id = $vendor_registration_document->id;
                     $name = $vendor_registration_document->primary->slug;
                     $vendor_registration_document = $request->$name;
                     $vendor_docs =  new VendorDocs();
@@ -302,7 +302,9 @@ class CustomerAuthController extends FrontController
                 }
             }
             UserVendor::create(['user_id' => $user->id, 'vendor_id' => $vendor->id]);
-            UserPermissions::create(['user_id' => $user->id, 'permission_id' => $permission_detail->id]);
+            foreach ($permission_details as $permission_detail) {
+                UserPermissions::create(['user_id' => $user->id, 'permission_id' => $permission_detail->id]);
+            }
             $email_data = [
                 'title' => $user->title,
                 'email' => $user->email,
@@ -315,9 +317,26 @@ class CustomerAuthController extends FrontController
                 'client_name' => $client_detail->name,
                 'customer_name' => ucwords($user->name),
                 'logo' => $client_detail->logo['original'],
+                'mail_from' => $client_preference->mail_from,
+                'subject' => 'Thanks For Signing up '.$client_detail->name,
+            ];
+            $admin_email_data = [
+                'title' => $user->title,
+                'email' => $user->email,
+                'powered_by' => url('/'),
+                'website' => $vendor->website,
+                'address' => $vendor->address,
+                'vendor_name' => $vendor->name,
+                'description' => $vendor->desc,
+                'phone_no' => $user->phone_number,
+                'client_name' => $client_detail->name,
+                'subject' => 'New Vendor Registration',
+                'customer_name' => ucwords($user->name),
+                'logo' => $client_detail->logo['original'],
                 'mail_from' => $client_preference->mail_from
             ];
             dispatch(new \App\Jobs\sendVendorRegistrationEmail($email_data))->onQueue('verify_email');
+            dispatch(new \App\Jobs\sendVendorRegistrationEmail($admin_email_data))->onQueue('verify_email');
             DB::commit();
             return response()->json([
                 'status' => 'success',

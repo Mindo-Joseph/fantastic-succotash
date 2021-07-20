@@ -16,6 +16,7 @@ class VendorDocs extends Model{
       $values['proxy_url'] = env('IMG_URL1');
       $values['image_path'] = env('IMG_URL2').'/'.\Storage::disk('s3')->url($img);
       $values['image_fit'] = env('FIT_URl');
+      $values['storage_url'] = \Storage::disk('s3')->url($img);
       return $values;
     }
     public function vendor_registration_document(){

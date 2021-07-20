@@ -25,7 +25,6 @@ class CategoryController extends BaseController{
         if($categories){
             $build = $this->buildTree($categories->toArray());
             $tree = $this->printTree($build);
-        //    dd("bhjfb");
         }
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')

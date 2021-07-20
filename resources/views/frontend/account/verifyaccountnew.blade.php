@@ -5,6 +5,12 @@
       pointer-events: none;
       cursor: default;
     }
+    input[type="email"]:disabled {
+      background: #dddddd;
+    }
+    input[type="text"]:disabled {
+      background: #dddddd;
+    }
 </style>
 <header>
     <div class="mobile-fix-option"></div>
@@ -34,7 +40,7 @@
                                 <div class="verify_id input-group mb-3">
                                     <input type="email" id="email" class="form-control" value="{{Auth::user()->email}}" disabled="">
                                     <div class="input-group-append">
-                                        <span class="input-group-text" id="edit_email">Edit</span>
+                                        <a class="input-group-text" id="edit_email" href="javascript:void(0)">Edit</a>
                                     </div>
                                     <span class="valid-feedback d-block text-center" role="alert">
                                         <strong class="edit_email_feedback"></strong>
@@ -78,7 +84,7 @@
                         <div class="verify_id input-group mb-3">
                             <input type="text" class="form-control" id="phone_number" value="{{Auth::user()->phone_number}}" disabled="">
                             <div class="input-group-append">
-                                <span class="input-group-text" id="edit_phone">Edit</span>
+                                <a class="input-group-text" id="edit_phone" href="javascript:void(0)">Edit</a>
                             </div>
                             <span class="valid-feedback d-block text-center" role="alert">
                                 <strong class="edit_phone_feedback"></strong>
@@ -131,7 +137,13 @@
     });
     var ajaxCall = 'ToCancelPrevReq';
     $('#edit_email').click(function() {
-        $('#email').prop('disabled', function(i, v) { return !v; });
+        if ($(this).text() == "Edit")
+            $(this).text("Save")
+        else
+           $(this).text("Edit");
+            verifyUser('email');
+            $('#email').prop('disabled', function(i, v) { return !v; });
+            $('#email').focus();
     });
     $('#edit_phone').click(function() {
         $('#phone_number').prop('disabled', function(i, v) { return !v; });

@@ -203,7 +203,7 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="form-group" id="">
-                                                            <label for="title" class="control-label">Description</label>
+                                                            <!-- <label for="title" class="control-label">Description</label> -->
                                                             <p>{{$vendor->desc}}</p>
                                                         </div>
                                                     </div>                                                  
@@ -214,9 +214,9 @@
                                     </div>
                                    
 
-                                    <div class="top-banner-content small-section">
+                                    <!-- <div class="top-banner-content small-section">
                                         <h4>{{ $vendor->name }}</h4>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="collection-product-wrapper">
                                     <div class="product-top-filter">
