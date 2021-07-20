@@ -137,15 +137,23 @@
     });
     var ajaxCall = 'ToCancelPrevReq';
     $('#edit_email').click(function() {
-        if ($(this).text() == "Edit")
-            $(this).text("Save")
-        else
-           $(this).text("Edit");
-            verifyUser('email');
-            $('#email').prop('disabled', function(i, v) { return !v; });
+        if ($(this).text() == "Edit"){
+            $(this).text("Save & Send")
             $('#email').focus();
+        }else{
+           $(this).text("Edit");
+           verifyUser('email');
+        }
+        $('#email').prop('disabled', function(i, v) { return !v; });
     });
     $('#edit_phone').click(function() {
+        if ($(this).text() == "Edit"){
+            $(this).text("Save & Send")
+            $('#phone_number').focus();
+        }else{
+           $(this).text("Edit");
+           verifyUser('phone');
+        }
         $('#phone_number').prop('disabled', function(i, v) { return !v; });
     });
     $('.verifyEmail').click(function() {
