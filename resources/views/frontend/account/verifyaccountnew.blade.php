@@ -34,7 +34,7 @@
                                 <div class="verify_id input-group mb-3">
                                     <input type="email" id="email" class="form-control" value="{{Auth::user()->email}}" disabled="">
                                     <div class="input-group-append">
-                                        <span class="input-group-text" id="edit_email">Edit</span>
+                                        <a class="input-group-text" id="edit_email" href="javascript:void(0)">Edit</a>
                                     </div>
                                     <span class="valid-feedback d-block text-center" role="alert">
                                         <strong class="edit_email_feedback"></strong>
@@ -78,7 +78,7 @@
                         <div class="verify_id input-group mb-3">
                             <input type="text" class="form-control" id="phone_number" value="{{Auth::user()->phone_number}}" disabled="">
                             <div class="input-group-append">
-                                <span class="input-group-text" id="edit_phone">Edit</span>
+                                <a class="input-group-text" id="edit_phone" href="javascript:void(0)">Edit</a>
                             </div>
                             <span class="valid-feedback d-block text-center" role="alert">
                                 <strong class="edit_phone_feedback"></strong>

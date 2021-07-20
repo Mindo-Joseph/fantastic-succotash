@@ -26,6 +26,6 @@ class VendorRegistrationMail extends Mailable
      * @return $this
      */
     public function build(){
-        return $this->view('email.vendor_signup')->from($this->mailData['mail_from'])->with('mailData', $this->mailData);
+        return $this->view('email.vendor_signup')->subject('')->from($this->mailData['mail_from'])->with('mailData', $this->mailData);
     }
 }
