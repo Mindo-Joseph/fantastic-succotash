@@ -1,4 +1,7 @@
 @extends('layouts.store', ['title' => 'Verify Account'])
+@section('css')
+<link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
+@endsection
 @section('content')
 <style type="text/css">
     a.disabled {
@@ -81,9 +84,10 @@
                 <p>Enter the code we just sent you on your email address</p>
                 <div class="row mt-3">
                     <div class="offset-xl-3 col-xl-6 text-left">
-                        <div class="verify_id input-group mb-3">
-                            <input type="text" class="form-control" id="phone_number" value="{{Auth::user()->phone_number}}" disabled="">
-                            <div class="input-group-append">
+                        <div class="verify_id input-group mb-3 radius-flag">
+                            <input type="tel" class="form-control" id="phone_number" value="{{'+'.Auth::user()->dial_code.Auth::user()->phone_number}}" disabled="">
+                            <input type="text" id="dial_code" value="{{Auth::user()->dial_code}}">
+                            <div class="input-group-append position-absolute position-right">
                                 <a class="input-group-text" id="edit_phone" href="javascript:void(0)">Edit</a>
                             </div>
                             <span class="valid-feedback d-block text-center" role="alert">
@@ -123,6 +127,29 @@
 </section> 
 @endsection
 @section('script')
+<script src="{{asset('assets/js/intlTelInput.js')}}"></script>
+<script>
+    var input = document.querySelector("#phone_number");
+    window.intlTelInput(input, {
+        separateDialCode: true,
+        hiddenInput: "full_number",
+        utilsScript: "{{asset('assets/js/utils.js')}}",
+    });
+    $(document).ready(function() {
+        $("#phone_number").keypress(function(e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+            return true;
+        });
+    });
+    $('.iti__country').click(function() {
+        var code = $(this).attr('data-country-code');
+        $('#countryData').val(code);
+        var dial_code = $(this).attr('data-dial-code');
+        $('#dial_code').val(dial_code);
+    });
+</script>
 <script type="text/javascript">
     function isNumberKey(evt){
         var charCode = (evt.which) ? evt.which : evt.keyCode
@@ -164,15 +191,21 @@
     });
     function verifyUser($type = 'email') {
         if($type == 'email'){
+            var email = $('#email').val();
+            var phone = $('#phone_number').val();
+            var dial_code = $('#dial_code').val();
             $('.verifyEmail').addClass('disabled').html('SENDING...');
         }else if ($type == 'phone') {
+            var email = $('#email').val();
+            var phone = $('#phone_number').val();
+            var dial_code = $('#dial_code').val();
             $('.verifyPhone').addClass('disabled').html('SENDING...');
         }
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
             url: "{{ route('email.send', Auth::user()->id) }}",
-            data: {"_token": "{{ csrf_token() }}",type: $type,},
+            data: {"_token": "{{ csrf_token() }}",type: $type,phone:phone,email:email, dial_code:dial_code},
             success: function(response) {
                 if($type == 'email'){
                     $('.verifyEmail').removeClass('disabled').html('RESEND');
