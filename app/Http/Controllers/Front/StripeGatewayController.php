@@ -6,7 +6,7 @@ use Auth;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
-use App\Models\{PaymentOption};
+use App\Models\{PaymentOption, Client, ClientCurrency};
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -42,6 +42,41 @@ class StripeGatewayController extends Controller{
             // elseif ($response->isRedirect()) {
             //     return $this->errorResponse($response->getRedirectUrl(), 400);
             // } 
+            else {
+                return $this->errorResponse($response->getMessage(), 400);
+            }
+        }catch(\Exception $ex){
+            return $this->errorResponse($ex->getMessage(), 400);
+        }
+    }
+
+    public function subscriptionPaymentViaStripe(request $request)
+    {
+        try{
+            $user = Auth::user();
+            $token = $request->stripe_token;
+            $plan_id = $request->subscription_id;
+            $customerResponse = $this->gateway->createCustomer(array(
+                'description' => 'Creating Customer for subscription',
+                'email' => $user->email,
+                'source' => $token
+            ))->send();
+            // Find the card ID
+            $customer_id = $customerResponse->getCustomerReference();
+            // $subscriptionResponse = $this->gateway->createSubscription(array(
+            //     "customerReference" => $customer_id,
+            //     'plan' => 'Basic Plan',
+            // ))->send();
+            $response = $this->gateway->purchase([
+                'currency' => 'INR',
+                'amount' => $request->input('amount'),
+                'metadata' => ['user_id' => $user->id, 'plan_id' => $plan_id],
+                'description' => 'This is a subscription purchase transaction.',
+                'customerReference' => $customer_id
+            ])->send();
+            if ($response->isSuccessful()) {
+                return $this->successResponse($response->getData());
+            }
             else {
                 return $this->errorResponse($response->getMessage(), 400);
             }

@@ -274,7 +274,7 @@ $timezone = Auth::user()->timezone;
     var subscription_payment_options_url = "{{route('user.subscription.plan.select', ':id')}}";
     var user_subscription_purchase_url = "{{route('user.subscription.plan.purchase', ':id')}}";
     var user_subscription_cancel_url = "{{route('user.subscription.plan.cancel', ':id')}}";
-    var payment_stripe_url = "{{route('payment.stripe')}}";
+    var payment_stripe_url = "{{route('subscription.payment.stripe')}}";
     var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
 
