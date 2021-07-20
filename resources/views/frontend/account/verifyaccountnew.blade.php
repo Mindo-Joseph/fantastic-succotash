@@ -5,6 +5,12 @@
       pointer-events: none;
       cursor: default;
     }
+    input[type="email"]:disabled {
+      background: #dddddd;
+    }
+    input[type="text"]:disabled {
+      background: #dddddd;
+    }
 </style>
 <header>
     <div class="mobile-fix-option"></div>
@@ -131,7 +137,13 @@
     });
     var ajaxCall = 'ToCancelPrevReq';
     $('#edit_email').click(function() {
-        $('#email').prop('disabled', function(i, v) { return !v; });
+        if ($(this).text() == "Edit")
+            $(this).text("Save")
+        else
+           $(this).text("Edit");
+            verifyUser('email');
+            $('#email').prop('disabled', function(i, v) { return !v; });
+            $('#email').focus();
     });
     $('#edit_phone').click(function() {
         $('#phone_number').prop('disabled', function(i, v) { return !v; });

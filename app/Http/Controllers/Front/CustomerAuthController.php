@@ -128,7 +128,6 @@ class CustomerAuthController extends FrontController
             return redirect()->route('user.verify');
         }
         $checkEmail = User::where('email', $req->email)->first();
-
         if ($checkEmail) {
             return redirect()->back()->with('err_password', 'Password not matched. Please enter correct password.');
         }
@@ -319,8 +318,25 @@ class CustomerAuthController extends FrontController
                 'customer_name' => ucwords($user->name),
                 'logo' => $client_detail->logo['original'],
                 'mail_from' => $client_preference->mail_from
+                'subject' => 'Thanks For Signing up '.$client_detail->name,
+            ];
+            $admin_email_data = [
+                'title' => $user->title,
+                'email' => $user->email,
+                'powered_by' => url('/'),
+                'website' => $vendor->website,
+                'address' => $vendor->address,
+                'vendor_name' => $vendor->name,
+                'description' => $vendor->desc,
+                'phone_no' => $user->phone_number,
+                'client_name' => $client_detail->name,
+                'subject' => 'New Vendor Registration',
+                'customer_name' => ucwords($user->name),
+                'logo' => $client_detail->logo['original'],
+                'mail_from' => $client_preference->mail_from
             ];
             dispatch(new \App\Jobs\sendVendorRegistrationEmail($email_data))->onQueue('verify_email');
+            dispatch(new \App\Jobs\sendVendorRegistrationEmail($admin_email_data))->onQueue('verify_email');
             DB::commit();
             return response()->json([
                 'status' => 'success',
