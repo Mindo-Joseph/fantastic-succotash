@@ -442,6 +442,7 @@ class PickupDeliveryController extends BaseController{
                 $tasks = array();
                 $meta_data = '';
                 $team_tag = $unique."_".$vendor;
+                $product = Product::find($request->product_id);
                 $order_agent_tag = $product->tags??'';
                 $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
                                                     'customer_phone_number' => $customer->phone_number??rand(111111,11111),
