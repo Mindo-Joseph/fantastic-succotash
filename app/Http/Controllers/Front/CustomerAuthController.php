@@ -292,6 +292,7 @@ class CustomerAuthController extends FrontController
             $permission_detail = Permissions::where('slug', 'vendors')->first();
             if($vendor_registration_documents->count() > 0){
                 foreach ($vendor_registration_documents as $vendor_registration_document) {
+                    $vendor_registration_document_id = $vendor_registration_document->id;
                     $name = $vendor_registration_document->primary->slug;
                     $vendor_registration_document = $request->$name;
                     $vendor_docs =  new VendorDocs();
