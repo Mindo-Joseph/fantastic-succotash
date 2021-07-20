@@ -148,7 +148,7 @@ class ProfileController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function editAccount(Request $request){
-        $user = User::select('id', 'name', 'email', 'description', 'phone_number', 'image', 'type', 'country_id')->where('id', Auth::user()->id)->first();
+        $user = User::select('id', 'name', 'email', 'description', 'phone_number', 'dial_code', 'image', 'type', 'country_id')->where('id', Auth::user()->id)->first();
         $user_addresses = UserAddress::where('user_id', Auth::user()->id)->get();
         $timezone_list = Timezonelist::create('timezone', $user->timezone, [
             'id'    => 'timezone',
