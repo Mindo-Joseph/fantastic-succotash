@@ -10,9 +10,9 @@ class NomenclatureTranslation extends Model
     use HasFactory;
     protected $table = 'nomenclatures_translations';
 
-    public static function getNameBylanguageId($language_id){
+    public static function getNameBylanguageId($language_id, $nomenclature_id){
         $name = '';
-        $result = NomenclatureTranslation::where('language_id', $language_id)->first();
+        $result = NomenclatureTranslation::where('nomenclature_id', $nomenclature_id)->where('language_id', $language_id)->first();
         if($result){
             $name = $result->name;
         }

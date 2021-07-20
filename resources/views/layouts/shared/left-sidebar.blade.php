@@ -110,7 +110,7 @@
                                             @endif
                                             @if(in_array('accounting_loyality',$allowed) || Auth::user()->is_superadmin == 1)
                                                 <li>
-                                                    <a href="{{route('account.loyalty')}}">Loyality</a>
+                                                    <a href="{{route('account.loyalty')}}">{{getNomenclatureName('Loyalty Cards', true)}}</a>
                                                 </li>
                                             @endif
                                             @if(in_array('accounting_promo_codes',$allowed) || Auth::user()->is_superadmin == 1)
@@ -125,7 +125,7 @@
                                             @endif
                                             @if(in_array('accounting_vendors',$allowed) || Auth::user()->is_superadmin == 1)
                                                 <li>
-                                                    <a href="{{route('account.vendor')}}">Vendors</a>
+                                                    <a href="{{route('account.vendor')}}">{{getNomenclatureName('Vendors', true)}}</a>
                                                 </li>
                                             @endif
                                         </ul>
@@ -148,7 +148,7 @@
                                         @endif
                                         @if(in_array('subscription_plans_vendors',$allowed) || Auth::user()->is_superadmin == 1)
                                             <li>
-                                                <a href="{{route('subscription.plans.vendor')}}">Vendors</a>
+                                                <a href="{{route('subscription.plans.vendor')}}">{{getNomenclatureName('Vendors', true)}}</a>
                                             </li>
                                         @endif
                                     </ul>
@@ -296,7 +296,7 @@
                             <li>
                                 <a href="{{route('loyalty.index')}}">
                                     <span class="icon-loyaltycard"></span>
-                                    <span> Loyalty Cards </span>
+                                    <span> {{getNomenclatureName('Loyalty Cards', true)}}</span>
                                 </a>
                             </li>
                         @endif
