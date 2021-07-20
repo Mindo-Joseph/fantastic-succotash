@@ -616,9 +616,9 @@ class VendorController extends BaseController
                 $alreadyids = UserVendor::where('vendor_id', $vendor_id)->pluck('user_id');
                 if (isset($search)) {
                     if ($search == '') {
-                        $employees = User::orderby('name', 'asc')->select('id', 'name','email','phone_number')->whereNotIn('id',$alreadyids)->limit(10)->get();
+                        $employees = User::orderby('name', 'asc')->select('id', 'name','email','phone_number')->where('is_superadmin','!=',1)->whereNotIn('id',$alreadyids)->limit(10)->get();
                     } else {
-                        $employees = User::orderby('name', 'asc')->select('id', 'name','email','phone_number')->whereNotIn('id',$alreadyids)->where('name', 'LIKE', "%{$search}%")->limit(10)->get();
+                        $employees = User::orderby('name', 'asc')->select('id', 'name','email','phone_number')->where('is_superadmin','!=',1)->whereNotIn('id',$alreadyids)->where('name', 'LIKE', "%{$search}%")->limit(10)->get();
                     }
                     $output = '<ul class="dropdown-menu" style="display:block; position:relative">';
                         foreach($employees as $row)
