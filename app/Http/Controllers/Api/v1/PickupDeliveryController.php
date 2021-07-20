@@ -71,7 +71,7 @@ class PickupDeliveryController extends BaseController{
                    
             if(!empty($products)){
                 foreach ($products as $key => $product) {
-                    $product->tags_price = $this->getDeliveryFeeDispatcher($request);
+                    $product->tags_price = $this->getDeliveryFeeDispatcher($request,$product);
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
                     foreach ($product->variant as $k => $v) {
                         $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
@@ -129,7 +129,7 @@ class PickupDeliveryController extends BaseController{
     public function listData($langId, $category_id, $type = '', $userid,$request){
         if ($type == 'Pickup/Delivery') {
             $category_details = [];
-            $deliver_charge = $this->getDeliveryFeeDispatcher($request);
+            $deliver_charge = $this->getDeliveryFeeDispatcher($request,);
             $deliver_charge = $deliver_charge??0.00;
             $category_list = Category::where('parent_id', $category_id)->get();
             foreach ($category_list as $category) {

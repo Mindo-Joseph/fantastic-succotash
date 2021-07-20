@@ -571,7 +571,7 @@ class VendorController extends BaseController
                 $unique = Auth::user()->code;
                 $postdata =  ['vendor_id' => $dispatch_domain->vendor_id ?? 0,
                 'name' => $vendor->name ?? "Manager".$dispatch_domain->vendor_id,
-                'phone_number' =>  $vendor->phone_no ?? rand('11111'.'458965'),
+                'phone_number' =>  $vendor->phone_no ?? rand('11111','458965'),
                 'email' => $unique.$vendor->id."_royodispatch@dispatch.com",
                 'team_tag' => $unique."_".$vendor->id,
                 'public_session' => $dispatch_domain->token];
