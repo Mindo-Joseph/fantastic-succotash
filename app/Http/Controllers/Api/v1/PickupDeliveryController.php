@@ -65,7 +65,7 @@ class PickupDeliveryController extends BaseController{
                                 $qr->select('category_id')->from('vendor_categories')
                                     ->where('vendor_id', $vid)->where('status', 0);
                     })
-                    ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id','products.tags as tags_price')
+                    ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id','products.tags')
                     ->where('products.vendor_id', $vid)
                     ->where('products.is_live', 1)->distinct()->paginate($paginate); 
                    
@@ -129,7 +129,7 @@ class PickupDeliveryController extends BaseController{
     public function listData($langId, $category_id, $type = '', $userid,$request){
         if ($type == 'Pickup/Delivery') {
             $category_details = [];
-            $deliver_charge = $this->getDeliveryFeeDispatcher($request,);
+            $deliver_charge = $this->getDeliveryFeeDispatcher($request);
             $deliver_charge = $deliver_charge??0.00;
             $category_list = Category::where('parent_id', $category_id)->get();
             foreach ($category_list as $category) {
@@ -151,12 +151,12 @@ class PickupDeliveryController extends BaseController{
 
 
      # get delivery fee from dispatcher 
-     public function getDeliveryFeeDispatcher($request){
+     public function getDeliveryFeeDispatcher($request,$product=null){
         try {
                 $dispatch_domain = $this->checkIfPickupDeliveryOn();
                 if ($dispatch_domain && $dispatch_domain != false) {
                             $all_location = array();
-                            $postdata =  ['locations' => $request->locations];
+                            $postdata =  ['locations' => $request->locations,'agent_tag' => $product->tags??''];
                             $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,
                                                         'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,
                                                         'content-type' => 'application/json']
