@@ -436,13 +436,13 @@ class PickupDeliveryController extends BaseController{
                     $payable_amount = 0.00;
                 }
                 $dynamic = uniqid($order->id.$vendor);
-               
                 $unique = Auth::user()->code;
                 $client_do = Client::where('code',$unique)->first();
                 $call_back_url = "https://".$client_do->sub_domain.env('SUBMAINDOMAIN')."/dispatch-pickup-delivery/".$dynamic; 
                 $tasks = array();
                 $meta_data = '';
                 $team_tag = $unique."_".$vendor;
+                $order_agent_tag = $product->tags??'';
                 $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
                                                     'customer_phone_number' => $customer->phone_number??rand(111111,11111),
                                                     'customer_email' => $customer->email ?? '',
@@ -456,6 +456,7 @@ class PickupDeliveryController extends BaseController{
                                                     'barcode' => '',
                                                     'call_back_url' => $call_back_url??null,
                                                     'order_team_tag' => $team_tag,
+                                                    'order_agent_tag' => $order_agent_tag,
                                                     'task' => $request->tasks
                                                     ];
 
