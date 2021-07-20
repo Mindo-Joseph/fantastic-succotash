@@ -2037,7 +2037,9 @@ a:-webkit-any-link:focus-visible {
 }
 
 
-
+.document-btn label{
+    color: #6c757d;
+}
 
 
 

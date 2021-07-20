@@ -20,7 +20,7 @@ use App\Http\Traits\ToasterResponser;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory,UserPermissions};
+use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory,UserPermissions, VendorDocs};
 use GuzzleHttp\Client as GCLIENT;
 use DB;
 class VendorController extends BaseController
@@ -84,6 +84,7 @@ class VendorController extends BaseController
     }
     public function index(){
         $csvVendors = CsvVendorImport::all();
+        $vendor_docs = collect(new VendorDocs);
         $client_preferences = ClientPreference::first();
         $vendors = Vendor::withCount(['products', 'orders', 'activeOrders'])->with('slot')->orderBy('id', 'desc');
         if (Auth::user()->is_superadmin == 0) {
@@ -113,6 +114,7 @@ class VendorController extends BaseController
                 return view('backend/vendor/index')->with([
                     'vendors' => $vendors,
                     'csvVendors' => $csvVendors,
+                    'vendor_docs' => $vendor_docs,
                     'client_preferences'=> $client_preferences, 
                     'total_vendor_count' => $total_vendor_count, 
                     'active_vendor_count' => $active_vendor_count, 
@@ -128,6 +130,7 @@ class VendorController extends BaseController
         }else{
             return view('backend/vendor/index')->with([
                 'vendors' => $vendors, 
+                'vendor_docs' => $vendor_docs, 
                 'csvVendors' => $csvVendors, 
                 'total_vendor_count' => $total_vendor_count, 
                 'client_preferences' => $client_preferences, 
@@ -204,9 +207,10 @@ class VendorController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function edit($domain = '', $id){
-        $client_preferences = ClientPreference::first();
         $vendor = Vendor::where('id', $id)->first();
-        $returnHTML = view('backend.vendor.form')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor])->render();
+        $client_preferences = ClientPreference::first();
+        $vendor_docs = VendorDocs::where('vendor_id', $id)->get();
+        $returnHTML = view('backend.vendor.form')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'vendor_docs' => $vendor_docs])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
