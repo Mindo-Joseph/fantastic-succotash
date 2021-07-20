@@ -264,7 +264,8 @@
                     </div>
                     <p class="sub-header">View and update the naming</p>
                     <div class="row mb-2">
-                        <div class="col-sm-12">
+                        @foreach($client_languages as $client_language)
+                        <div class="col-sm-6">
                             <div class="form-group mb-3">
                                 <label for="custom_domain">Vendors</label>
                                 <input type="text" name="custom_domain" id="custom_domain" placeholder="xyz" class="form-control" value="{{ $nomenclature_value ? $nomenclature_value->value : ''}}">
@@ -275,6 +276,7 @@
                                 @endif
                             </div>
                         </div>
+                        @endforeach
                     </div>
                 </div>
             </form>
@@ -309,8 +311,7 @@
                                 <option value="pinterest"> Pinterest </option>
                                 <option value="youtube"> Youtube </option>
                                 <option value="snapchat"> Snapchat </option>
-                                <option value="google-plus-g"> Google-plus-g </option>
-                                <option value="linkedin-in"> Linkedin-in </option>
+                                <option value="linkedin"> Linkedin-in </option>
                             </select>
                         </div>
                     </div>
