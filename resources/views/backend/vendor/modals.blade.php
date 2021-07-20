@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h4 class="modal-title">Add Vendor</h4>
+                <h4 class="modal-title">Add {{getNomenclatureName('vendors', false)}}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="save_banner_form" method="post" enctype="multipart/form-data">
@@ -154,7 +154,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h4 class="modal-title">Import Vendors</h4>
+                <h4 class="modal-title">Import {{getNomenclatureName('vendors', false)}}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form method="post" enctype="multipart/form-data" id="save_imported_vendors">
@@ -168,7 +168,7 @@
                             <div class="row mb-2">
                                 <div class="col-md-12">            
                                     <input type="file" accept=".csv" onchange="submitImportForm()" data-plugins="dropify" name="vendor_csv" class="dropify" data-default-file="" required/>
-                                    <p class="text-muted text-center mt-2 mb-0">Upload Vendors CSV</p>
+                                    <p class="text-muted text-center mt-2 mb-0">Upload {{getNomenclatureName('vendors', true)}} CSV</p>
                                 </div>
                             </div>
                         </div>
