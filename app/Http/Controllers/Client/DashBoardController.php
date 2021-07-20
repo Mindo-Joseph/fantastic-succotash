@@ -201,6 +201,11 @@ class DashBoardController extends BaseController{
                 );
             }
             $return_requests = OrderReturnRequest::where('status', 'Pending');
+            if (Auth::user()->is_superadmin == 0) {
+                $return_requests = $return_requests->whereHas('order.vendors.vendor.permissionToUser', function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                });
+            }
             if($date_filter){
                 $return_requests->whereBetween('created_at', [$from_date, $end_date]);
             }
