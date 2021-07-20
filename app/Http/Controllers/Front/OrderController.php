@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use DB;
 use Log;
 use Auth;
+use Carbon\Carbon;
 use Omnipay\Omnipay;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ use App\Models\ClientPreference;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, VendorOrderStatus,OrderTax};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, VendorOrderStatus,OrderTax, SubscriptionInvoicesUser};
 
 class OrderController extends FrontController
 {
@@ -123,6 +124,22 @@ class OrderController extends FrontController
                 $order_prescription->prescription = $cart_prescription->getRawOriginal('prescription');
                 $order_prescription->save();
             }
+            $subscription_features = array();
+            if($user){
+                $now = Carbon::now()->toDateTimeString();
+                $user_subscription = SubscriptionInvoicesUser::with('features')
+                    ->select('id', 'user_id', 'subscription_id')
+                    ->where('user_id', $user->id)
+                    ->where('status_id', 2)
+                    ->where('end_date', '>', $now)->get();
+                if($user_subscription){
+                    foreach($user_subscription as $subscription){
+                        foreach($subscription->features as $feature){
+                            $subscription_features[] = $feature->feature_id;
+                        }
+                    }
+                }
+            }
             $cart_products = CartProduct::select('*')->with(['product.pimage', 'product.variants', 'product.taxCategory.taxRate', 'coupon.promo', 'product.addon'])->where('cart_id', $cart->id)->where('status', [0, 1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
             $total_amount = 0;
             $total_discount = 0;
@@ -130,6 +147,7 @@ class OrderController extends FrontController
             $payable_amount = 0;
             $tax_category_ids = [];
             $total_delivery_fee = 0;
+            $total_subscription_discount = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                 $delivery_fee = 0;
                 $vendor_payable_amount = 0;
@@ -260,8 +278,12 @@ class OrderController extends FrontController
                 $order_status->save();
             }
             $loyalty_points_earned = LoyaltyCard::getLoyaltyPoint($loyalty_points_used, $payable_amount);
+            if(in_array(1, $subscription_features)){
+                $total_subscription_discount = $total_subscription_discount + $total_delivery_fee;
+            }
+            $total_discount = $total_discount + $total_subscription_discount;
             $order->total_amount = $total_amount;
-            $order->total_discount = $total_discount;
+            $order->total_discount = $total_discount + $total_subscription_discount;
             $order->taxable_amount = $taxable_amount;
             if ($loyalty_amount_saved > 0) {
                 if ($payable_amount < $loyalty_amount_saved) {
@@ -272,7 +294,8 @@ class OrderController extends FrontController
             $order->total_delivery_fee = $total_delivery_fee;
             $order->loyalty_points_used = $loyalty_points_used;
             $order->loyalty_amount_saved = $loyalty_amount_saved;
-            $order->payable_amount = $delivery_fee + $payable_amount - $total_discount - $loyalty_amount_saved;
+            $order->subscription_discount = $total_subscription_discount;
+            $order->payable_amount = $total_delivery_fee + $payable_amount - $total_discount - $loyalty_amount_saved;
             $order->loyalty_points_earned = $loyalty_points_earned['per_order_points'];
             $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
             $order->save();
