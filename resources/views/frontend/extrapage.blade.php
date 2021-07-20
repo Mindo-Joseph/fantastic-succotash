@@ -229,6 +229,8 @@
                         $(previewId).attr('src','https://image.flaticon.com/icons/svg/179/179483.svg');
                     }else if(extension == 'csv'){
                         $(previewId).attr('src',text_image);
+                    }else if(extension == 'txt'){
+                        $(previewId).attr('src',text_image);
                     }else{
                         $(previewId).attr('src',e.target.result);
                     }
