@@ -149,6 +149,7 @@
             }
         });
         function initDataTable() {
+            try{
             $('#user_datatable').DataTable({
                 "dom": '<"toolbar">Bfrtip',
                 "destroy": true,
@@ -176,7 +177,6 @@
                 },
                 columns: [
                     {data: 'image_url', name: 'image_url', orderable: false, searchable: false,"mRender": function ( data, type, full ) {
-                        console.log(full);
                         return "<img src='"+full.image_url+"' class='rounded-circle' alt='"+full.id+"' >";
                     }},
                     {data: 'name', name: 'name', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
@@ -210,11 +210,11 @@
                     {data: 'orders_count', name: 'orders_count', orderable: false, searchable: false},
                     {data: 'active_orders_count', name: 'active_orders_count', orderable: false, searchable: false},
                     {data: 'status', name: 'status', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
-                        if(full.status == 1){
-                            return "<input type='checkbox' data-id='"+full.id+"' id='cur_"+full.id+"' data-plugin='switchery' name='userAccount' class='chk_box' data-color='#43bee1' checked>";
-                        }else{
-                            return "<input type='checkbox' data-id='"+full.id+"' id='cur_"+full.id+"' data-plugin='switchery' name='userAccount' class='chk_box' data-color='#43bee1'>";
-                        }
+                            if(full.status == 1){
+                                return "<input type='checkbox' data-id='"+full.id+"' id='cur_"+full.id+"' data-plugin='switchery' name='userAccount' class='chk_box' data-color='#43bee1' checked>";
+                            }else{
+                                return "<input type='checkbox' data-id='"+full.id+"' id='cur_"+full.id+"' data-plugin='switchery' name='userAccount' class='chk_box' data-color='#43bee1'>";
+                            }
                     }},
                     {data: 'is_superadmin', name: 'is_superadmin', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
                         if(full.is_superadmin == 1){
@@ -223,6 +223,14 @@
                     }},
                 ]
             });
+            }
+            finally{
+                var elems = Array.prototype.slice.call(document.querySelectorAll('.chk_box'));
+                console.log(elems);
+                elems.forEach(function(html) {
+                var switchery = new Switchery(html);
+            });
+        }
         }
     });
 </script>
