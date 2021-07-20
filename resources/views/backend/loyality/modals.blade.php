@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content p-3">
             <div class="modal-header border-0 p-0 mb-3">
-                <h4 class="modal-title">Add Loyalty Card</h4><br>
+                <h4 class="modal-title">Add {{getNomenclatureName('Loyalty Cards', false)}}</h4><br>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="save_loyality_form">
@@ -55,14 +55,14 @@
                 </div> -->
                 <br>
 
-                <label for="purchase">Order Amount to earn 1 loyalty point (as per primary currency)</label>
+                <label for="purchase">Order Amount to earn 1 {{getNomenclatureName('Loyalty Cards', false)}} point (as per primary currency)</label>
 
                 <div class="row mb-2">
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">1 Loyalty Point =</span>
+                                    <span class="input-group-text" id="basic-addon1">1 {{getNomenclatureName('Loyalty Cards', false)}} Point =</span>
                                 </div>
                                 <input type="text" onkeypress="return isNumberKey(event);" class="form-control" name="amount_per_loyalty_point" id="amount_per_loyalty_point" placeholder="Value" aria-label="Username" aria-describedby="basic-addon1">
                             </div>
@@ -83,7 +83,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h4 class="modal-title">Edit Loyalty Card</h4>
+                <h4 class="modal-title">Edit {{getNomenclatureName('Loyalty Cards', false)}}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="update_loyality_form" method="post" enctype="multipart/form-data">
