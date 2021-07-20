@@ -264,15 +264,18 @@
                     </div>
                     <p class="sub-header">View and update the naming</p>
                     <div class="row mb-2">
-                        @foreach($client_languages as $client_language)
+                        @foreach($client_languages as $k => $client_language)
                         <div class="col-sm-6">
                             <div class="form-group mb-3">
-                                <label for="custom_domain">Vendors</label>
-                                <input type="text" name="custom_domain" id="custom_domain" placeholder="xyz" class="form-control" value="{{ $nomenclature_value ? $nomenclature_value->value : ''}}">
-                                @if($errors->has('custom_domain'))
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('custom_domain') }}</strong>
-                                    </span>
+                                <label for="custom_domain">Vendors({{$client_language->langName}})</label>
+                                <input type="hidden" name="language_ids[]" value="{{$client_language->langId}}">
+                                <input type="text" name="names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId)}}">
+                                @if($k == 0)
+                                    @if($errors->has('names.0'))
+                                        <span class="text-danger" role="alert">
+                                            <strong>The primary language name field is required.</strong>
+                                        </span>
+                                    @endif
                                 @endif
                             </div>
                         </div>
