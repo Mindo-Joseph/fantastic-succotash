@@ -118,11 +118,8 @@ class ProfileController extends FrontController
             $user->description = $request->description;
             $user->save();
             return redirect()->back()->with('success', 'Profile has been updated');
-            // return response()->json(array('status' => 'success', 'message'=>'Profile has been updated'));
-
         }
         return redirect()->back()->with('errors', 'Profile updation failed');
-        // return response()->json(['status' => 'error', 'message' => 'Profile updation failed']);
     }
 
     /**

@@ -59,10 +59,11 @@ class UserSubscriptionController extends FrontController
      */
     public function selectSubscriptionPlan(Request $request, $domain = '', $slug = '')
     {
+        $code = array('stripe');
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         $sub_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->firstOrFail();
-        $payment_options = PaymentOption::select('id', 'code', 'title')->where('status', 1)->get();
+        $payment_options = PaymentOption::select('id', 'code', 'title')->whereIn('code', $code)->where('status', 1)->get();
         foreach ($payment_options as $payment_option) {
            $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
         }

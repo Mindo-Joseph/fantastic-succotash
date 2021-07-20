@@ -56,13 +56,13 @@
                  <tr>
                     <th style="text-align: center;">
                         <a style="display: block;" href="#">
-                           <img src="{{$mailData['logo']}}" alt="">
+                           <img style="height:50px" src="{{$mailData['logo']}}" alt="">
                         </a>
                     </th>
                  </tr>
               </thead>
               <tbody>
-                 <tr>
+                <!--  <tr>
                     <td>
                         <div style="background: url(images/food-banner.jpg) no-repeat;height: 300px;background-size: cover;display: flex;align-items: center;justify-content: center;">
                            <div style="border-radius: 50%;width: 120px;height: 120px;padding: 20px;box-sizing: border-box;">
@@ -70,7 +70,7 @@
                            </div>
                         </div>
                     </td>
-                 </tr>
+                 </tr> -->
                  <tr>
                     <td>
                        <div style="margin-bottom: 20px;">

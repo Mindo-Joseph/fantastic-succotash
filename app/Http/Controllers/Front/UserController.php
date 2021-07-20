@@ -70,7 +70,7 @@ class UserController extends FrontController
                 $user->phone_token = $otp;
                 $user->phone_token_valid_till = $newDateTime;
                 $provider = $data->sms_provider;
-                $to = '+'.$user->dial_code.$user->phone_number;
+                $to = '+'.$request->dial_code.$request->phone;
                 $body = "Dear " . ucwords($user->name) . ", Please enter OTP " . $otp . " to verify your account.";
                 if (!empty($data->sms_key) && !empty($data->sms_secret) && !empty($data->sms_from)) {
                     $send = $this->sendSms($provider, $data->sms_key, $data->sms_secret, $data->sms_from, $to, $body);
@@ -89,7 +89,7 @@ class UserController extends FrontController
                     $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
                     $client_name = $client->name;
                     $mail_from = $data->mail_from;
-                    $sendto = $user->email;
+                    $sendto = $request->email;
                     try {
                         $data = [
                             'code' => $otp,
@@ -139,6 +139,10 @@ class UserController extends FrontController
             $message = 'OTP matched successfully.';
         }
         if ($request->type == 'phone') {
+            $user_detail_exist = User::where('phone_number', $request->phone_number)->where('id','!=',$user->id)->first();
+            if($user_detail_exist){
+                return response()->json(['error' => 'Email already in use!'], 404);
+            }
             if ($user->phone_token != $request->verifyToken) {
                 return response()->json(['error' => 'OTP is not valid'], 404);
             }
@@ -146,20 +150,26 @@ class UserController extends FrontController
                 return response()->json(['error' => 'OTP has been expired.'], 404);
             }
             $user->phone_token = NULL;
-            $user->phone_token_valid_till = NULL;
             $user->is_phone_verified = 1;
+            $user->phone_token_valid_till = NULL;
+            $user->dial_code = $request->dial_code;
+            $user->phone_number = $request->phone_number;
         }
         if ($request->type == 'email') {
+            $user_detail_exist = User::where('email', $request->email)->where('id','!=',$user->id)->first();
+            if($user_detail_exist){
+                return response()->json(['error' => 'Email already in use!'], 404);
+            }
             if ($user->email_token != $request->verifyToken) {
-                die();
                 return response()->json(['error' => 'OTP is not valid'], 404);
             }
             if ($currentTime > $user->email_token_valid_till) {
                 return response()->json(['error' => 'OTP has been expired.'], 404);
             }
             $user->email_token = NULL;
-            $user->email_token_valid_till = NULL;
             $user->is_email_verified = 1;
+            $user->email = $request->email;
+            $user->email_token_valid_till = NULL;
         }
         $user->save();
         return response()->json(['success' => 'OTP verified'], 202);
