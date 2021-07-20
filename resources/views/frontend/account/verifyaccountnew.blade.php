@@ -57,7 +57,7 @@
                                     <input class="form-control" type="text" id="digit-5" name="digit-5" data-next="digit-6" data-previous="digit-4" onkeypress="return isNumberKey(event)"/>
                                     <input class="form-control" type="text" id="digit-6" name="digit-6" data-next="digit-7" data-previous="digit-5" onkeypress="return isNumberKey(event)"/>
                                 </div>
-                                <strong class="invalid-feedback2 invalid_email_otp_error"></strong>
+                                <span class="invalid-feedback2 invalid_email_otp_error w-100 d-block text-center text-danger"></span>
                                 <div class="row text-center mt-2">
                                     <div class="col-12 resend_txt">
                                         <p class="mb-1">If you didn’t receive a code?</p>
@@ -86,7 +86,7 @@
                     <div class="offset-xl-3 col-xl-6 text-left">
                         <div class="verify_id input-group mb-3 radius-flag">
                             <input type="tel" class="form-control" id="phone_number" value="{{'+'.Auth::user()->dial_code.Auth::user()->phone_number}}" disabled="">
-                            <input type="text" id="dial_code" value="{{Auth::user()->dial_code}}">
+                            <input type="hidden" id="dial_code" value="{{Auth::user()->dial_code}}">
                             <div class="input-group-append position-absolute position-right">
                                 <a class="input-group-text" id="edit_phone" href="javascript:void(0)">Edit</a>
                             </div>
@@ -102,7 +102,7 @@
                             <input class="form-control" type="text" id="digit-5" name="digit-5" data-next="digit-6" data-previous="digit-4" onkeypress="return isNumberKey(event)"/>
                             <input class="form-control" type="text" id="digit-6" name="digit-6" data-next="digit-7" data-previous="digit-5" onkeypress="return isNumberKey(event)"/>
                         </div>
-                        <strong class="invalid-feedback2 invalid_phone_otp_error text-center"></strong>
+                        <span class="invalid_phone_otp_error invalid-feedback2 w-100 d-block text-center text-danger"></span>
                         <div class="row text-center mt-2">
                             <div class="col-12 resend_txt">
                                 <p class="mb-1">If you didn’t receive a code?</p>
@@ -213,10 +213,11 @@
                     $('.verifyPhone').removeClass('disabled').html('RESEND');
                 }
                 if($type == 'email'){
-                 $('.edit_email_feedback').html(response.message);
+                    $('.edit_email_feedback').html(response.message);
                 }else{
-                 $('.edit_phone_feedback').html(response.message);
+                    $('.edit_phone_feedback').html(response.message);
                 }
+                setTimeout(function(){$('.edit_email_feedback, .edit_phone_feedback').html(''); }, 5000);
             }
         });
     }
@@ -248,15 +249,18 @@
                verifyToken +=  $(this).val();
             }
         });
+        var dial_code =  $('#dial_code').val();
+        var phone_number =  $('#phone_number').val();
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "{{ route('user.verifyToken') }}",
-            data: {'verifyToken':verifyToken, 'type': 'phone'},
+            data: {'verifyToken':verifyToken, 'type': 'phone', phone_number:phone_number, dial_code:dial_code},
             success: function(response) {
                 $("#verify_phone_main_div").html('');
                 let phone_verified_template = _.template($('#phone_verified_template').html());
                 $("#verify_phone_main_div").append(phone_verified_template());
+                setTimeout(function(){location.reload(); }, 2000);
             },
             error: function(data) {
                 $(".invalid_phone_otp_error").html(data.responseJSON.error);
@@ -265,6 +269,7 @@
     });
     $("#verify_email_token").click(function(event) {
         var verifyToken = '';
+        var email = $('#email').val();
         $('.digit-group').find('input').each(function() {
             if($(this).val()){
                verifyToken +=  $(this).val();
@@ -274,11 +279,12 @@
             type: "POST",
             dataType: "json",
             url: "{{ route('user.verifyToken') }}",
-            data: {'verifyToken':verifyToken, 'type': 'email'},
+            data: {verifyToken:verifyToken, type: 'email', email:email},
             success: function(response) {
                 $("#verify_email_main_div").html('');
                 let email_verified_template = _.template($('#email_verified_template').html());
                 $("#verify_email_main_div").append(email_verified_template());
+                setTimeout(function(){location.reload(); }, 2000);
             },
             error: function(data) {
                 $(".invalid_email_otp_error").html(data.responseJSON.error);

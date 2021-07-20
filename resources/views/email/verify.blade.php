@@ -56,17 +56,12 @@
                  <tr>
                     <th style="text-align: center;">
                         <a style="display: block;" href="#">
-                           <img src="images/logo.png" alt="">
+                           <img src="{{ $mailData['logo']}}" height="50px" alt="">
                         </a>
                     </th>
                  </tr>
               </thead>
               <tbody style="text-align: center;">
-                 <tr>
-                    <td style="height: 400px;padding-top: 0;padding-bottom: 0;">
-                     <img style="width: 100%;height: 100%;object-fit: cover;" src="{{url('images/food-banner.jpg')}}" alt="">
-                    </td>
-                 </tr>
                  <tr>
                     <td style="padding-top: 0;">
                      <div style="background: #fff;box-shadow: 0 3px 4px #ddd;border-bottom-left-radius: 20px;border-bottom-right-radius: 20px;padding: 15px 40px 30px;">
@@ -76,17 +71,17 @@
                         <p style="Margin:0;Margin-bottom:16px;color:#cb202d;font-family:-apple-system,Helvetica,Arial,sans-serif;font-size:20px;font-weight:600;line-height:1.5;margin:0;margin-bottom:0;padding:0;text-align:center;word-break:keep-all!important">{{$mailData['code']}}</p>
                         </div>
                         <p>Note: The OTP will expire in 10 minutes and can only be used once.</p>
-                        <div style="margin: 30px 0 0;color: #ddd;">
+                        <!-- <div style="margin: 30px 0 0;color: #ddd;">
                            Thank you, <br>
                            Team Royo <br><br>
 
                            If you did not make this request, you can safely ignore this email.
-                        </div>
+                        </div> -->
                      </div>
                     </td>
                  </tr>
               </tbody>
-              <tfoot style="text-align: center;">
+              <!-- <tfoot style="text-align: center;">
                <tr>
                   <td colspan="2" style="padding: 0 15px 20px;">
                      <div style="background: #fff;box-shadow: 0 -2px 4px #ddd;border-radius: 20px;padding: 15px 0 0;margin-top: 20px;">
@@ -99,7 +94,7 @@
                      </div>
                   </td>
                </tr>
-            </tfoot>
+            </tfoot> -->
             </table>
          </div>
       </section>
