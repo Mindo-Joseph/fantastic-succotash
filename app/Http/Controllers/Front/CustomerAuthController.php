@@ -289,7 +289,7 @@ class CustomerAuthController extends FrontController
             $vendor->desc = $request->vendor_description;
             $vendor->slug = Str::slug($request->name, "-");
             $vendor->save();
-            $permission_detail = Permissions::where('slug', 'vendors')->first();
+            $permission_details = Permissions::whereIn('id', [1,2,3,12,17,18,19,20,21])->get();
             if($vendor_registration_documents->count() > 0){
                 foreach ($vendor_registration_documents as $vendor_registration_document) {
                     $vendor_registration_document_id = $vendor_registration_document->id;
@@ -303,7 +303,9 @@ class CustomerAuthController extends FrontController
                 }
             }
             UserVendor::create(['user_id' => $user->id, 'vendor_id' => $vendor->id]);
-            UserPermissions::create(['user_id' => $user->id, 'permission_id' => $permission_detail->id]);
+            foreach ($permission_details as $permission_detail) {
+                UserPermissions::create(['user_id' => $user->id, 'permission_id' => $permission_detail->id]);
+            }
             $email_data = [
                 'title' => $user->title,
                 'email' => $user->email,

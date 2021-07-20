@@ -36,10 +36,7 @@ class DashBoardController extends BaseController{
                 });
             }
             $total_vendor = $total_vendor->count();
-
             $total_banners = Banner::count();
-            
-            // total products 
             $total_products = Product::orderBy('id','desc');
             if (Auth::user()->is_superadmin == 0) {
                 $total_products = $total_products->whereHas('vendor.permissionToUser', function ($query) {
@@ -47,7 +44,6 @@ class DashBoardController extends BaseController{
                 });
             }
             $total_products = $total_products->count();
-
             $date_filter = $request->date_filter;
             if($date_filter){
                 $date_explode = explode('to', $date_filter);
@@ -55,7 +51,6 @@ class DashBoardController extends BaseController{
                 $end_date = $date_explode[1].' 23:59:59';
             }
             $total_categories = Category::count();
-            
             $total_revenue = Order::orderBy('id','desc');
             if (Auth::user()->is_superadmin == 0) {
                 $total_revenue = $total_revenue->whereHas('vendors.vendor.permissionToUser', function ($query) {
@@ -63,8 +58,6 @@ class DashBoardController extends BaseController{
                 });
             }
             $total_revenue = $total_revenue->sum('payable_amount');
-
-
             $today_sales = Order::whereDay('created_at', now()->day);
             if (Auth::user()->is_superadmin == 0) {
                 $today_sales = $today_sales->whereHas('vendors.vendor.permissionToUser', function ($query) {

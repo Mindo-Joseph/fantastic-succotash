@@ -231,6 +231,10 @@
                         $(previewId).attr('src',text_image);
                     }else if(extension == 'txt'){
                         $(previewId).attr('src',text_image);
+                    }else if(extension == 'xls'){
+                        $(previewId).attr('src',text_image);
+                    }else if(extension == 'xlsx'){
+                        $(previewId).attr('src',text_image);
                     }else{
                         $(previewId).attr('src',e.target.result);
                     }
