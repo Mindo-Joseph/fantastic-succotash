@@ -342,6 +342,10 @@ span.inner-div {
     border: 1px solid #ddd; */
 }
 
+.card-box.mb-0{    
+    margin-bottom: 0 !important;
+}
+
 #AddbrandBox {
     padding-bottom: 0;
 }
