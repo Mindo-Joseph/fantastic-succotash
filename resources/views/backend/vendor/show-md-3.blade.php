@@ -210,18 +210,16 @@
     
     <div class="inbox-widget" data-simplebar style="max-height: 350px;">
         @foreach($vendor->permissionToUser as $users)
-        <div class="inbox-item">
+        <div class="inbox-item pb-0">
             <div class="inbox-item-img">
                 <img src="{{$users->user ? $users->user->image['proxy_url'].'40/40'.$users->user->image['image_path'] : asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt="">
 
                 {{-- <img src="{{asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt=""> --}}
             </div>
-            <p class="inbox-item-author">{{ $users->user->name??'' }} 
-               
-            </p>
-            <p class="inbox-item-text"><i class="fa fa-envelope" aria-hidden="true"> {{ $users->user->email??'' }}</i> @if($users->user->phone_number)<i class="fa fa-phone" aria-hidden="true"> {{ $users->user->phone_number??'' }}</i>@endif</p>
+            <p class="inbox-item-author">{{ $users->user->name??'' }}  </p>
+            <p class="inbox-item-text"><label class="d-block"><i class="fa fa-envelope mr-1" aria-hidden="true"></i> {{ $users->user->email??'' }}  @if($users->user->phone_number)</label><label class="d-block">  <i class="fa fa-phone mr-1" aria-hidden="true"></i> {{ $users->user->phone_number??'' }}</label> </p> @endif</p>
             @if($users->user->id != Auth::id())
-            <form method="POST" action="{{route('user.vendor.permission.destroy', $users->id)}}">
+            <form class="delete-user position-absolute" method="POST" action="{{route('user.vendor.permission.destroy', $users->id)}}">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-primary-outline" onclick="return confirm('Are you sure ?');"> <i class="mdi mdi-delete"></i></button>
