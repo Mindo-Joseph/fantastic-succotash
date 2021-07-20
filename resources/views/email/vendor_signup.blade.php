@@ -108,15 +108,6 @@
                     </td>
                  </tr>
               </tbody>
-             <!--  <tfoot style="text-align: center;">
-               <tr>
-                  <td colspan="2" style="padding: 0 15px 20px;">
-                     <div style="border-radius: 20px">
-                        <p style="background-color: #8142ff;padding:5px 0;text-align:center;color: #fff;margin-top: 30px; ">Powered by <b>{{$mailData['powered_by']}}</b></p>
-                     </div>
-                  </td>
-               </tr>
-              </tfoot> -->
             </table>
          </div>
       </section>
