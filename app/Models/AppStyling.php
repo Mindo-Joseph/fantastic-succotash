@@ -5,17 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AppStyling extends Model
-{
+class AppStyling extends Model{
+
     use HasFactory;
 
-    public function styleOption()
-    {
+    public function styleOption(){
         return $this->hasOne('App\Models\AppStylingOption')->where('is_selected', 1);
     }
 
-    public static function getSelectedData()
-    {
+    public static function getSelectedData(){
         $app_styles_array = [];
         $app_styles = AppStyling::select('id','name')->with('styleOption')->get();
         foreach ($app_styles as $app_style) {

@@ -9,26 +9,17 @@
                 <label>Upload banner image</label>           
                 <input type="file" accept="image/*" data-plugins="dropify" data-default-file="{{$vendor->banner['proxy_url'] . '90/90' . $vendor->banner['image_path']}}" name="banner" class="dropify" />
             </div>
-            <div class="col-md-3">
-                <label>Uploaded Document</label>
-                <div class="d-flex align-items-center justify-content-between">
-                    <label>Document One</label><a class="d-block mb-1 document-btn" target="_blank" href="#"><i class="fa fa-eye float-right"></i> </a>
-                </div>
-                <div class="d-flex align-items-center justify-content-between">
-                    <label>Document Two</label><a class="d-block mb-1 document-btn" target="_blank" href="#"><i class="fa fa-eye float-right"></i> </a>
-                </div>
-                <div class="d-flex align-items-center justify-content-between">
-                    <label>Document Three</label><a class="d-block mb-1 document-btn" target="_blank" href="#"><i class="fa fa-eye float-right"></i> </a>
-                </div>
-                
-            
-            </div>
              @if(isset($vendor_docs))
                 @if($vendor_docs->count() > 0)
                     <div class="col-md-3">
                         <label>Upload Document</label>
                         @foreach($vendor_docs as $k => $vendor_doc)
-                        <a class="d-block mb-1 document-btn" target="_blank" href="{{$vendor_doc->file_name['proxy_url'] . '90/90' . $vendor_doc->file_name['image_path']}}">Document{{$k+1}}</a>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <label>{{$vendor_doc->vendor_registration_document->primary->name}}</label>
+                            <a class="d-block mb-1 document-btn" target="_blank" href="{{$vendor_doc->file_name['storage_url']}}">
+                                <i class="fa fa-eye float-right"></i>
+                            </a>
+                        </div>
                         @endforeach
                     </div>
                 @endif
