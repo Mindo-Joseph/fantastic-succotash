@@ -332,6 +332,7 @@
                     if (data.status == 'success') {
                         $('img').attr('src', '');
                         $('input[type=file]').val('');
+                        $('html,body').animate({scrollTop: '0px'}, 1000);
                         $("#vendor_signup_form")[0].reset();
                         $('#success_msg').html(data.message).show();
                         setTimeout(function() {
@@ -341,6 +342,7 @@
                 },
                 error: function(response) {
                     that.attr('disabled', false);
+                    $('html,body').animate({scrollTop: '0px'}, 1000);
                     $('#register_btn_loader').hide();
                     if (response.status === 422) {
                         let errors = response.responseJSON.errors;
