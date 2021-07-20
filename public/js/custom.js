@@ -254,6 +254,7 @@ $(document).ready(function() {
         let cartElement = $("input[name='cart_total_payable_amount']");
         let walletElement = $("input[name='wallet_amount']");
         let subscriptionElement = $("input[name='subscription_amount']");
+        let ajaxData = {'stripe_token' : stripe_token};
         if(cartElement.length > 0){
             total_amount = cartElement.val();
         }
@@ -262,12 +263,14 @@ $(document).ready(function() {
         }
         else if(subscriptionElement.length > 0){
             total_amount = subscriptionElement.val();
+            ajaxData.subscription_id = $("#subscription_payment #subscription_title").attr('data-id');
         }
+        ajaxData.amount = total_amount;
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: payment_stripe_url,
-            data: {'stripe_token' : stripe_token ,'amount': total_amount},
+            data: ajaxData,
             success: function (resp) {
                 if(resp.status == 'Success'){
                     if(path.indexOf("cart") !== -1){
