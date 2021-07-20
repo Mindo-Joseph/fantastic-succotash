@@ -3,15 +3,13 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 
-class SubscriptionStatusOptionsSeeder extends Seeder
-{
+class SubscriptionStatusOptionsSeeder extends Seeder{
     /**
      * Run the database seeds.
      *
      * @return void
      */
-    public function run()
-    {
+    public function run(){
         \DB::table('subscription_status_options')->delete();
  
         $statuses = array(

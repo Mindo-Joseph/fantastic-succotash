@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Client;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Client\BaseController;
 use App\Models\Nomenclature;
+use App\Models\NomenclatureTranslation;
+use App\Http\Controllers\Client\BaseController;
 
 class NomenclatureController extends BaseController
 
@@ -16,11 +17,23 @@ class NomenclatureController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        $result = NomenClature::first();
-        if($result){
-            $result->update(['label' => "vendors", 'value' => $request->custom_domain]);
-        }else{
-            NomenClature::create(['label' => "vendors", 'value' => $request->custom_domain]);
+        $this->validate($request, [
+          'names.0' => 'required|string',
+        ]);
+        NomenclatureTranslation::truncate();
+        $language_ids = $request->language_ids;
+        foreach ($request->names as $key => $name) {
+            $nomenclature = NomenClature::first();
+            if($nomenclature){
+                $nomenclature->update(['label' => "vendors"]);
+            }else{
+                $nomenclature = NomenClature::create(['label' => "vendors"]);
+            }
+            $nomenclature_translation =  new NomenclatureTranslation();
+            $nomenclature_translation->name = $name;
+            $nomenclature_translation->language_id = $language_ids[$key];
+            $nomenclature_translation->nomenclature_id = $nomenclature->id;
+            $nomenclature_translation->save();
         }
         return redirect()->route('configure.customize')->with('success', 'Nomenclature Saved Successfully!');
     }

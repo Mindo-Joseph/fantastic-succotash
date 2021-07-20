@@ -352,16 +352,16 @@
 
 
                         @if($configData->need_dispacher_ride == 1 && $product->category->categoryDetail->type_id == 7)
-                            @if(count($agent_dispatcher_tags))
                             <div class="col-md-6 d-flex justify-content-between mb-2">
                                 {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
-                                <select class="selectize-select1 form-control"  name="tags">
+                                <select class="selectize-select1 form-control"  name="tags" required>
+                                    @if($agent_dispatcher_tags != null && count($agent_dispatcher_tags))
                                     @foreach($agent_dispatcher_tags as $key => $tags)
                                             <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
                                     @endforeach
+                                    @endif
                                 </select>
                             </div>
-                            @endif
                         @endif
 
                        

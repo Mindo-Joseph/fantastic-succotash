@@ -2,7 +2,6 @@
     <div class="background pt-3 pb-2 px-2" style="background:url({{$vendor->banner['proxy_url'] . '200/100' . $vendor->banner['image_path']}}) no-repeat center center;background-size:cover;">
         <div class="vendor_text">
             <img src="{{$vendor->logo['proxy_url'] . '90/90' . $vendor->logo['image_path']}}" class="rounded-circle avatar-lg img-thumbnail" alt="profile-image">
-            {{$vendor->status}}
             <h4 class="mb-0 text-white">{{ucfirst($vendor->name)}}</h4>
             <p class="text-white">{{$vendor->address}}</p>
             <button type="button" class="btn btn-success btn-sm waves-effect mb-2 waves-light openEditModal" data-toggle="modal" data-target="#exampleModal"> Edit </button>
@@ -261,7 +260,7 @@
                 <h4 class="modal-title">Add User</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <form id="add_user_permission_vendor" method="post" enctype="multipart/form-data" action="{{route('permissionsForUserViaVendor')}}">
+            <form id="add_user_permission_vendor" method="post" enctype="multipart/form-data" action="{{route('permissionsForUserViaVendor')}}" autocomplete="off">
                 @csrf
                 <input type="hidden" name="vendor_id" value="{{$vendor->id}}" id="set-vendor_id">
                 <div class="modal-body">
