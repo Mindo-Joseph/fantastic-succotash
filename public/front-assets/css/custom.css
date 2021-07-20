@@ -605,12 +605,12 @@ ul.social-links li a {
 
 form label {
     font-size: 14px;
-    color: #000;
+    /* color: #000; */
     margin: 0 0 5px;
 }
 
 form .form-control {
-    font-weight: 600;
+    /* font-weight: 600; */
     /* color: #000; */
     opacity: 1;
     border-radius: 4px !important;
@@ -2817,6 +2817,9 @@ form input.form-control[placeholder="Address"] {
     width: auto;
 }
 
+img.h-45 {
+    height: 42px;
+}
 
 
 /**/

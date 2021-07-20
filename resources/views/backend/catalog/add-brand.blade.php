@@ -4,6 +4,7 @@
             <div class="col-md-12">              
                 <label>Upload image</label>
                 <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="" />
+                <label class="logo-size d-block text-right mt-1">Image Size 1000x200</label>
             </div>
         </div>
         <div class="row">
