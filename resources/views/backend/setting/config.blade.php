@@ -997,8 +997,10 @@
                                     <label for="">Name ({{$client_language->langName}})</label>
                                     <input class="form-control" name="language_id[{{$k}}]" type="hidden" value="{{$client_language->langId}}">
                                     <input class="form-control" name="name[{{$k}}]" type="text" id="vendor_registration_document_name_{{$client_language->langId}}">
-                                    <span class="text-danger error-text social_media_url_err"></span>
                                  </div>
+                                 @if($k == 0)
+                                    <span class="text-danger error-text social_media_url_err"></span>
+                                 @endif
                               </div>
                            </div>
                         </div>
@@ -1069,7 +1071,7 @@
                }
             },
             error: function(response) {
-               $('.social_media_url_err').html(response.responseJSON.errors.social_media_url[0]);
+               $('#add_vendor_registration_document_modal .social_media_url_err').html('The default language name field is required.');
             }
          });
       });

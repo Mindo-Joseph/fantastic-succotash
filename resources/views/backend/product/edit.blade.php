@@ -129,7 +129,7 @@
                         <div class="col-md-3" style="cursor: not-allowed;">
                             {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
                             {!! Form::text('category', $product->category ? $product->category->cat->slug : '', ['class'=>'form-control', 'id' => 'url_slug', 'style' => 'pointer-events:none;']) !!}
-                            <input type="hidden" name="category_id" value="{{$product->category ? $product->category->cat->id : $product->category_id}}">
+                            <input type="hidden" name="category_id" value="{{$product->category ? $product->category->cat->category_id : $product->category_id}}">
                         </div>
                     </div>
                 </div>

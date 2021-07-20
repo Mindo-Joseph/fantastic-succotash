@@ -216,8 +216,8 @@
                             <div class="row align-items-center">
                                 <div class="col-8">
                                     <div class="text-end">
-                                        <p class="text-muted mb-1 text-truncate">Drive Active Orders</p>
-                                        <h3 class="text-dark mt-1 mb-0"><span data-plugin="counterup">0</span></h3>
+                                        <p class="text-muted mb-1 text-truncate">Return Request</p>
+                                        <h3 class="text-dark mt-1 mb-0"><span data-plugin="counterup" id="return_requests"></span></h3>
                                     </div>
                                 </div>
                                 <div class="col-4">

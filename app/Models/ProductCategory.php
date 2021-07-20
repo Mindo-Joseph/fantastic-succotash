@@ -12,7 +12,7 @@ class ProductCategory extends Model
 	    return $this->hasOne('App\Models\Product', 'id', 'product_id'); 
 	}
     public function cat(){
-	    return $this->belongsTo('App\Models\CategoryTranslation', 'category_id', 'id')->select('id', 'name'); 
+	    return $this->hasOne('App\Models\CategoryTranslation', 'category_id', 'category_id')->select('id', 'name', 'category_id'); 
 	}
 	public function categoryDetail(){
 	    return $this->belongsTo('App\Models\Category', 'category_id', 'id'); 
