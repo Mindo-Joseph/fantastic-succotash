@@ -1,30 +1,30 @@
 $(document).ready(function () {
-    $(".refresh_cataegoryinfo").click(function () {
-        $('#range-datepicker').val('');
-        getDashboardData(dashboard_filter_url);
-    });
-    $("#dashboard_refresh_btn").click(function () {
-        $('#range-datepicker').val('');
-        getDashboardData(dashboard_filter_url);
-    });
-    $("#range-datepicker").flatpickr({ 
+    const $flatpickr =  $("#range-datepicker").flatpickr({ 
         mode: "range",
         onClose: function(selectedDates, dateStr, instance) {
             getDashboardData(dashboard_filter_url);
         }
     });
+    $(".refresh_cataegoryinfo").click(function () {
+        $flatpickr.clear();
+        getDashboardData(dashboard_filter_url);
+    });
+    $("#dashboard_refresh_btn").click(function () {
+        $flatpickr.clear();
+        getDashboardData(dashboard_filter_url);
+    });
     getDashboardData(dashboard_filter_url);
     $(".yearSales").click(function () {
-        $('#range-datepicker').val('');
+        $flatpickr.clear();
         var url = yearlyInfo_url;
         getDashboardData(dashboard_filter_url, 'yearly');
     });
     $(".monthlySales").click(function () {
-        $('#range-datepicker').val('');
+        $flatpickr.clear();
         getDashboardData(dashboard_filter_url, 'monthly');
     });
     $(".weeklySales").click(function () {
-        $('#range-datepicker').val('');
+        $flatpickr.clear();
         getDashboardData(dashboard_filter_url, 'weekly');
     });
     function getDashboardData(dashboard_filter_url, type = 'monthly'){
