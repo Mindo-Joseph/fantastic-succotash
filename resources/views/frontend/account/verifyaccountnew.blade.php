@@ -106,7 +106,7 @@
                         <div class="row text-center mt-2">
                             <div class="col-12 resend_txt">
                                 <p class="mb-1">If you didn’t receive a code?</p>
-                                <a class="verifyPhone"><u>RESEND</u></a>
+                                <a class="verifyPhone" href="javascript:void(0)"><u>RESEND</u></a>
                             </div>
                             <div class="col-md-12 mt-3">
                                 <button type="button" class="btn btn-solid" id="verify_phone_token">Verify</button>
