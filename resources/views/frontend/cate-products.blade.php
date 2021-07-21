@@ -247,12 +247,7 @@
                                                             <div class="front">
                                                                 <a href="{{route('productDetail', $data->url_slug)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
                                                             </div>
-                                                            <div class="cart-info cart-wrap">
-                                                                <!-- <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> 
-                                                                <a href="javascript:void(0)" title="Add to Wishlist" class="addWishList" proSku="{{$data->sku}}"><i class="ti-heart" aria-hidden="true"></i></a> -->
-                                                                <!-- <a data-toggle="modal" href="#" data-target="#quick-view" title="Quick View"><i class="ti-search" aria-hidden="true"></i></a>
-                                                                <a href="compare.html" title="Compare"><i class="ti-reload" aria-hidden="true"></i></a> -->
-                                                            </div>
+                                                           
                                                         </div>
                                                         <div class="product-detail">
                                                             <div>
@@ -268,7 +263,9 @@
                                                             <a href="{{route('productDetail', $data->url_slug)}}">
                                                                 <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
                                                             </a>
-                                                            <h4>{{Session::get('currencySymbol').(number_format($data->variant[0]->price * $data->variant[0]->multiplier,2))}}</h4>
+                                                            @if($data['inquiry_only'] == 0)
+                                                                <h4>{{Session::get('currencySymbol').(number_format($data->variant[0]->price * $data->variant[0]->multiplier,2))}}</h4>
+                                                            @endif
                                                             </div>
                                                         </div>
                                                     </div>
