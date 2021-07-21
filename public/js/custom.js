@@ -117,6 +117,7 @@ $(document).ready(function() {
                 if(response.status == "Success"){
                     $("#subscription_payment #subscription_title").html(response.sub_plan.title);
                     $("#subscription_payment #subscription_price").html('$' + response.sub_plan.price);
+                    $("#subscription_payment #features_list").html(response.sub_plan.features);
                     $("#subscription_payment #subscription_id").val(sub_id);
                     $("#subscription_payment #subscription_amount").val(response.sub_plan.price);
                     $("#subscription_payment #subscription_payment_methods").html('');
@@ -497,8 +498,8 @@ $(document).ready(function() {
                 },
                 error: function(error){
                     var response = $.parseJSON(error.responseText);
-                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                    $(".topup_wallet_confirm").removeAttr("disabled");
+                    success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
+                    $(".subscription_confirm_btn").removeAttr("disabled");
                 }
             });
         }else{

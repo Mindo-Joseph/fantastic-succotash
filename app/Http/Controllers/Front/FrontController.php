@@ -247,15 +247,15 @@ class FrontController extends Controller
                 $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
                 $client_name = $client->name;
                 $mail_from = $data->mail_from;
-                $sendto = 'preetinder.pal@codebrewinnovations.com'; //$subscription->user->email;
+                $sendto = $subscription->user->email;
                 try{
                     $data = [
                         'customer_name' => $subscription->user->name,
                         'code_text' => '',
                         'logo' => $client->logo['original'],
                         'frequency' => $subscription->frequency,
-                        'next_date' => $subscription->next_date,
-                        'link'=> "http://local.myorder.com/user/subscription/select/".$subscription->slug,
+                        'end_date' => $subscription->end_date,
+                        'link'=> "http://local.myorder.com/user/subscription/select/".$subscription->plan->slug,
                     ];
                     Mail::send('email.notifyUserSubscriptionBilling', ['mailData'=>$data],
                     function ($message) use($sendto, $client_name, $mail_from) {
@@ -263,7 +263,6 @@ class FrontController extends Controller
                         $message->to($sendto)->subject('Upcoming Subscription Billing');
                     });
                     $response['send_email'] = 1;
-                    return $response;
                 }
                 catch(\Exception $e){
                     return response()->json(['data' => $e->getMessage()]);

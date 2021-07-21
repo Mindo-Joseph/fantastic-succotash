@@ -15,7 +15,9 @@
 
 @section('content')
 @php
-$timezone = Auth::user()->timezone;
+    $timezone = Auth::user()->timezone;
+    $now = \Carbon\Carbon::now()->toDateString();
+    $after7days = \Carbon\Carbon::now()->addDays(7)->toDateString();
 @endphp
 <header>
     <div class="mobile-fix-option"></div>
@@ -83,9 +85,9 @@ $timezone = Auth::user()->timezone;
 
                 <div class="row">
                     <div class="col-12 mb-4">
-                        @if(!empty($active_subscriptions))
+                        @if(!empty($subscription))
                             <div class="card subscript-box">
-                                @foreach($active_subscriptions as $subscription)
+                                @if( (empty($subscription->cancelled_at)) || (!empty($subscription->cancelled_at)) && ($subscription->cancelled_at >= $now))
                                 <div class="row align-items-center mb-2">
                                     <div class="col-sm-3 text-center">
                                         <div class="gold-icon">
@@ -106,31 +108,50 @@ $timezone = Auth::user()->timezone;
                                                     @endforeach
                                                 </ul><?php */ ?>
                                             </div>
-                                            @if(!empty($subscription->cancelled_at))
-                                                <div class="col-sm-6 form-group mb-0">
-                                                    <b class="mr-2">Cancels On</b>
-                                                    <span>{{ convertDateTimeInTimeZone($subscription->cancelled_at, $timezone, 'F d, Y, H:i A') }}</span>
-                                                </div>
-                                            @else
-                                                <div class="col-sm-6 form-group mb-0">
-                                                    <b class="mr-2">Upcoming Billing Date</b>
-                                                    <span>{{ convertDateTimeInTimeZone($subscription->next_date, $timezone, 'F d, Y, H:i A') }}</span>
-                                                </div>
-                                                <div class="col-sm-6 mb-0 text-center text-sm-right">
-                                                    <a class="re-subscription-link btn btn-solid subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">Pay Now</a>
-                                                    <a class="cancel-subscription-link btn btn-solid" href="#cancel-subscription" data-toggle="modal" data-id="{{ $subscription->slug }}">Cancel</a>
-                                                </div>
-                                            @endif
+                                            
+                                            <div class="col-sm-6 form-group mb-0">
+                                                <b class="mr-2">
+                                                    @if(!empty($subscription->cancelled_at))
+                                                        @if( $subscription->end_date >= $now )
+                                                            Cancels On
+                                                        @else
+                                                            Cancelled On
+                                                        @endif
+                                                    @else
+                                                        @if( $subscription->end_date >= $now )
+                                                            Upcoming Billing Date
+                                                        @else
+                                                            Expired On
+                                                        @endif
+                                                    @endif
+                                                </b>
+                                                <span>{{ convertDateTimeInTimeZone($subscription->end_date, $timezone, 'F d, Y') }}</span>
+                                            </div>
+                                            <div class="col-sm-6 mb-0 text-center text-sm-right">
+                                                @if( $subscription->end_date >= $now )
+                                                    @if($subscription->plan->status == 1)
+                                                        <a class="btn btn-solid subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">Pay now (${{ $subscription->plan->price }})</a>
+                                                    @endif
+                                                    @if(empty($subscription->cancelled_at))
+                                                        <a class="cancel-subscription-link btn btn-solid" href="#cancel-subscription" data-toggle="modal" data-id="{{ $subscription->slug }}">Cancel</a>
+                                                    @endif
+                                                @else
+                                                    @if($subscription->plan->status == 1)
+                                                        <a class="btn btn-solid subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">Renew (${{ $subscription->plan->price }})</a>
+                                                    @endif
+                                                @endif
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-                                @endforeach
+                                @endif
                             </div>
                         @endif
                     </div>
                     
-                    @if($subscriptions->isNotEmpty())
-                        @foreach($subscriptions as $plan)
+                    @if($subscription_plans->isNotEmpty())
+                        @foreach($subscription_plans as $plan)
                             <div class="col-md-4 col-sm-6">
                                 <div class="pricingtable">
                                     <div class="gold-icon position-relative">
@@ -151,7 +172,7 @@ $timezone = Auth::user()->timezone;
                                         </ul>
                                     </div>
                                     <div class="pricingtable-purchase">
-                                        @if(in_array($plan->id, $active_subscription_plan_ids))
+                                        @if($plan->id == $subscription->plan->id)
                                             <button class="btn btn-solid black-btn disabled w-100">Subscribed</button>
                                         @else
                                             <button class="btn btn-solid w-100 subscribe_btn" data-id="{{ $plan->slug }}">Subscribe</button>
@@ -223,17 +244,22 @@ $timezone = Auth::user()->timezone;
       <form action="" id="subscription_payment_form">
         @csrf
         @method('POST')
+        <div>
+            <input type="hidden" name="email" id="email" value="{{ Auth::user()->email }}">
+            <input type="hidden" name="subscription_id" id="subscription_id" value="">
+            <input type="hidden" name="subscription_amount" id="subscription_amount" value="">
+            <input type="hidden" name="card_last_four_digit" id="card_last_four_digit" value="">
+            <input type="hidden" name="card_expiry_month" id="card_expiry_month" value="">
+            <input type="hidden" name="card_expiry_year" id="card_expiry_year" value="">
+        </div>
         <div class="modal-body pb-0">
             <div class="form-group">
                 <h5 class="text-17 mb-2" id="subscription_title"></h5>
-                <div class="text-36"><span id="subscription_price"></span></div>
-                <div>
-                    <input type="hidden" name="email" id="email" value="{{ Auth::user()->email }}">
-                    <input type="hidden" name="subscription_id" id="subscription_id" value="">
-                    <input type="hidden" name="subscription_amount" id="subscription_amount" value="">
-                    <input type="hidden" name="card_last_four_digit" id="card_last_four_digit" value="">
-                    <input type="hidden" name="card_expiry_month" id="card_expiry_month" value="">
-                    <input type="hidden" name="card_expiry_year" id="card_expiry_year" value="">
+                <div class="text-36 mb-2"><span id="subscription_price"></span></div>
+            </div>
+            <div class="form-group">
+                <div class="mt-2">Features included:
+                    <div id="features_list"></div>
                 </div>
             </div>
             <hr class="mb-1" />
