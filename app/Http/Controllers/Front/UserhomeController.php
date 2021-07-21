@@ -16,6 +16,15 @@ use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vend
 class UserhomeController extends FrontController{
     use ApiResponser;
     private $field_status = 2;
+
+    public function setTheme(Request $request){
+        if($request->theme_color == "dark"){
+            Session::put('config_theme', $request->theme_color);
+        }
+        else{
+            Session::forget('config_theme'); 
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -103,6 +112,7 @@ class UserhomeController extends FrontController{
         Session::forget('type');
         Session::put('type', $request->type);
         $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where($request->type, 1)->where('status', 1);
+        dd($vendors->get());
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                 $selectedAddress = $preferences->Default_location_name;

@@ -8,11 +8,13 @@
     .image-upload>input {
         display: none;
     }
+
     .product-img-box {
         width: 100%;
         height: 150px;
         border: 1px solid #ccc;
     }
+
     .product-img-box img {
         height: 100%;
         width: 100%;
@@ -194,12 +196,12 @@
                         </div>
                         <div class="col-sm-8 check_inventory">
                             <div class="row">
-                            @if($product->has_variant == 0)
+                                @if($product->has_variant == 0)
                                 <div class="col-sm-6">
                                     {!! Form::label('title', 'Quantity',['class' => 'control-label']) !!}
                                     {!! Form::number('quantity', $product->variant[0]->quantity, ['class'=>'form-control', 'id' => 'quantity', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                 </div>
-                            @endif
+                                @endif
                                 <div class="col-sm-6">
                                     {!! Form::label('title', 'Sell When Out Of Stock',['class' => 'control-label']) !!} <br />
                                     <input type="checkbox" bid="" id="sell_stock_out" data-plugin="switchery" name="sell_stock_out" class="chk_box" data-color="#43bee1" @if($product->sell_when_out_of_stock == 1) checked @endif>
@@ -208,6 +210,7 @@
                         </div>
                     </div>
                 </div>
+                @if($productVariants->count() > 0)
                 <div class="card-box">
                     <div class="row mb-2 bg-light">
                         <div class="col-8" style="margin:auto;">
@@ -220,7 +223,7 @@
                         @endif
                     </div>
                     <p>Select or change category to get variants</p>
-                    @if(!empty($productVariants))
+                    
                     <div class="row" style="width:100%; overflow-x: scroll;">
                         <div id="variantAjaxDiv" class="col-12 mb-2">
                             <h5 class="">Variant List</h5>
@@ -297,7 +300,7 @@
                                             <input type="text" style="width: 70px;" name="variant_cost_price[]" value="{{$varnt->cost_price}}" onkeypress="return isNumberKey(event)">
                                         </td>
                                         <td class="check_inventory">
-                                            <input type="text" style="width: 70px;"  name="variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
+                                            <input type="text" style="width: 70px;" name="variant_quantity[]" value="{{$varnt->quantity}}" onkeypress="return isNumberKey(event)">
                                         </td>
                                         <td>
                                             <a href="javascript:void(0);" data-varient_id="{{$varnt->id}}" class="action-icon deleteExistRow">
@@ -311,13 +314,9 @@
                         </div>
                         @endif
                         <div id="variantRowDiv" class="col-12"></div>
-                        @else
-                        <div class="row" style="width:100%; overflow-x: scroll;">
-                            <h5 class="">No variant assigned to category.</h5>
-                        </div>
-                        @endif
                     </div>
                 </div>
+                @endif
             </div>
             <div class="col-lg-5">
                 <div class="card-box">
@@ -338,33 +337,33 @@
                         </div>
                         @endif
                         @if($configData->pharmacy_check == 1 && $product->category->categoryDetail->type_id != 7)
-                            <div class="col-md-6 d-flex justify-content-between mb-2">
-                                {!! Form::label('title', 'Requires Prescription',['class' => 'control-label']) !!}
-                                <input type="checkbox" bid="" id="pharmacy_check" data-plugin="switchery" name="pharmacy_check" class="chk_box" data-color="#43bee1" @if($product->pharmacy_check == 1) checked @endif>
-                            </div>
+                        <div class="col-md-6 d-flex justify-content-between mb-2">
+                            {!! Form::label('title', 'Requires Prescription',['class' => 'control-label']) !!}
+                            <input type="checkbox" bid="" id="pharmacy_check" data-plugin="switchery" name="pharmacy_check" class="chk_box" data-color="#43bee1" @if($product->pharmacy_check == 1) checked @endif>
+                        </div>
                         @endif
                         @if($configData->enquire_mode == 1)
-                            <div class="col-md-6 d-flex justify-content-between mb-2">
-                                {!! Form::label('title', 'Inquiry Only',['class' => 'control-label']) !!}
-                                <input type="checkbox" bid="" id="inquiry_only" data-plugin="switchery" name="inquiry_only" class="chk_box" data-color="#43bee1" @if($product->inquiry_only == 1) checked @endif>
-                            </div>
+                        <div class="col-md-6 d-flex justify-content-between mb-2">
+                            {!! Form::label('title', 'Inquiry Only',['class' => 'control-label']) !!}
+                            <input type="checkbox" bid="" id="inquiry_only" data-plugin="switchery" name="inquiry_only" class="chk_box" data-color="#43bee1" @if($product->inquiry_only == 1) checked @endif>
+                        </div>
                         @endif
 
 
                         @if($configData->need_dispacher_ride == 1 && $product->category->categoryDetail->type_id == 7)
-                            @if(count($agent_dispatcher_tags))
-                            <div class="col-md-6 d-flex justify-content-between mb-2">
-                                {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
-                                <select class="selectize-select1 form-control"  name="tags">
-                                    @foreach($agent_dispatcher_tags as $key => $tags)
-                                            <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @endif
+                        @if(count($agent_dispatcher_tags))
+                        <div class="col-md-6 d-flex justify-content-between mb-2">
+                            {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
+                            <select class="selectize-select1 form-control" name="tags">
+                                @foreach($agent_dispatcher_tags as $key => $tags)
+                                <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @endif
                         @endif
 
-                       
+
 
                     </div>
                     <div class="row">
@@ -427,7 +426,7 @@
 
                         </div>
                     </div> -->
-                    
+
                 </div>
 
                 <div class="card-box">
@@ -614,16 +613,17 @@
         n2.value = n1.value + charCode;
         return true;
     }
-    function alplaNumericSlug(evt){
+
+    function alplaNumericSlug(evt) {
         var charCode = String.fromCharCode(event.which || event.keyCode);
-        if (!regexp.test(charCode)){
+        if (!regexp.test(charCode)) {
             return false;
         }
         var n2 = document.getElementById('url_slug');
-        n2.value = n2.value+charCode;
+        n2.value = n2.value + charCode;
         return true;
     }
-    $('.saveProduct').click(function(){
+    $('.saveProduct').click(function() {
         $('.product_form').submit();
     });
 

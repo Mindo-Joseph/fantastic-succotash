@@ -79,7 +79,7 @@
                         @if(!empty($variantSets) && count($variantSets) > 0)
                         @foreach($variantSets as $key => $sets)
                         <div class="collection-collapse-block border-0 open">
-                            <h3 class="collapse-block-title">{{$sets->title}}</h3>
+                            <h3 class="collapse-block-title">{{$sets->variantDetail->varcategory->cate->slug .' > '. $sets->title}}</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="collection-brand-filter">
                                     @if($sets->type == 2)
