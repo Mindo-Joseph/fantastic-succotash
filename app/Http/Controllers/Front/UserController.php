@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Client, Category, Brand, Product, ClientLanguage, User, ClientCurrency, ClientPreference, Country, UserAddress, UserVerification,};
-use Illuminate\Http\Request;
+use Auth;
+use Image;
 use Session;
 use Carbon\Carbon;
-//use Illuminate\Support\Facades\Redis;
-use Auth;
-use Illuminate\Support\Facades\Validator;
-use Image;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 use App\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Front\FrontController;
+use App\Models\{Currency, Banner, Client, Category, Brand, Product, ClientLanguage, User, ClientCurrency, ClientPreference, Country, UserAddress, UserVerification,EmailTemplate};
 
 
-class UserController extends FrontController
-{
+class UserController extends FrontController{
     private $field_status = 2;
     /**
      * Display a listing of the resource.
@@ -52,6 +50,7 @@ class UserController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function sendToken(Request $request, $domain = '', $uid = 0){
+
         $notified = 0;
         $user = User::where('id', Auth::user()->id)->first();
         if (!$user) {
@@ -91,6 +90,13 @@ class UserController extends FrontController
                     $mail_from = $data->mail_from;
                     $sendto = $request->email;
                     try {
+                        $email_template_content = '';
+                        $email_template = EmailTemplate::where('id', 2)->first();
+                        if($email_template){
+                            $email_template_content = $email_template->content;
+                            $email_template_content = str_ireplace("{code}", $otp, $email_template_content);
+                            $email_template_content = str_ireplace("{customer_name}", ucwords($user->name), $email_template_content);
+                        }
                         $data = [
                             'code' => $otp,
                             'link' => "link",
@@ -99,11 +105,13 @@ class UserController extends FrontController
                             'client_name' => $client_name,
                             'logo' => $client->logo['original'],
                             'customer_name' => ucwords($user->name),
-                            'code_text' => 'Enter below code to verify yoour account',
+                            'email_template_content' => $email_template_content,
                         ];
                         dispatch(new \App\Jobs\SendVerifyEmailJob($data))->onQueue('verify_email');
                         $notified = 1;
                     } catch (\Exception $e) {
+                        pr($e->getMessage());die;
+                        die('i mhere 114');
                         $user->save();
                     }
                 }

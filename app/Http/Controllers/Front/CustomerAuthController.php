@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions, VendorDocs, VendorRegistrationDocument};
+use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions, VendorDocs, VendorRegistrationDocument, EmailTemplate};
 
 class CustomerAuthController extends FrontController
 {
@@ -305,15 +305,30 @@ class CustomerAuthController extends FrontController
             foreach ($permission_details as $permission_detail) {
                 UserPermissions::create(['user_id' => $user->id, 'permission_id' => $permission_detail->id]);
             }
+            $content = '';
+            $email_template = EmailTemplate::where('id', 1)->first();
+            if($email_template){
+                $content = $email_template->content;
+                $content = str_ireplace("{title}", $user->title, $content);
+                $content = str_ireplace("{email}", $user->email, $content);
+                $content = str_ireplace("{address}", $vendor->address, $content);
+                $content = str_ireplace("{website}", $vendor->website, $content);
+                $content = str_ireplace("{description}", $vendor->desc, $content);
+                $content = str_ireplace("{vendor_name}", $vendor->name, $content);
+                $content = str_ireplace("{phone_no}", $user->phone_number, $content);
+            }
             $email_data = [
                 'title' => $user->title,
-                'email' => $user->email,
+                'email' => 'pankaj.pundir@codebrewinnovations.com',
                 'powered_by' => url('/'),
+                'banner' => $vendor->banner,
                 'website' => $vendor->website,
                 'address' => $vendor->address,
+                'vendor_logo' => $vendor->logo,
                 'vendor_name' => $vendor->name,
                 'description' => $vendor->desc,
                 'phone_no' => $user->phone_number,
+                'email_template_content' => $content,
                 'client_name' => $client_detail->name,
                 'customer_name' => ucwords($user->name),
                 'logo' => $client_detail->logo['original'],
@@ -324,8 +339,10 @@ class CustomerAuthController extends FrontController
                 'title' => $user->title,
                 'email' => $user->email,
                 'powered_by' => url('/'),
+                'banner' => $vendor->banner,
                 'website' => $vendor->website,
                 'address' => $vendor->address,
+                'vendor_logo' => $vendor->logo,
                 'vendor_name' => $vendor->name,
                 'description' => $vendor->desc,
                 'phone_no' => $user->phone_number,
@@ -333,7 +350,8 @@ class CustomerAuthController extends FrontController
                 'subject' => 'New Vendor Registration',
                 'customer_name' => ucwords($user->name),
                 'logo' => $client_detail->logo['original'],
-                'mail_from' => $client_preference->mail_from
+                'mail_from' => $client_preference->mail_from,
+                'email_template_content' => $email_template->content,
             ];
             dispatch(new \App\Jobs\sendVendorRegistrationEmail($email_data))->onQueue('verify_email');
             dispatch(new \App\Jobs\sendVendorRegistrationEmail($admin_email_data))->onQueue('verify_email');

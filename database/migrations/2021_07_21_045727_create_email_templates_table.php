@@ -15,8 +15,9 @@ class CreateEmailTemplatesTable extends Migration
     {
         Schema::create('email_templates', function (Blueprint $table) {
             $table->id();
-            $table->mediumText('label')->nullable();
             $table->mediumText('slug')->nullable();
+            $table->mediumText('tags')->nullable();
+            $table->mediumText('label')->nullable();
             $table->longText('content')->nullable();
             $table->mediumText('subject')->nullable();
             $table->timestamps();

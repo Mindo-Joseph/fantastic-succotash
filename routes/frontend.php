@@ -9,7 +9,6 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('dispatch-pickup-delivery/{id?}', 'Front\DispatcherController@dispatchPickupDeliveryUpdate')->name('dispatch-pickup-delivery'); // pickup delivery update from dispatch
 	Route::get('demo', 'Front\CustomerAuthController@getTestHtmlPage');
 	Route::get('test/email', function(){
-  
 		$send_mail = 'test@yopmail.com';
 		// App\Jobs\SendRefferalCodeEmailJob::dispatch($send_mail);
 		dispatch(new App\Jobs\SendRefferalCodeEmailJob($send_mail));
@@ -45,7 +44,7 @@ Route::group(['middleware' => ['domain']], function () {
 	]);
 	Route::get('/search','Front\SearchController@search');
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
-	Route::get('extra-page/{slug}','Front\UserhomeController@getExtraPage')->name('extrapage');
+	Route::get('page/{slug}','Front\UserhomeController@getExtraPage')->name('extrapage');
 	Route::post('/homePageData','Front\UserhomeController@postHomePageData')->name('homePageData');
 	Route::post('/homepage','Front\UserhomeController@homepage')->name('homepage');
 	Route::post('getClientPreferences', 'Front\UserhomeController@getClientPreferences')->name('getClientPreferences');
