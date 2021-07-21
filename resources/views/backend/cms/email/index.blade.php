@@ -64,7 +64,6 @@
                                 </div>
                                 <div class="col-md-2 mb-3">
                                     <label for="title" class="control-label">Tags:-<div id="tags" disabled=""></div></label>
-                                    
                                 </div>
                             </div>         
                         </div>

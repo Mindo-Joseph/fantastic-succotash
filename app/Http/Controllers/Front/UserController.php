@@ -110,8 +110,6 @@ class UserController extends FrontController{
                         dispatch(new \App\Jobs\SendVerifyEmailJob($data))->onQueue('verify_email');
                         $notified = 1;
                     } catch (\Exception $e) {
-                        pr($e->getMessage());die;
-                        die('i mhere 114');
                         $user->save();
                     }
                 }

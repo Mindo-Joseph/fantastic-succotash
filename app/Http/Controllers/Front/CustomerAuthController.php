@@ -319,7 +319,7 @@ class CustomerAuthController extends FrontController
             }
             $email_data = [
                 'title' => $user->title,
-                'email' => 'pankaj.pundir@codebrewinnovations.com',
+                'email' => $user->email,
                 'powered_by' => url('/'),
                 'banner' => $vendor->banner,
                 'website' => $vendor->website,
