@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{User, UserAddress, ClientPreference, Client, SubscriptionPlansUser, SubscriptionFeaturesListUser, SubscriptionInvoicesUser, SubscriptionInvoiceFeaturesUser, PaymentOption};
+use App\Models\{User, UserAddress, ClientPreference, Client, SubscriptionPlansUser, SubscriptionFeaturesListUser, SubscriptionInvoicesUser, SubscriptionInvoiceFeaturesUser, Payment, PaymentOption};
 
 class UserSubscriptionController extends FrontController
 {
@@ -30,7 +30,7 @@ class UserSubscriptionController extends FrontController
         $sub_plans = SubscriptionPlansUser::with('features.feature')->where('status', '1')->orderBy('sort_order', 'asc')->get();
         $featuresList = SubscriptionFeaturesListUser::where('status', 1)->get();
         $active_subscriptions = SubscriptionInvoicesUser::with(['plan', 'features.feature'])
-                            ->where('status_id', '2')
+                            ->where('status_id', 2)
                             ->where('user_id', Auth::user()->id)->get();
         $active_subscription_plan_ids = array();
         foreach($active_subscriptions as $subscription){
@@ -89,23 +89,29 @@ class UserSubscriptionController extends FrontController
             $subscription_invoice->frequency = $subscription_plan->frequency;
             $subscription_invoice->payment_option_id = $request->payment_option_id;
             $subscription_invoice->transaction_reference = $request->transaction_id;
-            $subscription_invoice->start_date = Carbon::now()->toDateTimeString();
+            $subscription_invoice->start_date = Carbon::now()->toDateString();
+            $subscription_invoice->next_date = NULL;
             if($subscription_plan->frequency == 'weekly'){
-                $subscription_invoice->next_date = Carbon::now()->addDays(7)->toDateTimeString();
-                $subscription_invoice->end_date = Carbon::now()->addDays(6)->toDateTimeString();
+                $subscription_invoice->next_date = Carbon::now()->addDays(6)->toDateString();
             }
             elseif($subscription_plan->frequency == 'monthly'){
-                $subscription_invoice->next_date = Carbon::now()->addDays(30)->toDateTimeString();
-                $subscription_invoice->end_date = Carbon::now()->addDays(29)->toDateTimeString();
+                $subscription_invoice->next_date = Carbon::now()->addDays(29)->toDateString();
             }
             elseif($subscription_plan->frequency == 'yearly'){
-                $subscription_invoice->next_date = Carbon::now()->addDays(365)->toDateTimeString();
-                $subscription_invoice->end_date = Carbon::now()->addDays(364)->toDateTimeString();
+                $subscription_invoice->next_date = Carbon::now()->addDays(364)->toDateString();
             }
+            $subscription_invoice->end_date = $subscription_invoice->next_date;
             $subscription_invoice->subscription_amount = $request->amount;
             $subscription_invoice->save();
             $subscription_invoice_id = $subscription_invoice->id;
             if($subscription_invoice_id){
+                $payment = new Payment;
+                $payment->balance_transaction = $request->amount;
+                $payment->transaction_id = $request->transaction_id;
+                $payment->user_subscription_invoice_id = $subscription_invoice_id;
+                $payment->date = Carbon::now()->format('Y-m-d');
+                $payment->save();
+
                 $subscription_invoice_features = array();
                 foreach($subscription_plan->features as $feature){
                     $subscription_invoice_features[] = array(
@@ -144,8 +150,7 @@ class UserSubscriptionController extends FrontController
                             ->where('user_id', Auth::user()->id)
                             ->where('status_id', 2)->first();
         if($active_subscription){
-            $active_subscription->status_id = 4;
-            $active_subscription->cancelled_at = Carbon::now()->toDateTimeString();
+            $active_subscription->cancelled_at = $active_subscription->end_date;
             $active_subscription->updated_at = Carbon::now()->toDateTimeString();
             $active_subscription->save();
             return redirect()->back()->with('success', 'Your '.$active_subscription->plan->title.' subscription has been cancelled successfully');
