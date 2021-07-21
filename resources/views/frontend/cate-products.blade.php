@@ -121,7 +121,7 @@
                                                 <a href="{{route('productDetail', $new['url_slug'])}}">
                                                     <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                                 </a>
-                                                @if($new->inquiry_only == 0)
+                                                @if($new['inquiry_only'] == 0)
                                                 <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
                                                     {{ Session::get('currencySymbol').' '.(number_format($new['variant'][0]['price'] * $multiply,2))}} </h4>
                                                 @endif
