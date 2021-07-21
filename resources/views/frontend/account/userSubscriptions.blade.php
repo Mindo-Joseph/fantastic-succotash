@@ -106,13 +106,21 @@ $timezone = Auth::user()->timezone;
                                                     @endforeach
                                                 </ul><?php */ ?>
                                             </div>
-                                            <div class="col-sm-6 form-group mb-0">
-                                                <b class="mr-2">Upcoming Billing Date</b>
-                                                <span>{{ convertDateTimeInTimeZone($subscription->next_date, $timezone, 'F d, Y, H:i A') }}</span>
-                                            </div>
-                                            <div class="col-sm-6 mb-0 text-center text-sm-right">
-                                                <a class="cancel-subscription-link" href="#cancel-subscription" data-toggle="modal" data-id="{{ $subscription->slug }}">Cancel</a>
-                                            </div>
+                                            @if(!empty($subscription->cancelled_at))
+                                                <div class="col-sm-6 form-group mb-0">
+                                                    <b class="mr-2">Cancels On</b>
+                                                    <span>{{ convertDateTimeInTimeZone($subscription->cancelled_at, $timezone, 'F d, Y, H:i A') }}</span>
+                                                </div>
+                                            @else
+                                                <div class="col-sm-6 form-group mb-0">
+                                                    <b class="mr-2">Upcoming Billing Date</b>
+                                                    <span>{{ convertDateTimeInTimeZone($subscription->next_date, $timezone, 'F d, Y, H:i A') }}</span>
+                                                </div>
+                                                <div class="col-sm-6 mb-0 text-center text-sm-right">
+                                                    <a class="re-subscription-link btn btn-solid subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">Pay Now</a>
+                                                    <a class="cancel-subscription-link btn btn-solid" href="#cancel-subscription" data-toggle="modal" data-id="{{ $subscription->slug }}">Cancel</a>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
