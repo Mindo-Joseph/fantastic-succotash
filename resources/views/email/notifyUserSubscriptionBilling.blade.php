@@ -66,7 +66,7 @@
                     <td style="padding-top: 0;">
                      <div style="background: #fff;box-shadow: 0 3px 4px #ddd;border-bottom-left-radius: 20px;border-bottom-right-radius: 20px;padding: 15px 40px 30px;">
                        <b style="margin-bottom: 10px; display: block;">Hi {{$mailData['customer_name']}},</b>
-                       <p>Your upcoming billing date for {{$mailData['frequency']}} subscription plan is {{$mailData['next_date']}}. </p>
+                       <p>Your upcoming billing date for {{$mailData['frequency']}} subscription plan is {{$mailData['end_date']}}. </p>
                        <p>Please go to following link to continue your subscription plan: </p>
                         <div style="padding:10px;border: 2px dashed #cb202d;word-break:keep-all!important;width: calc(100% - 40px);margin: 25px auto;">
                         <p style="Margin:0;Margin-bottom:16px;color:#cb202d;font-family:-apple-system,Helvetica,Arial,sans-serif;font-size:20px;font-weight:600;line-height:1.5;margin:0;margin-bottom:0;padding:0;text-align:center;word-break:keep-all!important">
