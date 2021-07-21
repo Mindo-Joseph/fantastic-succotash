@@ -146,7 +146,7 @@
                                         <a href="{{route('productDetail', $new['url_slug'])}}">
                                             <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                         </a>
-                                        @if($new->inquiry_only == 0)
+                                        @if($new['inquiry_only'] == 0)
                                             <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
                                                 {{ Session::get('currencySymbol').' '.(number_format($new['variant'][0]['price'] * $multiply,2))}}
                                             </h4>
@@ -311,14 +311,9 @@
                                                                     <a href="{{route('productDetail', $data->url_slug)}}">
                                                                         <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
                                                                     </a>
-                                                                    @if($data->inquiry_only == 0)
+                                                                    @if($data['inquiry_only'] == 0)
                                                                         <h4>{{Session::get('currencySymbol').(number_format($data->variant[0]->price * $data->variant[0]->multiplier,2))}}</h4>
                                                                     @endif
-                                                                    <!-- <ul class="color-variant">
-                                                                    <li class="bg-light0"></li>
-                                                                    <li class="bg-light1"></li>
-                                                                    <li class="bg-light2"></li>
-                                                                </ul> -->
                                                                 </div>
                                                             </div>
                                                         </div>
