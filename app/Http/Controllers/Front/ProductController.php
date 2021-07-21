@@ -1,26 +1,20 @@
 <?php
 
 namespace App\Http\Controllers\Front;
-
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category};
+use Auth;
+use Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Session;
-use Auth;
-
-
-class ProductController extends FrontController
-{
+use App\Http\Controllers\Front\FrontController;
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category};
+class ProductController extends FrontController{
     private $field_status = 2;
-
     /**
      * Display product By Id
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $domain = '', $url_slug)
-    {
+    public function index(Request $request, $domain = '', $url_slug){
         $user = Auth::user();
         $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
@@ -40,7 +34,6 @@ class ProductController extends FrontController
                 }
             }
         }
-
         $p_id = $product->id;
         $product = Product::with([
             'variant' => function ($sel) {
@@ -87,9 +80,6 @@ class ProductController extends FrontController
             ->firstOrFail();
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         $product->related_products = $this->metaProduct($langId, $clientCurrency->doller_compare, 'relate', $product->related);
-        foreach ($product->related_products as $key => $related_product) {
-            // pr($related_product->toArray());die;
-        }
         foreach ($product->variant as $key => $value) {
             if(isset($product->variant[$key])){
             $product->variant[$key]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : '1.00';
@@ -163,8 +153,7 @@ class ProductController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function getVariantData(Request $request, $domain = '', $sku)
-    {
+    public function getVariantData(Request $request, $domain = '', $sku){
         $product = Product::select('id')->where('sku', $sku)->firstOrFail();
         $pv_ids = array();
         if ($request->has('options') && !empty($request->options)) {
@@ -194,9 +183,6 @@ class ProductController extends FrontController
             $variantData->productPrice = Session::get('currencySymbol') . $variantData->price * $clientCurrency->doller_compare;
             return response()->json(array('success' => true, 'result' => $variantData->toArray()));
         }
-
         return response()->json(array('error' => true, 'result' => NULL));
     }
-
-  
 }

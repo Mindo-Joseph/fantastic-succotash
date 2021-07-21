@@ -329,11 +329,11 @@ class CustomerAuthController extends FrontController
                 'description' => $vendor->desc,
                 'phone_no' => $user->phone_number,
                 'email_template_content' => $content,
+                'subject' => $email_template->subject,
                 'client_name' => $client_detail->name,
                 'customer_name' => ucwords($user->name),
                 'logo' => $client_detail->logo['original'],
                 'mail_from' => $client_preference->mail_from,
-                'subject' => 'Thanks For Signing up '.$client_detail->name,
             ];
             $admin_email_data = [
                 'title' => $user->title,

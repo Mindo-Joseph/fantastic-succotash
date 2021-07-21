@@ -104,6 +104,7 @@ class UserController extends FrontController{
                             'mail_from' => $mail_from,
                             'client_name' => $client_name,
                             'logo' => $client->logo['original'],
+                            'subject' => $email_template->subject,
                             'customer_name' => ucwords($user->name),
                             'email_template_content' => $email_template_content,
                         ];
@@ -186,8 +187,7 @@ class UserController extends FrontController{
      *
      * @return \Illuminate\Http\Response
      */
-    public function checkUserLogin($domain = '')
-    {
+    public function checkUserLogin($domain = ''){
         if (Auth::user()) {
             return response()->json("yes");
         } else {
