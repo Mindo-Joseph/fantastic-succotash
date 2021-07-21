@@ -346,12 +346,12 @@ class CustomerAuthController extends FrontController
                 'vendor_name' => $vendor->name,
                 'description' => $vendor->desc,
                 'phone_no' => $user->phone_number,
+                'email_template_content' => $content,
                 'client_name' => $client_detail->name,
                 'subject' => 'New Vendor Registration',
                 'customer_name' => ucwords($user->name),
                 'logo' => $client_detail->logo['original'],
                 'mail_from' => $client_preference->mail_from,
-                'email_template_content' => $email_template->content,
             ];
             dispatch(new \App\Jobs\sendVendorRegistrationEmail($email_data))->onQueue('verify_email');
             dispatch(new \App\Jobs\sendVendorRegistrationEmail($admin_email_data))->onQueue('verify_email');
