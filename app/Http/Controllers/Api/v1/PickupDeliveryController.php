@@ -11,9 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\OrderProductRatingRequest;
-use App\Models\{Category,ClientPreference,ClientCurrency,Vendor,ProductVariantSet,Product,LoyaltyCard,UserAddress,Order,OrderVendor,OrderProduct,VendorOrderStatus,Client};
+use App\Models\{Category,ClientPreference,ClientCurrency,Vendor,ProductVariantSet,Product,LoyaltyCard,UserAddress,Order,OrderVendor,OrderProduct,VendorOrderStatus,Client,Promocode,PromoCodeDetail};
 use App\Http\Traits\ApiResponser;
 use GuzzleHttp\Client as GCLIENT;
+use Illuminate\Support\Facades\Validator;
 class PickupDeliveryController extends BaseController{
 	
     use ApiResponser;
@@ -353,15 +354,15 @@ class PickupDeliveryController extends BaseController{
 
                     if ($request->coupon_id) {
                         $coupon = Promocode::find($request->coupon_id);
-                        $coupon_id = $coupon->promo->id;
-                        $coupon_name = $coupon->promo->name;
-                        if ($coupon->promo->promo_type_id == 2) {
-                            $coupon_discount_amount = $coupon->promo->amount;
+                        $coupon_id = $coupon->id;
+                        $coupon_name = $coupon->name;
+                        if ($coupon->promo_type_id == 2) {
+                            $coupon_discount_amount = $coupon->amount;
                             $total_discount += $coupon_discount_amount;
                             $vendor_payable_amount -= $coupon_discount_amount;
                             $vendor_discount_amount +=$coupon_discount_amount;
                         } else {
-                            $coupon_discount_amount = ($quantity_price * $coupon->promo->amount / 100);
+                            $coupon_discount_amount = ($quantity_price * $coupon->amount / 100);
                             $final_coupon_discount_amount = $coupon_discount_amount * $clientCurrency->doller_compare;
                             $total_discount += $final_coupon_discount_amount;
                             $vendor_payable_amount -=$final_coupon_discount_amount;
@@ -493,6 +494,125 @@ class PickupDeliveryController extends BaseController{
                 
             
            
+    }
+
+
+
+
+      /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function postPromoCodeList(Request $request){
+        try {
+            $promo_codes = new \Illuminate\Database\Eloquent\Collection;
+            $vendor_id = $request->vendor_id;
+            $validator = $this->validatePromoCodeList();
+            if($validator->fails()){
+                return $this->errorResponse($validator->messages(), 422);
+            }
+            $vendor = Vendor::where('id', $request->vendor_id)->first();
+            if(!$vendor){
+                return response()->json(['error' => 'Invalid vendor id.'], 404);
+            }
+            $now = Carbon::now()->toDateTimeString();
+            $product_ids = Product::where('vendor_id', $request->vendor_id)->where('id', $request->product_id)->pluck("id");
+            $cart_products = Product::with(['variant' => function($q){
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                        }])->where('vendor_id', $request->vendor_id)->where('id', $request->product_id)->get();
+            //$total_minimum_spend = 0;
+            // foreach ($cart_products as $cart_product) {
+            //     $total_minimum_spend += $cart_product->variant->first() ? $cart_product->variant->first()->price * 1 : 0;
+            // }
+            $total_minimum_spend = $request->amount??0;
+            if($product_ids){
+                $promo_code_details = PromoCodeDetail::whereIn('refrence_id', $product_ids->toArray())->pluck('promocode_id');
+                if($promo_code_details->count() > 0){
+                    $result1 = Promocode::whereIn('id', $promo_code_details->toArray())->whereDate('expiry_date', '>=', $now)->where('minimum_spend','<=',$total_minimum_spend)->where('maximum_spend','>=',$total_minimum_spend)->where('restriction_on', 0)->where('restriction_type', 0)->where('is_deleted', 0)->get();
+                    $promo_codes = $promo_codes->merge($result1);
+                }
+                
+                $vendor_promo_code_details = PromoCodeDetail::whereHas('promocode')->where('refrence_id', $vendor_id)->pluck('promocode_id');
+                $result2 = Promocode::whereIn('id', $vendor_promo_code_details->toArray())->where('restriction_on', 1)->whereHas('details', function($q) use($vendor_id){
+                    $q->where('refrence_id', $vendor_id);
+                })->where('restriction_on', 1)->where('is_deleted', 0)->where('minimum_spend','<=',$total_minimum_spend)->where('maximum_spend','>=',$total_minimum_spend)->whereDate('expiry_date', '>=', $now)->get();
+                $promo_codes = $promo_codes->merge($result2);
+               
+               
+            }
+            return $this->successResponse($promo_codes, '', 200);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function postVerifyPromoCode(Request $request){
+        try {
+            $validator = $this->validatePromoCode();
+            if($validator->fails()){
+                return $this->errorResponse($validator->messages(), 422);
+            }
+            $vendor = Vendor::where('id', $request->vendor_id)->first();
+            if(!$vendor){
+                return response()->json(['error' => 'Invalid vendor id.'], 404);
+            }
+           
+            $cart_detail = Promocode::where('id', $request->coupon_id)->first();
+            if(!$cart_detail){
+                return $this->errorResponse('Invalid Promocode Id', 422);
+            }
+
+            if($cart_detail->promo_type_id == 2)
+            {
+                $cart_detail['new_amount'] = $request->amount - $cart_detail->amount;
+                if($cart_detail['new_amount'] < 0)
+                $cart_detail['new_amount'] = 0.00;
+            }
+            if($cart_detail->promo_type_id == 1){
+                $cart_detail['new_amount'] = $request->amount * ($cart_detail->amount/100);
+                if($cart_detail['new_amount'] < 0)
+                $cart_detail['new_amount'] = 0.00;
+            }
+            
+            return $this->successResponse($cart_detail, 'Promotion Code Used Successfully.', 201);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
+    }
+    public function postRemovePromoCode(Request $request){
+        try {
+            $validator = $this->validatePromoCode();
+            if($validator->fails()){
+                return $this->errorResponse($validator->messages(), 422);
+            }
+            $cart_detail = Cart::where('id', $request->cart_id)->first();
+            if(!$cart_detail){
+                return $this->errorResponse('Invalid Cart Id', 422);
+            }
+            $cart_detail = Promocode::where('id', $request->coupon_id)->first();
+            if(!$cart_detail){
+                return $this->errorResponse('Invalid Promocode Id', 422);
+            }
+           
+            return $this->successResponse(null, 'Promotion Code Removed Successfully.', 201);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function validatePromoCodeList(){
+        return Validator::make(request()->all(), [
+            'vendor_id' => 'required',
+        ]);
+    }
+    
+    public function validatePromoCode(){
+        return Validator::make(request()->all(), [
+            'vendor_id' => 'required',
+            'coupon_id' => 'required',
+            'amount' => 'required'
+        ]);
     }
 
 }
