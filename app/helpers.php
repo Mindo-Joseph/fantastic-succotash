@@ -56,9 +56,9 @@ function generateOrderNo($length = 8){
     return $number;
 }
 function getNomenclatureName($searchTerm, $plural = true){
-    $result = Nomenclature::where('label', 'LIKE', "%{$searchTerm}%")->first();
+    $result = Nomenclature::with('primary')->where('label', 'LIKE', "%{$searchTerm}%")->first();
     if($result){
-        $searchTerm = $result->value ? $result->value : ucfirst($searchTerm);
+        $searchTerm = $result->primary ? $result->primary->name : ucfirst($searchTerm);
     }
     return $plural ? $searchTerm : rtrim($searchTerm, 's');
 }

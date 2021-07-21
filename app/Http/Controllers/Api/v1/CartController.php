@@ -335,6 +335,7 @@ class CartController extends BaseController{
             foreach ($cartData as $ven_key => $vendorData) {
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
                 $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';$deliver_charge = 0;
+                $delivery_fee_charges = 0.00;
                 $couponData = $couponProducts = array();
                 if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->vendor_id == $vendorData->vendor_id)){
                     $now = Carbon::now()->toDateTimeString();
@@ -369,6 +370,7 @@ class CartController extends BaseController{
                         }
                     }
                 }
+                $delivery_count = 0;
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
                     $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0; 
                     $variantsData = $taxData = $vendorAddons = array();
@@ -436,6 +438,14 @@ class CartController extends BaseController{
                         $prod->taxdata = $taxData;
                         if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1){   
                             $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
+                            if(!empty($deliver_charge) && $delivery_count == 0)
+                            {
+                                $delivery_count = 1;
+                                $prod->deliver_charge = number_format($deliver_charge, 2);
+                                $payable_amount = $payable_amount + $deliver_charge;
+                                $delivery_fee_charges = $deliver_charge;
+                            }
+                            
                         }
                         if(!empty($prod->addon)){
                             foreach ($prod->addon as $ck => $addons) {

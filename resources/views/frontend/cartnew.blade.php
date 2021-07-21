@@ -13,6 +13,10 @@
         font-weight: 400;
         margin-bottom: 28px;
     }
+    .discard_price{
+        text-decoration: line-through;
+        color: #6c757d;
+    }
 </style>
 <header>
     <div class="mobile-fix-option"></div>
@@ -155,7 +159,7 @@
                     <p class="total_amt m-0">Delivery Fee :</p>
                 </td>
                 <td class="text-right pl-lg-2">
-                    <p class="total_amt mb-1">{{Session::get('currencySymbol')}} <%= product.delivery_fee_charges %></p>
+                    <p class="total_amt mb-1 {{ ((in_array(1, $subscription_features)) ) ? 'discard_price' : '' }}">{{Session::get('currencySymbol')}} <%= product.delivery_fee_charges %></p>
                     <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= product.product_total_amount %></p>
                 </td>
             </tr>
@@ -181,11 +185,28 @@
         </tr>
         <tr class="border_0">
             <td colspan="3"></td>
-            <td>Tax</td>
-            <td class="text-right" colspan="2">
-                <p class="m-1"><span class="pl-4">{{Session::get('currencySymbol')}}<%= cart_details.total_taxable_amount %></span></p>
+            <td class="pr-0 pb-0">
+               <p class="mb-1"></p> Tax
+               <hr class="mt-2 mb-0">
+            </td>
+            <td class="text-right pl-0 pb-0" colspan="3">
+               <p class="mb-1"></p> {{Session::get('currencySymbol')}}<%= cart_details.total_taxable_amount %>
+               <hr class="mt-2 mb-0">
             </td>
         </tr>
+        <% if(cart_details.total_subscription_discount != 'undefined') { %>
+            <tr class="border_0">
+                <td colspan="3"></td>
+                <td class="pr-0 pb-0">
+                <p class="mb-1"></p> Subscription Discount 
+                <hr class="mt-2 mb-0">
+                </td>
+                <td class="text-right pl-0 pb-0" colspan="3">
+                <p class="mb-1"></p> {{Session::get('currencySymbol')}}<%= cart_details.total_subscription_discount %>
+                <hr class="mt-2 mb-0">
+                </td>
+            </tr>
+        <% } %>
         <tr class="border_0">
             <td colspan="3"></td>
             <td colspan="2" class="pt-0 pr-0">

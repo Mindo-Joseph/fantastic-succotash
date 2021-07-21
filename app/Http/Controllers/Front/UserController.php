@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Client, Category, Brand, Product, ClientLanguage, User, ClientCurrency, ClientPreference, Country, UserAddress, UserVerification,};
-use Illuminate\Http\Request;
+use Auth;
+use Image;
 use Session;
 use Carbon\Carbon;
-//use Illuminate\Support\Facades\Redis;
-use Auth;
-use Illuminate\Support\Facades\Validator;
-use Image;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 use App\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Front\FrontController;
+use App\Models\{Currency, Banner, Client, Category, Brand, Product, ClientLanguage, User, ClientCurrency, ClientPreference, Country, UserAddress, UserVerification,EmailTemplate};
 
 
-class UserController extends FrontController
-{
+class UserController extends FrontController{
     private $field_status = 2;
     /**
      * Display a listing of the resource.
@@ -52,6 +50,7 @@ class UserController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function sendToken(Request $request, $domain = '', $uid = 0){
+
         $notified = 0;
         $user = User::where('id', Auth::user()->id)->first();
         if (!$user) {
@@ -70,7 +69,7 @@ class UserController extends FrontController
                 $user->phone_token = $otp;
                 $user->phone_token_valid_till = $newDateTime;
                 $provider = $data->sms_provider;
-                $to = '+'.$user->dial_code.$user->phone_number;
+                $to = '+'.$request->dial_code.$request->phone;
                 $body = "Dear " . ucwords($user->name) . ", Please enter OTP " . $otp . " to verify your account.";
                 if (!empty($data->sms_key) && !empty($data->sms_secret) && !empty($data->sms_from)) {
                     $send = $this->sendSms($provider, $data->sms_key, $data->sms_secret, $data->sms_from, $to, $body);
@@ -89,8 +88,15 @@ class UserController extends FrontController
                     $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
                     $client_name = $client->name;
                     $mail_from = $data->mail_from;
-                    $sendto = $user->email;
+                    $sendto = $request->email;
                     try {
+                        $email_template_content = '';
+                        $email_template = EmailTemplate::where('id', 2)->first();
+                        if($email_template){
+                            $email_template_content = $email_template->content;
+                            $email_template_content = str_ireplace("{code}", $otp, $email_template_content);
+                            $email_template_content = str_ireplace("{customer_name}", ucwords($user->name), $email_template_content);
+                        }
                         $data = [
                             'code' => $otp,
                             'link' => "link",
@@ -98,8 +104,9 @@ class UserController extends FrontController
                             'mail_from' => $mail_from,
                             'client_name' => $client_name,
                             'logo' => $client->logo['original'],
+                            'subject' => $email_template->subject,
                             'customer_name' => ucwords($user->name),
-                            'code_text' => 'Enter below code to verify yoour account',
+                            'email_template_content' => $email_template_content,
                         ];
                         dispatch(new \App\Jobs\SendVerifyEmailJob($data))->onQueue('verify_email');
                         $notified = 1;
@@ -139,6 +146,10 @@ class UserController extends FrontController
             $message = 'OTP matched successfully.';
         }
         if ($request->type == 'phone') {
+            $user_detail_exist = User::where('phone_number', $request->phone_number)->where('id','!=',$user->id)->first();
+            if($user_detail_exist){
+                return response()->json(['error' => 'Email already in use!'], 404);
+            }
             if ($user->phone_token != $request->verifyToken) {
                 return response()->json(['error' => 'OTP is not valid'], 404);
             }
@@ -146,20 +157,26 @@ class UserController extends FrontController
                 return response()->json(['error' => 'OTP has been expired.'], 404);
             }
             $user->phone_token = NULL;
-            $user->phone_token_valid_till = NULL;
             $user->is_phone_verified = 1;
+            $user->phone_token_valid_till = NULL;
+            $user->dial_code = $request->dial_code;
+            $user->phone_number = $request->phone_number;
         }
         if ($request->type == 'email') {
+            $user_detail_exist = User::where('email', $request->email)->where('id','!=',$user->id)->first();
+            if($user_detail_exist){
+                return response()->json(['error' => 'Email already in use!'], 404);
+            }
             if ($user->email_token != $request->verifyToken) {
-                die();
                 return response()->json(['error' => 'OTP is not valid'], 404);
             }
             if ($currentTime > $user->email_token_valid_till) {
                 return response()->json(['error' => 'OTP has been expired.'], 404);
             }
             $user->email_token = NULL;
-            $user->email_token_valid_till = NULL;
             $user->is_email_verified = 1;
+            $user->email = $request->email;
+            $user->email_token_valid_till = NULL;
         }
         $user->save();
         return response()->json(['success' => 'OTP verified'], 202);
@@ -170,8 +187,7 @@ class UserController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function checkUserLogin($domain = '')
-    {
+    public function checkUserLogin($domain = ''){
         if (Auth::user()) {
             return response()->json("yes");
         } else {

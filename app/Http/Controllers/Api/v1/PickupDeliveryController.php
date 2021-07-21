@@ -65,13 +65,13 @@ class PickupDeliveryController extends BaseController{
                                 $qr->select('category_id')->from('vendor_categories')
                                     ->where('vendor_id', $vid)->where('status', 0);
                     })
-                    ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id','products.tags as tags_price')
+                    ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id','products.tags')
                     ->where('products.vendor_id', $vid)
                     ->where('products.is_live', 1)->distinct()->paginate($paginate); 
                    
             if(!empty($products)){
                 foreach ($products as $key => $product) {
-                    $product->tags_price = $this->getDeliveryFeeDispatcher($request);
+                    $product->tags_price = $this->getDeliveryFeeDispatcher($request,$product);
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
                     foreach ($product->variant as $k => $v) {
                         $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
@@ -151,12 +151,12 @@ class PickupDeliveryController extends BaseController{
 
 
      # get delivery fee from dispatcher 
-     public function getDeliveryFeeDispatcher($request){
+     public function getDeliveryFeeDispatcher($request,$product=null){
         try {
                 $dispatch_domain = $this->checkIfPickupDeliveryOn();
                 if ($dispatch_domain && $dispatch_domain != false) {
                             $all_location = array();
-                            $postdata =  ['locations' => $request->locations];
+                            $postdata =  ['locations' => $request->locations,'agent_tag' => $product->tags??''];
                             $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,
                                                         'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,
                                                         'content-type' => 'application/json']
@@ -436,13 +436,14 @@ class PickupDeliveryController extends BaseController{
                     $payable_amount = 0.00;
                 }
                 $dynamic = uniqid($order->id.$vendor);
-               
                 $unique = Auth::user()->code;
                 $client_do = Client::where('code',$unique)->first();
                 $call_back_url = "https://".$client_do->sub_domain.env('SUBMAINDOMAIN')."/dispatch-pickup-delivery/".$dynamic; 
                 $tasks = array();
                 $meta_data = '';
                 $team_tag = $unique."_".$vendor;
+                $product = Product::find($request->product_id);
+                $order_agent_tag = $product->tags??'';
                 $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
                                                     'customer_phone_number' => $customer->phone_number??rand(111111,11111),
                                                     'customer_email' => $customer->email ?? '',
@@ -456,6 +457,7 @@ class PickupDeliveryController extends BaseController{
                                                     'barcode' => '',
                                                     'call_back_url' => $call_back_url??null,
                                                     'order_team_tag' => $team_tag,
+                                                    'order_agent_tag' => $order_agent_tag,
                                                     'task' => $request->tasks
                                                     ];
 

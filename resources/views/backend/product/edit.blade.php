@@ -112,7 +112,7 @@
                     <h5 class="text-uppercase bg-light p-2 mt-0 mb-3">General</h5>
                     <div class="row mb-2 row-spacing">
                         <div class="col-md-5 mb-2" style="cursor: not-allowed;">
-                            {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
+                            {!! Form::label('title', 'SKU (a-z, A-Z, 0-9, -,_)',['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
                             {!! Form::text('sku', $product->sku, ['class'=>'form-control','id' => 'sku', 'onkeypress' => "return alplaNumeric(event)",'name' => 'sku']) !!}
 
@@ -351,15 +351,16 @@
 
 
                         @if($configData->need_dispacher_ride == 1 && $product->category->categoryDetail->type_id == 7)
-                        @if(count($agent_dispatcher_tags))
-                        <div class="col-md-6 d-flex justify-content-between mb-2">
-                            {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
-                            <select class="selectize-select1 form-control" name="tags">
-                                @foreach($agent_dispatcher_tags as $key => $tags)
-                                <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                            <div class="col-md-6 d-flex justify-content-between mb-2">
+                                {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
+                                <select class="selectize-select1 form-control"  name="tags" required>
+                                    @if($agent_dispatcher_tags != null && count($agent_dispatcher_tags))
+                                    @foreach($agent_dispatcher_tags as $key => $tags)
+                                            <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
+                                    @endforeach
+                                    @endif
+                                </select>
+                            </div>
                         @endif
                         @endif
 

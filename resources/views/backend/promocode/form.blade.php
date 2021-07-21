@@ -1,14 +1,14 @@
 <div class="row">
     <div class="col-md-12">
         <div class="row">
-            <div class="col-md-3"></div>
             <div class="col-md-6" id="imageInput">
+                <label>Upload PromoCode image</label>
                 @if(isset($promo->id))
                     <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$promo->image['proxy_url'].'600/400'.$promo->image['image_path']}}" />
                 @else
                     <input data-default-file="" type="file" data-plugins="dropify" name="image" accept="image/*" class="dropify"/>
                 @endif
-                <p class="text-muted text-center mt-2 mb-0">Upload PromoCode image</p>
+                <label class="logo-size d-block text-right mt-1">Image Size 100x100</label>
                 <span class="invalid-feedback" role="alert">
                     <strong></strong>
                 </span>
@@ -86,7 +86,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4 text-center">
+            <div class="col-md-4">
                 <div class="form-group">
                     {!! Form::label('title', 'Allow Free Delivery',['class' => 'control-label']) !!}
                     <div>
@@ -94,7 +94,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 text-center">
+            <div class="col-md-4">
                 <div class="form-group">
                     {!! Form::label('title', 'First Order Only',['class' => 'control-label']) !!}
                     <div>
@@ -103,7 +103,7 @@
                 </div>
             </div>
             <input type="hidden" id="promocode_id" url="{{ (isset($promo->id) && $promo->id > 0) ? route('promocode.update', $promo->id) : route('promocode.store') }}">
-            <div class="col-md-4 text-center">
+            <div class="col-md-4">
                 <div class="form-group">
                     {!! Form::label('title', 'Paid By',['class' => 'control-label']) !!}
                     <div>

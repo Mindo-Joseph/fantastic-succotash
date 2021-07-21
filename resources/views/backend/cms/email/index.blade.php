@@ -1,7 +1,7 @@
 @extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Emails'])
 @section('css')
-<link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
-<link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.css" rel="stylesheet">
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -12,78 +12,29 @@
             </div>
         </div>
     </div>
-
     <div class="row cms-cols">
         <div class="col-lg-5 col-xl-3 mb-2">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="d-flex align-items-center justify-content-between mb-3">
                         <h4>List</h4>
-                        <!-- <button class="btn btn-info add_cms_page" data-toggle="modal">
-                            <i class="mdi mdi-plus-circle"></i> Add
-                        </button> -->
                     </div> 
                    <div class="table-responsive pages-list-data">
                         <table class="table table-striped w-100">
                             <thead>
                                 <tr>
-                                    <th class="border-bottom-0">Template Name</th>
-                                    <th class="text-right border-bottom-0">Action</th>
+                                    <th class="border-bottom-0">Templates Name</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                    <tr class="page-title active-page page-detail" data-page_id="" data-show_url="">
+                                @forelse($email_templates as $email_template)
+                                    <tr class="page-title active-page email-page-detail" data-email_template_id="{{$email_template->id}}" data-show_url="{{route('cms.emails.show', ['id'=> $email_template->id])}}">
                                         <td>
-                                            <a class="text-body" href="javascript:void(0)" id="">Orders</a>
-                                        </td>
-                                        <td align="right">
-                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
-                                                <i class="mdi mdi-pencil-box-outline"></i>
-                                            </a>
-                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
-                                                <i class="mdi mdi-delete"></i>
-                                            </a>
+                                            <a class="text-body d-block" href="javascript:void(0)">{{$email_template->label}}</a>
                                         </td>
                                     </tr>
-                                    <tr class="page-title active-page page-detail" data-page_id="" data-show_url="">
-                                        <td>
-                                            <a class="text-body" href="javascript:void(0)" id="">New Vendor Signup</a>
-                                        </td>
-                                        <td align="right">
-                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
-                                                <i class="mdi mdi-pencil-box-outline"></i>
-                                            </a>
-                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
-                                                <i class="mdi mdi-delete"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr class="page-title active-page page-detail" data-page_id="" data-show_url="">
-                                        <td>
-                                            <a class="text-body" href="javascript:void(0)" id="">Refund</a>
-                                        </td>
-                                        <td align="right">
-                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
-                                                <i class="mdi mdi-pencil-box-outline"></i>
-                                            </a>
-                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
-                                                <i class="mdi mdi-delete"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr class="page-title active-page page-detail" data-page_id="" data-show_url="">
-                                        <td>
-                                            <a class="text-body" href="javascript:void(0)" id="">Verify mail</a>
-                                        </td>
-                                        <td align="right">
-                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
-                                                <i class="mdi mdi-pencil-box-outline"></i>
-                                            </a>
-                                            <a class="text-body delete-page" href="javascript:void(0)" data-page_id="">
-                                                <i class="mdi mdi-delete"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                @empty
+                                @endforelse
                             </tbody>
                         </table>
                    </div>
@@ -95,29 +46,92 @@
                 <div class="card-body p-3" id="edit_page_content">
                     <div class="row">
                         <div class="col-12 text-right">
-                            <button type="button" class="btn btn-info" id=""> Publish</button>
+                            <button type="button" class="btn btn-info" id="update_email_template"> Publish</button>
                         </div>
                     </div>
                     <div class="row">
-                        <input type="hidden" id="page_id" value="">
+                        <input type="hidden" id="email_template_id" value="">
                         <div class="col-lg-12">
                             <div class="row">
                                 <div class="col-12 mb-3">
-                                    <label for="title" class="control-label">Title</label>
-                                    <input class="form-control" id="edit_title" placeholder="Meta Title" name="meta_title" type="text">
+                                    <label for="title" class="control-label">Subject</label>
+                                    <input class="form-control" id="subject" placeholder="Subject" name="subject" type="text">
                                     <span class="text-danger error-text updatetitleError"></span>
                                 </div>
-                                <div class="col-12 mb-3">
-                                    <label for="title" class="control-label">Description</label>
-                                    <textarea class="form-control" id="edit_meta_keyword" placeholder="Meta Keyword" rows="6" name="meta_keyword" cols="10"></textarea>
+                                <div class="col-md-10 mb-3">
+                                    <label for="title" class="control-label">Content</label>
+                                    <textarea class="form-control" id="content" placeholder="Meta Keyword" rows="6" name="meta_keyword" cols="10"></textarea>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="title" class="control-label">Tags:-<div id="tags" disabled=""></div></label>
                                 </div>
                             </div>         
                         </div>
-                        
                     </div>
                 </div>            
             </div>
         </div>         
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function() {
+         $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+        setTimeout(function(){ 
+            $('tr.page-title:first').trigger('click');
+        }, 500);
+        $(document).on("click","#client_language",function() {
+            $('tr.page-title:first').trigger('click');
+        });
+        $(document).on("click",".email-page-detail",function() {
+            $('#edit_page_content #content').val('');
+            $('#edit_page_content #content').summernote('destroy');
+            let url = $(this).data('show_url');
+            let language_id = $('#edit_page_content #client_language :selected').val();
+            $.get(url,function(response) {
+              if(response.status == 'Success'){
+                if(response.data){
+                    $('#edit_page_content #email_template_id').val(response.data.id);
+                    if(response.data){
+                        $('#edit_page_content #tags').html(response.data.tags);
+                        $('#edit_page_content #subject').val(response.data.subject);
+                        $('#edit_page_content #content').val(response.data.content);
+                        $('#edit_page_content #content').summernote({'height':450});
+                    }else{
+                      $(':input:text').val('');
+                      $('textarea').val('');
+                    }
+                }else{
+                    $('textarea').val('');
+                    $(':input:text').val('');
+                    $('#edit_page_content #page_id').val('');
+                }
+              }
+            });
+        });
+        $(document).on("click","#update_email_template",function() {
+            var update_url = "{{route('cms.emails.update')}}";
+            let subject = $('#edit_page_content #subject').val();
+            let content = $('#edit_page_content #content').val();
+            let email_template_id = $('#edit_page_content #email_template_id').val();
+            var data = { subject: subject, content: content, email_template_id:email_template_id};
+            $.post(update_url, data, function(response) {
+              $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+              setTimeout(function() {
+                    location.reload()
+                }, 2000);
+            }).fail(function(response) {
+                $('#edit_page_content .updatetitleError').html(response.responseJSON.errors.edit_title[0]);
+                $('#edit_page_content .updatedescrpitionError').html(response.responseJSON.errors.edit_description[0]);
+            });
+        });
+    });
+</script>
+@endsection
+@section('script')
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
 @endsection

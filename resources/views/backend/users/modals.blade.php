@@ -9,13 +9,15 @@
                 @csrf
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-3"></div>
-                        <div class="col-md-6" id="imageInput">
-                            <input data-default-file="" type="file" data-plugins="dropify" name="image" accept="image/*" class="dropify"/>
-                            <p class="text-muted text-center mt-2 mb-0">Profile image</p>
-                            <span class="invalid-feedback" role="alert">
-                                <strong></strong>
-                            </span>
+                        <div class="col-md-6">
+                            <div class="form-group" id="imageInput">
+                                <label>Profile image</label>
+                                <input data-default-file="" type="file" data-plugins="dropify" name="image" accept="image/*" class="dropify"/>
+                                <label class="logo-size text-right w-100">Image Size 112x112</label>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong></strong>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="row">

@@ -109,7 +109,6 @@
             data: '',
             dataType: 'json',
             success: function(data) {
-
                 $('#edit-loyalty-modal #editLoyaltyBox').html(data.html);
                 $('#edit-loyalty-modal').modal({
                     backdrop: 'static',

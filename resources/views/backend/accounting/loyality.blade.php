@@ -25,7 +25,7 @@
                                         <i class="mdi mdi-trophy-variant-outline text-primary mdi-24px"></i>
                                         <span data-plugin="counterup">{{$type_of_loyality_applied_count}}</span>
                                     </h3>
-                                    <p class="text-muted font-15 mb-0">Type Of Loyalty Applied</p>
+                                    <p class="text-muted font-15 mb-0">Type Of {{getNomenclatureName('Loyalty Cards', false)}} Applied</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
@@ -34,7 +34,7 @@
                                         <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
                                         <span data-plugin="counterup">{{$total_loyalty_earned}}</span>
                                     </h3>
-                                        <p class="text-muted font-15 mb-0">Total Loyalty Earned</p>
+                                        <p class="text-muted font-15 mb-0">Total {{getNomenclatureName('Loyalty Cards', false)}} Earned</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
@@ -43,7 +43,7 @@
                                         <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
                                         <span data-plugin="counterup">{{$total_loyalty_spent}}</span>
                                     </h3>
-                                    <p class="text-muted font-15 mb-0">Total Loyalty Spent</p>
+                                    <p class="text-muted font-15 mb-0">Total {{getNomenclatureName('Loyalty Cards', false)}} Spent</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
@@ -76,7 +76,7 @@
                                     </div>
                                     <div class="col">
                                         <select class="form-control" id="loyalty_select_box">
-                                            <option value="">Select Loyalty</option>
+                                            <option value="">Select {{getNomenclatureName('Loyalty Cards', false)}}</option>
                                             @foreach($loyalty_card_details as $loyalty_card_detail)
                                                 <option value="{{$loyalty_card_detail->id}}">{{$loyalty_card_detail->name}}</option>
                                             @endforeach
@@ -107,9 +107,9 @@
                                     <th>Date & Time</th>
                                     <th>Customer Name</th>
                                     <th>Final Amount</th>
-                                    <th>Loyality Used</th>
-                                    <th>Loyality Membership</th>
-                                    <th>Loyality Earned</th>
+                                    <th>{{getNomenclatureName('Loyalty Cards', false)}} Used</th>
+                                    <th>{{getNomenclatureName('Loyalty Cards', false)}} Membership</th>
+                                    <th>{{getNomenclatureName('Loyalty Cards', false)}} Earned</th>
                                     <th>Payment Method</th>
                                 </tr>
                             </thead>

@@ -1,4 +1,7 @@
 @extends('layouts.store', ['title' => 'Verify Account'])
+@section('css')
+<link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
+@endsection
 @section('content')
 <style type="text/css">
     a.disabled {
@@ -32,7 +35,7 @@
             @if($preference->verify_email == 1)
                 <div class="col-lg-6 mb-lg-0 mb-3 text-center  pb-4 {{$user->is_phone_verified == 0 && $preference->verify_phone == 1 ? 'border-right' : 'offset-lg-3'}}" id="verify_email_main_div">
                     @if($user->is_email_verified == 0)
-                        <img src="{{asset('front-assets/images/email_icon.svg')}}" alt="">
+                        <img class="h-45" src="{{asset('front-assets/images/email_icon.svg')}}" alt="">
                         <h3 class="mb-2">Verify Email Address</h3>
                         <p>Enter the code we just sent you on your email address</p>
                         <div class="row mt-3">
@@ -54,7 +57,7 @@
                                     <input class="form-control" type="text" id="digit-5" name="digit-5" data-next="digit-6" data-previous="digit-4" onkeypress="return isNumberKey(event)"/>
                                     <input class="form-control" type="text" id="digit-6" name="digit-6" data-next="digit-7" data-previous="digit-5" onkeypress="return isNumberKey(event)"/>
                                 </div>
-                                <strong class="invalid-feedback2 invalid_email_otp_error"></strong>
+                                <span class="invalid-feedback2 invalid_email_otp_error w-100 d-block text-center text-danger"></span>
                                 <div class="row text-center mt-2">
                                     <div class="col-12 resend_txt">
                                         <p class="mb-1">If you didn’t receive a code?</p>
@@ -81,9 +84,10 @@
                 <p>Enter the code we just sent you on your email address</p>
                 <div class="row mt-3">
                     <div class="offset-xl-3 col-xl-6 text-left">
-                        <div class="verify_id input-group mb-3">
-                            <input type="text" class="form-control" id="phone_number" value="{{Auth::user()->phone_number}}" disabled="">
-                            <div class="input-group-append">
+                        <div class="verify_id input-group mb-3 radius-flag">
+                            <input type="tel" class="form-control" id="phone_number" value="{{'+'.Auth::user()->dial_code.Auth::user()->phone_number}}" disabled="">
+                            <input type="hidden" id="dial_code" value="{{Auth::user()->dial_code}}">
+                            <div class="input-group-append position-absolute position-right">
                                 <a class="input-group-text" id="edit_phone" href="javascript:void(0)">Edit</a>
                             </div>
                             <span class="valid-feedback d-block text-center" role="alert">
@@ -98,31 +102,53 @@
                             <input class="form-control" type="text" id="digit-5" name="digit-5" data-next="digit-6" data-previous="digit-4" onkeypress="return isNumberKey(event)"/>
                             <input class="form-control" type="text" id="digit-6" name="digit-6" data-next="digit-7" data-previous="digit-5" onkeypress="return isNumberKey(event)"/>
                         </div>
-                        <strong class="invalid-feedback2 invalid_phone_otp_error text-center"></strong>
+                        <span class="invalid_phone_otp_error invalid-feedback2 w-100 d-block text-center text-danger"></span>
                         <div class="row text-center mt-2">
                             <div class="col-12 resend_txt">
                                 <p class="mb-1">If you didn’t receive a code?</p>
-                                <a class="verifyPhone"><u>RESEND</u></a>
+                                <a class="verifyPhone" href="javascript:void(0)"><u>RESEND</u></a>
                             </div>
                             <div class="col-md-12 mt-3">
                                 <button type="button" class="btn btn-solid" id="verify_phone_token">Verify</button>
                             </div>
                         </div>
                     </div>
+                    @else
+                    <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
+                    <h3 class="mb-2">Phone Verified!</h3>
+                    <p>You have successfully verified the <br> Phone.</p>
+                    @endif
                 </div>
-                @else
-                <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
-                <h3 class="mb-2">Phone Verified!</h3>
-                <p>You have successfully verified the <br> Phone.</p>
                 @endif
             </div>
-            @endif
-        </div>
         </div>
     </div>
 </section> 
 @endsection
 @section('script')
+<script src="{{asset('assets/js/intlTelInput.js')}}"></script>
+<script>
+    var input = document.querySelector("#phone_number");
+    window.intlTelInput(input, {
+        separateDialCode: true,
+        hiddenInput: "full_number",
+        utilsScript: "{{asset('assets/js/utils.js')}}",
+    });
+    $(document).ready(function() {
+        $("#phone_number").keypress(function(e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+            return true;
+        });
+    });
+    $('.iti__country').click(function() {
+        var code = $(this).attr('data-country-code');
+        $('#countryData').val(code);
+        var dial_code = $(this).attr('data-dial-code');
+        $('#dial_code').val(dial_code);
+    });
+</script>
 <script type="text/javascript">
     function isNumberKey(evt){
         var charCode = (evt.which) ? evt.which : evt.keyCode
@@ -137,15 +163,23 @@
     });
     var ajaxCall = 'ToCancelPrevReq';
     $('#edit_email').click(function() {
-        if ($(this).text() == "Edit")
-            $(this).text("Save")
-        else
-           $(this).text("Edit");
-            verifyUser('email');
-            $('#email').prop('disabled', function(i, v) { return !v; });
+        if ($(this).text() == "Edit"){
+            $(this).text("Save & Send")
             $('#email').focus();
+        }else{
+           $(this).text("Edit");
+           verifyUser('email');
+        }
+        $('#email').prop('disabled', function(i, v) { return !v; });
     });
     $('#edit_phone').click(function() {
+        if ($(this).text() == "Edit"){
+            $(this).text("Save & Send")
+            $('#phone_number').focus();
+        }else{
+           $(this).text("Edit");
+           verifyUser('phone');
+        }
         $('#phone_number').prop('disabled', function(i, v) { return !v; });
     });
     $('.verifyEmail').click(function() {
@@ -156,15 +190,21 @@
     });
     function verifyUser($type = 'email') {
         if($type == 'email'){
+            var email = $('#email').val();
+            var phone = $('#phone_number').val();
+            var dial_code = $('#dial_code').val();
             $('.verifyEmail').addClass('disabled').html('SENDING...');
         }else if ($type == 'phone') {
+            var email = $('#email').val();
+            var phone = $('#phone_number').val();
+            var dial_code = $('#dial_code').val();
             $('.verifyPhone').addClass('disabled').html('SENDING...');
         }
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
             url: "{{ route('email.send', Auth::user()->id) }}",
-            data: {"_token": "{{ csrf_token() }}",type: $type,},
+            data: {"_token": "{{ csrf_token() }}",type: $type,phone:phone,email:email, dial_code:dial_code},
             success: function(response) {
                 if($type == 'email'){
                     $('.verifyEmail').removeClass('disabled').html('RESEND');
@@ -172,10 +212,11 @@
                     $('.verifyPhone').removeClass('disabled').html('RESEND');
                 }
                 if($type == 'email'){
-                 $('.edit_email_feedback').html(response.message);
+                    $('.edit_email_feedback').html(response.message);
                 }else{
-                 $('.edit_phone_feedback').html(response.message);
+                    $('.edit_phone_feedback').html(response.message);
                 }
+                setTimeout(function(){$('.edit_email_feedback, .edit_phone_feedback').html(''); }, 5000);
             }
         });
     }
@@ -207,15 +248,18 @@
                verifyToken +=  $(this).val();
             }
         });
+        var dial_code =  $('#dial_code').val();
+        var phone_number =  $('#phone_number').val();
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "{{ route('user.verifyToken') }}",
-            data: {'verifyToken':verifyToken, 'type': 'phone'},
+            data: {'verifyToken':verifyToken, 'type': 'phone', phone_number:phone_number, dial_code:dial_code},
             success: function(response) {
                 $("#verify_phone_main_div").html('');
                 let phone_verified_template = _.template($('#phone_verified_template').html());
                 $("#verify_phone_main_div").append(phone_verified_template());
+                setTimeout(function(){location.reload(); }, 2000);
             },
             error: function(data) {
                 $(".invalid_phone_otp_error").html(data.responseJSON.error);
@@ -224,6 +268,7 @@
     });
     $("#verify_email_token").click(function(event) {
         var verifyToken = '';
+        var email = $('#email').val();
         $('.digit-group').find('input').each(function() {
             if($(this).val()){
                verifyToken +=  $(this).val();
@@ -233,11 +278,12 @@
             type: "POST",
             dataType: "json",
             url: "{{ route('user.verifyToken') }}",
-            data: {'verifyToken':verifyToken, 'type': 'email'},
+            data: {verifyToken:verifyToken, type: 'email', email:email},
             success: function(response) {
                 $("#verify_email_main_div").html('');
                 let email_verified_template = _.template($('#email_verified_template').html());
                 $("#verify_email_main_div").append(email_verified_template());
+                setTimeout(function(){location.reload(); }, 2000);
             },
             error: function(data) {
                 $(".invalid_email_otp_error").html(data.responseJSON.error);

@@ -342,6 +342,10 @@ span.inner-div {
     border: 1px solid #ddd; */
 }
 
+.card-box.mb-0{    
+    margin-bottom: 0 !important;
+}
+
 #AddbrandBox {
     padding-bottom: 0;
 }
@@ -1693,7 +1697,6 @@ label.logo-size {
 }
 
 .dd-list .dd3-content img.rounded-circle.mr-1 {
-    width: 30px;
     height: 30px;
 }
 
@@ -2043,16 +2046,56 @@ a:-webkit-any-link:focus-visible {
 .document-btn label{
     color: #6c757d;
 }
-
 .delete-user{
     right: 0;
     top: 0;
 }
+#add_user_permission_vendor .dropdown-menu {
+    width: 100%;
+}
+#add_user_permission_vendor #userList {
+    width: 100%;
+    position: absolute !important;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: calc(100% - 30px);
+}
+#add_user_permission_vendor .dropdown-menu li {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
 
+#add_user_permission_vendor .dropdown-menu li:last-child {
+    border: 0;
+}
 
+#add_user_permission_vendor .dropdown-menu {
+    width: 100%;        
+}
 
+#add_user_permission_vendor #userList {
+    width: 100%;
+    position: absolute !important;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: calc(100% - 30px);
+}
 
+#add_user_permission_vendor .dropdown-menu li {
+    border-bottom: 1px solid #DDD;
+    padding: 10px;
+}
 
+#add_user_permission_vendor .dropdown-menu li:last-child {
+    border: 0;
+}
+
+.gray-placeholder-img img {
+    filter: grayscale(100%);
+    opacity: 0.3;
+}
 
 
 

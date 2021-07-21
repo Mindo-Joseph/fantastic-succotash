@@ -2,7 +2,6 @@
     <div class="background pt-3 pb-2 px-2" style="background:url({{$vendor->banner['proxy_url'] . '200/100' . $vendor->banner['image_path']}}) no-repeat center center;background-size:cover;">
         <div class="vendor_text">
             <img src="{{$vendor->logo['proxy_url'] . '90/90' . $vendor->logo['image_path']}}" class="rounded-circle avatar-lg img-thumbnail" alt="profile-image">
-            {{$vendor->status}}
             <h4 class="mb-0 text-white">{{ucfirst($vendor->name)}}</h4>
             <p class="text-white">{{$vendor->address}}</p>
             <button type="button" class="btn btn-success btn-sm waves-effect mb-2 waves-light openEditModal" data-toggle="modal" data-target="#exampleModal"> Edit </button>
@@ -122,75 +121,73 @@
                 <div class="col-md-12">
                     <h4 class="mb-2"> <span class="">Category Setup</span> (Visible For Admin)</h4>
                 </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
-                    {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!}
-                    <input type="checkbox" data-plugin="switchery" name="can_add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-6 mb-3">
-                        {!! Form::label('title', 'Vendor Detail To Show',['class' => 'control-label ']) !!}
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <select class="selectize-select form-control assignToSelect" id="assignTo" {{$vendor->status == 1 ? '' : 'disabled'}}>
-                            @foreach($templetes as $templete)
-                                <option value="{{$templete->id}}" {{$vendor->vendor_templete_id == $templete->id ? 'selected="selected"' : ''}}>{{$templete->title}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        {!! Form::label('title', 'Vendor Category',['class' => 'control-label']) !!}
-                        <div class="custom-dd dd nestable_list_1" id="nestable_list_1">
-                            <ol class="dd-list">
-                                @forelse($builds as $build)
-                                @if($build['translation_one'])
-                                <li class="dd-item dd3-item" data-category_id="{{$build['id']}}">
-                                    <div class="dd3-content"> 
-                                        <img class="rounded-circle mr-1" src="{{$build['icon']['proxy_url']}}30/30{{$build['icon']['image_path']}}"> {{$build['translation_one']['name']}}
-                                        <span class="inner-div text-right">
-                                            <a class="action-icon" data-id="3" href="javascript:void(0)">
-                                                @if(in_array($build['id'], $VendorCategory))
-                                                    <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked {{$vendor->status == 1 ? '' : 'disabled'}}>
-                                                @else
-                                                    <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
-                                                @endif
-                                                <input type="hidden" value="{{ $build['id'] }}">
-                                            </a>
-                                        </span> 
-                                    </div>
-                                    @if(isset($build['children'])) 
-                                    <ol class="dd-list">
-                                        @forelse($build['children']  as $first_child)
-                                            @if(isset($first_child['translation_one']))
-                                                <li class="dd-item dd3-item" data-id="{{$first_child['id']}}">
-                                                    <div class="dd3-content"> 
-                                                        <img class="rounded-circle mr-1" src="{{$first_child['icon']['proxy_url']}}30/30{{$first_child['icon']['image_path']}}"> {{$first_child['translation_one']['name']}} 
-                                                        <span class="inner-div text-right">
-                                                            <a class="action-icon" data-id="6" href="javascript:void(0)">
-                                                                @if(in_array($first_child['id'], $VendorCategory))
-                                                                <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="" {{$vendor->status == 1 ? '' : 'disabled'}}>
-                                                                @else
-                                                                <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
-                                                                @endif
-                                                            </a>
-                                                        </span>
-                                                    </div>
-                                                </li>
-                                            @endif
-                                        @empty
-                                        @endforelse
-                                        </ol>
-                                        @endif
-                                    </li>
-                                </li>
-                                @endif
-                                @empty
-                                @endforelse
-                            </ol>
+            </div> 
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
+            {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!}
+            <input type="checkbox" data-plugin="switchery" name="can_add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
+        </div>
+        <div class="col-md-6 mb-3">
+            {!! Form::label('title', 'Vendor Detail To Show',['class' => 'control-label ']) !!}
+        </div>
+        <div class="col-md-6 mb-3">
+            <select class="selectize-select form-control assignToSelect" id="assignTo" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                @foreach($templetes as $templete)
+                    <option value="{{$templete->id}}" {{$vendor->vendor_templete_id == $templete->id ? 'selected="selected"' : ''}}>{{$templete->title}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-12">
+            {!! Form::label('title', 'Vendor Category',['class' => 'control-label']) !!}
+            <div class="custom-dd dd nestable_list_1" id="nestable_list_1">
+                <ol class="dd-list">
+                    @forelse($builds as $build)
+                    @if($build['translation_one'])
+                    <li class="dd-item dd3-item" data-category_id="{{$build['id']}}">
+                        <div class="dd3-content"> 
+                            <img class="rounded-circle mr-1" src="{{$build['icon']['proxy_url']}}30/30{{$build['icon']['image_path']}}"> {{$build['translation_one']['name']}}
+                            <span class="inner-div text-right">
+                                <a class="action-icon" data-id="3" href="javascript:void(0)">
+                                    @if(in_array($build['id'], $VendorCategory))
+                                        <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                    @else
+                                        <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                    @endif
+                                    <input type="hidden" value="{{ $build['id'] }}">
+                                </a>
+                            </span> 
                         </div>
-                    </div>
-                </div>
+                        @if(isset($build['children'])) 
+                        <ol class="dd-list">
+                            @forelse($build['children']  as $first_child)
+                                @if(isset($first_child['translation_one']))
+                                    <li class="dd-item dd3-item" data-id="{{$first_child['id']}}">
+                                        <div class="dd3-content"> 
+                                            <img class="rounded-circle mr-1" src="{{$first_child['icon']['proxy_url']}}30/30{{$first_child['icon']['image_path']}}"> {{$first_child['translation_one']['name']}} 
+                                            <span class="inner-div text-right">
+                                                <a class="action-icon" data-id="6" href="javascript:void(0)">
+                                                    @if(in_array($first_child['id'], $VendorCategory))
+                                                    <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                                    @else
+                                                    <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                                    @endif
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </li>
+                                @endif
+                            @empty
+                            @endforelse
+                            </ol>
+                            @endif
+                        </li>
+                    </li>
+                    @endif
+                    @empty
+                    @endforelse
+                </ol>
             </div>
         </div>
     </div>
@@ -261,7 +258,7 @@
                 <h4 class="modal-title">Add User</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <form id="add_user_permission_vendor" method="post" enctype="multipart/form-data" action="{{route('permissionsForUserViaVendor')}}">
+            <form id="add_user_permission_vendor" method="post" enctype="multipart/form-data" action="{{route('permissionsForUserViaVendor')}}" autocomplete="off">
                 @csrf
                 <input type="hidden" name="vendor_id" value="{{$vendor->id}}" id="set-vendor_id">
                 <div class="modal-body">

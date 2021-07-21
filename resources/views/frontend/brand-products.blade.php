@@ -151,7 +151,7 @@
                                 <div class="top-banner-wrapper text-center">
                                     
                                     @if(!empty($brand->image))
-                                     <div class="common-banner"><img alt="" src="{{$brand->image['proxy_url'] . '1000/200' . $brand->image['image_path']}}" class="img-fluid blur-up lazyload"></div>
+                                     <div class="common-banner"><img alt="" src="{{$brand->image['image_fit'] . '1000/200' . $brand->image['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
 
                                         

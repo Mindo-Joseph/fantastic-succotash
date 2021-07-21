@@ -15,9 +15,9 @@
 <form id="favicon-form" method="post" enctype="multipart/form-data">
 <div class="row">
     <div class="col-md-4 col-xl-2">
-        <div class="card h-100">
+        <div class="card">
             <div class="card-body">
-                <h4 class="header-title mb-3">Cart Toggle</h4>
+                <h4 class="header-title mb-2">Cart Toggle</h4>
                 <div class="mb-0">
                     <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
                 </div>
@@ -25,9 +25,9 @@
         </div>
     </div>
     <div class="col-md-4 col-xl-2">
-        <div class="card h-100">
+        <div class="card">
             <div class="card-body">
-                <h4 class="header-title mb-3">Rating Toggle</h4>
+                <h4 class="header-title mb-2">Rating Toggle</h4>
                 <div class="mb-0">
                     <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
                 </div>
@@ -35,12 +35,13 @@
         </div>
     </div>
     <div class="col-lg-2">
-        <div class="card h-100">
+        <div class="card">
             <div class="card-body">
-                <h4 class="header-title mb-3">Favicon</h4>
+                <h4 class="header-title">Favicon</h4>
                 <div class="mb-0">
+                    <label>Upload Favicon</label>
                     <input type="file" accept="image/*" data-default-file="{{$client_preferences->favicon ? $client_preferences->favicon['proxy_url'].'600/400'.$client_preferences->favicon['image_path'] : ''}}" data-plugins="dropify" name="favicon" class="dropify" id="image"/>
-                    <p class="text-muted text-center mt-2 mb-0">Upload Favicon</p>
+                    <label class="logo-size d-block text-right mt-1">Icon Size 32x32</label>                    
                     <span class="invalid-feedback" role="alert">
                         <strong></strong>
                     </span>
@@ -49,7 +50,7 @@
         </div>
     </div>
     <div class="col-lg-2">
-        <div class="card h-100">
+        <div class="card">
             <div class="card-body">
                 <h4 class="header-title">Color</h4>
                 <div class="mb-0">

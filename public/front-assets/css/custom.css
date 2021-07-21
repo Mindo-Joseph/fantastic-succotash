@@ -554,9 +554,28 @@ ul.social-links li a {
 }
 
 .verify_id .input-group-text {
-    border-top-right-radius: 50% !important;
-    border-bottom-right-radius: 50% !important;
+    border-top-right-radius: 50px !important;
+    border-bottom-right-radius: 50px !important;
 }
+
+.input-group-append.position-absolute.position-right {
+    right: 0;
+    height: 45px;
+    border: 0;
+}
+
+.verify_id input#phone {
+    padding-right: 95px;
+    padding-left: 70px;
+}
+
+.radius-flag .iti__selected-flag, .radius-flag .iti__selected-flag:hover {
+    background: transparent !important;
+    border-right: 1px solid #ddd;
+   /* border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;*/
+}
+
 
 .verify_id .form-control {
     opacity: 0.6;
@@ -605,12 +624,12 @@ ul.social-links li a {
 
 form label {
     font-size: 14px;
-    color: #000;
+    /* color: #000; */
     margin: 0 0 5px;
 }
 
 form .form-control {
-    font-weight: 600;
+    /* font-weight: 600; */
     /* color: #000; */
     opacity: 1;
     border-radius: 4px !important;
@@ -2817,6 +2836,9 @@ form input.form-control[placeholder="Address"] {
     width: auto;
 }
 
+img.h-45 {
+    height: 42px;
+}
 
 
 /**/
