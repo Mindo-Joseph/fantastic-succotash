@@ -45,7 +45,7 @@
                         @endif
                     </ul>
                     <div class="divider_line m-auto">
-                        <span>OR</span>
+                        <span>{{ __('OR') }}</span>
                     </div>
                     @endif
                 @endif
@@ -55,7 +55,7 @@
                             <div class="row form-group mb-0">
                                 <div class="col-md-6 mb-3">
                                     <label for="">{{ __('Full Name') }}</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Full Name" name="name" value="{{ old('name')}}">
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="{ __('Full Name') }}" name="name" value="{{ old('name')}}">
                                     @error('name')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -64,7 +64,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="">{{ __('Phone No.') }}</label>
-                                    <input type="tel" class="form-control phone @error('phone_number') is-invalid @enderror" id="phone" placeholder="Phone Number" name="phone_number" value="{{ old('phone_number')}}">
+                                    <input type="tel" class="form-control phone @error('phone_number') is-invalid @enderror" id="phone" placeholder="{{ __('Phone No.') }}" name="phone_number" value="{{ old('phone_number')}}">
                                     <input type="hidden" id="countryData" name="countryData" value="us">
                                     <input type="hidden" id="dialCode" name="dialCode" value="1">
                                     @error('phone_number')
@@ -77,7 +77,7 @@
                             <div class="row form-group mb-0">
                                 <div class="col-md-6 mb-3">
                                     <label for="">{{ __('Email') }}</label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" name="email" value="{{ old('email')}}">
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('Email') }}" name="email" value="{{ old('email')}}">
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -86,7 +86,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="">{{ __('Password') }}</label>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="review" placeholder="Enter your password" name="password">
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="review" placeholder="{{ __('Enter Your Password') }}" name="password">
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $errors->first('password') }}</strong>

@@ -81,14 +81,14 @@
         </div>
         <div class="row">
             <div class="col-lg-3">
-                <div class="account-sidebar"><a class="popup-btn">my account</a></div>
+                <div class="account-sidebar"><a class="popup-btn">{{ __('My Profile') }}</a></div>
                 @include('layouts.store/profile-sidebar')
             </div>
             <div class="col-lg-9">
                 <div class="dashboard-right">
                     <div class="dashboard">
                         <div class="page-title">
-                            <h2>My Profile</h2>
+                            <h2>{{ __('My Profile') }}</h2>
                         </div>
                         <div class="card-box">
                             <div class="row align-items-center">

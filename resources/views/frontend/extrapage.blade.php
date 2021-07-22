@@ -11,8 +11,8 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h2 class="mb-3">{{$page_detail->primary->title}}</h2>
-                <p>{!!$page_detail->primary->description!!}</p>
+                <h2 class="mb-3">{{$page_detail->translations->first() ? $page_detail->translations->first()->title : $page_detail->primary->title}}</h2>
+                <p>{!!$page_detail->translations->first() ? $page_detail->translations->first()->description : $page_detail->primary->description !!}</p>
             </div>
         </div>
         @if($page_detail->id == 3)
