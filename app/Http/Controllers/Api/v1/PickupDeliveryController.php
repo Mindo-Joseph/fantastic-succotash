@@ -429,7 +429,7 @@ class PickupDeliveryController extends BaseController{
             $customer = Auth::user();
             if ($dispatch_domain && $dispatch_domain != false) {
                 $tasks = array();
-                if ($request->payment_method == 2) {
+                if ($request->payment_method == 1) {
                     $cash_to_be_collected = 'Yes';
                     $payable_amount = $request->amount;
                 } else {
@@ -569,8 +569,8 @@ class PickupDeliveryController extends BaseController{
                 if($cart_detail['new_amount'] < 0)
                 $cart_detail['new_amount'] = 0.00;
             }
-            if($cart_detail->promo_type_id == 1){
-                $cart_detail['new_amount'] = $request->amount * ($cart_detail->amount/100);
+            if($cart_detail->promo_type_id == 1){ 
+                $cart_detail['new_amount'] = ($request->amount * $cart_detail->amount/100);
                 if($cart_detail['new_amount'] < 0)
                 $cart_detail['new_amount'] = 0.00;
             }
