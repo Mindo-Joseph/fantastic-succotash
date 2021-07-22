@@ -107,7 +107,7 @@
                                         <div class="outer-box d-flex align-items-center justify-content-between px-0">
                                             <div class="address-type w-100">
                                                 <div class="default_address border-bottom mb-1 px-2">
-                                                    <h6 class="mt-0 mb-2"><i class="fa fa-{{ ($add->type == 1 || $add->type == 3) ? 'home' : 'building' }} mr-1" aria-hidden="true"></i> {{ ($add->type == 1) ? 'Home' : (($add->type == 2) ? 'Office' : 'Others') }}</h6>
+                                                    <h6 class="mt-0 mb-2"><i class="fa fa-{{ ($add->type == 1 || $add->type == 3) ? 'home' : 'building' }} mr-1" aria-hidden="true"></i> {{ ($add->type == 1) ? __('Home') : (($add->type == 2) ? __('Office') : __('Others')) }}</h6>
                                                 </div>
                                                 <div class="px-2">
                                                     <p class="mb-1">{{$add->address}}</p>

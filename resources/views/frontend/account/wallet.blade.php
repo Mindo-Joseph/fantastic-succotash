@@ -1,5 +1,4 @@
 @extends('layouts.store', ['title' => 'My Wallet'])
-
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -8,9 +7,7 @@
         padding-bottom: 20px;
     }
 </style>
-
 @endsection
-
 @section('content')
 @php
 $timezone = Auth::user()->timezone;
@@ -28,7 +25,6 @@ $timezone = Auth::user()->timezone;
         cursor: default;
         border: none !important;
     }
-
     .product-right .color-variant li,
     .productVariants .otherChild {
         height: 35px;
@@ -39,18 +35,15 @@ $timezone = Auth::user()->timezone;
         border: 1px solid #f7f7f7;
         text-align: center;
     }
-
     .productVariants .otherSize {
         height: auto !important;
         width: auto !important;
         border: none !important;
         border-radius: 0%;
     }
-
     .product-right .size-box ul li.active {
         background-color: inherit;
     }
-
     .login-page .theme-card .theme-form input {
         margin-bottom: 5px;
     }
@@ -61,7 +54,6 @@ $timezone = Auth::user()->timezone;
         padding-top: .85rem;
     }
 </style>
-
 <section class="section-b-space">
     <div class="container">
         <div class="row">
@@ -89,17 +81,17 @@ $timezone = Auth::user()->timezone;
         </div>
         <div class="row mb-3">
             <div class="col-12">
-                <a href="{{route('user.profile')}}"><i class="fa fa-arrow-left mr-2" aria-hidden="true"></i> Back To
-                    Profile</a>
+                <a href="{{route('user.profile')}}"><i class="fa fa-arrow-left mr-2" aria-hidden="true"></i>{{__('Back To
+                    Profile')}}</a>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-3 profile-sidebar">
-                <div class="account-sidebar"><a class="popup-btn">My Account</a></div>
+                <div class="account-sidebar"><a class="popup-btn">{{__('My Account')}}</a></div>
                 <div class="dashboard-left">
                     <div class="collection-mobile-back">
                         <span class="filter-back">
-                            <i class="fa fa-angle-left" aria-hidden="true"></i> Back
+                            <i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}
                         </span>
                         </div>
                     @include('layouts.store/profile-sidebar')
@@ -109,18 +101,18 @@ $timezone = Auth::user()->timezone;
                 <div class="dashboard-right">
                     <div class="dashboard">
                         <div class="page-title">
-                            <h3 class="mt-0">My Wallet</h3>
+                            <h3 class="mt-0">{{__('My Wallet')}}</h3>
                         </div>
                         <div class="box-account box-info">
                             <div class="card-box mb-0">
                                 <div class="row align-items-center">
                                     <div class="col-md-6 text-md-left text-center mb-md-0 mb-4">
-                                        <h5 class="text-17 mb-2 mt-0">Available Balance</h5>
+                                        <h5 class="text-17 mb-2 mt-0">{{__('Available Balance')}}</h5>
                                         <div class="text-36">$<span class="wallet_balance">@money(Auth::user()->balanceFloat)</span></div>
                                     </div>
                                     <div class="col-md-6 text-md-right text-center">
-                                        <button type="button" class="btn btn-solid" id="topup_wallet_btn" data-toggle="modal" data-target="#topup_wallet">Topup Wallet</button>
-                                        <button type="button" class="btn btn-solid" data-toggle="modal" data-target="#add-money">Payout</button>
+                                        <button type="button" class="btn btn-solid" id="topup_wallet_btn" data-toggle="modal" data-target="#topup_wallet">{{__('Topup Wallet')}}</button>
+                                        <button type="button" class="btn btn-solid" data-toggle="modal" data-target="#add-money">{{__('Payout')}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -130,9 +122,9 @@ $timezone = Auth::user()->timezone;
                                   <table class="table wallet-transactions border">
                                     <thead>
                                         <tr class="table-head">
-                                            <th>Date</th>
-                                            <th>Description</th>
-                                            <th class="text-right" style="white-space:nowrap"><span class="text-success">Credit</span> / <span class="text-danger">Debit</span></th>
+                                            <th>{{__('Date')}}</th>
+                                            <th>{{__('Description')}}</th>
+                                            <th class="text-right" style="white-space:nowrap"><span class="text-success">{{__('Credit')}}</span> / <span class="text-danger">{{__('Debit')}}</span></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -159,7 +151,7 @@ $timezone = Auth::user()->timezone;
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header border-bottom">
-        <h5 class="modal-title" id="add-moneyLabel">Pay-Out</h5>
+        <h5 class="modal-title" id="add-moneyLabel">{{__('Pay-Out')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -167,22 +159,22 @@ $timezone = Auth::user()->timezone;
       <div class="modal-body">
         <form action="">
             <div class="form-group">
-                <label for="">Account Number</label>
+                <label for="">{{__('Account Number')}}</label>
                 <input class="form-control" type="text" placeholder="Account Number">
             </div>
             <div class="form-group">
-                <label for="">Account Name</label>
+                <label for="">{{__('Account Name')}}</label>
                 <input class="form-control" type="text" placeholder="Account Name">
             </div>
             <div class="form-group">
-                <label for="">Bank Name</label>
+                <label for="">{{__('Bank Name')}}</label>
                 <input class="form-control" type="text" placeholder="Bank Name">
             </div>
             <div class="form-group">
-                <label for="">IFSC Code</label>
+                <label for="">{{__('IFSC Code')}}</label>
                 <input class="form-control" type="text" placeholder="IFSC Code">
             </div>
-            <button type="button" class="btn btn-solid w-100 mt-2" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-solid w-100 mt-2" data-dismiss="modal">{{__('Close')}}</button>
         </form>
       </div>
     </div>
@@ -192,7 +184,7 @@ $timezone = Auth::user()->timezone;
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header border-bottom">
-        <h5 class="modal-title text-17 mb-0 mt-0" id="topup_walletLabel">Available Balance</h5>
+        <h5 class="modal-title text-17 mb-0 mt-0" id="topup_walletLabel">{{__('Available Balance')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -205,14 +197,14 @@ $timezone = Auth::user()->timezone;
                 <div class="text-36">$<span class="wallet_balance">@money(Auth::user()->balanceFloat)</span></div>
             </div>
             <div class="form-group">
-                <h5 class="text-17 mb-2">Topup Wallet</h5>
+                <h5 class="text-17 mb-2">{{__('Topup Wallet')}}</h5>
             </div>
             <div class="form-group">
-                <label for="wallet_amount">Amount</label>
+                <label for="wallet_amount">{{__('Amount')}}</label>
                 <input class="form-control" name="wallet_amount" id="wallet_amount" type="text" placeholder="Enter Amount">
             </div>
             <div class="form-group">
-                <div><label for="custom_amount">Recommended</label></div>
+                <div><label for="custom_amount">{{__('Recommended')}}</label></div>
                 <button type="button" class="btn btn-solid mb-2 custom_amount">+10</button>
                 <button type="button" class="btn btn-solid mb-2 custom_amount">+20</button>
                 <button type="button" class="btn btn-solid mb-2 custom_amount">+50</button>
@@ -221,24 +213,23 @@ $timezone = Auth::user()->timezone;
             <div class="payment_response">
                 <div class="alert p-0 m-0" role="alert"></div>
             </div>
-            <h5 class="text-17 mb-2">Debit From</h5>
+            <h5 class="text-17 mb-2">{{__('Debit From')}}</h5>
             <div class="form-group" id="wallet_payment_methods">
             </div>
         </div>
         <div class="modal-footer d-block text-center">
             <div class="row">
-                <div class="col-sm-6 pl-sm-0 pr-sm-1"><button type="button" class="btn btn-block btn-solid mt-2 topup_wallet_confirm">Topup Wallet</button></div>
-                <div class="col-sm-6 pr-sm-0 pl-sm-1"><button type="button" class="btn btn-block btn-solid mt-2" data-dismiss="modal">Cancel</button></div>
+                <div class="col-sm-6 pl-sm-0 pr-sm-1"><button type="button" class="btn btn-block btn-solid mt-2 topup_wallet_confirm">{{__('Topup Wallet')}}</button></div>
+                <div class="col-sm-6 pr-sm-0 pl-sm-1"><button type="button" class="btn btn-block btn-solid mt-2" data-dismiss="modal">{{__('Cancel')}}</button></div>
             </div>
         </div>
       </form>
     </div>
   </div>
 </div>
-
 <script type="text/template" id="payment_method_template">
     <% if(payment_options == '') { %>
-        <h6>Payment Methods Not Avaialable</h6>
+        <h6>{{__('Payment Methods Not Avaialable')}}</h6>
     <% }else{ %>
         <% _.each(payment_options, function(payment_option, k){%>
             <% if( (payment_option.slug != 'cash_on_delivery') && (payment_option.slug != 'loyalty_points') ) { %>
