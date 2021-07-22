@@ -543,10 +543,14 @@ function closeCart() {
 body_event.on("click", ".theme-layout-version", function () {
     if ($(".theme-layout-version").text() == 'Dark') {
         localStorage['theme_color'] = 'dark';
+        $("body").addClass("dark"),
         window.sessionStorage.setItem("theme", "dark");
+        $(".theme-layout-version").text("Light");
     } else {
         localStorage['theme_color'] = '';
+        $("body").removeClass("dark"),
         window.sessionStorage.setItem("theme", "light");
+        $(".theme-layout-version").text("Dark");
     }
     $.ajax({
         url: url1,
@@ -556,13 +560,12 @@ body_event.on("click", ".theme-layout-version", function () {
         success: function (data) {
         }
     });
-    return (
-        $(this).toggleClass("dark"),
-        $("body").removeClass("dark"),
-        $(".theme-layout-version").hasClass("dark") ? ($(".theme-layout-version").text("Light"), $("body").addClass("dark"), localStorage['theme_color'] = 'dark') :
-            ($("#theme-dark").remove(), $(".theme-layout-version").text("Dark")),
-        !1
-    );
+    // return (
+    //     // $(this).toggleClass("dark"),
+    //     $(".theme-layout-version").hasClass("dark") ? ($(".theme-layout-version").text("Light"), $("body").addClass("dark"), localStorage['theme_color'] = 'dark') :
+    //         ($("#theme-dark").remove(), $(".theme-layout-version").text("Dark")),
+    //     !1
+    // );
 }),
     $(function () {
         $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
