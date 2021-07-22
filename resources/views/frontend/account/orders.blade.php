@@ -64,7 +64,7 @@ $timezone = Auth::user()->timezone;
     <div class="container">
         <div class="row">
             <div class="col-lg-3">
-                <div class="account-sidebar"><a class="popup-btn">My account</a></div>
+                <div class="account-sidebar"><a class="popup-btn">My Account</a></div>
                 <div class="dashboard-left">
                     <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i> back</span></div>
                     @include('layouts.store/profile-sidebar')
@@ -548,8 +548,6 @@ $timezone = Auth::user()->timezone;
                                 </div>
                             </div>  
                         </div>
-
-
                         <div class="box-account box-info">
                           
                         </div>
@@ -559,7 +557,6 @@ $timezone = Auth::user()->timezone;
         </div>
     </div>
 </section>
-
 <!-- View Order details Modal -->
 <div class="modal fade order_detail" id="order-details" tabindex="-1" aria-labelledby="order-detailsLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">

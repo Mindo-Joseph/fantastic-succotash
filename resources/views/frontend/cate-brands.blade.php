@@ -26,9 +26,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-3 collection-filter">
-                    <!-- side-bar banner start start -->
                     <div class="theme-card">
-                        <h5 class="title-border">new product</h5>
+                        <h5 class="title-border">{{__('New Product')}}</h5>
                         <div class="offer-slider slide-1">
                             @if(!empty($newProducts) && count($newProducts) > 0)
                                 @foreach($newProducts as $newProds)
@@ -79,7 +78,6 @@
                                         {{--@if(!empty($category->childs) && count($category->childs) > 0)
                                             <div class="row">
                                                 <div class="col-12">
-                                                    
                                                     <div class="slide-6 no-arrow">
                                                         @foreach($category->childs->toArray() as $cate)
                                                         <div class="category-block">
@@ -103,7 +101,9 @@
                                     <div class="product-top-filter">
                                         <div class="row">
                                             <div class="col-xl-12">
-                                                <div class="filter-main-btn"><span class="filter-btn btn btn-theme"><i class="fa fa-filter" aria-hidden="true"></i> Filter</span></div>
+                                                <div class="filter-main-btn"><span class="filter-btn btn btn-theme">
+                                                    <i class="fa fa-filter" aria-hidden="true"></i>{{__('Filter')}}</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -158,7 +158,7 @@
                                                     </div>
                                                 @endforeach
                                             @else
-                                                <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">Details Not Available</h5></div>
+                                                <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">{{__('Details Not Available')}}</h5></div>
                                             @endif
                                             </div>
                                         </div>
@@ -175,9 +175,6 @@
         </div>
     </div>
 </section>
-
 @endsection
-
 @section('script')
-
 @endsection

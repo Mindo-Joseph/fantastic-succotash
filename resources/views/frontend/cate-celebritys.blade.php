@@ -1,5 +1,4 @@
 @extends('layouts.store', ['title' => (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug ])
-
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -13,22 +12,18 @@
 </style>
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/price-range.css')}}">
 @endsection
-
 @section('content')
-
  <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-
 <section class="section-b-space ratio_asos">
     <div class="collection-wrapper">
         <div class="container">
             <div class="row">
                 <div class="col-sm-3 collection-filter">
-                    <!-- side-bar banner start start -->
                     <div class="theme-card">
-                        <h5 class="title-border">new product</h5>
+                        <h5 class="title-border">{{__('New Product')}}</h5>
                         <div class="offer-slider slide-1">
                             @if(!empty($newProducts) && count($newProducts) > 0)
                                 @foreach($newProducts as $newProds)
@@ -63,10 +58,8 @@
                             @endif
                         </div>
                     </div>
-                    <!-- side-bar banner end here -->
                 </div>
                 <div class="collection-content col">
-
                     <div class="page-main-content">
                         <div class="row">
                             <div class="col-sm-12">
@@ -76,27 +69,24 @@
                                     @endif
                                     <div class="top-banner-content small-section">
                                         <h4>{{ (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug }}</h4>
-                                        {{--@if(!empty($category->childs) && count($category->childs) > 0)
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    
-                                                    <div class="slide-6 no-arrow">
-                                                        @foreach($category->childs->toArray() as $cate)
-                                                        <div class="category-block">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="slide-6 no-arrow">
+                                                    @foreach($category->childs->toArray() as $cate)
+                                                    <div class="category-block">
+                                                        <a href="{{route('categoryDetail', $cate['id'])}}">
+                                                            <div class="category-image"><img alt="" src="{{$cate['icon']['proxy_url'] . '100/80' . $cate['icon']['image_path']}}" ></div>
+                                                        </a>
+                                                        <div class="category-details">
                                                             <a href="{{route('categoryDetail', $cate['id'])}}">
-                                                                <div class="category-image"><img alt="" src="{{$cate['icon']['proxy_url'] . '100/80' . $cate['icon']['image_path']}}" ></div>
+                                                                <h5>{{$cate['translation'][0]['name']}}</h5>
                                                             </a>
-                                                            <div class="category-details">
-                                                                <a href="{{route('categoryDetail', $cate['id'])}}">
-                                                                    <h5>{{$cate['translation'][0]['name']}}</h5>
-                                                                </a>
-                                                            </div>
                                                         </div>
-                                                        @endforeach
                                                     </div>
+                                                    @endforeach
                                                 </div>
                                             </div>
-                                        @endif--}}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="collection-product-wrapper">
@@ -160,7 +150,7 @@
                                                     </div>
                                                     @endforeach
                                                 @else
-                                                    <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">Details Not Available</h5></div>
+                                                    <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">{{__('Details Not Available')}}</h5></div>
                                                 @endif
                                             </div>
                                         </div>
@@ -177,9 +167,6 @@
         </div>
     </div>
 </section>
-
 @endsection
-
 @section('script')
-
 @endsection

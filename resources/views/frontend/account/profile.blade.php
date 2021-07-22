@@ -81,7 +81,7 @@
         </div>
         <div class="row">
             <div class="col-lg-3">
-                <div class="account-sidebar"><a class="popup-btn">{{ __('My Profile') }}</a></div>
+                <div class="account-sidebar"><a class="popup-btn">{{ __('My Account') }}</a></div>
                 @include('layouts.store/profile-sidebar')
             </div>
             <div class="col-lg-9">
@@ -105,13 +105,13 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-6 text-center text-md-right mt-3 mt-md-0">
-                                    <a class="btn btn-solid openProfileModal" data-toggle="modal" data-target="#profile-modal" href="javascript:void(0)">Edit Profile</a>
+                                    <a class="btn btn-solid openProfileModal" data-toggle="modal" data-target="#profile-modal" href="javascript:void(0)">{{ __('Edit Profile') }}</a>
                                 </div>
                             </div>
                         </div>
                         <div class="card-box p-4 mb-3">
                             <div class="d-flex align-items-center justify-content-between mb-2">
-                                <h6 class="m-0">About Me</h6>
+                                <h6 class="m-0">{{ __('About Me') }}</h6>
                             </div>
                             <div class="text-16">
                                 <p class="m-0">{{$user->description}}</p>
@@ -121,7 +121,7 @@
                         <div class="row welcome-msg justify-content-between">
                             <div class="col">
                                 <h4 class="m-0">
-                                    <span>Your Refferal Code: {{(isset($userRefferal['refferal_code'])) ? $userRefferal['refferal_code'] : ''}}</span>
+                                    <span>{{ __('Your Refferal Code') }}: {{(isset($userRefferal['refferal_code'])) ? $userRefferal['refferal_code'] : ''}}</span>
                                 </h4>
                             </div>
                             <div class="col text-right">
@@ -137,24 +137,24 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="info-text mb-2">
-                                                <label class="m-0">Name</label>
+                                                <label class="m-0">{{ __('Name') }}</label>
                                                 <p>{{$user->name}}</p>
                                             </div>
 
                                             <div class="info-text mb-2">
-                                                <label class="m-0">Email</label>
+                                                <label class="m-0">{{ __('Email') }}</label>
                                                 <p>{{$user->email}}</p>
                                             </div>
 
                                             <div class="info-text mb-2">
-                                                <label class="m-0">Phone Number</label>
+                                                <label class="m-0">{{ __('Phone Number') }}</label>
                                                 <p>{{$user->phone_number}}</p>
                                             </div>
 
                                             <div class="info-text mb-2">
                                                 <form method="post" action="{{ route('user.updateTimezone') }}" id="user_timezone_form">
                                                     @csrf
-                                                    <label class="mb-1">Time Zone</label>
+                                                    <label class="mb-1">{{ __('Time Zone') }}</label>
                                                     {!! $timezone_list !!}
                                                 </form>
                                             </div>
@@ -169,13 +169,11 @@
         </div>
     </div>
 </section>
-
-<!-- Refferal Code Popup -->
 <div class="modal fade edit_profile_modal" id="profile-modal" tabindex="-1" aria-labelledby="profile-modalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title" id="profile-modalLabel">Edit Profile</h5>
+                <h5 class="modal-title" id="profile-modalLabel">{{ __('Edit Profile') }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -185,7 +183,7 @@
                 <div class="modal-body" id="editProfileBox">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-solid w-100">Save</button>
+                    <button type="submit" class="btn btn-solid w-100">{{ __('Save') }}</button>
                 </div>
             </form>
         </div>

@@ -78,10 +78,13 @@
         </div>
         <div class="row">
             <div class="col-lg-3">
-                <div class="account-sidebar"><a class="popup-btn">my account</a></div>
+                <div class="account-sidebar"><a class="popup-btn">{{ __('My Account') }}</a></div>
                 <div class="dashboard-left">
-                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left"
-                                aria-hidden="true"></i> back</span></div>
+                    <div class="collection-mobile-back">
+                        <span class="filter-back">
+                            <i class="fa fa-angle-left" aria-hidden="true"></i>{{ __('Back') }}
+                        </span>
+                    </div>
                     @include('layouts.store/profile-sidebar')
                 </div>
             </div>
@@ -89,14 +92,14 @@
                 <div class="dashboard-right">
                     <div class="dashboard">
                         <div class="page-title">
-                            <h2>Address Book</h2>
+                            <h2>{{ __('Address Book') }}</h2>
                         </div>
                         <div class="box-account box-info order-address">
                             <div class="row">
                                 <div class="col-xl-4 col-md-6 text-center mt-3">
                                     <a class="outer-box border-dashed d-flex align-items-center justify-content-center add_edit_address_btn" href="javascript:void(0)" data-toggle="modal" data-target="#add_edit_address">
                                         <i class="fa fa-plus-circle d-block mb-1" aria-hidden="true"></i>
-                                        <h6 class="m-0">Add new Address</h6>
+                                        <h6 class="m-0">{{ __('Add New Address') }}</h6>
                                     </a>
                                 </div>
                                 @foreach($useraddress as $add)
@@ -115,12 +118,12 @@
                                             </div>
                                             <div class="address-btn d-flex align-items-center justify-content-end w-100 mt-4 px-2">
                                                 @if($add->is_primary == 1)
-                                                    <a class="btn btn-solid disabled" href="#">Primary</a>
+                                                    <a class="btn btn-solid disabled" href="#">{{ __('Primary') }}</a>
                                                 @else
-                                                    <a class="btn btn-solid" href="{{ route('setPrimaryAddress', $add->id) }}" class="mr-2">Set as Primary</a>
+                                                    <a class="btn btn-solid" href="{{ route('setPrimaryAddress', $add->id) }}" class="mr-2">{{ __('Set As Primary') }}</a>
                                                 @endif
-                                                <a class="btn btn-solid add_edit_address_btn" href="javascript:void(0)" data-toggle="modal" data-target="#add_edit_address" data-id="{{$add->id}}">Edit</a>
-                                                <a class="btn btn-solid delete_address_btn" href="javascript:void(0)" data-toggle="modal" data-target="#removeAddressConfirmation" data-id="{{$add->id}}">Delete</a>
+                                                <a class="btn btn-solid add_edit_address_btn" href="javascript:void(0)" data-toggle="modal" data-target="#add_edit_address" data-id="{{$add->id}}">{{ __('Edit') }}</a>
+                                                <a class="btn btn-solid delete_address_btn" href="javascript:void(0)" data-toggle="modal" data-target="#removeAddressConfirmation" data-id="{{$add->id}}">{{ __('Delete') }}</a>
                                             </div>
                                         </div>
                                     </div>
@@ -137,17 +140,17 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header border-bottom">
-        <h5 class="modal-title" id="remove_addressLabel">Delete Address</h5>
+        <h5 class="modal-title" id="remove_addressLabel">{{ __('Delete Address') }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
       <div class="modal-body">
-        <h6 class="m-0">Do you really want to delete this address ?</h6>
+        <h6 class="m-0">{{ __('Do you really want to delete this address ?') }}</h6>
       </div>
       <div class="modal-footer flex-nowrap justify-content-center align-items-center">
-        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-solid" id="remove_address_confirm_btn" data-id="">Delete</button>
+        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">{{ __('Cancel') }}</button>
+        <button type="button" class="btn btn-solid" id="remove_address_confirm_btn" data-id="">{{ __('Delete') }}</button>
       </div>
     </div>
   </div>
@@ -172,11 +175,11 @@
                     <div class="theme-card w-100">
                         <div class="form-row no-gutters">
                             <div class="col-12">
-                                <label for="type">Address Type</label>
+                                <label for="type">{{ __('Address Type') }}</label>
                             </div>
                             <div class="col-md-3">
                                 <div class="delivery_box pt-0 pl-0  pb-3">
-                                    <label class="radio m-0">Home 
+                                    <label class="radio m-0">{{ __('Home') }}  
                                         <input type="radio" name="type" <%= (typeof address != 'undefined') ? ((address.type == 1) ? 'checked="checked"' : '') : 'checked="checked"' %> value="1">
                                         <span class="checkround"></span>
                                     </label>
@@ -184,7 +187,7 @@
                             </div>
                             <div class="col-md-3">
                             <div class="delivery_box pt-0 pl-0  pb-3">
-                                <label class="radio m-0">Office 
+                                <label class="radio m-0">{{ __('Office') }} 
                                     <input type="radio" name="type" <%= ((typeof address != 'undefined') && (address.type == 2)) ? 'checked="checked"' : '' %> value="2">
                                     <span class="checkround"></span>
                                 </label>
@@ -192,7 +195,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="delivery_box pt-0 pl-0  pb-3">
-                                <label class="radio m-0">Others
+                                <label class="radio m-0">{{ __('Others') }}
                                     <input type="radio" name="type" <%= ((typeof address != 'undefined') && (address.type == 3)) ? 'checked="checked"' : '' %> value="3">
                                     <span class="checkround"></span>
                                 </label>
@@ -203,7 +206,7 @@
                         <input type="hidden" name="longitude" id="longitude" value="<%= (typeof address != 'undefined') ? address.longitude : '' %>">
                         <div class="form-row">
                             <div class="col-md-12 mb-2">
-                                <label for="address">Address</label>
+                                <label for="address">{{ __('Address') }}</label>
                                 <div class="input-group">
                                     <input type="text" name="address" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2" value="<%= (typeof address != 'undefined') ? address.address : '' %>" autocomplete="off">
                                     <div class="input-group-append">
@@ -217,24 +220,24 @@
                         </div>
                         <div class="form-row">
                             <div class="col-md-6 mb-2">
-                                <label for="street">Street</label>
+                                <label for="street">{{ __('Street') }}</label>
                                 <input type="text" class="form-control" id="street" placeholder="Street" name="street" value="<%= ((typeof address != 'undefined') && (address.street != null)) ? address.street : '' %>">
                                 <span class="text-danger" id="street_error"></span>
                             </div>
                             <div class="col-md-6 mb-2">
-                                <label for="city">City</label>
+                                <label for="city">{{ __('City') }}</label>
                                 <input type="text" class="form-control" id="city" name="city" placeholder="City" value="<%= ((typeof address != 'undefined') && (address.city != null)) ? address.city : '' %>">
                                 <span class="text-danger" id="city_error"></span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col-md-6 mb-2">
-                                <label for="state">State</label>
+                                <label for="state">{{ __('State') }}</label>
                                 <input type="text" class="form-control" id="state" name="state" placeholder="State" value="<%= ((typeof address != 'undefined') && (address.state != null)) ? address.state : '' %>">
                                 <span class="text-danger" id="state_error"></span>
                             </div>
                             <div class="col-md-6 mb-2">
-                                <label for="country">Country</label>
+                                <label for="country">{{ __('Country') }}</label>
                                 <select name="country" id="country" class="form-control" value="<%= ((typeof address != 'undefined') && (address.country_id != null)) ? address.country_id : '' %>">
                                     @foreach($countries as $co)
                                         <option value="{{$co->id}}" <%= ((typeof address != 'undefined') && (address.country_id == {{$co->id}})) ? 'selected="selected"' : '' %>>{{$co->name}}</option>
@@ -245,7 +248,7 @@
                         </div>
                         <div class="form-row mb-0">
                             <div class="col-md-6 mb-2">
-                                <label for="pincode">Pincode</label>
+                                <label for="pincode">{{ __('Pincode') }}</label>
                                 <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode" value="<%= ((typeof address != 'undefined') && (address.pincode != null)) ? address.pincode : ''%>">
                                 <span class="text-danger" id="pincode_error"></span>
                             </div>
@@ -272,7 +275,7 @@
   <div class="modal-dialog  modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header border-bottom">
-        <h5 class="modal-title" id="pick-addressLabel">Select Location</h5>
+        <h5 class="modal-title" id="pick-addressLabel">{{ __('Select Location') }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -285,7 +288,7 @@
                 </div>
                 <div class="pick_address p-2 mb-2 position-relative">
                     <div class="text-center">
-                        <button type="button" class="btn btn-solid ml-auto pick_address_confirm w-100" data-dismiss="modal">Ok</button>
+                        <button type="button" class="btn btn-solid ml-auto pick_address_confirm w-100" data-dismiss="modal">{{ __('Ok') }}</button>
                     </div>
                 </div>
             </div>
@@ -302,27 +305,22 @@
     var update_address_url = "{{ route('address.update', ':id') }}";
     var delete_address_url = "{{ route('deleteAddress', ':id') }}";
     var verify_information_url = "{{ route('verifyInformation', Auth::user()->id) }}";
-    
     var ajaxCall = 'ToCancelPrevReq';
     $('.verifyEmail').click(function(){
         verifyUser('email');
     });
-
     $('.verifyPhone').click(function(){
        verifyUser('phone');
     });
-
     $(document).delegate(".delete_address_btn", "click", function(){
         var addressID = $(this).attr("data-id");
         $("#remove_address_confirm_btn").attr("data-id", addressID);
     });
-
     $(document).delegate("#remove_address_confirm_btn", "click", function(){
         var addressID = $(this).attr("data-id");
         var url = delete_address_url.replace(':id', addressID);
         location.href = url;
     });
-
     $(document).ready(function(){
         $(document).delegate(".add_edit_address_btn", "click", function(){
             var addressID = $(this).attr("data-id");
@@ -352,7 +350,6 @@
             }
         });
     });
-
     function verifyUser($type = 'email'){
         ajaxCall = $.ajax({
             type: "post",
@@ -372,7 +369,6 @@
             }
         });
     }
-
     $(document).on("click","#update_address",function() {
         let city = $('#add_new_address_form #city').val();
         let state = $('#add_new_address_form #state').val();

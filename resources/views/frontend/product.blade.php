@@ -153,7 +153,7 @@
 
                                     @if($product->inquiry_only == 0)
                                     <div class="product-description border-product">
-                                        <h6 class="product-title mt-0">quantity:
+                                        <h6 class="product-title mt-0">{{__('Quantity')}}:
                                             @if(!$product->variant[0]->quantity > 0)
                                             <span id="outofstock" style="color: red;">Out of Stock</span>
                                             @endif
@@ -205,23 +205,23 @@
                                         @if($product->variant[0]->quantity > 0)
                                         @if($is_inwishlist_btn)
                                         <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
-                                            {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? 'Remove from Wishlist' : 'Add To Wishlist' }}
+                                            {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? __('Remove From Wishlist') : __('Add To Wishlist') }}
                                         </button>
                                         @endif
                                         @if($product->inquiry_only == 0)
-                                        <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart">add to cart</a>
+                                            <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart">{{__('Add To Cart')}}</a>
                                         @else
-                                        <a href="#" data-toggle="modal" data-target="#inquiry_form" class="btn btn-solid inquiry_mode">Inquire Now</a>
+                                            <a href="#" data-toggle="modal" data-target="#inquiry_form" class="btn btn-solid inquiry_mode">{{ __('Inquire Now')}}</a>
                                         @endif
                                         @endif
                                     </div>
                                     <div class="border-product">
-                                        <h6 class="product-title">product details</h6>
+                                        <h6 class="product-title">{{__('Product Details')}}</h6>
                                         <p>{!!(!empty($product->translation) && isset($product->translation[0])) ?
                                             $product->translation[0]->body_html : ''!!}</p>
                                     </div>
                                     <div class="border-product">
-                                        <h6 class="product-title">share it</h6>
+                                        <h6 class="product-title">{{__('Share It')}}</h6>
                                         <div class="product-icon w-100">
                                             <ul class="product-social">
                                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
@@ -239,7 +239,7 @@
                         <div class="row">
                             <div class="col-sm-12 col-lg-12">
                                 <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
-                                    <li class="nav-item"><a class="nav-link active" id="top-home-tab" data-toggle="tab" href="#top-home" role="tab" aria-selected="true"><i class="icofont icofont-ui-home"></i>Description</a>
+                                    <li class="nav-item"><a class="nav-link active" id="top-home-tab" data-toggle="tab" href="#top-home" role="tab" aria-selected="true"><i class="icofont icofont-ui-home"></i>{{__('Description')}}</a>
                                         <div class="material-border"></div>
                                     </li>
                                     <!-- <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-toggle="tab"

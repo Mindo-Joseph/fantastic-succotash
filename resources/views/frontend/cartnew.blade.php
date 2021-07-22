@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Product'])
+@extends('layouts.store', ['title' => 'Cart'])
 
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
@@ -38,9 +38,9 @@
             <div class="cart_img_outer">
                 <img src="{{asset('front-assets/images/empty_cart.png')}}">
             </div>
-            <h3>Your cart is empty!</h3>
+            <h3>{{__('Your cart is empty!')}}</h3>
             <p>Add items to it now.</p>
-            <a class="btn btn-solid" href="{{url('/')}}">Continue Shopping</a>
+            <a class="btn btn-solid" href="{{url('/')}}">{{__('Continue Shopping')}}</a>
         </div>
     </div>
 </script>
@@ -48,7 +48,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title text-uppercase">Cart</h4>
+                <h4 class="page-title text-uppercase">{{__('Cart')}}</h4>
             </div>
         </div>
     </div>
@@ -99,9 +99,9 @@
                     </td>
                     <td>
                     <% if(cart_details.pharmacy_check == 1){ %>
-                    <% if(vendor_product.product.pharmacy_check == 1){ %>
-                    <button type="button" class="btn btn-solid prescription_btn" data-product="<%= vendor_product.product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">Add</button>
-                    <% } %>
+                        <% if(vendor_product.product.pharmacy_check == 1){ %>
+                            <button type="button" class="btn btn-solid prescription_btn" data-product="<%= vendor_product.product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">Add</button>
+                        <% } %>
                     <% } %>
                     </td>
                     <td class="text-center">
@@ -116,7 +116,7 @@
                 <% if(vendor_product.addon.length != 0) { %>
                     <tr>
                          <td colspan="6" class="border_0 p-0 border-0">
-                           <h6 class="m-0 pl-0"><b>Add Ons</b></h6>
+                           <h6 class="m-0 pl-0"><b>{{__('Add Ons')}}</b></h6>
                         </td>
                     </tr>
                     <% _.each(vendor_product.addon, function(addon, ad){%>
@@ -145,10 +145,9 @@
                     <div class="coupon_box d-flex w-75 align-items-center">
                         <img src="{{ asset('assets/images/discount_icon.svg') }}">
                         <label class="mb-0 ml-2"><%= product.coupon ? product.coupon.promo.name : '' %></label>
-                        
                     </div>
                     <% if(!product.coupon) { %>
-                            <a class="btn btn-solid promo_code_list_btn" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_total_amount %>">Apply</a>
+                            <a class="btn btn-solid promo_code_list_btn" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_total_amount %>">{{__('Apply')}}</a>
                         <% }else{ %>
                         <i class="fa fa-times ml-4 remove_promo_code_btn" data-coupon_id="<%= product.coupon ? product.coupon.promo.id : '' %>" data-cart_id="<%= cart_details.id %>"></i>
                         <% } %>
@@ -156,7 +155,7 @@
                 </td> 
                 <td colspan="2"></td>
                 <td class="text-center">
-                    <p class="total_amt m-0">Delivery Fee :</p>
+                    <p class="total_amt m-0">{{__('Delivery Fee')}} :</p>
                 </td>
                 <td class="text-right pl-lg-2">
                     <p class="total_amt mb-1 {{ ((in_array(1, $subscription_features)) ) ? 'discard_price' : '' }}">{{Session::get('currencySymbol')}} <%= product.delivery_fee_charges %></p>
@@ -169,24 +168,18 @@
         <tr>
             <td colspan="3"></td>
             <td class="pr-0 pb-0">
-               <p class="mb-1"></p> Sub Total  
-               <!-- <p class="mb-1"></p> Wallet  -->
-               <!-- <p class="mb-1"></p> Loyalty (500 pts)  -->
+               <p class="mb-1"></p>{{__('Sub Total')}}  
                <hr class="mt-2 mb-0">
-               <!-- <p class="total_amt m-0">Total Amount</p> -->
             </td>
             <td class="text-right pl-0 pb-0" colspan="3">
                <p class="mb-1"></p> $<%= cart_details.gross_amount %>
-               <!-- <p class="mb-1"></p> -$60.00 -->
-               <!-- <p class="mb-1"></p> -$10.00 -->
                <hr class="mt-2 mb-0">
-               <!-- <p class="total_amt m-0">{{Session::get('currencySymbol')}}<%= cart_details.gross_amount %></p> -->
             </td>
         </tr>
         <tr class="border_0">
             <td colspan="3"></td>
             <td class="pr-0 pb-0">
-               <p class="mb-1"></p> Tax
+               <p class="mb-1"></p>{{__('Tax')}}
                <hr class="mt-2 mb-0">
             </td>
             <td class="text-right pl-0 pb-0" colspan="3">
@@ -198,7 +191,7 @@
             <tr class="border_0">
                 <td colspan="3"></td>
                 <td class="pr-0 pb-0">
-                <p class="mb-1"></p> Subscription Discount 
+                <p class="mb-1"></p>{{__('Subscription Discount')}} 
                 <hr class="mt-2 mb-0">
                 </td>
                 <td class="text-right pl-0 pb-0" colspan="3">
@@ -211,7 +204,7 @@
             <td colspan="3"></td>
             <td colspan="2" class="pt-0 pr-0">
                 <hr class="mt-0 mb-2">
-                <p class="total_amt m-0">Amount Payable</p>
+                <p class="total_amt m-0">{{__('Amount Payable')}}</p>
             </td>
             <td colspan="2" class="pt-0 pl-0 text-right">
                 <hr class="mt-0 mb-2">
@@ -232,7 +225,7 @@
                 <hr class="m-0">
                 <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
                     <label class="m-0"><%= promo_code.name %></label>
-                    <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="<%= vendor_id %>" data-cart_id="<%= cart_id %>" data-coupon_id="<%= promo_code.id %>" data-amount="<%= amount %>" style="cursor: pointer;">Apply</a>
+                    <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="<%= vendor_id %>" data-cart_id="<%= cart_id %>" data-coupon_id="<%= promo_code.id %>" data-amount="<%= amount %>" style="cursor: pointer;">{{__('Apply')}}</a>
                 </div>
                 <hr class="m-0">
                 <div class="offer-text p-2">
@@ -245,7 +238,7 @@
 
 <script type="text/template" id="no_promo_code_template">
     <div class="col-12 no-more-coupon text-center">
-        <p>No other coupons available.</p>
+        <p>{{__('No Other Coupons Available.')}}</p>
     </div>
 </script>
 <div class="container" id="cart_main_page">
@@ -257,7 +250,7 @@
                 <div class="col-4 left_box">
                     <div class="row">
                         <div class="col-12 mb-2">
-                            <h4 class="page-title">Delivery Address</h4>
+                            <h4 class="page-title">{{__('Delivery Address')}}</h4>
                             <span class="text-danger hide" id="address_error"></span>
                         </div>
                     </div>
@@ -267,9 +260,9 @@
                             <div class="delivery_box px-0">
                                 <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}}
                                     @if($address->is_primary)
-                                    <input type="radio" name="address_id" value="{{$address->id}}" checked="checked">
+                                        <input type="radio" name="address_id" value="{{$address->id}}" checked="checked">
                                     @else
-                                    <input type="radio" name="address_id" value="{{$address->id}}" {{$k == 0? 'checked="checked""' : '' }}>
+                                        <input type="radio" name="address_id" value="{{$address->id}}" {{$k == 0? 'checked="checked""' : '' }}>
                                     @endif
                                     <span class="checkround"></span>
                                 </label>
@@ -277,25 +270,25 @@
                         </div>
                         @empty
                         <div class="col-12 address-no-found">
-                            <p>Address not available.</p>
+                            <p>{{__('Address not available.')}}</p>
                         </div>
                         @endforelse
                     </div>
                     <div class="row">
                         <div class="col-12 mt-4 text-center" id="add_new_address_btn">
                             <a class="btn btn-solid w-100 mx-auto mb-4">
-                                <i class="fa fa-plus mr-1" aria-hidden="true"></i> Add New Address
+                                <i class="fa fa-plus mr-1" aria-hidden="true"></i>{{__('Add New Address')}}
                             </a>
                         </div>
                         <div class="col-md-12" id="add_new_address_form" style="display:none;">
                             <div class="theme-card w-100">
                                 <div class="form-row no-gutters">
                                     <div class="col-12">
-                                        <label for="type">Address Type</label>
+                                        <label for="type">{{__('Address Type')}}</label>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="delivery_box pt-0 pl-0  pb-3">
-                                            <label class="radio m-0">Home
+                                            <label class="radio m-0">{{__('Home')}}
                                                 <input type="radio" checked="checked" name="address_type" value="1">
                                                 <span class="checkround"></span>
                                             </label>
@@ -303,7 +296,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="delivery_box pt-0 pl-0  pb-3">
-                                            <label class="radio m-0">Office
+                                            <label class="radio m-0">{{__('Office')}}
                                                 <input type="radio" name="address_type" value="2">
                                                 <span class="checkround"></span>
                                             </label>
@@ -311,7 +304,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="delivery_box pt-0 pl-0  pb-3">
-                                            <label class="radio m-0">Others
+                                            <label class="radio m-0">{{__('Others')}}
                                                 <input type="radio" name="address_type" value="3">
                                                 <span class="checkround"></span>
                                             </label>
@@ -322,7 +315,7 @@
                                 <input type="hidden" id="longitude">
                                 <div class="form-row">
                                     <div class="col-md-12 mb-3">
-                                        <label for="address">Address</label>
+                                        <label for="address">{{__('Address')}}</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2">
                                             <div class="input-group-append">
@@ -336,17 +329,17 @@
                                 </div>
                                 <div class="form-row mb-3">
                                     <div class="col-md-6 mb-3">
-                                        <label for="city">City</label>
+                                        <label for="city">{{__('City')}}</label>
                                         <input type="text" class="form-control" id="city" placeholder="City" value="">
                                         <span class="text-danger" id="city_error"></span>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="state">State</label>
+                                        <label for="state">{{__('State')}}</label>
                                         <input type="text" class="form-control" id="state" placeholder="State" value="">
                                         <span class="text-danger" id="state_error"></span>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="country">Country</label>
+                                        <label for="country">{{__('Country')}}</label>
                                         <select name="country" id="country" class="form-control">
                                             @foreach($countries as $co)
                                             <option value="{{$co->id}}">{{$co->name}}</option>
@@ -355,13 +348,13 @@
                                         <span class="text-danger" id="country_error"></span>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="pincode">Pincode</label>
+                                        <label for="pincode">{{__('Pincode')}}</label>
                                         <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
                                         <span class="text-danger" id="pincode_error"></span>
                                     </div>
                                     <div class="col-md-12 mt-3">
-                                        <button type="button" class="btn btn-solid" id="save_address">Save Address</button>
-                                        <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">Cancel</button>
+                                        <button type="button" class="btn btn-solid" id="save_address">{{__('Save Address')}}</button>
+                                        <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">{{__('Cancel')}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -376,10 +369,10 @@
             </div>
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4">
-                    <a class="btn btn-solid" href="{{ url('/') }}">Continue Shopping</a>
+                    <a class="btn btn-solid" href="{{ url('/') }}">{{__('Continue Shopping')}}</a>
                 </div>
                 <div class="offset-lg-6 offset-md-4 col-lg-3 col-md-4 text-md-right">
-                    <button id="order_palced_btn" class="btn btn-solid" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>Continue</button>
+                    <button id="order_palced_btn" class="btn btn-solid" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Continue')}}</button>
                 </div>
             </div>
         </div>
@@ -391,9 +384,9 @@
             <div class="cart_img_outer">
                 <img src="{{asset('front-assets/images/empty_cart.png')}}">
             </div>
-            <h3>Your cart is empty!</h3>
-            <p>Add items to it now.</p>
-            <a class="btn btn-solid" href="{{url('/')}}">Continue Shopping</a>
+            <h3>{{__('Your cart is empty!')}}</h3>
+            <p>{{__('Add items to it now.')}}</p>
+            <a class="btn btn-solid" href="{{url('/')}}">{{__('Continue Shopping')}}</a>
         </div>
     </div>
     @endif
@@ -402,7 +395,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title" id="refferal-modalLabel">Apply Coupon Code</h5>
+                <h5 class="modal-title" id="refferal-modalLabel">{{__('Apply Coupon Code')}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -421,7 +414,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header pb-0">
-                <h5 class="modal-title" id="remove_itemLabel">Remove Item</h5>
+                <h5 class="modal-title" id="remove_itemLabel">{{__('Remove Item')}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -429,11 +422,11 @@
             <div class="modal-body">
                 <input type="hidden" id="vendor_id" value="">
                 <input type="hidden" id="cartproduct_id" value="">
-                <h6 class="m-0">Are you sure you want to remove this item ?</h6>
+                <h6 class="m-0">{{__('Are you sure you want to remove this item ?')}}</h6>
             </div>
             <div class="modal-footer flex-nowrap justify-content-center align-items-center">
-                <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-solid" id="remove_product_button">Remove</button>
+                <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">{{__('Cancel')}}</button>
+                <button type="button" class="btn btn-solid" id="remove_product_button">{{__('Remove')}}</button>
             </div>
         </div>
     </div>
@@ -486,7 +479,7 @@
                     </div>
                     <div class="col-8">
                         <div class="tab-content-box pl-3">
-                            <h5 class="modal-title pt-4" id="pay-billLabel">Total Amount: <span id="total_amt"></span></h5>
+                            <h5 class="modal-title pt-4" id="pay-billLabel">{{__('Total Amount')}}: <span id="total_amt"></span></h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -504,7 +497,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h4 class="modal-title">Add Prescription</h4>
+                <h4 class="modal-title">{{__('Add Prescription')}}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="save_prescription_form" method="post" enctype="multipart/form-data">
@@ -515,7 +508,7 @@
                             <input type="hidden" id="vendor_idd" name="vendor_idd" value="" />
                             <input type="hidden" id="product_id" name="product_id" value="" />
                             <input data-default-file="" accept="image/*" type="file" data-plugins="dropify" name="prescriptions[]" class="dropify" multiple/>
-                            <p class="text-muted text-center mt-2 mb-0">Upload Prescription</p>
+                            <p class="text-muted text-center mt-2 mb-0">{{__('Upload Prescription')}}</p>
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
                             </span>
@@ -523,7 +516,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info waves-effect waves-light submitPrescriptionForm">Submit</button>
+                    <button type="button" class="btn btn-info waves-effect waves-light submitPrescriptionForm">{{__('Submit')}}</button>
                 </div>
             </form>
         </div>
