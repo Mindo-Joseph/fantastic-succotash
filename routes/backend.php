@@ -176,6 +176,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
 	Route::post('vendor/subscription/purchase/{id}/{slug}', 'Client\VendorSubscriptionController@purchaseSubscriptionPlan')->name('vendor.subscription.plan.purchase');
 	Route::post('vendor/subscription/cancel/{id}/{slug}', 'Client\VendorSubscriptionController@cancelSubscriptionPlan')->name('vendor.subscription.plan.cancel');
 	Route::get('vendor/subscription/checkActive/{id}/{slug}', 'Client\VendorSubscriptionController@checkActiveSubscription')->name('vendor.subscription.plan.checkActive');
+    Route::any('vendor/subscriptions/filterData', 'Client\VendorSubscriptionController@getSubscriptionsFilterData')->name('vendor.subscriptions.filterData');
 
     Route::post('subscription/payment/stripe', 'Client\StripeGatewayController@subscriptionPaymentViaStripe')->name('subscription.payment.stripe');
 

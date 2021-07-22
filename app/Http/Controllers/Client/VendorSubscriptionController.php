@@ -6,7 +6,9 @@ use Auth;
 use Session;
 use Redirect;
 use Timezonelist;
+use DataTables;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use App\Http\Traits\ToasterResponser;
@@ -208,5 +210,51 @@ class VendorSubscriptionController extends BaseController
         else{
             return redirect()->back()->with('error', 'Unable to cancel subscription');
         }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getSubscriptionsFilterData(Request $request)
+    {
+        $vendor_subscriptions = SubscriptionInvoicesVendor::with(['plan', 'vendor', 'features.feature', 'status'])->where('status_id', $request->status)->get();
+        if($vendor_subscriptions){
+            foreach($vendor_subscriptions as $sub){
+                $features = '';
+                if($sub->features->isNotEmpty()){
+                    $subFeaturesList = array();
+                    foreach($sub->features as $feature){
+                        $subFeaturesList[] = $feature->feature->title;
+                    }
+                    $features = implode(', ', $subFeaturesList);
+                }
+                $sub->vendor_name = $sub->vendor->name;
+                $sub->sub_features = $features;
+                $sub->plan_title = $sub->plan->title;
+                $sub->sub_status = $sub->status->title;
+                if($sub->sub_status == 'Pending'){
+                    $sub->sub_status_class = 'info';
+                }elseif($sub->sub_status == 'Rejected'){
+                    $sub->sub_status_class = 'danger';
+                }elseif($sub->sub_status == 'Active'){
+                    $sub->sub_status_class = 'success';
+                }
+            }
+        }
+
+        return Datatables::of($vendor_subscriptions)
+        ->addIndexColumn()
+        ->filter(function ($instance) use ($request) {
+            // if (!empty($request->get('search'))) {
+            //     $instance->collection = $instance->collection->filter(function ($row) use ($request){
+            //         if (Str::contains(Str::lower($row['name']), Str::lower($request->get('search')))){
+            //             return true;
+            //         }
+            //         return false;
+            //     });
+            // }
+        })->make(true);
     }
 }
