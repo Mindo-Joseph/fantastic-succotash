@@ -36,6 +36,13 @@ class SubscriptionStatusOptionsSeeder extends Seeder{
             ),
             array(
                 'id' => 4,
+                'title' => 'Rejected',
+                'status' => 1,
+                'created_at' =>  Carbon::now(),
+                'updated_at' => Carbon::now()
+            ),
+            array(
+                'id' => 5,
                 'title' => 'Cancelled',
                 'status' => 1,
                 'created_at' =>  Carbon::now(),
