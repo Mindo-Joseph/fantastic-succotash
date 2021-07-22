@@ -34,6 +34,7 @@ if (Session::has('toaster')) {
 <script src="{{asset('assets/js/pages/toastr.init.js')}}"></script>
 <script src="{{asset('assets/libs/datatables/datatables.min.js')}}"></script>
 <script>
+    let stripe_publishable_key = "{{ $stripe_publishable_key }}";
     let is_hyperlocal = 0;
     @if(Session::has('preferences'))
     @if((isset(Session::get('preferences')['is_hyperlocal'])) && (Session::get('preferences')['is_hyperlocal'] == 1))
