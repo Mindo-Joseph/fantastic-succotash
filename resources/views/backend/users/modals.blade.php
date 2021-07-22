@@ -13,7 +13,7 @@
                             <div class="form-group" id="imageInput">
                                 <label>Profile image</label>
                                 <input data-default-file="" type="file" data-plugins="dropify" name="image" accept="image/*" class="dropify"/>
-                                <label class="logo-size text-right w-100">Image Size 112x112</label>
+                                <label class="logo-size text-right w-100">Image Size 110x110 </label>
                                 <span class="invalid-feedback" role="alert">
                                     <strong></strong>
                                 </span>

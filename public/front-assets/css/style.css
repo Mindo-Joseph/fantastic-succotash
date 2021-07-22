@@ -18140,7 +18140,7 @@ body.dark {
 .dark .qty-box .input-group button i {
   color: #929292; }
 
-.dark .nav-tabs {
+.dark .nav-tabs.tab-icons {
   border-color: #404040; }
   .dark .nav-tabs .nav-link.active {
     background-color: #2b2b2b;

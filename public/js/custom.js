@@ -4,6 +4,13 @@ $(document).ready(function() {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
         }
     });
+    $(".navigation-tab-item").click(function() {
+        $(".navigation-tab-item").removeClass("active");
+        $(this).addClass("active");
+        $(".navigation-tab-overlay").css({
+            left: $(this).prevAll().length * 100 + "px"
+        });
+    });
     if($('#cart_main_page').length > 0){
         let address_checked = $("input:radio[name='address_id']").is(":checked");
         if(address_checked){

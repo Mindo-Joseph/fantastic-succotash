@@ -2097,8 +2097,9 @@ a:-webkit-any-link:focus-visible {
     opacity: 0.3;
 }
 
-
-
+.product-action + .bg-light {
+    height: 117px;
+}
 
 
 
