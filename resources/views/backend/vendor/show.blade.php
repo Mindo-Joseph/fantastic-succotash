@@ -157,6 +157,9 @@
                     <div class="alert alert-success">
                         <span>{!! \Session::get('success') !!}</span>
                     </div>
+                    @php
+                        \Session::forget('success');
+                    @endphp
                     @endif
                     @if (\Session::has('error_delete'))
                     <div class="alert alert-danger">
@@ -947,6 +950,7 @@
                             if(response.status == "Success"){
                                 $("#subscription_payment #subscription_title").html(response.sub_plan.title);
                                 $("#subscription_payment #subscription_price").html('$' + response.sub_plan.price);
+                                $("#subscription_payment #subscription_frequency").html(response.sub_plan.frequency);
                                 $("#subscription_payment #features_list").html(response.sub_plan.features);
                                 $("#subscription_payment #subscription_id").val(sub_id);
                                 $("#subscription_payment #subscription_amount").val(response.sub_plan.price);
@@ -1054,7 +1058,7 @@
                 data: {amount:amount, payment_option_id:payment_option_id, transaction_id:transaction_id},
                 success: function(response) {
                     if (response.status == "Success") {
-                        location.href = path;
+                        location.reload();
                     }else{
                         success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
                         $(".subscription_confirm_btn").attr("disabled", false);

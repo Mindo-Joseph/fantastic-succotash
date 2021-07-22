@@ -28,9 +28,10 @@ class VendorSubscriptionController extends BaseController
     {
         $sub_plans = SubscriptionPlansVendor::with('features.feature')->where('status', '1')->orderBy('sort_order', 'asc')->get();
         $featuresList = SubscriptionFeaturesListVendor::where('status', 1)->get();
-        $active_subscription = SubscriptionInvoicesVendor::with(['plan', 'features.feature'])
+        $active_subscription = SubscriptionInvoicesVendor::with(['plan', 'features.feature', 'status'])
                             ->where('vendor_id', $id)
-                            ->orderBy('end_date', 'desc')->first();
+                            ->orderBy('end_date', 'desc')
+                            ->orderBy('id', 'desc')->first();
         // $active_subscription_plan_ids = array();
         // foreach($active_subscription as $subscription){
         //     $active_subscription_plan_ids[] = $active_subscription->subscription_id;
@@ -110,6 +111,7 @@ class VendorSubscriptionController extends BaseController
         $last_subscription = SubscriptionInvoicesVendor::with(['plan', 'features.feature'])
             ->where('vendor_id', $id)
             ->where('subscription_id', $subscription_plan->id)
+            ->where('status_id', 2)
             ->orderBy('end_date', 'desc')->first();
         if( ($vendor) && ($subscription_plan) ){
             $subscription_invoice = new SubscriptionInvoicesVendor;
@@ -117,7 +119,7 @@ class VendorSubscriptionController extends BaseController
             $subscription_invoice->subscription_id = $subscription_plan->id;
             $subscription_invoice->slug = strtotime(Carbon::now()).'_'.$slug;
             $subscription_invoice->payment_option_id = $request->payment_option_id;
-            // $subscription_invoice->status_id = 2;
+            $subscription_invoice->status_id = ($subscription_plan->on_request == 1) ? (($last_subscription) ? 2 : 1) : 2;
             $subscription_invoice->frequency = $subscription_plan->frequency;
             $subscription_invoice->payment_option_id = $request->payment_option_id;
             $subscription_invoice->transaction_reference = $request->transaction_id;
@@ -168,6 +170,11 @@ class VendorSubscriptionController extends BaseController
                     SubscriptionInvoiceFeaturesVendor::insert($subscription_invoice_features);
                 }
                 $message = 'Your subscription has been activated successfully.';
+                if($subscription_plan->on_request == 1){
+                    if(empty($last_subscription)){
+                        $message = 'You have successfully purchased a subscription. Your request is under processing.';
+                    }
+                }
                 Session::put('success', $message);
                 return $this->successResponse('', $message);
             }
@@ -190,6 +197,7 @@ class VendorSubscriptionController extends BaseController
         $active_subscription = SubscriptionInvoicesVendor::with('plan')
                             ->where('slug', $slug)
                             ->where('vendor_id', $id)
+                            ->where('status_id', 2)
                             ->orderBy('end_date', 'desc')->first();
         if($active_subscription){
             $active_subscription->cancelled_at = $active_subscription->end_date;
