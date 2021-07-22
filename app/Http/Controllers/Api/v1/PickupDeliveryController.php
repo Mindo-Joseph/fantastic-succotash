@@ -570,7 +570,7 @@ class PickupDeliveryController extends BaseController{
                 $cart_detail['new_amount'] = 0.00;
             }
             if($cart_detail->promo_type_id == 1){ 
-                $cart_detail['new_amount'] = ($request->amount * $cart_detail->amount/100);
+                $cart_detail['new_amount'] = ($request->amount * ($cart_detail->amount/100));
                 if($cart_detail['new_amount'] < 0)
                 $cart_detail['new_amount'] = 0.00;
             }
