@@ -1,26 +1,20 @@
 <?php
 
 namespace App\Http\Controllers\Front;
-
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category};
+use Auth;
+use Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Session;
-use Auth;
-
-
-class ProductController extends FrontController
-{
+use App\Http\Controllers\Front\FrontController;
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category};
+class ProductController extends FrontController{
     private $field_status = 2;
-
     /**
      * Display product By Id
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $domain = '', $url_slug)
-    {
+    public function index(Request $request, $domain = '', $url_slug){
         $user = Auth::user();
         $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
@@ -40,7 +34,6 @@ class ProductController extends FrontController
                 }
             }
         }
-
         $p_id = $product->id;
         $product = Product::with([
             'variant' => function ($sel) {
@@ -87,9 +80,6 @@ class ProductController extends FrontController
             ->firstOrFail();
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         $product->related_products = $this->metaProduct($langId, $clientCurrency->doller_compare, 'relate', $product->related);
-        foreach ($product->related_products as $key => $related_product) {
-            // pr($related_product->toArray());die;
-        }
         foreach ($product->variant as $key => $value) {
             if(isset($product->variant[$key])){
             $product->variant[$key]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : '1.00';
@@ -112,13 +102,19 @@ class ProductController extends FrontController
                 $is_inwishlist_btn = $category_detail ? $category_detail->show_wishlist : 0;
             }
         }
-        // $cart = Cart::where('user_id', $user->id)->first();
-        // $quantity = 1;
-        // if($cart){
-        //     $cart_product = CartProduct::where('product_id', $p_id)->where('cart_id', $cart->id)->first();
-        //     if($cart_product){ $quantity = $cart_product->quantity;}
-        // }
-        return view('frontend.product')->with(['product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn]);
+
+        $availableSet = ProductVariantSet::where('product_id', $p_id)->get();
+        $sets = array();
+        foreach($availableSet->groupBy('product_variant_id') as $avSets){
+            $variant_type_id = array();
+            $variant_option_id = array();
+            foreach($avSets as $avSet){
+                $variant_type_id[] = $avSet->variant_type_id;
+                $variant_option_id[] = $avSet->variant_option_id;
+            }
+            $sets[] = ['variant_types' => $variant_type_id, 'variant_options' => $variant_option_id];
+        }
+        return view('frontend.product')->with(['sets' => $sets, 'product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn]);
     }
     public function metaProduct($langId, $multiplier, $for = 'relate', $productArray = []){
         if(empty($productArray)){
@@ -163,14 +159,12 @@ class ProductController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function getVariantData(Request $request, $domain = '', $sku)
-    {
+    public function getVariantData(Request $request, $domain = '', $sku){
         $product = Product::select('id')->where('sku', $sku)->firstOrFail();
         $pv_ids = array();
         if ($request->has('options') && !empty($request->options)) {
             foreach ($request->options as $key => $value) {
                 $newIds = array();
-
                 $product_variant = ProductVariantSet::where('variant_type_id', $request->variants[$key])
                     ->where('variant_option_id', $request->options[$key]);
 
@@ -192,11 +186,19 @@ class ProductController extends FrontController
             ->where('id', $pv_ids[0])->first();
         if ($variantData) {
             $variantData->productPrice = Session::get('currencySymbol') . $variantData->price * $clientCurrency->doller_compare;
-            return response()->json(array('success' => true, 'result' => $variantData->toArray()));
+            $availableSet = ProductVariantSet::where('product_id', $product->id)->get();
+            $sets = array();
+            foreach($availableSet->groupBy('product_variant_id') as $avSets){
+                $variant_type_id = array();
+                $variant_option_id = array();
+                foreach($avSets as $avSet){
+                    $variant_type_id[] = $avSet->variant_type_id;
+                    $variant_option_id[] = $avSet->variant_option_id;
+                }
+                $sets[] = ['variant_types' => $variant_type_id, 'variant_options' => $variant_option_id];
+            }
+            return response()->json(array('success' => true, 'result' => $variantData->toArray(), 'set' => $sets));
         }
-
         return response()->json(array('error' => true, 'result' => NULL));
     }
-
-  
 }

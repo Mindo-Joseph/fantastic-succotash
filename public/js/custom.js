@@ -112,22 +112,39 @@ $(document).ready(function() {
         $.ajax({
             type: "get",
             dataType: "json",
-            url: subscription_payment_options_url.replace(":id", sub_id),
+            url: check_active_subscription_url.replace(":id", sub_id),
             success: function(response) {
                 if(response.status == "Success"){
-                    $("#subscription_payment #subscription_title").html(response.sub_plan.title);
-                    $("#subscription_payment #subscription_price").html('$' + response.sub_plan.price);
-                    $("#subscription_payment #subscription_id").val(sub_id);
-                    $("#subscription_payment #subscription_amount").val(response.sub_plan.price);
-                    $("#subscription_payment #subscription_payment_methods").html('');
-                    let payment_method_template = _.template($('#payment_method_template').html());
-                    $("#subscription_payment #subscription_payment_methods").append(payment_method_template({payment_options: response.payment_options}));
-                    $("#subscription_payment").modal("show");
-                    stripeInitialize();
+                    $.ajax({
+                        type: "get",
+                        dataType: "json",
+                        url: subscription_payment_options_url.replace(":id", sub_id),
+                        success: function(response) {
+                            if(response.status == "Success"){
+                                $("#subscription_payment #subscription_title").html(response.sub_plan.title);
+                                $("#subscription_payment #subscription_price").html('$' + response.sub_plan.price);
+                                $("#subscription_payment #features_list").html(response.sub_plan.features);
+                                $("#subscription_payment #subscription_id").val(sub_id);
+                                $("#subscription_payment #subscription_amount").val(response.sub_plan.price);
+                                $("#subscription_payment #subscription_payment_methods").html('');
+                                let payment_method_template = _.template($('#payment_method_template').html());
+                                $("#subscription_payment #subscription_payment_methods").append(payment_method_template({payment_options: response.payment_options}));
+                                $("#subscription_payment").modal("show");
+                                stripeInitialize();
+                            }
+                        },error: function(error){
+                            var response = $.parseJSON(error.responseText);
+                            let error_messages = response.message;
+                            $("#error_response .message_body").html(error_messages);
+                            $("#error_response").modal("show");
+                        }
+                    });
                 }
             },error: function(error){
                 var response = $.parseJSON(error.responseText);
                 let error_messages = response.message;
+                $("#error_response .message_body").html(error_messages);
+                $("#error_response").modal("show");
             }
         });
     });
@@ -497,8 +514,8 @@ $(document).ready(function() {
                 },
                 error: function(error){
                     var response = $.parseJSON(error.responseText);
-                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                    $(".topup_wallet_confirm").removeAttr("disabled");
+                    success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
+                    $(".subscription_confirm_btn").removeAttr("disabled");
                 }
             });
         }else{

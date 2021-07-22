@@ -9,7 +9,6 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('dispatch-pickup-delivery/{id?}', 'Front\DispatcherController@dispatchPickupDeliveryUpdate')->name('dispatch-pickup-delivery'); // pickup delivery update from dispatch
 	Route::get('demo', 'Front\CustomerAuthController@getTestHtmlPage');
 	Route::get('test/email', function(){
-  
 		$send_mail = 'test@yopmail.com';
 		// App\Jobs\SendRefferalCodeEmailJob::dispatch($send_mail);
 		dispatch(new App\Jobs\SendRefferalCodeEmailJob($send_mail));
@@ -45,8 +44,9 @@ Route::group(['middleware' => ['domain']], function () {
 	]);
 	Route::get('/search','Front\SearchController@search');
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
-	Route::get('extra-page/{slug}','Front\UserhomeController@getExtraPage')->name('extrapage');
+	Route::get('page/{slug}','Front\UserhomeController@getExtraPage')->name('extrapage');
 	Route::post('/homePageData','Front\UserhomeController@postHomePageData')->name('homePageData');
+	Route::post('/theme','Front\UserhomeController@setTheme')->name('config.update');
 	Route::post('/homepage','Front\UserhomeController@homepage')->name('homepage');
 	Route::post('getClientPreferences', 'Front\UserhomeController@getClientPreferences')->name('getClientPreferences');
 	Route::post('validateEmail','Front\CustomerAuthController@validateEmail')->name('validateEmail');
@@ -128,6 +128,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/subscription/select/{slug}', 'Front\UserSubscriptionController@selectSubscriptionPlan')->name('user.subscription.plan.select');
 	Route::post('user/subscription/purchase/{slug}', 'Front\UserSubscriptionController@purchaseSubscriptionPlan')->name('user.subscription.plan.purchase');
 	Route::post('user/subscription/cancel/{slug}', 'Front\UserSubscriptionController@cancelSubscriptionPlan')->name('user.subscription.plan.cancel');
+	Route::get('user/subscription/checkActive/{slug}', 'Front\UserSubscriptionController@checkActiveSubscription')->name('user.subscription.plan.checkActive');
 	 // Rating & review 
  	Route::group(['prefix' => 'rating'], function () {
 		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');

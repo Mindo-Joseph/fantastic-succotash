@@ -130,13 +130,11 @@ class OrderController extends FrontController
                 $user_subscription = SubscriptionInvoicesUser::with('features')
                     ->select('id', 'user_id', 'subscription_id')
                     ->where('user_id', $user->id)
-                    ->where('status_id', 2)
-                    ->where('end_date', '>', $now)->get();
+                    ->where('end_date', '>', $now)
+                    ->orderBy('end_date', 'desc')->first();
                 if($user_subscription){
-                    foreach($user_subscription as $subscription){
-                        foreach($subscription->features as $feature){
-                            $subscription_features[] = $feature->feature_id;
-                        }
+                    foreach($user_subscription->features as $feature){
+                        $subscription_features[] = $feature->feature_id;
                     }
                 }
             }

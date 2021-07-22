@@ -79,7 +79,7 @@
                         @if(!empty($variantSets) && count($variantSets) > 0)
                         @foreach($variantSets as $key => $sets)
                         <div class="collection-collapse-block border-0 open">
-                            <h3 class="collapse-block-title">{{$sets->title}}</h3>
+                            <h3 class="collapse-block-title">{{$sets->variantDetail->varcategory->cate->slug .' > '. $sets->title}}</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="collection-brand-filter">
                                     @if($sets->type == 2)
@@ -107,7 +107,6 @@
                                 </div>
                             </div>
                         </div>
-
                         @endforeach
                         @endif
                         <div class="collection-collapse-block border-0 open">
@@ -121,7 +120,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- side-bar single product slider start -->
                     <div class="theme-card">
                         <h5 class="title-border">new product</h5>
                         <div class="offer-slider slide-1">
@@ -148,9 +146,11 @@
                                         <a href="{{route('productDetail', $new['url_slug'])}}">
                                             <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                         </a>
-                                        <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                            {{ Session::get('currencySymbol').' '.(number_format($new['variant'][0]['price'] * $multiply,2))}}
-                                        </h4>
+                                        @if($new['inquiry_only'] == 0)
+                                            <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
+                                                {{ Session::get('currencySymbol').' '.(number_format($new['variant'][0]['price'] * $multiply,2))}}
+                                            </h4>
+                                        @endif
                                     </div>
                                 </div>
                                 @endforeach
@@ -311,12 +311,9 @@
                                                                     <a href="{{route('productDetail', $data->url_slug)}}">
                                                                         <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
                                                                     </a>
-                                                                    <h4>{{Session::get('currencySymbol').(number_format($data->variant[0]->price * $data->variant[0]->multiplier,2))}}</h4>
-                                                                    <!-- <ul class="color-variant">
-                                                                    <li class="bg-light0"></li>
-                                                                    <li class="bg-light1"></li>
-                                                                    <li class="bg-light2"></li>
-                                                                </ul> -->
+                                                                    @if($data['inquiry_only'] == 0)
+                                                                        <h4>{{Session::get('currencySymbol').(number_format($data->variant[0]->price * $data->variant[0]->multiplier,2))}}</h4>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </div>

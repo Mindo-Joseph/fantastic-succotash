@@ -40,12 +40,11 @@ class CartController extends FrontController
             $user_subscription = SubscriptionInvoicesUser::with('features')
                 ->select('id', 'user_id', 'subscription_id')
                 ->where('user_id', $user->id)
-                ->where('end_date', '>', $now)->get();
+                ->where('end_date', '>', $now)
+                ->orderBy('end_date', 'desc')->first();
             if($user_subscription){
-                foreach($user_subscription as $subscription){
-                    foreach($subscription->features as $feature){
-                        $subscription_features[] = $feature->feature_id;
-                    }
+                foreach($user_subscription->features as $feature){
+                    $subscription_features[] = $feature->feature_id;
                 }
             }
         }
@@ -356,13 +355,11 @@ class CartController extends FrontController
             $user_subscription = SubscriptionInvoicesUser::with('features')
                 ->select('id', 'user_id', 'subscription_id')
                 ->where('user_id', $user->id)
-                ->where('status_id', 2)
-                ->where('end_date', '>', $now)->get();
+                ->where('end_date', '>', $now)
+                ->orderBy('end_date', 'desc')->first();
             if($user_subscription){
-                foreach($user_subscription as $subscription){
-                    foreach($subscription->features as $feature){
-                        $subscription_features[] = $feature->feature_id;
-                    }
+                foreach($user_subscription->features as $feature){
+                    $subscription_features[] = $feature->feature_id;
                 }
             }
         }
@@ -479,7 +476,7 @@ class CartController extends FrontController
             }
             if(!empty($subscription_features)){
                 $total_discount_amount = $total_discount_amount + $total_subscription_discount;
-                $cart->total_subscription_discount = $total_subscription_discount;
+                $cart->total_subscription_discount = number_format($total_subscription_discount, 2);
             }
             $total_payable_amount = $total_payable_amount - $total_discount_amount;
             $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount - $total_taxable_amount), 2);
