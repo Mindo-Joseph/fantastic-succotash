@@ -19,7 +19,6 @@ class NomenclatureController extends BaseController
     public function store(Request $request){
         $this->validate($request, [
           'names.0' => 'required|string',
-          'loyalty_cards_names.0' => 'required|string',
         ]);
         NomenclatureTranslation::truncate();
         $language_ids = $request->language_ids;
@@ -40,6 +39,9 @@ class NomenclatureController extends BaseController
             }
         }
         if(count($request->loyalty_cards_names) > 0){
+            $this->validate($request, [
+              'loyalty_cards_names.0' => 'required|string',
+            ]);
             foreach ($request->loyalty_cards_names as $ke => $loyalty_cards_name) {
                 $nomenclature = NomenClature::where('label', 'Loyalty Cards')->first();
                 if($nomenclature){

@@ -89,20 +89,19 @@ $timezone = Auth::user()->timezone;
         </div>
         <div class="row mb-3">
             <div class="col-12">
-                <a href="{{route('user.profile')}}"><i class="fa fa-arrow-left mr-2" aria-hidden="true"></i> Back to
+                <a href="{{route('user.profile')}}"><i class="fa fa-arrow-left mr-2" aria-hidden="true"></i> Back To
                     Profile</a>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-3 profile-sidebar">
-                <!-- <div class="row">
-                    <div class="col-12">
-                    </div>
-                </div> -->
-                <div class="account-sidebar"><a class="popup-btn">my account</a></div>
+                <div class="account-sidebar"><a class="popup-btn">My Account</a></div>
                 <div class="dashboard-left">
-                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left"
-                                aria-hidden="true"></i> back</span></div>
+                    <div class="collection-mobile-back">
+                        <span class="filter-back">
+                            <i class="fa fa-angle-left" aria-hidden="true"></i> Back
+                        </span>
+                        </div>
                     @include('layouts.store/profile-sidebar')
                 </div>
             </div>
@@ -156,8 +155,6 @@ $timezone = Auth::user()->timezone;
         </div>
     </div>
 </section>
-
-<!-- Modal -->
 <div class="modal fade wallet_money" id="add-money" tabindex="-1" aria-labelledby="add-moneyLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -191,7 +188,6 @@ $timezone = Auth::user()->timezone;
     </div>
   </div>
 </div>
-
 <div class="modal fade" id="topup_wallet" tabindex="-1" aria-labelledby="topup_walletLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -206,7 +202,6 @@ $timezone = Auth::user()->timezone;
         @method('POST')
         <div class="modal-body pb-0">
             <div class="form-group">
-                <!-- <h5 class="text-17 mb-2 mt-0">Available Balance</h5> -->
                 <div class="text-36">$<span class="wallet_balance">@money(Auth::user()->balanceFloat)</span></div>
             </div>
             <div class="form-group">
@@ -266,20 +261,7 @@ $timezone = Auth::user()->timezone;
         <% }); %>
     <% } %>
 </script>
-<?php /* ?><script type="text/template" id="wallet_transactions_template">
-    <% _.each(wallet_transactions, function(transaction, k){ %>
-        <% let reason = JSON.parse(transaction->meta); %>
-        <tr>
-            <td><%= transaction->created_at %></td>
-            <td><%= reason[0] %></td>
-            <td class="text-right <%= (transaction->type == 'deposit') ? 'text-success' : ((transaction->type == 'deposit') ? 'text-danger' : '') %>">
-                <b>+$<%= transaction->amount %></b>
-            </td>
-        </tr>
-    <% }); %>
-</script><?php */ ?>
 @endsection
-
 @section('script')
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
@@ -289,18 +271,12 @@ $timezone = Auth::user()->timezone;
     var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
     var payment_option_list_url = "{{route('payment.option.list')}}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
-
-    // $(".table.wallet-transactions tbody").html('');
-    // let wallet_transactions_template = _.template($('#wallet_transactions_template').html());
-    // $(".table.wallet-transactions tbody").append(wallet_transactions_template({wallet_transactions: '{!! json_encode($user_transactions->toArray()) !!}' }));
-
     $('.verifyEmail').click(function() {
         verifyUser('email');
     });
     $('.verifyPhone').click(function() {
         verifyUser('phone');
     });
-
     function verifyUser($type = 'email') {
         ajaxCall = $.ajax({
             type: "post",
@@ -321,7 +297,6 @@ $timezone = Auth::user()->timezone;
             error: function(data) {},
         });
     }
-
     $(document).delegate(".custom_amount", "click", function(){
         let wallet_amount = $("#wallet_amount").val();
         let amount = $(this).text();
@@ -339,12 +314,10 @@ $timezone = Auth::user()->timezone;
         }
     });
 </script>
-
 <script>
     var loadFile = function(event) {
         var output = document.getElementById('output');
         output.src = URL.createObjectURL(event.target.files[0]);
     };
 </script>
-
 @endsection

@@ -1,5 +1,4 @@
 @extends('layouts.store', ['title' => 'Forgot Password'])
-
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {

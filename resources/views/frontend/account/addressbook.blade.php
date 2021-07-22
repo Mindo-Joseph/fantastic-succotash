@@ -1,5 +1,4 @@
 @extends('layouts.store', ['title' => 'Address Book'])
-
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -8,12 +7,9 @@
         padding-bottom: 20px;
     }
 </style>
-    
 @endsection
-
 @section('content')
-
- <header>
+<header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
@@ -58,7 +54,6 @@
         height: 100%;
     }
 </style>
-
 <section class="section-b-space">
     <div class="container">
         <div class="row">
@@ -96,12 +91,7 @@
                         <div class="page-title">
                             <h2>Address Book</h2>
                         </div>
-                        <!-- <div class="welcome-msg">
-                            <h5>Hello, {{ucwords(Auth::user()->name)}} !</h5>
-                            <p>Here are all your addresses</p>
-                        </div> -->
                         <div class="box-account box-info order-address">
-
                             <div class="row">
                                 <div class="col-xl-4 col-md-6 text-center mt-3">
                                     <a class="outer-box border-dashed d-flex align-items-center justify-content-center add_edit_address_btn" href="javascript:void(0)" data-toggle="modal" data-target="#add_edit_address">
@@ -136,37 +126,6 @@
                                     </div>
                                 @endforeach
                             </div>
-
-                            <!-- <div class="box-head">
-                                <h2></h2>
-                                <a href="{{route('addNewAddress')}}">Add new Address</a>
-                            </div> -->
-                            <?php /* ?><div class="row mb-3">
-                            @foreach($useraddress as $add)
-                                <div class="col-sm-6">
-                                    <div class="box">
-                                        <div class="box-title">
-                                            <h3 style="float: left;">Address</h3>
-                                            <span style="float: right;">
-                                            @if($add->is_primary == 0)
-                                            <a href="{{ route('setPrimaryAddress', $add->id) }}" class="mr-2">Set Primary</a> 
-                                            @endif
-                                            <a href="{{ route('deleteAddress', $add->id) }}" class="mr-2">Delete</a> 
-                                            <a href="{{ route('editAddress', $add->id) }}" class="mr-2">Edit</a>
-                                            </span>
-                                        </div>
-                                        <div class="box-content">
-                                            <h6>Address: {{$add->address}}</h6>
-                                            <h6>Street: {{$add->street}}</h6>
-                                            <h6>City: {{$add->city}}</h6>
-                                            <h6>State: {{$add->state}}</h6>
-                                            <h6>Country: {{$add->country  ? $add->country : ''}}</h6>
-                                            <h6>Pincode: {{$add->pincode}}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div><?php */ ?>
                         </div>
                     </div>
                 </div>
@@ -174,97 +133,6 @@
         </div>
     </div>
 </section>
-
-<!-- Add New Address Modal Start From Here -->
-<?php /* ?><div class="modal fade add_new_address" id="add-new-address" tabindex="-1" aria-labelledby="add-new-addressLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header border-bottom">
-        <h5 class="modal-title" id="add-new-addressLabel">Add New Address</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="outer-box">
-            <form action="" class="theme-form" method="post">@csrf
-                    <div class="form-row mb-0">
-                        <div class="col-md-6 mb-2">
-                            <label for="address">Address</label>
-                            <input type="text" class="form-control" value="{{old('address')}}" id="address" placeholder="Address" required="" name="address">
-                            @if($errors->first('address'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('address') }}</strong>
-                            </span>
-                            @endif
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label for="street">Street</label>
-                            <input type="text" class="form-control" id="street" placeholder="Street" required="" name="street" value="{{old('street')}}">
-                            @if($errors->first('street'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('street') }}</strong>
-                            </span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="form-row mb-0">
-                        <div class="col-md-6 mb-2">
-                            <label for="city">City</label>
-                            <input type="city" class="form-control" id="email" placeholder="City" required="" name="city" value="{{old('city')}}">
-                            @if($errors->first('city'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('city') }}</strong>
-                            </span>
-                            @endif
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label for="state">State</label>
-                            <input type="text" class="form-control" id="state" placeholder="State" required="" name="state" value="{{old('state')}}">
-                            @if($errors->first('state'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('state') }}</strong>
-                            </span>
-                            @endif
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label for="country">Country</label>
-                            <select name="country" id="country" class="form-control">
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label for="pincode">Pincode</label>
-                            <input type="text" class="form-control" id="pincode" placeholder="Pincode" required="" name="pincode" value="{{old('pincode')}}">
-                            @if($errors->first('pincode'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('pincode') }}</strong>
-                            </span>
-                            @endif
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label for="type">Address Type</label>
-                            <select name="type" id="type" class="form-control">
-                                <option value="1" selected>Home</option>
-                                <option value="2">Office</option>
-                                
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                        </div>
-                        
-                    </div>
-                </form>
-            </div>
-      </div>
-      <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-        <div class="col-md-12 mb-2"><button type="submit" class="btn btn-solid mt-3 w-100">Update Address</button></div>
-      </div>
-    </div>
-  </div>
-</div><?php */ ?>
-
-
 <div class="modal fade" id="removeAddressConfirmation" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_addressLabel">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -284,7 +152,6 @@
     </div>
   </div>
 </div>
-
 <script type="text/template" id="add_address_template">
     <div class="modal-header border-bottom">
         <h5 class="modal-title" id="addedit-addressLabel"><%= title %> Address</h5>
@@ -394,7 +261,6 @@
         </form>
     </div>
 </script>
-
 <div class="modal fade" id="add_edit_address" tabindex="-1" aria-labelledby="addedit-addressLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
@@ -402,7 +268,6 @@
     </div>
   </div>
 </div>
-
 <div class="modal fade pick-address" id="pick_address" tabindex="-1" aria-labelledby="pick-addressLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="background-color: rgba(0,0,0,0.8);">
   <div class="modal-dialog  modal-dialog-centered">
     <div class="modal-content">
@@ -429,9 +294,7 @@
     </div>
   </div>
 </div>
-
 @endsection
-
 @section('script')
 <script type="text/javascript">
     var user_store_address_url = "{{ route('address.store') }}";
@@ -506,11 +369,7 @@
             },
             success: function(response) {
                 var res = response.result;
-                
-            },
-            error: function (data) {
-                
-            },
+            }
         });
     }
 
@@ -527,7 +386,6 @@
         let address_id = $('#add_new_address_form #address_id').val();
         $.ajax({
             type: "post",
-            // dataType: "json",
             url: update_address_url.replace(':id', address_id),
             data: {
                 "city": city,
@@ -639,7 +497,5 @@
         }
       });
     }
-
 </script>
-
 @endsection

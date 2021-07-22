@@ -47,15 +47,6 @@
                     </span>
                 @enderror
             </div> 
-            <!-- <div class="col-lg-12">
-                <div class="form-group" id="phoneInputEdit">
-                    {!! Form::label('title', 'Phone Number',['class' => 'control-label']) !!}
-                    {!! Form::text('phone_number', $user->phone_number, ['class'=>'form-control', 'required' => 'required']) !!}
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                </div>
-            </div> -->
             <div class="col-lg-12">
                 <div class="form-group" id="descriptionInputEdit">
                     {!! Form::label('title', 'About Me',['class' => 'control-label']) !!}
