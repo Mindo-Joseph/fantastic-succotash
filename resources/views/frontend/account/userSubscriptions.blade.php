@@ -172,7 +172,7 @@
                                         </ul>
                                     </div>
                                     <div class="pricingtable-purchase">
-                                        @if($plan->id == $subscription->plan->id)
+                                        @if( (isset($subscription->plan->id)) && ($plan->id == $subscription->plan->id) )
                                             <button class="btn btn-solid black-btn disabled w-100">Subscribed</button>
                                         @else
                                             <button class="btn btn-solid w-100 subscribe_btn" data-id="{{ $plan->slug }}">Subscribe</button>
@@ -254,11 +254,11 @@
         <div class="modal-body pb-0">
             <div class="form-group">
                 <h5 class="text-17 mb-2" id="subscription_title"></h5>
-                <div class="text-36 mb-2"><span id="subscription_price"></span></div>
+                <div class="mb-2"><span id="subscription_price"></span> / <span id="subscription_frequency"></span></div>
             </div>
             <div class="form-group">
-                <div class="mt-2">Features included:
-                    <div id="features_list"></div>
+                <div class="text-17 mt-2">Features included:
+                    <div class="mt-2" id="features_list"></div>
                 </div>
             </div>
             <hr class="mb-1" />
@@ -271,7 +271,7 @@
         </div>
         <div class="modal-footer d-block text-center">
             <div class="row">
-                <div class="col-sm-6 pl-sm-0 pr-sm-1"><button type="button" class="btn btn-block btn-solid mt-2 subscription_confirm_btn">Buy Now</button></div>
+                <div class="col-sm-6 pl-sm-0 pr-sm-1"><button type="button" class="btn btn-block btn-solid mt-2 subscription_confirm_btn">Pay</button></div>
                 <div class="col-sm-6 pr-sm-0 pl-sm-1"><button type="button" class="btn btn-block btn-solid mt-2" data-dismiss="modal">Cancel</button></div>
             </div>
         </div>

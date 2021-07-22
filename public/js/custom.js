@@ -123,12 +123,16 @@ $(document).ready(function() {
                             if(response.status == "Success"){
                                 $("#subscription_payment #subscription_title").html(response.sub_plan.title);
                                 $("#subscription_payment #subscription_price").html('$' + response.sub_plan.price);
+                                $("#subscription_payment #subscription_frequency").html(response.sub_plan.frequency);
                                 $("#subscription_payment #features_list").html(response.sub_plan.features);
                                 $("#subscription_payment #subscription_id").val(sub_id);
                                 $("#subscription_payment #subscription_amount").val(response.sub_plan.price);
                                 $("#subscription_payment #subscription_payment_methods").html('');
                                 let payment_method_template = _.template($('#payment_method_template').html());
                                 $("#subscription_payment #subscription_payment_methods").append(payment_method_template({payment_options: response.payment_options}));
+                                if(response.payment_options == ''){
+                                    $("#subscription_payment .subscription_confirm_btn").hide();
+                                }
                                 $("#subscription_payment").modal("show");
                                 stripeInitialize();
                             }
@@ -150,27 +154,27 @@ $(document).ready(function() {
     });
     $(document).delegate(".subscription_confirm_btn", "click", function(){
         var _this = $(".subscription_confirm_btn");
+        _this.attr("disabled", true);
         var selected_option = $("input[name='subscription_payment_method']:checked");
         var payment_option_id = selected_option.data("payment_option_id");
         if( (selected_option.length > 0) && (payment_option_id > 0) ){
             if( payment_option_id == 4 ){
                 stripe.createToken(card).then(function(result) {
-                    $("#card_last_four_digit").val(result.token.card.last4);
-                    $("#card_expiry_month").val(result.token.card.exp_month);
-                    $("#card_expiry_year").val(result.token.card.exp_year);
                     if (result.error) {
                         $('#stripe_card_error').html(result.error.message);
                         _this.attr("disabled", false);
                     } else {
-                        _this.attr("disabled", true);
+                        $("#card_last_four_digit").val(result.token.card.last4);
+                        $("#card_expiry_month").val(result.token.card.exp_month);
+                        $("#card_expiry_year").val(result.token.card.exp_year);
                         paymentViaStripe(result.token.id, '', payment_option_id);
                     }
                 });
             }else{
-                _this.attr("disabled", true);
                 paymentViaPaypal('', payment_option_id);
             }
         }else{
+            _this.attr("disabled", false);
             success_error_alert('error', 'Please select any payment option', "#subscription_payment .payment_response");
         }
     });

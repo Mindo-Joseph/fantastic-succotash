@@ -22,9 +22,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-3 collection-filter">
-                    <!-- side-bar banner start start -->
                     <div class="theme-card">
-                        <h5 class="title-border">new product</h5>
+                        <h5 class="title-border">{{__('New Product')}}</h5>
                         <div class="offer-slider slide-1">
                             @if(!empty($newProducts) && count($newProducts) > 0)
                                 @foreach($newProducts as $newProds)
@@ -68,14 +67,13 @@
                             <div class="col-sm-12">
                                 <div class="top-banner-wrapper text-center">
                                     @if(!empty($category->image))
-                                    <div class="common-banner"><img alt="" src="{{$category->image['proxy_url'] . '1000/200' . $category->image['image_path']}}" class="img-fluid blur-up lazyload"></div>
+                                        <div class="common-banner"><img alt="" src="{{$category->image['proxy_url'] . '1000/200' . $category->image['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
                                     <div class="top-banner-content small-section">
                                         <h4>{{ (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug }}</h4>
                                         {{--@if(!empty($category->childs) && count($category->childs) > 0)
                                             <div class="row">
                                                 <div class="col-12">
-                                                    
                                                     <div class="slide-6 no-arrow">
                                                         @foreach($category->childs->toArray() as $cate)
                                                         <div class="category-block">
@@ -156,7 +154,7 @@
                                                     </div>
                                                     @endforeach
                                                 @else
-                                                    <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">Details Not Available</h5></div>
+                                                    <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">{{__('Details Not Available')}}</h5></div>
                                                 @endif
                                             </div>
                                         </div>

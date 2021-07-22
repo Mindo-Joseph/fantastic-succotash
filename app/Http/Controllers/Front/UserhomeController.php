@@ -36,7 +36,9 @@ class UserhomeController extends FrontController{
         $language_id = Session::get('customerLanguage');
         $client_preferences = ClientPreference::first();
         $navCategories = $this->categoryNav($language_id);
-        $page_detail = Page::with('primary')->where('slug', $request->slug)->firstOrFail();
+        $page_detail = Page::with(['translations' => function($q) {
+                        $q->where('language_id', session()->get('customerLanguage'));
+                    }])->where('slug', $request->slug)->firstOrFail();
         $vendor_registration_documents = VendorRegistrationDocument::get();
         return view('frontend.extrapage', compact('page_detail', 'navCategories','client_preferences', 'user', 'vendor_registration_documents'));
     }

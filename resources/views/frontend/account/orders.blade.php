@@ -64,9 +64,9 @@ $timezone = Auth::user()->timezone;
     <div class="container">
         <div class="row">
             <div class="col-lg-3">
-                <div class="account-sidebar"><a class="popup-btn">My account</a></div>
+                <div class="account-sidebar"><a class="popup-btn">{{ __('My Account') }}</a></div>
                 <div class="dashboard-left">
-                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i> back</span></div>
+                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}</span></div>
                     @include('layouts.store/profile-sidebar')
                 </div>
             </div>
@@ -74,24 +74,24 @@ $timezone = Auth::user()->timezone;
                 <div class="dashboard-right">
                     <div class="dashboard">
                         <div class="page-title">
-                            <h2>Orders</h2>
+                            <h2>{{__('Orders')}}</h2>
                         </div>
                         <div class="welcome-msg">
-                            <h5>Here are all your previous orders !</h5>
+                            <h5>{{__('Here are all your previous orders')}}</h5>
                         </div>
                         <div class="row" id="orders_wrapper">
                             <div class="col-sm-12 col-lg-12 tab-product pt-3">
                                 <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link {{ ((Request::query('pageType') === null) || (Request::query('pageType') == 'activeOrders')) ? 'active show' : '' }}" id="active-orders-tab" data-toggle="tab" href="#active-orders" role="tab" aria-selected="true"><i class="icofont icofont-ui-home"></i>Active Orders</a>
+                                        <a class="nav-link {{ ((Request::query('pageType') === null) || (Request::query('pageType') == 'activeOrders')) ? 'active show' : '' }}" id="active-orders-tab" data-toggle="tab" href="#active-orders" role="tab" aria-selected="true"><i class="icofont icofont-ui-home"></i>{{__('Active Orders')}}</a>
                                         <div class="material-border"></div>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link {{ (Request::query('pageType') == 'pastOrders') ? 'active show' : '' }}" id="past_order-tab" data-toggle="tab" href="#past_order" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Past Orders</a>
+                                        <a class="nav-link {{ (Request::query('pageType') == 'pastOrders') ? 'active show' : '' }}" id="past_order-tab" data-toggle="tab" href="#past_order" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>{{__('Past Orders')}}</a>
                                         <div class="material-border"></div>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link {{ (Request::query('pageType') == 'returnOrders') ? 'active show' : '' }}" id="return_order-tab" data-toggle="tab" href="#return_order" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Return Requests</a>
+                                        <a class="nav-link {{ (Request::query('pageType') == 'returnOrders') ? 'active show' : '' }}" id="return_order-tab" data-toggle="tab" href="#return_order" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>{{__('Return Requests')}}</a>
                                         <div class="material-border"></div>
                                     </li>
                                 </ul>
@@ -103,10 +103,10 @@ $timezone = Auth::user()->timezone;
                                             @foreach($activeOrders as $key => $order)
                                             <div class="col-12">
                                                 <div class="row no-gutters order_head">
-                                                    <div class="col-md-3"><h4>Order Number</h4></div>
-                                                    <div class="col-md-3"><h4>Date & Time</h4></div>
-                                                    <div class="col-md-3"><h4>Customer Name</h4></div>
-                                                    <div class="col-md-3"><h4>Address</h4></div>
+                                                    <div class="col-md-3"><h4>{{__('Order Number')}}</h4></div>
+                                                    <div class="col-md-3"><h4>{{__('Date & Time')}}</h4></div>
+                                                    <div class="col-md-3"><h4>{{__('Customer Name')}}</h4></div>
+                                                    <div class="col-md-3"><h4>{{__('Address')}}</h4></div>
                                                 </div>
                                                 <div class="row no-gutters order_data">
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
@@ -138,7 +138,7 @@ $timezone = Auth::user()->timezone;
                                                                 <span class="left_arrow pulse"></span>
                                                                 <div class="row">
                                                                     <div class="col-5 col-sm-3">
-                                                                        <h5 class="m-0">Order Status</h5>
+                                                                        <h5 class="m-0">{{__('Order Status')}}</h5>
                                                                         <ul class="status_box mt-3 pl-0">
                                                                         @if(!empty($vendor->order_status))
                                                                             <li>
@@ -163,7 +163,6 @@ $timezone = Auth::user()->timezone;
                                                                                     <li class="text-center">
                                                                                         <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
                                                                                         <span class="item_no position-absolute">x{{$product->quantity}}</span>
-                                                                                        <?php /* ?><label class="items_name">{{$product->product_name}}</label><?php */ ?>
                                                                                         <label class="items_price">${{$product->price}}</label>
                                                                                     </li>
                                                                                     @php
@@ -178,19 +177,19 @@ $timezone = Auth::user()->timezone;
                                                                     <div class="col-md-5 mt-md-0 mt-sm-2">
                                                                         <ul class="price_box_bottom m-0 p-0">
                                                                             <li class="d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Product Total</label>
+                                                                                <label class="m-0">{{__('Product Total')}}</label>
                                                                                 <span>$@money($product_total_count)</span>
                                                                             </li>
                                                                             <li class="d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Coupon Discount</label>
+                                                                                <label class="m-0">{{__('Coupon Discount')}}</label>
                                                                                 <span>$@money($vendor->discount_amount)</span>
                                                                             </li>
                                                                             <li class="d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Delivery Fee</label>
+                                                                                <label class="m-0">{{__('Delivery Fee')}}</label>
                                                                                 <span>$@money($vendor->delivery_fee)</span>
                                                                             </li>
                                                                             <li class="grand_total d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Amount</label>
+                                                                                <label class="m-0">{{__('Amount')}}</label>
                                                                                 @php
                                                                                     $product_subtotal_amount = $product_total_count - $vendor->discount_amount + $vendor->delivery_fee;
                                                                                     $subtotal_order_price += $product_subtotal_amount;
@@ -208,23 +207,23 @@ $timezone = Auth::user()->timezone;
                                                         <div class="card-box p-2 mb-0 h-100">
                                                             <ul class="price_box_bottom m-0 pl-0 pt-1">
                                                                 <li class="d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Sub Total</label>
+                                                                    <label class="m-0">{{__('Sub Total')}}</label>
                                                                     <span>$@money($subtotal_order_price)</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Wallet</label>
+                                                                    <label class="m-0">{{__('Wallet')}}</label>
                                                                     <span>--</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Loyalty</label>
+                                                                    <label class="m-0">{{__('Loyalty')}}</label>
                                                                     <span>{{$order->loyality_points_used ? $order->loyality_points_used : 0}}</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Tax</label>
+                                                                    <label class="m-0">{{__('Tax')}}</label>
                                                                     <span>$@money($total_tax_order_price)</span>
                                                                 </li>
                                                                 <li class="grand_total d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Total Payable</label>
+                                                                    <label class="m-0">{{__('Total Payable')}}</label>
                                                                     <span>$@money($total_order_price + $subtotal_order_price + $total_tax_order_price)</span>
                                                                 </li>
                                                             </ul>
@@ -236,7 +235,7 @@ $timezone = Auth::user()->timezone;
                                             @else
                                                 <div class="col-12">
                                                     <div class="no-gutters order_head">
-                                                        <h4 class="text-center">No Active Order Found</h4>
+                                                        <h4 class="text-center">{{__('No Active Order Found')}}</h4>
                                                     </div>
                                                 </div>
                                             @endif
@@ -250,10 +249,10 @@ $timezone = Auth::user()->timezone;
                                             @foreach($pastOrders as $key => $order)
                                             <div class="col-12">
                                                 <div class="row no-gutters order_head">
-                                                    <div class="col-md-3"><h4>Order Number</h4></div>
-                                                    <div class="col-md-3"><h4>Date & Time</h4></div>
-                                                    <div class="col-md-3"><h4>Customer Name</h4></div>
-                                                    <div class="col-md-3"><h4>Address</h4></div>
+                                                    <div class="col-md-3"><h4>{{__('Order Number')}}</h4></div>
+                                                    <div class="col-md-3"><h4>{{__('Date & Time')}}</h4></div>
+                                                    <div class="col-md-3"><h4>{{__('Customer Name')}}</h4></div>
+                                                    <div class="col-md-3"><h4>{{__('Address')}}</h4></div>
                                                 </div>
                                                 <div class="row no-gutters order_data">
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
@@ -285,7 +284,7 @@ $timezone = Auth::user()->timezone;
                                                                 <span class="left_arrow pulse"></span>
                                                                 <div class="row">
                                                                     <div class="col-5 col-sm-3">
-                                                                        <h5 class="m-0">Order Status</h5>
+                                                                        <h5 class="m-0">{{__('Order Status')}}</h5>
                                                                         <ul class="status_box mt-3 pl-0">
                                                                         @if(!empty($vendor->order_status))
                                                                             <li>
@@ -327,26 +326,26 @@ $timezone = Auth::user()->timezone;
                                                                     <div class="col-md-5 mt-md-0 mt-sm-2">
                                                                         <ul class="price_box_bottom m-0 p-0">
                                                                             <li class="d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Product Total</label>
+                                                                                <label class="m-0">{{__('Product Total')}}</label>
                                                                                 <span>$@money($product_total_count)</span>
                                                                             </li>
                                                                             <li class="d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Coupon Discount</label>
+                                                                                <label class="m-0">{{__('Coupon Discount')}}</label>
                                                                                 <span>$@money($vendor->discount_amount)</span>
                                                                             </li>
                                                                             <li class="d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Delivery Fee</label>
+                                                                                <label class="m-0">{{__('Delivery Fee')}}</label>
                                                                                 <span>$@money($vendor->delivery_fee)</span>
                                                                             </li>
                                                                             <li class="grand_total d-flex align-items-center justify-content-between">
-                                                                                <label class="m-0">Amount</label>
+                                                                                <label class="m-0">{{__('Amount')}}</label>
                                                                                 @php
                                                                                     $product_subtotal_amount = $product_total_count - $vendor->discount_amount + $vendor->delivery_fee;
                                                                                     $subtotal_order_price += $product_subtotal_amount;
                                                                                 @endphp
                                                                                 <span>$@money($product_subtotal_amount)</span>
                                                                             </li>
-                                                                            <button class="return-order-product btn btn-solid" data-id="{{$order->id??0}}"  data-vendor_id="{{$vendor->vendor_id??0}}"><td class="text-center" colspan="3">Return</button>
+                                                                            <button class="return-order-product btn btn-solid" data-id="{{$order->id??0}}"  data-vendor_id="{{$vendor->vendor_id??0}}"><td class="text-center" colspan="3">{{__('Return')}}</button>
                                                                         </ul>
                                                                     </div>
                                                                 </div>
@@ -358,23 +357,23 @@ $timezone = Auth::user()->timezone;
                                                         <div class="card-box p-2 mb-0 h-100">
                                                             <ul class="price_box_bottom m-0 pl-0 pt-1">
                                                                 <li class="d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Sub Total</label>
+                                                                    <label class="m-0">{{__('Sub Total')}}</label>
                                                                     <span>$@money($subtotal_order_price)</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Wallet</label>
+                                                                    <label class="m-0">{{__('Wallet')}}</label>
                                                                     <span>--</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Loyalty</label>
+                                                                    <label class="m-0">{{__('Loyalty')}}</label>
                                                                     <span>{{$order->loyality_points_used ? $order->loyality_points_used : 0}}</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Tax</label>
+                                                                    <label class="m-0">{{__('Tax')}}</label>
                                                                     <span>$@money($total_tax_order_price)</span>
                                                                 </li>
                                                                 <li class="grand_total d-flex align-items-center justify-content-between">
-                                                                    <label class="m-0">Total Payable</label>
+                                                                    <label class="m-0">{{__('Total Payable')}}</label>
                                                                     <span>$@money($total_order_price + $subtotal_order_price + $total_tax_order_price)</span>
                                                                 </li>
                                                             </ul>
@@ -386,15 +385,13 @@ $timezone = Auth::user()->timezone;
                                             @else
                                                 <div class="col-12">
                                                     <div class="no-gutters order_head">
-                                                        <h4 class="text-center">No Past Order Found</h4>
+                                                        <h4 class="text-center">{{__('No Past Order Found')}}</h4>
                                                     </div>
                                                 </div>
                                             @endif
-                                            
                                         </div>
                                         {{ $pastOrders->appends(['pageType' => 'pastOrders'])->links() }}
                                     </div>
-
                                     <div class="tab-pane fade return-order {{ (Request::query('pageType') == 'returnOrders') ? 'active show' : '' }}" id="return_order" role="tabpanel"
                                     aria-labelledby="return_order-tab">
                                     <div class="row">
@@ -403,10 +400,10 @@ $timezone = Auth::user()->timezone;
                                         @if($order->orderStatusVendor->isNotEmpty())
                                         <div class="col-12">
                                             <div class="row no-gutters order_head">
-                                                <div class="col-md-3"><h4>Order Number</h4></div>
-                                                <div class="col-md-3"><h4>Date & Time</h4></div>
-                                                <div class="col-md-3"><h4>Customer Name</h4></div>
-                                                <div class="col-md-3"><h4>Address</h4></div>
+                                                <div class="col-md-3"><h4>{{__('Order Number')}}</h4></div>
+                                                <div class="col-md-3"><h4>{{__('Date & Time')}}</h4></div>
+                                                <div class="col-md-3"><h4>{{__('Customer Name')}}</h4></div>
+                                                <div class="col-md-3"><h4>{{__('Address')}}</h4></div>
                                             </div>
                                             <div class="row no-gutters order_data">
                                                 <div class="col-md-3">#{{$order->order_number}}</div>
@@ -433,98 +430,93 @@ $timezone = Auth::user()->timezone;
                                                         @php
                                                             $product_total_count = $product_subtotal_amount = $product_taxable_amount = 0;
                                                         @endphp
-                                                       
-                                                                <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
-                                                                    <span class="left_arrow pulse"></span>
-                                                                    <div class="row">
-                                                                        <div class="col-5 col-sm-3">
-                                                                            <h5 class="m-0"></h5>
-                                                                           
-                                                                        </div>
-                                                                        <div class="col-7 col-sm-4">
-                                                                            <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
-                                                                                @foreach($vendor->products as $product)
-                                                                                    @if($vendor->vendor_id == $product->vendor_id)
-                                                                                        @php
-                                                                                            $pro_rating = $product->productRating->rating??0;
-                                                                                        @endphp
-                                                                                        <li class="text-center">
-                                                                                            <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
-                                                                                            <span class="item_no position-absolute">x{{$product->quantity}}</span>
-                                                                                            <?php /* ?><label class="items_name">{{$product->product_name}}</label><?php */ ?>
-                                                                                            <label class="items_price">${{$product->price}}</label>
-                                                                                            <label class="rating-star add_edit_review" data-id="{{$product->productRating->id??0}}"  data-order_vendor_product_id="{{$product->id??0}}">
-                                                                                                <i class="fa fa-star{{ $pro_rating >= 1 ? '' : '-o' }}" ></i>
-                                                                                                <i class="fa fa-star{{ $pro_rating >= 2 ? '' : '-o' }}" ></i>
-                                                                                                <i class="fa fa-star{{ $pro_rating >= 3 ? '' : '-o' }}" ></i>
-                                                                                                <i class="fa fa-star{{ $pro_rating >= 4 ? '' : '-o' }}" ></i>
-                                                                                                <i class="fa fa-star{{ $pro_rating >= 5 ? '' : '-o' }}" ></i>
-                                                                                            </label>
-                                                                                           {{ __($product->productReturn->status??'') }}
-                                                                    
-                                                                                        </li>
-                                                                                        @php
-                                                                                            $product_total_count += $product->quantity * $product->price;
-                                                                                            $product_taxable_amount += $product->taxable_amount;
-                                                                                            $total_tax_order_price += $product->taxable_amount;
-                                                                                        @endphp
-                                                                                    @endif
-                                                                                @endforeach
-                                                                            </ul>
-                                                                        </div>
-                                                                        <div class="col-md-5 mt-md-0 mt-sm-2">
-                                                                            <ul class="price_box_bottom m-0 p-0">
-                                                                                <li class="d-flex align-items-center justify-content-between">
-                                                                                    <label class="m-0">Product Total</label>
-                                                                                    <span>$@money($product_total_count)</span>
-                                                                                </li>
-                                                                                <li class="d-flex align-items-center justify-content-between">
-                                                                                    <label class="m-0">Coupon Discount</label>
-                                                                                    <span>$@money($vendor->discount_amount)</span>
-                                                                                </li>
-                                                                                <li class="d-flex align-items-center justify-content-between">
-                                                                                    <label class="m-0">Delivery Fee</label>
-                                                                                    <span>$@money($vendor->delivery_fee)</span>
-                                                                                </li>
-                                                                                <li class="grand_total d-flex align-items-center justify-content-between">
-                                                                                    <label class="m-0">Amount</label>
-                                                                                    @php
-                                                                                        $product_subtotal_amount = $product_total_count - $vendor->discount_amount + $vendor->delivery_fee;
-                                                                                        $subtotal_order_price += $product_subtotal_amount;
-                                                                                        $total_order_price += $product_subtotal_amount + $total_tax_order_price;
-                                                                                    @endphp
-                                                                                    <span>$@money($product_subtotal_amount)</span>
-                                                                                </li>
-
-                                                                               
-                                                                            </ul>
-                                                                        </div>
-                                                                    </div>
+                                                        <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
+                                                            <span class="left_arrow pulse"></span>
+                                                            <div class="row">
+                                                                <div class="col-5 col-sm-3">
+                                                                    <h5 class="m-0"></h5>
                                                                 </div>
-                                                            
+                                                                <div class="col-7 col-sm-4">
+                                                                    <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
+                                                                        @foreach($vendor->products as $product)
+                                                                            @if($vendor->vendor_id == $product->vendor_id)
+                                                                                @php
+                                                                                    $pro_rating = $product->productRating->rating??0;
+                                                                                @endphp
+                                                                                <li class="text-center">
+                                                                                    <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
+                                                                                    <span class="item_no position-absolute">x{{$product->quantity}}</span>
+                                                                                    <label class="items_price">${{$product->price}}</label>
+                                                                                    <label class="rating-star add_edit_review" data-id="{{$product->productRating->id??0}}"  data-order_vendor_product_id="{{$product->id??0}}">
+                                                                                        <i class="fa fa-star{{ $pro_rating >= 1 ? '' : '-o' }}" ></i>
+                                                                                        <i class="fa fa-star{{ $pro_rating >= 2 ? '' : '-o' }}" ></i>
+                                                                                        <i class="fa fa-star{{ $pro_rating >= 3 ? '' : '-o' }}" ></i>
+                                                                                        <i class="fa fa-star{{ $pro_rating >= 4 ? '' : '-o' }}" ></i>
+                                                                                        <i class="fa fa-star{{ $pro_rating >= 5 ? '' : '-o' }}" ></i>
+                                                                                    </label>
+                                                                                   {{ __($product->productReturn->status??'') }}
+                                                                                </li>
+                                                                                @php
+                                                                                    $product_total_count += $product->quantity * $product->price;
+                                                                                    $product_taxable_amount += $product->taxable_amount;
+                                                                                    $total_tax_order_price += $product->taxable_amount;
+                                                                                @endphp
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="col-md-5 mt-md-0 mt-sm-2">
+                                                                    <ul class="price_box_bottom m-0 p-0">
+                                                                        <li class="d-flex align-items-center justify-content-between">
+                                                                            <label class="m-0">{{__('Product Total')}}</label>
+                                                                            <span>$@money($product_total_count)</span>
+                                                                        </li>
+                                                                        <li class="d-flex align-items-center justify-content-between">
+                                                                            <label class="m-0">{{__('Coupon Discount')}}</label>
+                                                                            <span>$@money($vendor->discount_amount)</span>
+                                                                        </li>
+                                                                        <li class="d-flex align-items-center justify-content-between">
+                                                                            <label class="m-0">{{__('Delivery Fee')}}</label>
+                                                                            <span>$@money($vendor->delivery_fee)</span>
+                                                                        </li>
+                                                                        <li class="grand_total d-flex align-items-center justify-content-between">
+                                                                            <label class="m-0">{{__('Amount')}}</label>
+                                                                            @php
+                                                                                $product_subtotal_amount = $product_total_count - $vendor->discount_amount + $vendor->delivery_fee;
+                                                                                $subtotal_order_price += $product_subtotal_amount;
+                                                                                $total_order_price += $product_subtotal_amount + $total_tax_order_price;
+                                                                            @endphp
+                                                                            <span>$@money($product_subtotal_amount)</span>
+                                                                        </li>
+
+                                                                       
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     @endforeach
                                                 </div>
                                                 <div class="col-md-3 mb-3 pl-lg-0">
                                                     <div class="card-box p-2 mb-0 h-100">
                                                         <ul class="price_box_bottom m-0 pl-0 pt-1">
                                                             <li class="d-flex align-items-center justify-content-between">
-                                                                <label class="m-0">Sub Total</label>
+                                                                <label class="m-0">{{('Sub Total')}}</label>
                                                                 <span>$@money($subtotal_order_price)</span>
                                                             </li>
                                                             <li class="d-flex align-items-center justify-content-between">
-                                                                <label class="m-0">Wallet</label>
+                                                                <label class="m-0">{{__('Wallet')}}</label>
                                                                 <span>--</span>
                                                             </li>
                                                             <li class="d-flex align-items-center justify-content-between">
-                                                                <label class="m-0">Loyalty</label>
+                                                                <label class="m-0">{{__('Loyalty')}}</label>
                                                                 <span>{{$order->loyality_points_used ? $order->loyality_points_used : 0}}</span>
                                                             </li>
                                                             <li class="d-flex align-items-center justify-content-between">
-                                                                <label class="m-0">Tax</label>
+                                                                <label class="m-0">{{__('Tax')}}</label>
                                                                 <span>$@money($total_tax_order_price)</span>
                                                             </li>
                                                             <li class="grand_total d-flex align-items-center justify-content-between">
-                                                                <label class="m-0">Total Payable</label>
+                                                                <label class="m-0">{{__('Total Payable')}}</label>
                                                                 <span>$@money($total_order_price)</span>
                                                             </li>
                                                         </ul>
@@ -537,21 +529,17 @@ $timezone = Auth::user()->timezone;
                                         @else
                                             <div class="col-12">
                                                 <div class="no-gutters order_head">
-                                                    <h4 class="text-center">No Return Requests</h4>
+                                                    <h4 class="text-center">{{__('No Return Requests')}}</h4>
                                                 </div>
                                             </div>
                                         @endif
-                                        
                                     </div>
                                     {{ $returnOrders->appends(['pageType' => 'returnOrders'])->links() }}
                                 </div>
                                 </div>
                             </div>  
                         </div>
-
-
                         <div class="box-account box-info">
-                          
                         </div>
                     </div>
                 </div>
@@ -559,13 +547,12 @@ $timezone = Auth::user()->timezone;
         </div>
     </div>
 </section>
-
 <!-- View Order details Modal -->
 <div class="modal fade order_detail" id="order-details" tabindex="-1" aria-labelledby="order-detailsLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header pb-2">
-        <h5 class="modal-title" id="order-detailsLabel">Order Details</h5>
+        <h5 class="modal-title" id="order-detailsLabel">{{__('Order Details')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

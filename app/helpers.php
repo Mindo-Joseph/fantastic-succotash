@@ -56,9 +56,11 @@ function generateOrderNo($length = 8){
     return $number;
 }
 function getNomenclatureName($searchTerm, $plural = true){
-    $result = Nomenclature::with('primary')->where('label', 'LIKE', "%{$searchTerm}%")->first();
+    $result = Nomenclature::with(['translations' => function($q) {
+                        $q->where('language_id', session()->get('customerLanguage'));
+                    }])->where('label', 'LIKE', "%{$searchTerm}%")->first();
     if($result){
-        $searchTerm = $result->primary ? $result->primary->name : ucfirst($searchTerm);
+        $searchTerm = $result->translations->count() != 0 ? $result->translations->first()->name : ucfirst($searchTerm);
     }
     return $plural ? $searchTerm : rtrim($searchTerm, 's');
 }
