@@ -44,36 +44,8 @@ class SubscriptionPlansVendorController extends BaseController
         $sub_plans = SubscriptionPlansVendor::with(['features.feature'])->orderBy('sort_order', 'asc')->get();
         $featuresList = SubscriptionFeaturesListVendor::where('status', 1)->get();
         $vendor_subscriptions = SubscriptionInvoicesVendor::where('status_id', 2)->groupBy('vendor_id')->get();
-        $pending_vendor_subscriptions = SubscriptionInvoicesVendor::with(['plan', 'vendor', 'features.feature'])->where('status_id', 1)->get();
-        if($pending_vendor_subscriptions){
-            foreach($pending_vendor_subscriptions as $plan){
-                $features = '';
-                if($plan->features->isNotEmpty()){
-                    $planFeaturesList = array();
-                    foreach($plan->features as $feature){
-                        $planFeaturesList[] = $feature->feature->title;
-                    }
-                    unset($plan->features);
-                    $features = implode(', ', $planFeaturesList);
-                }
-                $plan->features = $features;
-            }
-        }
-        $rejected_vendor_subscriptions = SubscriptionInvoicesVendor::with(['plan', 'vendor', 'features.feature'])->where('status_id', 4)->get();
-        if($rejected_vendor_subscriptions){
-            foreach($rejected_vendor_subscriptions as $plan){
-                $features = '';
-                if($plan->features->isNotEmpty()){
-                    $planFeaturesList = array();
-                    foreach($plan->features as $feature){
-                        $planFeaturesList[] = $feature->feature->title;
-                    }
-                    unset($plan->features);
-                    $features = implode(', ', $planFeaturesList);
-                }
-                $plan->features = $features;
-            }
-        }
+        $awaiting_approval_subscriptions_count = SubscriptionInvoicesVendor::with(['plan', 'vendor', 'features.feature'])->where('status_id', 1)->count();
+        $rejected_subscriptions_count = SubscriptionInvoicesVendor::with(['plan', 'vendor', 'features.feature'])->where('status_id', 4)->count();
         $subscribed_vendors_count = $vendor_subscriptions->count();
         $active_vendors = Vendor::where('status', 1)->count();
         $subscribed_vendors_percentage = ($subscribed_vendors_count / $active_vendors) * 100;
@@ -91,7 +63,7 @@ class SubscriptionPlansVendorController extends BaseController
                 $plan->features = $features;
             }
         }
-        return view('backend/subscriptions/subscriptionPlansVendor')->with(['features'=>$featuresList, 'subscription_plans'=>$sub_plans, 'subscribed_vendors_count'=>$subscribed_vendors_count, 'subscribed_vendors_percentage'=>$subscribed_vendors_percentage, 'pending_vendor_subscriptions'=>$pending_vendor_subscriptions, 'rejected_vendor_subscriptions'=>$rejected_vendor_subscriptions]);
+        return view('backend/subscriptions/subscriptionPlansVendor')->with(['features'=>$featuresList, 'subscription_plans'=>$sub_plans, 'subscribed_vendors_count'=>$subscribed_vendors_count, 'subscribed_vendors_percentage'=>$subscribed_vendors_percentage, 'awaiting_approval_subscriptions_count'=>$awaiting_approval_subscriptions_count, 'rejected_subscriptions_count'=>$rejected_subscriptions_count]);
     }
 
     /**
