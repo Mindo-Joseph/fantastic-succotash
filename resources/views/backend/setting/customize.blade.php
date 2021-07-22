@@ -203,7 +203,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-lg-5 col-lg-3 mb-3">
+        <div class="col-lg-3 mb-3">
             <div class="card-box mb-0 h-100 pb-1">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <h4 class="header-title mb-0">Social Media</h4>
@@ -254,7 +254,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-lg-3 mb-3">
+        <div class="col-lg-6 col-lg-3 mb-3">
             <form method="POST" class="h-100" action="{{route('nomenclature.store', Auth::user()->code)}}">
                 @csrf
                 <div class="card-box mb-0 h-100">
@@ -263,17 +263,42 @@
                         <button class="btn btn-info d-block" type="submit"> Save </button>
                     </div>
                     <p class="sub-header">View and update the naming</p>
-                    <div class="row mb-2">
-                        <div class="col-sm-12">
-                            <div class="form-group mb-3">
-                                <label for="custom_domain">Vendors</label>
-                                <input type="text" name="custom_domain" id="custom_domain" placeholder="xyz" class="form-control" value="{{ $nomenclature_value ? $nomenclature_value->value : ''}}">
-                                @if($errors->has('custom_domain'))
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('custom_domain') }}</strong>
-                                    </span>
-                                @endif
+                    <div class="table-responsive">
+                        <div class="row mb-2 flex-nowrap">
+                            @foreach($client_languages as $k => $client_language)
+                            <div class="col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label for="custom_domain">Vendors({{$client_language->langName}})</label>
+                                    <input type="hidden" name="language_ids[]" value="{{$client_language->langId}}">
+                                    <input type="text" name="names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 1)}}">
+                                    @if($k == 0)
+                                        @if($errors->has('names.0'))
+                                            <span class="text-danger" role="alert">
+                                                <strong>The primary language name field is required.</strong>
+                                            </span>
+                                        @endif
+                                    @endif
+                                </div>
                             </div>
+                            @endforeach
+                        </div>
+                        <div class="row mb-2 flex-nowrap">
+                            @foreach($client_languages as $k => $client_language)
+                            <div class="col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label for="custom_domain">Loyalty Cards({{$client_language->langName}})</label>
+                                    <input type="hidden" name="loyalty_cards_language_ids[]" value="{{$client_language->langId}}">
+                                    <input type="text" name="loyalty_cards_names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 2)}}">
+                                    @if($k == 0)
+                                        @if($errors->has('names.0'))
+                                            <span class="text-danger" role="alert">
+                                                <strong>The primary language name field is required.</strong>
+                                            </span>
+                                        @endif
+                                    @endif
+                                </div>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -309,8 +334,7 @@
                                 <option value="pinterest"> Pinterest </option>
                                 <option value="youtube"> Youtube </option>
                                 <option value="snapchat"> Snapchat </option>
-                                <option value="google-plus-g"> Google-plus-g </option>
-                                <option value="linkedin-in"> Linkedin-in </option>
+                                <option value="linkedin"> Linkedin-in </option>
                             </select>
                         </div>
                     </div>

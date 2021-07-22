@@ -143,15 +143,15 @@
                                     </div>
                                     <div class="displayProducts">
                                         <div class="product-wrapper-grid">
-                                            <div class="row margin-res">
+                                            <div class="row margin-res align-items-center">
                                             @if($listData->isNotEmpty())
                                                 @foreach($listData as $key => $data)
-                                                    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-xs-6">
-                                                        <div class="product-box">
+                                                    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-xs-6 mt-4">
+                                                        <div class="product-box m-0">
                                                             <div class="text-center">
                                                                 <a href="{{ $data->redirect_url }}">
                                                                     <?php //print_r($data->image);?>
-                                                                    <img width="100%" src="{{ $data->image['proxy_url'] }}150/150{{ $data->image['image_path'] }}" alt="">
+                                                                    <img width="100%" src="{{ $data->image['image_fit'] }}150/150{{ $data->image['image_path'] }}" alt="">
                                                                 </a>
                                                             </div>
                                                         </div>

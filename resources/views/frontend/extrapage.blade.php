@@ -184,7 +184,7 @@
                             <div class="form-row">
                                 <div class="col-12 checkbox-input">
                                     <input type="checkbox" id="html">
-                                    <label for="html">I accept the <a href="{{url('extra-page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and and have read the <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> Privacy Policy.</a></label>
+                                    <label for="html">I accept the <a href="{{url('page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and and have read the <a href="{{url('page/privacy-policy')}}" target="_blank"> Privacy Policy.</a></label>
                                 </div>
                             </div>
                             <button class="btn btn-solid mt-3 w-100" dir="ltr" data-style="expand-right" id="register_btn" type="button">
@@ -244,7 +244,7 @@
         }
         $(document).on('change', '[id^=input_file_logo_]', function(event){
             var rel = $(this).data('rel');
-            $('#plus_icon_'+rel).hide();
+            // $('#plus_icon_'+rel).hide();
             readURL(this, '#upload_logo_preview_'+rel);
         });
         $("#input_file_logo").change(function() {
@@ -330,9 +330,10 @@
                     $('#register_btn_loader').hide();
                     that.attr('disabled', false);
                     if (data.status == 'success') {
-                        $('img').attr('src', '');
                         $('input[type=file]').val('');
                         $("#vendor_signup_form")[0].reset();
+                        $('#vendor_signup_form img').attr('src', '');
+                        $('html,body').animate({scrollTop: '0px'}, 1000);
                         $('#success_msg').html(data.message).show();
                         setTimeout(function() {
                             $('#success_msg').html('').hide();
@@ -341,6 +342,7 @@
                 },
                 error: function(response) {
                     that.attr('disabled', false);
+                    $('html,body').animate({scrollTop: '0px'}, 1000);
                     $('#register_btn_loader').hide();
                     if (response.status === 422) {
                         let errors = response.responseJSON.errors;

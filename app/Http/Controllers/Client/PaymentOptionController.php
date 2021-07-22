@@ -75,15 +75,6 @@ class PaymentOptionController extends BaseController
 
     public function updateAll(Request $request, $domain = '')
     {
-        $validatedData = $request->validate([
-            'paypal_username'       => 'required',
-            'paypal_password'       => 'required',
-            'paypal_signature'      => 'required',
-            'stripe_api_key'        => 'required',
-            'stripe_publishable_key'=> 'required'
-        ], [
-            'stripe_api_key.required'=> 'Stripe secret key field is required'
-        ]);
         $msg = 'Payment options have been saved successfully!';
         $method_id_arr = $request->input('method_id');
         $method_name_arr = $request->input('method_name');
@@ -102,6 +93,11 @@ class PaymentOptionController extends BaseController
             if( (isset($active_arr[$id])) && ($active_arr[$id] == 'on') ){
                 $status = 1;
                 if( (isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'paypal') ){
+                    $validatedData = $request->validate([
+                        'paypal_username'       => 'required',
+                        'paypal_password'       => 'required',
+                        'paypal_signature'      => 'required',
+                    ]);
                     $json_creds = json_encode(array(
                         'username' => $request->paypal_username,
                         'password' => $request->paypal_password,
@@ -109,6 +105,12 @@ class PaymentOptionController extends BaseController
                     ));
                 }
                 else if( (isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'stripe') ){
+                    $validatedData = $request->validate([
+                        'stripe_api_key'        => 'required',
+                        'stripe_publishable_key'=> 'required'
+                    ], [
+                        'stripe_api_key.required'=> 'Stripe secret key field is required'
+                    ]);
                     $json_creds = json_encode(array(
                         'api_key' => $request->stripe_api_key,
                         'publishable_key' => $request->stripe_publishable_key

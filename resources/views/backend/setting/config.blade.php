@@ -635,46 +635,158 @@
          </form>
       </div>
    </div>
-   <div class="row">
-      <div class="col-6">
-         <div class="page-title-box">
-            <h4 class="page-title text-uppercase">User Authentication</h4>
-         </div>
-      </div>
-      <div class="col-6">
-         <div class="page-title-box">
-            <h4 class="page-title text-uppercase">Custom Mods</h4>
-         </div>
-      </div>
-   </div>
    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
       <input type="hidden" name="verify_config" id="verify_config" value="1">
       @csrf
+      
       <div class="row">
-         <div class="col-md-6 col-lx-4">
-            <div class="card-box">
-               <div class="row align-items-center">
-                  <div class="col-sm-5">
-                     <div class="form-group mb-0 switchery-demo">
-                        <label for="verify_email" class="mr-3 mb-0">Verify Email</label>
-                        <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1')) checked='checked' @endif>
+         <div class="col-md-6">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="page-title-box">
+                     <h4 class="page-title text-uppercase">User Authentication</h4>
+                  </div>
+                  <div class="card-box mb-0">
+                     <div class="row align-items-center">
+                        <div class="col-sm-5">
+                           <div class="form-group mb-0 switchery-demo">
+                              <label for="verify_email" class="mr-3 mb-0">Verify Email</label>
+                              <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1')) checked='checked' @endif>
+                           </div>
+                        </div>
+                        <div class="col-sm-5">
+                           <div class="form-group mb-0">
+                              <label for="verify_phone" class="mr-3 mb-0">Verify Phone</label>
+                              <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1')) checked='checked' @endif>
+                           </div>
+                        </div>
+                        <div class="col-sm-2">
+                           <div class="form-group mb-0 text-md-right">
+                              <button class="btn btn-info d-block ml-auto" type="submit"> Save </button>
+                           </div>
+                        </div>
                      </div>
                   </div>
-                  <div class="col-sm-5">
-                     <div class="form-group mb-0">
-                        <label for="verify_phone" class="mr-3 mb-0">Verify Phone</label>
-                        <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1')) checked='checked' @endif>
-                     </div>
+               </div>
+               <div class="col-md-12">
+                  <div class="page-title-box">
+                     <h4 class="page-title text-uppercase">Vendor Types</h4>
                   </div>
-                  <div class="col-sm-2">
-                     <div class="form-group mb-0 text-md-right">
-                        <button class="btn btn-info d-block ml-auto" type="submit"> Save </button>
+                  <div class="card-box mb-0">
+                     <div class="row align-items-center">
+                        <div class="col-md-3">
+                           <div class="form-group mb-0">
+                              <label for="dinein_check" class="mr-3 mb-0">Dine In</label>
+                              <input type="checkbox" data-plugin="switchery" name="dinein_check" id="dinein_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->dinein_check == '1')) checked='checked' @endif>
+                           </div>
+                        </div>
+                        <div class="col-md-3">
+                           <div class="form-group mb-0">
+                              <label for="delivery_check" class="mr-3 mb-0">Delivery</label>
+                              <input type="checkbox" data-plugin="switchery" name="delivery_check" id="delivery_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delivery_check == '1')) checked='checked' @endif>
+                           </div>
+                        </div>
+                        <div class="col-md-3">
+                           <div class="form-group mb-0">
+                              <label for="takeaway_check" class="mr-3 mb-0">Takeaway</label>
+                              <input type="checkbox" data-plugin="switchery" name="takeaway_check" id="takeaway_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->takeaway_check == '1')) checked='checked' @endif>
+                           </div>
+                        </div>
+                        <div class="col-md-3">
+                           <div class="form-group mb-0 text-md-right">
+                              <button class="btn btn-info d-block ml-md-auto" type="submit"> Save </button>
+                           </div>
+                        </div>
                      </div>
                   </div>
                </div>
             </div>
          </div>
+         
+         <div class="col-md-6">
+            <div class="row">
+               <div class="col-lg-8">
+                  <div class="page-title-box">
+                     <h4 class="page-title text-uppercase">Vendor Registration Documents</h4>
+                  </div>
+                  <div class="card-box mb-0 pb-2">
+                     <div class="d-flex align-items-center justify-content-end mt-2">
+                        <!-- <h4 class="header-title mb-0">Vendor Registration Documents</h4> -->
+                        <a class="btn btn-info d-block" id="add_vendor_registration_document_modal_btn">
+                           <i class="mdi mdi-plus-circle mr-1"></i>Add
+                        </a>
+                     </div>
+                     <div class="table-responsive mt-3 mb-1">
+                        <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
+                           <thead>
+                              <tr>
+                                 <th>Name</th>
+                                 <th>Type</th>
+                                 <th>Action</th>
+                              </tr>
+                           </thead>
+                           <tbody id="post_list">
+                              @forelse($vendor_registration_documents as $vendor_registration_document)
+                              <tr>
+                                 <td>{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</td>
+                                 <td>{{$vendor_registration_document->file_type}}</td>
+                                 <td>
+                                    <div>
+                                       <div class="inner-div" style="float: left;">
+                                          <a class="action-icon edit_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}" href="javascript:void(0)">
+                                             <i class="mdi mdi-square-edit-outline"></i>
+                                          </a>
+                                       </div>
+                                       <div class="inner-div">
+                                          <button type="button" class="btn btn-primary-outline action-icon delete_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}">
+                                             <i class="mdi mdi-delete"></i>
+                                          </button>
+                                       </div>
+                                    </div>
+                                 </td>
+                              </tr>
+                              @empty
+                              <tr align="center">
+                                 <td colspan="4" style="padding: 20px 0">Result not found.</td>
+                              </tr>
+                              @endforelse
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-4">
+                  <div class="page-title-box">
+                     <h4 class="page-title text-uppercase">Refer and Earn</h4>
+                  </div>
+                  <form method="POST" class="h-100" action="{{route('referandearn.update', Auth::user()->code)}}">
+                     @csrf
+                     <div class="card-box mb-0 pb-1">
+                        <div class="d-flex align-items-center justify-content-end">
+                           <!-- <h4 class="header-title mb-0">Refer and Earn</h4> -->
+                           <button class="btn btn-info d-block" type="submit"> Save </button>
+                        </div>
+                        <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 my-2" id="addCur-160">
+                           <label class="primaryCurText">Referred To Amount = </label>
+                           <input class="form-control" type="number" id="reffered_to_amount" name="reffered_to_amount" value="{{ old('reffered_to_amount', $reffer_to ?? '')}}" min="0">
+                        </div>
+                        <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-3" id="addCur-160">
+                           <label class="primaryCurText">Referred By Amount = </label>
+                           <input class="form-control" type="number" name="reffered_by_amount" id="reffered_by_amount" value="{{ old('reffered_by_amount', $reffer_by ?? '')}}" min="0">
+                        </div>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+    
+
+      <div class="row">         
          <div class="col-md-6 col-lx-4">
+            <div class="page-title-box">
+               <h4 class="page-title text-uppercase">Custom Mods</h4>
+            </div>
             <div class="card-box">
                <div class="row align-items-center">
                   <div class="col-md-3">
@@ -709,50 +821,10 @@
                </div>
             </div>
          </div>
-      </div>
-      <div class="row">
-         <div class="col-6">
-            <div class="page-title-box">
-               <h4 class="page-title text-uppercase">Vendor Types</h4>
-            </div>
-         </div>
-         <div class="col-6">
+         <div class="col-md-6 col-lx-4">
             <div class="page-title-box">
                <h4 class="page-title text-uppercase">Data Management</h4>
             </div>
-         </div>
-      </div>
-      <div class="row">
-         <div class="col-md-6 col-lx-4">
-            <div class="card-box">
-               <div class="row align-items-center">
-                  <div class="col-md-3">
-                     <div class="form-group mb-0">
-                        <label for="dinein_check" class="mr-3 mb-0">Dine In</label>
-                        <input type="checkbox" data-plugin="switchery" name="dinein_check" id="dinein_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->dinein_check == '1')) checked='checked' @endif>
-                     </div>
-                  </div>
-                  <div class="col-md-3">
-                     <div class="form-group mb-0">
-                        <label for="delivery_check" class="mr-3 mb-0">Delivery</label>
-                        <input type="checkbox" data-plugin="switchery" name="delivery_check" id="delivery_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delivery_check == '1')) checked='checked' @endif>
-                     </div>
-                  </div>
-                  <div class="col-md-3">
-                     <div class="form-group mb-0">
-                        <label for="takeaway_check" class="mr-3 mb-0">Takeaway</label>
-                        <input type="checkbox" data-plugin="switchery" name="takeaway_check" id="takeaway_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->takeaway_check == '1')) checked='checked' @endif>
-                     </div>
-                  </div>
-                  <div class="col-md-3">
-                     <div class="form-group mb-0 text-md-right">
-                        <button class="btn btn-info d-block ml-md-auto" type="submit"> Save </button>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="col-md-6 col-lx-4">
             <div class="card-box">
                <div class="row align-items-center text-center">
                   <div class="col-md-4">
@@ -766,74 +838,6 @@
                   </div>
                </div>
             </div>
-         </div>
-      </div>
-      <div class="row">
-         <div class="col-lg-6 col-lg-3 mb-3">
-            <div class="card-box mb-0 h-100 pb-1">
-               <div class="d-flex align-items-center justify-content-between mt-2">
-                  <h4 class="header-title mb-0">Vendor Registration Documents</h4>
-                  <a class="btn btn-info d-block" id="add_vendor_registration_document_modal_btn">
-                     <i class="mdi mdi-plus-circle mr-1"></i>Add
-                  </a>
-               </div>
-               <div class="table-responsive mt-3">
-                  <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
-                     <thead>
-                        <tr>
-                           <th>Name</th>
-                           <th>Type</th>
-                           <th>Action</th>
-                        </tr>
-                     </thead>
-                     <tbody id="post_list">
-                        @forelse($vendor_registration_documents as $vendor_registration_document)
-                        <tr>
-                           <td>{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</td>
-                           <td>{{$vendor_registration_document->file_type}}</td>
-                           <td>
-                              <div>
-                                 <div class="inner-div" style="float: left;">
-                                    <a class="action-icon edit_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}" href="javascript:void(0)">
-                                       <i class="mdi mdi-square-edit-outline"></i>
-                                    </a>
-                                 </div>
-                                 <div class="inner-div">
-                                    <button type="button" class="btn btn-primary-outline action-icon delete_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}">
-                                       <i class="mdi mdi-delete"></i>
-                                    </button>
-                                 </div>
-                              </div>
-                           </td>
-                        </tr>
-                        @empty
-                        <tr align="center">
-                           <td colspan="4" style="padding: 20px 0">Result not found.</td>
-                        </tr>
-                        @endforelse
-                     </tbody>
-                  </table>
-               </div>
-            </div>
-         </div>
-         <div class="col-lg-3 col-lg-3 mb-3">
-            <form method="POST" class="h-100" action="{{route('referandearn.update', Auth::user()->code)}}">
-               @csrf
-               <div class="card-box mb-0 h-100 pb-1">
-                  <div class="d-flex align-items-center justify-content-between mb-2">
-                     <h4 class="header-title mb-0">Refer and Earn</h4>
-                     <button class="btn btn-info d-block" type="submit"> Save </button>
-                  </div>
-                  <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-4" id="addCur-160">
-                     <label class="primaryCurText">Referred To Amount = </label>
-                     <input class="form-control" type="number" id="reffered_to_amount" name="reffered_to_amount" value="{{ old('reffered_to_amount', $reffer_to ?? '')}}" min="0">
-                  </div>
-                  <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-3" id="addCur-160">
-                     <label class="primaryCurText">Referred By Amount = </label>
-                     <input class="form-control" type="number" name="reffered_by_amount" id="reffered_by_amount" value="{{ old('reffered_by_amount', $reffer_by ?? '')}}" min="0">
-                  </div>
-               </div>
-            </form>
          </div>
       </div>
    </form>

@@ -1,9 +1,9 @@
 <input type="hidden" name="lc_id" id="lc_id" url="{{route('celebrity.update', $lc->id)}}">
-<div class="row mb-3">
-    <div class="col-md-3"></div>
+<div class="row">
     <div class="col-md-6" id="imageInput">
-        <label>Upload banner image</label>
+        <label>Upload image</label>
         <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$lc->avatar['proxy_url'].'600/400'.$lc->avatar['image_path']}}" />        
+        <label class="logo-size d-block text-right mt-1">Image Size 150x150</label>
         <span class="invalid-feedback" role="alert">
             <strong></strong>
         </span>

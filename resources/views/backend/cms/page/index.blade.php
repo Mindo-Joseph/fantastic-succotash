@@ -88,12 +88,12 @@
                             <div class="row">
                                 <div class="col-12 mb-3">
                                     <label for="title" class="control-label">Title</label>
-                                    <input class="form-control" id="edit_title" placeholder="Meta Title" name="meta_title" type="text">
+                                    <input class="form-control" id="edit_title" name="meta_title" type="text">
                                     <span class="text-danger error-text updatetitleError"></span>
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="title" class="control-label">Meta Keyword</label>
-                                    <textarea class="form-control" id="edit_meta_keyword" placeholder="Meta Keyword" rows="3" name="meta_keyword" cols="10"></textarea>
+                                    <textarea class="form-control" id="edit_meta_keyword" rows="3" name="meta_keyword" cols="10"></textarea>
                                 </div>
                             </div>         
                         </div>
@@ -101,18 +101,18 @@
                             <div class="row">
                                 <div class="col-12 mb-3">
                                     <label for="title" class="control-label">Meta Title</label>
-                                    <input class="form-control" id="edit_meta_title" placeholder="Meta Title" name="meta_title" type="text">
+                                    <input class="form-control" id="edit_meta_title" name="meta_title" type="text">
                                 </div>
                                 
                                 <div class="col-12 mb-3">
                                     <label for="title" class="control-label">Meta Description</label>
-                                    <textarea class="form-control" id="edit_meta_description" placeholder="Meta Description" rows="3" name="meta_description" cols="10"></textarea>
+                                    <textarea class="form-control" id="edit_meta_description" rows="3" name="meta_description" cols="10"></textarea>
                                 </div>                               
                             </div>         
                         </div>
                         <div class="col-12 mb-3">
                             <label for="title" class="control-label">Description</label>
-                            <textarea class="form-control" id="edit_description" placeholder="Meta Description" rows="9" name="meta_description" cols="100"></textarea>
+                            <textarea class="form-control" id="edit_description" rows="9" name="meta_description" cols="100"></textarea>
                             <span class="text-danger error-text updatedescrpitionError"></span>
                         </div>
                     </div>
@@ -137,7 +137,6 @@
         $(document).on("click",".page-detail",function() {
             $('#edit_page_content #edit_description').val('');
             $('#edit_page_content #edit_description').summernote('destroy');
-            $('#edit_page_content #edit_description').summernote({height: 450});
             let url = $(this).data('show_url');
             let language_id = $('#edit_page_content #client_language :selected').val();
             $.get(url, {language_id:language_id},function(response) {
@@ -151,7 +150,7 @@
                         $('#edit_page_content #edit_description').val(response.data.translation.description);
                         $('#edit_page_content #edit_meta_keyword').val(response.data.translation.meta_keyword);
                         $('#edit_page_content #edit_meta_description').val(response.data.translation.meta_description);
-                        $('#edit_page_content #edit_description').summernote({'height':300});
+                        $('#edit_page_content #edit_description').summernote({'height':450});
                     }else{
                       $(':input:text').val('');
                       $('textarea').val('');

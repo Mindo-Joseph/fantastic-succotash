@@ -56,67 +56,22 @@
                  <tr>
                     <th style="text-align: center;">
                         <a style="display: block;" href="#">
-                           <img src="{{$mailData['logo']}}" alt="">
+                           <img style="height:50px" src="{{$mailData['logo']}}" alt="">
                         </a>
                     </th>
                  </tr>
               </thead>
-              <tbody>
                  <tr>
                     <td>
-                        <div style="background: url(images/food-banner.jpg) no-repeat;height: 300px;background-size: cover;display: flex;align-items: center;justify-content: center;">
-                           <div style="border-radius: 50%;width: 120px;height: 120px;padding: 20px;box-sizing: border-box;">
-                              <img style="object-fit: contain; width: 100%;height: 100%;" src="{{asset('images/logo.png')}}" alt="">
+                        <div style="height: 300px;center;position: relative;">
+                           <img src="{{$mailData['banner']['image_fit'].'600/400'.$mailData['banner']['image_path']}}" style="height: 100%;width: 100%;object-fit: cover;">
+                           <div style="border-radius: 50%;width: 120px;height: 120px;padding: 20px; margin-top:-150px; display: block; position: absolute; bottom: -10px; right: -10px;margin: auto;">
+                              <img style="object-fit: contain; width: 100%;height: 100%;" src="{{$mailData['vendor_logo']['proxy_url'].'100/100'.$mailData['vendor_logo']['image_path']}}">
                            </div>
                         </div>
                     </td>
                  </tr>
-                 <tr>
-                    <td>
-                       <div style="margin-bottom: 20px;">
-                          <h4 style="margin-bottom: 5px;">Name</h4>
-                          <p>{{$mailData['vendor_name']}}</p>
-                       </div>
-                       <div style="margin-bottom: 20px;">
-                          <h4 style="margin-bottom: 5px;">Title</h4>
-                          <p>{{$mailData['title']}}</p>
-                       </div>
-                       <div style="margin-bottom: 20px;">
-                          <h4 style="margin-bottom: 5px;">Description</h4>
-                          <p>{{$mailData['description']}}</p>
-                       </div>
-                       <div style="margin-bottom: 20px;">
-                          <h4 style="margin-bottom: 5px;">Email</h4>
-                          <p>{{$mailData['email']}}</p>
-                       </div>
-                       <div style="margin-bottom: 20px;">
-                          <h4 style="margin-bottom: 5px;">Phone Number</h4>
-                          <p>{{$mailData['phone_no']}}</p>
-                       </div>
-                       <div style="margin-bottom: 20px;">
-                          <h4 style="margin-bottom: 5px;">Address</h4>
-                          <address style="font-style: normal;">
-                           <p style="text-transform: uppercase; width: 300px;">
-                              {{$mailData['address']}}
-                           </p>
-                        </address>
-                       </div>
-                       <div style="margin-bottom: 20px;">
-                        <h4 style="margin-bottom: 5px;">Website</h4>
-                        <a style="color: #8142ff;" href="{{$mailData['website']}}" target="_blank"><b>{{$mailData['website']}}</b></a>
-                     </div>
-                    </td>
-                 </tr>
-              </tbody>
-             <!--  <tfoot style="text-align: center;">
-               <tr>
-                  <td colspan="2" style="padding: 0 15px 20px;">
-                     <div style="border-radius: 20px">
-                        <p style="background-color: #8142ff;padding:5px 0;text-align:center;color: #fff;margin-top: 30px; ">Powered by <b>{{$mailData['powered_by']}}</b></p>
-                     </div>
-                  </td>
-               </tr>
-              </tfoot> -->
+                 {!! $mailData['email_template_content'] !!}
             </table>
          </div>
       </section>

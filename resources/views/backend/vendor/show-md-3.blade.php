@@ -121,75 +121,73 @@
                 <div class="col-md-12">
                     <h4 class="mb-2"> <span class="">Category Setup</span> (Visible For Admin)</h4>
                 </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
-                    {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!}
-                    <input type="checkbox" data-plugin="switchery" name="can_add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-6 mb-3">
-                        {!! Form::label('title', 'Vendor Detail To Show',['class' => 'control-label ']) !!}
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <select class="selectize-select form-control assignToSelect" id="assignTo" {{$vendor->status == 1 ? '' : 'disabled'}}>
-                            @foreach($templetes as $templete)
-                                <option value="{{$templete->id}}" {{$vendor->vendor_templete_id == $templete->id ? 'selected="selected"' : ''}}>{{$templete->title}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        {!! Form::label('title', 'Vendor Category',['class' => 'control-label']) !!}
-                        <div class="custom-dd dd nestable_list_1" id="nestable_list_1">
-                            <ol class="dd-list">
-                                @forelse($builds as $build)
-                                @if($build['translation_one'])
-                                <li class="dd-item dd3-item" data-category_id="{{$build['id']}}">
-                                    <div class="dd3-content"> 
-                                        <img class="rounded-circle mr-1" src="{{$build['icon']['proxy_url']}}30/30{{$build['icon']['image_path']}}"> {{$build['translation_one']['name']}}
-                                        <span class="inner-div text-right">
-                                            <a class="action-icon" data-id="3" href="javascript:void(0)">
-                                                @if(in_array($build['id'], $VendorCategory))
-                                                    <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked {{$vendor->status == 1 ? '' : 'disabled'}}>
-                                                @else
-                                                    <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
-                                                @endif
-                                                <input type="hidden" value="{{ $build['id'] }}">
-                                            </a>
-                                        </span> 
-                                    </div>
-                                    @if(isset($build['children'])) 
-                                    <ol class="dd-list">
-                                        @forelse($build['children']  as $first_child)
-                                            @if(isset($first_child['translation_one']))
-                                                <li class="dd-item dd3-item" data-id="{{$first_child['id']}}">
-                                                    <div class="dd3-content"> 
-                                                        <img class="rounded-circle mr-1" src="{{$first_child['icon']['proxy_url']}}30/30{{$first_child['icon']['image_path']}}"> {{$first_child['translation_one']['name']}} 
-                                                        <span class="inner-div text-right">
-                                                            <a class="action-icon" data-id="6" href="javascript:void(0)">
-                                                                @if(in_array($first_child['id'], $VendorCategory))
-                                                                <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="" {{$vendor->status == 1 ? '' : 'disabled'}}>
-                                                                @else
-                                                                <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
-                                                                @endif
-                                                            </a>
-                                                        </span>
-                                                    </div>
-                                                </li>
-                                            @endif
-                                        @empty
-                                        @endforelse
-                                        </ol>
-                                        @endif
-                                    </li>
-                                </li>
-                                @endif
-                                @empty
-                                @endforelse
-                            </ol>
+            </div> 
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
+            {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!}
+            <input type="checkbox" data-plugin="switchery" name="can_add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
+        </div>
+        <div class="col-md-6 mb-3">
+            {!! Form::label('title', 'Vendor Detail To Show',['class' => 'control-label ']) !!}
+        </div>
+        <div class="col-md-6 mb-3">
+            <select class="selectize-select form-control assignToSelect" id="assignTo" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                @foreach($templetes as $templete)
+                    <option value="{{$templete->id}}" {{$vendor->vendor_templete_id == $templete->id ? 'selected="selected"' : ''}}>{{$templete->title}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-12">
+            {!! Form::label('title', 'Vendor Category',['class' => 'control-label']) !!}
+            <div class="custom-dd dd nestable_list_1" id="nestable_list_1">
+                <ol class="dd-list">
+                    @forelse($builds as $build)
+                    @if($build['translation_one'])
+                    <li class="dd-item dd3-item" data-category_id="{{$build['id']}}">
+                        <div class="dd3-content"> 
+                            <img class="rounded-circle mr-1" src="{{$build['icon']['proxy_url']}}30/30{{$build['icon']['image_path']}}"> {{$build['translation_one']['name']}}
+                            <span class="inner-div text-right">
+                                <a class="action-icon" data-id="3" href="javascript:void(0)">
+                                    @if(in_array($build['id'], $VendorCategory))
+                                        <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                    @else
+                                        <input type="checkbox" data-category_id="{{ $build['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                    @endif
+                                    <input type="hidden" value="{{ $build['id'] }}">
+                                </a>
+                            </span> 
                         </div>
-                    </div>
-                </div>
+                        @if(isset($build['children'])) 
+                        <ol class="dd-list">
+                            @forelse($build['children']  as $first_child)
+                                @if(isset($first_child['translation_one']))
+                                    <li class="dd-item dd3-item" data-id="{{$first_child['id']}}">
+                                        <div class="dd3-content"> 
+                                            <img class="rounded-circle mr-1" src="{{$first_child['icon']['proxy_url']}}30/30{{$first_child['icon']['image_path']}}"> {{$first_child['translation_one']['name']}} 
+                                            <span class="inner-div text-right">
+                                                <a class="action-icon" data-id="6" href="javascript:void(0)">
+                                                    @if(in_array($first_child['id'], $VendorCategory))
+                                                    <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" checked="" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                                    @else
+                                                    <input type="checkbox" data-category_id="{{ $first_child['id'] }}" data-color="#43bee1" class="form-control activeCategory" data-plugin="switchery" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                                    @endif
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </li>
+                                @endif
+                            @empty
+                            @endforelse
+                            </ol>
+                            @endif
+                        </li>
+                    </li>
+                    @endif
+                    @empty
+                    @endforelse
+                </ol>
             </div>
         </div>
     </div>
@@ -209,18 +207,16 @@
     
     <div class="inbox-widget" data-simplebar style="max-height: 350px;">
         @foreach($vendor->permissionToUser as $users)
-        <div class="inbox-item">
+        <div class="inbox-item pb-0">
             <div class="inbox-item-img">
                 <img src="{{$users->user ? $users->user->image['proxy_url'].'40/40'.$users->user->image['image_path'] : asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt="">
 
                 {{-- <img src="{{asset('assets/images/users/user-2.jpg')}}" class="rounded-circle" alt=""> --}}
             </div>
-            <p class="inbox-item-author">{{ $users->user->name??'' }} 
-               
-            </p>
-            <p class="inbox-item-text"><i class="fa fa-envelope" aria-hidden="true"> {{ $users->user->email??'' }}</i> @if($users->user->phone_number)<i class="fa fa-phone" aria-hidden="true"> {{ $users->user->phone_number??'' }}</i>@endif</p>
+            <p class="inbox-item-author">{{ $users->user->name??'' }}  </p>
+            <p class="inbox-item-text"><label class="d-block"><i class="fa fa-envelope mr-1" aria-hidden="true"></i> {{ $users->user->email??'' }}  @if($users->user->phone_number)</label><label class="d-block">  <i class="fa fa-phone mr-1" aria-hidden="true"></i> {{ $users->user->phone_number??'' }}</label> </p> @endif</p>
             @if($users->user->id != Auth::id())
-            <form method="POST" action="{{route('user.vendor.permission.destroy', $users->id)}}">
+            <form class="delete-user position-absolute" method="POST" action="{{route('user.vendor.permission.destroy', $users->id)}}">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-primary-outline" onclick="return confirm('Are you sure ?');"> <i class="mdi mdi-delete"></i></button>

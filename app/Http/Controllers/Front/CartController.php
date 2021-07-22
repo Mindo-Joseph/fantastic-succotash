@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor,CartCoupon, LuxuryOption, UserWishlist};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor,CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser};
 use Illuminate\Http\Request;
 use Session;
 use Auth;
+use Carbon\Carbon;
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Support\Facades\Storage;
 class CartController extends FrontController
@@ -33,7 +34,21 @@ class CartController extends FrontController
         $countries = Country::get();
         $cartData = CartProduct::where('status', [0,1])->where('cart_id', $cart->id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         $navCategories = $this->categoryNav($langId);
-        return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries]);
+        $subscription_features = array();
+        if($user){
+            $now = Carbon::now()->toDateTimeString();
+            $user_subscription = SubscriptionInvoicesUser::with('features')
+                ->select('id', 'user_id', 'subscription_id')
+                ->where('user_id', $user->id)
+                ->where('end_date', '>', $now)
+                ->orderBy('end_date', 'desc')->first();
+            if($user_subscription){
+                foreach($user_subscription->features as $feature){
+                    $subscription_features[] = $feature->feature_id;
+                }
+            }
+        }
+        return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses,'countries' => $countries, 'subscription_features' => $subscription_features]);
     }
 
     public function postAddToCart(Request $request, $domain = ''){
@@ -333,10 +348,25 @@ class CartController extends FrontController
                         $qry->where('language_id', $langId);
                     }, 'vendorProducts.product.taxCategory.taxRate', 
                     ])->select('vendor_id', 'luxury_option_id')->where('status', [0,1])->where('cart_id', $cart_id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
-        $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
+        $user = Auth::user();
+        $subscription_features = array();
+        if($user){
+            $now = Carbon::now()->toDateTimeString();
+            $user_subscription = SubscriptionInvoicesUser::with('features')
+                ->select('id', 'user_id', 'subscription_id')
+                ->where('user_id', $user->id)
+                ->where('end_date', '>', $now)
+                ->orderBy('end_date', 'desc')->first();
+            if($user_subscription){
+                foreach($user_subscription->features as $feature){
+                    $subscription_features[] = $feature->feature_id;
+                }
+            }
+        }
+        $total_payable_amount = $total_subscription_discount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if($cartData){
             foreach ($cartData as $ven_key => $vendorData) {
-                $payable_amount = $taxable_amount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
+                $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
                     $quantity_price = 0;
@@ -382,7 +412,7 @@ class CartController extends FrontController
                     }else{
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
-                    if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1)
+                    if(!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1))
                     {   
                         $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                         if(!empty($deliver_charge) && $delivery_count == 0)
@@ -405,17 +435,23 @@ class CartController extends FrontController
                         $payable_amount -= $percentage_amount;
                     }
                 }
+                if(in_array(1, $subscription_features)){
+                    $subscription_discount = $subscription_discount + $delivery_fee_charges;
+                }
                 $vendorData->delivery_fee_charges = number_format($delivery_fee_charges, 2);
                 $vendorData->payable_amount = number_format($payable_amount, 2);
                 $vendorData->discount_amount = number_format($discount_amount, 2);
                 $vendorData->discount_percent = number_format($discount_percent, 2);
                 $vendorData->taxable_amount = number_format($taxable_amount, 2);
                 $vendorData->product_total_amount = number_format(($payable_amount - $taxable_amount), 2);
-
+                if(!empty($subscription_features)){
+                    $vendorData->product_total_amount = number_format(($vendorData->product_total_amount - $subscription_discount), 2);
+                }
                 $total_payable_amount = $total_payable_amount + $payable_amount;
                 $total_taxable_amount = $total_taxable_amount + $taxable_amount;
                 $total_discount_amount = $total_discount_amount + $discount_amount;
                 $total_discount_percent = $total_discount_percent + $discount_percent;
+                $total_subscription_discount = $total_subscription_discount + $subscription_discount;
             }
             $is_percent = 0;
             $amount_value = 0;
@@ -432,11 +468,15 @@ class CartController extends FrontController
             }
             if($is_percent == 1){
                 $total_discount_percent = ($total_discount_percent > 100) ? 100 : $total_discount_percent;
-                $total_discount_amount = ($total_payable_amount * $total_discount_percent) / 100;
+                $total_discount_amount = $total_discount_amount + ($total_payable_amount * $total_discount_percent) / 100;
             }
             if($amount_value > 0){
                 $amount_value = $amount_value * $clientCurrency->doller_compare;
                 $total_discount_amount = $total_discount_amount + $amount_value;
+            }
+            if(!empty($subscription_features)){
+                $total_discount_amount = $total_discount_amount + $total_subscription_discount;
+                $cart->total_subscription_discount = number_format($total_subscription_discount, 2);
             }
             $total_payable_amount = $total_payable_amount - $total_discount_amount;
             $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount - $total_taxable_amount), 2);

@@ -1,7 +1,7 @@
 @php
 $clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
 
-$urlImg =  $clientData ? $clientData->logo['proxy_url'].'200/80'.$clientData->logo['image_path'] : " ";
+$urlImg =  $clientData ? $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'] : " ";
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp

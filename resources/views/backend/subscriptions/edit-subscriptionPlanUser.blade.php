@@ -61,9 +61,9 @@
                             <label for="">Frequency</label>
                             <select class="form-control" name="frequency" value="{{ $plan->frequency }}" required="required">
                                 <option value="">Choose...</option>
-                                <option value="weekly">Weekly</option>
-                                <option value="monthly">Monthly</option>
-                                <option value="yearly">Yearly</option>
+                                <option value="weekly" {{ $plan->frequency == 'weekly' ? 'selected' : '' }}>Weekly</option>
+                                <option value="monthly" {{ $plan->frequency == 'monthly' ? 'selected' : '' }}>Monthly</option>
+                                <option value="yearly" {{ $plan->frequency == 'yearly' ? 'selected' : '' }}>Yearly</option>
                             </select>
                         </div>
                     </div>

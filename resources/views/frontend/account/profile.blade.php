@@ -238,13 +238,13 @@
             dataType: 'json',
             success: function (data) {
                 $('#editProfileForm #editProfileBox').html(data.html);
-                $('.dropify').dropify();
                 var input = document.querySelector("#phone");
                 window.intlTelInput(input, {
                     separateDialCode: true,
                     hiddenInput: "full_number",
                     utilsScript: "{{asset('assets/js/utils.js')}}",
                 });
+                $('.dropify').dropify();
             },
             error: function (data) {
             }

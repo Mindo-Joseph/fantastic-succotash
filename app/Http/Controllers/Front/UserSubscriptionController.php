@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{User, UserAddress, ClientPreference, Client, SubscriptionPlansUser, SubscriptionFeaturesListUser, SubscriptionInvoicesUser, SubscriptionInvoiceFeaturesUser, PaymentOption};
+use App\Models\{User, UserAddress, ClientPreference, Client, SubscriptionPlansUser, SubscriptionFeaturesListUser, SubscriptionInvoicesUser, SubscriptionInvoiceFeaturesUser, Payment, PaymentOption};
 
 class UserSubscriptionController extends FrontController
 {
@@ -29,13 +29,13 @@ class UserSubscriptionController extends FrontController
         $navCategories = $this->categoryNav($langId);
         $sub_plans = SubscriptionPlansUser::with('features.feature')->where('status', '1')->orderBy('sort_order', 'asc')->get();
         $featuresList = SubscriptionFeaturesListUser::where('status', 1)->get();
-        $active_subscriptions = SubscriptionInvoicesUser::with(['plan', 'features.feature'])
-                            ->where('status_id', '2')
-                            ->where('user_id', Auth::user()->id)->get();
-        $active_subscription_plan_ids = array();
-        foreach($active_subscriptions as $subscription){
-            $active_subscription_plan_ids[] = $subscription->subscription_id;
-        }
+        $active_subscription = SubscriptionInvoicesUser::with(['plan', 'features.feature'])
+                            ->where('user_id', Auth::user()->id)
+                            ->orderBy('end_date', 'desc')->first();
+        // $active_subscription_plan_ids = array();
+        // foreach($active_subscription as $subscription){
+        //     $active_subscription_plan_ids[] = $active_subscription->subscription_id;
+        // }
 
         if($sub_plans){
             foreach($sub_plans as $sub){
@@ -49,7 +49,7 @@ class UserSubscriptionController extends FrontController
                 $sub->features = $subFeaturesList;
             }
         }
-        return view('frontend.account.userSubscriptions')->with(['navCategories'=>$navCategories, 'subscriptions'=>$sub_plans, 'active_subscriptions'=>$active_subscriptions, 'active_subscription_plan_ids'=>$active_subscription_plan_ids]);
+        return view('frontend.account.userSubscriptions')->with(['navCategories'=>$navCategories, 'subscription_plans'=>$sub_plans, 'subscription'=>$active_subscription]);
     }
     
     /**
@@ -59,14 +59,46 @@ class UserSubscriptionController extends FrontController
      */
     public function selectSubscriptionPlan(Request $request, $domain = '', $slug = '')
     {
+        $code = array('stripe');
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        $sub_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->firstOrFail();
-        $payment_options = PaymentOption::select('id', 'code', 'title')->where('status', 1)->get();
+        $sub_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
+        if($sub_plan){
+            $subFeaturesList = '<ul>';
+            if($sub_plan->features->isNotEmpty()){
+                foreach($sub_plan->features as $feature){
+                    $subFeaturesList = $subFeaturesList.'<li><i class="fa fa-check">'.$feature->feature->title.'</li>';
+                }
+                unset($sub_plan->features);
+            }
+            $subFeaturesList = $subFeaturesList.'<ul>';
+            $sub_plan->features = $subFeaturesList;
+        }
+        else{
+            return response()->json(["status"=>"Error", "message" => "Subscription plan not active"]);
+        }
+        $payment_options = PaymentOption::select('id', 'code', 'title')->whereIn('code', $code)->where('status', 1)->get();
         foreach ($payment_options as $payment_option) {
            $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
         }
         return response()->json(["status"=>"Success", "sub_plan" => $sub_plan, "payment_options" => $payment_options]);
+    }
+
+    /**
+     * check if user has any active subscription.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function checkActiveSubscription(Request $request, $domain = '', $slug = '')
+    {
+        $userActiveSubscription = SubscriptionInvoicesUser::with(['plan'])
+                                ->whereNull('cancelled_at')
+                                ->where('user_id', Auth::user()->id)
+                                ->orderBy('end_date', 'desc')->first();
+        if( ($userActiveSubscription) && ($userActiveSubscription->plan->slug != $slug) ){
+            return $this->errorResponse('You cannot buy two subscriptions at the same time', 402);
+        }
+        return $this->successResponse('', 'Processing...');
     }
 
     /**
@@ -78,33 +110,53 @@ class UserSubscriptionController extends FrontController
     {
         $user = Auth::user();
         $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
+        $last_subscription = SubscriptionInvoicesUser::with(['plan', 'features.feature'])
+            ->where('user_id', Auth::user()->id)
+            ->where('subscription_id', $subscription_plan->id)
+            ->orderBy('end_date', 'desc')->first();
         if( ($user) && ($subscription_plan) ){
             $subscription_invoice = new SubscriptionInvoicesUser;
             $subscription_invoice->user_id = $user->id;
             $subscription_invoice->subscription_id = $subscription_plan->id;
             $subscription_invoice->slug = strtotime(Carbon::now()).'_'.$slug;
             $subscription_invoice->payment_option_id = $request->payment_option_id;
-            $subscription_invoice->status_id = 2;
+            // $subscription_invoice->status_id = 2;
             $subscription_invoice->frequency = $subscription_plan->frequency;
             $subscription_invoice->payment_option_id = $request->payment_option_id;
             $subscription_invoice->transaction_reference = $request->transaction_id;
-            $subscription_invoice->start_date = Carbon::now()->toDateTimeString();
+            $now = Carbon::now();
+            $current_date = $now->toDateString();
+            $start_date = $current_date;
+            $next_date = NULL;
+            $end_date = NULL;
+
+            if($last_subscription){
+                if($last_subscription->end_date >= $current_date){
+                    $start_date = Carbon::parse($last_subscription->end_date)->addDays(1)->toDateString();
+                }
+            }
             if($subscription_plan->frequency == 'weekly'){
-                $subscription_invoice->next_date = Carbon::now()->addDays(7)->toDateTimeString();
-                $subscription_invoice->end_date = Carbon::now()->addDays(6)->toDateTimeString();
+                $end_date = Carbon::parse($start_date)->addDays(6)->toDateString();
+            }elseif($subscription_plan->frequency == 'monthly'){
+                $end_date = Carbon::parse($start_date)->addMonths(1)->subDays(1)->toDateString();
+            }elseif($subscription_plan->frequency == 'yearly'){
+                $end_date = Carbon::parse($start_date)->addYears(1)->subDays(1)->toDateString();
             }
-            elseif($subscription_plan->frequency == 'monthly'){
-                $subscription_invoice->next_date = Carbon::now()->addDays(30)->toDateTimeString();
-                $subscription_invoice->end_date = Carbon::now()->addDays(29)->toDateTimeString();
-            }
-            elseif($subscription_plan->frequency == 'yearly'){
-                $subscription_invoice->next_date = Carbon::now()->addDays(365)->toDateTimeString();
-                $subscription_invoice->end_date = Carbon::now()->addDays(364)->toDateTimeString();
-            }
+            $next_date = Carbon::parse($end_date)->addDays(1)->toDateString();
+            $subscription_invoice->start_date = $start_date;
+            $subscription_invoice->next_date = $next_date;
+            $subscription_invoice->end_date = $end_date;
             $subscription_invoice->subscription_amount = $request->amount;
             $subscription_invoice->save();
             $subscription_invoice_id = $subscription_invoice->id;
             if($subscription_invoice_id){
+                $payment = new Payment;
+                $payment->balance_transaction = $request->amount;
+                $payment->transaction_id = $request->transaction_id;
+                $payment->user_subscription_invoice_id = $subscription_invoice_id;
+                $payment->date = Carbon::now()->format('Y-m-d');
+                $payment->save();
+
                 $subscription_invoice_features = array();
                 foreach($subscription_plan->features as $feature){
                     $subscription_invoice_features[] = array(
@@ -141,10 +193,9 @@ class UserSubscriptionController extends FrontController
         $active_subscription = SubscriptionInvoicesUser::with('plan')
                             ->where('slug', $slug)
                             ->where('user_id', Auth::user()->id)
-                            ->where('status_id', 2)->first();
+                            ->orderBy('end_date', 'desc')->first();
         if($active_subscription){
-            $active_subscription->status_id = 4;
-            $active_subscription->cancelled_at = Carbon::now()->toDateTimeString();
+            $active_subscription->cancelled_at = $active_subscription->end_date;
             $active_subscription->updated_at = Carbon::now()->toDateTimeString();
             $active_subscription->save();
             return redirect()->back()->with('success', 'Your '.$active_subscription->plan->title.' subscription has been cancelled successfully');

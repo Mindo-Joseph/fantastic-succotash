@@ -144,8 +144,7 @@ class CategoryController extends FrontController
         elseif(strtolower($type) == 'celebrity'){
             $celebs = Celebrity::orderBy('name', 'asc')->paginate($pagiNate);
             return $celebs;
-        }
-        else{
+        }else{
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
             $vendors = array();
             if(Session::has('vendors')){
@@ -159,7 +158,7 @@ class CategoryController extends FrontController
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                         },
-                    ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')->where('products.is_live', 1)->where('category_id', $category_id)->whereIn('products.vendor_id', $vendors)->paginate($pagiNate);
+                    ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating', 'products.inquiry_only')->where('products.is_live', 1)->where('category_id', $category_id)->whereIn('products.vendor_id', $vendors)->paginate($pagiNate);
 
             if(!empty($products)){
                 foreach ($products as $key => $value) {

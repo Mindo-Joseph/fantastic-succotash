@@ -67,7 +67,7 @@
                  @if(count(array_intersect($order_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a class="menu-title pl-1" href="#">
-                        <span class="icon-orders"></span>
+                        <!-- <span class="icon-orders"></span> -->
                         <span>ORDERS</span>
                     </a>
                     <ul class="nav-second-level">
@@ -110,7 +110,7 @@
                                             @endif
                                             @if(in_array('accounting_loyality',$allowed) || Auth::user()->is_superadmin == 1)
                                                 <li>
-                                                    <a href="{{route('account.loyalty')}}">Loyality</a>
+                                                    <a href="{{route('account.loyalty')}}">{{getNomenclatureName('Loyalty Cards', true)}}</a>
                                                 </li>
                                             @endif
                                             @if(in_array('accounting_promo_codes',$allowed) || Auth::user()->is_superadmin == 1)
@@ -125,7 +125,7 @@
                                             @endif
                                             @if(in_array('accounting_vendors',$allowed) || Auth::user()->is_superadmin == 1)
                                                 <li>
-                                                    <a href="{{route('account.vendor')}}">Vendors</a>
+                                                    <a href="{{route('account.vendor')}}">{{getNomenclatureName('Vendors', true)}}</a>
                                                 </li>
                                             @endif
                                         </ul>
@@ -148,7 +148,7 @@
                                         @endif
                                         @if(in_array('subscription_plans_vendors',$allowed) || Auth::user()->is_superadmin == 1)
                                             <li>
-                                                <a href="{{route('subscription.plans.vendor')}}">Vendors</a>
+                                                <a href="{{route('subscription.plans.vendor')}}">{{getNomenclatureName('Vendors', true)}}</a>
                                             </li>
                                         @endif
                                     </ul>
@@ -171,7 +171,7 @@
                 {{-- @if(count(array_intersect($setting_permissions, $allowed)) || Auth::user()->is_superadmin == 1) --}}
                 <li>
                    <a class="menu-title pl-1" href="#">
-                        <span class="icon-settings-1-1"></span>
+                        <!-- <span class="icon-settings-1-1"></span> -->
                         <span>SETTINGS</span>
                     </a>
                     <ul class="nav-second-level">
@@ -271,7 +271,7 @@
                 @if(count(array_intersect($marketing_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a class="menu-title pl-1" href="#">
-                        <span class="icon-marketing"></span>
+                        <!-- <span class="icon-marketing"></span> -->
                         <span>MARKETING</span>
                     </a>
                     <ul class="nav-second-level">
@@ -296,7 +296,7 @@
                             <li>
                                 <a href="{{route('loyalty.index')}}">
                                     <span class="icon-loyaltycard"></span>
-                                    <span> Loyalty Cards </span>
+                                    <span> {{getNomenclatureName('Loyalty Cards', true)}}</span>
                                 </a>
                             </li>
                         @endif
@@ -310,7 +310,7 @@
                     @if($client_preference->celebrity_check == 1 || $client_preference->enquire_mode == 1)
                         <li>
                             <a class="menu-title pl-1">
-                                <span class="icon-extra"></span>
+                                <!-- <span class="icon-extra"></span> -->
                                 <span>EXTRA</span>
                             </a>
                             <ul class="nav-second-level">
