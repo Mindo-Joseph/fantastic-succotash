@@ -253,8 +253,8 @@
                                 <span class="text-danger" id="pincode_error"></span>
                             </div>
                             <div class="col-md-12 mt-2">
-                                <button type="submit" class="btn btn-solid" id="<%= ((typeof address !== 'undefined') && (address !== false)) ? 'update_address' : 'save_address' %>">Save Address</button>
-                                <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-solid" id="<%= ((typeof address !== 'undefined') && (address !== false)) ? 'update_address' : 'save_address' %>">{{__('Save Address')}}</button>
+                                <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">{{__('Cancel')}}</button>
                             </div>
                         </div>
                     </div>

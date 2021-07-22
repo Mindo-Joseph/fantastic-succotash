@@ -116,7 +116,7 @@ $timezone = Auth::user()->timezone;
                                     </div>
                                 </div>
                             </div>
-                            <h6>Transaction History</h6>
+                            <h6>{{__('Transaction History')}}</h6>
                             <div class="card-box" id="wallet_transactions_history">
                                 <div class="table-responsive table-responsive-xs">
                                   <table class="table wallet-transactions border">

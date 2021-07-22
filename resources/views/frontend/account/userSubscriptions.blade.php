@@ -257,7 +257,7 @@
                 <div class="mb-2"><span id="subscription_price"></span> / <span id="subscription_frequency"></span></div>
             </div>
             <div class="form-group">
-                <div class="text-17 mt-2">{{ __('Features included') }}:
+                <div class="text-17 mt-2">{{ __('Features Included') }}:
                     <div class="mt-2" id="features_list"></div>
                 </div>
             </div>

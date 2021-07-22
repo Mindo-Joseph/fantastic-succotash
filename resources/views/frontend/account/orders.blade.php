@@ -77,7 +77,7 @@ $timezone = Auth::user()->timezone;
                             <h2>{{__('Orders')}}</h2>
                         </div>
                         <div class="welcome-msg">
-                            <h5>{{__('Here are all your previous orders')}}</h5>
+                            <h5>{{__('Here Are All Your Previous Orders')}}</h5>
                         </div>
                         <div class="row" id="orders_wrapper">
                             <div class="col-sm-12 col-lg-12 tab-product pt-3">
