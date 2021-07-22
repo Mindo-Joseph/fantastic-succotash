@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\{Promocode, Product, Vendor, PromoType, Category, PromocodeUser, PromocodeProduct, PromocodeRestriction,PromoCodeDetail};
-
+use Auth;
 class PromocodeController extends BaseController
 {
     /**
@@ -30,8 +30,21 @@ class PromocodeController extends BaseController
         $dataIds = array();
         $promocode = new Promocode();
         $promoTypes = PromoType::where('status', 1)->get();
-        $products = Product::select('id', 'sku')->where('is_live', 1)->get();
-        $vendors = Vendor::select('id', 'name')->where('status', 1)->get();
+        $products = Product::select('id', 'sku')->where('is_live', 1);
+        if (Auth::user()->is_superadmin == 0) {
+            $products = $products->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $products = $products->get();
+        
+        $vendors = Vendor::select('id', 'name')->where('status', 1);
+        if (Auth::user()->is_superadmin == 0) {
+            $vendors = $vendors->whereHas('permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendors = $vendors->get();
         $categories = Category::select('id', 'slug')->get();
         $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode,  'promoTypes' => $promoTypes, 'categories' => $categories, 'vendors' => $vendors, 'products' => $products, 'restrictionType' => '', 'include' => '0', 'exclude' => '0', 'dataIds' => $dataIds])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
@@ -92,6 +105,7 @@ class PromocodeController extends BaseController
         $promocode->restriction_on = $request->restriction_on;
         $promocode->Paid_by_vendor_admin = $request->radioInline;
         $promocode->restriction_type = $request->restriction_type == 'include'?  0: 1;
+        $promocode->added_by = Auth::id()??null;
         $promocode->save();
         if($promocode->id){
             PromoCodeDetail::where('promocode_id', $promocode->id)->delete();
@@ -158,8 +172,26 @@ class PromocodeController extends BaseController
     public function edit($domain = '', $id){
         $dataIds = array();
         $promoTypes = PromoType::where('status', 1)->get();
-        $vendors = Vendor::select('id', 'name')->where('status', 1)->get();
-        $products = Product::select('id', 'sku')->where('is_live', 1)->get();
+        
+        $products = Product::select('id', 'sku')->where('is_live', 1);
+        if (Auth::user()->is_superadmin == 0) {
+            $products = $products->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $products = $products->get();
+        
+        $vendors = Vendor::select('id', 'name')->where('status', 1);
+        if (Auth::user()->is_superadmin == 0) {
+            $vendors = $vendors->whereHas('permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendors = $vendors->get();
+
+
+
+
         $promocode = Promocode::with('restriction')->where('id', $id)->first();
         $categories = Category::with('english')->select('id', 'slug')
             ->where('id', '>', '1')->where('status', '!=', '2')
