@@ -7,11 +7,12 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Traits\ApiResponser;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\Front\FrontController;
 use Illuminate\Contracts\Session\Session as SessionSession;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference, Page, VendorRegistrationDocument};
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ClientPreference, Page, VendorRegistrationDocument, Language};
 
 class UserhomeController extends FrontController{
     use ApiResponser;
@@ -112,7 +113,6 @@ class UserhomeController extends FrontController{
         Session::forget('type');
         Session::put('type', $request->type);
         $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where($request->type, 1)->where('status', 1);
-        dd($vendors->get());
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                 $selectedAddress = $preferences->Default_location_name;
@@ -278,6 +278,9 @@ class UserhomeController extends FrontController{
         if($request->has('type') && $request->type == 'language'){
             $clientLanguage = ClientLanguage::where('language_id', $request->value1)->first();
             if($clientLanguage){
+                $lang_detail = Language::where('id', $request->value1)->first();
+                App::setLocale($lang_detail->sort_code);
+                session()->put('locale', $lang_detail->sort_code);
                 Session::put('customerLanguage', $request->value1);
             }
         }

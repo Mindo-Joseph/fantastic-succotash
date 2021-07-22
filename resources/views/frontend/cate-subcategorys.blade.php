@@ -1,5 +1,4 @@
 @extends('layouts.store', ['title' => (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug])
-
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -13,14 +12,11 @@
 </style>
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/price-range.css')}}">
 @endsection
-
 @section('content')
-
- <header>
+<header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-
 <section class="section-b-space ratio_asos">
     <div class="collection-wrapper">
         <div class="container">
@@ -53,8 +49,10 @@
                                                 <a href="{{route('productDetail', $new['url_slug'])}}">
                                                     <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
                                                 </a>
+                                                @if($new['inquiry_only'] == 0)
                                                 <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
                                                     {{ Session::get('currencySymbol').' '.(number_format($new['variant'][0]['price'] * $multiply,2))}} </h4>
+                                                @endif
                                             </div>
                                         </div>
                                     @endforeach
@@ -63,10 +61,8 @@
                             @endif
                         </div>
                     </div>
-                    <!-- side-bar banner end here -->
                 </div>
                 <div class="collection-content col">
-
                     <div class="page-main-content">
                         <div class="row">
                             <div class="col-sm-12">
@@ -177,9 +173,6 @@
         </div>
     </div>
 </section>
-
 @endsection
-
 @section('script')
-
 @endsection

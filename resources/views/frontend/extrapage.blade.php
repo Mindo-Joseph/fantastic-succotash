@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="col-md-4 mb-3" id="phone_numberInput">
                                     <label for="validationCustom02">Phone No.</label>
-                                    <input type="tel" class="form-control" name="phone_number" value="{{$user ? $user->phone_number : ''}}" id="phone" {{$user ? 'disabled' : ''}}>
+                                    <input type="tel" class="form-control" name="phone_number" value="{{$user ? '+'.$user->dial_code.''.$user->phone_number : ''}}" id="phone" {{$user ? 'disabled' : ''}}>
                                     <div class="invalid-feedback" id="phone_number_error"><strong></strong></div>
                                     <input type="hidden" id="countryData" name="countryData" value="us">
                                     <input type="hidden" id="dialCode" name="dialCode" value="{{$user ? $user->dial_code : ''}}">

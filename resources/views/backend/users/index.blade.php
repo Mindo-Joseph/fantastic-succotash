@@ -175,6 +175,12 @@
                     d.tax_type_filter = $('#tax_type_select_box option:selected').val();
                   }
                 },
+                "initComplete": function(settings, json) {
+                    var elems = Array.prototype.slice.call(document.querySelectorAll('.chk_box'));
+                    elems.forEach(function(html) {
+                        var switchery = new Switchery(html);
+                    });
+                },
                 columns: [
                     {data: 'image_url', name: 'image_url', orderable: false, searchable: false,"mRender": function ( data, type, full ) {
                         return "<img src='"+full.image_url+"' class='rounded-circle' alt='"+full.id+"' >";
