@@ -1,5 +1,4 @@
 @extends('layouts.store', ['title' => 'Buy Subscription'])
-
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
@@ -10,11 +9,8 @@
         padding-bottom: 20px;
     }
 </style>
-
 @endsection
-
 @section('content')
-
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -24,7 +20,6 @@
         display: block;
     }
 </style>
-
 <section class="section-b-space">
     <div class="container">
         <div class="row">
@@ -101,12 +96,10 @@
                     </div>
                 @endif
                 </div>
-                
             </div>
         </div>
     </div>
 </section>
-
 <div class="modal fade" id="confirm-buy-subscription" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="confirm_buy_subscriptionLabel">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -126,9 +119,7 @@
     </div>
   </div>
 </div>
-
 @endsection
-
 @section('script')
 <script src="{{asset('assets/libs/dropzone/dropzone.min.js')}}"></script>
 <script src="{{asset('assets/libs/dropify/dropify.min.js')}}"></script>
@@ -145,5 +136,4 @@
         }
     });
 </script>
-
 @endsection

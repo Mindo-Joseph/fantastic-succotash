@@ -1,18 +1,11 @@
 @extends('layouts.store', ['title' => 'Return Orders'])
-
 @section('css')
-
-
 @endsection
-
 @section('content')
-
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-
-
 <section class="section-b-space order-page">
     <div class="container">
         <div class="row">

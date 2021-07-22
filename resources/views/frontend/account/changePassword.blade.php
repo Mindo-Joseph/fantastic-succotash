@@ -1,5 +1,4 @@
 @extends('layouts.store', ['title' => 'Register'])
-
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -62,25 +61,19 @@
 </style>
 <link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
 @endsection
-
 @section('content')
-
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-
 <section class="register-page section-b-space">
     <div class="container">
         <div class="row">
             <div class="offset-xl-4 col-xl-4 offset-lg-3 col-lg-6">
                 <h3>Change Password</h3>
                   <div class="outer-box"> 
-
                     <form name="register" id="register" action="{{route('user.submitChangePassword')}}" class="theme-form" method="post"> @csrf
-                        
                         <div class="form-row mb-2">
-                           
                             <div class="col-md-12 mb-3">
                                 <label for="review">Password</label>
                                 <input type="password" class="form-control mb-0" id="review" placeholder="Enter your password" required="" name="new_password">
@@ -120,39 +113,16 @@
         </div>
     </div>
 </section>
-
 @endsection
-
 @section('script')
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
 <script>
-
     var input = document.querySelector("#phone");
     window.intlTelInput(input, {
         separateDialCode: true,
-        //allowDropdown: true,
-        //autoHideDialCode: true,
-      // autoPlaceholder: "off",
-      // dropdownContainer: document.body,
-      // excludeCountries: ["us"],
-      // formatOnDisplay: false,
-      // geoIpLookup: function(callback) {
-      //   $.get("http://ipinfo.io", function() {}, "jsonp").always(function(resp) {
-      //     var countryCode = (resp && resp.country) ? resp.country : "";
-      //     callback(countryCode);
-      //   });
-      // },
         hiddenInput: "full_number",
-        //initialCountry: "auto",
-      // localizedCountries: { 'de': 'Deutschland' },
-        //nationalMode: false,
-      // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
-        //placeholderNumberType: "MOBILE",
-      // preferredCountries: ['cn', 'jp'],
-        //separateDialCode: true,
-      utilsScript: "{{asset('assets/js/utils.js')}}",
+        utilsScript: "{{asset('assets/js/utils.js')}}",
     });
-
     $(document).ready(function () {
         $("#phone").keypress(function (e) {
             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
@@ -161,7 +131,6 @@
             return true;
         });
     });
-
     $('.iti__country').click(function(){
         var code = $(this).attr('data-country-code');
         $('#countryData').val(code);

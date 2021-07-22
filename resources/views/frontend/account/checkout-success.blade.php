@@ -13,26 +13,15 @@
     <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/custom.css')}}">
 </head>
 <body>
-
 <section class="section-b-space">
     <div class="container-fluid">
         <div class="payment_response">
-            <?php /* ?> @if (\Session::has('success'))
-                <div class="alert mt-2 alert-success">
-                    <span>{!! \Session::get('success') !!}</span>
-                </div>
-                @php
-                    \Session::forget('success');
-                @endphp
-            @endif <?php */ ?>
             <div class="alert mt-2 alert-success"><span>Thank you for your payment.</span></div>
         </div>
     </div>
 </section>
-
 <script src="{{asset('front-assets/js/jquery-3.3.1.min.js')}}"></script>
 <script>
-    
 </script>
 </body>
 </html>
