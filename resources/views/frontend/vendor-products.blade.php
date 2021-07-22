@@ -373,10 +373,10 @@
     $('.js-range-slider').ionRangeSlider({
         type: 'double',
         grid: false,
-        min: 0,
-        max: 50000,
-        from: 0,
-        to: 50000,
+        min: "{{$range_products->last()->price}}",
+        max: "{{$range_products->first()->price}}",
+        from: "{{$range_products->last()->price}}",
+        to: "{{$range_products->first()->price}}",
         prefix: ""
     });
 
