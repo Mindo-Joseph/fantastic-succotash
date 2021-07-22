@@ -2979,12 +2979,19 @@ img.h-45 {
 .dark .menu-navigation {
     background: #232323;
 }
+
+.dark .new-tag{
+    color: #f1f3f5;
+}
+
 .dark .inner_spacing h3,.dark .page-title h3 {
     color: #eaedef;
 }
+
 .dark .inner_spacing h4,.dark .product-title h4 {
     color: #e7eaec;
 }
+
 .dark .product-detail h6,.dark .contact_link i,.dark .org_price {
     color: #f1f3f5;
 }

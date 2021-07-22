@@ -453,6 +453,7 @@
                         @endif
                     </div>
                     <div class="dropzone dropzone-previews" id="my-awesome-dropzone"></div>
+                    <label class="logo-size d-block text-right mt-1">Image Size 540x715</label>
                     <div class="imageDivHidden"></div>
                 </div>
 

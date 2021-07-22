@@ -4,6 +4,12 @@
     <!-- Vendor Sign Up Form -->
     <section class="vendor-signup">
         <div class="container">
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                18+ popup
+            </button>
+
             <div class="row">
                 <div class="col-lg-8 offset-lg-2">
                     
@@ -742,10 +748,9 @@
                                                     <th>Total</th>
                                                 </tr>
                                             </thead>
-                                                                            <tbody>
-                                                                                                                                                                                                <tr>
-                                                    <th scope="row">Roll 
-                                                                                            </th>
+                                                <tbody>
+                                                     <th scope="row">Roll 
+                                                        </th>
                                                     <td>
                                                         <img src="https://imgproxy.royoorders.com/insecure/fill/32/32/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/RQAO9fhVSoquNYpVIN0aui9XpEBeyyWBXr9ncVVV.png" alt="product-img" height="32">
                                                     </td>
@@ -753,7 +758,7 @@
                                                     <td>$100.00</td>
                                                     <td>$100.00</td>
                                                 </tr>
-                                                                                                                        <tr>
+                                                <tr>
                                                     <th scope="row" colspan="4" class="text-end">Sub Total :</th>
                                                     <td>
                                                         <div class="fw-bold">$100.00</div>
@@ -774,7 +779,7 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                                                        </table>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -813,6 +818,36 @@
             </div>
         </div>
     </section>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header border-bottom">
+            <h5 class="modal-title" id="exampleModalLabel">Verify your age</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body text-center">
+            <img src="{{asset('assets/images/18.png')}}" alt="">
+            <p class="mb-0 mt-3">Are you 18 or older?</p>
+            <p class="mb-0">Are you sure you want to continue?</p> 
+        </div>
+        <div class="modal-footer d-block">
+            <div class="row no-gutters">
+                <div class="col-6 pr-1">
+                    <button type="button" class="btn btn-solid w-100" data-dismiss="modal">Yes</button>
+                </div>
+                <div class="col-6 pl-1">
+                    <button type="button" class="btn btn-solid w-100" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
 
     <script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields

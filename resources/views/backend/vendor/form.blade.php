@@ -4,12 +4,12 @@
             <div class="col-md-3">
                 <label>Upload Logo</label>
                 <input type="file" accept="image/*" data-plugins="dropify" name="logo" class="dropify" data-default-file="{{ $vendor->logo['proxy_url'].'90/90'.$vendor->logo['image_path'] }}" />
-                <label class="logo-size text-right w-100">Logo Size 215x215</label>
+                <label class="logo-size text-right w-100">Logo Size 170x96</label>
             </div> 
             <div class="col-md-6">     
                 <label>Upload banner image</label>           
                 <input type="file" accept="image/*" data-plugins="dropify" data-default-file="{{$vendor->banner['proxy_url'] . '90/90' . $vendor->banner['image_path']}}" name="banner" class="dropify" />
-                <label class="logo-size text-right w-100">Image Size 1026x200</label>
+                <label class="logo-size text-right w-100">Image Size 830x200</label>
             </div>
              @if(isset($vendor_docs))
                 @if($vendor_docs->count() > 0)

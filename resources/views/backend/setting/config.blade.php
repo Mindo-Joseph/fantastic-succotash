@@ -640,7 +640,7 @@
       @csrf
       
       <div class="row">
-         <div class="col-md-6">
+         <div class="col-xl-6">
             <div class="row">
                <div class="col-md-12">
                   <div class="page-title-box">
@@ -703,7 +703,7 @@
             </div>
          </div>
          
-         <div class="col-md-6">
+         <div class="col-xl-6">
             <div class="row">
                <div class="col-lg-8">
                   <div class="page-title-box">
@@ -766,11 +766,11 @@
                            <!-- <h4 class="header-title mb-0">Refer and Earn</h4> -->
                            <button class="btn btn-info d-block" type="submit"> Save </button>
                         </div>
-                        <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 my-2" id="addCur-160">
+                        <div class="col-xl-12 my-2" id="addCur-160">
                            <label class="primaryCurText">Referred To Amount = </label>
                            <input class="form-control" type="number" id="reffered_to_amount" name="reffered_to_amount" value="{{ old('reffered_to_amount', $reffer_to ?? '')}}" min="0">
                         </div>
-                        <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-3" id="addCur-160">
+                        <div class="col-xl-12 mb-2 mt-3" id="addCur-160">
                            <label class="primaryCurText">Referred By Amount = </label>
                            <input class="form-control" type="number" name="reffered_by_amount" id="reffered_by_amount" value="{{ old('reffered_by_amount', $reffer_by ?? '')}}" min="0">
                         </div>
@@ -783,7 +783,7 @@
     
 
       <div class="row">         
-         <div class="col-md-6 col-lx-4">
+         <div class="col-xl-6">
             <div class="page-title-box">
                <h4 class="page-title text-uppercase">Custom Mods</h4>
             </div>
@@ -821,7 +821,7 @@
                </div>
             </div>
          </div>
-         <div class="col-md-6 col-lx-4">
+         <div class="col-xl-6">
             <div class="page-title-box">
                <h4 class="page-title text-uppercase">Data Management</h4>
             </div>
