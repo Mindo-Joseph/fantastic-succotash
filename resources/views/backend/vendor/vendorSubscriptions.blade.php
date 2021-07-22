@@ -25,7 +25,8 @@
                             </div>
                             
                             <div class="col-sm-6 form-group mb-0">
-                                <b class="mr-2">
+                                @if($subscription->status_id == 2)
+                                    <b class="mr-2">
                                     @if(!empty($subscription->cancelled_at))
                                         @if( $subscription->end_date >= $now )
                                             Cancels On
@@ -39,20 +40,27 @@
                                             Expired On
                                         @endif
                                     @endif
-                                </b>
-                                <span>{{ convertDateTimeInTimeZone($subscription->end_date, $timezone, 'F d, Y') }}</span>
+                                    </b>
+                                    <span>{{ convertDateTimeInTimeZone($subscription->end_date, $timezone, 'F d, Y') }}</span>
+                                @elseif($subscription->status_id == 1)
+                                    <b class="mr-2">Status</b><span class="text-info">{{ $subscription->status->title }}</span>
+                                @elseif($subscription->status_id == 4)
+                                    <b class="mr-2">Status</b><span class="text-danger">{{ $subscription->status->title }}</span>
+                                @endif
                             </div>
                             <div class="col-sm-6 mb-0 text-center text-sm-right">
-                                @if( $subscription->end_date >= $now )
-                                    @if($subscription->plan->status == 1)
-                                        <a class="btn btn-info subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">Pay now (${{ $subscription->plan->price }})</a>
-                                    @endif
-                                    @if(empty($subscription->cancelled_at))
-                                        <a class="cancel-subscription-link btn btn-info" href="#cancel-subscription" data-toggle="modal" data-id="{{ $subscription->slug }}">Cancel</a>
-                                    @endif
-                                @else
-                                    @if($subscription->plan->status == 1)
-                                        <a class="btn btn-info subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">Renew (${{ $subscription->plan->price }})</a>
+                                @if($subscription->status_id == 2)
+                                    @if( $subscription->end_date >= $now )
+                                        @if($subscription->plan->status == 1)
+                                            <a class="btn btn-info subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">Pay now (${{ $subscription->plan->price }})</a>
+                                        @endif
+                                        @if(empty($subscription->cancelled_at))
+                                            <a class="cancel-subscription-link btn btn-info" href="#cancel-subscription" data-toggle="modal" data-id="{{ $subscription->slug }}">Cancel</a>
+                                        @endif
+                                    @else
+                                        @if($subscription->plan->status == 1)
+                                            <a class="btn btn-info subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">Renew (${{ $subscription->plan->price }})</a>
+                                        @endif
                                     @endif
                                 @endif
                             </div>
@@ -114,8 +122,8 @@
             <h6 class="m-0">Do you really want to cancel this subscription ?</h6>
         </div>
         <div class="modal-footer flex-nowrap justify-content-center align-items-center">
-            <button type="submit" class="btn btn-solid">Continue</a>
-            <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success">Continue</a>
+            <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
         </div>
       </form>
     </div>
@@ -135,7 +143,7 @@
         <h6 class="message_body">Unknown error occurs</h6>
       </div>
       <div class="modal-footer flex-nowrap justify-content-center align-items-center">
-        <button type="button" class="btn btn-solid" data-dismiss="modal">Ok</button>
+        <button type="button" class="btn btn-info" data-dismiss="modal">Ok</button>
       </div>
     </div>
   </div>
@@ -165,11 +173,11 @@
         <div class="modal-body pb-0">
             <div class="form-group">
                 <h5 class="text-17 mb-2" id="subscription_title"></h5>
-                <div class="text-36 mb-2"><span id="subscription_price"></span></div>
+                <div class="mb-2"><span id="subscription_price"></span> / <span id="subscription_frequency"></span></div>
             </div>
             <div class="form-group">
                 <div class="mt-2">Features included:
-                    <div id="features_list"></div>
+                    <div class="mt-2" id="features_list"></div>
                 </div>
             </div>
             <hr class="mb-1" />
@@ -183,7 +191,7 @@
         <div class="modal-footer d-block text-center">
             <div class="row">
                 <div class="col-sm-12 p-0 d-flex justify-space-around">
-                    <button type="button" class="btn btn-success btn-solid mt-2 subscription_confirm_btn">Buy Now</button>
+                    <button type="button" class="btn btn-success btn-solid mt-2 subscription_confirm_btn">Pay</button>
                     <button type="button" class="btn btn-info btn-solid mt-2" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
