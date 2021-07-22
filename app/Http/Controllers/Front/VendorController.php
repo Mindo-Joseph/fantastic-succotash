@@ -44,8 +44,10 @@ class VendorController extends FrontController
                             $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id');
                             $zx->select('variant_options.*', 'vt.title');
                             $zx->where('vt.language_id', $langId);
-                        }
-                    ])->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id')
+                        },
+                        'variantDetail.varcategory.cate'
+                    ]
+                )->join('variants as vr', 'product_variant_sets.variant_type_id', 'vr.id')
                     ->join('variant_translations as vt','vt.variant_id','vr.id')
                     ->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title')
                     ->where('vt.language_id', $langId)

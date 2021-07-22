@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, SmsProvider, Currency, Language, Country, User, SubscriptionPlansUser, SubscriptionPlanFeaturesUser,  SubscriptionFeaturesListUser};
+use App\Models\{Client, ClientPreference, SmsProvider, Currency, Language, Country, User, SubscriptionPlansUser, SubscriptionPlanFeaturesUser,  SubscriptionFeaturesListUser, SubscriptionInvoicesUser};
 use Carbon\Carbon;
 
 class SubscriptionPlansUserController extends BaseController
@@ -43,6 +43,10 @@ class SubscriptionPlansUserController extends BaseController
     {
         $sub_plans = SubscriptionPlansUser::with(['features.feature'])->orderBy('sort_order', 'asc')->get();
         $featuresList = SubscriptionFeaturesListUser::where('status', 1)->get();
+        $user_subscriptions = SubscriptionInvoicesUser::groupBy('user_id')->get();
+        $subscribed_users_count = $user_subscriptions->count();
+        $active_users = User::where('status', 1)->count();
+        $subscribed_users_percentage = ($subscribed_users_count / $active_users) * 100;
         if($sub_plans){
             foreach($sub_plans as $plan){
                 $features = '';
@@ -57,7 +61,7 @@ class SubscriptionPlansUserController extends BaseController
                 $plan->features = $features;
             }
         }
-        return view('backend/subscriptions/subscriptionPlansUser')->with(['features'=>$featuresList, 'subscription_plans'=>$sub_plans]);
+        return view('backend/subscriptions/subscriptionPlansUser')->with(['features'=>$featuresList, 'subscription_plans'=>$sub_plans, 'subscribed_users_count'=>$subscribed_users_count, 'subscribed_users_percentage'=>$subscribed_users_percentage]);
     }
 
     /**

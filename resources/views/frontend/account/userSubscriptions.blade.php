@@ -189,26 +189,6 @@
     </div>
 </section>
 
-<div class="modal fade" id="confirm-buy-subscription" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="confirm_buy_subscriptionLabel">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header pb-0">
-        <h5 class="modal-title" id="confirm_buy_subscriptionLabel">Confirm Subscription</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <h6 class="m-0">Do you really want to buy this subscription ?</h6>
-      </div>
-      <div class="modal-footer flex-nowrap justify-content-center align-items-center">
-        <button type="button" class="btn btn-solid" id="continue_buy_subscription_btn" data-id="">Continue</button>
-        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="modal fade" id="cancel-subscription" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="cancel_subscriptionLabel">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -228,6 +208,25 @@
             <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="error_response" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="error_responseLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="error_responseLabel">Error</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="message_body">Unknown error occurs</h6>
+      </div>
+      <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+        <button type="button" class="btn btn-solid" data-dismiss="modal">Ok</button>
+      </div>
     </div>
   </div>
 </div>
@@ -316,8 +315,7 @@
     var user_subscription_purchase_url = "{{route('user.subscription.plan.purchase', ':id')}}";
     var user_subscription_cancel_url = "{{route('user.subscription.plan.cancel', ':id')}}";
     var payment_stripe_url = "{{route('subscription.payment.stripe')}}";
-    var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
-    var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
+    var check_active_subscription_url = "{{route('user.subscription.plan.checkActive', ':id')}}";
 
     $(document).on('change', '#subscription_payment_methods input[name="subscription_payment_method"]', function() {
         var method = $(this).data("payment_option_id");

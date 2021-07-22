@@ -25,23 +25,6 @@ class UserSubscriptionController extends FrontController
      */
     public function getSubscriptionPlans(Request $request, $domain = '')
     {
-        // $user = Auth::user();
-        // $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', '60f165e1ae656')->where('status', '1')->first();
-        // $active_subscriptions = SubscriptionInvoicesUser::with(['plan', 'features.feature'])
-        //                     ->where('status_id', 2)
-        //                     ->whereNull('cancelled_at')
-        //                     ->where('user_id', Auth::user()->id)
-        //                     ->where('subscription_id', $subscription_plan->id)
-        //                     ->orderBy('end_date', 'desc')->first();
-        // if($active_subscriptions){
-        //     $now = Carbon::now()->toDateString();
-        //     $start_date = $now;
-        //     if($active_subscriptions->end_date >= $now){
-        //         $start_date = Carbon::parse($active_subscriptions->end_date)->addDays(1)->toDateString();
-        //     }
-        //     dd($start_date);
-        //     // dd(($active_subscriptions->end_date >= Carbon::now()->toDateString()));
-        // }
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         $sub_plans = SubscriptionPlansUser::with('features.feature')->where('status', '1')->orderBy('sort_order', 'asc')->get();
@@ -115,7 +98,7 @@ class UserSubscriptionController extends FrontController
         if( ($userActiveSubscription) && ($userActiveSubscription->plan->slug != $slug) ){
             return $this->errorResponse('You cannot buy two subscriptions at the same time', 402);
         }
-        return $this->successResponse();
+        return $this->successResponse('', 'Processing...');
     }
 
     /**
@@ -128,7 +111,6 @@ class UserSubscriptionController extends FrontController
         $user = Auth::user();
         $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
         $last_subscription = SubscriptionInvoicesUser::with(['plan', 'features.feature'])
-            ->whereNull('cancelled_at')
             ->where('user_id', Auth::user()->id)
             ->where('subscription_id', $subscription_plan->id)
             ->orderBy('end_date', 'desc')->first();
@@ -211,7 +193,7 @@ class UserSubscriptionController extends FrontController
         $active_subscription = SubscriptionInvoicesUser::with('plan')
                             ->where('slug', $slug)
                             ->where('user_id', Auth::user()->id)
-                            ->where('status_id', 2)->first();
+                            ->orderBy('end_date', 'desc')->first();
         if($active_subscription){
             $active_subscription->cancelled_at = $active_subscription->end_date;
             $active_subscription->updated_at = Carbon::now()->toDateTimeString();

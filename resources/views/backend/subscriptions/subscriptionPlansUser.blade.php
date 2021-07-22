@@ -68,7 +68,7 @@
                                     <div class="text-center">
                                         <h3>
                                             <i class="mdi mdi-account-multiple-plus text-primary mdi-24px"></i>
-                                            <span data-plugin="counterup" id="total_subscribed_users_count">0</span>
+                                            <span data-plugin="counterup" id="total_subscribed_users_count">{{ $subscribed_users_count }}</span>
                                         </h3>
                                         <p class="text-muted font-15 mb-0">Total Subscribed Users</p>
                                     </div>
@@ -77,7 +77,7 @@
                                     <div class="text-center">
                                         <h3>
                                             <i class="mdi mdi-account-multiple-plus text-primary mdi-24px"></i>
-                                            <span data-plugin="counterup" id="total_subscribed_users_percentage">0</span>
+                                            <span data-plugin="counterup" id="total_subscribed_users_percentage">{{ $subscribed_users_percentage }}</span>
                                         </h3>
                                         <p class="text-muted font-15 mb-0">Total Subscribed Users (%)</p>
                                     </div>

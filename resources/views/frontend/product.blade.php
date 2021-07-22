@@ -122,6 +122,7 @@
                                         @endif
                                     </h3>
                                     @endif
+
                                     @if(!empty($product->variantSet))
                                     @php
                                     $selectedVariant = isset($product->variant[0]) ? $product->variant[0]->id : 0;
@@ -141,7 +142,6 @@
                                                     <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="changeVariant dataVar{{$var_id}}">
                                                     <span class="checkround"></span>
                                                 </label>
-
                                                 @endforeach
                                             </li>
                                         </ul>
@@ -150,6 +150,7 @@
                                     @endif
                                     @endforeach
                                     @endif
+
                                     @if($product->inquiry_only == 0)
                                     <div class="product-description border-product">
                                         <h6 class="product-title mt-0">quantity:

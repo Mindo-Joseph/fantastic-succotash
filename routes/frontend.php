@@ -46,6 +46,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
 	Route::get('page/{slug}','Front\UserhomeController@getExtraPage')->name('extrapage');
 	Route::post('/homePageData','Front\UserhomeController@postHomePageData')->name('homePageData');
+	Route::post('/theme','Front\UserhomeController@setTheme')->name('config.update');
 	Route::post('/homepage','Front\UserhomeController@homepage')->name('homepage');
 	Route::post('getClientPreferences', 'Front\UserhomeController@getClientPreferences')->name('getClientPreferences');
 	Route::post('validateEmail','Front\CustomerAuthController@validateEmail')->name('validateEmail');
@@ -127,6 +128,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/subscription/select/{slug}', 'Front\UserSubscriptionController@selectSubscriptionPlan')->name('user.subscription.plan.select');
 	Route::post('user/subscription/purchase/{slug}', 'Front\UserSubscriptionController@purchaseSubscriptionPlan')->name('user.subscription.plan.purchase');
 	Route::post('user/subscription/cancel/{slug}', 'Front\UserSubscriptionController@cancelSubscriptionPlan')->name('user.subscription.plan.cancel');
+	Route::get('user/subscription/checkActive/{slug}', 'Front\UserSubscriptionController@checkActiveSubscription')->name('user.subscription.plan.checkActive');
 	 // Rating & review 
  	Route::group(['prefix' => 'rating'], function () {
 		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');
