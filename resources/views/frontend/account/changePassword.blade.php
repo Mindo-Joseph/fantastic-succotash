@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Register'])
+@extends('layouts.store', ['title' => __('Change Password')])
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -70,12 +70,12 @@
     <div class="container">
         <div class="row">
             <div class="offset-xl-4 col-xl-4 offset-lg-3 col-lg-6">
-                <h3>Change Password</h3>
+                <h3>{{__('Change Password')}}</h3>
                   <div class="outer-box"> 
                     <form name="register" id="register" action="{{route('user.submitChangePassword')}}" class="theme-form" method="post"> @csrf
                         <div class="form-row mb-2">
                             <div class="col-md-12 mb-3">
-                                <label for="review">Password</label>
+                                <label for="review">{{__('Password')}}</label>
                                 <input type="password" class="form-control mb-0" id="review" placeholder="Enter your password" required="" name="new_password">
                                 @if($errors->first('password'))
                                     <span class="invalid-feedback" role="alert">
@@ -89,7 +89,7 @@
                                 @endif
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label for="review">Confirm Password</label>
+                                <label for="review">{{__('Confirm Password')}}</label>
                                 <input type="password" class="form-control mb-0" id="review" placeholder="Confirm password" required="" name="confirm_password">
                                 @if($errors->first('confirm_password'))
                                     <span class="invalid-feedback" role="alert">
@@ -105,7 +105,7 @@
                             <input type="hidden" name="device_type" value="web">
                             <input type="hidden" name="device_token" value="web">
                             <input type="hidden" id="countryData" name="countryData" value="us">
-                            <div class="col-md-12"><button type="submit" class="btn btn-solid submitRegister w-100">Submit</button></div>
+                            <div class="col-md-12"><button type="submit" class="btn btn-solid submitRegister w-100">{{__('Submit')}}</button></div>
                         </div>
                     </form>
                 </div>
