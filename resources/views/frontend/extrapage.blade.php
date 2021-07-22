@@ -11,8 +11,8 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h2 class="mb-3">{{$page_detail->primary->title}}</h2>
-                <p>{!!$page_detail->primary->description!!}</p>
+                <h2 class="mb-3">{{$page_detail->translations->first() ? $page_detail->translations->first()->title : $page_detail->primary->title}}</h2>
+                <p>{!!$page_detail->translations->first() ? $page_detail->translations->first()->description : $page_detail->primary->description !!}</p>
             </div>
         </div>
         @if($page_detail->id == 3)
@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="col-md-4 mb-3" id="phone_numberInput">
                                     <label for="validationCustom02">Phone No.</label>
-                                    <input type="tel" class="form-control" name="phone_number" value="{{$user ? $user->phone_number : ''}}" id="phone" {{$user ? 'disabled' : ''}}>
+                                    <input type="tel" class="form-control" name="phone_number" value="{{$user ? '+'.$user->dial_code.''.$user->phone_number : ''}}" id="phone" {{$user ? 'disabled' : ''}}>
                                     <div class="invalid-feedback" id="phone_number_error"><strong></strong></div>
                                     <input type="hidden" id="countryData" name="countryData" value="us">
                                     <input type="hidden" id="dialCode" name="dialCode" value="{{$user ? $user->dial_code : ''}}">

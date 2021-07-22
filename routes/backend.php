@@ -170,6 +170,15 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('subscription/plan/delete/vendor/{slug}', 'Client\SubscriptionPlansVendorController@deleteSubscriptionPlan')->name('subscription.plan.delete.vendor');
     Route::post('subscription/plan/updateStatus/vendor/{slug}', 'Client\SubscriptionPlansVendorController@updateSubscriptionPlanStatus')->name('subscription.plan.updateStatus.vendor');
     Route::post('subscription/plan/updateOnRequest/vendor/{slug}', 'Client\SubscriptionPlansVendorController@updateSubscriptionPlanOnRequest')->name('subscription.plan.updateOnRequest.vendor');
+    
+    Route::get('vendor/subscription/plans/{id}', 'Client\VendorController@getSubscriptionPlans')->name('vendor.subscription.plans');
+	Route::get('vendor/subscription/select/{slug}', 'Client\VendorSubscriptionController@selectSubscriptionPlan')->name('vendor.subscription.plan.select');
+	Route::post('vendor/subscription/purchase/{id}/{slug}', 'Client\VendorSubscriptionController@purchaseSubscriptionPlan')->name('vendor.subscription.plan.purchase');
+	Route::post('vendor/subscription/cancel/{id}/{slug}', 'Client\VendorSubscriptionController@cancelSubscriptionPlan')->name('vendor.subscription.plan.cancel');
+	Route::get('vendor/subscription/checkActive/{id}/{slug}', 'Client\VendorSubscriptionController@checkActiveSubscription')->name('vendor.subscription.plan.checkActive');
+    Route::any('vendor/subscriptions/filterData', 'Client\VendorSubscriptionController@getSubscriptionsFilterData')->name('vendor.subscriptions.filterData');
+
+    Route::post('subscription/payment/stripe', 'Client\StripeGatewayController@subscriptionPaymentViaStripe')->name('subscription.payment.stripe');
 
     Route::get('/admin/signup', 'Client\AdminSignUpController@index')->name('admin.signup');
     // pickup & delivery 

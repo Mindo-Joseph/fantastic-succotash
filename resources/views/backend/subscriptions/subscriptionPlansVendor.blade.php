@@ -68,7 +68,7 @@
                                     <div class="text-center">
                                         <h3>
                                             <i class="mdi mdi-account-multiple-plus text-primary mdi-24px"></i>
-                                            <span data-plugin="counterup" id="total_subscribed_vendors_count">0</span>
+                                            <span data-plugin="counterup" id="total_subscribed_vendors_count">{{ $subscribed_vendors_count }}</span>
                                         </h3>
                                         <p class="text-muted font-15 mb-0">Total Subscribed Vendors</p>
                                     </div>
@@ -77,7 +77,7 @@
                                     <div class="text-center">
                                         <h3>
                                             <i class="mdi mdi-account-multiple-plus text-primary mdi-24px"></i>
-                                            <span data-plugin="counterup" id="total_subscribed_vendors_percentage">0</span>
+                                            <span data-plugin="counterup" id="total_subscribed_vendors_percentage">{{ $subscribed_vendors_percentage }}</span>
                                         </h3>
                                         <p class="text-muted font-15 mb-0">Total Subscribed Vendors (%)</p>
                                     </div>
@@ -89,59 +89,132 @@
             </div>
 
             <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <div class="table-responsive">
-                                    <form name="saveOrder" id="saveOrder"> @csrf </form>
-                                    <table class="table table-centered table-nowrap table-striped" id="sub-plans-datatable">
-                                        <thead>
-                                            <tr>
-                                                <th>Image</th>
-                                                <th>Title</th>
-                                                <th>Description</th>
-                                                <th>Price</th>
-                                                <th>Features</th>
-                                                <th>Frequency</th>
-                                                <th>Status</th>
-                                                <th>On Request</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="subscriptions_list">
-                                            @foreach($subscription_plans as $plan)
-                                            <?php 
-                                            ?>
-                                            <tr data-row-id="{{$plan->slug}}">
-                                                <td> 
-                                                    <img src="{{$plan->image['proxy_url'].'40/40'.$plan->image['image_path']}}" class="rounded-circle" alt="{{$plan->slug}}" >
-                                                </td>
-                                                <td><a href="javascript:void(0)" class="editSubscriptionPlanBtn" data-id="{{$plan->slug}}">{{$plan->title}}</a></td>
-                                                <td>{{$plan->Description}}</td>
-                                                <td>${{$plan->price}}</td>
-                                                <td>{{$plan->features}}</td>
-                                                <td>{{ucfirst($plan->frequency)}}</td>
-                                                <td>
-                                                    <input type="checkbox" data-id="{{$plan->slug}}" data-plugin="switchery" name="vendorSubscriptionStatus" class="chk_box status_check" data-color="#43bee1" {{($plan->status == 1) ? 'checked' : ''}} >
-                                                </td>
-                                                <td>
-                                                    <input type="checkbox" data-id="{{$plan->slug}}" data-plugin="switchery" name="vendorSubscriptionOnRequest" class="chk_box on_request_check" data-color="#43bee1" {{($plan->on_request == 1) ? 'checked' : ''}} >
-                                                </td>
-                                                <td> 
-                                                    <div class="form-ul" style="width: 60px;">
-                                                        <div class="inner-div" >
-                                                            @if(Auth::user()->is_superadmin == 1)
-                                                                <a href="javascript:void(0)" class="action-icon editSubscriptionPlanBtn" data-id="{{$plan->slug}}"><i class="mdi mdi-square-edit-outline"></i></a>
-                                                                <a href="{{route('subscription.plan.delete.vendor', $plan->slug)}}" onclick="return confirm('Are you sure? You want to delete the subscription plan.')" class="action-icon"> <i class="mdi mdi-delete" title="Delete subscription plan"></i></a>
-                                                            @endif    
-                                                        </div>
-                                                    </div>
-                                                </td> 
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
+                <div class="col-sm-12 col-lg-12 tab-product pt-0">
+                    <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="all-plans" data-toggle="tab" href="#all_plans" role="tab" aria-selected="false" data-rel="sub-plans-datatable" data-status="">
+                                <i class="icofont icofont-man-in-glasses"></i>Plans<sup class="total-items" id="all_plans_count">(0)</sup>
+                            </a>
+                            <div class="material-border"></div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="awaiting-approval-subscriptions" data-toggle="tab" href="#awaiting_approval_subscriptions" role="tab" aria-selected="true" data-rel="awaiting_approval_subscriptions_datatable" data-status="1">
+                                <i class="icofont icofont-ui-home"></i>Awaiting Approval<sup class="total-items">(0)</sup>
+                            </a>
+                            <div class="material-border"></div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="rejected-subscriptions" data-toggle="tab" href="#rejected_subscriptions" role="tab" aria-selected="false" data-rel="rejected_subscriptions_datatable" data-status="4">
+                                <i class="icofont icofont-man-in-glasses"></i>Rejected<sup class="total-items">(0)</sup>
+                            </a>
+                            <div class="material-border"></div>
+                        </li>
+                    </ul>
+                    <div class="tab-content nav-material pt-0" id="top-tabContent">
+                        <div class="tab-pane fade show active" id="all_plans" role="tabpanel" aria-labelledby="all-plans">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-centered table-nowrap table-striped" id="sub-plans-datatable" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Image</th>
+                                                            <th>Title</th>
+                                                            <th>Description</th>
+                                                            <th>Price</th>
+                                                            <th>Features</th>
+                                                            <th>Frequency</th>
+                                                            <th>Status</th>
+                                                            <th>On Request</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($subscription_plans as $plan)
+                                                        <tr data-row-id="{{$plan->slug}}">
+                                                            <td> 
+                                                                <img src="{{$plan->image['proxy_url'].'40/40'.$plan->image['image_path']}}" class="rounded-circle" alt="{{$plan->slug}}" >
+                                                            </td>
+                                                            <td><a href="javascript:void(0)" class="editSubscriptionPlanBtn" data-id="{{$plan->slug}}">{{$plan->title}}</a></td>
+                                                            <td>{{$plan->Description}}</td>
+                                                            <td>${{$plan->price}}</td>
+                                                            <td>{{$plan->features}}</td>
+                                                            <td>{{ucfirst($plan->frequency)}}</td>
+                                                            <td>
+                                                                <input type="checkbox" data-id="{{$plan->slug}}" data-plugin="switchery" name="vendorSubscriptionStatus" class="chk_box status_check" data-color="#43bee1" {{($plan->status == 1) ? 'checked' : ''}} >
+                                                            </td>
+                                                            <td>
+                                                                <input type="checkbox" data-id="{{$plan->slug}}" data-plugin="switchery" name="vendorSubscriptionOnRequest" class="chk_box on_request_check" data-color="#43bee1" {{($plan->on_request == 1) ? 'checked' : ''}} >
+                                                            </td>
+                                                            <td> 
+                                                                <div class="form-ul" style="width: 60px;">
+                                                                    <div class="inner-div" >
+                                                                        @if(Auth::user()->is_superadmin == 1)
+                                                                            <a href="javascript:void(0)" class="action-icon editSubscriptionPlanBtn" data-id="{{$plan->slug}}"><i class="mdi mdi-square-edit-outline"></i></a>
+                                                                            <a href="{{route('subscription.plan.delete.vendor', $plan->slug)}}" onclick="return confirm('Are you sure? You want to delete the subscription plan.')" class="action-icon"> <i class="mdi mdi-delete" title="Delete subscription plan"></i></a>
+                                                                        @endif    
+                                                                    </div>
+                                                                </div>
+                                                            </td> 
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="awaiting_approval_subscriptions" role="tabpanel" aria-labelledby="awaiting-approval-subscriptions">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-centered table-nowrap table-striped" id="awaiting_approval_subscriptions_datatable" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Vendor Name</th>
+                                                            <th>Plan</th>
+                                                            <th>Price</th>
+                                                            <th>Features</th>
+                                                            <th>Frequency</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="" role="tabpanel" aria-labelledby="rejected-subscriptions">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-centered table-nowrap table-striped" id="rejected-subscriptions-datatable" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Vendor Name</th>
+                                                            <th>Plan</th>
+                                                            <th>Price</th>
+                                                            <th>Features</th>
+                                                            <th>Frequency</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -264,6 +337,11 @@
     var update_subscription_status_url = "{{route('subscription.plan.updateStatus.vendor', ':id')}}";
     var update_subscription_onrequest_url = "{{route('subscription.plan.updateOnRequest.vendor', ':id')}}";
 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('input[name="_token"]').val()
+        }
+    });
     $(document).delegate(".editSubscriptionPlanBtn", "click", function(){
         let slug = $(this).attr("data-id");
         $.ajax({
@@ -287,11 +365,6 @@
         if($(this).is(":checked")){
             status = 1;
         }
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('input[name="_token"]').val()
-            }
-        });
         $.ajax({
             type: "post",
             dataType: "json",
@@ -309,11 +382,6 @@
         if($(this).is(":checked")){
             on_request = 1;
         }
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('input[name="_token"]').val()
-            }
-        });
         $.ajax({
             type: "post",
             dataType: "json",
@@ -324,6 +392,60 @@
             }
         });
     });
+
+    $(document).on("click",".nav-link",function() {
+        let rel= $(this).data('rel');
+        let status= $(this).data('status');
+        if(status != ''){
+            initDataTable(rel, status);
+        }
+    });
+
+    function initDataTable(table, status) {
+        $('#'+table).DataTable({
+            "destroy": true,
+            "scrollX": true,
+            "processing": true,
+            "serverSide": true,
+            "iDisplayLength": 20,
+            "dom": '<"toolbar">Brtip',
+            language: {
+                // search: "",
+                paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
+                // searchPlaceholder: "Search By "+search_text+" Name"
+            },
+            drawCallback: function () {
+                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+            },
+            buttons: [],
+            ajax: {
+                url: "{{ route('vendor.subscriptions.filterData') }}",
+                data: function (d) {
+                    d.status = status;
+                    // d.search = $('input[type="search"]').val();
+                    // d.date_filter = $('#range-datepicker').val();
+                    // d.payment_option = $('#payment_option_select_box option:selected').val();
+                    // d.tax_type_filter = $('#tax_type_select_box option:selected').val();
+                }
+            },
+            columns: [
+                {data: 'vendor_name', name: 'vendor_name', orderable: false, searchable: false,"mRender": function ( data, type, full ) {
+                    return "<a href='"+full.vendor_name+"'>"+full.vendor_name+"</a>";
+                }},
+                {data: 'plan_title', name: 'plan_title', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
+                    return "<a href='"+full.plan_title+"'>"+full.plan_title+"</a> ";
+                }},
+                {data: 'subscription_amount', name: 'subscription_amount', class:'subscription_amount',orderable: false, searchable: false, "mRender":function(data, type, full){
+                    return "<p class='ellips_txt' data-toggle='tooltip' data-placement='top' title='"+full.subscription_amount+"'>"+full.subscription_amount+"</p>";
+                }},
+                {data: 'sub_features', name: 'sub_features', class:'text-center', orderable: false, searchable: false},
+                {data: 'frequency', name: 'frequency', class:'text-center', orderable: false, searchable: false},
+                {data: 'sub_status', name: 'sub_status', orderable: false, searchable: false, "mRender":function(data, type, full){
+                    return "<span class='badge bg-soft-"+full.sub_status_class+" text-"+full.sub_status_class+"'>"+full.sub_status+"</span> | <a class='action-icon edit_vendor' href='javascript:void(0)' data-vendor_id='"+full.vendor_id+"'><i class='mdi mdi-square-edit-outline'></i></a>";
+                }},
+            ]
+        });
+    }
 
 </script>
 

@@ -16,7 +16,126 @@
         -moz-transform: translateY(-50%);
         transform: translateY(-50%);
     }
-    
+    /**/
+    .card.subscript-box {
+        background-color: #fff;
+        border: 1px solid #f7f7f7;
+        border-radius: 16px;
+        padding: 10px;
+        box-shadow: 0 0.75rem 6rem rgb(56 65 74 / 7%);
+    }
+
+    .gold-icon {
+        background: #ebcd71;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        border-radius: 4px;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .gold-icon img {
+        height: 120px;
+    }
+
+    .pricingtable {
+        width: calc(100% - 10px);
+        background: #fff;
+        box-shadow: 0 0.75rem 6rem rgb(56 65 74 / 7%);
+        color: #cad0de;
+        margin: auto;    
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .pricingtable .pricingtable-header {
+        padding: 0 10px;
+        background: rgb(0 0 0 / 20%);
+        width: 100%;
+        height: 100%;
+        transition: all .5s ease 0s;
+        text-align: right;
+    }
+
+    .pricingtable .pricingtable-header i {
+        font-size: 50px;
+        color: #858c9a;
+        margin-bottom: 10px;
+        transition: all .5s ease 0s
+    }
+
+    .pricingtable .price-value {
+        font-size: 30px;
+        color: #fff;
+        transition: all .5s ease 0s
+    }
+
+    .pricingtable .month {
+        display: block;
+        font-size: 14px;
+        color: #fff;
+    }
+
+    .pricingtable:hover .month,
+    .pricingtable:hover .price-value,
+    .pricingtable:hover .pricingtable-header i {
+        color: #fff
+    }
+
+    .pricingtable .heading {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-transform: uppercase
+    }
+
+    .pricingtable .pricing-content ul {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 30px
+    }
+
+    .pricingtable .pricing-content ul li {
+        line-height: 30px;
+        display: block;
+        color: #a7a8aa
+    }
+
+    .pricingtable.blue .heading,
+    .pricingtable.blue .price-value {
+        color: #4b64ff
+    }
+
+    .pricingtable.blue:hover .pricingtable-header {
+        background: #4b64ff
+    }
+
+
+    .pricingtable.red .heading,
+    .pricingtable.red .price-value {
+        color: #ff4b4b
+    }
+
+    .pricingtable.red:hover .pricingtable-header {
+        background: #ff4b4b
+    }
+
+    .pricingtable.green .heading,
+    .pricingtable.green .price-value {
+        color: #40c952
+    }
+
+    .pricingtable.green:hover .pricingtable-header {
+        background: #40c952
+    }
+
+
+    .pricingtable.blue:hover .price-value,
+    .pricingtable.green:hover .price-value,
+    .pricingtable.red:hover .price-value {
+        color: #fff
+    }
+    /**/
 </style>
 @endsection
 
@@ -38,6 +157,9 @@
                     <div class="alert alert-success">
                         <span>{!! \Session::get('success') !!}</span>
                     </div>
+                    @php
+                        \Session::forget('success');
+                    @endphp
                     @endif
                     @if (\Session::has('error_delete'))
                     <div class="alert alert-danger">
@@ -159,6 +281,8 @@
                                     </form>
                                 </div>
                             </div> -->
+
+                            @include('backend.vendor.vendorSubscriptions')
 
                             @if(session('preferences.is_hyperlocal') == 1)
                                 <div class="card-box">
@@ -770,6 +894,187 @@
             //iterate polygon latlongs?
         });
     });
+</script>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script type="text/javascript">
+    var subscription_payment_options_url = "{{route('vendor.subscription.plan.select', ':id')}}";
+    var user_subscription_purchase_url = "{{route('vendor.subscription.plan.purchase', [$vendor->id, ':id'])}}";
+    var user_subscription_cancel_url = "{{route('vendor.subscription.plan.cancel', [$vendor->id, ':id'])}}";
+    var payment_stripe_url = "{{route('subscription.payment.stripe')}}";
+    var check_active_subscription_url = "{{route('vendor.subscription.plan.checkActive', [$vendor->id, ':id'])}}";
+    var card = '';
+    var stripe = '';
+    
+    function stripeInitialize(){
+        stripe = Stripe(stripe_publishable_key);
+        var elements = stripe.elements();
+        var style = {
+            base: {fontSize: '16px',color: '#32325d',borderColor: '#ced4da'},
+        };
+        card = elements.create('card', {hidePostalCode: true, style: style});
+        card.mount('#stripe-card-element');
+    }
+
+    if($("#stripe-card-element").length > 0){
+        stripeInitialize();
+    }
+
+    $(document).on('change', '#subscription_payment_methods input[name="subscription_payment_method"]', function() {
+        var method = $(this).data("payment_option_id");
+        if(method == 4){
+            $("#subscription_payment_methods .stripe_element_wrapper").removeClass('d-none');
+        }else{
+            $("#subscription_payment_methods .stripe_element_wrapper").addClass('d-none');
+        }
+    });
+
+    $(document).on('click', '.cancel-subscription-link', function(){
+        var id = $(this).attr('data-id');
+        $('#cancel-subscription-form').attr('action', user_subscription_cancel_url.replace(":id", id));
+    });
+
+    $(document).delegate(".subscribe_btn", "click", function(){
+        var sub_id = $(this).attr('data-id');
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: check_active_subscription_url.replace(":id", sub_id),
+            success: function(response) {
+                if(response.status == "Success"){
+                    $.ajax({
+                        type: "get",
+                        dataType: "json",
+                        url: subscription_payment_options_url.replace(":id", sub_id),
+                        success: function(response) {
+                            if(response.status == "Success"){
+                                $("#subscription_payment #subscription_title").html(response.sub_plan.title);
+                                $("#subscription_payment #subscription_price").html('$' + response.sub_plan.price);
+                                $("#subscription_payment #subscription_frequency").html(response.sub_plan.frequency);
+                                $("#subscription_payment #features_list").html(response.sub_plan.features);
+                                $("#subscription_payment #subscription_id").val(sub_id);
+                                $("#subscription_payment #subscription_amount").val(response.sub_plan.price);
+                                $("#subscription_payment #subscription_payment_methods").html('');
+                                let payment_method_template = _.template($('#payment_method_template').html());
+                                $("#subscription_payment #subscription_payment_methods").append(payment_method_template({payment_options: response.payment_options}));
+                                if(response.payment_options == ''){
+                                    $("#subscription_payment .subscription_confirm_btn").hide();
+                                }
+                                $("#subscription_payment").modal("show");
+                                stripeInitialize();
+                            }
+                        },error: function(error){
+                            var response = $.parseJSON(error.responseText);
+                            let error_messages = response.message;
+                            $("#error_response .message_body").html(error_messages);
+                            $("#error_response").modal("show");
+                        }
+                    });
+                }
+            },error: function(error){
+                var response = $.parseJSON(error.responseText);
+                let error_messages = response.message;
+                $("#error_response .message_body").html(error_messages);
+                $("#error_response").modal("show");
+            }
+        });
+    });
+    $(document).delegate(".subscription_confirm_btn", "click", function(){
+        var _this = $(".subscription_confirm_btn");
+        _this.attr("disabled", true);
+        var selected_option = $("input[name='subscription_payment_method']:checked");
+        var payment_option_id = selected_option.data("payment_option_id");
+        if( (selected_option.length > 0) && (payment_option_id > 0) ){
+            if( payment_option_id == 4 ){
+                stripe.createToken(card).then(function(result) {
+                    if (result.error) {
+                        $('#stripe_card_error').html(result.error.message);
+                        _this.attr("disabled", false);
+                    } else {
+                        $("#card_last_four_digit").val(result.token.card.last4);
+                        $("#card_expiry_month").val(result.token.card.exp_month);
+                        $("#card_expiry_year").val(result.token.card.exp_year);
+                        paymentViaStripe(result.token.id, '', payment_option_id);
+                    }
+                });
+            }else{
+                paymentViaPaypal('', payment_option_id);
+            }
+        }else{
+            _this.attr("disabled", false);
+            success_error_alert('error', 'Please select any payment option', "#subscription_payment .payment_response");
+        }
+    });
+
+    function paymentViaStripe(stripe_token, address_id, payment_option_id){
+        let total_amount = 0;
+        let cartElement = $("input[name='cart_total_payable_amount']");
+        let walletElement = $("input[name='wallet_amount']");
+        let subscriptionElement = $("input[name='subscription_amount']");
+        let ajaxData = [];
+        if(cartElement.length > 0){
+            total_amount = cartElement.val();
+        }
+        else if(walletElement.length > 0){
+            total_amount = walletElement.val();
+        }
+        else if(subscriptionElement.length > 0){
+            total_amount = subscriptionElement.val();
+            ajaxData = $("#subscription_payment_form").serializeArray();
+        }
+        ajaxData.push(
+            {name: 'stripe_token', value: stripe_token},
+            {name: 'amount', value: total_amount},
+            {name: 'payment_option_id', value: payment_option_id}
+        );
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: payment_stripe_url,
+            data: ajaxData,
+            success: function (resp) {
+                if(resp.status == 'Success'){
+                    userSubscriptionPurchase(total_amount, payment_option_id, resp.data.id);
+                }else{
+                    success_error_alert('error', resp.message, "#subscription_payment_form .payment_response");
+                    $(".subscription_confirm_btn").removeAttr("disabled");
+                }
+            },
+            error: function(error){
+                var response = $.parseJSON(error.responseText);
+                success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
+                $(".subscription_confirm_btn").removeAttr("disabled");
+            }
+        });
+    }
+
+    function userSubscriptionPurchase(amount, payment_option_id, transaction_id){
+        var id = $("#subscription_payment_form #subscription_id").val();
+        if(id != ''){
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: user_subscription_purchase_url.replace(":id", id),
+                data: {amount:amount, payment_option_id:payment_option_id, transaction_id:transaction_id},
+                success: function(response) {
+                    if (response.status == "Success") {
+                        location.reload();
+                    }else{
+                        success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
+                        $(".subscription_confirm_btn").attr("disabled", false);
+                    }
+                },
+                error: function(error){
+                    var response = $.parseJSON(error.responseText);
+                    success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
+                    $(".subscription_confirm_btn").removeAttr("disabled");
+                }
+            });
+        }else{
+            success_error_alert('error', 'Invalid data', "#wallet_topup_form .payment_response");
+            $(".topup_wallet_confirm").removeAttr("disabled");
+        }
+    }
 </script>
 
 @endsection

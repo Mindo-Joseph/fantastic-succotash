@@ -15,7 +15,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <a href="{{ route('userHome') }}"><img class="img-fluid blur-up lazyload" alt="" src="{{$urlImg}}" ></a>
                         </div>
                     </div>
-
                     <div class="col-8">
                         <div class="row align-items-center no-gutters" id="location_search_wrapper">
                             @if( (Session::get('preferences')))
@@ -48,8 +47,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             @endif
                         </div>
                     </div>
-                    
-                    
                     <div class="col-2 menu-right justify-content-end">
                         <div>
                             <nav id="main-nav">
@@ -96,8 +93,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                 </li>
                                               <% }); %>
                                             <% }); %>
-                                            <li><div class='total'><h5>subtotal : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
-                                            <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>viewcart</a>
+                                            <li><div class='total'><h5>{{__('Subtotal')}} : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
+                                            <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('Viewcart')}}</a>
                                         </script>
                                         <ul class="show-div shopping-cart" id="header_cart_main_ul">
 
@@ -110,7 +107,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 </div>
             </div>
         </div>
-                                                             
     </div>
     @if(count($navCategories) > 0)
     <div class="menu-navigation">
@@ -300,7 +296,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         <div class="delivery_address p-2 mb-2 position-relative">
             <button type="button" class="close edit-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <div class="form-group">
-                <label class="delivery-head mb-2">SELECT YOUR LOCATION</label>
+                <label class="delivery-head mb-2">{{__('SELECT YOUR LOCATION')}}</label>
                 <div class="address-input-field d-flex align-items-center justify-content-between">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
                     <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{session('selectedAddress')}}">
@@ -309,7 +305,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 </div>
             </div>
             <div class="text-center">
-                <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100">Confirm And Proceed</button>
+                <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100">{{__('Confirm And Proceed')}}</button>
             </div>
         </div>
       </div>
@@ -320,17 +316,17 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header pb-0">
-        <h5 class="modal-title" id="remove_cartLabel">Remove Cart</h5>
+        <h5 class="modal-title" id="remove_cartLabel">{{__('Remove Cart')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
       <div class="modal-body">
-        <h6 class="m-0">Change in location will remove all your cart products. Do you really want to continue ?</h6>
+        <h6 class="m-0">{{__('Change in location will remove all your cart products. Do you really want to continue ?')}}</h6>
       </div>
       <div class="modal-footer flex-nowrap justify-content-center align-items-center">
-        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-solid" id="remove_cart_button" data-cart_id="">Remove</button>
+        <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">{{__('Cancel')}}</button>
+        <button type="button" class="btn btn-solid" id="remove_cart_button" data-cart_id="">{{__('Remove')}}</button>
       </div>
     </div>
   </div>

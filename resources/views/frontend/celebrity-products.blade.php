@@ -1,5 +1,4 @@
 @extends('layouts.store', ['title' => 'Celebrity'])
-
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -13,27 +12,25 @@
 </style>
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/price-range.css')}}">
 @endsection
-
 @section('content')
-
- <header>
+<header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-
 <section class="section-b-space ratio_asos">
     <div class="collection-wrapper">
         <div class="container">
             <div class="row">
                 <div class="col-sm-3 collection-filter">
-                    <!-- side-bar colleps block stat -->
                     <div class="collection-filter-block">
-                        <!-- brand filter start -->
-                        <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left"
-                                    aria-hidden="true"></i> back</span></div>
+                        <div class="collection-mobile-back">
+                            <span class="filter-back">
+                                <i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}
+                            </span>
+                        </div>
                         <div class="collection-collapse-block open">
                             @if(!empty($category->brands) && count($category->brands) > 0)
-                            <h3 class="collapse-block-title">brand</h3>
+                            <h3 class="collapse-block-title">{{__('Brand')}}</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="collection-brand-filter">
                                     @foreach($category->brands as $key => $val)
@@ -48,7 +45,6 @@
                             </div>
                             @endif
                         </div>
-
                         @if(!empty($variantSets) && count($variantSets) > 0)
                           @foreach($variantSets as $key => $sets)
                             <div class="collection-collapse-block border-0 open">
@@ -84,7 +80,7 @@
                           @endforeach
                         @endif
                         <div class="collection-collapse-block border-0 open">
-                            <h3 class="collapse-block-title">price</h3>
+                            <h3 class="collapse-block-title">{{__('Price')}}</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="wrapper mt-3">
                                     <div class="range-slider">
@@ -94,7 +90,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- side-bar single product slider start -->
                     <div class="theme-card">
                         <h5 class="title-border">new product</h5>
                         <div class="offer-slider slide-1">
@@ -131,15 +126,12 @@
                             @endif
                         </div>
                     </div>
-                    <!-- side-bar banner end here -->
                 </div>
                 <div class="collection-content col">
-
                     <div class="page-main-content">
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="top-banner-wrapper text-center">
-                                    
                                     @if(!empty($celebrity->avatar))
                                       <div class="common-banner"><img alt="" src="{{$celebrity->avatar['proxy_url'] . '1000/200' . $celebrity->avatar['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
@@ -151,16 +143,15 @@
                                     <div class="product-top-filter">
                                         <div class="row">
                                             <div class="col-xl-12">
-                                                <div class="filter-main-btn"><span class="filter-btn btn btn-theme"><i class="fa fa-filter"
-                                                            aria-hidden="true"></i> Filter</span></div>
+                                                <div class="filter-main-btn">
+                                                    <span class="filter-btn btn btn-theme">
+                                                        <i class="fa fa-filter" aria-hidden="true"></i> {{__('Filter')}}</span>
+                                                    </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="product-filter-content border-left">
-                                                    <!-- <div class="search-count">
-                                                        <h5>Showing Products 1-24 of 10 Result</h5>
-                                                    </div> -->
                                                     <div class="collection-view">
                                                         <ul>
                                                             <li><i class="fa fa-th grid-layout-view"></i></li>
@@ -178,7 +169,6 @@
                                                     <div class="product-page-per-view">
                                                         <?php $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 8; ?>
                                                         <select class="customerPaginate">
-
                                                             <option value="8" @if($pagiNate == 8) selected @endif>Show 8 
                                                             </option>
                                                             <option value="12" @if($pagiNate == 12) selected @endif>Show 12 
@@ -189,13 +179,6 @@
                                                             </option>
                                                         </select>
                                                     </div>
-                                                    <!-- <div class="product-page-filter">
-                                                        <select>
-                                                            <option value="High to low">Sorting items</option>
-                                                            <option value="Low to High">50 Products</option>
-                                                            <option value="Low to High">100 Products</option>
-                                                        </select>
-                                                    </div> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -203,7 +186,6 @@
                                     <div class="displayProducts">
                                         <div class="product-wrapper-grid">
                                             <div class="row margin-res">
-
                                               @if($celebrity->products->isNotEmpty())
                                                 @foreach($celebrity->products as $key => $data)
                                                 <?php
@@ -224,8 +206,6 @@
                                                             <div class="cart-info cart-wrap">
                                                                 <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> 
                                                                 <a href="javascript:void(0)" title="Add to Wishlist" class="addWishList" proSku="{{$data->sku}}"><i class="ti-heart" aria-hidden="true"></i></a>
-                                                                <!-- <a data-toggle="modal" href="#" data-target="#quick-view" title="Quick View"><i class="ti-search" aria-hidden="true"></i></a>
-                                                                <a href="compare.html" title="Compare"><i class="ti-reload" aria-hidden="true"></i></a> -->
                                                             </div>
                                                         </div>
                                                         <div class="product-detail">
@@ -253,11 +233,6 @@
                                               @endif
                                             </div>
                                         </div>
-                                        <div class="pagination pagination-rounded justify-content-end mb-0">
-                                            {{-- @if(!empty($celebrity))
-                                                {{ $celebrity->links() }}
-                                            @endif --}}
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -268,11 +243,8 @@
         </div>
     </div>
 </section>
-
 @endsection
-
 @section('script')
-
 <script src="{{asset('front-assets/js/rangeSlider.min.js')}}"></script>
 <script src="{{asset('front-assets/js/my-sliders.js')}}"></script>
 <script>

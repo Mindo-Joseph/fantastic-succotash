@@ -78,8 +78,8 @@ class BrandController extends FrontController
 
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-
-        return view('frontend.brand-products')->with(['brand' => $brand, 'products' => $products, 'newProducts' => $newProducts, 'navCategories' => $navCategories, 'variantSets' => $variantSets]);
+        $range_products = Product::join('product_variants', 'product_variants.product_id', '=', 'products.id')->orderBy('product_variants.price', 'desc')->groupBy('product_id')->select('*')->where('is_live', 1)->where('brand_id', $brandId)->get();
+        return view('frontend.brand-products')->with(['range_products' => $range_products, 'brand' => $brand, 'products' => $products, 'newProducts' => $newProducts, 'navCategories' => $navCategories, 'variantSets' => $variantSets]);
     }
 
     /**

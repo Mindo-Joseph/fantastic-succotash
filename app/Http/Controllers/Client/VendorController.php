@@ -20,7 +20,7 @@ use App\Http\Traits\ToasterResponser;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory,UserPermissions, VendorDocs};
+use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory,UserPermissions, VendorDocs, SubscriptionPlansVendor, SubscriptionInvoicesVendor, SubscriptionInvoiceFeaturesVendor, SubscriptionFeaturesListVendor};
 use GuzzleHttp\Client as GCLIENT;
 use DB;
 class VendorController extends BaseController
@@ -308,7 +308,8 @@ class VendorController extends BaseController
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend/vendor/show')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes, 'builds' => $build]);
+        $subscriptions_data = $this->getSubscriptionPlans($id);
+        return view('backend/vendor/show')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes, 'builds' => $build, 'subscription_plans'=> $subscriptions_data['sub_plans'], 'subscription'=> $subscriptions_data['active_sub']]);
     }
 
     /**   show vendor page - category tab      */
@@ -701,7 +702,36 @@ class VendorController extends BaseController
         return redirect()->back()->with('success', 'Permission deleted successfully!');
     }
 
-    
+    /**
+     * get vendor subscriptions.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getSubscriptionPlans($id)
+    {
+        $sub_plans = SubscriptionPlansVendor::with('features.feature')->where('status', '1')->orderBy('sort_order', 'asc')->get();
+        $featuresList = SubscriptionFeaturesListVendor::where('status', 1)->get();
+        $active_subscription = SubscriptionInvoicesVendor::with(['plan', 'features.feature', 'status'])
+                            ->where('vendor_id', $id)
+                            ->orderBy('end_date', 'desc')
+                            ->orderBy('id', 'desc')->first();
+        
+        if($sub_plans){
+            foreach($sub_plans as $sub){
+                $subFeaturesList = array();
+                if($sub->features->isNotEmpty()){
+                    foreach($sub->features as $feature){
+                        $subFeaturesList[] = $feature->feature->title;
+                    }
+                    unset($sub->features);
+                }
+                $sub->features = $subFeaturesList;
+            }
+        }
+        $data['sub_plans'] = $sub_plans;
+        $data['active_sub'] = $active_subscription;
+        return $data;
+    }
 
     
 }

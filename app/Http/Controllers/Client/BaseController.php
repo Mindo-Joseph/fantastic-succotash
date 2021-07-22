@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{Client, Category, Product, ClientPreference, UserDevice, UserLoyaltyPoint, Wallet};
+use App\Models\{Client, Category, Product, ClientPreference, UserDevice, UserLoyaltyPoint, Wallet, VendorSavedPaymentMethods};
 use Illuminate\Support\Facades\Storage;
 use Session;
 
@@ -226,5 +226,27 @@ class BaseController extends Controller
             $barCode = substr(md5(microtime()), 0, 14);
         }
         return $barCode;
+    }
+
+    /* Save user payment method */
+    public function saveVendorPaymentMethod($request)
+    {
+        $payment_method = new VendorSavedPaymentMethods;
+        $payment_method->vendor_id = $request->vendor_id;
+        $payment_method->payment_option_id = $request->payment_option_id;
+        $payment_method->card_last_four_digit = $request->card_last_four_digit;
+        $payment_method->card_expiry_month = $request->card_expiry_month;
+        $payment_method->card_expiry_year = $request->card_expiry_year;
+        $payment_method->customerReference = ($request->has('customerReference')) ? $request->customerReference : NULL;
+        $payment_method->cardReference = ($request->has('cardReference')) ? $request->cardReference : NULL;
+        $payment_method->save();
+    }
+
+    /* Get Saved vendor payment method */
+    public function getSavedVendorPaymentMethod($request)
+    {
+        $saved_payment_method = VendorSavedPaymentMethods::where('vendor_id', $request->vendor_id)
+                        ->where('payment_option_id', $request->payment_option_id)->first();
+        return $saved_payment_method;
     }
 }

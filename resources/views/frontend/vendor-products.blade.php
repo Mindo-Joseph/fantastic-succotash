@@ -1,5 +1,4 @@
 @extends('layouts.store', ['title' => $vendor->name])
-
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -10,9 +9,7 @@
 </style>
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/price-range.css')}}">
 @endsection
-
 @section('content')
-
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -55,10 +52,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-3 collection-filter">
-                    <!-- side-bar colleps block stat -->
                     <div class="collection-filter-block">
-                        <!-- brand filter start -->
-                        <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i> back</span></div>
+                        <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}</span></div>
                         <div class="collection-collapse-block open">
                             @if(!empty($brands) && count($brands) > 0)
                             <h3 class="collapse-block-title">brand</h3>
@@ -79,7 +74,7 @@
                         @if(!empty($variantSets) && count($variantSets) > 0)
                         @foreach($variantSets as $key => $sets)
                         <div class="collection-collapse-block border-0 open">
-                            <h3 class="collapse-block-title">{{$sets->variantDetail->varcategory->cate->slug .' > '. $sets->title}}</h3>
+                            <h3 class="collapse-block-title"> {{$sets->variantDetail->varcategory->cate->slug .' > '. $sets->title}}</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="collection-brand-filter">
                                     @if($sets->type == 2)
@@ -110,7 +105,7 @@
                         @endforeach
                         @endif
                         <div class="collection-collapse-block border-0 open">
-                            <h3 class="collapse-block-title">price</h3>
+                            <h3 class="collapse-block-title">{{__('Price')}}</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="wrapper mt-3">
                                     <div class="range-slider">
@@ -166,11 +161,9 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="top-banner-wrapper">
-
                                     @if(!empty($vendor->banner))
-                                    <div class="common-banner text-center"><img alt="" src="{{$vendor->banner['proxy_url'] . '1000/200' . $vendor->banner['image_path']}}" class="img-fluid blur-up lazyload"></div>
+                                        <div class="common-banner text-center"><img alt="" src="{{$vendor->banner['proxy_url'] . '1000/200' . $vendor->banner['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
-
                                     <div class="row mt-n5">
                                         <div class="col-md-8 offset-md-2">
                                             <form action="">
@@ -203,7 +196,6 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="form-group" id="">
-                                                            <!-- <label for="title" class="control-label">Description</label> -->
                                                             <p>{{$vendor->desc}}</p>
                                                         </div>
                                                     </div>                                                  
@@ -212,25 +204,17 @@
                                             </form>
                                         </div>
                                     </div>
-                                   
-
-                                    <!-- <div class="top-banner-content small-section">
-                                        <h4>{{ $vendor->name }}</h4>
-                                    </div> -->
                                 </div>
                                 <div class="collection-product-wrapper">
                                     <div class="product-top-filter">
                                         <div class="row">
                                             <div class="col-xl-12">
-                                                <div class="filter-main-btn"><span class="filter-btn btn btn-theme"><i class="fa fa-filter" aria-hidden="true"></i> Filter</span></div>
+                                                <div class="filter-main-btn"><span class="filter-btn btn btn-theme"><i class="fa fa-filter" aria-hidden="true"></i>{{__('Filter')}}</span></div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="product-filter-content border-left">
-                                                    <!-- <div class="search-count">
-                                                        <h5>Showing Products 1-24 of 10 Result</h5>
-                                                    </div> -->
                                                     <div class="collection-view">
                                                         <ul>
                                                             <li><i class="fa fa-th grid-layout-view"></i></li>
@@ -248,7 +232,6 @@
                                                     <div class="product-page-per-view">
                                                         <?php $pnum = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 8; ?>
                                                         <select class="customerPaginate">
-
                                                             <option value="8" @if($pnum==8) selected @endif>Show 8
                                                             </option>
                                                             <option value="12" @if($pnum==12) selected @endif>Show 12 </option>
@@ -258,13 +241,6 @@
                                                             </option>
                                                         </select>
                                                     </div>
-                                                    <!-- <div class="product-page-filter">
-                                                        <select>
-                                                            <option value="High to low">Sorting items</option>
-                                                            <option value="Low to High">50 Products</option>
-                                                            <option value="Low to High">100 Products</option>
-                                                        </select>
-                                                    </div> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -272,10 +248,8 @@
                                     <div class="displayProducts">
                                         <div class="product-wrapper-grid">
                                             <div class="row margin-res">
-
                                                 @if($listData->isNotEmpty())
                                                     @foreach($listData as $key => $data)
-
                                                     <?php $imagePath = $imagePath2 = '';
                                                     $mediaCount = count($data->media);
                                                     for ($i = 0; $i < $mediaCount && $i < 2; $i++) {
@@ -289,12 +263,6 @@
                                                             <div class="img-wrapper">
                                                                 <div class="front">
                                                                     <a href="{{route('productDetail', $data->url_slug)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
-                                                                </div>
-                                                                <div class="cart-info cart-wrap">
-                                                                    <!-- <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button>
-                                                                    <a href="javascript:void(0)" title="Add to Wishlist" class="addWishList" proSku="{{$data->sku}}"><i class="ti-heart" aria-hidden="true"></i></a> -->
-                                                                    <!-- <a data-toggle="modal" href="#" data-target="#quick-view" title="Quick View"><i class="ti-search" aria-hidden="true"></i></a>
-                                                                    <a href="compare.html" title="Compare"><i class="ti-reload" aria-hidden="true"></i></a> -->
                                                                 </div>
                                                             </div>
                                                             <div class="product-detail">
@@ -320,7 +288,7 @@
                                                     </div>
                                                     @endforeach
                                                 @else
-                                                    <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">No Product Found</h5></div>
+                                                    <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">{{__('No Product Found')}}</h5></div>
                                                 @endif
                                             </div>
                                         </div>
@@ -328,31 +296,6 @@
                                             {{ $listData->links() }}
                                         </div>
                                     </div>
-                                    <!-- <div class="product-pagination">
-                                        <div class="theme-paggination-block">
-                                            <div class="row">
-                                                <div class="col-xl-6 col-md-6 col-sm-12">
-                                                    <nav aria-label="Page navigation">
-                                                        <ul class="pagination">
-                                                            <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-chevron-left" aria-hidden="true"></i></span> <span class="sr-only">Previous</span></a></li>
-                                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true"><i
-                                                                            class="fa fa-chevron-right"
-                                                                            aria-hidden="true"></i></span> <span
-                                                                        class="sr-only">Next</span></a></li>
-                                                        </ul>
-                                                    </nav>
-                                                </div>
-                                                <div class="col-xl-6 col-md-6 col-sm-12">
-                                                    <div class="product-search-count-bottom">
-                                                        <h5>Showing Products 1-24 of 10 Result</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -362,21 +305,18 @@
         </div>
     </div>
 </section>
-
 @endsection
-
 @section('script')
-
 <script src="{{asset('front-assets/js/rangeSlider.min.js')}}"></script>
 <script src="{{asset('front-assets/js/my-sliders.js')}}"></script>
 <script>
     $('.js-range-slider').ionRangeSlider({
         type: 'double',
         grid: false,
-        min: 0,
-        max: 50000,
-        from: 0,
-        to: 50000,
+        min: "{{$range_products->last() ? $range_products->last()->price : 0}}",
+        max: "{{$range_products->first() ? $range_products->first()->price : 1000}}",
+        from: "{{$range_products->last() ? $range_products->last()->price : 0}}",
+        to: "{{$range_products->first() ? $range_products->first()->price : 1000}}",
         prefix: ""
     });
 
