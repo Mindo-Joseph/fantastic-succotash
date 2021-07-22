@@ -227,4 +227,12 @@ class BaseController extends Controller
         }
         return $barCode;
     }
+
+    /* Get Saved vendor payment method */
+    public function getSavedVendorPaymentMethod($request)
+    {
+        $saved_payment_method = VendorSavedPaymentMethods::where('vendor_id', $request->vendor_id)
+                        ->where('payment_option_id', $request->payment_option_id)->first();
+        return $saved_payment_method;
+    }
 }

@@ -172,7 +172,7 @@
                                         </ul>
                                     </div>
                                     <div class="pricingtable-purchase">
-                                        @if($plan->id == $subscription->plan->id)
+                                        @if( (isset($subscription->plan->id)) && ($plan->id == $subscription->plan->id) )
                                             <button class="btn btn-solid black-btn disabled w-100">Subscribed</button>
                                         @else
                                             <button class="btn btn-solid w-100 subscribe_btn" data-id="{{ $plan->slug }}">Subscribe</button>

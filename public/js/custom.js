@@ -129,6 +129,9 @@ $(document).ready(function() {
                                 $("#subscription_payment #subscription_payment_methods").html('');
                                 let payment_method_template = _.template($('#payment_method_template').html());
                                 $("#subscription_payment #subscription_payment_methods").append(payment_method_template({payment_options: response.payment_options}));
+                                if(response.payment_options == ''){
+                                    $("#subscription_payment .subscription_confirm_btn").hide();
+                                }
                                 $("#subscription_payment").modal("show");
                                 stripeInitialize();
                             }
@@ -150,6 +153,7 @@ $(document).ready(function() {
     });
     $(document).delegate(".subscription_confirm_btn", "click", function(){
         var _this = $(".subscription_confirm_btn");
+        _this.attr("disabled", true);
         var selected_option = $("input[name='subscription_payment_method']:checked");
         var payment_option_id = selected_option.data("payment_option_id");
         if( (selected_option.length > 0) && (payment_option_id > 0) ){
@@ -162,15 +166,14 @@ $(document).ready(function() {
                         $('#stripe_card_error').html(result.error.message);
                         _this.attr("disabled", false);
                     } else {
-                        _this.attr("disabled", true);
                         paymentViaStripe(result.token.id, '', payment_option_id);
                     }
                 });
             }else{
-                _this.attr("disabled", true);
                 paymentViaPaypal('', payment_option_id);
             }
         }else{
+            _this.attr("disabled", false);
             success_error_alert('error', 'Please select any payment option', "#subscription_payment .payment_response");
         }
     });
