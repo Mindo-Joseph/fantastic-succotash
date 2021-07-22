@@ -1,3 +1,8 @@
+@php
+    $timezone = Auth::user()->timezone;
+    $now = \Carbon\Carbon::now()->toDateString();
+    $after7days = \Carbon\Carbon::now()->addDays(7)->toDateString();
+@endphp
 <div class="row mb-4">
     <div class="col-12 mb-4">
         @if(!empty($subscription))
@@ -40,14 +45,14 @@
                             <div class="col-sm-6 mb-0 text-center text-sm-right">
                                 @if( $subscription->end_date >= $now )
                                     @if($subscription->plan->status == 1)
-                                        <a class="btn btn-solid subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">Pay now (${{ $subscription->plan->price }})</a>
+                                        <a class="btn btn-info subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">Pay now (${{ $subscription->plan->price }})</a>
                                     @endif
                                     @if(empty($subscription->cancelled_at))
-                                        <a class="cancel-subscription-link btn btn-solid" href="#cancel-subscription" data-toggle="modal" data-id="{{ $subscription->slug }}">Cancel</a>
+                                        <a class="cancel-subscription-link btn btn-info" href="#cancel-subscription" data-toggle="modal" data-id="{{ $subscription->slug }}">Cancel</a>
                                     @endif
                                 @else
                                     @if($subscription->plan->status == 1)
-                                        <a class="btn btn-solid subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">Renew (${{ $subscription->plan->price }})</a>
+                                        <a class="btn btn-info subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">Renew (${{ $subscription->plan->price }})</a>
                                     @endif
                                 @endif
                             </div>
@@ -177,7 +182,7 @@
         </div>
         <div class="modal-footer d-block text-center">
             <div class="row">
-                <div class="col-sm-6 p-0 d-flex justify-space-around">
+                <div class="col-sm-12 p-0 d-flex justify-space-around">
                     <button type="button" class="btn btn-success btn-solid mt-2 subscription_confirm_btn">Buy Now</button>
                     <button type="button" class="btn btn-info btn-solid mt-2" data-dismiss="modal">Cancel</button>
                 </div>
@@ -194,16 +199,15 @@
     <% }else{ %>
         <% _.each(payment_options, function(payment_option, k){%>
             <% if( (payment_option.slug != 'cash_on_delivery') && (payment_option.slug != 'loyalty_points') ) { %>
-                <label class="radio mt-2">
-                    <%= payment_option.title %> 
-                    <input type="radio" name="subscription_payment_method" id="radio-<%= payment_option.slug %>" value="<%= payment_option.slug %>" data-payment_option_id="<%= payment_option.id %>">
-                    <span class="checkround"></span>
-                </label>
+                <div class="radio pl-1 mt-2 radio-blue form-check-inline">
+                    <input type="radio" name="subscription_payment_method" id="radio-<%= payment_option.slug %>" value="<%= payment_option.slug %>" data-payment_option_id="<%= payment_option.id %>" {{ (isset($preference) && $preference->theme_admin =="light")? "checked" : "" }}>
+                    <label for="radio-<%= payment_option.slug %>"> <%= payment_option.title %> </label>
+                </div>
                 <% if(payment_option.slug == 'stripe') { %>
                     <div class="col-md-12 mt-3 mb-3 stripe_element_wrapper d-none">
                         <div class="form-control">
-                            <label class="d-flex flex-row pt-1 pb-1 mb-0">
-                                <div id="stripe-card-element"></div>
+                            <label class="d-flex flex-row mb-0">
+                                <div class="w-100" id="stripe-card-element"></div>
                             </label>
                         </div>
                         <span class="error text-danger" id="stripe_card_error"></span>

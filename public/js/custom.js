@@ -159,13 +159,13 @@ $(document).ready(function() {
         if( (selected_option.length > 0) && (payment_option_id > 0) ){
             if( payment_option_id == 4 ){
                 stripe.createToken(card).then(function(result) {
-                    $("#card_last_four_digit").val(result.token.card.last4);
-                    $("#card_expiry_month").val(result.token.card.exp_month);
-                    $("#card_expiry_year").val(result.token.card.exp_year);
                     if (result.error) {
                         $('#stripe_card_error').html(result.error.message);
                         _this.attr("disabled", false);
                     } else {
+                        $("#card_last_four_digit").val(result.token.card.last4);
+                        $("#card_expiry_month").val(result.token.card.exp_month);
+                        $("#card_expiry_year").val(result.token.card.exp_year);
                         paymentViaStripe(result.token.id, '', payment_option_id);
                     }
                 });

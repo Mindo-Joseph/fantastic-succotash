@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Front;
+namespace App\Http\Controllers\Client;
 
 use Auth;
 use Omnipay\Omnipay;
@@ -30,7 +30,7 @@ class StripeGatewayController extends BaseController{
         try{
             $token = $request->stripe_token;
             $plan_id = $request->subscription_id;
-            $saved_payment_method = $this->getSavedUserPaymentMethod($request);
+            $saved_payment_method = $this->getSavedVendorPaymentMethod($request);
             if(!$saved_payment_method){
                 $customerResponse = $this->gateway->createCustomer(array(
                     'description' => 'Creating Customer for subscription',
@@ -41,7 +41,7 @@ class StripeGatewayController extends BaseController{
                 $customer_id = $customerResponse->getCustomerReference();
                 if($customer_id){
                     $request->request->set('customerReference', $customer_id);
-                    $save_payment_method_response = $this->saveUserPaymentMethod($request);
+                    $save_payment_method_response = $this->saveVendorPaymentMethod($request);
                 }
             }
             else{
