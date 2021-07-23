@@ -38,7 +38,7 @@
                      $phn = ' ';
                  }
                 @endphp
-                <input type="tel" class="form-control phone @error('phone_number') is-invalid @enderror" id="phone" placeholder="Phone Number" name="phone_number" value="{{$phn ? $phn : old('phone_number')}}">
+                <input type="tel" class="form-control phone @error('phone_number') is-invalid @enderror" id="phone" placeholder="Phone Number" name="phone_number" value="{{$phn ? $phn : old('phone_number')}}" required="required">
                 <input type="hidden" id="countryData" name="countryData" value="us">
                 <input type="hidden" id="dialCode" name="dialCode" value="1">
                 @error('phone_number')
