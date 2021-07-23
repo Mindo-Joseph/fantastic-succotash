@@ -786,27 +786,33 @@
                   <input type="hidden" name="custom_mods_config" id="custom_mods_config" value="1">
                   @csrf
                   <div class="row align-items-center">
-                     <div class="col-md-3">
-                        <div class="form-group mb-0">
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
                            <label for="celebrity_check" class="mr-3 mb-0"> Celebrity Mod</label>
                            <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1')) checked='checked' @endif>
                         </div>
                      </div>
                      <div class="col-md-4">
-                        <div class="form-group mb-0">
+                        <div class="form-group mb-3">
                            <label for="pharmacy_check" class="mr-3 mb-0">Pharmacy Mod</label>
                            <input type="checkbox" data-plugin="switchery" name="pharmacy_check" id="pharmacy_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1')) checked='checked' @endif>
                         </div>
                      </div>
-                     <div class="col-md-3">
-                        <div class="form-group mb-0">
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
                            <label for="enquire_mode" class="mr-3 mb-0">Inquiry Mod</label>
                            <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1')) checked='checked' @endif>
                         </div>
                      </div>
-                     <div class="col-md-2">
-                        <div class="form-group mb-0 text-md-right">
-                           <button class="btn btn-info d-block ml-md-auto" type="submit">Save</button>
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="enquire_mode" class="mr-3 mb-0">Subscription Mod</label>
+                           <input type="checkbox" data-plugin="switchery" name="subscription_mode" id="subscription_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->subscription_mode == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-12">
+                        <div class="form-group mb-0 text-md-left">
+                           <button class="btn btn-info d-block" type="submit">Save</button>
                         </div>
                      </div>
                   </div>
