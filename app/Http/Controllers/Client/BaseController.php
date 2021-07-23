@@ -233,6 +233,7 @@ class BaseController extends Controller
     {
         $payment_method = new VendorSavedPaymentMethods;
         $payment_method->vendor_id = $request->vendor_id;
+        $payment_method->user_id = $request->user_id;
         $payment_method->payment_option_id = $request->payment_option_id;
         $payment_method->card_last_four_digit = $request->card_last_four_digit;
         $payment_method->card_expiry_month = $request->card_expiry_month;
@@ -245,7 +246,7 @@ class BaseController extends Controller
     /* Get Saved vendor payment method */
     public function getSavedVendorPaymentMethod($request)
     {
-        $saved_payment_method = VendorSavedPaymentMethods::where('vendor_id', $request->vendor_id)
+        $saved_payment_method = VendorSavedPaymentMethods::where('user_id', $request->user_id)
                         ->where('payment_option_id', $request->payment_option_id)->first();
         return $saved_payment_method;
     }
