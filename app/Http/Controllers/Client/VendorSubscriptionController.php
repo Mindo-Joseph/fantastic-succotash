@@ -32,12 +32,9 @@ class VendorSubscriptionController extends BaseController
         $featuresList = SubscriptionFeaturesListVendor::where('status', 1)->get();
         $active_subscription = SubscriptionInvoicesVendor::with(['plan', 'features.feature', 'status'])
                             ->where('vendor_id', $id)
+                            ->where('status_id', '!=', 4)
                             ->orderBy('end_date', 'desc')
                             ->orderBy('id', 'desc')->first();
-        // $active_subscription_plan_ids = array();
-        // foreach($active_subscription as $subscription){
-        //     $active_subscription_plan_ids[] = $active_subscription->subscription_id;
-        // }
 
         if($sub_plans){
             foreach($sub_plans as $sub){
@@ -94,6 +91,7 @@ class VendorSubscriptionController extends BaseController
         $vendorActiveSubscription = SubscriptionInvoicesVendor::with(['plan'])
                                 ->whereNull('cancelled_at')
                                 ->where('vendor_id', $id)
+                                ->where('status_id', '!=', 4)
                                 ->orderBy('end_date', 'desc')->first();
         if( ($vendorActiveSubscription) && ($vendorActiveSubscription->plan->slug != $slug) ){
             return $this->errorResponse('You cannot buy two subscriptions at the same time', 402);
@@ -222,7 +220,7 @@ class VendorSubscriptionController extends BaseController
         $subscription_invoice = SubscriptionInvoicesVendor::where('slug', $slug)->firstOrFail();
         if(!empty($request->subscription_status)){
             $status = $request->subscription_status;
-            if($status == 'activate'){
+            if($status == 'approve'){
                 $subscription_invoice->status_id = 2;
             }
             elseif($status == 'reject'){

@@ -713,6 +713,7 @@ class VendorController extends BaseController
         $featuresList = SubscriptionFeaturesListVendor::where('status', 1)->get();
         $active_subscription = SubscriptionInvoicesVendor::with(['plan', 'features.feature', 'status'])
                             ->where('vendor_id', $id)
+                            ->where('status_id', '!=', 4)
                             ->orderBy('end_date', 'desc')
                             ->orderBy('id', 'desc')->first();
         

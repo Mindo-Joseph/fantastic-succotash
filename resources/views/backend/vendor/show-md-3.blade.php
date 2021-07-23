@@ -199,7 +199,7 @@
     }
 </style>
 
-@if(count($vendor->permissionToUser))
+
  <div class="card-box">
     <h4 class="header-title mb-2 d-inline-block">Users</h4>
     <h4 class="header-title mb-1 float-right"><a class="btn addUsersBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1" ></i> Add Users
@@ -228,7 +228,7 @@
         @endforeach
     </div>
 </div>
-@endif
+
 <div id="edit-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
