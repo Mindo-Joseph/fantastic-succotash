@@ -307,7 +307,7 @@ class OrderController extends Controller {
                     'image_path' => $product->media->first() ? $product->media->first()->image->path : $product->image,
                     'price' => $product->price,
                     'qty' => $product->quantity,
-                    'category_detail' => $product->category,
+                    'category_type' => $product->product->category->categoryDetail->type->title??'',
                 );
             }
             $order->product_details = $product_details;
