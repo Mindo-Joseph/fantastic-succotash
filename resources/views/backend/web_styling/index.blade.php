@@ -88,7 +88,7 @@
         submitData();
     });
     $("#image").change(function() {
-       
+        submitData();
     });
     function submitData(){
         var form = document.getElementById('favicon-form');
