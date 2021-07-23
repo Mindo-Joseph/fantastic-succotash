@@ -147,7 +147,7 @@
                 <div class="title1">
                     <h2 class="title-inner1 mb-0">{{getNomenclatureName('vendors', true)}}</h2>
                 </div>
-                <!-- <a class="view_more_items" href="#">View More</a> -->
+                <a class="view_more_items" href="{{route('vendor.all')}}">View More</a>
             </div>
         </div>
         <div class="row">
