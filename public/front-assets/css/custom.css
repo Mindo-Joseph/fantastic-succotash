@@ -3198,6 +3198,19 @@ header .homepage-address h2 {
     }
 }
 
+@media(min-width: 1400px){
+    .booking-experience{
+        position: absolute;
+        left: calc(((100vw - 1440px) / 2) + 24px);
+    }
+}
+@media(min-width: 992px){
+    .booking-experience{
+        position: absolute;
+        left: calc(((100vw - 1440px) / 2) + 24px);
+    }
+}
+
 @media(max-width:991px){
     .wrapper-main .border-right,.wrapper-main .border-left{
         border: 0 !important;
