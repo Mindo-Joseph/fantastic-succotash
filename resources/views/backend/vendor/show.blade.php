@@ -896,6 +896,7 @@
     });
 </script>
 
+@if((isset($client_preferences['subscription_mode'])) && ($client_preferences['subscription_mode'] == 1))
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
     var subscription_payment_options_url = "{{route('vendor.subscription.plan.select', ':id')}}";
@@ -1076,5 +1077,6 @@
         }
     }
 </script>
+@endif
 
 @endsection
