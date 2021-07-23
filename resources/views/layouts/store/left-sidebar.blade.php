@@ -5,153 +5,10 @@ $urlImg =  $clientData ? $clientData->logo['image_fit'].'200/80'.$clientData->lo
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
-<header class="header-2 header-6">
-    <div class="container py-3">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="main-menu border-section border-top-0">
-                    <div class="col-2 menu-left">                        
-                        <div class="brand-logo">
-                            <a href="{{ route('userHome') }}"><img class="img-fluid blur-up lazyload" alt="" src="{{$urlImg}}" ></a>
-                        </div>
-                    </div>
-                    <div class="col-8">
-                        <div class="row align-items-center no-gutters" id="location_search_wrapper">
-                            @if( (Session::get('preferences')))
-                            @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
-                                <div class="col-md-4 col">
-                                    <div class="d-flex align-items-center justify-content-start pl-2 dropdown-toggle" href="#edit-address" data-toggle="modal">
-                                        <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-                                        <div class="homepage-address text-left">
-                                            <h2><span data-placement="top" data-toggle="tooltip" title="{{session('selectedAddress')}}">{{session('selectedAddress')}}</span></h2>
-                                        </div>
-                                        <div class="down-icon">
-                                            <i class="fa fa-angle-down" aria-hidden="true"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-8 col">
-                                    <form class="search_form d-flex align-items-center justify-content-between" action="">
-                                        <input class="form-control border-0" type="text" placeholder="Search">
-                                        <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                    </form>
-                                </div>
-                            @else
-                                <div class="col-md-12 col">
-                                    <form class="search_form d-flex align-items-center justify-content-between" action="">
-                                        <input class="form-control border-0" type="text" placeholder="Search">
-                                        <button class="btn btn-solid px-md-3 px-2"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                    </form>
-                                </div>
-                            @endif
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col-2 menu-right justify-content-end">
-                        <div>
-                            <nav id="main-nav">
-                                <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
-                            </nav>
-                        </div>
-                        <div>
-                            <div class="icon-nav">
-                                <form name="filterData" id="filterData" action="{{route('changePrimaryData')}}">
-                                    @csrf
-                                    <input type="hidden" id="cliLang" name="cliLang" value="{{session('customerLanguage')}}">
-                                    <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
-                                </form>
-                                <ul>
-                                    <li class="onhover-div">
-                                        @if($client_preference_detail)
-                                            @if($client_preference_detail->cart_enable == 1)
-                                                <a href="{{route('showCart')}}">
-                                                    <img src="{{asset('front-assets/images/icon/cart_.png')}}" class="img-fluid blur-up lazyload" alt=""> 
-                                                </a>
-                                                <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span>
-                                            @endif
-                                        @endif
-                                        <script type="text/template" id="header_cart_template">
-                                             <% _.each(cart_details.products, function(product, key){%>
-                                              <% _.each(product.vendor_products, function(vendor_product, vp){%>
-                                                <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
-                                                    <a class='media' href='#'>
-                                                        <% if(vendor_product.pvariant.media_one) { %>
-                                                            <img class='mr-2' src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.image.path.image_path %>">
-                                                        <% } %>
-                                                        <div class='media-body'>                                                                
-                                                            <h4><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>
-                                                            <h4>
-                                                                <span><%= vendor_product.quantity %> x <%= vendor_product.pvariant.price %></span>
-                                                            </h4>
-                                                        </div>
-                                                    </a>
-                                                    <div class='close-circle'>
-                                                        <a href="javascript::void(0);" data-product="<%= vendor_product.id %>" class='remove-product'>
-                                                            <i class='fa fa-times' aria-hidden='true'></i>
-                                                        </a>
-                                                    </div>
-                                                </li>
-                                              <% }); %>
-                                            <% }); %>
-                                            <li><div class='total'><h5>{{__('Subtotal')}} : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
-                                            <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('Viewcart')}}</a>
-                                        </script>
-                                        <ul class="show-div shopping-cart" id="header_cart_main_ul">
-
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @if(count($navCategories) > 0)
-    <div class="menu-navigation">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <ul id="main-menu" class="sm pixelstrap sm-horizontal">
-                        <li>
-                            <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
-                        </li>
-                        @foreach($navCategories as $cate)
-                        @if($cate['name'])
-                        <li>
-                            <a href="{{route('categoryDetail', $cate['slug'])}}">{{$cate['name']}}</a>
-                            @if(!empty($cate['children']))
-                                
-                                <ul>
-                                    @foreach($cate['children'] as $childs)
-                                    <li>
-                                        <a href="{{route('categoryDetail', $childs['slug'])}}"><span class="new-tag">{{$childs['name']}}</span></a>
-                                        @if(!empty($childs['children']))
-                                        <ul>
-                                            @foreach($childs['children'] as $chld)
-                                            <li><a href="{{route('categoryDetail', $chld['slug'])}}">{{$chld['name']}}</a></li>
-                                            @endforeach
-                                        </ul>
-                                        @endif
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            @endif
-                        </li>
-                        @endif
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>   
-    </div>   
-    @endif
-</header>
 <header class="site-header">
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="#"><img class="img-fluid" alt="" src="https://imgproxy.royoorders.com/insecure/fit/200/80/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/Clientlogo/60c1e84d06f64.jpg" ></a>
+            <a class="navbar-brand" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
             
             <div class="navbar-collapse main-menu">
                 <div class="d-flex mr-auto">
@@ -167,16 +24,20 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </li>                       
                         <div class="navigation-tab-overlay"></div>
                     </ul>
-
-                    <div class="location-bar d-flex align-items-center justify-content-start pl-3 dropdown-toggle" href="#edit-address" data-toggle="modal">
-                        <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-                        <div class="homepage-address text-left">
-                            <h2><span data-placement="top" data-toggle="tooltip" title="{{session('selectedAddress')}}">{{session('selectedAddress')}}</span></h2>
-                        </div>
-                        <div class="down-icon">
-                            <i class="fa fa-angle-down" aria-hidden="true"></i>
-                        </div>
-                    </div>
+                    
+                    @if( (Session::get('preferences')))
+                        @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
+                            <div class="location-bar d-flex align-items-center justify-content-start pl-3 dropdown-toggle" href="#edit-address" data-toggle="modal">
+                                <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                <div class="homepage-address text-left">
+                                    <h2><span data-placement="top" data-toggle="tooltip" title="{{session('selectedAddress')}}">{{session('selectedAddress')}}</span></h2>
+                                </div>
+                                <div class="down-icon">
+                                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
                 </div>
                 <div class="search_bar menu-right d-flex align-items-center justify-content-end">
                     <div class="radius-bar">
@@ -244,8 +105,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         </li>
                                     <% }); %>
                                     <% }); %>
-                                    <li><div class='total'><h5>subtotal : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
-                                    <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>viewcart</a>
+                                    <li><div class='total'><h5>{{__('Subtotal')}} : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
+                                    <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('Viewcart')}}</a>
                                 </script>
                                 <ul class="show-div shopping-cart" id="header_cart_main_ul">
 
@@ -255,10 +116,47 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     </div>
                 </div>
             </div>
-
-            
         </div>
     </nav>
+    @if(count($navCategories) > 0)
+        <div class="menu-navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <ul id="main-menu" class="sm pixelstrap sm-horizontal">
+                            <li>
+                                <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
+                            </li>
+                            @foreach($navCategories as $cate)
+                                @if($cate['name'])
+                                <li>
+                                    <a href="{{route('categoryDetail', $cate['slug'])}}">{{$cate['name']}}</a>
+                                    @if(!empty($cate['children']))
+                                        
+                                        <ul>
+                                            @foreach($cate['children'] as $childs)
+                                            <li>
+                                                <a href="{{route('categoryDetail', $childs['slug'])}}"><span class="new-tag">{{$childs['name']}}</span></a>
+                                                @if(!empty($childs['children']))
+                                                <ul>
+                                                    @foreach($childs['children'] as $chld)
+                                                    <li><a href="{{route('categoryDetail', $chld['slug'])}}">{{$chld['name']}}</a></li>
+                                                    @endforeach
+                                                </ul>
+                                                @endif
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </header>
 <script type="text/template" id="nav_categories_template">
     <li>
