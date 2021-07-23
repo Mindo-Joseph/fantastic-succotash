@@ -101,7 +101,7 @@
     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">.. 2 ..</div>
     <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">.. 3 ..</div>
 </div> -->
-
+<!-- 
 @if($count > 1)
 <section class="home-tabbar">
     <div class="container">
@@ -139,7 +139,7 @@
             </div>
         </div>
 </section>
-@endif
+@endif -->
 <section class="section-b-space p-t-0 pt-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
     <div class="container">
         <div class="row">
