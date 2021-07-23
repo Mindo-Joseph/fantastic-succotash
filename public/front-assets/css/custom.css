@@ -1671,7 +1671,7 @@ label{
 }
 
 .radius-bar  {
-    width: 90%;
+    width: 75%;
     background-color: #EEEEEE;
     /* border-radius: 50px; */
     padding: 0 10px;
@@ -2160,10 +2160,11 @@ footer .form-control {
     background: #f8f8f8;
 }
 
-.icon-nav i {
-    /* font-size: 26px; */
-    color: #999999;
-}   
+.icon-nav .btn.btn-solid {
+    padding: 10px;
+    border-radius: 50px;
+    min-width: 100px;
+}
 
 .pixelstrap ul a:before {
     content: none !important;

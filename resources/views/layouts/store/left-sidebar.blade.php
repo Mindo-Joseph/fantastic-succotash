@@ -6,7 +6,7 @@ $languageList = \App\Models\ClientLanguage::with('language')->where('is_active',
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
 <header class="site-header">
-        <div class="container">
+        <div class="container main-menu d-block">
             <div class="row align-items-center py-2">
                 <div class="col-lg-1 col-2">
                     <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
@@ -49,7 +49,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     </div>
                 </div>
                 <div class="col-lg-5 col-10 order-lg-2 order-1">                
-                    <div class="search_bar menu-right d-flex align-items-center justify-content-between">
+                    <div class="search_bar menu-right d-flex align-items-center justify-content-between w-100">
                         <div class="radius-bar">
                             <form class="search_form d-flex align-items-center justify-content-between" action="">
                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
@@ -83,13 +83,14 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         </ul>
                                     </div>
                                 </li><?php */ ?>
-                                <li class="onhover-div">
+                                <li class="onhover-div pl-0">
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->cart_enable == 1)
-                                            <a href="{{route('showCart')}}">
-                                                <img src="{{asset('front-assets/images/icon/cart_.png')}}" class="img-fluid blur-up lazyload" alt=""> 
+                                            <a class="btn btn-solid" href="{{route('showCart')}}">
+                                                <!-- <img src="{{asset('front-assets/images/icon/cart_.png')}}" class="img-fluid blur-up lazyload" alt="">  -->
+                                                <i class="fa fa-shopping-cart mr-1 " aria-hidden="true"></i> <span>Cart</span>  • <span id="cart_qty_span"></span> 
                                             </a>
-                                            <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span>
+                                            <!-- <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span> -->
                                         @endif
                                     @endif
                                     <script type="text/template" id="header_cart_template">
