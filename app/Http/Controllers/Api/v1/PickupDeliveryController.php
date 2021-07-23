@@ -201,10 +201,11 @@ class PickupDeliveryController extends BaseController{
             $order_place = $this->orderPlaceForPickupDelivery($request);
             if($order_place && $order_place['status'] == 200){
                 $data = [];
-                $order_place = $order_place['data'];
-                $request_to_dispatch = $this->placeRequestToDispatch($request,$order_place,$request->vendor_id);
+                $order = $order_place['data'];
+                $request_to_dispatch = $this->placeRequestToDispatch($request,$order,$request->vendor_id);
                     if($request_to_dispatch && isset($request_to_dispatch['task_id']) && $request_to_dispatch['task_id'] > 0){
                         DB::commit();
+                        $order_place['data']['dispatch_traking_url'] = $request_to_dispatch['dispatch_traking_url']; 
                         return  $order_place;
                     }else{
                         DB::rollback();
@@ -425,7 +426,7 @@ class PickupDeliveryController extends BaseController{
     }
 
      // place Request To Dispatch
-    public function placeRequestToDispatch($request,$order_place,$vendor){
+    public function placeRequestToDispatch($request,$order,$vendor){
         try {
             $dispatch_domain = $this->checkIfPickupDeliveryOn();
             $customer = Auth::user();
@@ -438,7 +439,7 @@ class PickupDeliveryController extends BaseController{
                     $cash_to_be_collected = 'No';
                     $payable_amount = 0.00;
                 }
-                $dynamic = uniqid($order_place->id.$vendor);
+                $dynamic = uniqid($order->id.$vendor);
                 $unique = Auth::user()->code;
                 $client_do = Client::where('code',$unique)->first();
                 $call_back_url = "https://".$client_do->sub_domain.env('SUBMAINDOMAIN')."/dispatch-pickup-delivery/".$dynamic; 
@@ -481,9 +482,9 @@ class PickupDeliveryController extends BaseController{
                 if ($response && isset($response['task_id']) && $response['task_id'] > 0) {
 
                     $dispatch_traking_url = $response['dispatch_traking_url']??'';
-                    $up_web_hook_code = OrderVendor::where(['order_id' => $order_place->id,'vendor_id' => $vendor])
+                    $up_web_hook_code = OrderVendor::where(['order_id' => $order->id,'vendor_id' => $vendor])
                                     ->update(['web_hook_code' => $dynamic,'dispatch_traking_url' => $dispatch_traking_url]);
-                    $order_place['dispatch_traking_url'] = $dispatch_traking_url;
+                    $response['dispatch_traking_url'] = $dispatch_traking_url;
                    return $response;
                 }
                 return $response;
