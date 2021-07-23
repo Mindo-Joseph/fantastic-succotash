@@ -289,8 +289,10 @@ class UserhomeController extends FrontController{
         if($request->has('type') && $request->type == 'currency'){
             $clientCurrency = ClientCurrency::where('currency_id', $request->value1)->first();
             if($clientCurrency){
-                Session::put('customerCurrency', $request->value1);
+                $currency_detail = Currency::where('id', $request->value1)->first();
                 Session::put('currencySymbol', $request->value2);
+                Session::put('customerCurrency', $request->value1);
+                Session::put('iso_code', $currency_detail->iso_code);
                 Session::put('currencyMultiplier', $clientCurrency->doller_compare);
             }
         }
