@@ -1656,8 +1656,8 @@ label{
     box-shadow: 0 1px 8px 0 rgb(0 0 0 / 12%);
     border-radius: 5px;
 }
-.homepage-address{
-    width: 80%;
+.homepage-address {
+    width: calc(100% - 40px);
 }
 
 .homepage-address h2 {
@@ -1669,9 +1669,7 @@ label{
     margin: 0px;
     cursor: pointer !important;
 }
-.search_bar {
-    width: 40%;
-}
+
 .radius-bar  {
     width: 90%;
     background-color: #EEEEEE;
@@ -3000,9 +2998,7 @@ header .homepage-address h2 {
     overflow: hidden;
     padding: 8px 10px;
 }
-.location-bar{
-    width: 40%;
-}
+
 
 /* Animation Tabbar Css */
 .nav-tabs .nav-link,.nav-tabs.navigation-tab .nav-item .nav-link, .nav-tabs.navigation-tab .nav-item.show .nav-link, 
@@ -3168,7 +3164,13 @@ header .homepage-address h2 {
     display: block;
 }
 
-
+/* Cab Booking Css */
+.booking-experience {
+    background: #fff;
+}
+{
+    background-color: var(--theme-deafult);
+}
 
 
 
@@ -3199,19 +3201,28 @@ header .homepage-address h2 {
     }
 }
 
+
 @media(min-width: 1400px){
-    .booking-experience{
+    .ds{
         position: absolute;
         left: calc(((100vw - 1440px) / 2) + 24px);
     }
 }
 @media(min-width: 992px){
-    .booking-experience{
+    .booking-experience {
         position: absolute;
         left: calc(((100vw - 1440px) / 2) + 24px);
+        top: 100px;
+        width: 400px;
+        height: calc(100vh - 150px);
     }
 }
 
+@media(min-width:800px){
+    .bc {
+        left: 24px;
+    }
+}
 @media(max-width:991px){
     .wrapper-main .border-right,.wrapper-main .border-left{
         border: 0 !important;
