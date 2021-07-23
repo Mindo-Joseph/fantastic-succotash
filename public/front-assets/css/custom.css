@@ -3087,6 +3087,17 @@ header .homepage-address h2 {
 }
 
 
+.register-page .theme-card .theme-form input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.register-page .theme-card .theme-form button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+
 /* Website Dark Mood Css Start Form Here */
 .dark .menu-navigation {
     background: #232323;
