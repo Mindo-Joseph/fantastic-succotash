@@ -131,8 +131,9 @@
         setTimeout(function(){ 
             $('tr.page-title:first').trigger('click');
         }, 500);
-        $(document).on("click","#client_language",function() {
-            $('tr.page-title:first').trigger('click');
+        $(document).on("change","#client_language",function() {
+            let page_id = $('#edit_page_content #page_id').val();
+            $('#text_body_'+page_id).trigger('click');
         });
         $(document).on("click",".page-detail",function() {
             $('#edit_page_content #edit_description').val('');

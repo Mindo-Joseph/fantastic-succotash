@@ -1,20 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   @include('layouts.store.title-meta', ['title' => $title])
   @include('layouts.store.head-content', ["demo" => "creative"])
-  <!-- <script>
-   document.addEventListener("DOMContentLoaded", function(event) { 
-      if (localStorage['theme_color'] == 'dark') {
-        $("body").addClass('dark');
-        $(".theme-layout-version").text("Light");
-      } else { 
-        $("body").removeClass('dark')
-        $(".theme-layout-version").text("Dark");
-      } 
-    });
-  </script> -->
   <style>
     :root {
       --theme-deafult: <?= ($client_preference_detail->web_color) ? $client_preference_detail->web_color : '#ff4c3b' ?>;
@@ -25,13 +13,11 @@
     }
   </style>
 </head>
-
-<body class="{{session()->has('config_theme') ? session()->get('config_theme') : ''}}">
-
+<body class="{{session()->has('config_theme') ? session()->get('config_theme') : ''}}" dir="{{session()->get('locale') == 'ar' ? 'rtl' : ''}}">
   @if (Auth::check())
-  @include('layouts.store/topbar-auth')
+   @include('layouts.store/topbar-auth')
   @else
-  @include('layouts.store/topbar-guest')
+    @include('layouts.store/topbar-guest')
   @endif
   @yield('content')
   @include('layouts.store/footer-content')
@@ -41,5 +27,4 @@
   </div>
   @yield('script')
 </body>
-
 </html>

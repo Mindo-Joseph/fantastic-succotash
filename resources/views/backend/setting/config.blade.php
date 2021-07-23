@@ -117,7 +117,6 @@
                         </span>
                         @endif
                      </div>
-
                      <div class="form-group mt-3 mb-0 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
                         <label for="delivery_service_key_code">Royo Dispatcher Short code</label>
                         <input type="text" name="delivery_service_key_code" id="delivery_service_key_code" placeholder="" class="form-control" value="{{ old('delivery_service_key_code', $preference->delivery_service_key_code ?? '')}}">
@@ -127,7 +126,6 @@
                         </span>
                         @endif
                      </div>
-
                      <div class="form-group mt-3 mb-0 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
                         <label for="delivery_service_key">Royo Dispatcher API key</label>
                         <input type="text" name="delivery_service_key" id="delivery_service_key" placeholder="" class="form-control" value="{{ old('delivery_service_key', $preference->delivery_service_key ?? '')}}">
@@ -137,7 +135,6 @@
                         </span>
                         @endif
                      </div>
-
                   </div>
                </div>
             </div>
@@ -635,75 +632,75 @@
          </form>
       </div>
    </div>
-   <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
-      <input type="hidden" name="verify_config" id="verify_config" value="1">
-      @csrf
-      
+   
       <div class="row">
-         <div class="col-md-6">
-            <div class="row">
-               <div class="col-md-12">
-                  <div class="page-title-box">
-                     <h4 class="page-title text-uppercase">User Authentication</h4>
+         <div class="col-xl-6">
+            <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+               <input type="hidden" name="verify_config" id="verify_config" value="1">
+               @csrf
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="page-title-box">
+                        <h4 class="page-title text-uppercase">User Authentication</h4>
+                     </div>
+                     <div class="card-box mb-0">
+                        <div class="row align-items-center">
+                           <div class="col-sm-5">
+                              <div class="form-group mb-0 switchery-demo">
+                                 <label for="verify_email" class="mr-3 mb-0">Verify Email</label>
+                                 <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1')) checked='checked' @endif>
+                              </div>
+                           </div>
+                           <div class="col-sm-5">
+                              <div class="form-group mb-0">
+                                 <label for="verify_phone" class="mr-3 mb-0">Verify Phone</label>
+                                 <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1')) checked='checked' @endif>
+                              </div>
+                           </div>
+                           <div class="col-sm-2">
+                              <div class="form-group mb-0 text-md-right">
+                                 <button class="btn btn-info d-block ml-auto" type="submit"> Save </button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
                   </div>
-                  <div class="card-box mb-0">
-                     <div class="row align-items-center">
-                        <div class="col-sm-5">
-                           <div class="form-group mb-0 switchery-demo">
-                              <label for="verify_email" class="mr-3 mb-0">Verify Email</label>
-                              <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1')) checked='checked' @endif>
+                  <div class="col-md-12">
+                     <div class="page-title-box">
+                        <h4 class="page-title text-uppercase">Vendor Types</h4>
+                     </div>
+                     <div class="card-box mb-0">
+                        <div class="row align-items-center">
+                           <div class="col-md-3">
+                              <div class="form-group mb-0">
+                                 <label for="dinein_check" class="mr-3 mb-0">Dine In</label>
+                                 <input type="checkbox" data-plugin="switchery" name="dinein_check" id="dinein_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->dinein_check == '1')) checked='checked' @endif>
+                              </div>
                            </div>
-                        </div>
-                        <div class="col-sm-5">
-                           <div class="form-group mb-0">
-                              <label for="verify_phone" class="mr-3 mb-0">Verify Phone</label>
-                              <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1')) checked='checked' @endif>
+                           <div class="col-md-3">
+                              <div class="form-group mb-0">
+                                 <label for="delivery_check" class="mr-3 mb-0">Delivery</label>
+                                 <input type="checkbox" data-plugin="switchery" name="delivery_check" id="delivery_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delivery_check == '1')) checked='checked' @endif>
+                              </div>
                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                           <div class="form-group mb-0 text-md-right">
-                              <button class="btn btn-info d-block ml-auto" type="submit"> Save </button>
+                           <div class="col-md-3">
+                              <div class="form-group mb-0">
+                                 <label for="takeaway_check" class="mr-3 mb-0">Takeaway</label>
+                                 <input type="checkbox" data-plugin="switchery" name="takeaway_check" id="takeaway_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->takeaway_check == '1')) checked='checked' @endif>
+                              </div>
+                           </div>
+                           <div class="col-md-3">
+                              <div class="form-group mb-0 text-md-right">
+                                 <button class="btn btn-info d-block ml-md-auto" type="submit"> Save </button>
+                              </div>
                            </div>
                         </div>
                      </div>
                   </div>
                </div>
-               <div class="col-md-12">
-                  <div class="page-title-box">
-                     <h4 class="page-title text-uppercase">Vendor Types</h4>
-                  </div>
-                  <div class="card-box mb-0">
-                     <div class="row align-items-center">
-                        <div class="col-md-3">
-                           <div class="form-group mb-0">
-                              <label for="dinein_check" class="mr-3 mb-0">Dine In</label>
-                              <input type="checkbox" data-plugin="switchery" name="dinein_check" id="dinein_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->dinein_check == '1')) checked='checked' @endif>
-                           </div>
-                        </div>
-                        <div class="col-md-3">
-                           <div class="form-group mb-0">
-                              <label for="delivery_check" class="mr-3 mb-0">Delivery</label>
-                              <input type="checkbox" data-plugin="switchery" name="delivery_check" id="delivery_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delivery_check == '1')) checked='checked' @endif>
-                           </div>
-                        </div>
-                        <div class="col-md-3">
-                           <div class="form-group mb-0">
-                              <label for="takeaway_check" class="mr-3 mb-0">Takeaway</label>
-                              <input type="checkbox" data-plugin="switchery" name="takeaway_check" id="takeaway_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->takeaway_check == '1')) checked='checked' @endif>
-                           </div>
-                        </div>
-                        <div class="col-md-3">
-                           <div class="form-group mb-0 text-md-right">
-                              <button class="btn btn-info d-block ml-md-auto" type="submit"> Save </button>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
+            </form>
          </div>
-         
-         <div class="col-md-6">
+         <div class="col-xl-6">
             <div class="row">
                <div class="col-lg-8">
                   <div class="page-title-box">
@@ -711,7 +708,6 @@
                   </div>
                   <div class="card-box mb-0 pb-2">
                      <div class="d-flex align-items-center justify-content-end mt-2">
-                        <!-- <h4 class="header-title mb-0">Vendor Registration Documents</h4> -->
                         <a class="btn btn-info d-block" id="add_vendor_registration_document_modal_btn">
                            <i class="mdi mdi-plus-circle mr-1"></i>Add
                         </a>
@@ -766,11 +762,11 @@
                            <!-- <h4 class="header-title mb-0">Refer and Earn</h4> -->
                            <button class="btn btn-info d-block" type="submit"> Save </button>
                         </div>
-                        <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 my-2" id="addCur-160">
+                        <div class="col-xl-12 my-2" id="addCur-160">
                            <label class="primaryCurText">Referred To Amount = </label>
                            <input class="form-control" type="number" id="reffered_to_amount" name="reffered_to_amount" value="{{ old('reffered_to_amount', $reffer_to ?? '')}}" min="0">
                         </div>
-                        <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 mb-2 mt-3" id="addCur-160">
+                        <div class="col-xl-12 mb-2 mt-3" id="addCur-160">
                            <label class="primaryCurText">Referred By Amount = </label>
                            <input class="form-control" type="number" name="reffered_by_amount" id="reffered_by_amount" value="{{ old('reffered_by_amount', $reffer_by ?? '')}}" min="0">
                         </div>
@@ -780,48 +776,44 @@
             </div>
          </div>
       </div>
-    
-
       <div class="row">         
-         <div class="col-md-6 col-lx-4">
+         <div class="col-xl-6">
             <div class="page-title-box">
                <h4 class="page-title text-uppercase">Custom Mods</h4>
             </div>
             <div class="card-box">
-               <div class="row align-items-center">
-                  <div class="col-md-3">
-                     <div class="form-group mb-0">
-                        <label for="celebrity_check" class="mr-3 mb-0"> Celebrity Mod</label>
-                        <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1')) checked='checked' @endif>
+               <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+                  <input type="hidden" name="custom_mods_config" id="custom_mods_config" value="1">
+                  @csrf
+                  <div class="row align-items-center">
+                     <div class="col-md-3">
+                        <div class="form-group mb-0">
+                           <label for="celebrity_check" class="mr-3 mb-0"> Celebrity Mod</label>
+                           <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="form-group mb-0">
+                           <label for="pharmacy_check" class="mr-3 mb-0">Pharmacy Mod</label>
+                           <input type="checkbox" data-plugin="switchery" name="pharmacy_check" id="pharmacy_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-3">
+                        <div class="form-group mb-0">
+                           <label for="enquire_mode" class="mr-3 mb-0">Inquiry Mod</label>
+                           <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-2">
+                        <div class="form-group mb-0 text-md-right">
+                           <button class="btn btn-info d-block ml-md-auto" type="submit">Save</button>
+                        </div>
                      </div>
                   </div>
-                  <div class="col-md-4">
-                     <div class="form-group mb-0">
-                        <label for="pharmacy_check" class="mr-3 mb-0">Pharmacy Mod</label>
-                        <input type="checkbox" data-plugin="switchery" name="pharmacy_check" id="pharmacy_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1')) checked='checked' @endif>
-                     </div>
-                  </div>
-                  <div class="col-md-3">
-                     <div class="form-group mb-0">
-                        <label for="enquire_mode" class="mr-3 mb-0">Inquiry Mod</label>
-                        <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1')) checked='checked' @endif>
-                     </div>
-                  </div>
-                  <!-- <div class="col-md-3">
-                     <div class="form-group mb-0">
-                        <label for="rating_check" class="mr-3 mb-0">Rating</label>
-                        <input type="checkbox" data-plugin="switchery" name="rating_check" id="rating_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->rating_check == '1')) checked='checked' @endif>
-                     </div>
-                  </div> -->
-                  <div class="col-md-2">
-                     <div class="form-group mb-0 text-md-right">
-                        <button class="btn btn-info d-block ml-md-auto" type="submit"> Save </button>
-                     </div>
-                  </div>
-               </div>
+               </form>
             </div>
          </div>
-         <div class="col-md-6 col-lx-4">
+         <div class="col-xl-6">
             <div class="page-title-box">
                <h4 class="page-title text-uppercase">Data Management</h4>
             </div>
@@ -841,7 +833,6 @@
          </div>
       </div>
    </form>
-
    <div style="display:none;">
       <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
          @csrf

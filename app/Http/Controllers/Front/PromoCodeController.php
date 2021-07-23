@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Front;
+use DB;
 use Carbon\Carbon;
 use App\Models\Cart;
 use App\Models\Order;
@@ -8,6 +9,7 @@ use App\Models\Vendor;
 use App\Models\Product;
 use App\Models\Promocode;
 use App\Models\CartCoupon;
+use App\Models\OrderVendor;
 use Illuminate\Http\Request;
 use App\Models\PromoCodeDetail;
 use App\Http\Traits\ApiResponser;
@@ -21,8 +23,10 @@ class PromoCodeController extends Controller{
 
     public function postPromoCodeList(Request $request){
         try {
+            $user = Auth::user();
             $promo_codes = new \Illuminate\Database\Eloquent\Collection;
             $vendor_id = $request->vendor_id;
+            $total_minimum_spend = $request->amount;
             $validator = $this->validatePromoCodeList();
             if($validator->fails()){
                 return $this->errorResponse($validator->messages(), 422);
@@ -31,6 +35,7 @@ class PromoCodeController extends Controller{
             if(!$vendor){
                 return response()->json(['error' => 'Invalid vendor id.'], 404);
             }
+            // $order_vendor_coupon_list = OrderVendor::whereNotNull('coupon_id')->where('user_id', $user->id)->get([DB::raw('coupon_id'),  DB::raw('sum(coupon_id) as total')]);
             $now = Carbon::now()->toDateTimeString();
             $product_ids = Product::where('vendor_id', $request->vendor_id)->pluck("id");
             if($product_ids){
@@ -44,6 +49,14 @@ class PromoCodeController extends Controller{
                     $q->where('refrence_id', $vendor_id);
                 })->where('restriction_on', 1)->where('is_deleted', 0)->whereDate('expiry_date', '>=', $now)->get();
                 $promo_codes = $promo_codes->merge($result2);
+            }
+            foreach ($promo_codes as $key => $promo_code) {
+                if($total_minimum_spend < $promo_code->minimum_spend){
+                    $promo_codes->forget($key);
+                }
+                if($total_minimum_spend > $promo_code->maximum_spend){
+                    $promo_codes->forget($key);
+                }
             }
             return $this->successResponse($promo_codes, '', 200);
         } catch (Exception $e) {

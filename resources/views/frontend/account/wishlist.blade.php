@@ -1,5 +1,4 @@
-@extends('layouts.store', ['title' => 'My Wishlist'])
-
+@extends('layouts.store', ['title' => __('My Wishlist')])
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -8,11 +7,8 @@
         padding-bottom: 20px;
     }
 </style>
-
 @endsection
-
 @section('content')
-
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -60,8 +56,6 @@
         padding-top: .85rem;
     }
 </style>
-
-
 <section class="section-b-space">
     <div class="container">
         @if ($errors->any())
@@ -75,9 +69,9 @@
         @endif
         <div class="row">
             <div class="col-lg-3">
-                <div class="account-sidebar"><a class="popup-btn">my account</a></div>
+                <div class="account-sidebar"><a class="popup-btn">{{__('My Account')}}</a></div>
                 <div class="dashboard-left">
-                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i> back</span></div>
+                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}</span></div>
                     @include('layouts.store/profile-sidebar')
                 </div>
             </div>
@@ -85,12 +79,8 @@
                 <div class="dashboard-right">
                     <div class="dashboard">
                         <div class="page-title">
-                            <h2>Wishlist</h2>
+                            <h2>{{__('Wishlist')}}</h2>
                         </div>
-                        <!-- <div class="welcome-msg">
-                            <h5>Here are all your wishlist products !</h5>
-                        </div> -->
-                        
                         <div class="box-account box-info mt-3">
                             <div class="row">
                                 <div class="col-sm-12 table-responsive table-responsive-xs">
@@ -105,11 +95,11 @@
                                                         </div>
                                                     </div>
                                                 </th>   
-                                                <th scope="col">Image</th>
-                                                <th scope="col">Product Name</th>
-                                                <th scope="col">Price</th>
-                                                <th scope="col">Date Added</th>
-                                                <th scope="col">Stock Status</th>
+                                                <th scope="col">{{__('Image')}}</th>
+                                                <th scope="col">{{__('Product Name')}}</th>
+                                                <th scope="col">{{__('Price')}}</th>
+                                                <th scope="col">{{__('Date Added')}}</th>
+                                                <th scope="col">{{__('Stock Status')}}</th>
                                                 <th scope="col"></th>
                                             </tr>
                                         </thead>
@@ -145,42 +135,29 @@
                                                         <td>
                                                             @if($wish['product']['variant'][0]['quantity'] > 0)
                                                                 <i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>
-                                                                <span>In Stock</span>
+                                                                <span>{{__('In Stock')}}</span>
                                                             @else
-                                                                <span>Not In Stock</span>
+                                                                <span>{{__('Not In Stock')}}</span>
                                                             @endif
                                                         </td>
                                                         <td><a href="{{ route('removeWishlist', $wish['product']['sku']) }}" class="icon me-3"><i class="ti-close"></i> </a></td>
                                                     </tr>
                                                 @endforeach
                                             @else
-                                                <tr><td align="center" colspan="6">No Item Exists In Your Wishlist</td></tr>
+                                                <tr><td align="center" colspan="6">{{__('No Item Exists In Your Wishlist')}}</td></tr>
                                             @endif
                                         </tbody>
                                         @if(!empty($wishList))
                                             <tfoot class="border-top border-bottom">
                                                 <tr>
                                                     <td colspan="7" class="pt-2">
-                                                        <button type="button" class="btn btn-solid mr-2 addWishlistToCart">Add to Cart</button>
+                                                        <button type="button" class="btn btn-solid mr-2 addWishlistToCart">{{__('Add To Cart')}}</button>
                                                     </td>
                                                 </tr>
                                             </tfoot>
                                         @endif
                                     </table>
                                 </div>
-                                <!-- @foreach($wishList as $wish)
-                                <div class="col-sm-4">
-                                    <div class="box">
-                                        <div class="box-title">
-                                            <h3>{{$wish['product']['sku']}}</h3><a href="{{ route('removeWishlist', $wish['product']['sku']) }}">Remove</a>
-                                        </div>
-                                        <div class="box-content">
-                                            <a href="{{route('second', ['ecommerce', 'product-detail'])}}"><img src="{{$wish['product']['media'][0]['image']['path']['proxy_url'].'200/200'.$wish['product']['media'][0]['image']['path']['image_path']}}" alt="product-img" height="100" /></a>
-                                            <h6>Price: {{$wish['product']['variant'][0]['price']}}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endforeach -->
                             </div>
                         </div>
                     </div>
@@ -189,12 +166,8 @@
         </div>
     </div>
 </section>
-
-
 @endsection
-
 @section('script')
-
 <script type="text/javascript">
     var add_wishlist_to_cart_url = "{{ route('addWishlistToCart') }}";
     var ajaxCall = 'ToCancelPrevReq';

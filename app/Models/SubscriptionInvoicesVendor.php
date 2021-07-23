@@ -18,6 +18,10 @@ class SubscriptionInvoicesVendor extends Model
         return $this->belongsTo('App\Models\Vendor', 'vendor_id', 'id'); 
     }
 
+    public function status(){
+        return $this->belongsTo('App\Models\SubscriptionStatusOptions', 'status_id', 'id');
+    }
+
     public function features(){
         return $this->hasMany('App\Models\SubscriptionInvoiceFeaturesVendor', 'subscription_invoice_id', 'id'); 
     }

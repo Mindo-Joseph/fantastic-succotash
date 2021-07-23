@@ -39,10 +39,6 @@ class AppServiceProvider extends ServiceProvider
         }
         $this->connectDynamicDb($request);
         Paginator::useBootstrap();
-        $pages = '';
-        if(Schema::hasTable('pages')){
-            $pages = Page::with('primary')->get();
-        }
         $social_media_details = '';
         if(Schema::hasTable('social_media'))
         $social_media_details = SocialMedia::get();
@@ -57,12 +53,18 @@ class AppServiceProvider extends ServiceProvider
         if($stripe_creds){
             $creds_arr = json_decode($stripe_creds->credentials);
         }
-        $stripe_publishable_key = (isset($creds_arr->publishable_key)) ? $creds_arr->publishable_key : '';
 
-        view()->share('pages', $pages);
+        $count = 0;
+        if($client_preference_detail){
+            if($client_preference_detail->dinein_check == 1){$count++;}
+            if($client_preference_detail->takeaway_check == 1){$count++;}
+            if($client_preference_detail->delivery_check == 1){$count++;}
+        }
+        $stripe_publishable_key = (isset($creds_arr->publishable_key)) ? $creds_arr->publishable_key : '';
+        view()->share('favicon', $favicon_url);
+        view()->share('favicon', $favicon_url);
         view()->share('client_head', $client_head);
-        view()->share('favicon', $favicon_url);
-        view()->share('favicon', $favicon_url);
+        view()->share('mod_count', $count);
         view()->share('social_media_details', $social_media_details);
         view()->share('stripe_publishable_key', $stripe_publishable_key);
         view()->share('client_preference_detail', $client_preference_detail);

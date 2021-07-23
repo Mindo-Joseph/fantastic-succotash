@@ -1,9 +1,27 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
 
+<section class="cab-booking pt-0">
+<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4850.865733603189!2d76.82393041076074!3d30.716149768967526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1627015845978!5m2!1sen!2sin" width="100%" height="100vh" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+</section>
+
+<section>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">.. 1 ..</div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">.. 2 ..</div>
+        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">.. 3 ..</div>
+    </div>
+</section>
+
     <!-- Vendor Sign Up Form -->
     <section class="vendor-signup">
         <div class="container">
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                18+ popup
+            </button>
+
             <div class="row">
                 <div class="col-lg-8 offset-lg-2">
                     
@@ -236,6 +254,7 @@
             </div>
         </div>
     </div>
+
     <section class="wrapper-main mb-5 py-lg-5">
         <div class="container">
             <div class="row">
@@ -669,8 +688,6 @@
             </div>
         </div>
     </section> 
-  
-
 
     <section class="order-detail-page">
         <div class="container">
@@ -742,10 +759,9 @@
                                                     <th>Total</th>
                                                 </tr>
                                             </thead>
-                                                                            <tbody>
-                                                                                                                                                                                                <tr>
-                                                    <th scope="row">Roll 
-                                                                                            </th>
+                                                <tbody>
+                                                     <th scope="row">Roll 
+                                                        </th>
                                                     <td>
                                                         <img src="https://imgproxy.royoorders.com/insecure/fill/32/32/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/RQAO9fhVSoquNYpVIN0aui9XpEBeyyWBXr9ncVVV.png" alt="product-img" height="32">
                                                     </td>
@@ -753,7 +769,7 @@
                                                     <td>$100.00</td>
                                                     <td>$100.00</td>
                                                 </tr>
-                                                                                                                        <tr>
+                                                <tr>
                                                     <th scope="row" colspan="4" class="text-end">Sub Total :</th>
                                                     <td>
                                                         <div class="fw-bold">$100.00</div>
@@ -774,7 +790,7 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                                                        </table>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -814,6 +830,63 @@
         </div>
     </section>
 
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title" id="exampleModalLabel">Verify your age</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="{{asset('assets/images/18.png')}}" alt="">
+                <p class="mb-0 mt-3">Are you 18 or older?</p>
+                <p class="mb-0">Are you sure you want to continue?</p> 
+            </div>
+            <div class="modal-footer d-block">
+                <div class="row no-gutters">
+                    <div class="col-6 pr-1">
+                        <button type="button" class="btn btn-solid w-100" data-dismiss="modal">Yes</button>
+                    </div>
+                    <div class="col-6 pl-1">
+                        <button type="button" class="btn btn-solid w-100" data-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade edit_address" id="edit-address" tabindex="-1" aria-labelledby="edit-addressLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div id="address-map-container">
+            <div id="address-map"></div>
+        </div>
+        <div class="delivery_address p-2 mb-2 position-relative">
+            <button type="button" class="close edit-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="form-group">
+                <label class="delivery-head mb-2">SELECT YOUR LOCATION</label>
+                <div class="address-input-field d-flex align-items-center justify-content-between">
+                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{session('selectedAddress')}}">
+                    <input type="hidden" name="address_latitude" id="address-latitude" value="{{session('latitude')}}" />
+                    <input type="hidden" name="address_longitude" id="address-longitude" value="{{session('longitude')}}" />
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100">Confirm And Proceed</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
     <script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields
         (function() {
@@ -845,6 +918,10 @@
     var banner = document.getElementById('banner');
     banner.src = URL.createObjectURL(event.target.files[0]);
    };
+    </script>
+
+    <script>
+        
     </script>
     
 @endsection

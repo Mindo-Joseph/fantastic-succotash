@@ -15,6 +15,12 @@ class VendorController extends FrontController
 {
     private $field_status = 2;
     
+    public function viewAll(){
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where('status', 1)->get();
+        return view('frontend/vendor-all')->with(['navCategories' => $navCategories,'vendors' => $vendors]);
+    }
     /**
      * Display product By Vendor
      *
@@ -60,8 +66,9 @@ class VendorController extends FrontController
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $listData = $this->listData($langId, $vendor->id, $vendor->vendor_templete_id);
+        $range_products = Product::join('product_variants', 'product_variants.product_id', '=', 'products.id')->orderBy('product_variants.price', 'desc')->select('*')->where('is_live', 1)->where('vendor_id', $vendor->id)->get();
         $page = ($vendor->vendor_templete_id == 2) ? 'categories' : 'products';
-        return view('frontend/vendor-'.$page)->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
+        return view('frontend/vendor-'.$page)->with(['range_products' => $range_products, 'vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
     }
 
     /**

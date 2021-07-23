@@ -290,7 +290,7 @@
                                     <input type="hidden" name="loyalty_cards_language_ids[]" value="{{$client_language->langId}}">
                                     <input type="text" name="loyalty_cards_names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 2)}}">
                                     @if($k == 0)
-                                        @if($errors->has('names.0'))
+                                        @if($errors->has('loyalty_cards_names.0'))
                                             <span class="text-danger" role="alert">
                                                 <strong>The primary language name field is required.</strong>
                                             </span>

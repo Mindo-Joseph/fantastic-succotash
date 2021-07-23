@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, SmsProvider, Currency, Language, Country, User, SubscriptionPlansVendor, SubscriptionPlanFeaturesVendor, SubscriptionFeaturesListVendor};
+use App\Models\{Client, ClientPreference, SmsProvider, Currency, Language, Country, User, Vendor, SubscriptionPlansVendor, SubscriptionPlanFeaturesVendor, SubscriptionFeaturesListVendor, SubscriptionInvoicesVendor, SubscriptionInvoiceFeaturesVendor};
 use Carbon\Carbon;
 
 class SubscriptionPlansVendorController extends BaseController
@@ -43,6 +43,13 @@ class SubscriptionPlansVendorController extends BaseController
     {
         $sub_plans = SubscriptionPlansVendor::with(['features.feature'])->orderBy('sort_order', 'asc')->get();
         $featuresList = SubscriptionFeaturesListVendor::where('status', 1)->get();
+        $vendor_subscriptions = SubscriptionInvoicesVendor::where('status_id', 2)->groupBy('vendor_id')->get();
+        $awaiting_approval_subscriptions_count = SubscriptionInvoicesVendor::with(['plan', 'vendor', 'features.feature'])->where('status_id', 1)->count();
+        $rejected_subscriptions_count = SubscriptionInvoicesVendor::with(['plan', 'vendor', 'features.feature'])->where('status_id', 4)->count();
+        $subscribed_vendors_count = $vendor_subscriptions->count();
+        $active_vendors = Vendor::where('status', 1)->count();
+        $subscribed_vendors_percentage = ($subscribed_vendors_count / $active_vendors) * 100;
+        $subscribed_vendors_percentage = number_format($subscribed_vendors_percentage, 2);
         if($sub_plans){
             foreach($sub_plans as $plan){
                 $features = '';
@@ -57,7 +64,7 @@ class SubscriptionPlansVendorController extends BaseController
                 $plan->features = $features;
             }
         }
-        return view('backend/subscriptions/subscriptionPlansVendor')->with(['features'=>$featuresList, 'subscription_plans'=>$sub_plans]);
+        return view('backend/subscriptions/subscriptionPlansVendor')->with(['features'=>$featuresList, 'subscription_plans'=>$sub_plans, 'subscribed_vendors_count'=>$subscribed_vendors_count, 'subscribed_vendors_percentage'=>$subscribed_vendors_percentage, 'awaiting_approval_subscriptions_count'=>$awaiting_approval_subscriptions_count, 'rejected_subscriptions_count'=>$rejected_subscriptions_count]);
     }
 
     /**
@@ -191,4 +198,5 @@ class SubscriptionPlansVendorController extends BaseController
             return redirect()->back()->with('error', 'Subscription cannot be deleted.');
         }
     }
+
 }

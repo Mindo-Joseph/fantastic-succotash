@@ -12,7 +12,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="header-contact">
                     <ul>
                         <li>{{session('client_config')->company_name}}</li>
-                        <li><i class="fa fa-phone" aria-hidden="true"></i>Call Us: {{session('client_config')->phone_number}}</li>
+                        <li><i class="fa fa-phone" aria-hidden="true"></i>{{__('Call Us')}}: {{session('client_config')->phone_number}}</li>
                     </ul>
                 </div>
             </div>
@@ -22,7 +22,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <a href="#"><img src="{{asset('front-assets/images/icon/translation.png')}}" class="img-fluid" alt="">  </a>
                         <ul class="onhover-show-div">
                             @foreach($languageList as $key => $listl)
-                            <li><a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a></li>
+                                <li><a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a></li>
                             @endforeach
                         </ul>
                     </li>
@@ -35,13 +35,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </ul>
                     </li>
                     <li class="onhover-dropdown mobile-account"> <i class="fa fa-user" aria-hidden="true"></i>
-                        My Account
+                        {{__('My Account')}}
                         <ul class="onhover-show-div">
                             @if(Auth::user()->is_superadmin == 1 || Auth::user()->is_admin == 1)
-                            <li><a href="{{route('client.dashboard')}}" data-lng="en">Dashboard</a></li>
+                                <li><a href="{{route('client.dashboard')}}" data-lng="en">{{__('Dashboard')}}</a></li>
                             @endif
-                            <li><a href="{{route('user.profile')}}" data-lng="en">Profile</a></li>
-                            <li><a href="{{route('user.logout')}}" data-lng="es">Logout</a></li>
+                            <li><a href="{{route('user.profile')}}" data-lng="en">{{__('Profile')}}</a></li>
+                            <li><a href="{{route('user.logout')}}" data-lng="es">{{__('Logout')}}</a></li>
                         </ul>
                     </li>
                 </ul>

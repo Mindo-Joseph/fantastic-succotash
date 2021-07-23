@@ -1,5 +1,4 @@
 @extends('layouts.store', ['title' => (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug])
-
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -13,14 +12,11 @@
 </style>
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/price-range.css')}}">
 @endsection
-
 @section('content')
-
- <header>
+<header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-
 <section class="section-b-space ratio_asos">
     <div class="collection-wrapper">
         <div class="container">
@@ -28,12 +24,14 @@
                 <div class="col-sm-3 collection-filter">
                     <!-- side-bar colleps block stat -->
                     <div class="collection-filter-block">
-                        <!-- brand filter start -->
-                        <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left"
-                                    aria-hidden="true"></i> back</span></div>
+                        <div class="collection-mobile-back">
+                            <span class="filter-back">
+                                <i class="fa fa-angle-left" aria-hidden="true"></i> {{__('Back')}}
+                            </span>
+                        </div>
                         @if(!empty($category->brands) && count($category->brands) > 0)
                         <div class="collection-collapse-block open">
-                            <h3 class="collapse-block-title">brand</h3>
+                            <h3 class="collapse-block-title">{{__('Brand')}}</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="collection-brand-filter">
                                     @foreach($category->brands as $key => $val)
@@ -48,14 +46,12 @@
                             </div>
                         </div>
                         @endif
-
                         @if(!empty($variantSets) && count($variantSets) > 0)
                           @foreach($variantSets as $key => $sets)
                             <div class="collection-collapse-block border-0 open">
                                 <h3 class="collapse-block-title">{{$sets->title}}</h3>
                                 <div class="collection-collapse-block-content">
                                     <div class="collection-brand-filter">
-                                        
                                     @if($sets->type == 2)
                                         @foreach($sets->options as $ok => $opt)
                                             <div class="chiller_cb small_label d-inline-block color-selector">
@@ -80,23 +76,11 @@
                                     </div>
                                 </div>
                             </div>
-
                           @endforeach
                         @endif
-                       <!--  <div class="collection-collapse-block border-0 open">
-                            <h3 class="collapse-block-title">price</h3>
-                            <div class="collection-collapse-block-content">
-                                <div class="wrapper mt-3">
-                                    <div class="range-slider">
-                                        <input type="text" class="js-range-slider rangeSliderPrice" value="" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
-                    <!-- side-bar single product slider start -->
                     <div class="theme-card">
-                        <h5 class="title-border">new product</h5>
+                        <h5 class="title-border">{{__('New Product')}}</h5>
                         <div class="offer-slider slide-1">
                             @if(!empty($newProducts) && count($newProducts) > 0)
                                 @foreach($newProducts as $newProds)
@@ -133,23 +117,17 @@
                             @endif
                         </div>
                     </div>
-                    <!-- side-bar banner end here -->
                 </div>
                 <div class="collection-content col">
-
                     <div class="page-main-content">
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="top-banner-wrapper text-center">
-                                    
                                     @if(!empty($category->image))
                                       <div class="common-banner"><img alt="" src="{{$category->image['proxy_url'] . '1000/200' . $category->image['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
-
-                                        
                                     <div class="top-banner-content small-section">
                                         <h4>{{ (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug }}</h4>
-
                                         @if(!empty($category->childs) && count($category->childs) > 0)
                                             <div class="row">
                                                 <div class="col-12">
@@ -177,16 +155,16 @@
                                     <div class="product-top-filter">
                                         <div class="row">
                                             <div class="col-xl-12">
-                                                <div class="filter-main-btn"><span class="filter-btn btn btn-theme"><i class="fa fa-filter"
-                                                            aria-hidden="true"></i> Filter</span></div>
+                                                <div class="filter-main-btn">
+                                                    <span class="filter-btn btn btn-theme">
+                                                        <i class="fa fa-filter" aria-hidden="true"></i>{{__('Filter')}}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="product-filter-content">
-                                                    <!-- <div class="search-count">
-                                                        <h5>Showing Products 1-24 of 10 Result</h5>
-                                                    </div> -->
                                                     <div class="collection-view">
                                                         <ul>
                                                             <li><i class="fa fa-th grid-layout-view"></i></li>
@@ -204,7 +182,6 @@
                                                     <div class="product-page-per-view">
                                                         <?php $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 8; ?>
                                                         <select class="customerPaginate">
-
                                                             <option value="8" @if($pagiNate == 8) selected @endif>Show 8 
                                                             </option>
                                                             <option value="12" @if($pagiNate == 12) selected @endif>Show 12 
@@ -215,13 +192,6 @@
                                                             </option>
                                                         </select>
                                                     </div>
-                                                    <!-- <div class="product-page-filter">
-                                                        <select>
-                                                            <option value="High to low">Sorting items</option>
-                                                            <option value="Low to High">50 Products</option>
-                                                            <option value="Low to High">100 Products</option>
-                                                        </select>
-                                                    </div> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -245,7 +215,6 @@
                                                             <div class="front">
                                                                 <a href="{{route('productDetail', $data->url_slug)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
                                                             </div>
-                                                           
                                                         </div>
                                                         <div class="product-detail">
                                                             <div>
@@ -289,15 +258,11 @@
         </div>
     </div>
 </section>
-
 @endsection
-
 @section('script')
-
 <script src="{{asset('front-assets/js/rangeSlider.min.js')}}"></script>
 <script src="{{asset('front-assets/js/my-sliders.js')}}"></script>
 <script>
-
     $('.js-range-slider').ionRangeSlider({
         type: 'double',
         grid: false,
@@ -307,20 +272,13 @@
         to: 50000,
         prefix: " "
     });
-
-    /*$('.rangeSliderPrice').change(function(){
-        var range = $('.rangeSliderPrice').val();
-        console.log(range);
-    });*/
     var ajaxCall = 'ToCancelPrevReq';
     $('.js-range-slider').change(function(){
         filterProducts();
     });
-
     $('.productFilter').click(function(){
         filterProducts();
     });
-
     function filterProducts(){
         var brands = [];
         var variants = [];
@@ -363,8 +321,5 @@
             },
         });
     }
-
 </script>
-
-
 @endsection
