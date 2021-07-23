@@ -6,52 +6,6 @@
         padding-top: 20px;
         padding-bottom: 20px;
     }
-    .productVariants .firstChild{
-        min-width: 150px;
-        text-align: left !important;
-        border-radius: 0% !important;
-        margin-right: 10px;
-        cursor: default;
-        border: none !important;
-    }
-    .product-right .color-variant li, .productVariants .otherChild{
-        height: 35px;
-        width: 35px;
-        border-radius: 50%;
-        margin-right: 10px;
-        cursor: pointer;
-        border: 1px solid #f7f7f7;
-        text-align: center;
-    }
-    .productVariants .otherSize{
-        height: auto !important;
-        width: auto !important;
-        border: none !important;
-        border-radius: 0%;
-    }
-    .product-right .size-box ul li.active {
-        background-color: inherit;
-    }
-    .iti__flag-container li, .flag-container li{
-        display: block;
-    }
-    .iti.iti--allow-dropdown, .allow-dropdown {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-    }
-    .iti.iti--allow-dropdown .phone, .flag-container .phone {
-        padding: 17px 0 17px 100px !important;
-    }
-    .social-logins{
-        text-align: center;
-    }
-    .social-logins img{
-        width: 100px;
-        height: 100px;
-        border-radius: 100%;
-        margin-right: 20px;
-    }
     .register-page .theme-card .theme-form input {
         margin-bottom: 5px;
     }
@@ -75,23 +29,16 @@
                     <form name="register" id="register" action="{{route('customer.forgotPass')}}" class="theme-form" method="post"> @csrf
                         <div class="form-row mb-3">
                             <div class="col-md-6">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" placeholder="Email" required="" name="email" value="{{ old('email')}}">
+                                <div class="input-group">
+                                    <input type="email" class="form-control" id="email" placeholder="Enter Email" required="" name="email" value="">
+                                    <button class="btn input-group-text btn-dark waves-effect waves-light" type="button">Send Password Reset Link</button>
+                                </div>
                                 @if($errors->first('email'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                                 @endif
-                                @if(\Session::has('err_email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{!! \Session::get('err_email') !!}</strong>
-                                    </span>
-                                @endif
                             </div>
-                            <input type="hidden" name="device_type" value="web">
-                            <input type="hidden" name="device_token" value="web">
-                            <input type="hidden" id="countryData" name="countryData" value="us">
-                            <button type="submit" class="btn btn-solid mt-3 submitRegister">Send OTP</button>
                         </div>
                     </form>
                 </div>
