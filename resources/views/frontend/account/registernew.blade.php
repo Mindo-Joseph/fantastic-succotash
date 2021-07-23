@@ -55,7 +55,7 @@
                             <div class="row form-group mb-0">
                                 <div class="col-md-6 mb-3">
                                     <label for="">{{ __('Full Name') }}</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="{ __('Full Name') }}" name="name" value="{{ old('name')}}">
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="{{ __('Full Name') }}" name="name" value="{{ old('name')}}">
                                     @error('name')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -97,7 +97,7 @@
                             <div class="row form-group mb-0 align-items-center">
                             <div class="col-12 checkbox-input">
                                 <input type="checkbox" id="html" name="html" required>
-                                    <label for="html">I accept the <a href="{{url('extra-page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and and have read the <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> Privacy Policy.</a></label>
+                                    <label for="html">{{__('I accept the')}}<a href="{{url('extra-page/terms-conditions')}}" target="_blank">{{__('Terms And Conditions')}} </a> {{__('and have read the')}} <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> {{__('Privacy Policy')}}.</a></label>
                                 </div>
                                 <div class="col-md-6 hide position-absolute">
                                     <label for="">Referral Code</label>
