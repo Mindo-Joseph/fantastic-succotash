@@ -15,6 +15,12 @@ class VendorController extends FrontController
 {
     private $field_status = 2;
     
+    public function viewAll(){
+        $langId = Session::get('customerLanguage');
+        $navCategories = $this->categoryNav($langId);
+        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where('status', 1)->get();
+        return view('frontend/vendor-all')->with(['navCategories' => $navCategories,'vendors' => $vendors]);
+    }
     /**
      * Display product By Vendor
      *
