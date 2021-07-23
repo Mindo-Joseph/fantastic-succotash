@@ -231,6 +231,7 @@ class VendorSubscriptionController extends BaseController
             else{
                 return redirect()->back()->with('error', 'Invalid request');
             }
+            $subscription_invoice->updated_at = Carbon::now()->toDateTimeString();
             $subscription_invoice->save();
         }else{
             return redirect()->back()->with('error', 'Invalid request');

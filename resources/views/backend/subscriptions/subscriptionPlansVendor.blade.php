@@ -93,7 +93,7 @@
                     <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="all-plans" data-toggle="tab" href="#all_plans" role="tab" aria-selected="false" data-rel="sub-plans-datatable" data-status="">
-                                <i class="icofont icofont-man-in-glasses"></i>Plans<sup class="total-items" id="all_plans_count">(0)</sup>
+                                <i class="icofont icofont-man-in-glasses"></i>Plans
                             </a>
                             <div class="material-border"></div>
                         </li>
@@ -193,7 +193,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="" role="tabpanel" aria-labelledby="rejected-subscriptions">
+                        <div class="tab-pane fade" id="rejected_subscriptions" role="tabpanel" aria-labelledby="rejected-subscriptions">
                             <div class="row">
                                 <div class="col-12">
                                     <div class="card">
@@ -343,11 +343,11 @@
         <div class="modal-body">
             <h6 class="m-0">Choose an option for this subscription : </h6>
             <div class="radio pl-1 mt-2 radio-blue form-check-inline">
-                <input type="radio" name="subscription_status" id="radio-activate" value="activate">
+                <input type="radio" name="subscription_status" id="radio-activate" value="activate" required>
                 <label for="radio-activate"> Activate </label>
             </div>
             <div class="radio pl-1 mt-2 radio-blue form-check-inline">
-                <input type="radio" name="subscription_status" id="radio-reject" value="reject">
+                <input type="radio" name="subscription_status" id="radio-reject" value="reject" required>
                 <label for="radio-reject"> Reject </label>
             </div>
         </div>
@@ -469,12 +469,16 @@
                     return "<a href='"+full.plan_url+"'>"+full.plan_title+"</a> ";
                 }},
                 {data: 'subscription_amount', name: 'subscription_amount', class:'subscription_amount',orderable: false, searchable: false, "mRender":function(data, type, full){
-                    return "<p class='ellips_txt' data-toggle='tooltip' data-placement='top' title='"+full.subscription_amount+"'>$"+full.subscription_amount+"</p>";
+                    return "<p class='ellips_txt'>$"+full.subscription_amount+"</p>";
                 }},
                 {data: 'sub_features', name: 'sub_features', class:'text-center', orderable: false, searchable: false},
                 {data: 'frequency', name: 'frequency', class:'text-center', orderable: false, searchable: false},
                 {data: 'sub_status', name: 'sub_status', orderable: false, searchable: false, "mRender":function(data, type, full){
-                    return "<span class='badge bg-soft-"+full.sub_status_class+" text-"+full.sub_status_class+"'>"+full.sub_status+"</span> | <a class='action-icon edit_pending_subscription' href='javascript:void(0)' data-subscription_invoice='"+full.slug+"'><i class='mdi mdi-square-edit-outline'></i></a>";
+                    var status = "<span class='badge bg-soft-"+full.sub_status_class+" text-"+full.sub_status_class+"'>"+full.sub_status+"</span>";
+                    if(full.sub_status != 'Rejected'){
+                        status = status + " | <a class='action-icon edit_pending_subscription' href='javascript:void(0)' data-subscription_invoice='"+full.slug+"'><i class='mdi mdi-square-edit-outline'></i></a>";
+                    }
+                    return status;
                 }},
             ]
         });

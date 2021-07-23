@@ -47,6 +47,7 @@ class SubscriptionPlansUserController extends BaseController
         $subscribed_users_count = $user_subscriptions->count();
         $active_users = User::where('status', 1)->count();
         $subscribed_users_percentage = ($subscribed_users_count / $active_users) * 100;
+        $subscribed_users_percentage = number_format($subscribed_users_percentage, 2);
         if($sub_plans){
             foreach($sub_plans as $plan){
                 $features = '';
