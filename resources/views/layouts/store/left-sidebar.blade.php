@@ -88,7 +88,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         @if($client_preference_detail->cart_enable == 1)
                                             <a class="btn btn-solid" href="{{route('showCart')}}">
                                                 <!-- <img src="{{asset('front-assets/images/icon/cart_.png')}}" class="img-fluid blur-up lazyload" alt="">  -->
-                                                <i class="fa fa-shopping-cart mr-1 " aria-hidden="true"></i> <span>Cart</span>  • <span id="cart_qty_span"></span> 
+                                                <i class="fa fa-shopping-cart mr-1 " aria-hidden="true"></i> <span>Cart</span> <span id="cart_qty_span">• 1</span> 
                                             </a>
                                             <!-- <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span> -->
                                         @endif

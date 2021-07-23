@@ -2998,6 +2998,7 @@ header .homepage-address h2 {
     border-radius: 50px;
     overflow: hidden;
     padding: 8px 10px;
+    width: 100%;
 }
 
 
@@ -3182,10 +3183,56 @@ header .homepage-address h2 {
 .booking-experience {
     background: #fff;
 }
-{
+.address-bar{
     background-color: var(--theme-deafult);
+    padding: 40px;
 }
 
+.location-title li{
+    color: #fff;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+/* Search Bar Css */
+.list-box {
+    box-shadow: 0 16px 32px 0 rgb(0 0 0 / 5%) !important;
+    border-radius: 0 0 16px 16px !important;
+    padding: 20px;
+    background: #fff;
+}
+
+.list-items img {
+    height: 80px;
+}
+
+.list-box h4,.list-box span {
+    font-weight: 600;
+}
+
+/*
+ *  STYLE 4
+ */
+
+ .style-4::-webkit-scrollbar-track
+ {
+     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+     background-color: #F5F5F5;
+ }
+ 
+ .style-4::-webkit-scrollbar
+ {
+     width: 10px;
+     height: 5px;
+     background-color: #F5F5F5;
+ }
+ 
+ .style-4::-webkit-scrollbar-thumb
+ {
+     background-color: #000000;
+     border: 2px solid #555555;
+ }
+ 
 
 
 

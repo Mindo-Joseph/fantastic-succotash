@@ -14,26 +14,6 @@
 </div>
 <form id="favicon-form" method="post" enctype="multipart/form-data">
 <div class="row">
-    <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-2">Cart Toggle</h4>
-                <div class="mb-0">
-                    <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-2">Rating Toggle</h4>
-                <div class="mb-0">
-                    <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="col-lg-2">
         <div class="card">
             <div class="card-body">
@@ -62,6 +42,26 @@
             </div>
         </div>
     </div>
+    <div class="col-md-4 col-xl-2">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title mb-2">Cart Toggle</h4>
+                <div class="mb-0">
+                    <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xl-2">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title mb-2">Rating Toggle</h4>
+                <div class="mb-0">
+                    <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                </div>
+            </div>
+        </div>
+    </div>    
 </div>
 </form>
 
