@@ -1,17 +1,21 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
 
-<section class="cab-booking pt-0">
-<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4850.865733603189!2d76.82393041076074!3d30.716149768967526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1627015845978!5m2!1sen!2sin" width="100%" height="100vh" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-</section>
-
-<section>
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">.. 1 ..</div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">.. 2 ..</div>
-        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">.. 3 ..</div>
-    </div>
-</section>
+    <section class="cab-booking pt-0">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4850.865733603189!2d76.82393041076074!3d30.716149768967526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1627015845978!5m2!1sen!2sin" width="100%" height="100vh" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        <div class="booking-experience ds">
+            <div class="address-bar">
+                <ul>
+                    <li class="pickup-text">
+                        From CH Devi Lal Centre of Learning
+                    </li>
+                    <li class="drop-text">
+                        To Sector 14
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
 
     <!-- Vendor Sign Up Form -->
     <section class="vendor-signup">
