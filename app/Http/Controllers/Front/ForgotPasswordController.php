@@ -58,14 +58,20 @@ class ForgotPasswordController extends FrontController{
                 $client_name = $client->name;
                 $mail_from = $data->mail_from;
                 DB::table('password_resets')->insert(['email' => $request->email, 'token' => $token, 'created_at' => Carbon::now()]);
+                $email_template_content = '';
+                $email_template = EmailTemplate::where('id', 3)->first();
+                if($email_template){
+                    $email_template_content = $email_template->content;
+                    $email_template_content = str_ireplace("{reset_link}", url('/reset-password/'.$token), $email_template_content);
+                }
                 $data = [
                     'token' => $token,
                     'mail_from' => $mail_from,
                     'email' => $request->email,
                     'client_name' => $client_name,
                     'logo' => $client->logo['original'],
-                    'link' => url('/reset-password/'.$token),
-                    'subject' => 'Reset Password Notification',
+                    'subject' => $email_template->subject,
+                    'email_template_content' => $email_template_content,
                 ];
                 dispatch(new \App\Jobs\sendForgotPasswordEmail($data))->onQueue('forgot_password_email');
             }
