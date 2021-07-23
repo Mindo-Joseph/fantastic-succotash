@@ -3003,6 +3003,8 @@ header .homepage-address h2 {
 .location-bar{
     width: 40%;
 }
+
+/* Animation Tabbar Css */
 .nav-tabs .nav-link,.nav-tabs.navigation-tab .nav-item .nav-link, .nav-tabs.navigation-tab .nav-item.show .nav-link, 
 .nav-tabs.navigation-tab .nav-link.active,.nav-tabs.navigation-tab .nav-link:focus, .nav-tabs.navigation-tab .nav-link:hover {
     border: 0;
@@ -3058,8 +3060,16 @@ header .homepage-address h2 {
     width: 100px;
 }
 
+/* Animation Tabbar Css End */
 
+/* Cab Booking Css */
+.cab-booking {
+    height: 100vh;
+}
 
+.cab-booking iframe {
+    height: 100vh;
+}
 
 
 

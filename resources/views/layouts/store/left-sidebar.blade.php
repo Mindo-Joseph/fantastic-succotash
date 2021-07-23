@@ -5,7 +5,7 @@ $urlImg =  $clientData ? $clientData->logo['image_fit'].'200/80'.$clientData->lo
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
-<!-- <header class="header-2 header-6">
+<header class="header-2 header-6">
     <div class="container py-3">
         <div class="row">
             <div class="col-sm-12">
@@ -147,7 +147,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </div>   
     </div>   
     @endif
-</header> -->
+</header>
 <header class="site-header">
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
@@ -157,13 +157,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="d-flex mr-auto">
                     <ul class="nav nav-tabs navigation-tab mr-3" id="myTab" role="tablist">
                         <li class="navigation-tab-item active" role="presentation">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Delivery</a>
                         </li>
                         <li class="navigation-tab-item" role="presentation">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Dine-In</a>
                         </li>
                         <li class="navigation-tab-item" role="presentation">
-                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Takeaway</a>
                         </li>                       
                         <div class="navigation-tab-overlay"></div>
                     </ul>
