@@ -1,6 +1,5 @@
 @php
 $clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
-
 $urlImg =  $clientData ? $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'] : " ";
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
@@ -63,34 +62,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
                             </form>
                             <ul>
-                                <!-- <li class="search_btn">
-                                    <img src="{{asset('front-assets/images/icon/search.svg')}}" class="img-fluid blur-up lazyload" alt="">
-                                </li> -->
-                                <?php /* ?><li class="onhover-div mobile-setting">
-                                    <div><img src="{{asset('front-assets/images/icon/setting.svg')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-settings"></i></div>
-                                    <div class="show-div setting">
-                                        <h6>language</h6>
-                                        <ul>
-                                            @foreach($languageList as $key => $listl)
-                                            <li><a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a></li>
-                                            @endforeach
-                                        </ul>
-                                        <h6>currency</h6>
-                                        <ul class="list-inline">
-                                            @foreach($currencyList as $key => $listc)
-                                            <li><a href="javascript:void(0)" currId="{{$listc->currency_id}}" class="customerCurr" currSymbol="{{$listc->currency->symbol}}">{{$listc->currency->iso_code}}</a></li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </li><?php */ ?>
                                 <li class="onhover-div pl-0">
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->cart_enable == 1)
                                             <a class="btn btn-solid" href="{{route('showCart')}}">
-                                                <!-- <img src="{{asset('front-assets/images/icon/cart_.png')}}" class="img-fluid blur-up lazyload" alt="">  -->
-                                                <i class="fa fa-shopping-cart mr-1 " aria-hidden="true"></i> <span>Cart</span> <span id="cart_qty_span">• 1</span> 
+                                                <i class="fa fa-shopping-cart mr-1 " aria-hidden="true"></i> <span>{{__('Cart')}} •</span> <span id="cart_qty_span"></span> 
                                             </a>
-                                            <!-- <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span> -->
                                         @endif
                                     @endif
                                     <script type="text/template" id="header_cart_template">
@@ -119,9 +96,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         <li><div class='total'><h5>{{__('Subtotal')}} : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
                                         <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('Viewcart')}}</a>
                                     </script>
-                                    <ul class="show-div shopping-cart" id="header_cart_main_ul">
-
-                                    </ul>
+                                    <ul class="show-div shopping-cart" id="header_cart_main_ul"></ul>
                                 </li>
                             </ul>
                         </div>
@@ -137,7 +112,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="col-12">
                         <ul id="main-menu" class="sm pixelstrap sm-horizontal">
                             <li>
-                                <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
+                                <div class="mobile-back text-end">{{__('Back')}}<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
                             </li>
                             @foreach($navCategories as $cate)
                                 @if($cate['name'])
