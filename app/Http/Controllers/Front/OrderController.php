@@ -28,16 +28,13 @@ class OrderController extends FrontController
     {
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        
-        $pastOrders = Order::with(['vendors.products','products.productRating', 'user', 'address'])->whereHas('orderStatusVendor',function($q){
-            $q->where('order_status_option_id', 5);
-        })
-        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(10);
+        $pastOrders = Order::with(['vendors.products','products.productRating', 'user', 'address'])->whereHas('vendors',function($q){
+            $q->where('order_status_option_id', 6);
+        })->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(10);
 
-        $activeOrders = Order::with(['vendors.products', 'user', 'address'])->whereHas('orderStatusVendor',function($q){
-            $q->where('order_status_option_id', '!=', 5);
-        })
-        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(10);
+        $activeOrders = Order::with(['vendors.products', 'user', 'address'])->whereHas('vendors',function($q){
+            $q->where('order_status_option_id', '!=', 6);
+        })->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(10);
 
         foreach ($activeOrders as $order) {
             foreach ($order->vendors as $vendor) {

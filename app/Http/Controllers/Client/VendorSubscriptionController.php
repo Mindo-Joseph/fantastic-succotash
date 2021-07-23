@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use DB;
 use Auth;
 use Session;
 use Redirect;
@@ -106,9 +107,11 @@ class VendorSubscriptionController extends BaseController
      */
     public function purchaseSubscriptionPlan(Request $request, $domain = '', $id, $slug = '')
     {
+        $user = Auth::user();
         $vendor = Vendor::where('id', $id)->first();
         $subscription_plan = SubscriptionPlansVendor::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
         $last_subscription = SubscriptionInvoicesVendor::with(['plan', 'features.feature'])
+            ->where('user_id', $user->id)
             ->where('vendor_id', $id)
             ->where('subscription_id', $subscription_plan->id)
             ->where('status_id', 2)
@@ -116,6 +119,7 @@ class VendorSubscriptionController extends BaseController
         if( ($vendor) && ($subscription_plan) ){
             $subscription_invoice = new SubscriptionInvoicesVendor;
             $subscription_invoice->vendor_id = $vendor->id;
+            $subscription_invoice->user_id = $user->id;
             $subscription_invoice->subscription_id = $subscription_plan->id;
             $subscription_invoice->slug = strtotime(Carbon::now()).'_'.$slug;
             $subscription_invoice->payment_option_id = $request->payment_option_id;
@@ -217,24 +221,43 @@ class VendorSubscriptionController extends BaseController
      */
     public function updateSubscriptionStatus(Request $request, $domain = '', $slug = '')
     {
-        $subscription_invoice = SubscriptionInvoicesVendor::where('slug', $slug)->firstOrFail();
+        $message = '';
+        $subscription_invoice = SubscriptionInvoicesVendor::with('plan')->where('slug', $slug)->firstOrFail();
         if(!empty($request->subscription_status)){
-            $status = $request->subscription_status;
-            if($status == 'approve'){
-                $subscription_invoice->status_id = 2;
+            DB::beginTransaction();
+            try {
+                $status = $request->subscription_status;
+                if($status == 'approve'){
+                    $subscription_invoice->status_id = 2;
+                    $subscription_invoice->approved_by = Auth::user()->id;
+                    $message = 'approved';
+                }
+                elseif(($status == 'reject') && ($subscription_invoice->status_id != 4)){
+                    $subscription_invoice->status_id = 4;
+                    $subscription_invoice->rejected_by = Auth::user()->id;
+                    if($subscription_invoice->subscription_amount > 0) {
+                        $credit_amount = $subscription_invoice->subscription_amount;
+                        $user = User::findOrFail($subscription_invoice->user_id);
+                        $wallet = $user->wallet;
+                        $wallet->depositFloat($credit_amount, ['Wallet has been <b>Credited</b> for rejected '.$subscription_invoice->plan->title]);
+                        $message = 'rejected and refunded';
+                    }
+                }
+                else{
+                    return redirect()->back()->with('error', 'Invalid request');
+                }
+                $subscription_invoice->updated_at = Carbon::now()->toDateTimeString();
+                $subscription_invoice->save();
+                DB::commit();
+                return redirect()->back()->with('success', 'Subscription has been '.$message.' successfully');
+            } 
+            catch (Exception $e) {
+                DB::rollback();
+                return redirect()->back()->with('error', $e->getMessage());
             }
-            elseif($status == 'reject'){
-                $subscription_invoice->status_id = 4;
-            }
-            else{
-                return redirect()->back()->with('error', 'Invalid request');
-            }
-            $subscription_invoice->updated_at = Carbon::now()->toDateTimeString();
-            $subscription_invoice->save();
         }else{
             return redirect()->back()->with('error', 'Invalid request');
         }
-        return redirect()->back()->with('success', 'Vendor subscription has been updated successfully');
     }
 
     /**

@@ -55,6 +55,9 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('vendor/register','Front\CustomerAuthController@postVendorregister')->name('vendor.register');
 	Route::post('user/forgotPassword','Front\ForgotPasswordController@postForgotPassword')->name('customer.forgotPass');
 	Route::post('user/resetPassword','Front\CustomerAuthController@resetPassword')->name('customer.resetPass');
+	Route::get('reset-password/{token}', 'Front\ForgotPasswordController@getResetPasswordForm');
+	Route::post('reset-password', 'Front\ForgotPasswordController@postUpdateResetPassword')->name('reset-password');
+
 	Route::post('primaryData', 'Front\UserhomeController@changePrimaryData')->name('changePrimaryData');
 	Route::post('paginateValue', 'Front\UserhomeController@changePaginate')->name('changePaginate');
 	Route::get('/product/{id?}','Front\ProductController@index')->name('productDetail');

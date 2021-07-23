@@ -18,6 +18,21 @@ use App\Models\{User, UserAddress, ClientPreference, Client, SubscriptionPlansUs
 class UserSubscriptionController extends FrontController
 {
     use ApiResponser;
+
+    /**
+     * Handle the incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function __construct(request $request)
+    {
+        $preferences = ClientPreference::where(['id' => 1])->first();
+        if((isset($preferences->subscription_mode)) && ($preferences->subscription_mode == 0)){
+            abort(404);
+        }
+    }
+
     /**
      * get user subscriptions.
      *
