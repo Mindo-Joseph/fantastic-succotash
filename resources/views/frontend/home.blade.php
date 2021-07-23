@@ -18,7 +18,7 @@
         @foreach($banners as $banner)
             <div>
                 <div class="home text-center">
-                    <img src="{{$banner->image['proxy_url'] . '1500/600' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
+                    <img src="{{$banner->image['image_fit'] . '1500/600' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
                 </div>
             </div>
         @endforeach
