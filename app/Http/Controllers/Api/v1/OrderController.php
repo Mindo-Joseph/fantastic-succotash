@@ -271,7 +271,7 @@ class OrderController extends Controller {
         $order_status_options= [];
         $paginate = $request->has('limit') ? $request->limit : 12;
         $type = $request->has('type') ? $request->type : 'active';
-        $orders = OrderVendor::where('user_id', $user->id)->orderBy('id', 'DESC');
+        $orders = OrderVendor::where('user_id', $user->id)->orderBy('id', 'DESC'); 
         switch ($type) {
             case 'active':
                 $orders->whereNotIn('order_status_option_id', [6,3]);
@@ -307,6 +307,7 @@ class OrderController extends Controller {
                     'image_path' => $product->media->first() ? $product->media->first()->image->path : $product->image,
                     'price' => $product->price,
                     'qty' => $product->quantity,
+                    'category_detail' => $product->category,
                 );
             }
             $order->product_details = $product_details;
