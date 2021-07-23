@@ -6,7 +6,7 @@ use Auth;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
-use App\Models\{PaymentOption, Client, ClientCurrency};
+use App\Models\{PaymentOption, Client, ClientCurrency, SubscriptionPlansVendor};
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Client\BaseController;
 use Illuminate\Support\Facades\Validator;
@@ -28,8 +28,10 @@ class StripeGatewayController extends BaseController{
     public function subscriptionPaymentViaStripe(request $request)
     {
         try{
+            $user = Auth::user();
             $token = $request->stripe_token;
-            $plan_id = $request->subscription_id;
+            $plan = SubscriptionPlansVendor::where('slug',$request->subscription_id)->firstOrFail();
+            $request->request->add(['user_id' => $user->id]); //add request
             $saved_payment_method = $this->getSavedVendorPaymentMethod($request);
             if(!$saved_payment_method){
                 $customerResponse = $this->gateway->createCustomer(array(
@@ -37,7 +39,6 @@ class StripeGatewayController extends BaseController{
                     'email' => $request->email,
                     'source' => $token
                 ))->send();
-                // Find the card ID
                 $customer_id = $customerResponse->getCustomerReference();
                 if($customer_id){
                     $request->request->set('customerReference', $customer_id);
@@ -62,7 +63,7 @@ class StripeGatewayController extends BaseController{
                 $purchaseResponse = $this->gateway->purchase([
                     'currency' => 'INR',
                     'amount' => $request->amount,
-                    'metadata' => ['vendor_id' => $request->vendor_id, 'plan_id' => $plan_id],
+                    'metadata' => ['user_id'=>$user->id, 'vendor_id' => $request->vendor_id, 'plan_id' => $plan->id],
                     'description' => 'This is a subscription purchase transaction.',
                     'customerReference' => $customer_id
                 ])->send();

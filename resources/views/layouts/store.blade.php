@@ -7,7 +7,6 @@
     :root {
       --theme-deafult: <?= ($client_preference_detail->web_color) ? $client_preference_detail->web_color : '#ff4c3b' ?>;
     }
-
     a {
       color: <?= ($client_preference_detail->web_color) ? $client_preference_detail->web_color : '#ff4c3b' ?>;
     }

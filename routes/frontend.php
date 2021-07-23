@@ -36,7 +36,7 @@ Route::group(['middleware' => ['domain']], function () {
 	]);
 	Route::get('user/forgotPassword', [
 		'as' => 'customer.forgotPassword',
-		'uses' => 'Front\CustomerAuthController@forgotPasswordForm'
+		'uses' => 'Front\ForgotPasswordController@getForgotPasswordForm'
 	]);
 	Route::get('user/resetPassword', [
 		'as' => 'customer.resetPassword',
@@ -53,7 +53,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('user/loginData','Front\CustomerAuthController@login')->name('customer.loginData');
 	Route::post('user/register','Front\CustomerAuthController@register')->name('customer.register');
 	Route::post('vendor/register','Front\CustomerAuthController@postVendorregister')->name('vendor.register');
-	Route::post('user/forgotPassword','Front\CustomerAuthController@forgotPassword')->name('customer.forgotPass');
+	Route::post('user/forgotPassword','Front\ForgotPasswordController@postForgotPassword')->name('customer.forgotPass');
 	Route::post('user/resetPassword','Front\CustomerAuthController@resetPassword')->name('customer.resetPass');
 	Route::post('primaryData', 'Front\UserhomeController@changePrimaryData')->name('changePrimaryData');
 	Route::post('paginateValue', 'Front\UserhomeController@changePaginate')->name('changePaginate');

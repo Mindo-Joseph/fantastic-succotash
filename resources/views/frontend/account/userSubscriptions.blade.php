@@ -163,7 +163,7 @@
                                     <div class="p-2">
                                         <h3 class="heading mt-0 mb-2"><b>{{ $plan->title }}</b></h3>
                                         <div class="pricing-content">
-                                            <p class="mb-0">{{ $plan->description }}</p>
+                                            <p>{{ $plan->description }}</p>
                                         </div>
                                         <ul class="mb-3">
                                             @foreach($plan->features as $feature)
