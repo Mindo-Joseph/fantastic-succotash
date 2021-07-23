@@ -105,7 +105,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-6 text-center text-md-right mt-3 mt-md-0">
-                                    <a class="btn btn-solid openProfileModal" data-toggle="modal" data-target="#profile-modal" href="javascript:void(0)">{{ __('Edit Profile') }}</a>
+                                    <button type="button" class="btn btn-solid openProfileModal">{{ __('Edit Profile') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -236,6 +236,7 @@
             dataType: 'json',
             success: function (data) {
                 $('#editProfileForm #editProfileBox').html(data.html);
+                $('#profile-modal').modal('show');
                 var input = document.querySelector("#phone");
                 window.intlTelInput(input, {
                     separateDialCode: true,

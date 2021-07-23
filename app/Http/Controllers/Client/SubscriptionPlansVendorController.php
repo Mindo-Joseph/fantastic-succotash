@@ -28,9 +28,12 @@ class SubscriptionPlansVendorController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request)
+    public function __construct(request $request)
     {
-        //
+        $preferences = ClientPreference::where(['id' => 1])->first();
+        if((isset($preferences->subscription_mode)) && ($preferences->subscription_mode == 0)){
+            abort(404);
+        }
     }
 
     /**
