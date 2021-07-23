@@ -93,7 +93,7 @@
                 <div class="create_box">
                     <h6>{{ __('Create A Account') }}</h6>
                     <p>{{ __('Sign up for a free account at our store. Registration is quick and easy. It allows you to be able to order from our shop. To start shopping click register.') }}</p>
-                    <a href="{{route('customer.register')}}" class="btn btn-solid mt-4">{{ __('Create an Account') }}</a>
+                    <a href="{{route('customer.register')}}" class="btn btn-solid mt-4">{{ __('Create An Account') }}</a>
                 </div>
             </div>
         </div>

@@ -213,6 +213,32 @@ class VendorSubscriptionController extends BaseController
     }
 
     /**
+     * update vendor subscription status.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateSubscriptionStatus(Request $request, $domain = '', $slug = '')
+    {
+        $subscription_invoice = SubscriptionInvoicesVendor::where('slug', $slug)->firstOrFail();
+        if(!empty($request->subscription_status)){
+            $status = $request->subscription_status;
+            if($status == 'activate'){
+                $subscription_invoice->status_id = 2;
+            }
+            elseif($status == 'reject'){
+                $subscription_invoice->status_id = 4;
+            }
+            else{
+                return redirect()->back()->with('error', 'Invalid request');
+            }
+            $subscription_invoice->save();
+        }else{
+            return redirect()->back()->with('error', 'Invalid request');
+        }
+        return redirect()->back()->with('success', 'Vendor subscription has been updated successfully');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -231,8 +257,11 @@ class VendorSubscriptionController extends BaseController
                     $features = implode(', ', $subFeaturesList);
                 }
                 $sub->vendor_name = $sub->vendor->name;
+                $sub->vendor_url = route('vendor.catalogs', $sub->vendor_id);
                 $sub->sub_features = $features;
+                $sub->frequency = ucfirst($sub->frequency);
                 $sub->plan_title = $sub->plan->title;
+                $sub->plan_url = route('subscription.plans.vendor');
                 $sub->sub_status = $sub->status->title;
                 if($sub->sub_status == 'Pending'){
                     $sub->sub_status_class = 'info';

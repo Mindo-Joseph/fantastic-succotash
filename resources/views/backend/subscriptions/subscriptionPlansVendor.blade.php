@@ -41,7 +41,7 @@
                                 <span>{!! \Session::get('success') !!}</span>
                             </div>
                         @endif
-                        @if (\Session::has('error_delete'))
+                        @if (\Session::has('error_delete') || \Session::has('error'))
                             <div class="alert alert-danger">
                                 <span>{!! \Session::get('error') !!}</span>
                             </div>
@@ -99,13 +99,13 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="awaiting-approval-subscriptions" data-toggle="tab" href="#awaiting_approval_subscriptions" role="tab" aria-selected="true" data-rel="awaiting_approval_subscriptions_datatable" data-status="1">
-                                <i class="icofont icofont-ui-home"></i>Awaiting Approval<sup class="total-items">(0)</sup>
+                                <i class="icofont icofont-ui-home"></i>Awaiting Approval<sup class="total-items">({{ $awaiting_approval_subscriptions_count }})</sup>
                             </a>
                             <div class="material-border"></div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="rejected-subscriptions" data-toggle="tab" href="#rejected_subscriptions" role="tab" aria-selected="false" data-rel="rejected_subscriptions_datatable" data-status="4">
-                                <i class="icofont icofont-man-in-glasses"></i>Rejected<sup class="total-items">(0)</sup>
+                                <i class="icofont icofont-man-in-glasses"></i>Rejected<sup class="total-items">({{ $rejected_subscriptions_count }})</sup>
                             </a>
                             <div class="material-border"></div>
                         </li>
@@ -199,7 +199,7 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="table-responsive">
-                                                <table class="table table-centered table-nowrap table-striped" id="rejected-subscriptions-datatable" width="100%">
+                                                <table class="table table-centered table-nowrap table-striped" id="rejected_subscriptions_datatable" width="100%">
                                                     <thead>
                                                         <tr>
                                                             <th>Vendor Name</th>
@@ -328,6 +328,38 @@
     </div>
 </div>
 
+<div class="modal fade" id="subscription-update" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="subscription_updateLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="subscription_updateLabel">Action</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <form id="subscription-update-form" method="POST" action="">
+        @csrf
+        <div><input type="hidden" name="subscription_slug" id="subscription_slug" value=""></div>
+        <div class="modal-body">
+            <h6 class="m-0">Choose an option for this subscription : </h6>
+            <div class="radio pl-1 mt-2 radio-blue form-check-inline">
+                <input type="radio" name="subscription_status" id="radio-activate" value="activate">
+                <label for="radio-activate"> Activate </label>
+            </div>
+            <div class="radio pl-1 mt-2 radio-blue form-check-inline">
+                <input type="radio" name="subscription_status" id="radio-reject" value="reject">
+                <label for="radio-reject"> Reject </label>
+            </div>
+        </div>
+        <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+            <button type="submit" class="btn btn-success">Continue</a>
+            <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 @endsection
 
 @section('script')
@@ -336,6 +368,7 @@
     var edit_subscription_url = "{{ route('subscription.plan.edit.vendor', ':id') }}";
     var update_subscription_status_url = "{{route('subscription.plan.updateStatus.vendor', ':id')}}";
     var update_subscription_onrequest_url = "{{route('subscription.plan.updateOnRequest.vendor', ':id')}}";
+    var vendor_subscription_update_url = "{{ route('vendor.subscription.status.update', ':id') }}";
 
     $.ajaxSetup({
         headers: {
@@ -430,22 +463,29 @@
             },
             columns: [
                 {data: 'vendor_name', name: 'vendor_name', orderable: false, searchable: false,"mRender": function ( data, type, full ) {
-                    return "<a href='"+full.vendor_name+"'>"+full.vendor_name+"</a>";
+                    return "<a href='"+full.vendor_url+"'>"+full.vendor_name+"</a>";
                 }},
                 {data: 'plan_title', name: 'plan_title', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
-                    return "<a href='"+full.plan_title+"'>"+full.plan_title+"</a> ";
+                    return "<a href='"+full.plan_url+"'>"+full.plan_title+"</a> ";
                 }},
                 {data: 'subscription_amount', name: 'subscription_amount', class:'subscription_amount',orderable: false, searchable: false, "mRender":function(data, type, full){
-                    return "<p class='ellips_txt' data-toggle='tooltip' data-placement='top' title='"+full.subscription_amount+"'>"+full.subscription_amount+"</p>";
+                    return "<p class='ellips_txt' data-toggle='tooltip' data-placement='top' title='"+full.subscription_amount+"'>$"+full.subscription_amount+"</p>";
                 }},
                 {data: 'sub_features', name: 'sub_features', class:'text-center', orderable: false, searchable: false},
                 {data: 'frequency', name: 'frequency', class:'text-center', orderable: false, searchable: false},
                 {data: 'sub_status', name: 'sub_status', orderable: false, searchable: false, "mRender":function(data, type, full){
-                    return "<span class='badge bg-soft-"+full.sub_status_class+" text-"+full.sub_status_class+"'>"+full.sub_status+"</span> | <a class='action-icon edit_vendor' href='javascript:void(0)' data-vendor_id='"+full.vendor_id+"'><i class='mdi mdi-square-edit-outline'></i></a>";
+                    return "<span class='badge bg-soft-"+full.sub_status_class+" text-"+full.sub_status_class+"'>"+full.sub_status+"</span> | <a class='action-icon edit_pending_subscription' href='javascript:void(0)' data-subscription_invoice='"+full.slug+"'><i class='mdi mdi-square-edit-outline'></i></a>";
                 }},
             ]
         });
     }
+
+    $(document).delegate(".edit_pending_subscription", "click", function(){
+        var sub_slug = $(this).attr('data-subscription_invoice');
+        $("#subscription-update-form #subscription_slug").val(sub_slug);
+        $("#subscription-update-form").attr("action", vendor_subscription_update_url.replace(":id", sub_slug));
+        $("#subscription-update").modal('show');
+    });
 
 </script>
 

@@ -36,14 +36,14 @@
                 <div class="col-lg-6 mb-lg-0 mb-3 text-center  pb-4 {{$user->is_phone_verified == 0 && $preference->verify_phone == 1 ? 'border-right' : 'offset-lg-3'}}" id="verify_email_main_div">
                     @if($user->is_email_verified == 0)
                         <img class="h-45" src="{{asset('front-assets/images/email_icon.svg')}}" alt="">
-                        <h3 class="mb-2">Verify Email Address</h3>
-                        <p>Enter the code we just sent you on your email address</p>
+                        <h3 class="mb-2">{{__('Verify Email Address')}}</h3>
+                        <p>{{__('Enter the code we just sent you on your email address')}}</p>
                         <div class="row mt-3">
                             <div class="offset-xl-3 col-xl-6 text-left">
                                 <div class="verify_id input-group mb-3">
                                     <input type="email" id="email" class="form-control" value="{{Auth::user()->email}}" disabled="">
                                     <div class="input-group-append">
-                                        <a class="input-group-text" id="edit_email" href="javascript:void(0)">Edit</a>
+                                        <a class="input-group-text" id="edit_email" href="javascript:void(0)">{{__('Edit')}}</a>
                                     </div>
                                     <span class="valid-feedback d-block text-center" role="alert">
                                         <strong class="edit_email_feedback"></strong>
@@ -60,11 +60,11 @@
                                 <span class="invalid-feedback2 invalid_email_otp_error w-100 d-block text-center text-danger"></span>
                                 <div class="row text-center mt-2">
                                     <div class="col-12 resend_txt">
-                                        <p class="mb-1">If you didn’t receive a code?</p>
-                                        <a class="verifyEmail" href="javascript:void(0)"><u>RESEND</u></a>
+                                        <p class="mb-1">{{__('If you didn’t receive a code?')}}</p>
+                                        <a class="verifyEmail" href="javascript:void(0)"><u>{{__('RESEND')}}</u></a>
                                     </div>
                                     <div class="col-md-12 mt-3">
-                                        <button type="button" class="btn btn-solid" id="verify_email_token">Verify</button>
+                                        <button type="button" class="btn btn-solid" id="verify_email_token">{{__('VERIFY')}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +72,7 @@
                     @else
                         <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
                         <h3 class="mb-2">Email Address Verified!</h3>
-                        <p>You have successfully verified the <br> email account.</p>
+                        <p>{{__('You have successfully verified the')}} <br> email account.</p>
                     @endif
                 </div>
             @endif
@@ -88,7 +88,7 @@
                             <input type="tel" class="form-control" id="phone_number" value="{{'+'.Auth::user()->dial_code.Auth::user()->phone_number}}" disabled="">
                             <input type="hidden" id="dial_code" value="{{Auth::user()->dial_code}}">
                             <div class="input-group-append position-absolute position-right">
-                                <a class="input-group-text" id="edit_phone" href="javascript:void(0)">Edit</a>
+                                <a class="input-group-text" id="edit_phone" href="javascript:void(0)">{{__('Edit')}}</a>
                             </div>
                             <span class="valid-feedback d-block text-center" role="alert">
                                 <strong class="edit_phone_feedback"></strong>
@@ -105,18 +105,18 @@
                         <span class="invalid_phone_otp_error invalid-feedback2 w-100 d-block text-center text-danger"></span>
                         <div class="row text-center mt-2">
                             <div class="col-12 resend_txt">
-                                <p class="mb-1">If you didn’t receive a code?</p>
-                                <a class="verifyPhone" href="javascript:void(0)"><u>RESEND</u></a>
+                                <p class="mb-1">{{__('If you didn’t receive a code?')}}</p>
+                                <a class="verifyPhone" href="javascript:void(0)"><u>{{__('RESEND')}}</u></a>
                             </div>
                             <div class="col-md-12 mt-3">
-                                <button type="button" class="btn btn-solid" id="verify_phone_token">Verify</button>
+                                <button type="button" class="btn btn-solid" id="verify_phone_token">{{__('VERIFY')}}</button>
                             </div>
                         </div>
                     </div>
                     @else
                     <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
-                    <h3 class="mb-2">Phone Verified!</h3>
-                    <p>You have successfully verified the <br> Phone.</p>
+                    <h3 class="mb-2">{{__('Phone Verified!')}}</h3>
+                    <p>{{__('You have successfully verified the')}} <br> Phone.</p>
                     @endif
                 </div>
                 @endif
