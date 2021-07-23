@@ -23,7 +23,8 @@ class BrandController extends BaseController{
                         ->where('id', '>', '1')
                         ->where('status', '!=', '2')
                         ->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();
+                        ->orderBy('position', 'asc')
+                        ->whereIn('type_id', ['1', '3', '6'])->get();
         $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
                     ->where('is_active', 1)
                     ->orderBy('is_primary', 'desc')->get();
@@ -88,7 +89,8 @@ class BrandController extends BaseController{
                         ->where('id', '>', '1')
                         ->where('status', '!=', '2')
                         ->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();
+                        ->orderBy('position', 'asc')
+                        ->whereIn('type_id', ['1', '3', '6'])->get();
         $langs = ClientLanguage::with(['language', 'brand_trans' => function($query) use ($id) {
                         $query->where('brand_id', $id);
                     }])

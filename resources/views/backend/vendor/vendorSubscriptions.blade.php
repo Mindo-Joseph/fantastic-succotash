@@ -3,6 +3,7 @@
     $now = \Carbon\Carbon::now()->toDateString();
     $after7days = \Carbon\Carbon::now()->addDays(7)->toDateString();
 @endphp
+@if((isset($client_preferences['subscription_mode'])) && ($client_preferences['subscription_mode'] == 1))
 <div class="row mb-4">
     <div class="col-12 mb-4">
         @if(!empty($subscription))
@@ -225,3 +226,4 @@
         <% }); %>
     <% } %>
 </script>
+@endif

@@ -308,8 +308,24 @@ class VendorController extends BaseController
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        $subscriptions_data = $this->getSubscriptionPlans($id);
-        return view('backend/vendor/show')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'center' => $center, 'tab' => 'configuration', 'co_ordinates' => $co_ordinates, 'all_coordinates' => $all_coordinates, 'areas' => $areas, 'categoryToggle' => $categoryToggle, 'VendorCategory' => $VendorCategory, 'templetes' => $templetes, 'builds' => $build, 'subscription_plans'=> $subscriptions_data['sub_plans'], 'subscription'=> $subscriptions_data['active_sub']]);
+        $returnData = array();
+        $returnData['client_preferences'] = $client_preferences;
+        $returnData['vendor'] = $vendor;
+        $returnData['center'] = $center;
+        $returnData['tab'] = 'configuration';
+        $returnData['co_ordinates'] = $co_ordinates;
+        $returnData['all_coordinates'] = $all_coordinates;
+        $returnData['areas'] = $areas;
+        $returnData['categoryToggle'] = $categoryToggle;
+        $returnData['VendorCategory'] = $VendorCategory;
+        $returnData['templetes'] = $templetes;
+        $returnData['builds'] = $build;
+        if((isset($preferences['subscription_mode'])) && ($preferences['subscription_mode'] == 1)){
+            $subscriptions_data = $this->getSubscriptionPlans($id);
+            $returnData['subscription_plans'] = $subscriptions_data['sub_plans'];
+            $returnData['subscription'] = $subscriptions_data['active_sub'];
+        }
+        return view('backend/vendor/show')->with($returnData);
     }
 
     /**   show vendor page - category tab      */

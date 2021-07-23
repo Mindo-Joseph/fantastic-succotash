@@ -385,7 +385,7 @@
             </div>
             <div class="radio pl-1 mt-2 radio-blue form-check-inline">
                 <input type="radio" name="subscription_status" id="radio-reject" value="reject" required>
-                <label for="radio-reject"> Reject </label>
+                <label for="radio-reject"> Reject & Refund </label>
             </div>
         </div>
         <div class="modal-footer flex-nowrap justify-content-center align-items-center">
