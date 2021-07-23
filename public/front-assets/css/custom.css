@@ -3025,6 +3025,7 @@ header .homepage-address h2 {
     border: 5px solid #EEEEEE !important;
     display: flex;
     position: relative;
+    flex: none;
 }
 .navigation-tab-item {
     display: flex;

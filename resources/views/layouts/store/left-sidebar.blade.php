@@ -155,19 +155,26 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             
             <div class="navbar-collapse main-menu">
                 <div class="d-flex mr-auto">
-                    <ul class="nav nav-tabs navigation-tab mr-3" id="myTab" role="tablist">
-                        <li class="navigation-tab-item active" role="presentation">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Delivery</a>
-                        </li>
+                @if($mod_count > 1)
+                    <ul class="nav nav-tabs navigation-tab mr-3 nav-material tab-icons" id="top-tab" role="tablist">
+                        @if($client_preference_detail->delivery_check == 1)
                         <li class="navigation-tab-item" role="presentation">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Dine-In</a>
+                            <a class="nav-link {{$mod_count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
                         </li>
+                        @endif
+                        @if($client_preference_detail->dinein_check == 1)
                         <li class="navigation-tab-item" role="presentation">
-                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Takeaway</a>
-                        </li>                       
+                            <a class="nav-link {{$client_preference_detail->dinein_check == 1 && $client_preference_detail->delivery_check != 1? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-controls="dinein_tab" aria-selected="false">{{ __('Dine-In') }}</a>
+                        </li>
+                        @endif
+                        @if($client_preference_detail->takeaway_check == 1)
+                        <li class="navigation-tab-item" role="presentation">
+                            <a class="nav-link {{$mod_count == 1 ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ __('Takeaway') }}</a>
+                        </li>                   
+                        @endif    
                         <div class="navigation-tab-overlay"></div>
                     </ul>
-
+                    @endif
                     <div class="location-bar d-flex align-items-center justify-content-start pl-3 dropdown-toggle" href="#edit-address" data-toggle="modal">
                         <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
                         <div class="homepage-address text-left">

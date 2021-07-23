@@ -49,6 +49,7 @@ class SubscriptionPlansVendorController extends BaseController
         $subscribed_vendors_count = $vendor_subscriptions->count();
         $active_vendors = Vendor::where('status', 1)->count();
         $subscribed_vendors_percentage = ($subscribed_vendors_count / $active_vendors) * 100;
+        $subscribed_vendors_percentage = number_format($subscribed_vendors_percentage, 2);
         if($sub_plans){
             foreach($sub_plans as $plan){
                 $features = '';

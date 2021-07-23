@@ -70,6 +70,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('userAddress','Front\UserController@getUserAddress')->name('getUserAddress');
 	Route::get('category/{slug?}', 'Front\CategoryController@categoryProduct')->name('categoryDetail');
     Route::post('category/filters/{id}', 'Front\CategoryController@categoryFilters')->name('productFilters');
+    Route::get('vendor/all', 'Front\VendorController@viewAll')->name('vendor.all');
     Route::get('vendor/{id?}', 'Front\VendorController@vendorProducts')->name('vendorDetail');
 	Route::get('vendor/{slug1}/{slug2}', 'Front\VendorController@vendorCategoryProducts')->name('vendorCategoryProducts');
     Route::post('vendor/filters/{id}', 'Front\VendorController@vendorFilters')->name('vendorProductFilters');
