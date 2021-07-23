@@ -75,6 +75,7 @@ class PickupDeliveryController extends BaseController{
                     $product->tags_price = $this->getDeliveryFeeDispatcher($request,$product);
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
                     foreach ($product->variant as $k => $v) {
+                        $product->variant[$k]->price = $product->tags_price;
                         $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
                     }
                 }
@@ -200,8 +201,8 @@ class PickupDeliveryController extends BaseController{
             $order_place = $this->orderPlaceForPickupDelivery($request);
             if($order_place && $order_place['status'] == 200){
                 $data = [];
-                $order = $order_place['data'];
-                $request_to_dispatch = $this->placeRequestToDispatch($request,$order,$request->vendor_id);
+                $order_place = $order_place['data'];
+                $request_to_dispatch = $this->placeRequestToDispatch($request,$order_place,$request->vendor_id);
                     if($request_to_dispatch && isset($request_to_dispatch['task_id']) && $request_to_dispatch['task_id'] > 0){
                         DB::commit();
                         return  $order_place;
@@ -237,7 +238,7 @@ class PickupDeliveryController extends BaseController{
         $payable_amount = 0;
         
         $request->address_id = $request->address_id ??null;
-        $request->payment_option_id = $request->payment_method ??2;
+        $request->payment_option_id = $request->payment_method ??1;
         $user = Auth::user();
         if ($user) {
             $loyalty_amount_saved = 0;
@@ -417,13 +418,14 @@ class PickupDeliveryController extends BaseController{
                         $data = [];
                         $data['status'] = 200;
                         $data['message'] =  'Order Placed';
-                        $data['data'] =  $order;
+                        $data['data'] =  
+                        $order;
                         return $data;
         }
     }
 
      // place Request To Dispatch
-    public function placeRequestToDispatch($request,$order,$vendor){
+    public function placeRequestToDispatch($request,$order_place,$vendor){
         try {
             $dispatch_domain = $this->checkIfPickupDeliveryOn();
             $customer = Auth::user();
@@ -436,7 +438,7 @@ class PickupDeliveryController extends BaseController{
                     $cash_to_be_collected = 'No';
                     $payable_amount = 0.00;
                 }
-                $dynamic = uniqid($order->id.$vendor);
+                $dynamic = uniqid($order_place->id.$vendor);
                 $unique = Auth::user()->code;
                 $client_do = Client::where('code',$unique)->first();
                 $call_back_url = "https://".$client_do->sub_domain.env('SUBMAINDOMAIN')."/dispatch-pickup-delivery/".$dynamic; 
@@ -477,8 +479,11 @@ class PickupDeliveryController extends BaseController{
                 );
                 $response = json_decode($res->getBody(), true);
                 if ($response && isset($response['task_id']) && $response['task_id'] > 0) {
-                    $up_web_hook_code = OrderVendor::where(['order_id' => $order->id,'vendor_id' => $vendor])
-                                    ->update(['web_hook_code' => $dynamic]);
+
+                    $dispatch_traking_url = $response['dispatch_traking_url']??'';
+                    $up_web_hook_code = OrderVendor::where(['order_id' => $order_place->id,'vendor_id' => $vendor])
+                                    ->update(['web_hook_code' => $dynamic,'dispatch_traking_url' => $dispatch_traking_url]);
+                    $order_place['dispatch_traking_url'] = $dispatch_traking_url;
                    return $response;
                 }
                 return $response;
@@ -565,7 +570,7 @@ class PickupDeliveryController extends BaseController{
 
             if($cart_detail->promo_type_id == 2)
             {
-                $cart_detail['new_amount'] = $request->amount - $cart_detail->amount;
+                $cart_detail['new_amount'] = $cart_detail->amount;
                 if($cart_detail['new_amount'] < 0)
                 $cart_detail['new_amount'] = 0.00;
             }
