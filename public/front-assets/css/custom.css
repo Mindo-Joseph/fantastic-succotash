@@ -3245,6 +3245,15 @@ header .homepage-address h2 {
  }
  
 
+ .theme-form .input-group input.form-control {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.theme-form .input-group button.btn {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
 
 
 
@@ -3279,6 +3288,7 @@ header .homepage-address h2 {
         position: absolute;
         left: calc(((100vw - 1440px) / 2) + 24px);
     }
+    
 }
 @media(min-width: 992px){
     .booking-experience {
@@ -3287,6 +3297,9 @@ header .homepage-address h2 {
         top: 100px;
         width: 400px;
         height: calc(100vh - 150px);
+    }
+    .fh {
+        height: calc(100vh - 445px);
     }
 }
 
@@ -3332,5 +3345,8 @@ header .homepage-address h2 {
 @media(max-width:767px){    
     .product-box .blur-up.lazyloaded {
         height: 200px;
+    }
+    .theme-form .input-group input.form-control{
+        width: 100%;
     }
 }

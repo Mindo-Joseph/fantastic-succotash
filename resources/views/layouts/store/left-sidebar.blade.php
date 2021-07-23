@@ -27,7 +27,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             @endif
                         @endif
                         @if($mod_count > 1)
-                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0" id="top-tab" role="tablist">
+                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mt-3" id="top-tab" role="tablist">
                                 @if($client_preference_detail->delivery_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
                                     <a class="nav-link {{$mod_count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
@@ -49,7 +49,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     </div>
                 </div>
                 <div class="col-lg-5 col-10 order-lg-2 order-1">                
-                    <div class="search_bar menu-right d-flex align-items-center justify-content-between w-100">
+                    <div class="search_bar menu-right d-flex align-items-center justify-content-between w-100 ">
                         <div class="radius-bar">
                             <form class="search_form d-flex align-items-center justify-content-between" action="">
                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>

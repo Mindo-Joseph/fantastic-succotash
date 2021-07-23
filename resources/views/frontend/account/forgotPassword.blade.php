@@ -20,19 +20,19 @@
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-<section class="register-page section-b-space">
+<section class="register-page section-b-space fh">
     <div class="container">
         <div class="row">
-            <div class="offset-md-3 col-md-6">
+            <div class="offset-lg-3 col-lg-6">
                 <h3>{{__('Enter Email Address')}}</h3>
-                <div class="theme-card">
+                <div class="card mt-4">
                 <div class="alert alert-success" role="alert" style="display:none;">fdgdfg</div>
                     <form name="register" id="register" action="" class="theme-form" method="post">
                         <div class="form-row mb-3">
                             <div class="col-md-12">
-                                <div class="input-group">
-                                    <input type="email" class="form-control mb-0" id="email" placeholder="{{__('Enter Email')}}" required="" name="email" value="">
-                                    <button class="btn btn-solid" type="button" id="send_password_reset_link">{{__('Send Password Reset Link')}}</button>
+                                <div class="input-group d-md-flex d-block text-center">
+                                    <input type="email" class="form-control text-left mb-0" id="email" placeholder="{{__('Enter Email')}}" required="" name="email" value="">
+                                    <button class="btn btn-solid mx-auto mt-3 mt-md-0" type="button" id="send_password_reset_link">{{__('Send Password Reset Link')}}</button>
                                 </div>
                             </div>
                             <div class="px-3">
