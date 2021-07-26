@@ -96,7 +96,7 @@ class UserSubscriptionController extends FrontController
             $sub_plan->price = $sub_plan->price * $clientCurrency->doller_compare;
         }
         else{
-            return response()->json(["status"=>"Error", "message" => "Subscription plan not active"]);
+            return response()->json(["status"=>"Error", "message" => __("Subscription plan not active")]);
         }
         $payment_options = PaymentOption::select('id', 'code', 'title')->whereIn('code', $code)->where('status', 1)->get();
         foreach ($payment_options as $payment_option) {
@@ -117,7 +117,7 @@ class UserSubscriptionController extends FrontController
                                 ->where('user_id', Auth::user()->id)
                                 ->orderBy('end_date', 'desc')->first();
         if( ($userActiveSubscription) && ($userActiveSubscription->plan->slug != $slug) ){
-            return $this->errorResponse('You cannot buy two subscriptions at the same time', 402);
+            return $this->errorResponse(__('You cannot buy two subscriptions at the same time'), 402);
         }
         return $this->successResponse('', 'Processing...');
     }
@@ -191,16 +191,16 @@ class UserSubscriptionController extends FrontController
                 if(!empty($subscription_invoice_features)){
                     SubscriptionInvoiceFeaturesUser::insert($subscription_invoice_features);
                 }
-                $message = 'Your subscription has been activated successfully.';
+                $message = __('Your subscription has been activated successfully.');
                 Session::put('success', $message);
                 return $this->successResponse('', $message);
             }
             else{
-                return $this->errorResponse('Error in purchasing subscription.', 402);
+                return $this->errorResponse(__('Error in purchasing subscription.'), 402);
             }
         }
         else{
-            return $this->errorResponse('Invalid Data', 402);
+            return $this->errorResponse(__('Invalid Data'), 402);
         }
     }
 
@@ -222,7 +222,7 @@ class UserSubscriptionController extends FrontController
             return redirect()->back()->with('success', 'Your '.$active_subscription->plan->title.' subscription has been cancelled successfully');
         }
         else{
-            return redirect()->back()->with('error', 'Unable to cancel subscription');
+            return redirect()->back()->with('error', __('Unable to cancel subscription'));
         }
     }
 }
