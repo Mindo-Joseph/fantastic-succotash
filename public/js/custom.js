@@ -859,7 +859,7 @@ $(document).ready(function() {
         $(this).hide();
         $('#add_new_address_form').show();
     });
-    $(document).on("click","#save_address",function() {
+    /*$(document).on("click","#save_address",function() {
         let city = $('#add_new_address_form #city').val();
         let state = $('#add_new_address_form #state').val();
         let street = $('#add_new_address_form #street').val();
@@ -906,7 +906,7 @@ $(document).ready(function() {
                 }
             }
         });
-    });
+    });*/
     $(document).on("click",".addToCart",function() {
         addToCart();
     });
