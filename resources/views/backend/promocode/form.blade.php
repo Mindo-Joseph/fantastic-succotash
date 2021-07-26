@@ -168,7 +168,6 @@
                     <select class="selectize-select form-control inlineRadioOptions" name="restriction_on" for="{{(isset($promo->id) && $promo->id > 0) ? 'edit' : 'add'}}">
                         <option value='0' @if($promo->restriction_on == 0) selected @endif>Products</option>
                         <option value='1' @if($promo->restriction_on == 1) selected @endif>Vendors</option>
-                        <!-- <option value='2' @if($promo->restriction_on == 2) selected @endif>Category</option> -->
                     </select>
                 </div>
             </div>
@@ -197,16 +196,6 @@
                     <select class="form-control select2-multiple" id="IncludeVendor" name="vendorList[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
                         @foreach($vendors as $nm)
                         <option value="{{$nm->id}}" @if($promo->restriction_on == 1 && in_array($nm->id, $dataIds)) selected @endif>{{$nm->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6" style="{{($promo->restriction_on == 2) ? '' : 'display: none;'}}" id="categoriesList">
-                <div class="form-group">
-                    {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
-                    <select class="form-control select2-multiple" id="IncludeCategory" name="categoryList[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
-                        @foreach($categories as $category)
-                        <option value="{{$category->id}}" @if($promo->restriction_on == 2 && in_array($category->id, $dataIds)) selected @endif>{{$category->translation_one->name}}</option>
                         @endforeach
                     </select>
                 </div>

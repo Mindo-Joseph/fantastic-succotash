@@ -70,8 +70,7 @@ class CustomerAuthController extends FrontController
     }
 
     /**     * Display login Form     */
-    public function login(LoginRequest $req, $domain = '')
-    {
+    public function login(LoginRequest $req, $domain = ''){
         if (Auth::attempt(['email' => $req->email, 'password' => $req->password])) {
             $userid = Auth::id();
             $this->checkCookies($userid);
@@ -100,9 +99,9 @@ class CustomerAuthController extends FrontController
         }
         $checkEmail = User::where('email', $req->email)->first();
         if ($checkEmail) {
-            return redirect()->back()->with('err_password', 'Password not matched. Please enter correct password.');
+            return redirect()->back()->with('err_password', __('Password not matched. Please enter correct password.'));
         }
-        return redirect()->back()->with('err_email', 'Email not exist. Please enter correct email.');
+        return redirect()->back()->with('err_email', __('Email not exist. Please enter correct email.'));
     }
 
 

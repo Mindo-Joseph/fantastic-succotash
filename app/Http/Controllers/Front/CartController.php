@@ -23,6 +23,7 @@ class CartController extends FrontController
     public function showCart($domain = ''){
         $cartData = [];
         $user = Auth::user();
+        $countries = Country::get();
         $langId = Session::get('customerLanguage');
         if ($user) {
             $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
@@ -31,8 +32,9 @@ class CartController extends FrontController
             $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
             $addresses = [];
         }
-        $countries = Country::get();
-        $cartData = CartProduct::where('status', [0,1])->where('cart_id', $cart->id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
+        if($cart){
+            $cartData = CartProduct::where('status', [0,1])->where('cart_id', $cart->id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
+        }
         $navCategories = $this->categoryNav($langId);
         $subscription_features = array();
         if($user){
@@ -484,6 +486,9 @@ class CartController extends FrontController
             $cart->total_payable_amount = number_format($total_payable_amount, 2);
             $cart->total_discount_amount = number_format($total_discount_amount, 2);
             $cart->total_taxable_amount = number_format($total_taxable_amount, 2);
+            $cart->tip_5_percent = number_format((0.05 * $total_payable_amount), 2);
+            $cart->tip_10_percent = number_format((0.1 * $total_payable_amount), 2);
+            $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2);
             $cart->products = $cartData->toArray();
         }
         return $cart;

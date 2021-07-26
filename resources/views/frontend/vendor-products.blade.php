@@ -116,7 +116,7 @@
                         </div>
                     </div>
                     <div class="theme-card">
-                        <h5 class="title-border">new product</h5>
+                        <h5 class="title-border">{{__('New Product')}}</h5>
                         <div class="offer-slider slide-1">
                             @if(!empty($newProducts) && count($newProducts) > 0)
                             @foreach($newProducts as $newProds)

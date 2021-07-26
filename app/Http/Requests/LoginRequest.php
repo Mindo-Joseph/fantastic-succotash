@@ -11,8 +11,7 @@ class LoginRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize(){
         return true;
     }
 
@@ -21,14 +20,19 @@ class LoginRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules(){
         return [
             'email' => 'required|email',
-            'password' => 'required|string|min:6|max:50',
             'device_type' => 'required|string',
             'device_token' => 'required|string',
+            'password' => 'required|string|min:6|max:50',
         ];
 
+    }
+     public function messages(){
+        return [
+            "email.required" => __('The email field is required.'),
+            "password.required" => __("The password field is required."),
+        ];
     }
 }

@@ -28,16 +28,13 @@ class OrderController extends FrontController
     {
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        
-        $pastOrders = Order::with(['vendors.products','products.productRating', 'user', 'address'])->whereHas('orderStatusVendor',function($q){
-            $q->where('order_status_option_id', 5);
-        })
-        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(10);
+        $pastOrders = Order::with(['vendors.products','products.productRating', 'user', 'address'])->whereHas('vendors',function($q){
+            $q->where('order_status_option_id', 6);
+        })->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(10);
 
-        $activeOrders = Order::with(['vendors.products', 'user', 'address'])->whereHas('orderStatusVendor',function($q){
-            $q->where('order_status_option_id', '!=', 5);
-        })
-        ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(10);
+        $activeOrders = Order::with(['vendors.products', 'user', 'address'])->whereHas('vendors',function($q){
+            $q->where('order_status_option_id', '!=', 6);
+        })->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(10);
 
         foreach ($activeOrders as $order) {
             foreach ($order->vendors as $vendor) {
@@ -281,7 +278,7 @@ class OrderController extends FrontController
             }
             $total_discount = $total_discount + $total_subscription_discount;
             $order->total_amount = $total_amount;
-            $order->total_discount = $total_discount + $total_subscription_discount;
+            $order->total_discount = $total_discount;
             $order->taxable_amount = $taxable_amount;
             if ($loyalty_amount_saved > 0) {
                 if ($payable_amount < $loyalty_amount_saved) {
@@ -289,13 +286,18 @@ class OrderController extends FrontController
                     $loyalty_points_used = $payable_amount * $redeem_points_per_primary_currency;
                 }
             }
+            $tip_amount = 0;
+            if ( (isset($request->tip)) && ($request->tip != '') && ($request->tip > 0) ) {
+                $tip_amount = $request->tip;
+                $order->tip_amount = $tip_amount;
+            }
             $order->total_delivery_fee = $total_delivery_fee;
             $order->loyalty_points_used = $loyalty_points_used;
             $order->loyalty_amount_saved = $loyalty_amount_saved;
             $order->subscription_discount = $total_subscription_discount;
-            $order->payable_amount = $total_delivery_fee + $payable_amount - $total_discount - $loyalty_amount_saved;
             $order->loyalty_points_earned = $loyalty_points_earned['per_order_points'];
             $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
+            $order->payable_amount = $total_delivery_fee + $payable_amount + $tip_amount - $total_discount - $loyalty_amount_saved;
             $order->save();
             CartAddon::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();

@@ -1,27 +1,299 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
 
+    <!-- <div class="search-list">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="radius-bar w-100">
+                        <form class="search_form d-flex align-items-center justify-content-between" action="">
+                            <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+                            <input class="form-control border-0" type="text" placeholder="Search">
+                        </form>
+                    </div>
+                    <div class="list-box">
+                        <div class="mb-4">
+                            <h4>Categories List</h4>
+                            <div class="table-responsive style-4">
+                                <div class="row flex-nowrap mx-0 mb-2">
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h4>Vendor List</h4>
+                            <div class="table-responsive style-4">
+                                <div class="row flex-nowrap mx-0 mb-2">
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h4>Product List</h4>
+                            <div class="table-responsive style-4">
+                                <div class="row flex-nowrap mx-0 mb-2">
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-1 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
     <section class="cab-booking pt-0">
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4850.865733603189!2d76.82393041076074!3d30.716149768967526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1627015845978!5m2!1sen!2sin" width="100%" height="100vh" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-        <div class="booking-experience ds">
-            <div class="address-bar">
-                <ul>
-                    <li class="pickup-text">
-                        From CH Devi Lal Centre of Learning
-                    </li>
-                    <li class="drop-text">
-                        To Sector 14
-                    </li>
-                </ul>
-            </div>
+        <div class="booking-experience ds bc">
+            <form class="address-form">
+                <div class="location-box">
+                    <ul class="location-inputs position-relative pl-2">
+                        <li class="d-block mb-3 dots">
+                            <input class="form-control pickup-text" type="text" placeholder="From CH Devi Lal Centre of Learning" />
+                            <i class="fa fa-times ml-1" aria-hidden="true"></i>
+                        </li>
+                        <li class="d-block mb-3 dots">
+                            <input class="form-control pickup-text" type="text" placeholder="To Sector 14" />
+                            <i class="fa fa-times ml-1" aria-hidden="true"></i>
+                        </li>
+                    </ul>
+                    <a class="add-more-location position-relative pl-2" href="javascript:void(0)">Add Destination</a>
+                </div>
+                <div class="location-list style-4">
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14 first</b></h4>
+                        <p class="ellips mb-0">Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">BEL Colony, Sector 14, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">BEL Colony, Sector 14, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">BEL Colony, Sector 14, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store last</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                </div>
+            </form>
         </div>
     </section>
 
     <!-- Vendor Sign Up Form -->
-    <section class="vendor-signup">
+    <!-- <section class="vendor-signup">
         <div class="container">
 
-            <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                 18+ popup
             </button>
@@ -159,10 +431,10 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- Order Return Page -->
-    <section class="return-page">
+    <!-- <section class="return-page">
         <div class="container">
             <h2 >Choose items to return</h2>
             <form class="" action="">
@@ -219,7 +491,7 @@
                 <button class="btn btn-solid mt-3 ">Request</button>
             </form>
         </div>
-    </section>
+    </section> -->
 
 
     <!-- Return List Page -->
@@ -238,7 +510,7 @@
 
 
 
-    <div class="container-fluid px-0 py-5">
+    <!-- <div class="container-fluid px-0 py-5">
         <div class="row no-gutters">
             <div class="col-12">
                 <div class="full-banner custom-space p-right text-end">
@@ -719,9 +991,6 @@
                                     </div>
                                     <div class="row track-order-list">
                                         <div class="col-12">
-                                            <!-- <button type="button" class="btn btn-danger waves-effect waves-light">
-                                                <i class="mdi mdi-close"></i>
-                                            </button> -->
                                             <ul class="list-unstyled" id="order_statuses">
                                                 <li class="">
                                                     <h5 class="mt-0 mb-1">Placed</h5>
@@ -832,7 +1101,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
 
     <!-- Modal -->
@@ -848,7 +1117,6 @@
             <div class="modal-body text-center">
                 <img src="{{asset('assets/images/18.png')}}" alt="">
                 <p class="mb-0 mt-3">Are you 18 or older?</p>
-                <p class="mb-0">Are you sure you want to continue?</p> 
             </div>
             <div class="modal-footer d-block">
                 <div class="row no-gutters">
@@ -865,31 +1133,32 @@
     </div>
 
     <div class="modal fade edit_address" id="edit-address" tabindex="-1" aria-labelledby="edit-addressLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-body p-0">
-        <div id="address-map-container">
-            <div id="address-map"></div>
-        </div>
-        <div class="delivery_address p-2 mb-2 position-relative">
-            <button type="button" class="close edit-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <div class="form-group">
-                <label class="delivery-head mb-2">SELECT YOUR LOCATION</label>
-                <div class="address-input-field d-flex align-items-center justify-content-between">
-                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{session('selectedAddress')}}">
-                    <input type="hidden" name="address_latitude" id="address-latitude" value="{{session('latitude')}}" />
-                    <input type="hidden" name="address_longitude" id="address-longitude" value="{{session('longitude')}}" />
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-body p-0">
+                <div id="address-map-container">
+                    <div id="address-map"></div>
+                </div>
+                <div class="delivery_address p-2 mb-2 position-relative">
+                    <button type="button" class="close edit-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="form-group">
+                        <label class="delivery-head mb-2">SELECT YOUR LOCATION</label>
+                        <div class="address-input-field d-flex align-items-center justify-content-between">
+                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{session('selectedAddress')}}">
+                            <input type="hidden" name="address_latitude" id="address-latitude" value="{{session('latitude')}}" />
+                            <input type="hidden" name="address_longitude" id="address-longitude" value="{{session('longitude')}}" />
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100">Confirm And Proceed</button>
+                    </div>
                 </div>
             </div>
-            <div class="text-center">
-                <button type="button" class="btn btn-solid ml-auto confirm_address_btn w-100">Confirm And Proceed</button>
             </div>
         </div>
-      </div>
     </div>
-  </div>
-</div>
+
 
     <script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields

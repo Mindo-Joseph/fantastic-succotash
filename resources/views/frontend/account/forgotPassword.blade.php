@@ -20,24 +20,23 @@
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-<section class="register-page section-b-space">
+<section class="register-page section-b-space fh">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
-                <h3>Enter Email Address</h3>
-                <div class="theme-card">
-                    <form name="register" id="register" action="{{route('customer.forgotPass')}}" class="theme-form" method="post"> @csrf
+            <div class="offset-lg-3 col-lg-6">
+                <h3>{{__('Enter Email Address')}}</h3>
+                <div class="card mt-4">
+                <div class="alert alert-success" role="alert" style="display:none;">fdgdfg</div>
+                    <form name="register" id="register" action="" class="theme-form" method="post">
                         <div class="form-row mb-3">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <input type="email" class="form-control" id="email" placeholder="Enter Email" required="" name="email" value="">
-                                    <button class="btn input-group-text btn-dark waves-effect waves-light" type="button">Send Password Reset Link</button>
+                            <div class="col-md-12">
+                                <div class="input-group d-md-flex d-block text-center">
+                                    <input type="email" class="form-control text-left mb-0" id="email" placeholder="{{__('Enter Email')}}" required="" name="email" value="">
+                                    <button class="btn btn-solid mx-auto mt-3 mt-md-0" type="button" id="send_password_reset_link">{{__('Send Password Reset Link')}}</button>
                                 </div>
-                                @if($errors->first('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
+                            </div>
+                            <div class="px-3">
+                                 <span class="invalid-feedback" role="alert" id="email_validation_error"></span>
                             </div>
                         </div>
                     </form>
@@ -46,4 +45,10 @@
         </div>
     </div>
 </section>
+@endsection
+@section('script')
+<script type="text/javascript">
+    var forgot_password_url = "{{route('customer.forgotPass')}}";
+</script>
+<script src="{{asset('js/forgot_password.js')}}"></script>
 @endsection

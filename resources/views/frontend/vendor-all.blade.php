@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Home'])
+@extends('layouts.store', ['title' => __('All Vendors')])
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
 @endsection
@@ -11,7 +11,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h2 class="mb-3">All Vendors</h2>
+                <h2 class="mb-3">{{__('All Vendors')}}</h2>
             </div>
         </div>
         <div class="row margin-res">
