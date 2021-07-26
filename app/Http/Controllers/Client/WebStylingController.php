@@ -35,7 +35,9 @@ class WebStylingController extends BaseController{
             }
             $client_preferences->web_color = $request->primary_color;
             $client_preferences->cart_enable = $request->cart_enable == 'on' ? 1 : 0;
+            $client_preferences->age_restriction = $request->age_restriction == 'on' ? 1 : 0;
             $client_preferences->rating_check = $request->rating_enable == 'on' ? 1 : 0;
+            $client_preferences->age_restriction_title = $request->age_restriction_title;
             $client_preferences->save();
         }
         return response()->json([

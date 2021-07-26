@@ -108,7 +108,7 @@ $timezone = Auth::user()->timezone;
                                 <div class="row align-items-center">
                                     <div class="col-md-6 text-md-left text-center mb-md-0 mb-4">
                                         <h5 class="text-17 mb-2 mt-0">{{__('Available Balance')}}</h5>
-                                        <div class="text-36">$<span class="wallet_balance">@money(Auth::user()->balanceFloat)</span></div>
+                                        <div class="text-36">{{Session::get('currencySymbol')}}<span class="wallet_balance">@money(Auth::user()->balanceFloat * $clientCurrency->doller_compare)</span></div>
                                     </div>
                                     <div class="col-md-6 text-md-right text-center">
                                         <button type="button" class="btn btn-solid" id="topup_wallet_btn" data-toggle="modal" data-target="#topup_wallet">{{__('Topup Wallet')}}</button>
@@ -194,7 +194,7 @@ $timezone = Auth::user()->timezone;
         @method('POST')
         <div class="modal-body pb-0">
             <div class="form-group">
-                <div class="text-36">{{Session::get('currencySymbol')}}<span class="wallet_balance">@money(Auth::user()->balanceFloat)</span></div>
+                <div class="text-36">{{Session::get('currencySymbol')}}<span class="wallet_balance">@money(Auth::user()->balanceFloat * $clientCurrency->doller_compare)</span></div>
             </div>
             <div class="form-group">
                 <h5 class="text-17 mb-2">{{__('Topup Wallet')}}</h5>

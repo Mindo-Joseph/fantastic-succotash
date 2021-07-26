@@ -99,7 +99,7 @@
                                             <div class="col-12">
                                                 <div class="d-flex align-items-center justify-content-between">
                                                     <h3 class="d-inline-block"><b>{{ $subscription->plan->title }}</b></h3>
-                                                    <span class="plan-price">${{ $subscription->subscription_amount }} / {{ $subscription->frequency }}</span>
+                                                    <span class="plan-price">{{ Session::get('currencySymbol') . ($subscription->subscription_amount * $clientCurrency->doller_compare) }} / {{ $subscription->frequency }}</span>
                                                 </div>
                                                 <p>{{ $subscription->plan->description }}</p>
                                                 <?php /* ?><ul class="mb-3">
@@ -130,14 +130,14 @@
                                             <div class="col-sm-6 mb-0 text-center text-sm-right">
                                                 @if( $subscription->end_date >= $now )
                                                     @if($subscription->plan->status == 1)
-                                                        <a class="btn btn-solid subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">{{ __('Pay now') }} (${{ $subscription->plan->price }})</a>
+                                                        <a class="btn btn-solid subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">{{ __('Pay now') }} ({{ Session::get('currencySymbol') . ($subscription->plan->price * $clientCurrency->doller_compare) }})</a>
                                                     @endif
                                                     @if(empty($subscription->cancelled_at))
                                                         <a class="cancel-subscription-link btn btn-solid" href="#cancel-subscription" data-toggle="modal" data-id="{{ $subscription->slug }}">{{ __('Cancel') }}</a>
                                                     @endif
                                                 @else
                                                     @if($subscription->plan->status == 1)
-                                                        <a class="btn btn-solid subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">{{ __('Renew') }} (${{ $subscription->plan->price }})</a>
+                                                        <a class="btn btn-solid subscribe_btn" href="javascript:void(0)" data-toggle="modal" data-id="{{ $subscription->plan->slug }}">{{ __('Renew') }} ({{ Session::get('currencySymbol') . ($subscription->plan->price * $clientCurrency->doller_compare) }})</a>
                                                     @endif
                                                 @endif
                                             </div>
@@ -157,7 +157,7 @@
                                     <div class="gold-icon position-relative">
                                         <img src="{{ $plan->image['proxy_url'].'100/100'.$plan->image['image_path'] }}">
                                         <div class="pricingtable-header position-absolute">
-                                            <div class="price-value"> <b>${{ $plan->price }}</b> <span class="month">{{ $plan->frequency }}</span> </div>
+                                            <div class="price-value"> <b>{{ Session::get('currencySymbol') . ($plan->price * $clientCurrency->doller_compare) }}</b> <span class="month">{{ $plan->frequency }}</span> </div>
                                         </div>
                                     </div>
                                     <div class="p-2">
