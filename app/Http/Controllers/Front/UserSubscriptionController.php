@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{User, UserAddress, ClientPreference, Client, SubscriptionPlansUser, SubscriptionFeaturesListUser, SubscriptionInvoicesUser, SubscriptionInvoiceFeaturesUser, Payment, PaymentOption};
+use App\Models\{User, UserAddress, ClientPreference, Client, ClientCurrency, SubscriptionPlansUser, SubscriptionFeaturesListUser, SubscriptionInvoicesUser, SubscriptionInvoiceFeaturesUser, Payment, PaymentOption};
 
 class UserSubscriptionController extends FrontController
 {
@@ -42,6 +42,8 @@ class UserSubscriptionController extends FrontController
     {
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
+        $currency_id = Session::get('customerCurrency');
+        $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
         $sub_plans = SubscriptionPlansUser::with('features.feature')->where('status', '1')->orderBy('sort_order', 'asc')->get();
         $featuresList = SubscriptionFeaturesListUser::where('status', 1)->get();
         $active_subscription = SubscriptionInvoicesUser::with(['plan', 'features.feature'])
@@ -64,7 +66,7 @@ class UserSubscriptionController extends FrontController
                 $sub->features = $subFeaturesList;
             }
         }
-        return view('frontend.account.userSubscriptions')->with(['navCategories'=>$navCategories, 'subscription_plans'=>$sub_plans, 'subscription'=>$active_subscription]);
+        return view('frontend.account.userSubscriptions')->with(['navCategories'=>$navCategories, 'subscription_plans'=>$sub_plans, 'subscription'=>$active_subscription, 'clientCurrency'=>$clientCurrency]);
     }
     
     /**
@@ -77,6 +79,9 @@ class UserSubscriptionController extends FrontController
         $code = array('stripe');
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
+        $currency_id = Session::get('customerCurrency');
+        $currencySymbol = Session::get('currencySymbol');
+        $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
         $sub_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
         if($sub_plan){
             $subFeaturesList = '<ul>';
@@ -88,6 +93,7 @@ class UserSubscriptionController extends FrontController
             }
             $subFeaturesList = $subFeaturesList.'<ul>';
             $sub_plan->features = $subFeaturesList;
+            $sub_plan->price = $sub_plan->price * $clientCurrency->doller_compare;
         }
         else{
             return response()->json(["status"=>"Error", "message" => "Subscription plan not active"]);
@@ -96,7 +102,7 @@ class UserSubscriptionController extends FrontController
         foreach ($payment_options as $payment_option) {
            $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
         }
-        return response()->json(["status"=>"Success", "sub_plan" => $sub_plan, "payment_options" => $payment_options]);
+        return response()->json(["status"=>"Success", "sub_plan" => $sub_plan, "payment_options" => $payment_options, "currencySymbol"=>$currencySymbol]);
     }
 
     /**

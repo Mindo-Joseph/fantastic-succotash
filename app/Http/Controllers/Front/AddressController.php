@@ -150,7 +150,7 @@ class AddressController extends FrontController{
         $user = Auth::user();
         $address = UserAddress::where('user_id', $user->id)->update(['is_primary' => 0]);
         $address = UserAddress::where('user_id', $user->id)->where('id', $id)->update(['is_primary' => 1]);
-        return redirect()->route('user.addressBook');
+        return redirect()->route('user.addressBook')->with('success', __('Primary Address Has Been Changed Successfully'));
     }
 
     /**
