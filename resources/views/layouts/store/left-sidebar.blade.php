@@ -52,7 +52,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <div class="radius-bar">
                             <form class="search_form d-flex align-items-center justify-content-between" action="">
                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                <input class="form-control border-0" type="text" placeholder="Search">
+                                <input class="form-control border-0" type="text" placeholder="{{__('Search')}}">
                             </form>
                         </div>
                         <div class="icon-nav">
