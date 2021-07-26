@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Cart'])
+@extends('layouts.store', ['title' => __('Cart')])
 
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
             <div class="cart_img_outer">
                 <img src="{{asset('front-assets/images/empty_cart.png')}}">
             </div>
-            <h3>{{__('Your cart is empty!')}}</h3>
+            <h3>{{__('Your Cart Is Empty!')}}</h3>
             <p>Add items to it now.</p>
             <a class="btn btn-solid" href="{{url('/')}}">{{__('Continue Shopping')}}</a>
         </div>
@@ -172,7 +172,7 @@
                <hr class="mt-2 mb-0">
             </td>
             <td class="text-right pl-0 pb-0" colspan="3">
-               <p class="mb-1"></p> $<%= cart_details.gross_amount %>
+               <p class="mb-1"></p> {{Session::get('currencySymbol')}}<%= cart_details.gross_amount %>
                <hr class="mt-2 mb-0">
             </td>
         </tr>
@@ -202,14 +202,51 @@
         <% } %>
         <tr class="border_0">
             <td colspan="3"></td>
+            <td colspan="4" class="pr-0 pb-0">
+                <div class="mb-2">Do you want to give a tip ?</div>
+                <div class="tip_radio_controls">
+                    <input type="radio" class="tip_radio" id="control_01" name="select" value="<%= cart_details.tip_5_percent %>">
+                    <label class="tip_label" for="control_01">
+                        <h5 class="m-0" id="tip_5">{{Session::get('currencySymbol')}}<%= cart_details.tip_5_percent %></h5>
+                        <p class="m-0">5%</p>
+                    </label>
+                
+                    <input type="radio" class="tip_radio" id="control_02" name="select" value="<%= cart_details.tip_10_percent %>" >
+                    <label class="tip_label" for="control_02">
+                        <h5 class="m-0" id="tip_10">{{Session::get('currencySymbol')}}<%= cart_details.tip_10_percent %></h5>
+                        <p class="m-0">10%</p>
+                    </label>
+                
+                    <input type="radio" class="tip_radio" id="control_03" name="select" value="<%= cart_details.tip_15_percent %>" >
+                    <label class="tip_label" for="control_03">
+                        <h5 class="m-0" id="tip_15">{{Session::get('currencySymbol')}}<%= cart_details.tip_15_percent %></h5>
+                        <p class="m-0">15%</p>
+                    </label>
+
+                    <input type="radio" class="tip_radio" id="custom_control" name="select" value="custom" >
+                    <label class="tip_label" for="custom_control">
+                        <h5 class="m-0">Custom<br>Amount</h5>
+                    </label>
+                </div>
+                <div class="custom_tip mb-3 d-none">
+                    <input class="input-number form-control" name="custom_tip_amount" id="custom_tip_amount" placeholder="Enter Custom Amount" type="number" value="" step="0.1">
+                </div>
+            </td>
+        </tr>
+        <tr class="border_0">
+            <td colspan="3"></td>
             <td colspan="2" class="pt-0 pr-0">
                 <hr class="mt-0 mb-2">
                 <p class="total_amt m-0">{{__('Amount Payable')}}</p>
             </td>
             <td colspan="2" class="pt-0 pl-0 text-right">
                 <hr class="mt-0 mb-2">
-                <p class="total_amt m-0" id="cart_total_payable_amount">{{Session::get('currencySymbol')}}<%= cart_details.total_payable_amount %></p>
-                <div><input type="hidden" name="cart_total_payable_amount" value="<%= cart_details.total_payable_amount %>"></div>
+                <p class="total_amt m-0" id="cart_total_payable_amount" data-cart_id="<%= cart_details.id %>">{{Session::get('currencySymbol')}}<%= cart_details.total_payable_amount %></p>
+                <div>
+                    <input type="hidden" name="cart_tip_amount" id="cart_tip_amount" value="0">
+                    <input type="hidden" name="cart_total_payable_amount" value="<%= cart_details.total_payable_amount %>">
+                    <input type="hidden" name="cart_payable_amount_original" id="cart_payable_amount_original" value="<%= cart_details.total_payable_amount %>">
+                </div>
             </td>
         </tr>
     </tfoot>
@@ -251,7 +288,7 @@
                     <div class="row">
                         <div class="col-12 mb-2">
                             <h4 class="page-title">{{__('Delivery Address')}}</h4>
-                            <span class="text-danger hide" id="address_error"></span>
+                            <!-- <span class="text-danger hide" id="address_error"></span> -->
                         </div>
                     </div>
                     <div class="row mb-4" id="address_template_main_div">
@@ -317,7 +354,7 @@
                                     <div class="col-md-12 mb-3">
                                         <label for="address">{{__('Address')}}</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2">
+                                            <input type="text" class="form-control" id="address" placeholder="{{__('Address')}}" aria-label="Recipient's Address" aria-describedby="button-addon2">
                                             <div class="input-group-append">
                                                 <button class="btn btn-outline-secondary" type="button" id="button-addon2">
                                                     <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -330,12 +367,12 @@
                                 <div class="form-row mb-3">
                                     <div class="col-md-6 mb-3">
                                         <label for="city">{{__('City')}}</label>
-                                        <input type="text" class="form-control" id="city" placeholder="City" value="">
+                                        <input type="text" class="form-control" id="city" placeholder="{{__('City')}}" value="">
                                         <span class="text-danger" id="city_error"></span>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="state">{{__('State')}}</label>
-                                        <input type="text" class="form-control" id="state" placeholder="State" value="">
+                                        <input type="text" class="form-control" id="state" placeholder="{{__('State')}}" value="">
                                         <span class="text-danger" id="state_error"></span>
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -349,7 +386,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="pincode">{{__('Pincode')}}</label>
-                                        <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
+                                        <input type="text" class="form-control" id="pincode" placeholder="{{__('Pincode')}}" value="">
                                         <span class="text-danger" id="pincode_error"></span>
                                     </div>
                                     <div class="col-md-12 mt-3">
@@ -362,8 +399,19 @@
                     </div>
                 </div>
                 <div class="col-8">
-                    <div class="table-responsive">
-                        <table class="table table-centered table-nowrap" id="cart_table"></table>
+                    <div class="table-responsive h-100">
+                        <table class="table table-centered table-nowrap mb-0 h-100" id="cart_table">
+                            <tbody>
+                                <td>
+                                    <!-- GRADIENT SPINNER -->
+                                    <div class="spinner-box">
+                                        <div class="circle-border">
+                                            <div class="circle-core"></div>
+                                        </div>  
+                                    </div>
+                                </td>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -384,7 +432,7 @@
             <div class="cart_img_outer">
                 <img src="{{asset('front-assets/images/empty_cart.png')}}">
             </div>
-            <h3>{{__('Your cart is empty!')}}</h3>
+            <h3>{{__('Your Cart Is Empty!')}}</h3>
             <p>{{__('Add items to it now.')}}</p>
             <a class="btn btn-solid" href="{{url('/')}}">{{__('Continue Shopping')}}</a>
         </div>
@@ -422,7 +470,7 @@
             <div class="modal-body">
                 <input type="hidden" id="vendor_id" value="">
                 <input type="hidden" id="cartproduct_id" value="">
-                <h6 class="m-0">{{__('Are you sure you want to remove this item ?')}}</h6>
+                <h6 class="m-0">{{__('Are You Sure You Want To Remove This Item?')}}</h6>
             </div>
             <div class="modal-footer flex-nowrap justify-content-center align-items-center">
                 <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">{{__('Cancel')}}</button>
@@ -460,7 +508,7 @@
                     </div>
                     <div class="row mt-5">
                         <div class="col-md-12 text-md-right">
-                            <button type="button" class="btn btn-solid" data-dismiss="modal">{{_('Cancel')}}</button>
+                            <button type="button" class="btn btn-solid" data-dismiss="modal">{{ __('Cancel') }}</button>
                             <button type="button" class="btn btn-solid ml-1 proceed_to_pay">{{__('Place Order')}}</button>
                         </div>
                     </div>

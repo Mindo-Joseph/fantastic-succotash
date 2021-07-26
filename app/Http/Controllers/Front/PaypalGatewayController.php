@@ -32,11 +32,15 @@ class PaypalGatewayController extends Controller
 
     public function paypalPurchase(Request $request){
         try{
+            $returnUrlParams = '?amount='.$request->amount;
+            if($request->has('tip')){
+                $returnUrlParams = $returnUrlParams.'&tip='.$request->tip;
+            }
             $response = $this->gateway->purchase([
                 'currency' => 'USD',
-                'amount' => $request->input('amount'),
+                'amount' => $request->amount,
                 'cancelUrl' => url($request->cancelUrl),
-                'returnUrl' => url($request->returnUrl . '?amount=' . $request->input('amount')),
+                'returnUrl' => url($request->returnUrl . $returnUrlParams),
             ])->send();
             if ($response->isSuccessful()) {
                 return $this->successResponse($response->getData());

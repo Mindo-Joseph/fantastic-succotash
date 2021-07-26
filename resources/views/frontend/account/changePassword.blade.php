@@ -76,21 +76,16 @@
                         <div class="form-row mb-2">
                             <div class="col-md-12 mb-3">
                                 <label for="review">{{__('Password')}}</label>
-                                <input type="password" class="form-control mb-0" id="review" placeholder="Enter your password" required="" name="new_password">
-                                @if($errors->first('password'))
+                                <input type="password" class="form-control mb-0" id="review" placeholder="{{__('Password')}}" name="new_password">
+                                @if($errors->has('new_password'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                                @if(\Session::has('err_pass'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{!! \Session::get('err_pass') !!}</strong>
+                                        <strong>{{ $errors->first('new_password') }}</strong>
                                     </span>
                                 @endif
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label for="review">{{__('Confirm Password')}}</label>
-                                <input type="password" class="form-control mb-0" id="review" placeholder="Confirm password" required="" name="confirm_password">
+                                <input type="password" class="form-control mb-0" id="review" placeholder="{{__('Confirm Password')}}" name="confirm_password">
                                 @if($errors->first('confirm_password'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('confirm_password') }}</strong>

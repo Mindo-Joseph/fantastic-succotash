@@ -82,7 +82,7 @@ class UserSubscriptionController extends FrontController
             $subFeaturesList = '<ul>';
             if($sub_plan->features->isNotEmpty()){
                 foreach($sub_plan->features as $feature){
-                    $subFeaturesList = $subFeaturesList.'<li><i class="fa fa-check">'.$feature->feature->title.'</li>';
+                    $subFeaturesList = $subFeaturesList.'<li><i class="fa fa-check"></i><span class="ml-1">'.$feature->feature->title.'</span></li>';
                 }
                 unset($sub_plan->features);
             }

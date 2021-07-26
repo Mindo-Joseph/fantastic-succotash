@@ -32,7 +32,7 @@ class StoreController extends Controller{
 			$vendor_categories = VendorCategory::where('vendor_id', $is_selected_vendor_id)
 							->whereHas('category', function($query) {
 							   	$query->whereIn('type_id', [1]);
-							})->get('category_id');
+							})->where('status', 1)->get('category_id');
 			$vendor_category_id = 0;
 			if($vendor_categories->count()){
 				$vendor_category_id = $vendor_categories->first()->category_id;
