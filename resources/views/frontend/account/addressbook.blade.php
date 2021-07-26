@@ -208,7 +208,7 @@
                             <div class="col-md-12 mb-2">
                                 <label for="address">{{ __('Address') }}</label>
                                 <div class="input-group">
-                                    <input type="text" name="address" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2" value="<%= (typeof address != 'undefined') ? address.address : '' %>" autocomplete="off">
+                                    <input type="text" name="address" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2" value="<%= (typeof address != 'undefined') ? address.address : '' %>" autocomplete="off" required="required">
                                     <div class="input-group-append">
                                     <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
                                         <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -226,19 +226,19 @@
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label for="city">{{ __('City') }}</label>
-                                <input type="text" class="form-control" id="city" name="city" placeholder="City" value="<%= ((typeof address != 'undefined') && (address.city != null)) ? address.city : '' %>">
+                                <input type="text" class="form-control" id="city" name="city" placeholder="City" value="<%= ((typeof address != 'undefined') && (address.city != null)) ? address.city : '' %>" required="required">
                                 <span class="text-danger" id="city_error"></span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col-md-6 mb-2">
                                 <label for="state">{{ __('State') }}</label>
-                                <input type="text" class="form-control" id="state" name="state" placeholder="State" value="<%= ((typeof address != 'undefined') && (address.state != null)) ? address.state : '' %>">
+                                <input type="text" class="form-control" id="state" name="state" placeholder="State" value="<%= ((typeof address != 'undefined') && (address.state != null)) ? address.state : '' %>" required="required">
                                 <span class="text-danger" id="state_error"></span>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label for="country">{{ __('Country') }}</label>
-                                <select name="country" id="country" class="form-control" value="<%= ((typeof address != 'undefined') && (address.country_id != null)) ? address.country_id : '' %>">
+                                <select name="country" id="country" class="form-control" value="<%= ((typeof address != 'undefined') && (address.country_id != null)) ? address.country_id : '' %>" required="required">
                                     @foreach($countries as $co)
                                         <option value="{{$co->id}}" <%= ((typeof address != 'undefined') && (address.country_id == {{$co->id}})) ? 'selected="selected"' : '' %>>{{$co->name}}</option>
                                     @endforeach
@@ -249,11 +249,11 @@
                         <div class="form-row mb-0">
                             <div class="col-md-6 mb-2">
                                 <label for="pincode">{{ __('Pincode') }}</label>
-                                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode" value="<%= ((typeof address != 'undefined') && (address.pincode != null)) ? address.pincode : ''%>">
+                                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode" value="<%= ((typeof address != 'undefined') && (address.pincode != null)) ? address.pincode : ''%>" required="required">
                                 <span class="text-danger" id="pincode_error"></span>
                             </div>
                             <div class="col-md-12 mt-2">
-                                <button type="submit" class="btn btn-solid" id="<%= ((typeof address !== 'undefined') && (address !== false)) ? 'update_address' : 'save_address' %>">{{__('Save Address')}}</button>
+                                <button type="submit" class="btn btn-solid" id="<%= ((typeof address !== 'undefined') && (address !== false)) ? 'updateAddress' : 'saveAddress' %>">{{__('Save Address')}}</button>
                                 <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">{{__('Cancel')}}</button>
                             </div>
                         </div>
@@ -369,7 +369,7 @@
             }
         });
     }
-    $(document).on("click","#update_address",function() {
+    /*$(document).on("click","#update_address",function() {
         let city = $('#add_new_address_form #city').val();
         let state = $('#add_new_address_form #state').val();
         let street = $('#add_new_address_form #street').val();
@@ -414,7 +414,7 @@
                 }
             }
         });
-    });
+    });*/
 
     $(document).on('click', '.showMapHeader', function(){
         var lats = document.getElementById('latitude').value;

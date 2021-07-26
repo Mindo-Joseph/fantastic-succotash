@@ -71,9 +71,9 @@ class AddressController extends FrontController{
         $address->longitude  = $request->longitude;
         $address->save();
         if($request->ajax()){
-            return response()->json(['status' => 'success', 'message' => 'Address Has Been Added Successfully!', 'address' => $address]);
+            return response()->json(['status' => 'success', 'message' => __('Address Has Been Added Successfully'), 'address' => $address]);
         }else{
-            return redirect()->route('user.addressBook')->with('success', 'Address Has Been Added Successfully');
+            return redirect()->route('user.addressBook')->with('success', __('Address Has Been Added Successfully'));
         }
     }
 
@@ -91,7 +91,7 @@ class AddressController extends FrontController{
             'address' => 'required',
             'country' => 'required',
         ], [
-            'type.required' => 'Address Type is required'
+            'type.required' => __('Address Type is required')
         ]);
         $country = Country::select('code', 'name')->where('id', $request->country)->first();
         $user = User::where('id', Auth::user()->id)->first();
@@ -111,7 +111,7 @@ class AddressController extends FrontController{
         $address->latitude  = $request->latitude;
         $address->longitude  = $request->longitude;
         $address->save();
-        return redirect()->route('user.addressBook')->with('success', 'Address Has Been Updated Successfully');
+        return redirect()->route('user.addressBook')->with('success', __('Address Has Been Updated Successfully'));
     }
 
     /**
@@ -147,8 +147,9 @@ class AddressController extends FrontController{
      */
     public function setPrimaryAddress($domain = '', $id)
     {
-        $address = UserAddress::where('user_id', Auth::user()->id)->update(['is_primary' => 0]);
-        $address = UserAddress::where('user_id', Auth::user()->id)->where('id', $id)->update(['is_primary' => 1]);
+        $user = Auth::user();
+        $address = UserAddress::where('user_id', $user->id)->update(['is_primary' => 0]);
+        $address = UserAddress::where('user_id', $user->id)->where('id', $id)->update(['is_primary' => 1]);
         return redirect()->route('user.addressBook');
     }
 
@@ -159,7 +160,7 @@ class AddressController extends FrontController{
      */
     public function delete($domain = '', $id){
         $address = UserAddress::find($id)->delete();
-        return redirect()->route('user.addressBook');
+        return redirect()->route('user.addressBook')->with('success', __('Address Has Been Deleted Successfully'));
     }
    
 
