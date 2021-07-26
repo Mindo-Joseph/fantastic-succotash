@@ -277,7 +277,11 @@ $(document).ready(function() {
     let path = window.location.pathname;
     let urlParams = new URLSearchParams(queryString);
     if( (urlParams.has('PayerID')) && (urlParams.has('token')) ){
-        paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path);
+        let tipAmount = 0;
+        if(urlParams.has('tip')){
+            tipAmount = urlParams.get('tip');
+        }
+        paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path, tipAmount);
     }
 
     function paymentViaStripe(stripe_token, address_id, payment_option_id){
@@ -355,19 +359,27 @@ $(document).ready(function() {
     }
     function paymentViaPaypal(){
         let total_amount = 0;
+        let tip = 0;
+        let tipElement = $("#cart_tip_amount");
         let cartElement = $("input[name='cart_total_payable_amount']");
         let walletElement = $("input[name='wallet_amount']");
+        let ajaxData = {};
         if(cartElement.length > 0){
             total_amount = cartElement.val();
+            tip = tipElement.val();
+            ajaxData.tip = tip;
         }
         else if(walletElement.length > 0){
             total_amount = walletElement.val();
         }
+        ajaxData.amount = total_amount;
+        ajaxData.returnUrl = path;
+        ajaxData.cancelUrl = path;
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: payment_paypal_url,
-            data: {'amount': total_amount, 'returnUrl': path, 'cancelUrl': path},
+            data: ajaxData,
             success: function (response) {
                 if(response.status == "Success"){
                     window.location.href = response.data;
@@ -395,7 +407,7 @@ $(document).ready(function() {
             }
         });
     }
-    function paymentSuccessViaPaypal(amount, token, payer_id, path){
+    function paymentSuccessViaPaypal(amount, token, payer_id, path, tip=0){
         let address_id = 0;
         if(path.indexOf("cart") !== -1){
             $('#order_palced_btn').trigger('click');
@@ -416,7 +428,7 @@ $(document).ready(function() {
             success: function (response) {
                 if(response.status == "Success"){
                     if(path.indexOf("cart") !== -1){
-                        placeOrder(address_id, 3, response.data);
+                        placeOrder(address_id, 3, response.data, tip);
                     }
                     else if(path.indexOf("wallet") !== -1){
                         creditWallet(amount, 3, response.data);
