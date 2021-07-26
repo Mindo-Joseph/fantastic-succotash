@@ -3192,6 +3192,7 @@ header .homepage-address h2 {
 
 /* Cab Booking Css */
 .booking-experience {
+    overflow: hidden;
     background: #fff;
     position: relative;
     z-index: 1;
@@ -3199,11 +3200,15 @@ header .homepage-address h2 {
 .location-box{
     background-color: var(--theme-deafult);
     position: relative;
-    padding: 40px;
+    padding: 30px;
 }
 
-.location-box::before {
-    height: calc(100% - 130px);
+.location-inputs li{
+    position: relative;
+}
+
+.location-inputs li::before {
+    height: 100%;
     background: transparent;
     border-left: 2px dashed #fff;
     position: absolute;
@@ -3211,12 +3216,11 @@ header .homepage-address h2 {
     margin: auto;
     content: "";
     width: 2px;
-    left: 20px;
-    bottom: 0;
-    top: 0;
+    left: -20px;
+    top: 21px;
 }
 
-.location-box::after,.dots::after {
+.dots::after {
     height: 10px;
     width: 10px;
     border: 2px solid #fff;
@@ -3225,14 +3229,59 @@ header .homepage-address h2 {
     display: block;
     margin: auto;
     content: "";
-    left: 16px;
-    top: 50px;
+    left: 0;
+    top: 10px;
     border-radius: 50px;
 }
 
-.location-box .dots::after{
-    bottom: 50px;
-    top: auto;
+.location-inputs .dots::after{
+    top: 5px;
+    left: -24px;
+}
+
+.location-inputs .dots.map-icon::after {
+    font-family: FontAwesome;
+    content: "\f041";
+    color: #fff;
+    border: 0;
+    top: -1px;
+}
+
+.add-more-location{
+    color: #fff;
+}
+
+.add-more-location:hover{
+    color: #fff;
+}
+
+.add-more-location::before {
+    font-family: FontAwesome;
+    content: "\f055";
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    font-size: 20px;
+}
+
+.location-inputs li .form-control {
+    width: calc(100% - 30px);
+    display: inline-block;
+}
+
+.location-inputs li i{
+    color: #fff;
+    opacity: 0;
+    cursor: pointer;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.location-inputs li:hover i{
+    opacity: 1;
 }
 
 form .location-box .form-control::-webkit-input-placeholder,form .location-box .form-control::placeholder {
@@ -3248,8 +3297,8 @@ form .location-box .form-control::-webkit-input-placeholder,form .location-box .
 }
 
 .location-list {
-    height: calc(100vh - 332px);
     overflow: auto;
+    height: calc(100vh - 362px);
 }
 
 .search-location-result{
@@ -3266,6 +3315,7 @@ form .location-box .form-control::-webkit-input-placeholder,form .location-box .
     color: var(--theme-deafult);
     font-size: 30px;
 }
+
 
 /* Search Bar Css */
 .list-box {
