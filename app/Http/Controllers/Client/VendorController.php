@@ -20,7 +20,7 @@ use App\Http\Traits\ToasterResponser;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory,UserPermissions, VendorDocs, SubscriptionPlansVendor, SubscriptionInvoicesVendor, SubscriptionInvoiceFeaturesVendor, SubscriptionFeaturesListVendor};
+use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorDineinCategory, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory,UserPermissions, VendorDocs, SubscriptionPlansVendor, SubscriptionInvoicesVendor, SubscriptionInvoiceFeaturesVendor, SubscriptionFeaturesListVendor, VendorDineinTable};
 use GuzzleHttp\Client as GCLIENT;
 use DB;
 class VendorController extends BaseController
@@ -253,10 +253,17 @@ class VendorController extends BaseController
         $categoryToggle = array();
         $vendor = Vendor::findOrFail($id);
         $client_preferences = ClientPreference::first();
+        $dinein_categories = VendorDineinCategory::where('vendor_id', $id)->get();
+        $vendor_tables = VendorDineinTable::where('vendor_id', $id)->get();
         $co_ordinates = $all_coordinates = array();
         $areas = ServiceArea::where('vendor_id', $id)->orderBy('created_at', 'DESC')->get();
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $zz = 1;
+        $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
+                    ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
+                    ->where('client_languages.client_code', Auth::user()->code)
+                    ->where('client_languages.is_active', 1)
+                    ->orderBy('client_languages.is_primary', 'desc')->get();
         foreach ($areas as $k => $v) {
             $all_coordinates[] = [
                 'name' => $k . '-a',
@@ -316,6 +323,9 @@ class VendorController extends BaseController
         $returnData['co_ordinates'] = $co_ordinates;
         $returnData['all_coordinates'] = $all_coordinates;
         $returnData['areas'] = $areas;
+        $returnData['dinein_categories'] = $dinein_categories;
+        $returnData['vendor_tables'] = $vendor_tables;
+        $returnData['languages'] = $langs;
         $returnData['categoryToggle'] = $categoryToggle;
         $returnData['VendorCategory'] = $VendorCategory;
         $returnData['templetes'] = $templetes;

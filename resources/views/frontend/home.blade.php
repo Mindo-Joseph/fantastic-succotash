@@ -96,50 +96,6 @@
     <% }); %>
 </script>
 
-<!-- <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">.. 1 ..</div>
-    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">.. 2 ..</div>
-    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">.. 3 ..</div>
-</div> -->
-<!-- 
-@if($count > 1)
-<section class="home-tabbar">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12 col-lg-12 tab-product pt-0">
-                <ul class="nav nav-tabs nav-material tab-icons" id="top-tab" role="tablist">
-                    @if($clientPreferences->delivery_check == 1)
-                    <li class="nav-item">
-                        <a class="nav-link {{$count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-selected="false" data-rel="delivery_tab">
-                            <i><span class="icon-shipped"></span></i>
-                            <span>{{ __('Delivery') }}</span>
-                        </a>
-                        <div class="material-border"></div>
-                    </li>
-                    @endif
-                    @if($clientPreferences->dinein_check == 1)
-                    <li class="nav-item">
-                        <a class="nav-link {{$clientPreferences->dinein_check == 1 && $clientPreferences->delivery_check != 1? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-selected="true" data-rel="dinein_tab">
-                            <i><span class="icon-dine-in"></span></i>
-                            <span>{{ __('Dine-In') }}</span>
-                        </a>
-                        <div class="material-border"></div>
-                    </li>
-                    @endif
-                    @if($clientPreferences->takeaway_check == 1)
-                    <li class="nav-item">
-                        <a class="nav-link {{$count == 1 ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-selected="false" data-rel="takeaway_tab">
-                            <i><span class="icon-take-away"></span></i> 
-                            <span>{{ __('Takeaway') }}</span>
-                        </a>
-                        <div class="material-border"></div>
-                    </li>
-                    @endif
-                </ul>
-            </div>
-        </div>
-</section>
-@endif -->
 <section class="section-b-space p-t-0 pt-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
     <div class="container">
         <div class="row">
@@ -218,6 +174,29 @@
         </div>
     </div>
 </section>
+
+<!-- Modal -->
+<div class="modal fade" id="age_restriction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="{{asset('assets/images/18.png')}}" alt="">
+                <p class="mb-0 mt-3">{{ $client_preference_detail ? $client_preference_detail->age_restriction_title : 'Are you 18 or older?' }}</p>
+                <p class="mb-0">Are you sure you want to continue?</p> 
+            </div>
+            <div class="modal-footer d-block">
+                <div class="row no-gutters">
+                    <div class="col-6 pr-1">
+                        <button type="button" class="btn btn-solid w-100 age_restriction_yes" data-dismiss="modal">Yes</button>
+                    </div>
+                    <div class="col-6 pl-1">
+                        <button type="button" class="btn btn-solid w-100 age_restriction_no" data-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
