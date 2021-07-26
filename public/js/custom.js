@@ -777,10 +777,22 @@ $(document).ready(function() {
             }
         });
     }
-    $(document).on('change', '.tip_radio_controls .tip_radio', function(){
+    $(document).on('click', '.tip_radio_controls .tip_radio', function(){
         var tip = $(this).val();
-        var amount_elem = $("#cart_payable_amount_original");
-        var amount_payable = amount_elem.val();
+        var amount_payable = $("#cart_payable_amount_original").val();
+        // if this was previously checked
+        if ($(this).hasClass("active")){
+            $(this).prop('checked', false);
+            $(this).removeClass('active');
+            setTipAmount(0, amount_payable);
+        }else{
+            $('.tip_radio_controls .tip_radio').removeClass("active");
+            $(this).addClass('active');
+            setTipAmount(tip, amount_payable);
+        }
+        
+    });
+    function setTipAmount(tip, amount_payable){
         if(tip != 'custom'){
             if( (tip == '') || (isNaN(tip)) ){
                 tip = 0;
@@ -798,7 +810,7 @@ $(document).ready(function() {
             $("#custom_tip_amount").focus();
         }
         $("input[name='cart_total_payable_amount']").val(parseFloat(amount_payable).toFixed(2));
-    });
+    }
     $(document).on('keyup', '#custom_tip_amount', function(){
         var tip = $(this).val();
         if( (tip == '') || (isNaN(tip)) ){

@@ -278,7 +278,7 @@ class OrderController extends FrontController
             }
             $total_discount = $total_discount + $total_subscription_discount;
             $order->total_amount = $total_amount;
-            $order->total_discount = $total_discount + $total_subscription_discount;
+            $order->total_discount = $total_discount;
             $order->taxable_amount = $taxable_amount;
             if ($loyalty_amount_saved > 0) {
                 if ($payable_amount < $loyalty_amount_saved) {
