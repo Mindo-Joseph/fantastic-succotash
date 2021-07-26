@@ -48,7 +48,7 @@
                             @csrf
                             <div class="form-group">
                                 <label for="">{{ __('Email') }}</label>
-                                <input type="email" class="form-control @if(isset($errors) && $errors->has('email')) is-invalid @endif" aria-describedby="" placeholder="{{ __('Email') }}" value="{{ old('email')}}" name="email" required="">
+                                <input type="email" class="form-control @if(isset($errors) && $errors->has('email')) is-invalid @endif" aria-describedby="" placeholder="{{ __('Email') }}" value="{{ old('email')}}" name="email">
                                 @if($errors->first('email'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -62,7 +62,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="">{{ __('Password') }}</label>
-                                <input type="password" class="form-control @if(isset($errors) && $errors->has('password')) is-invalid @endif" name="password" placeholder="{{ __('Password') }}" required="">
+                                <input type="password" class="form-control @if(isset($errors) && $errors->has('password')) is-invalid @endif" name="password" placeholder="{{ __('Password') }}">
                                 @if($errors->first('password') || \Session::has('Error'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('password') }}</strong>

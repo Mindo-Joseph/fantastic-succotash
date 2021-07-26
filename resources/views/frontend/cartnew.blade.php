@@ -172,7 +172,7 @@
                <hr class="mt-2 mb-0">
             </td>
             <td class="text-right pl-0 pb-0" colspan="3">
-               <p class="mb-1"></p> $<%= cart_details.gross_amount %>
+               <p class="mb-1"></p> {{Session::get('currencySymbol')}}<%= cart_details.gross_amount %>
                <hr class="mt-2 mb-0">
             </td>
         </tr>
@@ -251,7 +251,7 @@
                     <div class="row">
                         <div class="col-12 mb-2">
                             <h4 class="page-title">{{__('Delivery Address')}}</h4>
-                            <span class="text-danger hide" id="address_error"></span>
+                            <!-- <span class="text-danger hide" id="address_error"></span> -->
                         </div>
                     </div>
                     <div class="row mb-4" id="address_template_main_div">
@@ -317,7 +317,7 @@
                                     <div class="col-md-12 mb-3">
                                         <label for="address">{{__('Address')}}</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2">
+                                            <input type="text" class="form-control" id="address" placeholder="{{__('Address')}}" aria-label="Recipient's Address" aria-describedby="button-addon2">
                                             <div class="input-group-append">
                                                 <button class="btn btn-outline-secondary" type="button" id="button-addon2">
                                                     <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -330,12 +330,12 @@
                                 <div class="form-row mb-3">
                                     <div class="col-md-6 mb-3">
                                         <label for="city">{{__('City')}}</label>
-                                        <input type="text" class="form-control" id="city" placeholder="City" value="">
+                                        <input type="text" class="form-control" id="city" placeholder="{{__('City')}}" value="">
                                         <span class="text-danger" id="city_error"></span>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="state">{{__('State')}}</label>
-                                        <input type="text" class="form-control" id="state" placeholder="State" value="">
+                                        <input type="text" class="form-control" id="state" placeholder="{{__('State')}}" value="">
                                         <span class="text-danger" id="state_error"></span>
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -349,7 +349,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="pincode">{{__('Pincode')}}</label>
-                                        <input type="text" class="form-control" id="pincode" placeholder="Pincode" value="">
+                                        <input type="text" class="form-control" id="pincode" placeholder="{{__('Pincode')}}" value="">
                                         <span class="text-danger" id="pincode_error"></span>
                                     </div>
                                     <div class="col-md-12 mt-3">
