@@ -200,6 +200,7 @@ $(document).ready(function() {
                     cartTotalProductCount();
                     if($("#tbody_" + vendor_id + " > tr.vendor_products_tr").length == 0){
                         $('#tbody_'+vendor_id).remove();
+                        $('#thead_'+vendor_id).remove();
                     }
                     if($("[id^=tr_vendor_products_]").length == 0){
                         if($("#cart_main_page").length){
@@ -643,9 +644,9 @@ $(document).ready(function() {
         $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
     });
     $(document).on("click","#remove_product_button",function() {
+        $('#remove_item_modal').modal('hide');
         let vendor_id = $('#remove_item_modal #vendor_id').val();
         let cartproduct_id = $('#remove_item_modal #cartproduct_id').val();
-        $('#remove_item_modal').modal('hide');
         productRemove(cartproduct_id, vendor_id);
     });
     function capitalizeFirstLetter(string) {
