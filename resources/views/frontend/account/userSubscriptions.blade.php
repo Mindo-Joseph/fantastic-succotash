@@ -314,8 +314,9 @@
     var subscription_payment_options_url = "{{route('user.subscription.plan.select', ':id')}}";
     var user_subscription_purchase_url = "{{route('user.subscription.plan.purchase', ':id')}}";
     var user_subscription_cancel_url = "{{route('user.subscription.plan.cancel', ':id')}}";
-    var payment_stripe_url = "{{route('subscription.payment.stripe')}}";
+    var payment_stripe_url = "{{route('user.subscription.payment.stripe')}}";
     var check_active_subscription_url = "{{route('user.subscription.plan.checkActive', ':id')}}";
+    console.log(payment_stripe_url);
 
     $(document).on('change', '#subscription_payment_methods input[name="subscription_payment_method"]', function() {
         var method = $(this).data("payment_option_id");

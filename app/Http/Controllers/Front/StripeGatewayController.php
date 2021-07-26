@@ -6,7 +6,7 @@ use Auth;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
-use App\Models\{PaymentOption, Client, ClientCurrency, SubscriptionPlansVendor};
+use App\Models\{PaymentOption, Client, ClientCurrency, SubscriptionPlansUser};
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Front\FrontController;
 use Illuminate\Support\Facades\Validator;
@@ -55,7 +55,7 @@ class StripeGatewayController extends FrontController{
         try{
             $user = Auth::user();
             $token = $request->stripe_token;
-            $plan = SubscriptionPlansVendor::where('slug',$request->subscription_id)->firstOrFail();
+            $plan = SubscriptionPlansUser::where('slug',$request->subscription_id)->firstOrFail();
             $saved_payment_method = $this->getSavedUserPaymentMethod($request);
             if(!$saved_payment_method){
                 $customerResponse = $this->gateway->createCustomer(array(

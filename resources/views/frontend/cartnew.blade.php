@@ -202,14 +202,51 @@
         <% } %>
         <tr class="border_0">
             <td colspan="3"></td>
+            <td colspan="4" class="pr-0 pb-0">
+                <div class="mb-2">Do you want to give a tip ?</div>
+                <div class="tip_radio_controls">
+                    <input type="radio" class="tip_radio" id="control_01" name="select" value="<%= cart_details.tip_5_percent %>">
+                    <label class="tip_label" for="control_01">
+                        <h5 class="m-0" id="tip_5">{{Session::get('currencySymbol')}}<%= cart_details.tip_5_percent %></h5>
+                        <p class="m-0">5%</p>
+                    </label>
+                
+                    <input type="radio" class="tip_radio" id="control_02" name="select" value="<%= cart_details.tip_10_percent %>" >
+                    <label class="tip_label" for="control_02">
+                        <h5 class="m-0" id="tip_10">{{Session::get('currencySymbol')}}<%= cart_details.tip_10_percent %></h5>
+                        <p class="m-0">10%</p>
+                    </label>
+                
+                    <input type="radio" class="tip_radio" id="control_03" name="select" value="<%= cart_details.tip_15_percent %>" >
+                    <label class="tip_label" for="control_03">
+                        <h5 class="m-0" id="tip_15">{{Session::get('currencySymbol')}}<%= cart_details.tip_15_percent %></h5>
+                        <p class="m-0">15%</p>
+                    </label>
+
+                    <input type="radio" class="tip_radio" id="custom_control" name="select" value="custom" >
+                    <label class="tip_label" for="custom_control">
+                        <h5 class="m-0">Custom<br>Amount</h5>
+                    </label>
+                </div>
+                <div class="custom_tip mb-3 d-none">
+                    <input class="input-number form-control" name="custom_tip_amount" id="custom_tip_amount" placeholder="Enter Custom Amount" type="number" value="" step="0.1">
+                </div>
+            </td>
+        </tr>
+        <tr class="border_0">
+            <td colspan="3"></td>
             <td colspan="2" class="pt-0 pr-0">
                 <hr class="mt-0 mb-2">
                 <p class="total_amt m-0">{{__('Amount Payable')}}</p>
             </td>
             <td colspan="2" class="pt-0 pl-0 text-right">
                 <hr class="mt-0 mb-2">
-                <p class="total_amt m-0" id="cart_total_payable_amount">{{Session::get('currencySymbol')}}<%= cart_details.total_payable_amount %></p>
-                <div><input type="hidden" name="cart_total_payable_amount" value="<%= cart_details.total_payable_amount %>"></div>
+                <p class="total_amt m-0" id="cart_total_payable_amount" data-cart_id="<%= cart_details.id %>">{{Session::get('currencySymbol')}}<%= cart_details.total_payable_amount %></p>
+                <div>
+                    <input type="hidden" name="cart_tip_amount" id="cart_tip_amount" value="0">
+                    <input type="hidden" name="cart_total_payable_amount" value="<%= cart_details.total_payable_amount %>">
+                    <input type="hidden" name="cart_payable_amount_original" id="cart_payable_amount_original" value="<%= cart_details.total_payable_amount %>">
+                </div>
             </td>
         </tr>
     </tfoot>
@@ -362,8 +399,19 @@
                     </div>
                 </div>
                 <div class="col-8">
-                    <div class="table-responsive">
-                        <table class="table table-centered table-nowrap" id="cart_table"></table>
+                    <div class="table-responsive h-100">
+                        <table class="table table-centered table-nowrap mb-0 h-100" id="cart_table">
+                            <tbody>
+                                <td>
+                                    <!-- GRADIENT SPINNER -->
+                                    <div class="spinner-box">
+                                        <div class="circle-border">
+                                            <div class="circle-core"></div>
+                                        </div>  
+                                    </div>
+                                </td>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
