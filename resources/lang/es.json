@@ -16,7 +16,6 @@
    "Enter Email":"Ingrese correo electrónico",
    "The name must be at least 3 characters.":"El nombre debe tener al menos 3 caracteres.",
    "The name may not be greater than 50 characters.":"El nombre no puede tener más de 50 caracteres.",
-   "Enter Email":"El campo del número de teléfono es obligatorio.",
    "The phone number field is required.":"El campo de correo electrónico es obligatorio.",
    "The selected email is invalid.":"El correo electrónico seleccionado no es válido.",
    "Send Password Reset Link":"Enviar enlace de restablecimiento de contraseña",
@@ -229,5 +228,6 @@
    "Terms And Conditions":"Y Condiciones oss Términos",
    "Verify Email Addresss":"Verificar | Direcciones de correo electrónico",
    "Enter the code we just sent you on your email address":"El código es el Ingrese, simplemente le enviamos a su dirección de correo electrónico",
-   "Stripe":" The Stripe"
+   "Stripe":" The Stripe",
+   "View More": "Ver más"
 }

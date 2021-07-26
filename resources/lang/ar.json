@@ -3,6 +3,7 @@
   "Password not matched. Please enter correct password.": "كلمة المرور غير متطابقة. الرجاء إدخال كلمة المرور الصحيحة.",
   "The name field is required.": "حقل الاسم مطلوب.",
   "Invalid Token!": "رمز غير صالح!",
+  "View More": "عرض المزيد",
   "An otp has been sent to your email. Please check.": "تم إرسال otp إلى بريدك الإلكتروني. يرجى التحقق.",
   "An otp has been sent to your phone. Please check.": "تم إرسال otp إلى هاتفك. يرجى التحقق.",
   "If you didn’t receive a code?": "إذا لم تستلم رمزًا؟",
@@ -46,7 +47,6 @@
   "All Vendors": "تم إرسال otp إلى بريدك الإلكتروني. يرجى التحقق.2",
   "Register": "تم إرسال otp إلى بريدك الإلكتروني. يرجى التحقق.3",
   "New Products": "تم إرسال otp إلى بريدك الإلكتروني. يرجى التحقق.4",
-
   "Feature Product": "منتج مميز",
   "Login To Your Account": "تسجيل الدخول إلى حسابك",
   "New Customer": "عميل جديد",
@@ -96,7 +96,6 @@
   "Submit": "اشترك للحصول على حساب مجاني في متجرنا. تسجيل سريع وسهل. يسمح لك بالطلب في متجرنا. لبدء التسوق ، انقر فوق تسجيل6",
   "The confirm password and new password must match.": "اشترك للحصول على حساب مجاني في متجرنا. تسجيل سريع وسهل. يسمح لك بالطلب في متجرنا. لبدء التسوق ، انقر فوق تسجيل7",
   "The new password must be at least 6 characters.": "اشترك للحصول على حساب مجاني في متجرنا. تسجيل سريع وسهل. يسمح لك بالطلب في متجرنا. لبدء التسوق ، انقر فوق تسجيل8",
-
   "The new password field is required.": "مطلوب حقل كلمة المرور الجديدة.",
   "The confirm password field is required.": "مطلوب حقل تأكيد كلمة المرور.",
   "Order ID": "معرف الطلب",
