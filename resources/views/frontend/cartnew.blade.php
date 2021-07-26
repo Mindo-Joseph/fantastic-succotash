@@ -38,7 +38,7 @@
             <div class="cart_img_outer">
                 <img src="{{asset('front-assets/images/empty_cart.png')}}">
             </div>
-            <h3>{{__('Your cart is empty!')}}</h3>
+            <h3>{{__('Your Cart Is Empty!')}}</h3>
             <p>Add items to it now.</p>
             <a class="btn btn-solid" href="{{url('/')}}">{{__('Continue Shopping')}}</a>
         </div>
@@ -432,7 +432,7 @@
             <div class="cart_img_outer">
                 <img src="{{asset('front-assets/images/empty_cart.png')}}">
             </div>
-            <h3>{{__('Your cart is empty!')}}</h3>
+            <h3>{{__('Your Cart Is Empty!')}}</h3>
             <p>{{__('Add items to it now.')}}</p>
             <a class="btn btn-solid" href="{{url('/')}}">{{__('Continue Shopping')}}</a>
         </div>
