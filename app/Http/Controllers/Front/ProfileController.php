@@ -172,24 +172,21 @@ class ProfileController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function submitChangePassword(Request $request, $domain = ''){
-        $validator = Validator::make($request->all(), [
-            'new_password' => 'required|string|min:6|max:50',
+        $request->validate([
+            'new_password' => 'required|string|min:6',
             'confirm_password' => 'required|same:new_password',
+        ],[
+            'new_password.required' => __('The new password field is required.'),
+            'new_password.min' => __('The new password must be at least 6 characters.'),
+            'confirm_password.required' => __('The confirm password field is required.'),
+            'confirm_password.same' => __('The confirm password and new password must match.'),
         ]);
-
-        if ($validator->fails()) {
-            foreach ($validator->errors()->toArray() as $error_key => $error_value) {
-                $errors['error'] = $error_value[0];
-                return redirect()->back()->with($errors);
-            }
-        }
-        
         $user = User::where('id', Auth::user()->id)->first();
         if ($user){
-        $user->password = Hash::make($request['new_password']);
-        $user->save();
+            $user->password = Hash::make($request['new_password']);
+            $user->save();
         }
-        return redirect()->route('user.profile')->with('success', 'Your Password has been changed successfully');
+        return redirect()->route('user.profile')->with('success', __('Your Password has been changed successfully'));
     }
 
 }

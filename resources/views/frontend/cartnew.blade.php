@@ -470,7 +470,7 @@
             <div class="modal-body">
                 <input type="hidden" id="vendor_id" value="">
                 <input type="hidden" id="cartproduct_id" value="">
-                <h6 class="m-0">{{__('Are you sure you want to remove this item ?')}}</h6>
+                <h6 class="m-0">{{__('Are You Sure You Want To Remove This Item?')}}</h6>
             </div>
             <div class="modal-footer flex-nowrap justify-content-center align-items-center">
                 <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">{{__('Cancel')}}</button>
@@ -508,7 +508,7 @@
                     </div>
                     <div class="row mt-5">
                         <div class="col-md-12 text-md-right">
-                            <button type="button" class="btn btn-solid" data-dismiss="modal">{{_('Cancel')}}</button>
+                            <button type="button" class="btn btn-solid" data-dismiss="modal">{{ __('Cancel') }}</button>
                             <button type="button" class="btn btn-solid ml-1 proceed_to_pay">{{__('Place Order')}}</button>
                         </div>
                     </div>

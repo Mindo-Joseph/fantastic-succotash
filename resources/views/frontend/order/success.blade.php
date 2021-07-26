@@ -87,7 +87,7 @@
                     </div>
                     <div class="col-sm-12 payment-mode">
                         <h4>{{__('Payment Method')}}</h4>
-                        <p>{{$order->paymentOption->title}}</p>
+                        <p>{{__($order->paymentOption->title)}}</p>
                     </div>
                 </div>
             </div>
