@@ -462,7 +462,8 @@ class PickupDeliveryController extends BaseController{
                                                     'call_back_url' => $call_back_url??null,
                                                     'order_team_tag' => $team_tag,
                                                     'order_agent_tag' => $order_agent_tag,
-                                                    'task' => $request->tasks
+                                                    'task' => $request->tasks,
+                                                    'order_time_zone' => $request->order_time_zone??null
                                                     ];
 
                   
