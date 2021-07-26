@@ -53,14 +53,14 @@
 	                        <div class="col-3 order_detail">
 	                            <div>
 	                                <h4>{{__('Price')}}</h4>
-	                                <h5>{{Session::get('currencySymbol')}}@money($product->price)</h5>
+	                                <h5>{{Session::get('currencySymbol')}}@money($product->price * $clientCurrency->doller_compare)</h5>
 	                            </div>
 	                        </div>
 	                    </div>
                     @endforeach
                     <div class="total-sec">
                         <ul>
-                            <li>{{__('Subtotal')}}<span>{{Session::get('currencySymbol')}}@money($order->total_amount)</span></li>
+                            <li>{{__('Subtotal')}}<span>{{Session::get('currencySymbol')}}@money($order->total_amount * $clientCurrency->doller_compare)</span></li>
                             <li>{{__('Tax')}} <span>{{Session::get('currencySymbol')}}@money($order->taxable_amount)</span></li>
                         </ul>
                     </div>

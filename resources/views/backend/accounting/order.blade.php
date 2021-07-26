@@ -100,7 +100,7 @@
                         </div>
                    </div>
                     <div class="table-responsive">
-                        <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable">
+                        <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable" width="100%">
                             <thead>
                                 <tr>
                                     <th>Order Id</th>

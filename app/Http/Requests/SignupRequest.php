@@ -27,6 +27,7 @@ class SignupRequest extends FormRequest{
             'phone_number' => 'required|string|min:10|max:15|unique:users',
             'device_type' => 'required|string',
             'device_token' => 'required|string',
+            'term_and_condition' => 'accepted',
             'refferal_code' => 'nullable|exists:user_refferals,refferal_code',
         ];
     }
@@ -35,11 +36,12 @@ class SignupRequest extends FormRequest{
             "name.required" => __('The name field is required.'),
             "email.required" => __('The email field is required.'),
             "email.unique" => __('The email has already been taken.'),
-            "phone_number.unique" => __('The phone number has already been taken.'),
             "name.min" => __('The name must be at least 3 characters.'),
             "password.required" => __("The password field is required."),
             "name.max" => __('The name may not be greater than 50 characters.'),
             "phone_number.required" => __('The phone number field is required.'),
+            "phone_number.unique" => __('The phone number has already been taken.'),
+            "term_and_condition.required" => __('The term and condition must be accepted.'),
         ];
     }
 }

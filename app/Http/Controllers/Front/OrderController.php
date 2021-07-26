@@ -26,16 +26,15 @@ class OrderController extends FrontController
      */
     public function orders(Request $request, $domain = '')
     {
+        $currency_id = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         $pastOrders = Order::with(['vendors.products','products.productRating', 'user', 'address'])->whereHas('vendors',function($q){
             $q->where('order_status_option_id', 6);
         })->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(10);
-
         $activeOrders = Order::with(['vendors.products', 'user', 'address'])->whereHas('vendors',function($q){
             $q->where('order_status_option_id', '!=', 6);
         })->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(10);
-
         foreach ($activeOrders as $order) {
             foreach ($order->vendors as $vendor) {
                 $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
@@ -48,7 +47,6 @@ class OrderController extends FrontController
                 $vendor->order_status = $vendor_order_status ? strtolower($vendor_order_status->OrderStatusOption->title) : '';
             }
         }
-
         $returnOrders = Order::with(['vendors.products.productReturn','products.productRating', 'user', 'address', 'products'=>function($q){
             $q->whereHas('productReturn');
         },'vendors.products'=>function($q){
@@ -57,16 +55,17 @@ class OrderController extends FrontController
             $q->whereHas('products.productReturn');
         }])->whereHas('vendors.products.productReturn')->whereHas('vendors.products.productReturn')
         ->where('orders.user_id', Auth::user()->id)->orderBy('orders.id', 'DESC')->paginate(20);
-      
-        return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders, 'returnOrders'=>$returnOrders]);
+        $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
+        return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders'=>$activeOrders, 'pastOrders'=>$pastOrders, 'returnOrders'=>$returnOrders, 'clientCurrency'=> $clientCurrency]);
     }
 
-    public function getOrderSuccessPage(Request $request)
-    {
+    public function getOrderSuccessPage(Request $request){
+        $currency_id = Session::get('customerCurrency');
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         $order = Order::with(['products.pvariant.vset', 'address'])->findOrfail($request->order_id);
-        return view('frontend.order.success', compact('order', 'navCategories'));
+        $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
+        return view('frontend.order.success', compact('order', 'navCategories', 'clientCurrency'));
     }
     public function placeOrder(Request $request, $domain = '')
     {
