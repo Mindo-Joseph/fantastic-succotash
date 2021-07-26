@@ -4,6 +4,28 @@ $(document).ready(function() {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
         }
     });
+
+    // Cabbooking Js Code 
+        $('.add-more-location').click(function(){
+            $(".location-inputs").append("<li class='d-block mb-3 dots apdots map-icon'><input class='form-control pickup-text' type='text' placeholder='Choose destination, or click on the map...' /><i class='fa fa-times ml-1 apremove' aria-hidden='true'></i></li>");
+            const height = document.querySelector('.location-box').offsetHeight;
+            var getheight = height;
+            var abc = 150;
+            var minheight = parseFloat(getheight + abc)+'px';
+            $('.location-list').attr('style', 'height:calc(100vh - '+minheight+' !important');
+        });
+
+        $('.location-inputs').on('click','.apremove',function(){
+            $(this).closest('.apdots').remove();
+            const height = document.querySelector('.location-box').offsetHeight;
+            var getheight = height;
+            var abc = 156;
+            var minheight = parseFloat(getheight + abc)+'px';
+            $('.location-list').attr('style', 'height:calc(100vh - '+minheight+' !important');
+        });
+    // Cabbooking Js Code  
+     
+   
     $(".navigation-tab-item").click(function() {
         $(".navigation-tab-item").removeClass("active");
         $(this).addClass("active");
@@ -200,6 +222,7 @@ $(document).ready(function() {
                     cartTotalProductCount();
                     if($("#tbody_" + vendor_id + " > tr.vendor_products_tr").length == 0){
                         $('#tbody_'+vendor_id).remove();
+                        $('#thead_'+vendor_id).remove();
                     }
                     if($("[id^=tr_vendor_products_]").length == 0){
                         if($("#cart_main_page").length){
@@ -643,9 +666,9 @@ $(document).ready(function() {
         $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
     });
     $(document).on("click","#remove_product_button",function() {
+        $('#remove_item_modal').modal('hide');
         let vendor_id = $('#remove_item_modal #vendor_id').val();
         let cartproduct_id = $('#remove_item_modal #cartproduct_id').val();
-        $('#remove_item_modal').modal('hide');
         productRemove(cartproduct_id, vendor_id);
     });
     function capitalizeFirstLetter(string) {

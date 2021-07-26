@@ -55,7 +55,7 @@
 </div>
 <script type="text/template" id="cart_template">
     <% _.each(cart_details.products, function(product, key){%>
-        <thead>
+        <thead id="thead_<%= product.vendor.id %>">
             <tr>
                 <th colspan="3">
                     <%= product.vendor.name %>
