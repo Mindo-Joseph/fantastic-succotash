@@ -3274,16 +3274,78 @@ header .homepage-address h2 {
 /* Cab Booking Css */
 .booking-experience {
     background: #fff;
+    position: relative;
+    z-index: 1;
 }
-.address-bar{
+.location-box{
     background-color: var(--theme-deafult);
+    position: relative;
     padding: 40px;
 }
 
-.location-title li{
-    color: #fff;
-    font-weight: 600;
-    font-size: 18px;
+.location-box::before {
+    height: calc(100% - 130px);
+    background: transparent;
+    border-left: 2px dashed #fff;
+    position: absolute;
+    display: block;
+    margin: auto;
+    content: "";
+    width: 2px;
+    left: 20px;
+    bottom: 0;
+    top: 0;
+}
+
+.location-box::after,.dots::after {
+    height: 10px;
+    width: 10px;
+    border: 2px solid #fff;
+    background: transparent;
+    position: absolute;
+    display: block;
+    margin: auto;
+    content: "";
+    left: 16px;
+    top: 50px;
+    border-radius: 50px;
+}
+
+.location-box .dots::after{
+    bottom: 50px;
+    top: auto;
+}
+
+form .location-box .form-control::-webkit-input-placeholder,form .location-box .form-control::placeholder {
+    opacity: 1;
+    color: #000;
+    font-weight: 700;
+}
+
+.ellips{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.location-list {
+    height: calc(100vh - 332px);
+    overflow: auto;
+}
+
+.search-location-result{
+    padding: 16px 16px 16px 70px;
+}
+
+.search-location-result::before{
+    font-family: FontAwesome;
+    content: "\f041";
+    position: absolute;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--theme-deafult);
+    font-size: 30px;
 }
 
 /* Search Bar Css */
@@ -3314,7 +3376,7 @@ header .homepage-address h2 {
  
  .style-4::-webkit-scrollbar
  {
-     width: 10px;
+     width: 5px;
      height: 5px;
      background-color: #F5F5F5;
  }
@@ -3325,6 +3387,11 @@ header .homepage-address h2 {
      border: 2px solid #555555;
  }
  
+ .location-list.style-4::-webkit-scrollbar-thumb
+ {
+     background-color: var(--theme-deafult);
+     border: 2px solid var(--theme-deafult);
+ }
 
  .theme-form .input-group input.form-control {
     border-top-right-radius: 0 !important;
@@ -3364,6 +3431,22 @@ header .homepage-address h2 {
 }
 
 
+
+@media(min-width: 992px){
+    .booking-experience {
+        height: calc(100vh - 150px);
+        position: absolute;
+        width: 400px;
+        top: 100px;
+    }
+    .fh {
+        height: calc(100vh - 445px);
+    }
+    .bc{
+        left: 24px;
+    }
+}
+
 @media(min-width: 1400px){
     .ds{
         position: absolute;
@@ -3371,24 +3454,8 @@ header .homepage-address h2 {
     }
     
 }
-@media(min-width: 992px){
-    .booking-experience {
-        position: absolute;
-        left: calc(((100vw - 1440px) / 2) + 24px);
-        top: 100px;
-        width: 400px;
-        height: calc(100vh - 150px);
-    }
-    .fh {
-        height: calc(100vh - 445px);
-    }
-}
 
-@media(min-width:800px){
-    .bc {
-        left: 24px;
-    }
-}
+
 @media(max-width:991px){
     .wrapper-main .border-right,.wrapper-main .border-left{
         border: 0 !important;
@@ -3400,6 +3467,17 @@ header .homepage-address h2 {
         height: 300px;
         margin: auto;
     }
+    .cab-booking {
+        height: auto;
+    }
+    .cab-booking iframe {
+        height: 40vh;
+    }
+    .location-list {
+        height: 400px;
+        overflow: auto;
+    }
+    
 }
 
 @media(min-width:576px){

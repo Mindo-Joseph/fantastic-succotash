@@ -54,16 +54,16 @@ class UserController extends FrontController{
         $notified = 0;
         $user = User::where('id', Auth::user()->id)->first();
         if (!$user) {
-            return redirect()->back()->with('err_user', 'User not found.');
+            return redirect()->back()->with('err_user', __('User not found.'));
         }
         if ($user->is_email_verified == 1 && $user->is_phone_verified == 1) {
-            return redirect()->back()->with('err_user', 'Account already verified.');
+            return redirect()->back()->with('err_user', __('Account already verified.'));
         }
         $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
         $data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from', 'mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
         $newDateTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
         if ($request->type == "phone") {
-            $message = "An otp has been sent to your phone. Please check";
+            $message = __('An otp has been sent to your phone. Please check.');
             if ($user->is_phone_verified == 0) {
                 $otp = mt_rand(100000, 999999);
                 $user->phone_token = $otp;
@@ -80,7 +80,7 @@ class UserController extends FrontController{
             }
         }else{
             if ($user->is_email_verified == 0) {
-                $message = "An otp has been sent to your email. Please check";
+                $message = __('An otp has been sent to your email. Please check.');
                 $otp = mt_rand(100000, 999999);
                 $user->email_token = $otp;
                 $user->email_token_valid_till = $newDateTime;
@@ -123,7 +123,7 @@ class UserController extends FrontController{
                 'message' => $message,
             ]);
         } else {
-            return redirect()->back()->with('err_user', 'Provider service is not configured. Please contact administration.');
+            return redirect()->back()->with('err_user', __('Provider service is not configured. Please contact administration.'));
         }
     }
 
@@ -135,26 +135,23 @@ class UserController extends FrontController{
     public function verifyToken(Request $request, $domain = ''){
         $user = User::where('id', Auth::user()->id)->first();
         if (!$user || !$request->has('type')) {
-            return response()->json(['error' => 'User not found!'], 404);
+            return response()->json(['error' => __('User not found!')], 404);
         }
         if(!$request->verifyToken){
-            return response()->json(['error' => 'OTP required!'], 404);
+            return response()->json(['error' => __('OTP required!')], 404);
         }
         $currentTime = \Carbon\Carbon::now()->toDateTimeString();
-        $message = 'Account verified successfully.';
-        if ($request->has('is_forget_password') && $request->is_forget_password == 1) {
-            $message = 'OTP matched successfully.';
-        }
         if ($request->type == 'phone') {
-            $user_detail_exist = User::where('phone_number', $request->phone_number)->where('id','!=',$user->id)->first();
+            $phone_number = str_ireplace(' ', '', $request->phone_number);
+            $user_detail_exist = User::where('phone_number', $request->phone_number)->whereNotIn('id', [$user->id])->first();
             if($user_detail_exist){
-                return response()->json(['error' => 'Email already in use!'], 404);
+                return response()->json(['error' => __('phone number in use!')], 404);
             }
             if ($user->phone_token != $request->verifyToken) {
-                return response()->json(['error' => 'OTP is not valid'], 404);
+                return response()->json(['error' => __('OTP is not valid')], 404);
             }
             if ($currentTime > $user->phone_token_valid_till) {
-                return response()->json(['error' => 'OTP has been expired.'], 404);
+                return response()->json(['error' => __('OTP has been expired.')], 404);
             }
             $user->phone_token = NULL;
             $user->is_phone_verified = 1;
@@ -165,13 +162,13 @@ class UserController extends FrontController{
         if ($request->type == 'email') {
             $user_detail_exist = User::where('email', $request->email)->where('id','!=',$user->id)->first();
             if($user_detail_exist){
-                return response()->json(['error' => 'Email already in use!'], 404);
+                return response()->json(['error' => __('Email already in use!')], 404);
             }
             if ($user->email_token != $request->verifyToken) {
-                return response()->json(['error' => 'OTP is not valid'], 404);
+                return response()->json(['error' => __('OTP is not valid')], 404);
             }
             if ($currentTime > $user->email_token_valid_till) {
-                return response()->json(['error' => 'OTP has been expired.'], 404);
+                return response()->json(['error' => __('OTP has been expired.')], 404);
             }
             $user->email_token = NULL;
             $user->is_email_verified = 1;
@@ -179,7 +176,7 @@ class UserController extends FrontController{
             $user->email_token_valid_till = NULL;
         }
         $user->save();
-        return response()->json(['success' => 'OTP verified'], 202);
+        return response()->json(['success' => __('OTP verified')], 202);
     }
 
     /**

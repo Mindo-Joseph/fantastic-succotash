@@ -50,7 +50,11 @@ class AddressController extends FrontController{
                 'address' => 'required',
                 'country' => 'required',
         ], [
-            'type.required' => 'Address Type is required'
+            'address.required' => __('The address field is required.'),
+            'type.required' => __('Address Type is required'),
+            'city.required' => __('The city field is required.'),
+            'state.required' => __('The state field is required.'),
+            'pincode.required' => __('The pincode field is required.'),
         ]);
         $country = Country::select('code', 'name')->where('id', $request->country)->first();
         $address = new UserAddress;

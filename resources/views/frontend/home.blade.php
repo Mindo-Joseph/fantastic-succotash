@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Home'])
+@extends('layouts.store', ['title' => __('Home')])
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {

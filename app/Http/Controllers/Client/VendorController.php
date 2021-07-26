@@ -452,9 +452,7 @@ class VendorController extends BaseController
             $vendor->order_pre_time     = $request->order_pre_time;
             $vendor->auto_reject_time   = $request->auto_reject_time;
         }
-        if ($request->has('is_show_vendor_details')) {
-            $vendor->is_show_vendor_details = ($request->has('is_show_vendor_details') && $request->is_show_vendor_details == 'on') ? 1 : 0;
-        }
+        $vendor->is_show_vendor_details = ($request->has('is_show_vendor_details') && $request->is_show_vendor_details == 'on') ? 1 : 0;
         if ($request->has('commission_percent')) {
             $vendor->commission_percent         = $request->commission_percent;
             $vendor->commission_fixed_per_order = $request->commission_fixed_per_order;
