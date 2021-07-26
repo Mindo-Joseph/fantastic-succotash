@@ -131,7 +131,7 @@
     var edit_text = "{{__('Edit')}}";
     var resend_text = "{{__('RESEND')}}";
     var sending_text = "{{__('SENDING...')}}";
-    var save_and_send = "{{__('Save & Send.')}}";
+    var save_and_send = "{!! __('Save & Send.') !!}";
     var input = document.querySelector("#phone_number");
     window.intlTelInput(input, {
         separateDialCode: true,
@@ -193,6 +193,7 @@
         verifyUser('phone');
     });
     function verifyUser($type = 'email') {
+        $(".invalid_email_otp_error").html('');
         if($type == 'email'){
             var email = $('#email').val();
             var phone = $('#phone_number').val();
