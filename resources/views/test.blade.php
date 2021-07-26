@@ -224,50 +224,67 @@
         <div class="booking-experience ds bc">
             <form class="address-form">
                 <div class="location-box">
-                    <div class="form-group">
-                        <input class="form-control pickup-text" type="text" placeholder="From CH Devi Lal Centre of Learning" />
-                    </div>
-                    <div class="form-group pt-2 mb-0 dots">
-                        <input class="form-control pickup-text" type="text" placeholder="To Sector 14" />
-                    </div>
+                    <ul class="location-inputs position-relative pl-2">
+                        <li class="d-block mb-3 dots">
+                            <input class="form-control pickup-text" type="text" placeholder="From CH Devi Lal Centre of Learning" />
+                            <i class="fa fa-times ml-1" aria-hidden="true"></i>
+                        </li>
+                        <li class="d-block mb-3 dots">
+                            <input class="form-control pickup-text" type="text" placeholder="To Sector 14" />
+                            <i class="fa fa-times ml-1" aria-hidden="true"></i>
+                        </li>
+                    </ul>
+                    <a class="add-more-location position-relative pl-2" href="javascript:void(0)">Add Destination</a>
                 </div>
-                <div class="location-list">
-                    <div class="search-location-result position-relative">
-                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                <div class="location-list style-4">
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14 first</b></h4>
                         <p class="ellips mb-0">Panchkula, Haryana, India</p>
-                    </div>
-                    <div class="search-location-result position-relative">
-                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
-                        <p class="ellips mb-0">BEL Colony, Sector 14, Panchkula, Haryana, India</p>
-                    </div>
-                    <div class="search-location-result position-relative">
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
                         <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
                         <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
-                    </div>
-                    <div class="search-location-result position-relative">
-                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
-                        <p class="ellips mb-0">Panchkula, Haryana, India</p>
-                    </div>
-                    <div class="search-location-result position-relative">
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
                         <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
                         <p class="ellips mb-0">BEL Colony, Sector 14, Panchkula, Haryana, India</p>
-                    </div>
-                    <div class="search-location-result position-relative">
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
                         <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
                         <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
-                    </div>
-                    <div class="search-location-result position-relative">
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
                         <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
                         <p class="ellips mb-0">Panchkula, Haryana, India</p>
-                    </div>
-                    <div class="search-location-result position-relative">
-                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
-                        <p class="ellips mb-0">BEL Colony, Sector 14, Panchkula, Haryana, India</p>
-                    </div>
-                    <div class="search-location-result position-relative">
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
                         <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
                         <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
-                    </div>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">BEL Colony, Sector 14, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">BEL Colony, Sector 14, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store last</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
                 </div>
             </form>
         </div>
@@ -1141,6 +1158,7 @@
             </div>
         </div>
     </div>
+
 
     <script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields
