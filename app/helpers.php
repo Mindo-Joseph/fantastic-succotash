@@ -14,7 +14,7 @@ function pr($var) {
 }
 function http_check($url) {
     $return = $url;
-    if ((!(substr($url, 0, 7) == 'http://')) || (!(substr($url, 0, 8) == 'https://'))) {
+    if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
         $return = 'http://' . $url;
     }
     return $return;
