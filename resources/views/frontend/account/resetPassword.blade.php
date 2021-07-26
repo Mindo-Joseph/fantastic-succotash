@@ -68,102 +68,46 @@
 </header>
 <section class="register-page section-b-space">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h3>Reset Password</h3>
-                  <div class="theme-card"> 
-                    <form name="register" id="register" action="{{route('customer.resetPass')}}" class="theme-form" method="post"> @csrf
-                        <div class="form-row mb-3">
+     <div class="row justify-content-center">
+         <div class="col-md-8">
+            <div class="card">
+                <div class="alert alert-success" role="alert" style="display:none;"></div>
+                 <div class="card-header">{{__('Reset Password')}}</div>
+                      <div class="card-body">
+                        <form method="POST" id="reset_password_form">
+                           @csrf
+                        <input type="hidden" name="token" value="{{ $token }}">
+                        <div class="form-group row">
+                            <label for="password" class="col-md-4 col-form-label text-md-right">{{__('Password')}}</label>
                             <div class="col-md-6">
-                                <label for="otp">OTP</label>
-                                <input type="text" class="form-control" id="name" placeholder="OTP" required="" name="otp">
-                                @if($errors->first('otp'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('otp') }}</strong>
-                                    </span>
-                                @endif 
-                                @if(\Session::has('err_otp'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{!! \Session::get('err_otp') !!}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                            <div class="col-md-6">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" placeholder="Email" required="" name="email">
-                                @if($errors->first('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                                @if(\Session::has('err_email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{!! \Session::get('err_email') !!}</strong>
-                                    </span>
-                                @endif
+                                <input id="password" type="password" class="form-control" name="password" autocomplete="new-password" id="password">
+                                <span class="invalid-feedback" role="alert" id="password_err"></span>
                             </div>
                         </div>
-                        <div class="form-row mb-3">
+                        <div class="form-group row">
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{__('Confirm Password')}}</label>
                             <div class="col-md-6">
-                                <label for="review">Password</label>
-                                <input type="password" class="form-control" id="review" placeholder="Enter your password" required="" name="new_password">
-                                @if($errors->first('password'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                                @if(\Session::has('err_pass'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{!! \Session::get('err_pass') !!}</strong>
-                                    </span>
-                                @endif
+                                <input type="password" class="form-control" name="password_confirmation" autocomplete="new-password" id="password_confirmation">
+                                <span class="invalid-feedback" role="alert" id="password_confirmation_err"></span>
                             </div>
-                            <div class="col-md-6">
-                                <label for="review">Confirm Password</label>
-                                <input type="password" class="form-control" id="review" placeholder="Confirm password" required="" name="confirm_password">
-                                @if($errors->first('confirm_password'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('confirm_password') }}</strong>
-                                    </span>
-                                @endif
-                                @if(\Session::has('err_cf'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{!! \Session::get('err_cf') !!}</strong>
-                                    </span>
-                                @endif
+                        </div>
+                        <div class="form-group row mb-0">
+                           <div class="col-md-6 offset-md-4">
+                                <button type="button" class="btn btn-primary" id="reset_password_btn">{{__('Reset Password')}}</button>
                             </div>
-                            <input type="hidden" name="device_type" value="web">
-                            <input type="hidden" name="device_token" value="web">
-                            <input type="hidden" id="countryData" name="countryData" value="us">
-                            <button type="submit" class="btn btn-solid mt-3 submitRegister">Submit</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </section>
 @endsection
 @section('script')
-<script src="{{asset('assets/js/intlTelInput.js')}}"></script>
-<script>
-    var input = document.querySelector("#phone");
-    window.intlTelInput(input, {
-        separateDialCode: true,
-        hiddenInput: "full_number",
-        utilsScript: "{{asset('assets/js/utils.js')}}",
-    });
-    $(document).ready(function () {
-        $("#phone").keypress(function (e) {
-            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-                return false;
-            }
-            return true;
-        });
-    });
-    $('.iti__country').click(function(){
-        var code = $(this).attr('data-country-code');
-        $('#countryData').val(code);
-    })
+<script type="text/javascript">
+    var login_url = "{{url('user/login')}}";
+    var reset_password_url = "{{route('reset-password')}}";
 </script>
+<script src="{{asset('js/forgot_password.js')}}"></script>
 @endsection

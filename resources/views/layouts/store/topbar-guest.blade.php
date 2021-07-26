@@ -19,26 +19,40 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             <div class="col-lg-5 text-right">
                 <ul class="header-dropdown">
                     <li class="onhover-dropdown change-language">
-                        <a href="#"><img src="{{asset('front-assets/images/icon/translation.png')}}" class="img-fluid" alt="">  </a>
+                        <a href="javascript:void(0)">{{session()->get('locale')}} 
+                            <img src="{{asset('front-assets/images/icon/translation.png')}}" class="img-fluid">
+                        </a>
                         <ul class="onhover-show-div">
                             @foreach($languageList as $key => $listl)
-                            <li><a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a></li>
+                            <li class="{{session()->get('locale') ==  $listl->language->sort_code ?  'active' : ''}}">
+                                <a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a>
+                            </li>
                             @endforeach
                         </ul>
                     </li>
                     <li class="onhover-dropdown change-currency">
-                        <a href="#"><img src="{{asset('front-assets/images/icon/exchange.png')}}" class="img-fluid" alt="">  </a>
+                        <a href="javascript:void(0)">{{session()->get('iso_code')}}
+                            <img src="{{asset('front-assets/images/icon/exchange.png')}}" class="img-fluid">
+                        </a>
                         <ul class="onhover-show-div">
                             @foreach($currencyList as $key => $listc)
-                            <li><a href="javascript:void(0)" currId="{{$listc->currency_id}}" class="customerCurr" currSymbol="{{$listc->currency->symbol}}">{{$listc->currency->iso_code}}</a></li>
+                            <li class="{{session()->get('iso_code') ==  $listc->currency->iso_code ?  'active' : ''}}">
+                                <a href="javascript:void(0)" currId="{{$listc->currency_id}}" class="customerCurr" currSymbol="{{$listc->currency->symbol}}">
+                                    {{$listc->currency->iso_code}}
+                                </a>
+                            </li>
                             @endforeach
                         </ul>
                     </li>
-                    <li class="onhover-dropdown mobile-account"> <i class="fa fa-user" aria-hidden="true"></i>
-                        Account
+                    <li class="onhover-dropdown mobile-account">
+                        <i class="fa fa-user" aria-hidden="true"></i>Account
                         <ul class="onhover-show-div">
-                            <li><a href="{{route('customer.login')}}" data-lng="en">Login</a></li>
-                            <li><a href="{{route('customer.register')}}" data-lng="es">Register</a></li>
+                            <li>
+                                <a href="{{route('customer.login')}}" data-lng="en">Login</a>
+                            </li>
+                            <li>
+                                <a href="{{route('customer.register')}}" data-lng="es">Register</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

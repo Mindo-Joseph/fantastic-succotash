@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
               LuxuryOptionsSeeder::class,
               OrderStatusSeeder::class,
               OrderStatusSeeder::class,
+              VendorProductTempleteSeeder::class,
               DispatcherStatusOptionSeeder::class,
               SubscriptionFeaturesListUserSeeder::class,
               SubscriptionFeaturesListVendorSeeder::class,

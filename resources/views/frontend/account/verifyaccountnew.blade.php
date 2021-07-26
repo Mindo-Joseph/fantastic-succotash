@@ -23,13 +23,13 @@
     <div class="container">
         <script type="text/template" id="email_verified_template">
             <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
-            <h3 class="mb-2">Email Address Verified!</h3>
-            <p>You have successfully verified the <br> email account.</p>
+            <h3 class="mb-2">{{__('Email Address Verified!')}}</h3>
+            <p>{{__('You have successfully verified the')}} <br> {{__('email account.')}}</p>
         </script>
         <script type="text/template" id="phone_verified_template">
             <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
             <h3 class="mb-2">Phone Verified!</h3>
-            <p>You have successfully verified the <br> Phone.</p>
+            <p>{{__('You have successfully verified the')}} <br> {{__('Phone.')}}</p>
         </script>
         <div class="row">
             @if($preference->verify_email == 1)
@@ -71,8 +71,8 @@
                         </div>
                     @else
                         <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
-                        <h3 class="mb-2">Email Address Verified!</h3>
-                        <p>{{__('You have successfully verified the')}} <br> email account.</p>
+                        <h3 class="mb-2">{{__('Email Address Verified!')}}</h3>
+                        <p>{{__('You have successfully verified the')}} <br> {{__('email account.')}}</p>
                     @endif
                 </div>
             @endif
@@ -80,8 +80,8 @@
             <div class="col-lg-6 text-center {{$user->verify_phone == 1 && $preference->is_phone_verified == 0 ? '' : 'offset-lg-0'}}" id="verify_phone_main_div">
                 @if($user->is_phone_verified == 0)
                 <img src="{{asset('front-assets/images/phone-otp.svg')}}">
-                <h3 class="mb-2">Verify Phone</h3>
-                <p>Enter the code we just sent you on your email address</p>
+                <h3 class="mb-2">{{__('Verify Phone')}}</h3>
+                <p>{{__('Enter the code we just sent you on your email address')}}</p>
                 <div class="row mt-3">
                     <div class="offset-xl-3 col-xl-6 text-left">
                         <div class="verify_id input-group mb-3 radius-flag">
@@ -116,7 +116,7 @@
                     @else
                     <img src="{{asset('front-assets/images/verified.svg')}}" alt="">
                     <h3 class="mb-2">{{__('Phone Verified!')}}</h3>
-                    <p>{{__('You have successfully verified the')}} <br> Phone.</p>
+                    <p>{{__('You have successfully verified the')}} <br> {{__('Phone.')}}</p>
                     @endif
                 </div>
                 @endif
@@ -128,6 +128,10 @@
 @section('script')
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
 <script>
+    var edit_text = "{{__('Edit')}}";
+    var resend_text = "{{__('RESEND')}}";
+    var sending_text = "{{__('SENDING...')}}";
+    var save_and_send = "{!! __('Save & Send.') !!}";
     var input = document.querySelector("#phone_number");
     window.intlTelInput(input, {
         separateDialCode: true,
@@ -163,21 +167,21 @@
     });
     var ajaxCall = 'ToCancelPrevReq';
     $('#edit_email').click(function() {
-        if ($(this).text() == "Edit"){
-            $(this).text("Save & Send")
+        if ($(this).text() == edit_text){
+            $(this).text(save_and_send)
             $('#email').focus();
         }else{
-           $(this).text("Edit");
+           $(this).text(edit_text);
            verifyUser('email');
         }
         $('#email').prop('disabled', function(i, v) { return !v; });
     });
     $('#edit_phone').click(function() {
         if ($(this).text() == "Edit"){
-            $(this).text("Save & Send")
+            $(this).text(save_and_send)
             $('#phone_number').focus();
         }else{
-           $(this).text("Edit");
+           $(this).text(edit_text);
            verifyUser('phone');
         }
         $('#phone_number').prop('disabled', function(i, v) { return !v; });
@@ -189,16 +193,17 @@
         verifyUser('phone');
     });
     function verifyUser($type = 'email') {
+        $(".invalid_email_otp_error").html('');
         if($type == 'email'){
             var email = $('#email').val();
             var phone = $('#phone_number').val();
             var dial_code = $('#dial_code').val();
-            $('.verifyEmail').addClass('disabled').html('SENDING...');
+            $('.verifyEmail').addClass('disabled').html(sending_text);
         }else if ($type == 'phone') {
             var email = $('#email').val();
             var phone = $('#phone_number').val();
             var dial_code = $('#dial_code').val();
-            $('.verifyPhone').addClass('disabled').html('SENDING...');
+            $('.verifyPhone').addClass('disabled').html(sending_text);
         }
         ajaxCall = $.ajax({
             type: "post",
@@ -207,9 +212,9 @@
             data: {"_token": "{{ csrf_token() }}",type: $type,phone:phone,email:email, dial_code:dial_code},
             success: function(response) {
                 if($type == 'email'){
-                    $('.verifyEmail').removeClass('disabled').html('RESEND');
+                    $('.verifyEmail').removeClass('disabled').html(resend_text);
                 }else{
-                    $('.verifyPhone').removeClass('disabled').html('RESEND');
+                    $('.verifyPhone').removeClass('disabled').html(resend_text);
                 }
                 if($type == 'email'){
                     $('.edit_email_feedback').html(response.message);

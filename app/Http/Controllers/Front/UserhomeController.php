@@ -114,7 +114,7 @@ class UserhomeController extends FrontController{
         }
         Session::forget('type');
         Session::put('type', $request->type);
-        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where($request->type, 1)->where('status', 1);
+        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where($request->type, 1);
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                 $selectedAddress = $preferences->Default_location_name;
@@ -289,8 +289,10 @@ class UserhomeController extends FrontController{
         if($request->has('type') && $request->type == 'currency'){
             $clientCurrency = ClientCurrency::where('currency_id', $request->value1)->first();
             if($clientCurrency){
-                Session::put('customerCurrency', $request->value1);
+                $currency_detail = Currency::where('id', $request->value1)->first();
                 Session::put('currencySymbol', $request->value2);
+                Session::put('customerCurrency', $request->value1);
+                Session::put('iso_code', $currency_detail->iso_code);
                 Session::put('currencyMultiplier', $clientCurrency->doller_compare);
             }
         }

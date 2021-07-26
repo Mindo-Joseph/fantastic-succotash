@@ -3,6 +3,7 @@
     $now = \Carbon\Carbon::now()->toDateString();
     $after7days = \Carbon\Carbon::now()->addDays(7)->toDateString();
 @endphp
+@if((isset($client_preferences['subscription_mode'])) && ($client_preferences['subscription_mode'] == 1))
 <div class="row mb-4">
     <div class="col-12 mb-4">
         @if(!empty($subscription))
@@ -86,7 +87,7 @@
                     <div class="p-2">
                         <h3 class="heading mt-0 mb-2"><b>{{ $plan->title }}</b></h3>
                         <div class="pricing-content">
-                            <p class="mb-0">{{ $plan->description }}</p>
+                            <p>{{ $plan->description }}</p>
                         </div>
                         <ul class="mb-3 pl-1" style="list-style:none">
                             @foreach($plan->features as $feature)
@@ -225,3 +226,4 @@
         <% }); %>
     <% } %>
 </script>
+@endif

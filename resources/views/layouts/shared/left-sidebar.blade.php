@@ -64,6 +64,9 @@
             }
             ?>
             <ul id="side-menu">
+                @php
+                    $client_preference = \App\Models\ClientPreference::where(['id' => 1])->first();
+                @endphp
                  @if(count(array_intersect($order_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                 <li>
                     <a class="menu-title pl-1" href="#">
@@ -134,26 +137,28 @@
                             @endif
                             @if(Auth::user()->is_superadmin == 1)
                             {{-- @if(count(array_intersect($subscription_permissions, $allowed)) || Auth::user()->is_superadmin == 1) --}}
-                            <li>
-                                <a href="#sidebarsubscriptions" data-toggle="collapse">
-                                    <span class="icon-subscribe"></span>
-                                    <span> Subscriptions </span>
-                                </a>
-                                <div class="collapse" id="sidebarsubscriptions">
-                                    <ul class="nav-second-level">
-                                        @if(in_array('subscription_plans_customers',$allowed) || Auth::user()->is_superadmin == 1)
-                                            <li>
-                                                <a href="{{route('subscription.plans.user')}}">Customers</a>
-                                            </li>
-                                        @endif
-                                        @if(in_array('subscription_plans_vendors',$allowed) || Auth::user()->is_superadmin == 1)
-                                            <li>
-                                                <a href="{{route('subscription.plans.vendor')}}">{{getNomenclatureName('Vendors', true)}}</a>
-                                            </li>
-                                        @endif
-                                    </ul>
-                                </div>
-                            </li>
+                                @if($client_preference->subscription_mode == 1)
+                                    <li>
+                                        <a href="#sidebarsubscriptions" data-toggle="collapse">
+                                            <span class="icon-subscribe"></span>
+                                            <span> Subscriptions </span>
+                                        </a>
+                                        <div class="collapse" id="sidebarsubscriptions">
+                                            <ul class="nav-second-level">
+                                                @if(in_array('subscription_plans_customers',$allowed) || Auth::user()->is_superadmin == 1)
+                                                    <li>
+                                                        <a href="{{route('subscription.plans.user')}}">Customers</a>
+                                                    </li>
+                                                @endif
+                                                @if(in_array('subscription_plans_vendors',$allowed) || Auth::user()->is_superadmin == 1)
+                                                    <li>
+                                                        <a href="{{route('subscription.plans.vendor')}}">{{getNomenclatureName('Vendors', true)}}</a>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    </li>
+                                @endif
                             @endif
                             {{-- @if(in_array('customers',$allowed) || Auth::user()->is_superadmin == 1) --}}
                             @if(Auth::user()->is_superadmin == 1)
@@ -303,9 +308,7 @@
                     </ul>
                 </li>
                 @endif
-                @php
-                    $client_preference = \App\Models\ClientPreference::where(['id' => 1])->first();
-                @endphp
+                
                 @if(count(array_intersect($extra_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                     @if($client_preference->celebrity_check == 1 || $client_preference->enquire_mode == 1)
                         <li>

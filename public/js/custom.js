@@ -282,12 +282,16 @@ $(document).ready(function() {
 
     function paymentViaStripe(stripe_token, address_id, payment_option_id){
         let total_amount = 0;
+        let tip = 0;
         let cartElement = $("input[name='cart_total_payable_amount']");
         let walletElement = $("input[name='wallet_amount']");
         let subscriptionElement = $("input[name='subscription_amount']");
+        let tipElement = $("#cart_tip_amount");
         let ajaxData = [];
         if(cartElement.length > 0){
             total_amount = cartElement.val();
+            tip = tipElement.val();
+            ajaxData.push({name: 'tip', value: tip});
         }
         else if(walletElement.length > 0){
             total_amount = walletElement.val();
@@ -309,7 +313,7 @@ $(document).ready(function() {
             success: function (resp) {
                 if(resp.status == 'Success'){
                     if(path.indexOf("cart") !== -1){
-                        placeOrder(address_id, payment_option_id, resp.data.id);
+                        placeOrder(address_id, payment_option_id, resp.data.id, tip);
                     }
                     else if(path.indexOf("wallet") !== -1){
                         creditWallet(total_amount, payment_option_id, resp.data.id);
@@ -441,12 +445,12 @@ $(document).ready(function() {
             }
         });
     }
-    function placeOrder(address_id, payment_option_id, transaction_id){
+    function placeOrder(address_id, payment_option_id, transaction_id, tip = 0){
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: place_order_url,
-            data: {address_id:address_id, payment_option_id:payment_option_id, transaction_id:transaction_id},
+            data: {address_id:address_id, payment_option_id:payment_option_id, transaction_id:transaction_id, tip : tip},
             success: function(response) {
                 if (response.status == "Success") {
                     window.location.href = base_url+'/order/success/'+response.data.order.id;
@@ -710,6 +714,7 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.status == "success") {
                     $("#cart_table").html('');
+                    $(".spinner-box").hide();
                     var cart_details = response.cart_details;
                     if(response.cart_details.length != 0){
                         if(response.cart_details.products.length != 0){
@@ -760,6 +765,40 @@ $(document).ready(function() {
             }
         });
     }
+    $(document).on('change', '.tip_radio_controls .tip_radio', function(){
+        var tip = $(this).val();
+        var amount_elem = $("#cart_payable_amount_original");
+        var amount_payable = amount_elem.val();
+        if(tip != 'custom'){
+            if( (tip == '') || (isNaN(tip)) ){
+                tip = 0;
+            }
+            amount_payable = parseFloat(amount_payable) + parseFloat(tip);
+            $("#cart_tip_amount").val(parseFloat(tip).toFixed(2));
+            $("#cart_total_payable_amount").html('$' + parseFloat(amount_payable).toFixed(2));
+            $(".custom_tip").addClass("d-none");
+            $("#custom_tip_amount").val('');
+        }
+        else{
+            $("#cart_total_payable_amount").text('$'+ parseFloat(amount_payable).toFixed(2));
+            $("#cart_tip_amount").val(0);
+            $(".custom_tip").removeClass("d-none");
+            $("#custom_tip_amount").focus();
+        }
+        $("input[name='cart_total_payable_amount']").val(parseFloat(amount_payable).toFixed(2));
+    });
+    $(document).on('keyup', '#custom_tip_amount', function(){
+        var tip = $(this).val();
+        if( (tip == '') || (isNaN(tip)) ){
+            tip = 0;
+        }
+        var amount_elem = $("#cart_payable_amount_original");
+        var amount_payable = amount_elem.val();
+        amount_payable = parseFloat(amount_payable) + parseFloat(tip);
+        $("#cart_tip_amount").val(parseFloat(tip).toFixed(2));
+        $("#cart_total_payable_amount").html('$' + parseFloat(amount_payable).toFixed(2));
+        $("input[name='cart_total_payable_amount']").val(parseFloat(amount_payable).toFixed(2));
+    });
     $(document).on('click', '.qty-minus', function() {
         let base_price = $(this).data('base_price');
         let cartproduct_id = $(this).attr("data-id");

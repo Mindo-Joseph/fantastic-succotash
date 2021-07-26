@@ -1,130 +1,110 @@
 @php
 $clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
-
 $urlImg =  $clientData ? $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'] : " ";
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
 <header class="site-header">
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
-            
-            <div class="navbar-collapse main-menu">
-                <div class="d-flex mr-auto">
-                    @if($mod_count > 1)
-                        <ul class="nav nav-tabs navigation-tab mr-3 nav-material tab-icons" id="top-tab" role="tablist">
-                            @if($client_preference_detail->delivery_check == 1)
-                            <li class="navigation-tab-item" role="presentation">
-                                <a class="nav-link {{$mod_count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
-                            </li>
-                            @endif
-                            @if($client_preference_detail->dinein_check == 1)
-                            <li class="navigation-tab-item" role="presentation">
-                                <a class="nav-link {{$client_preference_detail->dinein_check == 1 && $client_preference_detail->delivery_check != 1? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-controls="dinein_tab" aria-selected="false">{{ __('Dine-In') }}</a>
-                            </li>
-                            @endif
-                            @if($client_preference_detail->takeaway_check == 1)
-                            <li class="navigation-tab-item" role="presentation">
-                                <a class="nav-link {{$mod_count == 1 ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ __('Takeaway') }}</a>
-                            </li>                   
-                            @endif    
-                            <div class="navigation-tab-overlay"></div>
-                        </ul>
-                    @endif   
-                    @if( (Session::get('preferences')))
-                        @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
-                            <div class="location-bar d-flex align-items-center justify-content-start pl-3 dropdown-toggle" href="#edit-address" data-toggle="modal">
-                                <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-                                <div class="homepage-address text-left">
-                                    <h2><span data-placement="top" data-toggle="tooltip" title="{{session('selectedAddress')}}">{{session('selectedAddress')}}</span></h2>
-                                </div>
-                                <div class="down-icon">
-                                    <i class="fa fa-angle-down" aria-hidden="true"></i>
-                                </div>
-                            </div>
-                        @endif
-                    @endif
+        <div class="container main-menu d-block">
+            <div class="row align-items-center py-2">
+                <div class="col-lg-1 col-2">
+                    <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                 </div>
-                <div class="search_bar menu-right d-flex align-items-center justify-content-end">
-                    <div class="radius-bar">
-                        <form class="search_form d-flex align-items-center justify-content-between" action="">
-                            <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
-                            <input class="form-control border-0" type="text" placeholder="Search">
-                        </form>
-                    </div>
-                    <div class="icon-nav">
-                        <form name="filterData" id="filterData" action="{{route('changePrimaryData')}}">
-                            @csrf
-                            <input type="hidden" id="cliLang" name="cliLang" value="{{session('customerLanguage')}}">
-                            <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
-                        </form>
-                        <ul>
-                            <!-- <li class="search_btn">
-                                <img src="{{asset('front-assets/images/icon/search.svg')}}" class="img-fluid blur-up lazyload" alt="">
-                            </li> -->
-                            <?php /* ?><li class="onhover-div mobile-setting">
-                                <div><img src="{{asset('front-assets/images/icon/setting.svg')}}" class="img-fluid blur-up lazyload" alt=""> <i class="ti-settings"></i></div>
-                                <div class="show-div setting">
-                                    <h6>language</h6>
-                                    <ul>
-                                        @foreach($languageList as $key => $listl)
-                                        <li><a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a></li>
-                                        @endforeach
-                                    </ul>
-                                    <h6>currency</h6>
-                                    <ul class="list-inline">
-                                        @foreach($currencyList as $key => $listc)
-                                        <li><a href="javascript:void(0)" currId="{{$listc->currency_id}}" class="customerCurr" currSymbol="{{$listc->currency->symbol}}">{{$listc->currency->iso_code}}</a></li>
-                                        @endforeach
-                                    </ul>
+                <div class="col-lg-6 main-menu d-block order-lg-1 order-2">
+                    <div class="d-md-flex mr-auto">  
+                        @if( (Session::get('preferences')))
+                            @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
+                                <div class="location-bar d-flex align-items-center justify-content-start ml-md-2 my-2 my-lg-0 dropdown-toggle order-1" href="#edit-address" data-toggle="modal">
+                                    <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                    <div class="homepage-address text-left">
+                                        <h2><span data-placement="top" data-toggle="tooltip" title="{{session('selectedAddress')}}">{{session('selectedAddress')}}</span></h2>
+                                    </div>
+                                    <div class="down-icon">
+                                        <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                    </div>
                                 </div>
-                            </li><?php */ ?>
-                            <li class="onhover-div">
-                                @if($client_preference_detail)
-                                    @if($client_preference_detail->cart_enable == 1)
-                                        <a href="{{route('showCart')}}">
-                                            <img src="{{asset('front-assets/images/icon/cart_.png')}}" class="img-fluid blur-up lazyload" alt=""> 
-                                        </a>
-                                        <span class="cart_qty_cls" style="display:none;" id="cart_qty_span"></span>
-                                    @endif
+                            @endif
+                        @endif
+                        @if($mod_count > 1)
+                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mt-3 mt-md-0" id="top-tab" role="tablist">
+                                @if($client_preference_detail->delivery_check == 1)
+                                <li class="navigation-tab-item" role="presentation">
+                                    <a class="nav-link {{$mod_count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
+                                </li>
                                 @endif
-                                <script type="text/template" id="header_cart_template">
-                                    <% _.each(cart_details.products, function(product, key){%>
-                                    <% _.each(product.vendor_products, function(vendor_product, vp){%>
-                                        <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
-                                            <a class='media' href='#'>
-                                                <% if(vendor_product.pvariant.media_one) { %>
-                                                    <img class='mr-2' src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.image.path.image_path %>">
-                                                <% } %>
-                                                <div class='media-body'>                                                                
-                                                    <h4><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>
-                                                    <h4>
-                                                        <span><%= vendor_product.quantity %> x <%= vendor_product.pvariant.price %></span>
-                                                    </h4>
-                                                </div>
+                                @if($client_preference_detail->dinein_check == 1)
+                                <li class="navigation-tab-item" role="presentation">
+                                    <a class="nav-link {{$client_preference_detail->dinein_check == 1 && $client_preference_detail->delivery_check != 1? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-controls="dinein_tab" aria-selected="false">{{ __('Dine-In') }}</a>
+                                </li>
+                                @endif
+                                @if($client_preference_detail->takeaway_check == 1)
+                                <li class="navigation-tab-item" role="presentation">
+                                    <a class="nav-link {{$mod_count == 1 ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ __('Takeaway') }}</a>
+                                </li>                   
+                                @endif    
+                                <div class="navigation-tab-overlay"></div>
+                            </ul>
+                        @endif 
+                    </div>
+                </div>
+                <div class="col-lg-5 col-10 order-lg-2 order-1">                
+                    <div class="search_bar menu-right d-flex align-items-center justify-content-between w-100 ">
+                        <div class="radius-bar">
+                            <form class="search_form d-flex align-items-center justify-content-between" action="">
+                                <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                <input class="form-control border-0" type="text" placeholder="Search">
+                            </form>
+                        </div>
+                        <div class="icon-nav">
+                            <form name="filterData" id="filterData" action="{{route('changePrimaryData')}}">
+                                @csrf
+                                <input type="hidden" id="cliLang" name="cliLang" value="{{session('customerLanguage')}}">
+                                <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
+                            </form>
+                            <ul>
+                                <li class="onhover-div pl-0">
+                                    @if($client_preference_detail)
+                                        @if($client_preference_detail->cart_enable == 1)
+                                            <a class="btn btn-solid" href="{{route('showCart')}}">
+                                                <i class="fa fa-shopping-cart mr-1 " aria-hidden="true"></i> <span>{{__('Cart')}} •</span> <span id="cart_qty_span"></span> 
                                             </a>
-                                            <div class='close-circle'>
-                                                <a href="javascript::void(0);" data-product="<%= vendor_product.id %>" class='remove-product'>
-                                                    <i class='fa fa-times' aria-hidden='true'></i>
+                                        @endif
+                                    @endif
+                                    <script type="text/template" id="header_cart_template">
+                                        <% _.each(cart_details.products, function(product, key){%>
+                                        <% _.each(product.vendor_products, function(vendor_product, vp){%>
+                                            <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
+                                                <a class='media' href='#'>
+                                                    <% if(vendor_product.pvariant.media_one) { %>
+                                                        <img class='mr-2' src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.image.path.image_path %>">
+                                                    <% } %>
+                                                    <div class='media-body'>                                                                
+                                                        <h4><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>
+                                                        <h4>
+                                                            <span><%= vendor_product.quantity %> x <%= vendor_product.pvariant.price %></span>
+                                                        </h4>
+                                                    </div>
                                                 </a>
-                                            </div>
-                                        </li>
-                                    <% }); %>
-                                    <% }); %>
-                                    <li><div class='total'><h5>{{__('Subtotal')}} : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
-                                    <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('Viewcart')}}</a>
-                                </script>
-                                <ul class="show-div shopping-cart" id="header_cart_main_ul">
-
-                                </ul>
-                            </li>
-                        </ul>
+                                                <div class='close-circle'>
+                                                    <a href="javascript::void(0);" data-product="<%= vendor_product.id %>" class='remove-product'>
+                                                        <i class='fa fa-times' aria-hidden='true'></i>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        <% }); %>
+                                        <% }); %>
+                                        <li><div class='total'><h5>{{__('Subtotal')}} : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
+                                        <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('Viewcart')}}</a>
+                                    </script>
+                                    <ul class="show-div shopping-cart" id="header_cart_main_ul"></ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </nav>
+
     @if(count($navCategories) > 0)
         <div class="menu-navigation">
             <div class="container">
@@ -132,7 +112,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="col-12">
                         <ul id="main-menu" class="sm pixelstrap sm-horizontal">
                             <li>
-                                <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
+                                <div class="mobile-back text-end">{{__('Back')}}<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
                             </li>
                             @foreach($navCategories as $cate)
                                 @if($cate['name'])

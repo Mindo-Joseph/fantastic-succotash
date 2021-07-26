@@ -18,6 +18,21 @@ use App\Models\{User, UserAddress, ClientPreference, Client, SubscriptionPlansUs
 class UserSubscriptionController extends FrontController
 {
     use ApiResponser;
+
+    /**
+     * Handle the incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function __construct(request $request)
+    {
+        $preferences = ClientPreference::where(['id' => 1])->first();
+        if((isset($preferences->subscription_mode)) && ($preferences->subscription_mode == 0)){
+            abort(404);
+        }
+    }
+
     /**
      * get user subscriptions.
      *
@@ -67,7 +82,7 @@ class UserSubscriptionController extends FrontController
             $subFeaturesList = '<ul>';
             if($sub_plan->features->isNotEmpty()){
                 foreach($sub_plan->features as $feature){
-                    $subFeaturesList = $subFeaturesList.'<li><i class="fa fa-check">'.$feature->feature->title.'</li>';
+                    $subFeaturesList = $subFeaturesList.'<li><i class="fa fa-check"></i><span class="ml-1">'.$feature->feature->title.'</span></li>';
                 }
                 unset($sub_plan->features);
             }

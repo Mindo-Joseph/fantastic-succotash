@@ -6983,7 +6983,7 @@ header {
         margin-top: 5px; }
       .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:last-child a{
         margin-bottom: 5px; }
-      .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:hover a,.category-list li:hover a {
+      .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:hover a,.category-list li:hover a,.category-list li.active a {
         border-color: var(--theme-deafult);
         background: linear-gradient(90deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
       }

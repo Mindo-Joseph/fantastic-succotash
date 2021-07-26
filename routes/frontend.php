@@ -16,7 +16,7 @@ Route::group(['middleware' => ['domain']], function () {
 		dd('send mail successfully !!');
 	});
 	Route::post('payment/stripe', 'Front\StripeGatewayController@postPaymentViaStripe')->name('payment.stripe');
-	Route::post('subscription/payment/stripe', 'Front\StripeGatewayController@subscriptionPaymentViaStripe')->name('subscription.payment.stripe');
+	Route::post('user/subscription/payment/stripe', 'Front\StripeGatewayController@subscriptionPaymentViaStripe')->name('user.subscription.payment.stripe');
 	Route::post('payment/paypal', 'Front\PaypalGatewayController@paypalPurchase')->name('payment.paypalPurchase');
 	Route::get('payment/paypal/CompletePurchase', 'Front\PaypalGatewayController@paypalCompletePurchase')->name('payment.paypalCompletePurchase');
 
@@ -36,7 +36,7 @@ Route::group(['middleware' => ['domain']], function () {
 	]);
 	Route::get('user/forgotPassword', [
 		'as' => 'customer.forgotPassword',
-		'uses' => 'Front\CustomerAuthController@forgotPasswordForm'
+		'uses' => 'Front\ForgotPasswordController@getForgotPasswordForm'
 	]);
 	Route::get('user/resetPassword', [
 		'as' => 'customer.resetPassword',
@@ -53,8 +53,11 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('user/loginData','Front\CustomerAuthController@login')->name('customer.loginData');
 	Route::post('user/register','Front\CustomerAuthController@register')->name('customer.register');
 	Route::post('vendor/register','Front\CustomerAuthController@postVendorregister')->name('vendor.register');
-	Route::post('user/forgotPassword','Front\CustomerAuthController@forgotPassword')->name('customer.forgotPass');
+	Route::post('user/forgotPassword','Front\ForgotPasswordController@postForgotPassword')->name('customer.forgotPass');
 	Route::post('user/resetPassword','Front\CustomerAuthController@resetPassword')->name('customer.resetPass');
+	Route::get('reset-password/{token}', 'Front\ForgotPasswordController@getResetPasswordForm');
+	Route::post('reset-password', 'Front\ForgotPasswordController@postUpdateResetPassword')->name('reset-password');
+
 	Route::post('primaryData', 'Front\UserhomeController@changePrimaryData')->name('changePrimaryData');
 	Route::post('paginateValue', 'Front\UserhomeController@changePaginate')->name('changePaginate');
 	Route::get('/product/{id?}','Front\ProductController@index')->name('productDetail');

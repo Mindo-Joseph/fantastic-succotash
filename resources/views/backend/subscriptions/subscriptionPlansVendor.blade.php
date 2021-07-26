@@ -104,6 +104,12 @@
                             <div class="material-border"></div>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="approved-subscriptions" data-toggle="tab" href="#approved_subscriptions" role="tab" aria-selected="false" data-rel="approved_subscriptions_datatable" data-status="2">
+                                <i class="icofont icofont-man-in-glasses"></i>Approved<sup class="total-items">({{ $approved_subscriptions_count }})</sup>
+                            </a>
+                            <div class="material-border"></div>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="rejected-subscriptions" data-toggle="tab" href="#rejected_subscriptions" role="tab" aria-selected="false" data-rel="rejected_subscriptions_datatable" data-status="4">
                                 <i class="icofont icofont-man-in-glasses"></i>Rejected<sup class="total-items">({{ $rejected_subscriptions_count }})</sup>
                             </a>
@@ -175,6 +181,31 @@
                                         <div class="card-body">
                                             <div class="table-responsive">
                                                 <table class="table table-centered table-nowrap table-striped" id="awaiting_approval_subscriptions_datatable" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Vendor Name</th>
+                                                            <th>Plan</th>
+                                                            <th>Price</th>
+                                                            <th>Features</th>
+                                                            <th>Frequency</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="approved_subscriptions" role="tabpanel" aria-labelledby="approved-subscriptions">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-centered table-nowrap table-striped" id="approved_subscriptions_datatable" width="100%">
                                                     <thead>
                                                         <tr>
                                                             <th>Vendor Name</th>
@@ -274,7 +305,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Features</label>
                                         <select class="form-control select2-multiple" name="features[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ..." required="required">
@@ -284,14 +315,14 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Price</label>
                                         <input class="form-control" type="number" name="price" min="0" required="required">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Frequency</label>
@@ -301,6 +332,12 @@
                                             <option value="monthly">Monthly</option>
                                             <option value="yearly">Yearly</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="">Sort Order</label>
+                                        <input class="form-control" type="number" name="sort_order" min="1" value="" required="required">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -343,12 +380,12 @@
         <div class="modal-body">
             <h6 class="m-0">Choose an option for this subscription : </h6>
             <div class="radio pl-1 mt-2 radio-blue form-check-inline">
-                <input type="radio" name="subscription_status" id="radio-activate" value="activate" required>
-                <label for="radio-activate"> Activate </label>
+                <input type="radio" name="subscription_status" id="radio-approve" value="approve" required>
+                <label for="radio-approve"> Approve </label>
             </div>
             <div class="radio pl-1 mt-2 radio-blue form-check-inline">
                 <input type="radio" name="subscription_status" id="radio-reject" value="reject" required>
-                <label for="radio-reject"> Reject </label>
+                <label for="radio-reject"> Reject & Refund </label>
             </div>
         </div>
         <div class="modal-footer flex-nowrap justify-content-center align-items-center">
@@ -475,7 +512,7 @@
                 {data: 'frequency', name: 'frequency', class:'text-center', orderable: false, searchable: false},
                 {data: 'sub_status', name: 'sub_status', orderable: false, searchable: false, "mRender":function(data, type, full){
                     var status = "<span class='badge bg-soft-"+full.sub_status_class+" text-"+full.sub_status_class+"'>"+full.sub_status+"</span>";
-                    if(full.sub_status != 'Rejected'){
+                    if(full.sub_status == 'Pending'){
                         status = status + " | <a class='action-icon edit_pending_subscription' href='javascript:void(0)' data-subscription_invoice='"+full.slug+"'><i class='mdi mdi-square-edit-outline'></i></a>";
                     }
                     return status;

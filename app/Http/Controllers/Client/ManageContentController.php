@@ -125,15 +125,17 @@ class ManageContentController extends BaseController
     {
         try {
             DB::beginTransaction();
-            DB::statement("SET foreign_key_checks=0");
 
-            $filename = "backup-" . Carbon::now()->format('Y-m-d') . ".gz";
-            $command = "mysqldump --user=" . env('DB_USERNAME_SECOND') ." --password=" . env('DB_PASSWORD_SECOND') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE_SECOND') . "  | gzip > " . storage_path() . "/app/backup/" . $filename;
-            $returnVar = NULL;
-            $output  = NULL;
-            exec($command, $output, $returnVar);
+            // $filename = "backup-" . Carbon::now()->format('Y-m-d') . ".gz";
+            // $command = "mysqldump --user=" . env('DB_USERNAME_SECOND') ." --password=" . env('DB_PASSWORD_SECOND') . " --host=" . env('DB_HOST') . " " . env('DB_DATABASE_SECOND') . "  | gzip > " . storage_path() . "/app/backup/" . $filename;
+            // $returnVar = NULL;
+            // $output  = NULL;
+            // exec($command, $output, $returnVar);
 
-            DB::statement("SET foreign_key_checks=1");
+           
+            $path = url('public/data.sql');
+            DB::unprepared(file_get_contents($path));
+        
             DB::commit();
             return response()->json(['success' => 'Imported Successfully']);
         } catch (\PDOException $e) {

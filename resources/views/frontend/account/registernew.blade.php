@@ -96,8 +96,8 @@
                             </div>
                             <div class="row form-group mb-0 align-items-center">
                             <div class="col-12 checkbox-input">
-                                <input type="checkbox" id="html" name="html" required>
-                                    <label for="html">{{__('I accept the')}}<a href="{{url('extra-page/terms-conditions')}}" target="_blank">{{__('Terms And Conditions')}} </a> {{__('and have read the')}} <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> {{__('Privacy Policy')}}.</a></label>
+                                <input type="checkbox" id="html" name="term_and_condition">
+                                <label for="html">{{__('I accept the')}}<a href="{{url('extra-page/terms-conditions')}}" target="_blank">{{__('Terms And Conditions')}} </a> {{__('and have read the')}} <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> {{__('Privacy Policy')}}.</a></label>
                                 </div>
                                 <div class="col-md-6 hide position-absolute">
                                     <label for="">Referral Code</label>

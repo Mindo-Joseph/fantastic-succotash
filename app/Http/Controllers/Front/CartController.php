@@ -484,6 +484,9 @@ class CartController extends FrontController
             $cart->total_payable_amount = number_format($total_payable_amount, 2);
             $cart->total_discount_amount = number_format($total_discount_amount, 2);
             $cart->total_taxable_amount = number_format($total_taxable_amount, 2);
+            $cart->tip_5_percent = number_format((0.05 * $total_payable_amount), 2);
+            $cart->tip_10_percent = number_format((0.1 * $total_payable_amount), 2);
+            $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2);
             $cart->products = $cartData->toArray();
         }
         return $cart;
