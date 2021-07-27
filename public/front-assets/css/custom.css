@@ -3507,6 +3507,10 @@ body[dir="rtl"] .pixelstrap ul a:hover,body[dir="rtl"] .top-header .header-dropd
     background: linear-gradient(280deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
 }
 
+body[dir="rtl"] .navigation-tab-item,body[dir="rtl"] .navigation-tab-overlay {
+    width: 130px;
+}
+
 body[dir="rtl"] ul,body[dir="rtl"] .navigation-tab,body[dir="rtl"] .main-menu .menu-right .icon-nav .onhover-div .show-div.shopping-cart li .media .media-body h4{
     padding: 0;
 }
