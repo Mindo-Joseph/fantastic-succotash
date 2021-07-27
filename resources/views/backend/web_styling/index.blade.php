@@ -74,7 +74,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-xl-2">
+    <!-- <div class="col-md-4 col-xl-2">
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title mb-2">Cart Toggle</h4>
@@ -93,7 +93,7 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>     -->
 </div>
 </form>
 
