@@ -74,9 +74,9 @@ class CategoryController extends BaseController
                     $vendor_ids[] = $vendor_category->vendor_id;
                }
             }
-            $vendorData = Vendor::select('id', 'name', 'banner', 'show_slot', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('status', '!=', $this->field_status)->whereIn('id', $vendor_ids)->with('slot', 'products')->paginate($limit);
-            $avgRating = $vendorData->products->avg('averageRating');
-            $vendorData->avgRating = $avgRating;
+            $vendorData = Vendor::select('id', 'name', 'banner', 'show_slot', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('status', '!=', $this->field_status)->whereIn('id', $vendor_ids)->with('slot')->paginate($limit);
+            // $avgRating = $vendorData->products->avg('averageRating');
+            // $vendorData->avgRating = $avgRating;
             foreach ($vendorData as $vendor) {
                 unset($vendor->products);
                 $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
@@ -90,9 +90,9 @@ class CategoryController extends BaseController
                     $vendor_ids[] = $vendor_category->vendor_id;
                }
             }
-            $vendorData = Vendor::select('id', 'name', 'banner', 'show_slot', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('status', '!=', $this->field_status)->whereIn('id', $vendor_ids)->with('slot', 'products')->paginate($limit);
-            $avgRating = $vendorData->products->avg('averageRating');
-            $vendorData->avgRating = $avgRating;
+            $vendorData = Vendor::select('id', 'name', 'banner', 'show_slot', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('status', '!=', $this->field_status)->whereIn('id', $vendor_ids)->with('slot')->paginate($limit);
+            // $avgRating = $vendorData->products->avg('averageRating');
+            // $vendorData->avgRating = $avgRating;
             foreach ($vendorData as $vendor) {
                 unset($vendor->products);
                 $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
