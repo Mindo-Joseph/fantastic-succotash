@@ -100,8 +100,7 @@ class ProfileController extends BaseController{
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function updateWishlist(Request $request, $pid = 0)
-    {
+    public function updateWishlist(Request $request, $pid = 0){
         $product = Product::where('id', $pid)->first();
         if(!$product){
             return response()->json(['error' => 'No record found.'], 404);
