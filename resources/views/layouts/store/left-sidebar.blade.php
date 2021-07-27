@@ -54,6 +54,208 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
                                 <input class="form-control border-0" type="text" placeholder="{{__('Search')}}">
                             </form>
+                            <div class="list-box">
+                        <div class="mb-4">
+                            <h4>Categories List</h4>
+                            <div class="table-responsive style-4">
+                                <div class="row flex-nowrap mx-0 mb-2">
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h4>Vendor List</h4>
+                            <div class="table-responsive style-4">
+                                <div class="row flex-nowrap mx-0 mb-2">
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h4>Product List</h4>
+                            <div class="table-responsive style-4">
+                                <div class="row flex-nowrap mx-0 mb-2">
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                    <div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div><div class="col-4 text-center list-items">
+                                        <img src="https://d4p17acsd5wyj.cloudfront.net/shortcuts/deals.png" alt="">
+                                        <span>Deal</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                         </div>
                         <div class="icon-nav">
                             <form name="filterData" id="filterData" action="{{route('changePrimaryData')}}">
