@@ -192,16 +192,23 @@ class ProductController extends BaseController
             }
         }
         $otherProducts = Product::with('primary')->select('id', 'sku')->where('is_live', 1)->where('id', '!=', $product->id)->get();
-        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode')->first();
+        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode','need_dispacher_home_other_service')->first();
         $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
         
         $agent_dispatcher_tags = [];
-        if(isset($product->category->categoryDetail) && $product->category->categoryDetail->type_id == 7 ) # if type is pickup delivery then get dispatcher tags
+        if(isset($product->category->categoryDetail) && $product->category->categoryDetail->type_id == 7) # if type is pickup delivery then get dispatcher tags
         {   
             $vendor_id = $product->vendor_id;
             $agent_dispatcher_tags = $this->getDispatcherTags($vendor_id);
         }
-        return view('backend/product/edit', ['agent_dispatcher_tags' => $agent_dispatcher_tags,'typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
+        if(isset($product->category->categoryDetail) && $product->category->categoryDetail->type_id == 2) # if type is on demand
+        {   
+            $vendor_id = $product->vendor_id;
+            $agent_dispatcher_on_demand_tags = $this->getDispatcherOnDemandTags($vendor_id);
+        }
+
+        
+        return view('backend/product/edit', ['agent_dispatcher_on_demand_tags' => $agent_dispatcher_on_demand_tags,'agent_dispatcher_tags' => $agent_dispatcher_tags,'typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
     }
 
     /**
@@ -248,7 +255,8 @@ class ProductController extends BaseController
         $product->sell_when_out_of_stock    = ($request->has('sell_stock_out') && $request->sell_stock_out == 'on') ? 1 : 0;
         $product->requires_shipping         = ($request->has('require_ship') && $request->require_ship == 'on') ? 1 : 0;
         $product->Requires_last_mile        = ($request->has('last_mile') && $request->last_mile == 'on') ? 1 : 0;
-
+        $product->need_price_from_dispatcher = ($request->has('need_price_from_dispatcher') && $request->need_price_from_dispatcher == 'on') ? 1 : 0;
+        
         if (empty($product->publish_at)) {
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
         }
@@ -745,6 +753,42 @@ class ProductController extends BaseController
     public function checkIfPickupDeliveryOn(){
         $preference = ClientPreference::first();
         if($preference->need_dispacher_ride == 1 && !empty($preference->pickup_delivery_service_key) && !empty($preference->pickup_delivery_service_key_code) && !empty($preference->pickup_delivery_service_key_url))
+            return $preference;
+        else
+            return false;
+    }
+
+
+      # get dispatcher on demand tags from dispatcher panel  
+      public function getDispatcherOnDemandTags($vendor_id){
+        try {   
+            $dispatch_domain = $this->checkIfOnDemandOn();
+                if ($dispatch_domain && $dispatch_domain != false) {
+
+                    $unique = Auth::user()->code;
+                    $email =  $unique.$vendor_id."_royodispatch@dispatch.com";
+
+                    $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,
+                                                        'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,
+                                                        'content-type' => 'application/json']
+                                                            ]);
+                            $url = $dispatch_domain->pickup_delivery_service_key_url;                      
+                            $res = $client->get($url.'/api/get-agent-tags?email_set='.$email);
+                            $response = json_decode($res->getBody(), true); 
+                            if($response && $response['message'] == 'success'){
+                                return $response['tags'];
+                            }
+                    
+                }
+            }    
+            catch(\Exception $e){
+            
+            }
+    }
+    # check if last mile delivery on 
+    public function checkIfOnDemandOn(){
+        $preference = ClientPreference::first();
+        if($preference->need_dispacher_home_other_service == 1 && !empty($preference->dispacher_home_other_service_key) && !empty($preference->dispacher_home_other_service_key_url) && !empty($preference->dispacher_home_other_service_key_code))
             return $preference;
         else
             return false;
