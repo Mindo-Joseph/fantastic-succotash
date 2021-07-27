@@ -119,7 +119,7 @@ class VendorController extends FrontController
                 }
                 $listData = $this->listData($langId, $vendor->id, $vendor->vendor_templete_id, $slug2);
         $page = ($vendor->vendor_templete_id == 2) ? 'categories' : 'products';
-        $range_products = [];
+        $range_products = Product::join('product_variants', 'product_variants.product_id', '=', 'products.id')->orderBy('product_variants.price', 'desc')->select('*')->where('is_live', 1)->where('vendor_id', $vendor->id)->get();
         return view('frontend/vendor-'.$page)->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands, 'range_products' => $range_products]);
     }
 
