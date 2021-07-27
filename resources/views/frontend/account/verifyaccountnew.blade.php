@@ -31,15 +31,15 @@
             <h3 class="mb-2">Phone Verified!</h3>
             <p>{{__('You have successfully verified the')}} <br> {{__('Phone.')}}</p>
         </script>
-        <div class="row">
+        <div class="row justify-content-center">
             @if($preference->verify_email == 1)
-                <div class="col-lg-6 mb-lg-0 mb-3 text-center  pb-4 {{$user->is_phone_verified == 0 && $preference->verify_phone == 1 ? 'border-right' : 'offset-lg-3'}}" id="verify_email_main_div">
+                <div class="col-lg-6 mb-lg-0 mb-3 text-center  pb-4 {{$user->is_phone_verified == 0 && $preference->verify_phone == 1 ? 'border-right' : 'offset-lg-0'}}" id="verify_email_main_div">
                     @if($user->is_email_verified == 0)
                         <img class="h-45" src="{{asset('front-assets/images/email_icon.svg')}}" alt="">
                         <h3 class="mb-2">{{__('Verify Email Address')}}</h3>
                         <p>{{__('Enter the code we just sent you on your email address')}}</p>
-                        <div class="row mt-3">
-                            <div class="offset-xl-3 col-xl-6 text-left">
+                        <div class="row mt-3  justify-content-center">
+                            <div class="col-xl-6 text-left">
                                 <div class="verify_id input-group mb-3">
                                     <input type="email" id="email" class="form-control" value="{{Auth::user()->email}}" disabled="">
                                     <div class="input-group-append">

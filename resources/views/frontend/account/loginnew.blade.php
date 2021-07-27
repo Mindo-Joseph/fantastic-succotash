@@ -42,7 +42,7 @@
                 </div>
                 @endif
                 @endif
-                <div class="row mt-3">
+                <div class="row mt-3 arabic-language">
                     <div class="offset-xl-2 col-xl-8 text-left">
                         <form name="login" id="login" action="{{route('customer.loginData')}}" class="px-lg-4" method="post"> 
                             @csrf

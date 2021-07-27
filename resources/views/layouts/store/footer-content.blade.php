@@ -6,8 +6,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
 <footer class="footer-light">
     <section class="section-b-space light-layout py-4">
         <div class="container">
-            <div class="row footer-theme partition-f align-items-center">
-                <div class="col-lg-2 col-md-6 mb-md-0 mb-3">
+            <div class="row footer-theme partition-f">
+                <div class="col-lg-2 col-md-6 mb-md-0 mb-3 d-flex align-items-center">
                     <div class="footer-logo mb-0">
                         <a href="{{ route('userHome') }}">
                             <img class="img-fluid blur-up lazyload" src="{{$urlImg}}">

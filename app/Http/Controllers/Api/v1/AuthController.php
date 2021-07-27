@@ -122,6 +122,7 @@ class AuthController extends BaseController{
      */
     public function signup(Request $signReq){
         $validator = Validator::make($signReq->all(), [
+            'dial_code'   => 'required|string',
             'device_type'   => 'required|string',
             'device_token'  => 'required|string',
             'country_code'  => 'required|string',
@@ -139,7 +140,7 @@ class AuthController extends BaseController{
         }
         $user = new User();
 
-        foreach ($signReq->only('name', 'email', 'phone_number', 'country_id') as $key => $value) {
+        foreach ($signReq->only('name', 'email', 'phone_number', 'country_id','dial_code') as $key => $value) {
             $user->{$key} = $value;
         }
         $country_detail = Country::where('code', $signReq->country_code)->first();

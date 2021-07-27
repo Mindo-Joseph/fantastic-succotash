@@ -81,8 +81,25 @@ class PickupDeliveryController extends BaseController{
                 }
             }
            
+              
+            $loyalty_amount_saved = 0;
+            $redeem_points_per_primary_currency = '';
+            $loyalty_card = LoyaltyCard::where('status', '0')->first();
+            if ($loyalty_card) {
+                $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
+            }
+            $loyalty_points_used;
+                $order_loyalty_points_earned_detail = Order::where('user_id', $userid)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
+                if ($order_loyalty_points_earned_detail) {
+                    $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
+                    if ($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0) {
+                        $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
+                    }
+                }
+           
             $response['vendor'] = $vendor;
             $response['products'] = $products;
+            $response['loyalty_amount_saved'] = $loyalty_amount_saved??0.00;
            // $response['filterData'] = $variantSets;
             return response()->json(['data' => $response]);
         } catch (Exception $e) {
@@ -462,7 +479,8 @@ class PickupDeliveryController extends BaseController{
                                                     'call_back_url' => $call_back_url??null,
                                                     'order_team_tag' => $team_tag,
                                                     'order_agent_tag' => $order_agent_tag,
-                                                    'task' => $request->tasks
+                                                    'task' => $request->tasks,
+                                                    'order_time_zone' => $request->order_time_zone??null
                                                     ];
 
                   

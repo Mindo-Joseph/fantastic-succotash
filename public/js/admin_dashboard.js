@@ -143,6 +143,8 @@ $(document).ready(function () {
     }
     function orderTopcatgory(labels, series){
         if(labels.length > 0 && series.length > 0){
+            $('#cardCollpase4').show();
+            $('#empty_card_collpase4').hide();
             var options = {
                 series: series,
                 labels: labels,
@@ -185,6 +187,9 @@ $(document).ready(function () {
             };
             var chart1 = new ApexCharts(document.querySelector("#apexchartsfwg700r2"), options);
             chart1.render();
+        }else{
+            $('#cardCollpase4').hide();
+            $('#empty_card_collpase4').show();
         }
     }
     function getUpdateSales(){

@@ -96,8 +96,8 @@ class ProfileController extends FrontController
             'phone_number' => 'required|numeric'
         ]);
         $messages = array(
-            'name.required' => 'Name field is required',
-            'phone_number.required' => 'Phone number field is required'
+            'name.required' => __('The name field is required'),
+            'phone_number.required' => __('Phone number field is required')
         );
         if ($validator->fails()) {
             foreach ($validator->errors()->toArray() as $error_key => $error_value) {
@@ -112,10 +112,10 @@ class ProfileController extends FrontController
                 $user->image = Storage::disk('s3')->put($this->folderName, $file,'public');
             }
             $user->name = $request->name;
-            $user->phone_number = $request->phone_number;
-            $user->dial_code = $request->dialCode;
             $user->timezone = $request->timezone;
+            $user->dial_code = $request->dialCode;
             $user->description = $request->description;
+            $user->phone_number = $request->phone_number;
             $user->save();
             return redirect()->back()->with('success', 'Profile has been updated');
         }
@@ -127,8 +127,7 @@ class ProfileController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function updateTimezone(Request $request, $domain = '')
-    {
+    public function updateTimezone(Request $request, $domain = ''){
         $timezone = $request->timezone ? $request->timezone : NULL;
         $user = User::where('id', Auth::user()->id)->first();
         if ($user){
