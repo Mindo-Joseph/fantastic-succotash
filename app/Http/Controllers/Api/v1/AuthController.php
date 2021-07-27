@@ -140,7 +140,7 @@ class AuthController extends BaseController{
         }
         $user = new User();
 
-        foreach ($signReq->only('name', 'email', 'phone_number', 'country_id') as $key => $value) {
+        foreach ($signReq->only('name', 'email', 'phone_number', 'country_id','dial_code') as $key => $value) {
             $user->{$key} = $value;
         }
         $country_detail = Country::where('code', $signReq->country_code)->first();
@@ -155,7 +155,6 @@ class AuthController extends BaseController{
         $user->is_phone_verified = 0;
         $user->phone_token = $phoneCode;
         $user->email_token = $emailCode;
-        $user->dial_code = $signReq->dial_code;
         $user->country_id = $country_detail->id;
         $user->phone_token_valid_till = $sendTime;
         $user->email_token_valid_till = $sendTime;
