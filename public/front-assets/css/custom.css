@@ -3431,8 +3431,16 @@ form .location-box .form-control::-webkit-input-placeholder,form .location-box .
     height: 80px;
 }
 
-.list-box h4,.list-box span {
+.list-box h4, .list-box span {
     font-weight: 600;
+    font-size: 12px;
+    display: block;
+    margin-top: 4px;
+}
+
+.list-items {
+    line-height: 16px;
+    display: block;
 }
 
 /*
