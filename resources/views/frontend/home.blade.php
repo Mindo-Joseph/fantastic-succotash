@@ -36,7 +36,7 @@
             </div>
             <div class="product-detail">
             @if($client_preference_detail)
-                @if($client_preference_detail->rating_check == 1)
+                {{--@if($client_preference_detail->rating_check == 1)
                     <div class="rating">
                         <i class="fa fa-star"></i>
                         <i class="fa fa-star"></i> 
@@ -44,7 +44,7 @@
                         <i class="fa fa-star"></i> 
                         <i class="fa fa-star"></i>
                     </div>
-                @endif
+                @endif--}}
             @endif
                 <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                     <h6><%= vendor.name %></h6>
@@ -83,9 +83,11 @@
                         @if($client_preference_detail)
                             @if($client_preference_detail->rating_check == 1)
                                 <div class="rating">
-                                    <% _.each([1,2,3,4,5], function(value, k){ %>
-                                        <i class="fa fa-star"></i>
-                                    <% }); %>
+                                    <% if(product.averageRating > 0) { %>
+                                        <% _.each([1,2,3,4,5], function(value, k){ %>
+                                            <i class="fa fa-star<%= (k+1 <= product.averageRating) ? ' filled' : '' %>"></i>
+                                        <% }); %>
+                                    <% } %>
                                 </div>
                             @endif
                         @endif

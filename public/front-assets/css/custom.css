@@ -1941,6 +1941,9 @@ div#test {
     font-size: 10px;
     padding: 0;
 }
+.rating i.fa.fa-star.filled {
+    color: gold;
+}
 
 .logo-block {
     width: 150px;
