@@ -5,6 +5,8 @@ $(document).ready(function() {
         }
     });
 
+  
+
     // Cabbooking Js Code 
         $('.add-more-location').click(function(){
             $(".location-inputs").append("<li class='d-block mb-3 dots apdots map-icon'><input class='form-control pickup-text' type='text' placeholder='Choose destination, or click on the map...' /><i class='fa fa-times ml-1 apremove' aria-hidden='true'></i></li>");

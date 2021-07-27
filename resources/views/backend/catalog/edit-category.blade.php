@@ -121,13 +121,13 @@
                                     <input type="radio" 
                                     value="{{$dispatcher_warning_page_option->id}}" id="dispatcher_warning_page_option_{{$dispatcher_warning_page_option->id}}" 
                                     name="warning_page_id" 
-                                    class="custom-control-input tab_bar_options" {{ ($category->warning_page_id == $dispatcher_warning_page_option->id) ? 'checked' : '' }}>
+                                    class="custom-control-input tab_bar_options radio-none" {{ ($category->warning_page_id == $dispatcher_warning_page_option->id) ? 'checked' : '' }}>
                                 @else
                                     <input {{$dwpo == 0 ? 'checked' : '' }} type="radio" 
                                     value="{{$dispatcher_warning_page_option->id}}" 
                                     id="dispatcher_warning_page_option_{{$dispatcher_warning_page_option->id}}" 
                                     name="warning_page_id" 
-                                    class="custom-control-input tab_bar_options">
+                                    class="custom-control-input tab_bar_options radio-none">
                                 @endif
                                 <label class="custom-control-label" for="dispatcher_warning_page_option_{{$dispatcher_warning_page_option->id}}">
                                     <img class="card-img-top img-fluid" src="{{asset('images/'.$dispatcher_warning_page_option->image_path)}}" alt="Card image cap">
@@ -249,3 +249,27 @@
         </div>    
     </div>
 </div>
+
+<script>
+    $(function(){
+        
+        var inputs = $('input.radio-none');
+        var checked = inputs.filter(':checked').val();
+        
+        inputs.on('click', function(){
+            
+            if($(this).val() === checked) {
+
+                $(this).prop('checked', false);
+
+                checked = '';
+                
+            } else {
+                $(this).prop('checked', true);
+                checked = $(this).val();
+                
+            }
+        });
+        
+    });
+</script>

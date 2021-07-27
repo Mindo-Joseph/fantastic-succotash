@@ -1,5 +1,5 @@
 <script>
-    $('.openAddModal').click(function(){
+$('.openAddModal').click(function(){
         $('#add-form').modal({
             //backdrop: 'static',
             keyboard: false
