@@ -142,6 +142,7 @@ class CategoryController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $domain = '', $id){
+        dd($request->all());
         $rules = array(
             'slug' => 'required|string|max:30|unique:categories,slug,'.$id,
             'name.0' => 'required|string|max:60',
@@ -194,7 +195,7 @@ class CategoryController extends BaseController{
         $cate->display_mode = $request->display_mode;
         $cate->warning_page_id = $request->warning_page_id;
         $cate->template_type_id = $request->template_type_id;
-        $cate->warning_page_design = $request->warning_page_design;
+        $cate->warning_page_design = $request->has('warning_page_design') ? $request->warning_page_design : 0;
         $cate->is_visible = ($request->has('is_visible') && $request->is_visible == 'on') ? 1 : 0;
         $cate->show_wishlist = ($request->has('show_wishlist') && $request->show_wishlist == 'on') ? 1 : 0;
         $cate->can_add_products = ($request->has('can_add_products') && $request->can_add_products == 'on' && ($request->type_id == 1 || $request->type_id == 3)) ? 1 : 0;

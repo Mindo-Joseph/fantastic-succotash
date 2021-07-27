@@ -383,7 +383,7 @@
                         </div>
                         <div class="col-sm-5 mb-2">
                             {!! Form::label('title', 'Table Number',['class' => 'control-label']) !!}
-                            {!! Form::text('table_number', '',['class' => 'form-control', 'placeholder' => 'Table Number', 'required'=>'required']) !!}
+                            {!! Form::text('table_number', '',['class' => 'form-control', 'id' => 'edit_table_number', 'placeholder' => 'Table Number', 'required'=>'required']) !!}
                         </div>
                         <div class="col-sm-3 mb-2">
                             {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
