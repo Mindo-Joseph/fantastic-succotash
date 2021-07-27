@@ -378,7 +378,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <label>Upload Category image</label>
-                            <input type="file" accept="image/*" data-default-file="" data-plugins="dropify" name="image" class="dropify" id="image"/>
+                            <input type="file" accept="image/*" data-default-file="" data-plugins="dropify" name="image" class="dropify" id="edit_table_image"/>
                             <label class="logo-size d-block text-right mt-1">Image Size 1026x200</label>
                         </div>
                         <div class="col-sm-5 mb-2">

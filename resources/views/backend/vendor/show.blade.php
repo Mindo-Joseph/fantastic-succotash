@@ -655,10 +655,10 @@
             },
             url: "{{ route('vendor_table_edit') }}",
             success: function(response) {
+                console.log(response.data.image.image_fit +"100/100" + response.data.image.image_path);
                 if (response.status = 'Success') {
-                    console.log(response);
                     $('#edit_table_form').modal('show');
-                    $("#edit_pack_img1").attr("data-default-file","" + );
+                    $("#edit_table_image").attr("data-default-file", response.data.image.image_fit +"100/100" + response.data.image.image_path);
                     $('.dropify').dropify();
                     // $("#edit_table_category #edit_category_name").val(response.data.title).change();
                     // $("#edit_table_category #table_category_id").val(response.data.id).change();
