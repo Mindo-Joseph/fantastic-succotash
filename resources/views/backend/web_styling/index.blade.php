@@ -46,7 +46,7 @@
         <div class="card">
             <div class="card-body">
                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h4 class="header-title mb-0">Age Restriction</h4>
+                    <h4 class="header-title mb-0">Age Restriction Popup</h4>
                     <div class="mb-0">
                         <input type="checkbox" id="age_restriction" data-plugin="switchery" name="age_restriction" class="chk_box1" data-color="#43bee1" {{$client_preferences->age_restriction == 1 ? 'checked' : ''}}>
                     </div>
@@ -61,44 +61,27 @@
             <div class="card-body">
                 <ul class="pl-0 mb-0">
                     <li class="d-flex align-items-center justify-content-between">
-                        <h4 class="header-title mb-2">Cart Toggle</h4>
+                        <h4 class="header-title mb-2">Show Ratings</h4>
+                        <div class="mb-0">
+                            <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-between mt-2">
+                        <h4 class="header-title mb-2">Show Cart Icon</h4>
                         <div class="mb-0">
                             <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
                         </div>
                     </li>
                     <li class="d-flex align-items-center justify-content-between mt-2">
-                        <h4 class="header-title mb-2">Rating Toggle</h4>
+                        <h4 class="header-title mb-2">Show Contact Us</h4>
                         <div class="mb-0">
-                            <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                            <input type="checkbox" id="show_contact_us" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_contact_us == 1 ? 'checked' : ''}}>
                         </div>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
-   
-    
-   
-    <!-- <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-2">Cart Toggle</h4>
-                <div class="mb-0">
-                    <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-2">Rating Toggle</h4>
-                <div class="mb-0">
-                    <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
-                </div>
-            </div>
-        </div>
-    </div>     -->
 </div>
 </form>
 
@@ -117,7 +100,9 @@
     $("#primary_color_option").change(function() {
         submitData();
     });
-
+    $("#show_contact_us").change(function() {
+        submitData();
+    });
     $("#cart_enable").change(function() {
         submitData();
     });
