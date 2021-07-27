@@ -66,6 +66,8 @@
                 $signature = (isset($creds->signature)) ? $creds->signature : '';
                 $api_key = (isset($creds->api_key)) ? $creds->api_key : '';
                 $publishable_key = (isset($creds->publishable_key)) ? $creds->publishable_key : '';
+                $secret_key = (isset($creds->secret_key)) ? $creds->secret_key : '';
+                $public_key = (isset($creds->public_key)) ? $creds->public_key : '';
                 ?>
 
                 <div class="card-box h-100">
@@ -120,6 +122,25 @@
                         </div>
                     </div>
                     @endif
+
+                    @if ( (strtolower($opt->title) == 'paystack') )
+                    <div id="paystack_fields_wrapper" @if($opt->status != 1) style="display:none" @endif>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="paystack_secret_key" class="mr-3">Secret Key</label>
+                                    <input type="password" name="paystack_secret_key" id="paystack_secret_key" class="form-control" value="{{$secret_key}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="paystack_public_key" class="mr-3">Publishable Key</label>
+                                    <input type="password" name="paystack_public_key" id="paystack_public_key" class="form-control" value="{{$public_key}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                     <!-- <div class="d-flex align-items-center justify-content-between mb-2">
                         <button class="btn btn-info d-block" type="submit"> Save </button>
                     </div> -->
@@ -156,7 +177,6 @@
                     $("#stripe_fields_wrapper").find('input').removeAttr('required');
                 }
             }
-
             if( title.toLowerCase() == 'paypal' ){
                 if($(this).is(":checked")){
                     $("#paypal_fields_wrapper").show();
@@ -165,6 +185,16 @@
                 else{
                     $("#paypal_fields_wrapper").hide();
                     $("#paypal_fields_wrapper").find('input').removeAttr('required');
+                }
+            }
+            if( title.toLowerCase() == 'paystack' ){
+                if($(this).is(":checked")){
+                    $("#paystack_fields_wrapper").show();
+                    $("#paystack_fields_wrapper").find('input').attr('required', true);
+                }
+                else{
+                    $("#paystack_fields_wrapper").hide();
+                    $("#paystack_fields_wrapper").find('input').removeAttr('required');
                 }
             }
 
