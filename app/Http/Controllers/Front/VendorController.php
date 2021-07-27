@@ -119,7 +119,8 @@ class VendorController extends FrontController
                 }
                 $listData = $this->listData($langId, $vendor->id, $vendor->vendor_templete_id, $slug2);
         $page = ($vendor->vendor_templete_id == 2) ? 'categories' : 'products';
-        return view('frontend/vendor-'.$page)->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
+        $range_products = [];
+        return view('frontend/vendor-'.$page)->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands, 'range_products' => $range_products]);
     }
 
     public function listData($langId, $vid, $type = '', $categorySlug = ''){
