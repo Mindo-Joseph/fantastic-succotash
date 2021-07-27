@@ -122,6 +122,7 @@ class AuthController extends BaseController{
      */
     public function signup(Request $signReq){
         $validator = Validator::make($signReq->all(), [
+            'dial_code'   => 'required|string',
             'device_type'   => 'required|string',
             'device_token'  => 'required|string',
             'country_code'  => 'required|string',
@@ -154,6 +155,7 @@ class AuthController extends BaseController{
         $user->is_phone_verified = 0;
         $user->phone_token = $phoneCode;
         $user->email_token = $emailCode;
+        $user->dial_code = $signReq->dial_code;
         $user->country_id = $country_detail->id;
         $user->phone_token_valid_till = $sendTime;
         $user->email_token_valid_till = $sendTime;
