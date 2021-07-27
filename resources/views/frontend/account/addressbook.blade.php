@@ -208,7 +208,7 @@
                             <div class="col-md-12 mb-2">
                                 <label for="address">{{ __('Address') }}</label>
                                 <div class="input-group">
-                                    <input type="text" name="address" class="form-control" id="address" placeholder="Address" aria-label="Recipient's Address" aria-describedby="button-addon2" value="<%= (typeof address != 'undefined') ? address.address : '' %>" autocomplete="off" required="required">
+                                    <input type="text" name="address" class="form-control" id="address" placeholder="{{ __('Address') }}" aria-label="Recipient's Address" aria-describedby="button-addon2" value="<%= (typeof address != 'undefined') ? address.address : '' %>" autocomplete="off" required="required">
                                     <div class="input-group-append">
                                     <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
                                         <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -221,19 +221,19 @@
                         <div class="form-row">
                             <div class="col-md-6 mb-2">
                                 <label for="street">{{ __('Street') }}</label>
-                                <input type="text" class="form-control" id="street" placeholder="Street" name="street" value="<%= ((typeof address != 'undefined') && (address.street != null)) ? address.street : '' %>">
+                                <input type="text" class="form-control" id="street" placeholder="{{ __('Street') }}" name="street" value="<%= ((typeof address != 'undefined') && (address.street != null)) ? address.street : '' %>">
                                 <span class="text-danger" id="street_error"></span>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label for="city">{{ __('City') }}</label>
-                                <input type="text" class="form-control" id="city" name="city" placeholder="City" value="<%= ((typeof address != 'undefined') && (address.city != null)) ? address.city : '' %>" required="required">
+                                <input type="text" class="form-control" id="city" name="city" placeholder="{{ __('City') }}" value="<%= ((typeof address != 'undefined') && (address.city != null)) ? address.city : '' %>" required="required">
                                 <span class="text-danger" id="city_error"></span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col-md-6 mb-2">
                                 <label for="state">{{ __('State') }}</label>
-                                <input type="text" class="form-control" id="state" name="state" placeholder="State" value="<%= ((typeof address != 'undefined') && (address.state != null)) ? address.state : '' %>" required="required">
+                                <input type="text" class="form-control" id="state" name="state" placeholder="{{ __('State') }}" value="<%= ((typeof address != 'undefined') && (address.state != null)) ? address.state : '' %>" required="required">
                                 <span class="text-danger" id="state_error"></span>
                             </div>
                             <div class="col-md-6 mb-2">
@@ -249,7 +249,7 @@
                         <div class="form-row mb-0">
                             <div class="col-md-6 mb-2">
                                 <label for="pincode">{{ __('Pincode') }}</label>
-                                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode" value="<%= ((typeof address != 'undefined') && (address.pincode != null)) ? address.pincode : ''%>" required="required">
+                                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="{{ __('Pincode') }}" value="<%= ((typeof address != 'undefined') && (address.pincode != null)) ? address.pincode : ''%>" required="required">
                                 <span class="text-danger" id="pincode_error"></span>
                             </div>
                             <div class="col-md-12 mt-2">

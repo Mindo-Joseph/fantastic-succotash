@@ -226,5 +226,15 @@
   "Verify Email Addresss": "Bestellung aufgeben4",
   "Enter the code we just sent you on your email address": "Bestellung aufgeben5",
   "Stripe": "Bestellung aufgeben6",
-  "View More": "Bestellung aufgeben7"
+  "View More": "Bestellung aufgeben7",
+
+  "Name": "Naam",
+  "Inquiry": "Navraag",
+  "Message": "Bericht",
+  "Company Name":"Bedrijfsnaam",
+  "The name field is required.":"Het naamveld is verplicht.",
+  "The email field is required.":"Het e-mailveld is verplicht.",
+  "The agree must be accepted.":"Het berichtveld is verplicht.",
+  "The number field is required.":"Het nummerveld is verplicht.",
+  "The message field is required.":"Het berichtveld is verplicht."
 }

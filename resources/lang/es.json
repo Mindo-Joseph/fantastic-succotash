@@ -229,5 +229,15 @@
    "Verify Email Addresss":"Verificar | Direcciones de correo electrónico",
    "Enter the code we just sent you on your email address":"El código es el Ingrese, simplemente le enviamos a su dirección de correo electrónico",
    "Stripe":" The Stripe",
-   "View More": "Ver más"
+   "View More": "Ver más",
+
+   "Name": "Nombre",
+   "Message": "Mensaje",
+   "Inquiry": "Consulta",
+   "Company Name":"nombre de empresa",
+   "The agree must be accepted.":"El acuerdo debe ser aceptado.",
+   "The name field is required.":"El campo de nombre es obligatorio.",
+   "The number field is required.":"El campo de número es obligatorio.",
+   "The message field is required.":"El campo del mensaje es obligatorio.",
+   "The email field is required.":"El campo de correo electrónico es obligatorio."
 }

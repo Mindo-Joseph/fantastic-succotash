@@ -12,7 +12,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="header-contact">
                     <ul>
                         <li>{{session('client_config') ? session('client_config')->company_name : ''}}</li>
-                        <li><i class="fa fa-phone" aria-hidden="true"></i>Call Us: {{session('client_config') ? session('client_config')->phone_number : ''}}</li>
+                        <li><i class="fa fa-phone" aria-hidden="true"></i>{{__('Call Us')}}: {{session('client_config') ? session('client_config')->phone_number : ''}}</li>
                     </ul>
                 </div>
             </div>
@@ -24,9 +24,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </a>
                         <ul class="onhover-show-div">
                             @foreach($languageList as $key => $listl)
-                            <li class="{{session()->get('locale') ==  $listl->language->sort_code ?  'active' : ''}}">
-                                <a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a>
-                            </li>
+                                <li class="{{session()->get('locale') ==  $listl->language->sort_code ?  'active' : ''}}">
+                                    <a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a>
+                                </li>
                             @endforeach
                         </ul>
                     </li>
@@ -45,13 +45,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </ul>
                     </li>
                     <li class="onhover-dropdown mobile-account">
-                        <i class="fa fa-user" aria-hidden="true"></i>Account
+                        <i class="fa fa-user" aria-hidden="true"></i>{{__('Account')}}
                         <ul class="onhover-show-div">
                             <li>
-                                <a href="{{route('customer.login')}}" data-lng="en">Login</a>
+                                <a href="{{route('customer.login')}}" data-lng="en">{{__('Login')}}</a>
                             </li>
                             <li>
-                                <a href="{{route('customer.register')}}" data-lng="es">Register</a>
+                                <a href="{{route('customer.register')}}" data-lng="es">{{__('Register')}}</a>
                             </li>
                         </ul>
                     </li>

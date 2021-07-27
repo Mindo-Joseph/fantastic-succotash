@@ -155,7 +155,7 @@
                                     <div class="product-description border-product">
                                         <h6 class="product-title mt-0">{{__('Quantity')}}:
                                             @if(!$product->variant[0]->quantity > 0)
-                                            <span id="outofstock" style="color: red;">Out of Stock</span>
+                                            <span id="outofstock" style="color: red;">{{__('Out of Stock')}}</span>
                                             @endif
                                         </h6>
                                         @if($product->variant[0]->quantity > 0)
@@ -371,7 +371,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title" id="inquiry_formLabel">Inquiry</h5>
+                <h5 class="modal-title" id="inquiry_formLabel">{{__('Inquiry')}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -385,36 +385,36 @@
                         <input type="hidden" name="vendor_id" value="{{$product->vendor_id}}" />
                         <input type="hidden" name="product_id" value="{{$product->id}}" />
                         <div class="col-md-6 form-group">
-                            <label>Name</label>
-                            <input class="form-control" name="name" id="name" value="{{$user ? $user->name : '' }}" type="text">
+                            <label>{{__('Name')}}</label>
+                            <input class="form-control" name="name" id="name" value="{{$user ? $user->name : '' }}" type="text" placeholder="{{__('Name')}}">
                             <span class="text-danger error-text nameError"></span>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>Email</label>
-                            <input class="form-control" name="email" id="email" value="{{$user ? $user->email : '' }}" type="text">
+                            <label>{{__('Email')}}</label>
+                            <input class="form-control" name="email" id="email" value="{{$user ? $user->email : '' }}" type="text" placeholder="{{__('Email')}}">
                             <span class="text-danger error-text emailError"></span>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>Phone Number</label>
-                            <input class="form-control" name="number" id="number" value="{{$user ? $user->phone_number : '' }}" type="text">
+                            <label>{{__('Phone Number')}}</label>
+                            <input class="form-control" name="number" id="number" value="{{$user ? $user->phone_number : '' }}" type="text" placeholder="{{__('Phone Number')}}">
                             <span class="text-danger error-text numberError"></span>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>Company Name</label>
-                            <input class="form-control" name="company_name" id="company_name" type="text">
+                            <label>{{__('Company Name')}}</label>
+                            <input class="form-control" name="company_name" id="company_name" type="text" placeholder="{{__('Company Name')}}">
                         </div>
                         <div class="col-12 form-group">
-                            <label>Message</label>
-                            <textarea class="form-control" name="message" id="message" cols="30" rows="8"></textarea>
+                            <label>{{__('Message')}}</label>
+                            <textarea class="form-control" name="message" id="message" cols="30" rows="8" placeholder="{{__('Message')}}"></textarea>
                             <span class="text-danger error-texprapt messageError"></span>
                         </div>
                         <div class="col-12 form-group checkbox-input">
                             <input type="checkbox" id="agree" name="agree" required>
-                            <label for="agree">I accept the <a href="{{url('extra-page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and have read the <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> Privacy Policy.</a></label>
+                            <label for="agree">{{__('I accept the')}} <a href="{{url('extra-page/terms-conditions')}}" target="_blank">{{__('Terms And Conditions')}}</a> {{__('and have read the')}} <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> {{__('Privacy Policy')}}</a></label>
                             <span class="d-block text-danger error-text agreeError"></span>
                         </div>
                         <div class="col-12 mt-2">
-                            <button type="button" class="btn btn-solid w-100 submitInquiryForm">Submit</button>
+                            <button type="button" class="btn btn-solid w-100 submitInquiryForm">{{__('Submit')}}</button>
                         </div>
                     </div>
                 </form>
