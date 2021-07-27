@@ -116,6 +116,16 @@ class PaymentOptionController extends BaseController
                         'publishable_key' => $request->stripe_publishable_key
                     ));
                 }
+                else if( (isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'paystack') ){
+                    $validatedData = $request->validate([
+                        'paystack_secret_key'=> 'required',
+                        'paystack_public_key'=> 'required'
+                    ]);
+                    $json_creds = json_encode(array(
+                        'secret_key' => $request->paystack_secret_key,
+                        'public_key' => $request->paystack_public_key
+                    ));
+                }
             }
             PaymentOption::where('id', $id)->update(['status' => $status, 'credentials' => $json_creds]);
         }

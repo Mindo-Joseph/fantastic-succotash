@@ -68,7 +68,8 @@ class SearchController extends FrontController{
                         ->orderBy('categories.position', 'asc')->get();
         foreach ($categories as $category) {
             $image_url = $category->image['proxy_url'].'80/80'.$category->image['image_path'];
-            $response[] = ['id' => $category->id, 'name' => $category->name, 'image_url' => $image_url, 'slug' => $category->slug];
+            $redirect_url = route('categoryDetail', $category->slug);
+            $response[] = ['id' => $category->id, 'name' => $category->name, 'image_url' => $image_url];
         }
         $products = Product::with('media')->join('product_translations as pt', 'pt.product_id', 'products.id')
                     ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
@@ -78,7 +79,8 @@ class SearchController extends FrontController{
                     })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->get();
         foreach ($products as $product) {
             $image_url = $product->media->first() ? $product->media->first()->image->path['proxy_url'].'80/80'.$product->media->first()->image->path['image_path'] : '';
-            $response[] = ['id' => $product->id, 'name' => $product->dataname, 'image_url' => $image_url, 'slug' => $product->sku];
+            $redirect_url = route('productDetail', $product->sku);
+            $response[] = ['id' => $product->id, 'name' => $product->dataname, 'image_url' => $image_url, 'redirect_url' => $redirect_url];
         }
         return $this->successResponse($response);
     }
