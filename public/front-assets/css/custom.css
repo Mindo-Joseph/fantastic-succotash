@@ -3287,7 +3287,7 @@ header .homepage-address h2 {
 }
 
 .location-inputs li::before {
-    height: 100%;
+    height: calc(100% + 8px);
     background: transparent;
     border-left: 2px dashed #fff;
     position: absolute;
@@ -3296,7 +3296,11 @@ header .homepage-address h2 {
     content: "";
     width: 2px;
     left: -20px;
-    top: 21px;
+    top: 26px;
+}
+
+.location-inputs li:last-child::before {
+    height: calc(100% - 2px);
 }
 
 .dots::after {
@@ -3313,17 +3317,18 @@ header .homepage-address h2 {
     border-radius: 50px;
 }
 
-.location-inputs .dots::after{
-    top: 5px;
+.location-inputs .dots::after {
+    top: 50%;
     left: -24px;
+    transform: translateY(-50%);
 }
 
 .location-inputs .dots.map-icon::after {
     font-family: FontAwesome;
+    top: calc(50% - 8px);
     content: "\f041";
     color: #fff;
     border: 0;
-    top: -1px;
 }
 
 .add-more-location{
@@ -3567,7 +3572,7 @@ body[dir="rtl"] .small-slider{
 
 
 
-    
+
 }
 
 
