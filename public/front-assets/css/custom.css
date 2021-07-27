@@ -1756,7 +1756,7 @@ label{
     background-color: #EEEEEE;
     /* border-radius: 50px; */
     padding: 0 10px;
-    overflow: hidden;
+    position: relative;
 }
 .search_form, .search_form input.form-control, .search_form button.btn.btn-solid {
     height: 100%;
@@ -3416,6 +3416,12 @@ form .location-box .form-control::-webkit-input-placeholder,form .location-box .
     border-radius: 0 0 16px 16px !important;
     padding: 20px;
     background: #fff;
+    position: absolute;
+    top: 100%;
+    z-index: 9999999999;
+    left: 0;
+    width: 100%;
+    display: block;
 }
 
 .list-items img {
