@@ -203,7 +203,7 @@
         <tr class="border_0">
             <td colspan="3"></td>
             <td colspan="4" class="pr-0 pb-0">
-                <div class="mb-2">Do you want to give a tip ?</div>
+                <div class="mb-2">{{__('Do you want to give a tip?')}}</div>
                 <div class="tip_radio_controls">
                     <input type="radio" class="tip_radio" id="control_01" name="select" value="<%= cart_details.tip_5_percent %>">
                     <label class="tip_label" for="control_01">
@@ -225,11 +225,11 @@
 
                     <input type="radio" class="tip_radio" id="custom_control" name="select" value="custom" >
                     <label class="tip_label" for="custom_control">
-                        <h5 class="m-0">Custom<br>Amount</h5>
+                        <h5 class="m-0">{{__('Custom')}}<br>{{__('Amount')}}</h5>
                     </label>
                 </div>
                 <div class="custom_tip mb-3 d-none">
-                    <input class="input-number form-control" name="custom_tip_amount" id="custom_tip_amount" placeholder="Enter Custom Amount" type="number" value="" step="0.1">
+                    <input class="input-number form-control" name="custom_tip_amount" id="custom_tip_amount" placeholder="{{__('Enter Custom Amount')}}" type="number" value="" step="0.1">
                 </div>
             </td>
         </tr>
@@ -402,7 +402,6 @@
                         <table class="table table-centered table-nowrap mb-0 h-100" id="cart_table">
                             <tbody>
                                 <td>
-                                    <!-- GRADIENT SPINNER -->
                                     <div class="spinner-box">
                                         <div class="circle-border">
                                             <div class="circle-core"></div>
@@ -574,9 +573,9 @@
     var base_url = "{{url('/')}}";
     var place_order_url = "{{route('user.placeorder')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
-    var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
     var user_store_address_url = "{{route('address.store')}}";
     var promo_code_remove_url = "{{ route('remove.promocode') }}";
+    var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
     var payment_option_list_url = "{{route('payment.option.list')}}";

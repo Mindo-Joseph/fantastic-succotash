@@ -195,7 +195,6 @@
 <script src="{{asset('assets/libs/dropify/dropify.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
-
 <script type="text/javascript">
     var ajaxCall = 'ToCancelPrevReq';
     $('.verifyEmail').click(function() {
@@ -204,7 +203,6 @@
     $('.verifyPhone').click(function() {
         verifyUser('phone');
     });
-
     function verifyUser($type = 'email') {
         ajaxCall = $.ajax({
             type: "post",
@@ -225,7 +223,6 @@
             error: function(data) {},
         });
     }
-
     $(".openProfileModal").click(function (e) {
         e.preventDefault();
         var uri = "{{route('user.editAccount')}}";
@@ -272,10 +269,7 @@
         output.src = URL.createObjectURL(event.target.files[0]);
     };
 </script>
-
-
 <script>
-   
     $(document).ready(function() {
         $("#phone").keypress(function(e) {
             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {

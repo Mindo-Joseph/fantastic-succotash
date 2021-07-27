@@ -648,9 +648,8 @@
 <script src="{{ asset('assets/js/pages/jquery.cookie.js') }}"></script>
 
 <script type="text/javascript">
-    var areajson_json = {
-        !!json_encode($all_coordinates) !!
-    };
+    var all_coordinates = "{{json_encode($all_coordinates)}}";
+    var areajson_json = {all_coordinates};
 
     /*function gm_authFailure() {
 
@@ -712,9 +711,7 @@
     var lat_longs = new Array();
     var markers = new Array();
     var drawingManager;
-    var no_parking_geofences_json = {
-        !!json_encode($all_coordinates) !!
-    };
+    var no_parking_geofences_json = {all_coordinates};
     var newlocation = '<?php echo json_encode($co_ordinates); ?>';
     var first_location = JSON.parse(newlocation);
     var lat = parseFloat(first_location.lat);
