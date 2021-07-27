@@ -129,7 +129,6 @@ $timezone = Auth::user()->timezone;
                                                             @php
                                                                 $product_total_count = $product_subtotal_amount = $product_taxable_amount = 0;
                                                             @endphp
-                                                            @if($vendor->order_status != 'delivered')
                                                             <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
                                                                 <span class="left_arrow pulse"></span>
                                                                 <div class="row">
@@ -197,7 +196,6 @@ $timezone = Auth::user()->timezone;
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            @endif
                                                         @endforeach
                                                     </div>
                                                     <div class="col-md-3 mb-3 pl-lg-0">
@@ -288,7 +286,6 @@ $timezone = Auth::user()->timezone;
                                                             @php
                                                                 $product_total_count = $product_subtotal_amount = $product_taxable_amount = 0;
                                                             @endphp
-                                                            @if($vendor->order_status == 'delivered')
                                                             <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
                                                                 <span class="left_arrow pulse"></span>
                                                                 <div class="row">
@@ -358,7 +355,6 @@ $timezone = Auth::user()->timezone;
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            @endif
                                                         @endforeach
                                                     </div>
                                                     <div class="col-md-3 mb-3 pl-lg-0">
