@@ -142,7 +142,6 @@ class CategoryController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $domain = '', $id){
-        dd($request->all());
         $rules = array(
             'slug' => 'required|string|max:30|unique:categories,slug,'.$id,
             'name.0' => 'required|string|max:60',
