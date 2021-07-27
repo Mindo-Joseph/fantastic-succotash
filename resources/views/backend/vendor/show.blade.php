@@ -398,7 +398,7 @@
                                                                 <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$dinein_category->title}}</a>
                                                             </td>
                                                             <td>
-                                                                <button type="button" class="btn btn-primary-outline action-icon editAreaBtn" area_id="{{$dinein_category->id}}"><i class="mdi mdi-square-edit-outline"></i></button>
+                                                                <button type="button" class="btn btn-primary-outline action-icon editCategorybtn" data-id="{{$dinein_category->id}}"><i class="mdi mdi-square-edit-outline"></i></button>
 
                                                                 <form action="{{route('vendor.category.delete', $vendor->id)}}" method="POST" class="action-icon">
                                                                     @csrf
@@ -430,7 +430,7 @@
                                                                 <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$vendor_table->table_number}}</a>
                                                             </td>
                                                             <td>
-                                                                <button type="button" class="btn btn-primary-outline action-icon editAreaBtn" area_id="{{$vendor_table->id}}"><i class="mdi mdi-square-edit-outline"></i></button>
+                                                                <button type="button" class="btn btn-primary-outline action-icon editTablebtn" data-id="{{$vendor_table->id}}"><i class="mdi mdi-square-edit-outline"></i></button>
 
                                                                 <form action="{{route('vendor.table.delete', $vendor->id)}}" method="POST" class="action-icon">
                                                                     @csrf
@@ -485,7 +485,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <label>Upload Category image</label>
-                            <input type="file" accept="image/*" data-default-file="" data-plugins="dropify" name="image" class="dropify" id="image"/>
+                            <input type="file" accept="image/*" data-default-file="" data-plugins="dropify" name="image" class="dropify" id="image" />
                             <label class="logo-size d-block text-right mt-1">Image Size 1026x200</label>
                         </div>
                         <div class="col-sm-5 mb-2">
@@ -643,10 +643,65 @@
 
 <script src="{{asset('assets/libs/moment/moment.min.js')}}"></script>
 
-<!-- Page js-->
 <script src="{{asset('assets/js/calender_main.js')}}"></script>
 <script src="{{ asset('assets/js/pages/jquery.cookie.js') }}"></script>
+<script>
+    $(document).on("click", ".editTablebtn", function() {
+        let table_id = $(this).data('id');
+        $.ajax({
+            method: 'GET',
+            data: {
+                table_id: table_id
+            },
+            url: "{{ route('vendor_table_edit') }}",
+            success: function(response) {
+                console.log(response.data.image.image_fit +"100/100" + response.data.image.image_path);
+                if (response.status = 'Success') {
+                    $('#edit_table_form').modal('show');
+                    $("#edit_table_image").attr("data-default-file", response.data.image.image_fit +"100/100" + response.data.image.image_path);
+                    $('.dropify').dropify();
+                    // $("#edit_table_category #edit_category_name").val(response.data.title).change();
+                    // $("#edit_table_category #table_category_id").val(response.data.id).change();
+                    //       $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val(response.data.id);
+                    //       $('#add_vendor_registration_document_modal #standard-modalLabel').html('Update Vendor Registration Document');
+                    //       $.each(response.data.translations, function( index, value ) {
+                    //         $('#add_vendor_registration_document_modal #vendor_registration_document_name_'+value.language_id).val(value.name);
+                    //       });
+                }
+            },
+            error: function() {
 
+            }
+        });
+    });
+
+    $(document).on("click", ".editCategorybtn", function() {
+        let table_category_id = $(this).data('id');
+        $.ajax({
+            method: 'GET',
+            data: {
+                table_category_id: table_category_id
+            },
+            url: "{{ route('vendor_table_category_edit') }}",
+            success: function(response) {
+                if (response.status = 'Success') {
+                    console.log(response);
+                    $('#edit_table_category').modal('show');
+                    $("#edit_table_category #edit_category_name").val(response.data.title).change();
+                    $("#edit_table_category #table_category_id").val(response.data.id).change();
+                    //       $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val(response.data.id);
+                    //       $('#add_vendor_registration_document_modal #standard-modalLabel').html('Update Vendor Registration Document');
+                    //       $.each(response.data.translations, function( index, value ) {
+                    //         $('#add_vendor_registration_document_modal #vendor_registration_document_name_'+value.language_id).val(value.name);
+                    //       });
+                }
+            },
+            error: function() {
+
+            }
+        });
+    });
+</script>
 <script type="text/javascript">
     var all_coordinates = "{{json_encode($all_coordinates)}}";
     var areajson_json = {all_coordinates};
@@ -656,6 +711,8 @@
         $('.excetion_keys').append('<span><i class="mdi mdi-block-helper mr-2"></i> <strong>Google Map</strong> key is not valid</span><br/>');
         $('.displaySettingsError').show();
     }*/
+
+
 
     function initialize_show() {
 

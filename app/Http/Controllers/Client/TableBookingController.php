@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\{VendorDineinCategory, VendorDineinTable, VendorDineinTableTranslation};
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-
-use function GuzzleHttp\Promise\all;
+use App\Http\Traits\ApiResponser;
 
 class TableBookingController extends BaseController
-{
+{   use ApiResponser;
+
     public function storeCategory(Request $request)
     {
         $rules = array(
@@ -26,6 +26,25 @@ class TableBookingController extends BaseController
         $vendor_category->save();
         
         return redirect()->back()->with('success', 'Added Successfully!');
+    }
+
+    public function editCategory(Request $request)
+    {
+        $table_category = VendorDineinCategory::where('id', $request->table_category_id)->first();
+        return $this->successResponse($table_category, '');
+    }
+
+    public function updateCategory(Request $request)
+    {
+        $rules = array(
+            'title' => 'required|string|max:150|unique:vendor_dinein_categories,title,'.$request->table_category_id,
+        );
+        $validation  = Validator::make($request->all(), $rules)->validate();
+        $vendor_category = VendorDineinCategory::where('id', $request->table_category_id)->first();
+        $vendor_category->vendor_id = $request->vendor_id;
+        $vendor_category->title = $request->title;
+        $vendor_category->save();
+        return redirect()->back()->with('success', 'Updated Successfully!');
     }
 
     public function destroyCategory($domain="", Request $request, $vid)
@@ -69,4 +88,11 @@ class TableBookingController extends BaseController
             return redirect()->back()->with('success', 'Table Added Successfully!');
         }
     }
+
+    public function editTable(Request $request)
+    {
+        $table_data = VendorDineinTable::where('id', $request->table_id)->first();
+        return $this->successResponse($table_data, '');
+    }
+
 }
