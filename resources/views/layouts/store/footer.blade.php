@@ -17,7 +17,9 @@
 <script type="text/javascript">
     var is_hyperlocal = 0;
     var selected_address = 0;
+    var autocomplete_url = "{{ route('autocomplete') }}";
     let stripe_publishable_key = '{{ $stripe_publishable_key }}';
+    var home_page_url = "{{ route('userHome') }}";
     var home_page_url = "{{ route('userHome') }}";
     var add_to_whishlist_url = "{{ route('addWishlist') }}";
     var show_cart_url = "{{ route('showCart') }}";
@@ -53,3 +55,4 @@
 <script src="{{asset('front-assets/js/script.js')}}"></script>
 <script src="{{asset('js/custom.js')}}"></script>
 <script src="{{asset('js/location.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>

@@ -1,88 +1,87 @@
 <?php
 
 namespace App\Http\Controllers\Front;
-
-
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, Category_translation, ProductTranslation};
-use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Redis;
+use App\Http\Controllers\Front\FrontController;
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, Category_translation, ProductTranslation};
 
-class SearchController extends FrontController
-{
-    public function search(Request $request)
-    {
-        $langId = Session::get('customerLanguage');
-        $navCategories = $this->categoryNav($langId);
-        $inp = $request->input('query');
-
-        if (empty($inp)) { 
-            return view('backend.searchbar.search')->with(['products' => [],  'categories' => [], 'vendors' => [], 'navCategories' => $navCategories, 'search' => Null]);
-        }
-        // $langId = Session::get('customerLanguage');
-        $prodTrans = ProductTranslation::select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')
-            ->where('language_id', $langId)
-            ->where(function ($q) use ($inp) {
-                $q->where('title', 'LIKE', '%' .  $inp . '%')
-                    ->orWhere('body_html', 'LIKE', '%' . $inp . '%')
-                    ->orWhere('meta_title', 'LIKE', '%' . $inp . '%')
-                    ->orWhere('meta_keyword', 'LIKE', '%' . $inp . '%')
-                    ->orWhere('meta_description', 'LIKE', '%' . $inp . '%');
-            })->get();
-        $productIds = array();
-
-        if ($prodTrans) {
-            foreach ($prodTrans as $key => $val) {
-                $productIds[] = $val->product_id;
+class SearchController extends FrontController{
+    use ApiResponser;
+    public function postAutocompleteSearch(Request $request){
+        $response = [];
+        $keyword = $request->input('keyword');
+        $language_id = Session::get('customerLanguage');
+        $preferences = Session::get('preferences');
+        $vendors = Vendor::select('id', 'name', 'logo','slug');
+        if($preferences){
+            if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
+                $selectedAddress = $preferences->Default_location_name;
+                $latitude = $preferences->Default_latitude;
+                $longitude = $preferences->Default_longitude;
+                Session::put('latitude', $latitude);
+                Session::put('longitude', $longitude);
+                Session::put('selectedAddress', $selectedAddress);
+            }
+            if(($preferences->is_hyperlocal == 1) && ($latitude) && ($longitude) ){
+                $vendors = $vendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
+                    $query->select('vendor_id')
+                    ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+                });
             }
         }
-
-        $products = Product::select("id", "url_slug")
-            ->with(['media.image', 'variant.vimage.pimage.image', 'translation' => function ($query) use ($langId) {
-                $query->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
-                $query->where('language_id', $langId);
-            }])
-            ->where(function ($q) use ($inp, $productIds) {
-                $q->whereIn('id', $productIds)
-                    ->orWhere('url_slug', 'LIKE', '%' . $inp . '%');
-            })->get();
-
-        // dd($products);
-        // $products  = Product::where('url_slug', 'LIKE', '%' . $request->input('query') . '%')->where('is_live', 1)->with('translation')->with('variant.vimage.pimage.image')
-        //     ->get()->toArray();
-
-
-        $categoryTrans = Category_translation::select('category_id',   'meta_title', 'meta_keywords', 'meta_description')
-            ->where('language_id', $langId)
-            ->where(function ($q) use ($inp) {
-                $q->where('meta_title', 'LIKE', '%' .  $inp . '%')
-                    ->orWhere('meta_keywords', 'LIKE', '%' . $inp . '%')
-                    ->orWhere('meta_description', 'LIKE', '%' . $inp . '%');
-            })->get();
-        $productIds = array();
-
-        if ($categoryTrans) {
-            foreach ($categoryTrans as $key => $val) {
-                $categoryIds[] = $val->category_id;
-            }
+        $vendors = $vendors->where(function ($q) use ($keyword) {
+                        $q->where('name', 'LIKE', "%$keyword%");
+                    })->where('status', '!=', 2)->get();
+        foreach ($vendors as $vendor) {
+            $vendor->redirect_url = route('vendorDetail', $vendor->slug);
+            $vendor->image_url = $vendor->logo['proxy_url'].'80/80'.$vendor->logo['image_path'];
+            $response[] = $vendor;
         }
-
-        $categories = Category::join('category_translations as ct', 'ct.category_id', 'categories.id')
-            ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.type_id', 'categories.image', 'ct.name', 'ct.trans-slug', 'ct.meta_title', 'ct.meta_description', 'ct.meta_keywords', 'ct.category_id')
-            ->where('ct.language_id', $langId)
-            ->where(function ($q) use ($inp) {
-                $q->where('ct.name', ' LIKE', '%' . $inp . '%')
-                    ->orWhere('ct.trans-slug', 'LIKE', '%' . $inp . '%')
-                    ->orWhere('ct.meta_title', 'LIKE', '%' . $inp . '%')
-                    ->orWhere('ct.meta_description', 'LIKE', '%' . $inp . '%')
-                    ->orWhere('ct.meta_keywords', 'LIKE', '%' . $inp . '%');
-            })->get();
-
-
-        $vendors  = Vendor::where('name', 'LIKE', '%' . $request->input('query') . '%')->get();
-
-        return view('backend.searchbar.search')->with(['products' => $products,  'categories' => $categories, 'vendors' => $vendors, 'navCategories' => $navCategories, 'search' => $inp]);
+        $brands = Brand::join('brand_translations as bt', 'bt.brand_id', 'brands.id')
+                ->select('brands.id', 'bt.title as name', 'image')
+                ->where('bt.title', 'LIKE', '%' . $keyword . '%')
+                ->where('brands.status', '!=', '2')
+                ->where('bt.language_id', $language_id)
+                ->orderBy('brands.position', 'asc')->get();
+        foreach ($brands as $brand) {
+            $brand->redirect_url = route('brandDetail', $brand->id);
+            $brand->image_url = $brand->image['proxy_url'].'80/80'.$brand->image['image_path'];
+            $response[] = $brand;
+        }
+        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
+                        ->leftjoin('types', 'types.id', 'categories.type_id')
+                        ->select('categories.id', 'categories.icon', 'categories.image', 'categories.slug', 'categories.parent_id', 'cts.name', 'categories.warning_page_id', 'categories.template_type_id', 'types.title as redirect_to')
+                        ->where('categories.id', '>', '1')
+                        ->where('categories.is_visible', 1)
+                        ->where('categories.status', '!=', 2)
+                        ->where('categories.is_core', 1)
+                        ->where('cts.language_id', $language_id)
+                        ->where(function ($q) use ($keyword) {
+                            $q->where('cts.name', ' LIKE', '%' . $keyword . '%')
+                            ->orWhere('categories.slug', 'LIKE', '%' . $keyword . '%')
+                            ->orWhere('cts.trans-slug', 'LIKE', '%' . $keyword . '%');
+                        })->orderBy('categories.parent_id', 'asc')
+                        ->orderBy('categories.position', 'asc')->get();
+        foreach ($categories as $category) {
+            $redirect_url = route('categoryDetail', $category->slug);
+            $image_url = $category->image['proxy_url'].'80/80'.$category->image['image_path'];
+            $response[] = ['id' => $category->id, 'name' => $category->name, 'image_url' => $image_url, 'redirect_url' => $redirect_url];
+        }
+        $products = Product::with('media')->join('product_translations as pt', 'pt.product_id', 'products.id')
+                    ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
+                    ->where('pt.language_id', $language_id)
+                    ->where(function ($q) use ($keyword) {
+                        $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
+                    })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->get();
+        foreach ($products as $product) {
+            $redirect_url = route('productDetail', $product->sku);
+            $image_url = $product->media->first() ? $product->media->first()->image->path['proxy_url'].'80/80'.$product->media->first()->image->path['image_path'] : '';
+            $response[] = ['id' => $product->id, 'name' => $product->dataname, 'image_url' => $image_url, 'redirect_url' => $redirect_url];
+        }
+        return $this->successResponse($response);
     }
 }
