@@ -10,7 +10,7 @@ $(document).ready(function() {
             $(".location-inputs").append("<li class='d-block mb-3 dots apdots map-icon'><input class='form-control pickup-text' type='text' placeholder='Choose destination, or click on the map...' /><i class='fa fa-times ml-1 apremove' aria-hidden='true'></i></li>");
             const height = document.querySelector('.location-box').offsetHeight;
             var getheight = height;
-            var abc = 150;
+            var abc = 146;
             var minheight = parseFloat(getheight + abc)+'px';
             $('.location-list').attr('style', 'height:calc(100vh - '+minheight+' !important');
         });
@@ -33,6 +33,7 @@ $(document).ready(function() {
             left: $(this).prevAll().length * 100 + "px"
         });
     });
+  
     if($('#cart_main_page').length > 0){
         let address_checked = $("input:radio[name='address_id']").is(":checked");
         if(address_checked){
