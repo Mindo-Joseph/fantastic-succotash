@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use DB;
+use App\Models\User;
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\Controller;
 use Illuminate\Validation\Validator;
-use App\Models\Client;
-use App\Models\User;
-use DB;
-class LoginController extends Controller
-{
+use Illuminate\Support\Facades\Cache;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+class LoginController extends Controller{
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -39,15 +38,15 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(){
         $this->middleware('guest')->except('logout');
     }
+
     public function getClientLogin(){
         return view('auth.login');
     }
-    public function clientLogin(Request $request)
-    {
+    
+    public function clientLogin(Request $request){
         $this->validate($request, [
             'email'           => 'required|max:255|email',
             'password'        => 'required',
@@ -63,8 +62,7 @@ class LoginController extends Controller
             if($client->is_superadmin == 1 || $client->is_admin == 1){
                
                 return redirect()->route('client.dashboard');
-            }
-            else{
+            }else{
                 Auth::logout();
                 return redirect()->back()->with('Error', 'You are unauthorized user.');
             }
@@ -75,7 +73,7 @@ class LoginController extends Controller
     public function Logout(){   
         Auth::guard('client')->logout();
         Auth::logout();
-        return redirect()->route('admin.login');
+        return redirect()->route('customer.login');
     }
 
     public function wrongurl(){

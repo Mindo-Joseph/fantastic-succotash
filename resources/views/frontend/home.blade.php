@@ -56,7 +56,7 @@
 <script type="text/template" id="banner_template">
     <% _.each(brands, function(brand, k){%>
         <div>
-            <div class="logo-block">
+            <div class="">
                 <a href="<%= brand.redirect_url %>">
                     <img src="<%= brand.image.image_fit %>120/120<%= brand.image.image_path %>" alt="">
                 </a>
