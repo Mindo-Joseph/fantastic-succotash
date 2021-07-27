@@ -37,8 +37,8 @@ class SearchController extends FrontController{
                         $q->where('name', 'LIKE', "%$keyword%");
                     })->where('status', '!=', 2)->get();
         foreach ($vendors as $vendor) {
-            $vendor->image_url = $vendor->logo['proxy_url'].'80/80'.$vendor->logo['image_path'];
             $vendor->redirect_url = route('vendorDetail', $vendor->slug);
+            $vendor->image_url = $vendor->logo['proxy_url'].'80/80'.$vendor->logo['image_path'];
             $response[] = $vendor;
         }
         $brands = Brand::join('brand_translations as bt', 'bt.brand_id', 'brands.id')
@@ -48,8 +48,8 @@ class SearchController extends FrontController{
                 ->where('bt.language_id', $language_id)
                 ->orderBy('brands.position', 'asc')->get();
         foreach ($brands as $brand) {
-            $brand->image_url = $brand->image['proxy_url'].'80/80'.$brand->image['image_path'];
             $brand->redirect_url = route('brandDetail', $brand->id);
+            $brand->image_url = $brand->image['proxy_url'].'80/80'.$brand->image['image_path'];
             $response[] = $brand;
         }
         $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
@@ -67,9 +67,9 @@ class SearchController extends FrontController{
                         })->orderBy('categories.parent_id', 'asc')
                         ->orderBy('categories.position', 'asc')->get();
         foreach ($categories as $category) {
-            $image_url = $category->image['proxy_url'].'80/80'.$category->image['image_path'];
             $redirect_url = route('categoryDetail', $category->slug);
-            $response[] = ['id' => $category->id, 'name' => $category->name, 'image_url' => $image_url];
+            $image_url = $category->image['proxy_url'].'80/80'.$category->image['image_path'];
+            $response[] = ['id' => $category->id, 'name' => $category->name, 'image_url' => $image_url, 'redirect_url' => $redirect_url];
         }
         $products = Product::with('media')->join('product_translations as pt', 'pt.product_id', 'products.id')
                     ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
@@ -78,8 +78,8 @@ class SearchController extends FrontController{
                         $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
                     })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->get();
         foreach ($products as $product) {
-            $image_url = $product->media->first() ? $product->media->first()->image->path['proxy_url'].'80/80'.$product->media->first()->image->path['image_path'] : '';
             $redirect_url = route('productDetail', $product->sku);
+            $image_url = $product->media->first() ? $product->media->first()->image->path['proxy_url'].'80/80'.$product->media->first()->image->path['image_path'] : '';
             $response[] = ['id' => $product->id, 'name' => $product->dataname, 'image_url' => $image_url, 'redirect_url' => $redirect_url];
         }
         return $this->successResponse($response);
