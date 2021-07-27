@@ -28,7 +28,6 @@ class RatingController extends BaseController{
             $order_details = OrderProduct::where('id',$request->order_vendor_product_id)->whereHas('order',function($q){$q->where('user_id',Auth::id());})->first();
             if($order_details)
             $order_deliver = VendorOrderStatus::where(['order_id' => $request->order_id,'vendor_id' => $order_details->vendor_id,'order_status_option_id' => 5])->count();
-            
             if($order_deliver > 0){
                 $ratings = OrderProductRating::updateOrCreate(['order_vendor_product_id' => $request->order_vendor_product_id,
                 'order_id' => $request->order_id,
@@ -67,12 +66,9 @@ class RatingController extends BaseController{
         try {
             $ratings = '';
             $ratings = OrderProductRating::where('id',$request->id)->with('reviewFiles')->first();
-       
             if(isset($ratings))
             return $this->successResponse($ratings,'Rating Details.');
-           
             return $this->errorResponse('Invalid rating', 404);
-            
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }
