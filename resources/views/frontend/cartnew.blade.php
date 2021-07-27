@@ -187,7 +187,7 @@
                <hr class="mt-2 mb-0">
             </td>
         </tr>
-        <% if(cart_details.total_subscription_discount != 'undefined') { %>
+        <% if(cart_details.total_subscription_discount != undefined) { %>
             <tr class="border_0">
                 <td colspan="3"></td>
                 <td class="pr-0 pb-0">
