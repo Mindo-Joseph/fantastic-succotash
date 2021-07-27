@@ -660,7 +660,7 @@
                     $("#edit_table_image").attr("data-default-file", response.data.image.image_fit +"100/100" + response.data.image.image_path);
                     $('.dropify').dropify();
                     $("#edit_table_form #edit_table_number").val(response.data.table_number).change();
-                    $("#edit_table_form #edit_table_number").val(response.data.table_number).change();
+                    $("#assignTo").val(response.data.vendor_dinein_category_id);
                     $('#edit_table_form').modal('show');
                     // $("#edit_table_category #table_category_id").val(response.data.id).change();
                     //       $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val(response.data.id);

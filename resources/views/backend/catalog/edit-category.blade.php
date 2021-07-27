@@ -123,7 +123,7 @@
                                     name="warning_page_id" 
                                     class="custom-control-input tab_bar_options radio-none" {{ ($category->warning_page_id == $dispatcher_warning_page_option->id) ? 'checked' : '' }}>
                                 @else
-                                    <input {{$dwpo == 0 ? 'checked' : '' }} type="radio" 
+                                    <input type="radio" 
                                     value="{{$dispatcher_warning_page_option->id}}" 
                                     id="dispatcher_warning_page_option_{{$dispatcher_warning_page_option->id}}" 
                                     name="warning_page_id" 

@@ -113,7 +113,7 @@
                     <div class="row">
                         @foreach($dispatcher_warning_page_options as $dwpo => $dispatcher_warning_page_option)                       
                             <div class="col-lg-6 custom-radio radio_new mt-2">
-                                <input {{$dwpo == 0 ? 'checked' : '' }} type="radio" name="warning_page_id"
+                                <input type="radio" name="warning_page_id"
                                     value="{{$dispatcher_warning_page_option->id}}" id="dispatcher_warning_page_option_{{$dispatcher_warning_page_option->id}}" class="custom-control-input tab_bar_options">
                                 <label class="custom-control-label" for="dispatcher_warning_page_option_{{$dispatcher_warning_page_option->id}}">
                                     <img class="card-img-top img-fluid" src="{{asset('images/'.$dispatcher_warning_page_option->image_path)}}" alt="Card image cap">
