@@ -44,9 +44,15 @@ $(document).ready(function() {
     $(".navigation-tab-item").click(function() {
         $(".navigation-tab-item").removeClass("active");
         $(this).addClass("active");
-        $(".navigation-tab-overlay").css({
-            left: $(this).prevAll().length * 100 + "px"
-        });
+        if($('body').attr('dir') == 'rtl'){
+            $(".navigation-tab-overlay").css({
+                right: $(this).prevAll().length * 130 + "px"
+            });
+        }else{
+            $(".navigation-tab-overlay").css({
+                left: $(this).prevAll().length * 100 + "px"
+            });
+        }
     });
   
     if($('#cart_main_page').length > 0){
