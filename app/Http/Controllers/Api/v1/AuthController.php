@@ -109,6 +109,7 @@ class AuthController extends BaseController{
         $data['verify_details'] = $verified;
         $data['is_admin'] = $user->is_admin;
         $data['client_preference'] = $prefer;
+        $data['dial_code'] = $user->dial_code;
         $data['phone_number'] = $user->phone_number;
         $data['cca2'] = $user->country ? $user->country->code : '';
         $data['callingCode'] = $user->country ? $user->country->phonecode : '';
@@ -221,9 +222,10 @@ class AuthController extends BaseController{
             }
             $checkSystemUser = $this->checkCookies($user->id);
             $response['status'] = 'Success';
-            $response['auth_token'] =  $token;
             $response['name'] = $user->name;
+            $response['auth_token'] =  $token;
             $response['email'] = $user->email;
+            $response['dial_code'] = $user->dial_code;
             $response['phone_number'] = $user->phone_number;
             $verified['is_email_verified'] = 0;
             $verified['is_phone_verified'] = 0;
