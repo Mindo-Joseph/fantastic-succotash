@@ -374,7 +374,7 @@ $timezone = Auth::user()->timezone;
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
                                                                     <label class="m-0">{{__('Loyalty')}}</label>
-                                                                    <span>{{$order->loyality_points_used ? $order->loyalty_points_used : 0}}</span>
+                                                                    <span>{{$order->loyalty_points_used ? $order->loyalty_points_used : 0}}</span>
                                                                 </li>
                                                                 <li class="d-flex align-items-center justify-content-between">
                                                                     <label class="m-0">{{__('Tax')}}</label>
@@ -530,7 +530,7 @@ $timezone = Auth::user()->timezone;
                                                             </li>
                                                             <li class="d-flex align-items-center justify-content-between">
                                                                 <label class="m-0">{{__('Loyalty')}}</label>
-                                                                <span>{{$order->loyality_points_used ? $order->loyalty_points_used : 0}}</span>
+                                                                <span>{{$order->loyalty_points_used ? $order->loyalty_points_used : 0}}</span>
                                                             </li>
                                                             <li class="d-flex align-items-center justify-content-between">
                                                                 <label class="m-0">{{__('Tax')}}</label>
@@ -580,102 +580,6 @@ $timezone = Auth::user()->timezone;
         </div>
     </div>
 </section>
-<div class="modal fade order_detail" id="order-details" tabindex="-1" aria-labelledby="order-detailsLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header pb-2">
-        <h5 class="modal-title" id="order-detailsLabel">{{__('Order Details')}}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body pt-0">
-        <ul class="d-inline-flex align-items-center p-0">
-            <li class="product-icon">
-                <img src="http://local.myorder.com/assets/images/products/product-1.png" alt="product-img" height="50">
-            </li>
-            <li class="product-title pl-1">
-                <h4 class="m-0">T-Shirt</h4>
-                <span class="rating vertical-middle my-1">
-                    <i class="fa fa-star-o" aria-hidden="true"></i>
-                    <i class="fa fa-star-o" aria-hidden="true"></i>
-                    <i class="fa fa-star-o" aria-hidden="true"></i>
-                    <i class="fa fa-star-o" aria-hidden="true"></i>
-                    <i class="fa fa-star-o" aria-hidden="true"></i>
-                    <span class="review_txt"> 3 Review</span>
-                </span>
-                <p class="m-0">Sector 21, Chandigarh</p>
-            </li>
-        </ul>
-        <hr class="mb-2">
-        <h5 class="modal-title mt-0 mb-2">Your Order</h5>
-        <h6 class="product-title mt-0">T-Shirt</h6>
-        <p class="d-flex align-items-center justify-content-between"><label>1 X ₹89</label><span>₹89</span></p>
-        <div class="table-responsive">
-            <table class="table detail-table mb-0">
-                <thead>
-                    <tr>
-                        <th>Item Total</th>
-                        <th class="text-right">₹89</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Promo - (ZOMATO20)</td>
-                        <td class="text-right">you save ₹15.84</td>
-                    </tr>
-                    <tr>
-                        <td>Restaurant Promo</td>
-                        <td class="text-right">you save ₹9.79</td>
-                    </tr>
-                    <tr>
-                        <td>Delivery Charge</td>
-                        <td class="text-right">₹10.00</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <p class="saving-txt d-flex align-items-center justify-content-between m-0"><span>Your total savings</span><span>₹25.63</span></p>  
-                        </td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td>Grand Total</td>
-                        <td class="text-right">₹73.37</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-        <h5 class="modal-title mt-3 mb-2">Order Details</h5>
-        <div class="order_details p-0">
-            <div class="order-no mb-2">
-                <p class="order_head">Order Id</p>
-                <p class="order_sub_title">1312370737</p>
-            </div> 
-            <div class="total-amt mb-2">
-                <p class="order_head">PAYMENT</p>
-                <p class="order_sub_title">Paid: Using Card</p>
-            </div> 
-            <div class="total-items mb-2">
-                <p class="order_head">DATE</p>
-                <p class="order_sub_title">March 29, 2019 at 09:01 PM</p>
-            </div> 
-            <div class="ordered-on mb-2">
-                <p class="order_head">PHONE NUMBER</p>
-                <p class="order_sub_title">854622123</p>
-            </div> 
-            <div class="ordered-on mb-2">
-                <p class="order_head">DELIVER TO</p>
-                <p class="order_sub_title">#1541, phase-5, mohali, Phase 5, Mohali</p>
-            </div> 
-        </div>
-      </div>
-      <div class="modal-footer">
-       
-      </div>
-    </div>
-  </div>
-</div>
 <div class="modal fade product-rating" id="product_rating" tabindex="-1" aria-labelledby="product_ratingLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
